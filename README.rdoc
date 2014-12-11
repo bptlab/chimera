@@ -7,7 +7,5 @@ The JEngine is a Framework for Production Case Management (PCM) containing Model
 This JEngine does execute
 * sequential
 * usertasks
-* for each user
-
 
 :-)
