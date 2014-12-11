@@ -39,8 +39,6 @@
     <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" level="project" />
     <orderEntry type="library" name="mysql:mysql-connector-java:5.1.33" level="project" />
     <orderEntry type="library" name="junit:junit:4.11" level="project" />
-     <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql:mysql-connector-java:5.1.33" level="project" />
     <orderEntry type="library" name="javax.ws.rs:javax.ws.rs-api:2.0-m01" level="project" />
     <orderEntry type="library" name="com.sun.jersey.glassfish.v3.osgi:jersey-gf-bundle:1.0.3" level="project" />
@@ -51,3 +49,4 @@
     <orderEntry type="library" name="commons-httpclient:commons-httpclient:3.1" level="project" />
   </component>
 </module>
+
