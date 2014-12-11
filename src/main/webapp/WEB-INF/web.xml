@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This web.xml file is not required when using Servlet 3.0 container,
+     see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html -->
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!-- SERVLET: REST -->
+   <servlet>
+      <servlet-name>Jersey Web Application</servlet-name>
+      <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+      <init-param>
+         <param-name>com.sun.jersey.config.property.packages</param-name>         
+         <param-value>de.uni_potsdam.hpi.bpt.bp2014.jcomparser.REST</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <!-- SERVLET: FileUpload -->
+    <servlet>
+        <servlet-name>FileUpload</servlet-name>
+        <servlet-class>de.uni_potsdam.hpi.bpt.bp2014.jcomparser.FileUpload</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>upload</servlet-name>
+        <jsp-file>/upload.jsp</jsp-file>
+    </servlet>
+
+     <!-- SERVLET: Jengine -->
+   <servlet>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>de.uni_potsdam.hpi.bpt.bp2014</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- SERVLET: REST -->
+   <servlet-mapping>
+      <servlet-name>Jersey Web Application</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+
+<!-- SERVLET: FileUpload -->
+    <servlet-mapping>
+        <servlet-name>upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FileUpload</servlet-name>
+        <url-pattern>/done</url-pattern>
+    </servlet-mapping>
+
+<!-- SERVLET: JEngine -->
+    <servlet-mapping>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <url-pattern>/webapi/*</url-pattern>
+    </servlet-mapping>
+</web-app>

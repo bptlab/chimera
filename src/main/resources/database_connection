@@ -1,0 +1,3 @@
+samsa
+root
+jdbc:mysql://localhost:3306/JEngineV2

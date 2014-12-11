@@ -1,0 +1,109 @@
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<model xmlns="http://frapu.net/xsd/ProcessEditor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="232643656" name="testScenario" type="net.frapu.code.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<nodes>
+<node>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="#nodes" value=""/>
+<property name="collapsed" value="0"/>
+<property name="x" value="0"/>
+<property name="width" value="200"/>
+<property name="y" value="0"/>
+<property name="text" value=""/>
+<property name="stereotype" value=""/>
+<property name="#id" value="1607067893"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentCollection"/>
+<property name="height" value="500"/>
+</node>
+<node>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="#nodes" value=""/>
+<property name="collapsed" value="0"/>
+<property name="x" value="500"/>
+<property name="width" value="200"/>
+<property name="y" value="500"/>
+<property name="text" value=""/>
+<property name="stereotype" value=""/>
+<property name="#id" value="2098450691"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectCollection"/>
+<property name="height" value="500"/>
+</node>
+<node>
+<property name="fragment mid" value="1231604870"/>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="x" value="706"/>
+<property name="width" value="804"/>
+<property name="y" value="327"/>
+<property name="text" value="entscheiden"/>
+<property name="stereotype" value=""/>
+<property name="#id" value="547681992"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode"/>
+<property name="height" value="20"/>
+</node>
+<node>
+<property name="fragment mid" value="1212030953"/>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="x" value="706"/>
+<property name="width" value="1106"/>
+<property name="y" value="307"/>
+<property name="text" value="kleben.model"/>
+<property name="stereotype" value=""/>
+<property name="#id" value="849428571"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode"/>
+<property name="height" value="20"/>
+</node>
+<node>
+<property name="fragment mid" value="332837239"/>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="x" value="706"/>
+<property name="width" value="1257"/>
+<property name="y" value="287"/>
+<property name="text" value="schweißen.model"/>
+<property name="stereotype" value=""/>
+<property name="#id" value="1445323883"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode"/>
+<property name="height" value="20"/>
+</node>
+<node>
+<property name="fragment mid" value="612207202"/>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="x" value="706"/>
+<property name="width" value="1333"/>
+<property name="y" value="267"/>
+<property name="text" value="transportieren.model"/>
+<property name="stereotype" value=""/>
+<property name="#id" value="644048411"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode"/>
+<property name="height" value="20"/>
+</node>
+<node>
+<property name="shadow" value="0"/>
+<property name="color_background" value="-1"/>
+<property name="x" value="500"/>
+<property name="width" value="198"/>
+<property name="y" value="270"/>
+<property name="text" value="Teil"/>
+<property name="stereotype" value=""/>
+<property name="#id" value="569824937"/>
+<property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode"/>
+<property name="height" value="20"/>
+</node>
+</nodes>
+<edges/>
+<properties>
+<property name="author" value=""/>
+<property name="Termination State" value="[]"/>
+<property name="#folder" value="/"/>
+<property name="name" value="testScenario"/>
+<property name="#uri" value="/models/232643656/versions/0"/>
+<property name="comment" value=""/>
+<property name="#creationDate" value="8. Dezember 2014 13:08:52 MEZ"/>
+<property name="Termination Data Object" value=""/>
+</properties>
+</model>

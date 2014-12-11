@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<model xmlns="http://frapu.net/xsd/ProcessEditor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="612207202" name="transportieren.model" type="net.frapu.code.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+    <nodes>
+        <node>
+            <property name="shadow" value="0"/>
+            <property name="color_background" value="-1"/>
+            <property name="x" value="433"/>
+            <property name="width" value="30"/>
+            <property name="y" value="417"/>
+            <property name="text" value=""/>
+            <property name="stereotype" value=""/>
+            <property name="non_interupting" value="0"/>
+            <property name="#id" value="54409448"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.StartEvent"/>
+            <property name="height" value="30"/>
+        </node>
+        <node>
+            <property name="shadow" value="0"/>
+            <property name="implementation" value=""/>
+            <property name="global" value="1"/>
+            <property name="loop_type" value="NONE"/>
+            <property name="color_background" value="-1"/>
+            <property name="x" value="525"/>
+            <property name="width" value="100"/>
+            <property name="y" value="417"/>
+            <property name="compensation" value="0"/>
+            <property name="text" value="Teil transportieren"/>
+            <property name="stereotype" value=""/>
+            <property name="#id" value="368338489"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.Task"/>
+            <property name="height" value="60"/>
+        </node>
+        <node>
+            <property name="shadow" value="0"/>
+            <property name="color_background" value="-1"/>
+            <property name="x" value="617"/>
+            <property name="width" value="30"/>
+            <property name="y" value="417"/>
+            <property name="text" value=""/>
+            <property name="stereotype" value=""/>
+            <property name="#id" value="1701495014"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.EndEvent"/>
+            <property name="height" value="30"/>
+        </node>
+    </nodes>
+    <edges>
+        <edge>
+            <property name="color_arc" value="-16777216"/>
+            <property name="sequence_type" value="TYPE_STANDARD"/>
+            <property name="#sourceNode" value="54409448"/>
+            <property name="#targetNode" value="368338489"/>
+            <property name="#target_dockpoint" value=""/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="label" value=""/>
+            <property name="#id" value="231006231"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow"/>
+            <property name="#source_dockpoint" value=""/>
+            <property name="points" value=""/>
+        </edge>
+        <edge>
+            <property name="color_arc" value="-16777216"/>
+            <property name="sequence_type" value="TYPE_STANDARD"/>
+            <property name="#sourceNode" value="368338489"/>
+            <property name="#targetNode" value="1701495014"/>
+            <property name="#target_dockpoint" value=""/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="label" value=""/>
+            <property name="#id" value="387712668"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow"/>
+            <property name="#source_dockpoint" value=""/>
+            <property name="points" value=""/>
+        </edge>
+    </edges>
+    <properties>
+        <property name="author" value=""/>
+        <property name="name" value="transportieren.model"/>
+        <property name="#uri" value="C:\Users\Stpehan\Desktop\PCMBeispiele\transportieren.model"/>
+        <property name="comment" value=""/>
+        <property name="#creationDate" value="8. Dezember 2014 09:50:46 MEZ"/>
+    </properties>
+</model>

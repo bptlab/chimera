@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<model xmlns="http://frapu.net/xsd/ProcessEditor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="1212030953" name="" type="net.frapu.code.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+    <nodes>
+        <node>
+            <property name="shadow" value="0"/>
+            <property name="color_background" value="-1"/>
+            <property name="x" value="235"/>
+            <property name="width" value="30"/>
+            <property name="y" value="336"/>
+            <property name="text" value=""/>
+            <property name="stereotype" value=""/>
+            <property name="non_interupting" value="0"/>
+            <property name="#id" value="1254946547"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.StartEvent"/>
+            <property name="height" value="30"/>
+        </node>
+        <node>
+            <property name="shadow" value="0"/>
+            <property name="implementation" value=""/>
+            <property name="global" value="0"/>
+            <property name="loop_type" value="NONE"/>
+            <property name="color_background" value="-1"/>
+            <property name="x" value="337"/>
+            <property name="width" value="100"/>
+            <property name="y" value="336"/>
+            <property name="compensation" value="0"/>
+            <property name="text" value="Teil kleben"/>
+            <property name="stereotype" value=""/>
+            <property name="#id" value="1599598077"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.Task"/>
+            <property name="height" value="60"/>
+        </node>
+        <node>
+            <property name="shadow" value="0"/>
+            <property name="color_background" value="-1"/>
+            <property name="x" value="439"/>
+            <property name="width" value="30"/>
+            <property name="y" value="336"/>
+            <property name="text" value=""/>
+            <property name="stereotype" value=""/>
+            <property name="#id" value="1118459746"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.EndEvent"/>
+            <property name="height" value="30"/>
+        </node>
+    </nodes>
+    <edges>
+        <edge>
+            <property name="color_arc" value="-16777216"/>
+            <property name="#sourceNode" value="1254946547"/>
+            <property name="sequence_type" value="TYPE_STANDARD"/>
+            <property name="#targetNode" value="1599598077"/>
+            <property name="#target_dockpoint" value=""/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="label" value=""/>
+            <property name="#id" value="673553272"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow"/>
+            <property name="#source_dockpoint" value=""/>
+            <property name="points" value=""/>
+        </edge>
+        <edge>
+            <property name="color_arc" value="-16777216"/>
+            <property name="#sourceNode" value="1599598077"/>
+            <property name="sequence_type" value="TYPE_STANDARD"/>
+            <property name="#targetNode" value="1118459746"/>
+            <property name="#target_dockpoint" value=""/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="label" value=""/>
+            <property name="#id" value="112160518"/>
+            <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow"/>
+            <property name="#source_dockpoint" value=""/>
+            <property name="points" value=""/>
+        </edge>
+    </edges>
+    <properties>
+        <property name="author" value=""/>
+        <property name="name" value=""/>
+        <property name="#uri" value="&lt;PCM Fragment Model.model&gt;"/>
+        <property name="comment" value=""/>
+        <property name="#creationDate" value="8. Dezember 2014 09:28:38 MEZ"/>
+    </properties>
+</model>
