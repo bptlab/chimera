@@ -4,9 +4,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 
-/**
- * Created by jaspar.mang on 24.11.14.
- */
 public class FragmentInstance {
     private ScenarioInstance scenarioInstance;
     public int fragment_id;

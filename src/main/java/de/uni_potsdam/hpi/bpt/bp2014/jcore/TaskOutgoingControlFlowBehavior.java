@@ -2,9 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 24.11.14.
- */
 public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
 
     public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id){

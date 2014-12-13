@@ -2,9 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 08.12.14.
- */
 public class ExecutionService {
     ScenarioInstance scenarioInstance;
 

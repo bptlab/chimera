@@ -5,9 +5,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 24.11.14.
- */
 public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
     public LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();

@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 24.11.14.
- */
 public class debugClass {
     public static String selectScenario(){
 
