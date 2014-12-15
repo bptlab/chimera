@@ -11,6 +11,21 @@ public class ActivityStateMachine extends StateMachine {
         this.controlNodeInstance_id = activityInstance_id;
         this.controlNodeInstance = controlNodeInstance;
         state = getDBState();
+        if (state.equals("ready")){
+            scenarioInstance.controlFlowEnabledControlNodeInstances.add(controlNodeInstance);
+            scenarioInstance.dataEnabledControlNodeInstances.add(controlNodeInstance);
+            scenarioInstance.enabledControlNodeInstances.add(controlNodeInstance);
+        }else if(state.equals("ready(Data)")){
+            scenarioInstance.dataEnabledControlNodeInstances.add(controlNodeInstance);
+        }else if(state.equals("ready(ControlFlow)")){
+            scenarioInstance.controlFlowEnabledControlNodeInstances.add(controlNodeInstance);
+        }else if(state.equals("running")){
+            scenarioInstance.runningControlNodeInstances.add(controlNodeInstance);
+        }else if(state.equals("terminated")){
+            scenarioInstance.terminatedControlNodeInstances.add(controlNodeInstance);
+        }else if(state.equals("skipped")){
+            scenarioInstance.terminatedControlNodeInstances.add(controlNodeInstance);
+        }
     }
     private String getDBState(){
         return dbActivityInstance.getState(controlNodeInstance_id);

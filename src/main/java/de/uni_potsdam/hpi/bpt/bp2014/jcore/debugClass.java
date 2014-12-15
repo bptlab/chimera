@@ -18,9 +18,9 @@ public class debugClass {
 
     public static String selectScenarioInstance(){
 
-        System.out.print("Select ScenarioInstance: ");
+        System.out.print("Select Scenario Instance: ");
         String scID = readLine();
-        System.out.println("Scenario " + scID + " selected");
+        System.out.println("Scenario Instance " + scID + " selected");
         return scID;
     }
 

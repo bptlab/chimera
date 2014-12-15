@@ -16,8 +16,14 @@ public class ActivityInstance extends ControlNodeInstance {
         scenarioInstance.controlNodeInstances.add(this);
         if(dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)){
             System.out.println("Activity exist");
+            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+            this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
+            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
+            this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
+            this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
             //TODO: Activity already exists
         }else {
+            System.out.println("Activity not exist");
             dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");

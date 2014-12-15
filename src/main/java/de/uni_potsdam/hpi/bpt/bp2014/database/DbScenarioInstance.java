@@ -84,7 +84,7 @@ public class DbScenarioInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id;
+            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " ORDER BY id DESC";
             rs = stmt.executeQuery(sql);
             rs.next();
             results = rs.getInt("id");
