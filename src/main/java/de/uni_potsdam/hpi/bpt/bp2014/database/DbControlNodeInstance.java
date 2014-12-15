@@ -4,9 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by jaspar.mang on 03.12.14.
- */
 public class DbControlNodeInstance {
     public Boolean existControlNodeInstance(int controlNode_id, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();

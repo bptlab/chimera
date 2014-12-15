@@ -5,9 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 01.12.14.
- */
 public class DbFragment {
     public LinkedList<Integer> getFragmentsForScenario(int scenario_id) {
         java.sql.Connection conn = Connection.getInstance().connect();

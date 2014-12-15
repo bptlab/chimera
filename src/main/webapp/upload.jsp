@@ -13,10 +13,10 @@
 	<br/><br/><br/>
 	<input type="file" size="50" name="file1">
 	<br/><br/><br/>
-	<!--<input type="file" size="50" name="file2">
+	<input type="file" size="50" name="file2">
 	<br/>
 	<input type="file" size="50" name="file3">
-	<br/>-->
+	<br/>
 	<input type="submit" value="Upload">
 	</form>
 </body>

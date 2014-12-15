@@ -4,9 +4,6 @@ import java.io.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Created by jaspar.mang on 26.11.14.
- */
 public class Connection {
     private static Connection instance = null;
     private static File file;

@@ -4,9 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by jaspar.mang on 26.11.14.
- */
 public class ExampleClass {
     public String sqlStatment() {
         java.sql.Connection conn = Connection.getInstance().connect();

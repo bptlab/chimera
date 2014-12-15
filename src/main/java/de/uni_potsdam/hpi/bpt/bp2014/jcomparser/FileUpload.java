@@ -43,7 +43,6 @@ public class FileUpload extends HttpServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         try {
             List<FileItem> fields = upload.parseRequest(request);
-            //out.println("Number of fields: " + fields.size() + "<br/><br/>");
             Iterator<FileItem> it = fields.iterator();
             if (!it.hasNext()) {
                 out.println("ERROR: No fields found");
@@ -79,8 +78,6 @@ public class FileUpload extends HttpServlet {
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-
-        //out.println(pcm);
 
         // Calling the postprocessing asynchronously
 
