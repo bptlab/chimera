@@ -29,7 +29,7 @@ public class Connection {
 
     public static Connection getInstance() {
         if (instance == null) {
-            instance = new Connection("/Users/jaspar.mang/Repositories/rapid-prototype/JEngine-Java-V2/src/main/resources/database_connection");
+            instance = new Connection("resources/database_connection");
         }
         return instance;
     }
