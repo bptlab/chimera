@@ -1,0 +1,33 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="JEngine:war exploded">
+    <output-path>$PROJECT_DIR$/target/JEngine</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="JEngine" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet-core:2.13" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:javax.inject:2.3.0-b10" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-common:2.13" />
+          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.2" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.bundles.repackaged:jersey-guava:2.13" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-api:2.3.0-b10" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-utils:2.3.0-b10" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:aopalliance-repackaged:2.3.0-b10" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-locator:2.3.0-b10" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.18.1-GA" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.13" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-client:2.13" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
+          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="JEngine/web/Web" />
+    </root>
+  </artifact>
+</component>
