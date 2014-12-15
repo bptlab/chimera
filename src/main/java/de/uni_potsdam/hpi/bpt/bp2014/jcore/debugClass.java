@@ -16,6 +16,14 @@ public class debugClass {
         return scID;
     }
 
+    public static String selectScenarioInstance(){
+
+        System.out.print("Select ScenarioInstance: ");
+        String scID = readLine();
+        System.out.println("Scenario " + scID + " selected");
+        return scID;
+    }
+
     public static String readLine(){
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
@@ -32,7 +40,8 @@ public class debugClass {
 
     public static void main(String args[]){
         String scenarioID = selectScenario();
-        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID));
+        String scenarioInstanceID = selectScenarioInstance();
+        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
         dbActivityInstance.setState(1 , "init");
         while(true){

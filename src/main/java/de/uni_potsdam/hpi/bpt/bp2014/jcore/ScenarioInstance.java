@@ -20,19 +20,25 @@ public class ScenarioInstance {
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbFragment dbFragment = new DbFragment();
 
-    public ScenarioInstance(int scenario_id){
+    public ScenarioInstance(int scenario_id, int scenarioInstance_id){
         this.scenario_id = scenario_id;
-        //TODO: more then one Scenario Instance
-        if (dbScenarioInstance.existScenario(scenario_id)){
-            scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+        if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)){
+            this.scenarioInstance_id = scenarioInstance_id;
             System.out.println("exist");
             this.initializeFragments();
         } else {
             System.out.println("exist not");
             dbScenarioInstance.createNewScenarioInstance(scenario_id);
-            scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+            this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
             this.initializeFragments();
         }
+    }
+
+    public ScenarioInstance(int scenario_id){
+        this.scenario_id = scenario_id;
+        dbScenarioInstance.createNewScenarioInstance(scenario_id);
+        this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+        this.initializeFragments();
     }
 
     private void initializeFragments(){
