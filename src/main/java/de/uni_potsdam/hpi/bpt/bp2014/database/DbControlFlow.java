@@ -5,9 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 03.12.14.
- */
 public class DbControlFlow {
     public int getNextControlNodeAfterStartEvent(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();

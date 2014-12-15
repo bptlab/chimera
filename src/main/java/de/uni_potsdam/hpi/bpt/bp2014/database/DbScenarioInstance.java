@@ -4,9 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by jaspar.mang on 01.12.14.
- */
 public class DbScenarioInstance {
     public Boolean existScenario(int scenario_id, int scenarioInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
