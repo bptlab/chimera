@@ -8,7 +8,7 @@ import java.sql.Statement;
  * Created by jaspar.mang on 01.12.14.
  */
 public class DbScenarioInstance {
-    public Boolean existScenario(int scenario_id) {
+    public Boolean existScenario(int scenario_id, int scenarioInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -17,7 +17,7 @@ public class DbScenarioInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id;
+            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " AND id = "+scenarioInstance_id;
             rs = stmt.executeQuery(sql);
             if(rs.next()) {
                 return true;
