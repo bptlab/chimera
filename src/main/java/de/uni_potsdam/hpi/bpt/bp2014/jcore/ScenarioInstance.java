@@ -65,6 +65,13 @@ public class ScenarioInstance {
         fragmentInstances.remove(fragmentInstance);
         fragmentInstance.terminate();
         initializeFragment(fragmentInstance.fragment_id);
+        LinkedList<ControlNodeInstance> updatedList = new LinkedList<ControlNodeInstance>(terminatedControlNodeInstances);
+        for(ControlNodeInstance controlNodeInstance: updatedList){
+            if(controlNodeInstance.fragmentInstance_id == fragmentInstance_id){
+                terminatedControlNodeInstances.remove(controlNodeInstance);
+            }
+        }
+        System.out.print("");
     }
 
     public void initializeDataObjects(){
