@@ -21,9 +21,8 @@ public class JComparser {
 
         /* Initialization */
         String XML_response = "";
-        //String Processeditor_server_url = "http://localhost:8080/models/"; -> Liste aller Modelle
-        //String Processeditor_server_model_url = "http://localhost:8080/models/";
-        String Processeditor_server_url = "http://hpi.framsteg.de/bp2014w1/PCMBeispiele/transportieren.model";
+        String Processeditor_server_url = "http://http://172.16.64.113:1205/";
+
 
         if(file_upload){
             FileUpload jUpload = new FileUpload();
@@ -33,32 +32,24 @@ public class JComparser {
             REST jREST = new REST();
         }
         if (retrieval_by_url) {
-            /*
-            1- first get a list of all models via Processeditor_server_url
-            2 - then get each scenario via Processeditor_server_model_url
-
             Retrieval jRetrieval = new Retrieval();
             List<String> pcm = new ArrayList<String>();
+            List<String> models_list = new ArrayList<String>();
 
-            response_list = jRetrieval.getHTML(Processeditor_server_url);
 
-            int response_size = response_list.size();
+
+            String response_list = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "models");
+            models_list = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parseModelList(response_list);
+            int models_size = models_list.size();
             String response_item = "";
 
-            for(int i=0; i < response_size; i++) {
+            for(int i=0; i < models_size; i++) {
                 response_item = response_list.get(i);
-                XML_response = jRetrieval.getHTML(Processeditor_server_model_url + response_item + "/md/");
+                XML_response = jRetrieval.getHTML(Processeditor_server_url + "models/" + response_item + ".pm");
                 pcm.add(XML_response);
             }
             handleFileRetrieval(pcm);
-             */
-            PostMethod post = new PostMethod("http://172.16.64.113:1205/users/login/");
-            NameValuePair[] data = {
-                    new NameValuePair("user", "root"),
-                    new NameValuePair("password", "inubit")
-            };
-            post.setRequestBody(data);
-            // execute method and handle any error responses.
+
 
             InputStream in = null;
             try {

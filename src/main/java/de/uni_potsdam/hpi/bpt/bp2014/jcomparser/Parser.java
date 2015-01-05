@@ -10,6 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -45,6 +47,30 @@ public class Parser {
             printErrorMessage(e);
         }
     }
+
+    public static List<String> parseModelList(String xml_list) {
+        List<String> model_urls = new ArrayList<String>();
+
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(new InputSource(new ByteArrayInputStream(xml_list.getBytes("utf-8"))));   // http://stackoverflow.com/questions/1706493/java-net-malformedurlexception-no-protocol
+            // Document doc = dBuilder.parse(pcm_item);
+            doc.getDocumentElement().normalize();
+            System.out.println("Root Element:"
+                    + doc.getDocumentElement().getNodeName());
+        } catch (ParserConfigurationException e1) {
+            e1.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return model_urls;
+    }
+
     private static void fillTables(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
         filluserTask(doc, jHandler);
         fillAssociation(doc, jHandler);
