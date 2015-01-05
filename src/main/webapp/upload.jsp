@@ -7,17 +7,29 @@
 </head>
 <body>
 <h1>JComparser - upload your PCM Model</h1>
+
+    <div id="readroot" style="display: none">
+
+        <input type="button" value="Remove Upload Field"
+               onclick="this.parentNode.parentNode.removeChild(this.parentNode);" /><br /><br />
+        <input type="file" size="50" name="file1">
+        <br/><br/><br/>
+    </div>
+
 	<form name="form1" id="form1" action="done" method="post" enctype="multipart/form-data">
-	<!--<input type="hidden" name="hiddenfield1" value="ok">-->
-	Please select the files you want to upload into the JEngine
-	<br/><br/><br/>
-	<input type="file" size="50" name="file1">
-	<br/><br/><br/>
-	<input type="file" size="50" name="file2">
-	<br/>
-	<input type="file" size="50" name="file3">
-	<br/>
-	<input type="submit" value="Upload">
+        <!--<input type="hidden" name="hiddenfield1" value="ok">-->
+        Please select the files you want to upload into the JEngine
+        <br/><br/><br/>
+        <span id="writeroot"></span>
+
+        <!--<input type="file" size="50" name="file1">
+        <br/><br/><br/>
+        <input type="file" size="50" name="file2">
+        <br/>
+        <input type="file" size="50" name="file3">
+        <br/>-->
+        <input type="button" id="moreFields" value="Add more upload fields" />
+        <input type="submit" value="Upload">
 	</form>
 </body>
 </html>

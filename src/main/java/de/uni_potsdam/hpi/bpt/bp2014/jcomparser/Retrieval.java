@@ -1,12 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.binary.Base64;
+
 import java.io.*;
 import java.net.*;
 
 /*
 As a part of the JComparser we need to retrieve XML docus from a source URL like the Repo from the Processeditor.
  */
-
 public class Retrieval {
     public String getHTML(String urlToRead) {
         /* credits to Kalpak http://stackoverflow.com/questions/1485708/how-do-i-do-a-http-get-in-java */
@@ -30,5 +32,30 @@ public class Retrieval {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public String getHTMLwithAuth(String hosturl, String urlToRead) {
+        /* credits to  http://www.avajava.com/tutorials/lessons/how-do-i-connect-to-a-url-using-basic-authentication.html */
+
+        HttpURLConnection connection = null;
+        String username = "root";
+        String password = "inubit";
+        HttpURLConnection conn;
+
+        try {
+            Base64 base64 = new Base64();
+            connection = (HttpURLConnection) new URL(hosturl + "user/login").openConnection();
+            String encoded = (String)base64.encode(username + ":" + password);
+            connection.setRequestProperty("Authorization", "Basic " + encoded);
+
+            connection.setRequestMethod("GET");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EncoderException e) {
+            e.printStackTrace();
+        }
+        // TODO: Return value
+        return null;
     }
 }
