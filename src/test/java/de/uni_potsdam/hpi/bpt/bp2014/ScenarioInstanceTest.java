@@ -1,4 +1,4 @@
-package main.java.de.uni_potsdam.hpi.bpt.bp2014;
+package de.uni_potsdam.hpi.bpt.bp2014;
 
 import org.junit.Test;
 
