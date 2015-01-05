@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,22 +41,22 @@ public class JComparser {
             String response_item = "";
 
             for(int i=0; i < models_size; i++) {
-                response_item = response_list.get(i);
+            //    response_item = response_list.get(i);
                 XML_response = jRetrieval.getHTML(Processeditor_server_url + "models/" + response_item + ".pm");
                 pcm.add(XML_response);
             }
-            handleFileRetrieval(pcm);
+            //handleFileRetrieval(pcm);
 
 
             InputStream in = null;
-            try {
-                in = post.getResponseBodyAsStream();
+            /* try {
+               in = post.getResponseBodyAsStream();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             System.out.println(in);
 
-            Retrieval jRetrieval = new Retrieval();
+            // jRetrieval = new Retrieval();
             XML_response = jRetrieval.getHTML(Processeditor_server_url);
             XML_response = XML_response.replaceAll("[^\\x20-\\x7e]", "");
             handleFileRetrieval(XML_response);

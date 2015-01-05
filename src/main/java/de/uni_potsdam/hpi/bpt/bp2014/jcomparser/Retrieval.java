@@ -1,8 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.io.*;
 import java.net.*;
@@ -44,14 +43,19 @@ public class Retrieval {
         HttpURLConnection conn;
 
         try {
+            Base64 base64 = new Base64();
             connection = (HttpURLConnection) new URL(hosturl + "user/login").openConnection();
-            String encoded = Base64.encode(username + ":" + password);
+            String encoded = (String)base64.encode(username + ":" + password);
             connection.setRequestProperty("Authorization", "Basic " + encoded);
 
             connection.setRequestMethod("GET");
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (EncoderException e) {
+            e.printStackTrace();
         }
+        // TODO: Return value
+        return null;
     }
 }
