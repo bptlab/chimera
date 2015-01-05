@@ -1,0 +1,5 @@
+test:
+  adapter: mysql2
+  database: JEngineV2
+  username: root
+  encoding: utf8

@@ -3,3 +3,10 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
+
+before_script:
+  - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
+
+script:
+  - ls -a
+  - mysql JEngineV2 < resources/JEngineV2.sql
