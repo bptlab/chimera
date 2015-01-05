@@ -11,6 +11,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior{
         ((ActivityStateMachine)stateMachine).enableData();
     }
 
+    @Override
     public void enableControlFlow(){
         ((ActivityStateMachine)stateMachine).enableControlFlow();
     }

@@ -14,12 +14,7 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for(int followingControlNode_id: followingControlNode_ids){
             ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
-            if(followingControlNodeInstance instanceof ActivityInstance) {
-                ((TaskIncomingControlFlowBehavior) followingControlNodeInstance.incomingBehavior).enableControlFlow();
-            }else if(followingControlNodeInstance instanceof EventInstance){
-                ((EventInstance) followingControlNodeInstance).doEndevent();
-            }
-            //TODO: Instance of decision Gateway
+           followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
 
@@ -32,7 +27,7 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
         if(type.equals("Activity")){
             controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
         }else if(type.equals("Endevent")){
-            controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance);
+            controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
         }
         //TODO: Gateways
         return controlNodeInstance;
