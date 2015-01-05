@@ -8,21 +8,21 @@ import java.util.LinkedList;
 /**
  * Created by jaspar.mang on 05.01.15.
  */
-public class DbDataNode {
-    public LinkedList<Integer> getDataClassesForScenario(int scenario_id) {
+public class DbDataObject {
+    public LinkedList<String> getDataObjectsForScenario(int scenario_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
+        LinkedList<String> results = new LinkedList<String>();
         if (conn == null) return results;
 
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT dataclass_id FROM datanode WHERE scenario_id = " + scenario_id + " GROUP BY dataclass_id";
+            String sql = "SELECT name FROM datanode WHERE scenario_id = " + scenario_id + " GROUP BY name ORDER BY dataclass_id";
             rs = stmt.executeQuery(sql);
             while(rs.next()){
-                results.add(rs.getInt("dataclass_id"));
+                results.add(rs.getString("name"));
             }
             //Clean-up environment
             rs.close();
