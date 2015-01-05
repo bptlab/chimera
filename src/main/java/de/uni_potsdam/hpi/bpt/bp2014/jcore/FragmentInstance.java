@@ -2,7 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
+
+import java.util.LinkedList;
 
 public class FragmentInstance {
     private ScenarioInstance scenarioInstance;
@@ -12,6 +15,7 @@ public class FragmentInstance {
     private DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbControlFlow dbControlFlow = new DbControlFlow();
+    private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 
     public FragmentInstance(int fragment_id, int scenarioInstance_id, ScenarioInstance scenarioInstance){
         this.scenarioInstance = scenarioInstance;
@@ -19,10 +23,19 @@ public class FragmentInstance {
         this.scenarioInstance_id = scenarioInstance_id;
         if (dbFragmentInstance.existFragment(fragment_id, scenarioInstance_id)){
             fragmentInstance_id = dbFragmentInstance.getFragmentInstanceID(fragment_id, scenarioInstance_id);
+            this.initializeExistingNodeInstanceForFragment();
+            System.out.println("Fragment exist, ScenarioInstanceID: "+scenarioInstance_id);
         }else {
             dbFragmentInstance.createNewFragmentInstance(fragment_id, scenarioInstance_id);
             fragmentInstance_id = dbFragmentInstance.getFragmentInstanceID(fragment_id, scenarioInstance_id);
             this.initializeNodeInstanceForFragment();
+            System.out.println("Fragment not exist");
+        }
+    }
+    private void initializeExistingNodeInstanceForFragment(){
+        LinkedList<Integer> activities = dbControlNodeInstance.getActivitiesForFragmentInstanceID(fragmentInstance_id);
+        for(int activity: activities) {
+            ActivityInstance activityInstance = new ActivityInstance(activity, fragmentInstance_id, scenarioInstance);
         }
     }
     private void initializeNodeInstanceForFragment(){

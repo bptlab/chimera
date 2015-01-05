@@ -9,4 +9,5 @@ public class IncomingBehavior {
     protected StateMachine stateMachine;
 
 
+    public void enableControlFlow(){}
 }

@@ -21,6 +21,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/de/uni_potsdam/hpi/bpt/bp2014/jcomparser" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -66,4 +67,3 @@
     <orderEntry type="library" name="org.apache.commons:com.springsource.org.apache.commons.collections:3.2.1" level="project" />
   </component>
 </module>
-

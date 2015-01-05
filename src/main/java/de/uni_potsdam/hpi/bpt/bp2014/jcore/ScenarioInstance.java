@@ -24,10 +24,10 @@ public class ScenarioInstance {
         this.scenario_id = scenario_id;
         if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)){
             this.scenarioInstance_id = scenarioInstance_id;
-            System.out.println("exist");
+            System.out.println("Scenario exist");
             this.initializeFragments();
         } else {
-            System.out.println("exist not");
+            System.out.println("Scenario exist not");
             dbScenarioInstance.createNewScenarioInstance(scenario_id);
             this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
             this.initializeFragments();

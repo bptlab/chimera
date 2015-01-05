@@ -1,3 +1,4 @@
 .idea
 .idea/*
 *.class
+resources/database_connection
