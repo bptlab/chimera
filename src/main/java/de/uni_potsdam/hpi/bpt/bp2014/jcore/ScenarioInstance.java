@@ -71,7 +71,6 @@ public class ScenarioInstance {
                 terminatedControlNodeInstances.remove(controlNodeInstance);
             }
         }
-        System.out.print("");
     }
 
     public void initializeDataObjects(){
