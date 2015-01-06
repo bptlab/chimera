@@ -8,8 +8,8 @@ import java.util.LinkedList;
 /**
  * Created by jaspar.mang on 05.01.15.
  */
-public class DbDataNode {
-    public LinkedList<Integer> getDataClassesForScenario(int scenario_id) {
+public class DbDataSet {
+    public LinkedList<Integer> getDataSetForScenario(int scenario_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -19,10 +19,10 @@ public class DbDataNode {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT dataclass_id FROM datanode WHERE scenario_id = " + scenario_id + " GROUP BY dataclass_id";
+            String sql = "Select dataset_id FROM datasetconsistsofdatanode, datanode Where dataset_id = datanode.id AND scenario_id = " + scenario_id + " GROUP BY dataset_id";
             rs = stmt.executeQuery(sql);
             while(rs.next()){
-                results.add(rs.getInt("dataclass_id"));
+                results.add(rs.getInt("dataset_id"));
             }
             //Clean-up environment
             rs.close();

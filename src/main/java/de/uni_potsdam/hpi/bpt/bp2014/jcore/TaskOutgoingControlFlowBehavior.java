@@ -14,7 +14,7 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for(int followingControlNode_id: followingControlNode_ids){
             ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
-           followingControlNodeInstance.incomingBehavior.enableControlFlow();
+            followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
 
