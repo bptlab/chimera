@@ -8,5 +8,5 @@ before_script:
   - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
 
 script:
-  - mysql JEngineV2 < resources/JEngineV2.sql
+  - mysql JEngineV2 < resources/JEngineV2.sql -uroot
   - mvn test
