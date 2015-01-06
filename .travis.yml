@@ -9,6 +9,5 @@ before_script:
 
 script:
   - mysql JEngineV2 < resources/JEngineV2.sql -uroot
-  - mysql -uroot JEngineV2 -e "Select * From activityinstance"
   - mvn clean
   - mvn test
