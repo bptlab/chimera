@@ -15,7 +15,7 @@ public class DbActivityInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT activity_state FROM ActivityInstance WHERE id = " + id;
+            String sql = "SELECT activity_state FROM activityinstance WHERE id = " + id;
             rs = stmt.executeQuery(sql);
             rs.next();
             results = rs.getString("activity_state");
