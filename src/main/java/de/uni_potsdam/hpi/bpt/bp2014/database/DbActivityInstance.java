@@ -51,7 +51,7 @@ public class DbActivityInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "UPDATE ActivityInstance SET activity_state = '" + state + "' WHERE id = " + id;
+            String sql = "UPDATE activityinstance SET activity_state = '" + state + "' WHERE id = " + id;
             stmt.executeUpdate(sql);
             //Clean-up environment
             stmt.close();
