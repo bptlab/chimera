@@ -95,7 +95,7 @@
                     <div class="navbar">
                       <div class="navbar-inner">
                         <div class="container">
-                          <center>  <img src="img/bpmn.png"></center>
+                          <center>  <img src="img/human_task.png"></center>
                         </div>
                     </div>
                   </div>
@@ -113,38 +113,39 @@
                   </div>
                 </div>
             <div class="widget-body">
-                 <li class="submenu">
-                      <a href="edit-profile.php" class="selected">
-                        <div class="icon">
-                        <span class="fs1" aria-hidden="true" data-icon="&#xe0aa;"></span>
-                        </div>
-                       Extras
-                     </a>
-                <ul>
-                  <li>
-                    <a href="edit-profile.php">Edit Profile</a>
-                  </li>
-                  <li>
-                    <a href="calendar.php">Calendar</a>
-                  </li>
-                  <li>
-                    <a href="login.php">Login</a>
-                  </li>
-                  <li>
-                    <a href="help.php">Help</a>
-                  </li>
-                </ul>
-              </li>
-               <!--<ul> 
-                   <li>test</li>
-                   <li>test</li>
-              </ul>
 
-               <br><br>
-               <b>always possible</b>
-               <ul> 
-                  <li><font color="red">cancel</font></li>
-              </ul>-->
+                <!-- Expand and collapse a div using javascript -->    
+                <script>
+                $(".collapse_custom").click(function () {
+                      $header = $(this);
+                      //getting the next element
+                      $content = $header.next();
+                      //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+                      $content.slideToggle(500, function () {
+                          //execute this after slideToggle is done
+                          //change text of header based on visibility of content div
+                          $header.text(function () {
+                              //change text based on condition
+                              return $content.is(":visible") ? "Collapse" : "Expand";
+                          });
+                      });
+
+                  });
+                </script>
+
+                <div class="container_custom">
+                    <div class="collapse_custom"><span>Expand</span>
+                    </div>
+                    <div class="content_custom">
+                        <ul>
+                            <li>This is just some random content.</li>
+                            <li>This is just some random content.</li>
+                            <li>This is just some random content.</li>
+                            <li>This is just some random content.</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
           </div>
           </div>

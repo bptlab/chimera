@@ -42,7 +42,17 @@
     <link href="css/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet" />
     <link href="css/wysiwyg/wysiwyg-color.css" rel="stylesheet" />
     <link href="css/charts-graphs.css" rel="stylesheet" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- Expand and collapse a div using javascript -->
+    <style>
+        .container_custom .content_custom {
+        display: none;
+        padding : 5px;
+    }
+    </style>
+
+  </head>
   <body>
     <header>
       <a href="index.php" class="logo">
