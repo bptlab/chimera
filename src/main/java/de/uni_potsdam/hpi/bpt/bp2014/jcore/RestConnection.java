@@ -9,12 +9,22 @@ import java.util.LinkedList;
 
 @Path( "Scenario" )
 public class RestConnection {
+//    @GET
+//    @Path( "Scenarioname/{Scenarioname}" )
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public LinkedList showEnabledActivities( @PathParam("Scenarioname") ScenarioInstance scenarioInstance){
+//        ExecutionService executionService = new ExecutionService(scenarioInstance);
+//        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDs();
+//        return enabledActivitiesIDs;
+//    }
+
     @GET
     @Path( "Scenarioname/{Scenarioname}" )
     @Produces(MediaType.APPLICATION_JSON)
-    public LinkedList showEnabledActivities( @PathParam("Scenarioname") ScenarioInstance scenarioInstance){
-        ExecutionService executionService = new ExecutionService(scenarioInstance);
-        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDs();
+    public LinkedList showEnabledActivities( @PathParam("Scenarioname") int scenario_id){
+        ExecutionService executionService = new ExecutionService();
+        int scenarioInstance_id = executionService.startNewScenarioInstance(scenario_id);
+        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance_id);
         return enabledActivitiesIDs;
     }
 }
