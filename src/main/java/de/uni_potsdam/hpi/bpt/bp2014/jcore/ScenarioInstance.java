@@ -86,4 +86,21 @@ public class ScenarioInstance {
         }
         return false;
     }
+    public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id){
+        for(DataObjectInstance dataObjectInstance: dataObjectInstances){
+            if(dataObjectInstance.dataObject_id == dataObject_id) {
+                dataObjectInstance.setState(state_id);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void checkDataFlowEnabled(){
+        for (ControlNodeInstance activityInstance: controlFlowEnabledControlNodeInstances){
+            if (activityInstance.getClass() == ActivityInstance.class){
+                ((ActivityInstance) activityInstance).checkDataFlowEnabled();
+            }
+        }
+    }
 }

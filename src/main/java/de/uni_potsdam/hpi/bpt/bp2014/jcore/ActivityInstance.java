@@ -42,4 +42,7 @@ public class ActivityInstance extends ControlNodeInstance {
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
         return workingFine;
     }
+    public void checkDataFlowEnabled(){
+        ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
+    }
 }
