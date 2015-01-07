@@ -15,8 +15,8 @@ public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     public LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
-    private int scenarioInstance_id;
-    private int scenario_id;
+    public int scenarioInstance_id;
+    public int scenario_id;
     private String name;
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbFragment dbFragment = new DbFragment();
