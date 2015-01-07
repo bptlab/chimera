@@ -10,6 +10,10 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
         this.fragmentInstance_id = fragmentInstance_id;
     }
 
+    public void terminate(){
+        this.enableFollowing();
+    }
+
     public void enableFollowing(){
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for(int followingControlNode_id: followingControlNode_ids){

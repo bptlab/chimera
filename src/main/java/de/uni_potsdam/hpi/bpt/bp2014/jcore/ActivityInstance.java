@@ -39,7 +39,7 @@ public class ActivityInstance extends ControlNodeInstance {
     }
     public Boolean terminate(){
         Boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
-        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).enableFollowing();
+        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
         return workingFine;
     }
 }
