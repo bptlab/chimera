@@ -26,4 +26,9 @@ public class DataObjectInstance {
             dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
         }
     }
+
+    public void setState(int state_id){
+        this.state_id = state_id;
+        dbDataObjectInstance.setState(dataObjectInstance_id, state_id);
+    }
 }
