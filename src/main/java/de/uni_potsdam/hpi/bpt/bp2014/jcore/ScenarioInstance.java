@@ -80,4 +80,11 @@ public class ScenarioInstance {
             dataObjectInstances.add(new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id));
         }
     }
+
+    public Boolean checkDataObjectState(int dataObject_id, int state_id){
+        for(DataObjectInstance dataObjectInstance: dataObjectInstances){
+            if(dataObjectInstance.dataObject_id == dataObject_id && dataObjectInstance.state_id == state_id) return true;
+        }
+        return false;
+    }
 }
