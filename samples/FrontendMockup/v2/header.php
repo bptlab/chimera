@@ -86,7 +86,7 @@
     <div class="container-fluid">
       <div id="mainnav" class="hidden-phone hidden-tablet">
         <ul style="display: block;">
-          <li class="active">
+<?php if(basename($_SERVER['REQUEST_URI']) == 'index.php'){ echo "<li class='active'>"; } else {  echo "<li>"; }  ?>
             <a href="index.php">
               <div class="icon">
                 <span class="fs1" aria-hidden="true" data-icon="&#xe0a0;"></span>
@@ -94,7 +94,7 @@
               Dashboard
             </a>
           </li>
-          <li>
+<?php if(basename($_SERVER['REQUEST_URI']) == 'forms.php'){ echo "<li class='active'>"; } else {  echo "<li>"; }  ?>
             <a href="forms.php">
               <div class="icon">
                 <span class="fs1" aria-hidden="true" data-icon="&#xe0b8;"></span>
@@ -102,7 +102,7 @@
               Human Tasks
             </a>
           </li>
-          <li>
+<?php if(basename($_SERVER['REQUEST_URI']) == 'history.php'){ echo "<li class='active'>"; } else {  echo "<li>"; }  ?>
             <a href="history.php">
               <div class="icon">
                 <span class="fs1" aria-hidden="true" data-icon="&#xe14a;"></span>

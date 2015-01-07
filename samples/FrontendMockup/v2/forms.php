@@ -113,16 +113,38 @@
                   </div>
                 </div>
             <div class="widget-body">
-             <ul> 
-                 <li>test</li>
-                 <li>test</li>
-            </ul>
+                 <li class="submenu">
+                      <a href="edit-profile.php" class="selected">
+                        <div class="icon">
+                        <span class="fs1" aria-hidden="true" data-icon="&#xe0aa;"></span>
+                        </div>
+                       Extras
+                     </a>
+                <ul>
+                  <li>
+                    <a href="edit-profile.php">Edit Profile</a>
+                  </li>
+                  <li>
+                    <a href="calendar.php">Calendar</a>
+                  </li>
+                  <li>
+                    <a href="login.php">Login</a>
+                  </li>
+                  <li>
+                    <a href="help.php">Help</a>
+                  </li>
+                </ul>
+              </li>
+               <!--<ul> 
+                   <li>test</li>
+                   <li>test</li>
+              </ul>
 
-             <br><br>
-             <b>always possible</b>
-             <ul> 
-                <li><font color="red">cancel</font></li>
-            </ul>
+               <br><br>
+               <b>always possible</b>
+               <ul> 
+                  <li><font color="red">cancel</font></li>
+              </ul>-->
             </div>
           </div>
           </div>
