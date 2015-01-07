@@ -5,9 +5,9 @@ jdk:
   - openjdk7
 
 before_script:
+  - mvn clean
   - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
 
 script:
   - mysql JEngineV2 < resources/JEngineV2.sql -uroot
-  - mvn clean
   - mvn test
