@@ -63,15 +63,36 @@ public class ExecutionService {
         return ids;
     }
 
-    public void startActivity(int scenarioInstance_id, int activity_id){
+    public void beginActivity(int scenarioInstance_id, int activity_id){
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances) {
             if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
                 ((ActivityInstance) nodeInstance).begin();
+                return;
+            }
+        }
+    }
+
+    public void terminateActivity(int scenarioInstance_id, int activity_id){
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances) {
+            if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
                 ((ActivityInstance) nodeInstance).terminate();
                 return;
             }
         }
+    }
+
+    public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id){
+        LinkedList<Integer> dataObjectIDs = new LinkedList<Integer>();
+        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances) dataObjectIDs.add(dataObject.dataObject_id);
+        return dataObjectIDs;
+    }
+
+    public LinkedList<Integer> getAllDataObjectStateIDs(int scenarioInstance_id){
+        LinkedList<Integer> dataObjectStateIDs = new LinkedList<Integer>();
+        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances) dataObjectStateIDs.add(dataObject.state_id);
+        return dataObjectStateIDs;
     }
 
     //Debug only
