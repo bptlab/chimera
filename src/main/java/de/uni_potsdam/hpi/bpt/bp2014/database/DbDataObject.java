@@ -6,10 +6,10 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 /**
- * Created by jaspar.mang on 07.01.15.
+ * Created by jaspar.mang on 05.01.15.
  */
-public class DbDataNode {
-    public LinkedList<Integer> getDataObjectIdsForDataSets(int dataSet_id) {
+public class DbDataObject {
+    public LinkedList<Integer> getDataObjectsForScenario(int scenario_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -19,10 +19,10 @@ public class DbDataNode {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "Select dataobject_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = " + dataSet_id + " ORDER BY dataobject_id";
+            String sql = "SELECT id FROM dataobject WHERE scenario_id = " + scenario_id;
             rs = stmt.executeQuery(sql);
             while(rs.next()){
-                results.add(rs.getInt("dataobject_id"));
+                results.add(rs.getInt("id"));
             }
             //Clean-up environment
             rs.close();
@@ -47,21 +47,20 @@ public class DbDataNode {
         }
         return results;
     }
-    public LinkedList<Integer> getDataStatesForDataSets(int dataSet_id) {
+    public int getStartStateID(int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
+        int results = -1;
         if (conn == null) return results;
 
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "Select state_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = " + dataSet_id + " ORDER BY dataobject_id";
+            String sql = "SELECT start_state_id FROM dataobject WHERE id = " + dataObject_id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
-                results.add(rs.getInt("state_id"));
-            }
+            rs.next();
+            results = rs.getInt("start_state_id");
             //Clean-up environment
             rs.close();
             stmt.close();
