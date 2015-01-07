@@ -113,26 +113,44 @@
                   </div>
                 </div>
             <div class="widget-body">
-
-                <div class="container_custom">
-                    <div class="collapse_custom"><span>Expand</span>
-                    </div>
-                    <div class="content_custom">
-                        <ul>
-                            <li>This is just some random content.</li>
-                            <li>This is just some random content.</li>
-                            <li>This is just some random content.</li>
-                            <li>This is just some random content.</li>
-                        </ul>
-                    </div>
-                </div>
-
+            
+                <h3>open Task</h3>
+                    <ul>
+                        <li>Teil kleben</li>
+                        <li>Teil transportieren</li>
+                        <li>Teil schweißen</li>
+                        <li><font color="green">Teil schrauben</font></li>
+                    </ul>
+                <h3>interdepend Task</h3>
+                    <ul>
+                        <li><font color="green">Other Human Task</font></li>
+                    </ul>
+                <h3>skipped Task</h3>
+                    <ul>
+                        <li><font color="green">none</font></li>
+                    </ul>
             </div>
           </div>
           </div>
 
-
           <div class="span5">
+            <div class="widget">
+                <div class="widget-header">
+                  <div class="title">
+                    <span class="fs1" aria-hidden="true" data-icon="&#xe022;"></span> Information regarding the Task
+                  </div>
+                </div>
+            <div class="widget-body">
+            
+                <h3>Details</h3>
+           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+             </div>
+          </div>
+          </div>
+          </div>
+          
+          <div class="span12">
           <div class="widget">
                 <div class="widget-header">
                   <div class="title">
@@ -187,7 +205,7 @@
                   </form>
                 </div>
               </div>
-            </div>
+          </div>
 
           </div>
 
