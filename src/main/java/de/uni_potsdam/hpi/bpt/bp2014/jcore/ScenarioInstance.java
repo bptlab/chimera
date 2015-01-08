@@ -15,8 +15,8 @@ public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     public LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
-    private int scenarioInstance_id;
-    private int scenario_id;
+    public int scenarioInstance_id;
+    public int scenario_id;
     private String name;
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbFragment dbFragment = new DbFragment();
@@ -71,13 +71,36 @@ public class ScenarioInstance {
                 terminatedControlNodeInstances.remove(controlNodeInstance);
             }
         }
-        System.out.print("");
     }
 
     public void initializeDataObjects(){
         LinkedList<Integer> data = dbDataObject.getDataObjectsForScenario(scenario_id);
         for(Integer dataObject: data){
             dataObjectInstances.add(new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id));
+        }
+    }
+
+    public Boolean checkDataObjectState(int dataObject_id, int state_id){
+        for(DataObjectInstance dataObjectInstance: dataObjectInstances){
+            if(dataObjectInstance.dataObject_id == dataObject_id && dataObjectInstance.state_id == state_id) return true;
+        }
+        return false;
+    }
+    public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id){
+        for(DataObjectInstance dataObjectInstance: dataObjectInstances){
+            if(dataObjectInstance.dataObject_id == dataObject_id) {
+                dataObjectInstance.setState(state_id);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void checkDataFlowEnabled(){
+        for (ControlNodeInstance activityInstance: controlFlowEnabledControlNodeInstances){
+            if (activityInstance.getClass() == ActivityInstance.class){
+                ((ActivityInstance) activityInstance).checkDataFlowEnabled();
+            }
         }
     }
 }

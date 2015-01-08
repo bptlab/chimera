@@ -6,10 +6,10 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 /**
- * Created by jaspar.mang on 05.01.15.
+ * Created by jaspar.mang on 07.01.15.
  */
-public class DbDataFlow {
-    public LinkedList<Integer> getInputSetsForControlNode(int controlNode_id) {
+public class DbDataNode {
+    public LinkedList<Integer> getDataObjectIdsForDataSets(int dataSet_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -19,10 +19,10 @@ public class DbDataFlow {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "Select dataset_id FROM dataflow WHERE dataflow.input = 1 AND controlnode_id = " + controlNode_id;
+            String sql = "Select dataobject_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = " + dataSet_id + " ORDER BY dataobject_id";
             rs = stmt.executeQuery(sql);
             while(rs.next()){
-                results.add(rs.getInt("dataset_id"));
+                results.add(rs.getInt("dataobject_id"));
             }
             //Clean-up environment
             rs.close();
@@ -47,7 +47,7 @@ public class DbDataFlow {
         }
         return results;
     }
-    public LinkedList<Integer> getOutputSetsForControlNode(int controlNode_id) {
+    public LinkedList<Integer> getDataStatesForDataSets(int dataSet_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -57,10 +57,10 @@ public class DbDataFlow {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "Select dataset_id FROM dataflow WHERE dataflow.input = 0 AND controlnode_id = " + controlNode_id;
+            String sql = "Select state_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = " + dataSet_id + " ORDER BY dataobject_id";
             rs = stmt.executeQuery(sql);
             while(rs.next()){
-                results.add(rs.getInt("dataset_id"));
+                results.add(rs.getInt("state_id"));
             }
             //Clean-up environment
             rs.close();
