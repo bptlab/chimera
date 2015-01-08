@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 
