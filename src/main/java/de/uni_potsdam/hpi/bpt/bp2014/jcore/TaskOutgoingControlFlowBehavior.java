@@ -4,7 +4,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 
 import java.util.LinkedList;
-
+/*
+handles the behavior of a terminating activity instance
+ */
 public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
     public DbDataNode dbDataNode = new DbDataNode();
     public DbDataFlow dbDataFlow = new DbDataFlow();

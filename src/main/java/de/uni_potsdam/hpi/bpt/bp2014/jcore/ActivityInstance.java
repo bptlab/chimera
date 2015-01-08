@@ -3,6 +3,12 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 
+/*
+represents the activity instance, it save the state of the activity in the statemachine, it has an outgoing behavior and
+an incoming behavior
+the constructor looks for an activity instance in the database or create a new one in the database
+ */
+
 public class ActivityInstance extends ControlNodeInstance {
     public TaskExecutionBehavior taskExecutionBehavior;
     public ScenarioInstance scenarioInstance;

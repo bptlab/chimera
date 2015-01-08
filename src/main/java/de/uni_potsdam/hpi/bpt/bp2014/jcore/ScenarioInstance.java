@@ -5,7 +5,14 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 
 import java.util.LinkedList;
-
+/*
+represents a scenario instance
+the constructor looks for an scenario instance in the database or create a new one in the database
+the constructor also initialize the fragment instances and data object instances
+the scenario instance has Lists for all enabled, control flow enabled, data flow enabled, running and terminated activity
+instances, fragment instances and all data object instances
+the scenario instance provide methods for the administration of the data object instances
+ */
 public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
     public LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
