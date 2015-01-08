@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
