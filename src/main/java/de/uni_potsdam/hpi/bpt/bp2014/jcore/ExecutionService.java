@@ -1,10 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 
 import java.util.HashMap;
-import java.util.IntSummaryStatistics;
 import java.util.LinkedList;
 
 public class ExecutionService {
@@ -36,6 +36,10 @@ public class ExecutionService {
 
     public LinkedList<Integer> getAllScenarioIDs(){
         return dbScenario.getScenarioInstances();
+    }
+
+    public Boolean scenarioInstanceIsRunning(int scenarioInstance_id){
+        return sortedScenarioInstances.containsKey(scenarioInstance_id);
     }
 
     public Boolean existScenarioInstance(int scenarioInstance_id){
