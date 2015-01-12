@@ -5,7 +5,14 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 
 import java.util.LinkedList;
-
+/*
+represents a scenario instance
+the constructor looks for an scenario instance in the database or create a new one in the database
+the constructor also initialize the fragment instances and data object instances
+the scenario instance has Lists for all enabled, control flow enabled, data flow enabled, running and terminated activity
+instances, fragment instances and all data object instances
+the scenario instance provide methods for the administration of the data object instances
+ */
 public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
     public LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
@@ -15,8 +22,8 @@ public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     public LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
-    private int scenarioInstance_id;
-    private int scenario_id;
+    public int scenarioInstance_id;
+    public int scenario_id;
     private String name;
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbFragment dbFragment = new DbFragment();
@@ -85,5 +92,22 @@ public class ScenarioInstance {
             if(dataObjectInstance.dataObject_id == dataObject_id && dataObjectInstance.state_id == state_id) return true;
         }
         return false;
+    }
+    public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id){
+        for(DataObjectInstance dataObjectInstance: dataObjectInstances){
+            if(dataObjectInstance.dataObject_id == dataObject_id) {
+                dataObjectInstance.setState(state_id);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void checkDataFlowEnabled(){
+        for (ControlNodeInstance activityInstance: controlFlowEnabledControlNodeInstances){
+            if (activityInstance.getClass() == ActivityInstance.class){
+                ((ActivityInstance) activityInstance).checkDataFlowEnabled();
+            }
+        }
     }
 }

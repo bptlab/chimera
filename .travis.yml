@@ -4,10 +4,12 @@ jdk:
   - oraclejdk7
   - openjdk7
 
+before_install:
+  - mvn clean
+
 before_script:
   - mysql -e "create database IF NOT EXISTS JEngineV2;" -uroot
 
 script:
   - mysql JEngineV2 < resources/JEngineV2.sql -uroot
-  - mvn clean
   - mvn test
