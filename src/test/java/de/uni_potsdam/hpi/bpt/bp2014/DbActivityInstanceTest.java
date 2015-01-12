@@ -21,4 +21,6 @@ public class DbActivityInstanceTest {
         dbActivityInstance.setState(91, "terminated");
         assertEquals("terminated", dbActivityInstance.getState(91));
     }
+
+    //TODO: testCreateNewActivityInstance
 }
