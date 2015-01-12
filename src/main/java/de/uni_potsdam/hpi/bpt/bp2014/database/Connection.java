@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.io.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,12 +14,15 @@ public class Connection {
     private static String url;
     public static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
+    @Resource(name="jdbc/jengine")
+    private DataSource ds;
+
     private Connection(String path){
-        file = new File(path);
+        /*file = new File(path);
         file=file.getAbsoluteFile();
-        username = this.getUsername();
+        userrname = this.getUsername();
         password = this.getPassword();
-        url = this.getUrl();
+        url = this.getUrl();*/
 
     }
 
@@ -91,10 +96,11 @@ public class Connection {
     public java.sql.Connection connect() {
         java.sql.Connection conn = null;
         try {
+            return ds.getConnection();
             //Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
+            //Class.forName("com.mysql.jdbc.Driver");
             //Open a connection
-            conn = DriverManager.getConnection(url, password, username);
+            //conn = DriverManager.getConnection(url, password, username);
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
