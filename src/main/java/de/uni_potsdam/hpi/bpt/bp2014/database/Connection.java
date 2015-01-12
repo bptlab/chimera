@@ -82,7 +82,7 @@ public class Connection {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.err.println(file.getAbsoluteFile());
+        //System.err.println(file.getAbsoluteFile());
         BufferedReader br = new BufferedReader(fr);
         String url = "";
         try {
