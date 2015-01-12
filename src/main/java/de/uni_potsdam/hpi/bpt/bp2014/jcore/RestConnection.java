@@ -15,9 +15,7 @@ public class RestConnection {
     @Path("{Scenarioname}/{Instance}")
     //@Produces(MediaType.APPLICATION_JSON)
     public String showEnabledActivities( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") String scenarioInstanceID ){
-        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(1), new Integer(2));
-        DbActivityInstance dbActivityInstance = new DbActivityInstance();
-        dbActivityInstance.setState(1 , "init");
+        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
         ExecutionService executionService = new ExecutionService(scenarioInstance);
         LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDs();
         return enabledActivitiesIDs.toString();
