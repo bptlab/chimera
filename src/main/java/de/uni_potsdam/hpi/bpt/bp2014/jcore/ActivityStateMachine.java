@@ -65,6 +65,21 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    public Boolean disableData(){
+        //String state = this.getState();
+        if(state.equals("ready(Data)")) {
+            this.setState("init");
+            scenarioInstance.dataEnabledControlNodeInstances.remove(controlNodeInstance);
+            return true;
+        }else if(state.equals("ready")) {
+            this.setState("ready(ControlFlow)");
+            scenarioInstance.dataEnabledControlNodeInstances.remove(controlNodeInstance);
+            scenarioInstance.enabledControlNodeInstances.remove(controlNodeInstance);
+            return true;
+        }
+        return false;
+    }
+
     public Boolean begin(){
         //String state = this.getState();
         if(state.equals("ready")){

@@ -4,7 +4,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 
 public class DataObjectInstance {
-    public OLCInstance olcInstance;
     public int state_id;
     public int dataObjectInstance_id;
     public int dataObject_id;
@@ -25,5 +24,10 @@ public class DataObjectInstance {
             dbDataObjectInstance.createNewDataObjectInstance(scenarioInstance_id, state_id, dataObject_id);
             dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
         }
+    }
+
+    public void setState(int state_id){
+        this.state_id = state_id;
+        dbDataObjectInstance.setState(dataObjectInstance_id, state_id);
     }
 }
