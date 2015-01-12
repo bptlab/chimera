@@ -14,6 +14,7 @@ public class Connection {
 
     private Connection(String path){
         file = new File(path);
+        file=file.getAbsoluteFile();
         username = this.getUsername();
         password = this.getPassword();
         url = this.getUrl();
@@ -29,7 +30,8 @@ public class Connection {
 
     public static Connection getInstance() {
         if (instance == null) {
-            instance = new Connection("resources/database_connection");
+            //instance = new Connection("C:/xampp/tomcat/webapps/JEngine/WEB-INF/classes/database_connection");
+            instance = new Connection("JEngine/WEB-INF/classes/database_connection");
         }
         return instance;
     }
@@ -73,6 +75,7 @@ public class Connection {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        System.err.println(file.getAbsoluteFile());
         BufferedReader br = new BufferedReader(fr);
         String url = "";
         try {
