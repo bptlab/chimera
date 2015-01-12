@@ -6,7 +6,11 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 
 import java.util.LinkedList;
-
+/*
+represents a fragment instance
+the constructor looks for an fragment instance in the database or create a new one in the database
+the constructor also initialize the control nodes
+ */
 public class FragmentInstance {
     private ScenarioInstance scenarioInstance;
     public int fragment_id;

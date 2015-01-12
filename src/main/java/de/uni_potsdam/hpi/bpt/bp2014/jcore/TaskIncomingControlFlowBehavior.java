@@ -24,7 +24,17 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior{
     @Override
     public void enableControlFlow(){
         ((ActivityStateMachine)stateMachine).enableControlFlow();
-        //TODO: Data Objects HERE
+        if(checkInputObjects()){
+            ((ActivityStateMachine) stateMachine).enableData();
+        }
+    }
+
+    public void checkDataFlowEnabled(){
+        if(checkInputObjects()){
+            ((ActivityStateMachine) stateMachine).enableData();
+        }else{
+            ((ActivityStateMachine) stateMachine).disableData();
+        }
     }
 
     private Boolean checkInputObjects(){
