@@ -38,7 +38,7 @@ public class Connection {
     public static Connection getInstance() {
         if (instance == null) {
             //instance = new Connection("C:/xampp/tomcat/webapps/JEngine/WEB-INF/classes/database_connection");
-            instance = new Connection("JEngine/WEB-INF/classes/database_connection");
+            instance = new Connection("resources/database_connection");
         }
         return instance;
     }
