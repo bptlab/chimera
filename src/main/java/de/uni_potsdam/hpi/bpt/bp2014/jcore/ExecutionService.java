@@ -126,7 +126,7 @@ public class ExecutionService {
 
     public LinkedList<Integer> getClosedActivitiesIDs() {
         LinkedList<Integer> ids = new LinkedList<Integer>();
-        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances){ // must be changed
+        for(ControlNodeInstance nodeInstance: scenarioInstance_debug.enabledControlNodeInstances){ // must be changed
             if(nodeInstance instanceof ActivityInstance){
                 ids.add(((ActivityInstance) nodeInstance).controlNode_id);
             }
