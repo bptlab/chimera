@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 12. Jan 2015 um 10:35
+-- Erstellungszeit: 12. Jan 2015 um 11:21
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -54,7 +54,7 @@ INSERT INTO `activityinstance` (`id`, `type`, `role_id`, `activity_state`, `work
 (87, 'HumanTask', 1, 'terminated', 'init'),
 (89, 'HumanTask', 1, 'terminated', 'init'),
 (90, 'HumanTask', 1, 'terminated', 'init'),
-(91, 'HumanTask', 1, 'ready', 'init'),
+(91, 'HumanTask', 1, 'terminated', 'init'),
 (92, 'HumanTask', 1, 'terminated', 'init'),
 (93, 'HumanTask', 1, 'running', 'init'),
 (94, 'HumanTask', 1, 'ready', 'init'),
@@ -278,7 +278,9 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (5, 6, ''),
 (6, 7, ''),
 (9, 10, ''),
-(10, 11, '');
+(10, 11, ''),
+(12, 13, ''),
+(12, 14, '');
 
 -- --------------------------------------------------------
 
@@ -291,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -308,7 +310,10 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`) VALUES
 (8, 'Endevent1Fragment2', 'Endevent', 2),
 (9, 'StartEventFragment3', 'Startevent', 3),
 (10, 'ActivityFragment3', 'Activity', 3),
-(11, 'EndEventFragment3', 'Endevent', 3);
+(11, 'EndEventFragment3', 'Endevent', 3),
+(12, 'test1', 'Activity', 100),
+(13, 'test2', 'Activity', 100),
+(14, 'test3', 'Activity', 100);
 
 -- --------------------------------------------------------
 
@@ -772,7 +777,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -781,7 +786,8 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 INSERT INTO `fragment` (`id`, `name`, `scenario_id`) VALUES
 (1, 'fragment1', 1),
 (2, 'fragment2', 1),
-(3, 'fragment3', 1);
+(3, 'fragment3', 1),
+(100, 'testfragment', 101);
 
 -- --------------------------------------------------------
 
@@ -1415,7 +1421,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
@@ -1465,7 +1471,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
