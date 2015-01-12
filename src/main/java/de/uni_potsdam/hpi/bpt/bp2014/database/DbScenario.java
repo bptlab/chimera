@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 public class DbScenario {
-    public LinkedList<Integer> getScenarioInstances() {
+    public LinkedList<Integer> getScenarioIDs() {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;

@@ -34,7 +34,7 @@ public class ExecutionService {
     }
 
     public LinkedList<Integer> getAllScenarioIDs(){
-        return dbScenario.getScenarioInstances();
+        return dbScenario.getScenarioIDs();
     }
 
     public Boolean scenarioInstanceIsRunning(int scenarioInstance_id){
