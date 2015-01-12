@@ -19,6 +19,6 @@ public class DbActivityInstanceTest {
     public void testSetState() {
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
         dbActivityInstance.setState(91, "terminated");
-        assertEquals("terminated", dbActivityInstance.getState(88));
+        assertEquals("terminated", dbActivityInstance.getState(91));
     }
 }
