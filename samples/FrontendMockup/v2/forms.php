@@ -105,7 +105,8 @@
           </div>
          
 
-          <div class="span6">
+          <!--<div class="span6">-->
+          <div class="span4">
             <div class="widget">
                 <div class="widget-header">
                   <div class="title">
@@ -123,7 +124,7 @@
                     </ul>
                 <h3>interdepend Task</h3>
                     <ul>
-                        <li><font color="green">Other Human Task</font></li>
+                        <li><font color="red">Other Human Task</font></li>
                     </ul>
                 <h3>skipped Task</h3>
                     <ul>
@@ -133,23 +134,39 @@
           </div>
           </div>
 
-          <div class="span5">
+          <!--<div class="span5">-->
+          <div class="span4">
             <div class="widget">
                 <div class="widget-header">
                   <div class="title">
-                    <span class="fs1" aria-hidden="true" data-icon="&#xe022;"></span> Information regarding the Task
+                    <span class="fs1" aria-hidden="true" data-icon="&#xe022;"></span> Further Informations
                   </div>
                 </div>
             <div class="widget-body">
-            
-                <h3>Details</h3>
            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-             </div>
+           </div>
+          </div>
+          </div>
+
+
+          <div class="span4">
+            <div class="widget">
+                <div class="widget-header">
+                  <div class="title">
+                    <span class="fs1" aria-hidden="true" data-icon="&#xe022;"></span>Attachments
+                  </div>
+                </div>
+            <div class="widget-body">
+                 <ul>
+                  <li> <a href="http://www.omg.org/bpmn/Documents/Introduction_to_BPMN.pdf">Introduction to BPMN </a> </li>
+                   <li> <a href="http://subs.emis.de/LNI/Proceedings/Proceedings154/gi-proc-154-375.pdf">A BPMN Case Study: Paper Review and Submission</a> </li>
+                    <li> <a href="https://www.hs-neu-ulm.de/fileadmin/user_upload/Forschung/HNU_Working_Paper/HNU_WP16_Kocian_Geschaeftsprozessmodellierung.pdf">GeschäftsprozessmodellierungN </a> </li>
+                </ul>
+           </div>
           </div>
           </div>
           </div>
-          
+
           <div class="span12">
           <div class="widget">
                 <div class="widget-header">
