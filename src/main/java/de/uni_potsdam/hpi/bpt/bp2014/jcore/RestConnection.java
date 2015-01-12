@@ -17,7 +17,7 @@ public class RestConnection {
     public String showEnabledActivities( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") String scenarioInstanceID ){
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
         ExecutionService executionService = new ExecutionService(scenarioInstance);
-        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDs();
+        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(new Integer(scenarioInstanceID));
         return enabledActivitiesIDs.toString();
     }
     @GET
@@ -26,7 +26,7 @@ public class RestConnection {
     public LinkedList showClosedActivities( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") String scenarioInstanceID ){
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
         ExecutionService executionService = new ExecutionService(scenarioInstance);
-        LinkedList<Integer> closedActivitiesIDs= executionService.getClosedActivitiesIDs();
+        LinkedList<Integer> closedActivitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(new Integer(scenarioInstanceID));
         return closedActivitiesIDs;
     }
 }
