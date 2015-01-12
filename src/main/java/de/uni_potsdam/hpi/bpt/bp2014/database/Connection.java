@@ -18,12 +18,14 @@ public class Connection {
     private DataSource ds;
 
     private Connection(String path){
-        /*file = new File(path);
-        file=file.getAbsoluteFile();
-        userrname = this.getUsername();
-        password = this.getPassword();
-        url = this.getUrl();*/
 
+        if(ds == null) {
+            file = new File(path);
+            file = file.getAbsoluteFile();
+            username = this.getUsername();
+            password = this.getPassword();
+            url = this.getUrl();
+        }
     }
 
     public static Connection getInstance(String path) {
@@ -36,7 +38,7 @@ public class Connection {
     public static Connection getInstance() {
         if (instance == null) {
             //instance = new Connection("C:/xampp/tomcat/webapps/JEngine/WEB-INF/classes/database_connection");
-            instance = new Connection("JEngine/WEB-INF/classes/database_connection");
+            instance = new Connection("src/main/resources/database_connection");
         }
         return instance;
     }
@@ -80,7 +82,7 @@ public class Connection {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.err.println(file.getAbsoluteFile());
+        //System.err.println(file.getAbsoluteFile());
         BufferedReader br = new BufferedReader(fr);
         String url = "";
         try {
@@ -96,11 +98,12 @@ public class Connection {
     public java.sql.Connection connect() {
         java.sql.Connection conn = null;
         try {
-            return ds.getConnection();
-            //Register JDBC driver
-            //Class.forName("com.mysql.jdbc.Driver");
+            if(ds != null) {
+                return ds.getConnection();
+            }//Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
             //Open a connection
-            //conn = DriverManager.getConnection(url, password, username);
+            conn = DriverManager.getConnection(url, password, username);
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();

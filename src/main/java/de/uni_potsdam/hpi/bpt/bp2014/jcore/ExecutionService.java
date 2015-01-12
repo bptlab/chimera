@@ -27,7 +27,7 @@ public class ExecutionService {
         return scenarioInstance.scenarioInstance_id;
     }
 
-    public void openExistingScenario(int scenario_id, int scenarioInstance_id){
+    public void openExistingScenarioInstance(int scenario_id, int scenarioInstance_id){
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id, scenarioInstance_id);
         scenarioInstances.add(scenarioInstance);
         sortedScenarioInstances.put(scenarioInstance_id, scenarioInstance);
@@ -124,13 +124,5 @@ public class ExecutionService {
         }
     }
 
-    public LinkedList<Integer> getClosedActivitiesIDs() {
-        LinkedList<Integer> ids = new LinkedList<Integer>();
-        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances){ // must be changed
-            if(nodeInstance instanceof ActivityInstance){
-                ids.add(((ActivityInstance) nodeInstance).controlNode_id);
-            }
-        }
-        return ids;
-    }
+
 }
