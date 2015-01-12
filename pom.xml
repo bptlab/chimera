@@ -75,12 +75,10 @@
             <version>5.1.34</version>
         </dependency>
 
-        <!-- uncomment this to get JSON support
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
         </dependency>
-        -->
     </dependencies>
     <properties>
         <jersey.version>2.13</jersey.version>
