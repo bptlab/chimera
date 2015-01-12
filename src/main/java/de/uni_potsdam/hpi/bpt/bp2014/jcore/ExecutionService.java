@@ -27,7 +27,7 @@ public class ExecutionService {
         return scenarioInstance.scenarioInstance_id;
     }
 
-    public void openExistingScenario(int scenario_id, int scenarioInstance_id){
+    public void openExistingScenarioInstance(int scenario_id, int scenarioInstance_id){
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id, scenarioInstance_id);
         scenarioInstances.add(scenarioInstance);
         sortedScenarioInstances.put(scenarioInstance_id, scenarioInstance);
