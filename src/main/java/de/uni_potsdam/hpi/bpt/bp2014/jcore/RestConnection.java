@@ -11,6 +11,15 @@ import java.util.LinkedList;
 
 @Path( "Scenario" )
 public class RestConnection {
+//    @GET
+//    @Path( "Scenarioname/{Scenarioname}" )
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public LinkedList showEnabledActivities( @PathParam("Scenarioname") ScenarioInstance scenarioInstance){
+//        ExecutionService executionService = new ExecutionService(scenarioInstance);
+//        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDs();
+//        return enabledActivitiesIDs;
+//    }
+
     @GET
     @Path("{Scenarioname}/{Instance}")
     //@Produces(MediaType.APPLICATION_JSON)

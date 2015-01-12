@@ -10,7 +10,7 @@ import org.junit.Test;
 public class ScenarioInstanceTest {
     @Test
     public void testScenarioID(){
-        ScenarioInstance scenarioInstance = new ScenarioInstance(1, -1);
+        ScenarioInstance scenarioInstance = new ScenarioInstance(1);
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         int scenarioInstance_ID = dbScenarioInstance.getScenarioInstanceID(1);
         assert(dbScenarioInstance.existScenario(1, scenarioInstance_ID));
