@@ -5,6 +5,16 @@
 % For tracking purposes - this is V3.1SP - APRIL 2009
 
 \documentclass{acm_proc_article-sp}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{stmaryrd}
 
 \begin{document}
 
@@ -34,7 +44,7 @@ Diese Dokumentation ist entstanden im Rahmen des Bachelorprojekts BP2014W1 am Le
 %
 %
 \section{Introduction}
-Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFrameworkPCM} (siehe Abbildung \ref{fig:PCMmetaModell}.
+Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFrameworkPCM} (siehe Abbildung \ref{fig:PCMmetaModell}).
 
 %
 %
@@ -56,17 +66,14 @@ Overall JEngine
 %
 %
 \subsection{JCore}
+Der JCore umfasst mehrere Hauptkomponenten unserer Engine. Dazu zählt die Auswertung der Datenbank und das Entscheiden von enableden Aktivitäten etc.\\
+Dazu zählt zum Beispiel auch die REST-API.
+
+\subsubsection{REST-API}
+Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost:8080/Scenario/\textit{\{ScenarioID\}}/\\\textit{\{ScenarioInstanceID\}}} abrufen.
+\subsubsection{ExecutionService}
 
 
-%
-%
-\subsubsection{REST Interface}
-Entsprechend den Standard des 21 Jahrhunderts stellen wir ein REST Interface zur Steuerung und Interaktion mit unserer ``Core Engine'' zur Verfügung. Wir nutzen dieses REST Interface selbst für das Frontend und die Funktionalitäten die dort bereitgestellt werden.
-
---> Sven dein Beitrag. Wie sieht das REST Interface aus? Welche API keys, struktur, calls werden verwendet. Am besten mit Beispiel! thx :)
-
-%
-%
 \subsection{JComparser}
 
 %

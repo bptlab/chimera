@@ -49,6 +49,7 @@ public class ScenarioInstance {
         this.scenario_id = scenario_id;
         dbScenarioInstance.createNewScenarioInstance(scenario_id);
         this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+        this.initializeDataObjects();
         this.initializeFragments();
     }
 

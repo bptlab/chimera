@@ -17,28 +17,23 @@ public class Connection {
     @Resource(name="jdbc/jengine")
     private DataSource ds;
 
-    private Connection(String path){
-
-        if(ds == null) {
-            file = new File(path);
-            file = file.getAbsoluteFile();
-            username = this.getUsername();
-            password = this.getPassword();
-            url = this.getUrl();
-        }
+    private Connection(){
     }
 
     public static Connection getInstance(String path) {
         if (instance == null) {
-            instance = new Connection(path);
+            instance = new Connection();
+            instance.initializeDatabaseConfiguration(path);
         }
         return instance;
     }
 
     public static Connection getInstance() {
         if (instance == null) {
+            String path = "src/main/resources/database_connection";
             //instance = new Connection("C:/xampp/tomcat/webapps/JEngine/WEB-INF/classes/database_connection");
-            instance = new Connection("src/main/resources/database_connection");
+            instance = new Connection();
+            instance.initializeDatabaseConfiguration(path);
         }
         return instance;
     }
@@ -112,5 +107,17 @@ public class Connection {
             e.printStackTrace();
         }
         return conn;
+    }
+
+    private void initializeDatabaseConfiguration(String path) {
+
+        if(ds == null) {
+            file = new File(path);
+            file = file.getAbsoluteFile();
+            username = this.getUsername();
+            password = this.getPassword();
+            url = this.getUrl();
+        }
+
     }
 }
