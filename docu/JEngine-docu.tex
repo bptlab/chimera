@@ -10,17 +10,11 @@
 \usepackage[ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{fancyhdr}
 \usepackage{enumerate}
 \usepackage{enumitem}
 \usepackage{stmaryrd}
-\usepackage[margin=3cm]{geometry}
-\geometry{a4paper, top=35mm, right=25mm, bottom=25mm, left=25mm, headsep=15mm, footskip=15mm}
-\pagestyle{fancy}
-
-\usepackage{tikz}
 
 \begin{document}
 
@@ -50,7 +44,7 @@ Diese Dokumentation ist entstanden im Rahmen des Bachelorprojekts BP2014W1 am Le
 %
 %
 \section{Introduction}
-Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFrameworkPCM} (siehe Abbildung \ref{fig:PCMmetaModell}.
+Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFrameworkPCM} (siehe Abbildung \ref{fig:PCMmetaModell}).
 
 %
 %
@@ -72,9 +66,14 @@ Overall JEngine
 %
 %
 \subsection{JCore}
+Der JCore umfasst mehrere Hauptkomponenten unserer Engine. Dazu zählt die Auswertung der Datenbank und das Entscheiden von enableden Aktivitäten etc.\\
+Dazu zählt zum Beispiel auch die REST-API.
 
-%
-%
+\subsubsection{REST-API}
+Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost:8080/Scenario/\textit{ScenarioID}/\\\textit{ScenarioInstanceID}/enabled} abrufen.
+\subsubsection{ExecutionService}
+
+
 \subsection{JComparser}
 
 %
