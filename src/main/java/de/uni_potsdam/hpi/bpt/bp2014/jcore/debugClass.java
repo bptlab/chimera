@@ -43,9 +43,20 @@ public class debugClass {
         String scenarioID = selectScenario();
         String scenarioInstanceID = selectScenarioInstance();
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-        DbActivityInstance dbActivityInstance = new DbActivityInstance();
-        dbActivityInstance.setState(1 , "init");
+
+/*
+        ExecutionService executionService = new ExecutionService();
+        int id = executionService.startNewScenarioInstance(1);
+        LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(id);
+        System.out.println("enabled Aktivität ID");
+        for(int activityID: activitiesIDs){
+            System.out.println(activityID);
+        }
+*/
+
         while(true){
+
+
             ExecutionService executionService = new ExecutionService(scenarioInstance);
             LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
             System.out.println("enabled Aktivität ID");
