@@ -4,45 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DbControlNode {
-    public int getStartEventID(int fragment_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM controlnode WHERE type = 'Startevent' AND fragment_id = " + fragment_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
-    }
-    public String getType(int controlNode_id) {
+/**
+ * Created by jaspar.mang on 14.01.15.
+ */
+public class DbGatewayInstance {
+    public String getType(int gatewayInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -52,7 +18,7 @@ public class DbControlNode {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
+            String sql = "SELECT type FROM gatewayinstance WHERE id = " + gatewayInstance_id;
             rs = stmt.executeQuery(sql);
             rs.next();
             results = rs.getString("type");
@@ -79,7 +45,7 @@ public class DbControlNode {
         }
         return results;
     }
-    public String getLabel(int controlNode_id) {
+    public String getState(int gatewayInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -89,10 +55,10 @@ public class DbControlNode {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
+            String sql = "SELECT gateway_state FROM gatewayinstance WHERE id = " + gatewayInstance_id;
             rs = stmt.executeQuery(sql);
             rs.next();
-            results = rs.getString("label");
+            results = rs.getString("gateway_state");
             //Clean-up environment
             rs.close();
             stmt.close();
