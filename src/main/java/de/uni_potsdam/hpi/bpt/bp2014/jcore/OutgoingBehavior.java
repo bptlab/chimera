@@ -9,4 +9,6 @@ public class OutgoingBehavior {
     protected ScenarioInstance scenarioInstance;
     protected int controlNode_id;
     protected int fragmentInstance_id;
+
+    public void terminate(){}
 }
