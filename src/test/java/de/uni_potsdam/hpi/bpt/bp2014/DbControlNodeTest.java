@@ -19,4 +19,10 @@ public class DbControlNodeTest {
         assertEquals("Startevent", dbControlNode.getType(1));
         assertEquals("Activity", dbControlNode.getType(2));
     }
+    @Test
+    public void testGetLabel(){
+        DbControlNode dbControlNode = new DbControlNode();
+        assertEquals("Activity2Fragment1", dbControlNode.getLabel(5));
+        assertEquals("test1", dbControlNode.getLabel(12));
+    }
 }

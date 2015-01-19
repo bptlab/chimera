@@ -41,10 +41,10 @@ public class debugClass {
     }
 
     public static void main(String args[]){
-//        String scenarioID = selectScenario();
-//        String scenarioInstanceID = selectScenarioInstance();
-//        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-
+     /*   String scenarioID = selectScenario();
+        String scenarioInstanceID = selectScenarioInstance();
+        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
+*/
         ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(new Integer(1));
         LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
@@ -54,8 +54,8 @@ public class debugClass {
         }
         System.out.println(" -  -- -- -- -- -- - -- -- -- -- -");
         HistoryService historyService = new HistoryService();
-        LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(53);
-        HashMap<Integer, String> labels2 = historyService.getTerminatedActivityLabelsForScenarioInstance(53);
+        LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(223);
+        HashMap<Integer, String> labels2 = historyService.getTerminatedActivityLabelsForScenarioInstance(223);
         for(int activityID: terminatedActivities) {
             System.out.println("ID: " + activityID + ", " + labels2.get(activityID));
         }
@@ -68,17 +68,17 @@ public class debugClass {
         }*/
 
 
-//        while(true){
-//
-//
-//            ExecutionService executionService = new ExecutionService(scenarioInstance);
-//            LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
-//            System.out.println("enabled Aktivität ID");
-//            for(int activityID: activitiesIDs){
-//                System.out.println(activityID);
-//            }
-//            System.out.println("Select Activity");
-//            executionService.startActivity(new Integer(readLine()));
-//        }
+      /*  while(true){
+
+
+            ExecutionService executionService = new ExecutionService(scenarioInstance);
+            LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
+            System.out.println("enabled Aktivität ID");
+            for(int activityID: activitiesIDs){
+                System.out.println(activityID);
+            }
+            System.out.println("Select Activity");
+            executionService.startActivity(new Integer(readLine()));
+        }*/
     }
 }
