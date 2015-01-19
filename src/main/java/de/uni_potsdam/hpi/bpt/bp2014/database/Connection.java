@@ -14,7 +14,7 @@ public class Connection {
     private static String url;
     public static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
-    @Resource(name="jdbc/jengine")
+    @Resource(name="jdbc/JEngineV2")
     private DataSource ds;
 
     private Connection(){
@@ -91,32 +91,21 @@ public class Connection {
     }
 
     public java.sql.Connection connect() {
-        java.sql.Connection conn = null;
         try {
-            if(ds != null) {
-                return ds.getConnection();
-            }//Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
-            //Open a connection
-            conn = DriverManager.getConnection(url, password, username);
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch (Exception e) {
-            //Handle errors for Class.forName
+            return DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return conn;
+        return null;
     }
 
     private void initializeDatabaseConfiguration(String path) {
-
-        if(ds == null) {
-            file = new File(path);
-            file = file.getAbsoluteFile();
-            username = this.getUsername();
-            password = this.getPassword();
-            url = this.getUrl();
+        try {
+            username = "root";
+            password = "foi6cixoo0Quah2e";
+            url = "jdbc:mysql://localhost:3306/JEngineV2";
+        } catch(Exception e) {
+            System.err.println("You are running the Engine on Tomcat");
         }
 
     }
