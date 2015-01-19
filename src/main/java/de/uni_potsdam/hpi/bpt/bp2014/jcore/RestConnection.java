@@ -17,8 +17,8 @@ public class RestConnection {
     public String showEnabledActivities( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") String scenarioInstanceID ){
         ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(new Integer(scenarioID));
-        LinkedList<Integer> enabledActivitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(id);
-        return enabledActivitiesIDs.toString();
+        LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
+        return enabledActivitiesIDs.get(0).toString();
     }
     @GET
     @Path( "Scenarioname/{Scenarioname}/Instance/{Instance}/closed" )
