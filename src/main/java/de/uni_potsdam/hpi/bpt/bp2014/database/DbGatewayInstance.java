@@ -82,4 +82,69 @@ public class DbGatewayInstance {
         }
         return results;
     }
+    public void createNewGatewayInstance(int controlNodeInstance_id, String type, String state) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) return;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "INSERT INTO gatewayinstance (id, gatewayinstance.type, gateway_state) VALUES (" + controlNodeInstance_id + ", '"+ type +"', '" + state + "')";
+            stmt.executeUpdate(sql);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+    public void setState(int id, String state) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) return;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "UPDATE gatewayinstance SET gateway_state = '" + state + "' WHERE id = " + id;
+            stmt.executeUpdate(sql);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
 }

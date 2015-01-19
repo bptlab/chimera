@@ -48,9 +48,11 @@ public class FragmentInstance {
         String controlNodeType = dbControlNode.getType(controlNode);
         if (controlNodeType.equals("Activity")){
             ActivityInstance activityInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
-            ((TaskIncomingControlFlowBehavior)activityInstance.incomingBehavior).enableControlFlow();
+            activityInstance.incomingBehavior.enableControlFlow();
+        }else if(controlNodeType.equals("AND") || controlNodeType.equals("XOR")){
+            GatewayInstance gatewayInstance = new GatewayInstance(controlNode, fragmentInstance_id, scenarioInstance);
+            gatewayInstance.incomingBehavior.enableControlFlow();
         }
-        //TODO: insert Gateways HERE!
     }
     public void terminate(){
         dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
