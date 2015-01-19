@@ -48,9 +48,15 @@ public class debugClass {
         ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(new Integer(1));
         LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
-        HashMap<Integer, String> labels = executionService.getActivityLabelsForScenarioInstance(id);
+        HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(id);
         for(int activityID: enabledActivitiesIDs) {
             System.out.println("ID: " + activityID + ", " + labels.get(activityID));
+        }
+        System.out.println(" -  -- -- -- -- -- - -- -- -- -- -");
+        HistoryService historyService = new HistoryService();
+        LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(53);
+        for(int activityID: terminatedActivities) {
+            System.out.println("ID: " + activityID);
         }
        /* ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(1);
