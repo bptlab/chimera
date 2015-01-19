@@ -14,7 +14,7 @@ public class Connection {
     private static String url;
     public static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
-    @Resource(name="jdbc/JEngineV2")
+    @Resource(name="jdbc/jengine")
     private DataSource ds;
 
     private Connection(){
@@ -42,14 +42,20 @@ public class Connection {
         try {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            username = "root";
+            password = "samsa";
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         BufferedReader br = new BufferedReader(fr);
         String username = "";
         try {
             username = br.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            username = "root";
+            password = "samsa";
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         return username;
     }
@@ -58,7 +64,10 @@ public class Connection {
         try {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            username = "root";
+            password = "samsa";
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         BufferedReader br = new BufferedReader(fr);
         String password = "";
@@ -66,7 +75,10 @@ public class Connection {
             br.readLine();
             password = br.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            username = "root";
+            password = "samsa";
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         return password;
     }
@@ -75,7 +87,9 @@ public class Connection {
         try {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            username = "root";
+            password = "samsa";
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         //System.err.println(file.getAbsoluteFile());
         BufferedReader br = new BufferedReader(fr);
@@ -85,27 +99,45 @@ public class Connection {
             br.readLine();
             url = br.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            username = "root";
+            password = "samsa";
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+            //e.printStackTrace();
         }
         return url;
     }
 
     public java.sql.Connection connect() {
+        java.sql.Connection conn = null;
         try {
-            return DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
+
+             //   return ds.getConnection();
+            //Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+            //Open a connection
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
             e.printStackTrace();
         }
-        return null;
+        return conn;
     }
 
     private void initializeDatabaseConfiguration(String path) {
-        try {
+
+        try{
+            file = new File(path);
+            file = file.getAbsoluteFile();
+            username = this.getUsername();
+            password = this.getPassword();
+            url = this.getUrl();
+        }catch(Exception e) {
             username = "root";
             password = "samsa";
-            url = "jdbc:mysql://localhost:3306/JEngineV2";
-        } catch(Exception e) {
-            System.err.println("You are running the Engine on Tomcat");
+            url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
 
     }
