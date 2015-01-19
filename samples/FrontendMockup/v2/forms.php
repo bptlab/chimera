@@ -117,10 +117,10 @@
             
                 <h3>open Task</h3>
                     <ul>
-                        <li>Teil kleben</li>
-                        <li>Teil transportieren</li>
-                        <li>Teil schweißen</li>
-                        <li><font color="green">Teil schrauben</font></li>
+                        <div id="container">
+                       		 <br><br><br>
+                      		  <i>waiting for HANA..</i><br><br><img src="ajax-loader.gif"><br><br><br><br><br><br><br>
+             	       </div>
                     </ul>
                 <h3>interdepend Task</h3>
                     <ul>
