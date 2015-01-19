@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 
 /*
@@ -14,11 +15,14 @@ public class ActivityInstance extends ControlNodeInstance {
     public ScenarioInstance scenarioInstance;
     public DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     public DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    public DbControlNode dbControlNode = new DbControlNode();
+    public String label;
 
     public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance){
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
+        this.label = dbControlNode.getLabel(controlNode_id);
         scenarioInstance.controlNodeInstances.add(this);
         if(dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)){
             System.out.println("Activity exist");
