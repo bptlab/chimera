@@ -16,10 +16,11 @@ public class JComparser {
         boolean rest_option = false;
         boolean file_upload = true;
 
+        boolean bpmn_img_retrieval = false;
+
         /* Initialization */
         String XML_response = "";
-        String Processeditor_server_url = "http://http://172.16.64.113:1205/";
-
+        String Processeditor_server_url = "http://172.16.64.113:1205/";
 
         if(file_upload){
             FileUpload jUpload = new FileUpload();
@@ -60,6 +61,17 @@ public class JComparser {
             XML_response = jRetrieval.getHTML(Processeditor_server_url);
             XML_response = XML_response.replaceAll("[^\\x20-\\x7e]", "");
             handleFileRetrieval(XML_response);
+        }
+
+        if(bpmn_img_retrieval) {
+            //retrieve an image for each model via its modelid
+            Retrieval jRetrieval = new Retrieval();
+            List<String> pcm = new ArrayList<String>();
+            List<String> models_list = new ArrayList<String>();
+
+
+
+            String response_list = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "modelid.png");
         }
     }
 
