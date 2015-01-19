@@ -25,11 +25,11 @@
 %
 \author{
 \alignauthor
-Jaspar, Jan, Sven, Stephan, Juliane, Nikolai\\
+Jaspar, Jan, Sven, Stephan, Juliane, Jannik\\
        \affaddr{Hasso Plattner Institute}\\
        \affaddr{Prof.-Dr.-Helmert-Str. 2-3}\\
        \affaddr{14482 Potsdam, Germany}\\
-       \email{\footnotesize  \{Jaspar,Jan,Sven,Stephan,Juliane,Nikolai\}@student.hpi.de}
+       \email{\footnotesize  \{Jaspar,Jan,Sven,Stephan,Juliane,Jannik\}@student.hpi.de}
 }
 \date{28 December 2014}
 
@@ -54,7 +54,7 @@ Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFramewo
 \centering
 %\psfig{file=rosette.ps, height=1in, width=1in,}
 \includegraphics[width=3in]{img/MetaModell_classDiagramm.jpg}
-\caption{Meta Modell PCM.}
+\caption{Meta Modell von PCM.}
 \label{fig:PCMmetaModell}
 \end{figure}
 
@@ -69,11 +69,14 @@ Overall JEngine
 Der JCore umfasst mehrere Hauptkomponenten unserer Engine. Dazu zählt die Auswertung der Datenbank und das Entscheiden von enableden Aktivitäten etc.\\
 Dazu zählt zum Beispiel auch die REST-API.
 
+%
+%
 \subsubsection{REST-API}
 Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost:8080/Scenario/\textit{\{ScenarioID\}}/\\\textit{\{ScenarioInstanceID\}}} abrufen.
 \subsubsection{ExecutionService}
 
-
+%
+%
 \subsection{JComparser}
 
 %
@@ -88,19 +91,22 @@ Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost
 %
 \section{Processeditor}
 
-\section{PCM modelling using the
-Processeditor}\label{pcm-modelling-using-the-processeditor}
-
+%
+%
+\section{PCM modelling using the Processeditor}\label{pcm-modelling-using-the-processeditor}
 This document explains how to use the Processeditor to create PCM
 models. A PCM-Process can be described by many PCM fragments and one PCM
 scenario.
 
+%
+%
 \subsection{Preparations}\label{preparations}
-
 Currently you need both, the Processeditor Workbench and the
 Processeditor Server to model and Save PCM. You will use the Workbench
 for modelling and the Server as a global repository.
 
+%
+%
 \subsection{PCM Fragments}\label{pcm-fragments}
 
 PCM Fragments are small Business Process models. They can be modelled
@@ -124,8 +130,9 @@ using a subset of the BPMN-Notation:
 
 All this elements are offered by the model type PCM Fragment.
 
+%
+%
 \subsubsection{Marking a Task as Global}\label{marking-a-task-as-global}
-
 PCM allows to use the same task in more than one fragment. To do so
 
 \begin{enumerate}
@@ -141,6 +148,8 @@ PCM allows to use the same task in more than one fragment. To do so
   Set the \emph{global flag}
 \end{enumerate}
 
+%
+%
 \subsubsection{Copy and Refer an existing
 Task}\label{copy-and-refer-an-existing-task}
 
@@ -159,12 +168,15 @@ Task}\label{copy-and-refer-an-existing-task}
   Click on Ok
 \end{enumerate}
 
+%
+%
 \subsection{PCM Scenario}\label{pcm-scenario}
-
 A Scenario defines which PCM Fragments are part of one Process. All PCM
 Fragments have to be saved on the Server. You can alter the Scenario
 only by moving the nodes and adding/removing PCM Fragments.
 
+%
+%
 \subsubsection{Defining a PCM Scenario}\label{defining-a-pcm-scenario}
 
 \begin{enumerate}
