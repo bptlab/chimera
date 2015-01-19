@@ -44,6 +44,23 @@
     <link href="css/charts-graphs.css" rel="stylesheet" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){    
+                var a = $(this).attr('id');
+                $.post("form_content.php", {
+                }, function(response){
+                    $('#container').fadeOut();
+                    $('#container').html(unescape(response));
+                    $('#container').fadeIn();
+                    setTimeout("finishAjax('container', '"+escape(response)+"')", 400);
+                });  
+        });    
+        function finishAjax(id, response){
+          $('#'+id).html(unescape(response));
+          $('#'+id).fadeIn();
+        } 
+        </script>	
   </head>
   <body>
     <header>
