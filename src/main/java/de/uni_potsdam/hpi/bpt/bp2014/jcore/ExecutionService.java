@@ -66,6 +66,17 @@ public class ExecutionService {
         return ids;
     }
 
+    public HashMap<Integer, String> getEnabledActivityLabelsForScenarioInstance(int scenarioInstance_id){
+        HashMap<Integer,String> labels = new HashMap<Integer, String>();
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances){
+            if(nodeInstance instanceof ActivityInstance){
+                labels.put(((ActivityInstance) nodeInstance).controlNode_id, ((ActivityInstance) nodeInstance).label);
+            }
+        }
+        return labels;
+    }
+
     public void beginActivity(int scenarioInstance_id, int activity_id){
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances) {
