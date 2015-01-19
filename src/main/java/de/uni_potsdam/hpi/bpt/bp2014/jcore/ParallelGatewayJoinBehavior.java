@@ -1,8 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-public class ParallelGatewayJoinBehavior extends IncomingBehavior {
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 
-    ParallelGatewayJoinBehavior(){
-        super();
+public class ParallelGatewayJoinBehavior extends IncomingBehavior {
+    private DbDataFlow dbDataFlow = new DbDataFlow();
+
+    ParallelGatewayJoinBehavior(GatewayInstance gatewayInstance){
+        this.controlNodeInstance = gatewayInstance;
     }
 }
