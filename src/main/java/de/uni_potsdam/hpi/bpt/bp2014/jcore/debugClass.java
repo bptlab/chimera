@@ -55,8 +55,9 @@ public class debugClass {
         System.out.println(" -  -- -- -- -- -- - -- -- -- -- -");
         HistoryService historyService = new HistoryService();
         LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(53);
+        HashMap<Integer, String> labels2 = historyService.getTerminatedActivityLabelsForScenarioInstance(53);
         for(int activityID: terminatedActivities) {
-            System.out.println("ID: " + activityID);
+            System.out.println("ID: " + activityID + ", " + labels2.get(activityID));
         }
        /* ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(1);
