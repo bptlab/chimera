@@ -16,7 +16,7 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
         this.scenarioInstance = scenarioInstance;
         this.fragmentInstance_id = fragmentInstance_id;
     }
-
+    @Override
     public void terminate(){
         setDataStates();
         scenarioInstance.checkDataFlowEnabled();
@@ -41,8 +41,9 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
             controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
         }else if(type.equals("Endevent")){
             controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
+        }else if(type.equals("XOR") || type.equals("AND")){
+            controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
         }
-        //TODO: Gateways
         return controlNodeInstance;
     }
 

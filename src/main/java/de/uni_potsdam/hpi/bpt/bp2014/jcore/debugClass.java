@@ -41,12 +41,11 @@ public class debugClass {
     }
 
     public static void main(String args[]){
-     /*   String scenarioID = selectScenario();
+        String scenarioID = selectScenario();
         String scenarioInstanceID = selectScenarioInstance();
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-*/
-        ExecutionService executionService = new ExecutionService();
-        int id = executionService.startNewScenarioInstance(new Integer(1));
+
+/*        int id = executionService.startNewScenarioInstance(new Integer(1));
         LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
         HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(id);
         for(int activityID: enabledActivitiesIDs) {
@@ -58,7 +57,7 @@ public class debugClass {
         HashMap<Integer, String> labels2 = historyService.getTerminatedActivityLabelsForScenarioInstance(223);
         for(int activityID: terminatedActivities) {
             System.out.println("ID: " + activityID + ", " + labels2.get(activityID));
-        }
+        }*/
        /* ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(1);
         LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(id);
@@ -68,7 +67,7 @@ public class debugClass {
         }*/
 
 
-      /*  while(true){
+        while(true){
 
 
             ExecutionService executionService = new ExecutionService(scenarioInstance);
@@ -79,6 +78,6 @@ public class debugClass {
             }
             System.out.println("Select Activity");
             executionService.startActivity(new Integer(readLine()));
-        }*/
+        }
     }
 }

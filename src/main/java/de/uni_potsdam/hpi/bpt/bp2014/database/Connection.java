@@ -102,7 +102,7 @@ public class Connection {
     private void initializeDatabaseConfiguration(String path) {
         try {
             username = "root";
-            password = "foi6cixoo0Quah2e";
+            password = "samsa";
             url = "jdbc:mysql://localhost:3306/JEngineV2";
         } catch(Exception e) {
             System.err.println("You are running the Engine on Tomcat");
