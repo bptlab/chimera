@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 19. Jan 2015 um 14:05
+-- Erstellungszeit: 19. Jan 2015 um 16:46
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=636 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=659 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -598,7 +598,21 @@ INSERT INTO `activityinstance` (`id`, `type`, `role_id`, `activity_state`, `work
 (632, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
 (633, 'HumanTask', 1, 'ready', 'init'),
 (634, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
-(635, 'HumanTask', 1, 'ready(ControlFlow)', 'init');
+(635, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(637, 'HumanTask', 1, 'ready', 'init'),
+(638, 'HumanTask', 1, 'ready', 'init'),
+(640, 'HumanTask', 1, 'ready', 'init'),
+(641, 'HumanTask', 1, 'ready', 'init'),
+(643, 'HumanTask', 1, 'ready', 'init'),
+(644, 'HumanTask', 1, 'ready', 'init'),
+(646, 'HumanTask', 1, 'ready', 'init'),
+(647, 'HumanTask', 1, 'ready', 'init'),
+(649, 'HumanTask', 1, 'terminated', 'init'),
+(650, 'HumanTask', 1, 'ready', 'init'),
+(653, 'HumanTask', 1, 'terminated', 'init'),
+(654, 'HumanTask', 1, 'terminated', 'init'),
+(657, 'HumanTask', 1, 'terminated', 'init'),
+(658, 'HumanTask', 1, 'terminated', 'init');
 
 -- --------------------------------------------------------
 
@@ -662,7 +676,13 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (9, 10, ''),
 (10, 11, ''),
 (12, 13, ''),
-(12, 14, '');
+(12, 14, ''),
+(101, 102, ''),
+(102, 103, ''),
+(102, 104, ''),
+(103, 105, ''),
+(104, 105, ''),
+(105, 106, '');
 
 -- --------------------------------------------------------
 
@@ -675,7 +695,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=107 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -696,7 +716,13 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`) VALUES
 (12, 'test1', 'Activity', 100),
 (13, 'test2', 'Activity', 100),
 (14, 'test3', 'Activity', 100),
-(100, 'TestAND', 'AND', 100);
+(100, 'TestAND', 'AND', 100),
+(101, 'Startevent', 'Startevent', 101),
+(102, 'AND', 'AND', 101),
+(103, 'Activity1', 'Activity', 101),
+(104, 'Activity2', 'Activity', 101),
+(105, 'AND Join', 'AND', 101),
+(106, 'Endevent', 'Endevent', 101);
 
 -- --------------------------------------------------------
 
@@ -709,7 +735,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=636 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=660 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -1275,7 +1301,31 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (632, 'Activity', 10, 602),
 (633, 'Activity', 2, 603),
 (634, 'Activity', 4, 604),
-(635, 'Activity', 10, 605);
+(635, 'Activity', 10, 605),
+(636, 'AND', 102, 613),
+(637, 'Activity', 103, 613),
+(638, 'Activity', 104, 613),
+(639, 'AND', 102, 614),
+(640, 'Activity', 103, 614),
+(641, 'Activity', 104, 614),
+(642, 'AND', 102, 615),
+(643, 'Activity', 103, 615),
+(644, 'Activity', 104, 615),
+(645, 'AND', 102, 616),
+(646, 'Activity', 103, 616),
+(647, 'Activity', 104, 616),
+(648, 'AND', 102, 617),
+(649, 'Activity', 103, 617),
+(650, 'Activity', 104, 617),
+(651, 'AND', 105, 617),
+(652, 'AND', 102, 618),
+(653, 'Activity', 103, 618),
+(654, 'Activity', 104, 618),
+(655, 'AND', 105, 618),
+(656, 'AND', 102, 619),
+(657, 'Activity', 103, 619),
+(658, 'Activity', 104, 619),
+(659, 'AND', 105, 619);
 
 -- --------------------------------------------------------
 
@@ -1618,7 +1668,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=102 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -1628,7 +1678,8 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`) VALUES
 (1, 'fragment1', 1),
 (2, 'fragment2', 1),
 (3, 'fragment3', 1),
-(100, 'testfragment', 101);
+(100, 'testfragment', 101),
+(101, 'fragmentScenario2', 2);
 
 -- --------------------------------------------------------
 
@@ -1641,7 +1692,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=606 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=620 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -2175,7 +2226,21 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (602, 0, 3, 226),
 (603, 0, 1, 228),
 (604, 0, 2, 228),
-(605, 0, 3, 228);
+(605, 0, 3, 228),
+(606, 0, 101, 229),
+(607, 0, 101, 230),
+(608, 0, 101, 231),
+(609, 0, 101, 232),
+(610, 0, 101, 233),
+(611, 0, 101, 234),
+(612, 0, 101, 235),
+(613, 0, 101, 236),
+(614, 0, 101, 237),
+(615, 0, 101, 238),
+(616, 0, 101, 239),
+(617, 0, 101, 240),
+(618, 1, 101, 241),
+(619, 0, 101, 241);
 
 -- --------------------------------------------------------
 
@@ -2204,7 +2269,17 @@ CREATE TABLE IF NOT EXISTS `gatewayinstance` (
 --
 
 INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
-(100, 'AND', 'Init');
+(100, 'AND', 'init'),
+(636, 'AND', 'init'),
+(639, 'AND', 'init'),
+(642, 'AND', 'init'),
+(645, 'AND', 'init'),
+(648, 'AND', 'terminated'),
+(651, 'AND', 'init'),
+(652, 'AND', 'terminated'),
+(655, 'AND', 'terminated'),
+(656, 'AND', 'terminated'),
+(659, 'AND', 'init');
 
 -- --------------------------------------------------------
 
@@ -2267,6 +2342,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
 
 INSERT INTO `scenario` (`id`, `name`) VALUES
 (1, 'HELLOWORLD'),
+(2, 'helloWorld2'),
 (100, 'TestScenario'),
 (101, 'Test Insert Scenario');
 
@@ -2279,7 +2355,7 @@ INSERT INTO `scenario` (`id`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 `id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=242 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -2466,7 +2542,20 @@ INSERT INTO `scenarioinstance` (`id`, `scenario_id`) VALUES
 (225, 101),
 (226, 1),
 (227, 101),
-(228, 1);
+(228, 1),
+(229, 2),
+(230, 2),
+(231, 2),
+(232, 2),
+(233, 2),
+(234, 2),
+(235, 2),
+(236, 2),
+(237, 2),
+(238, 2),
+(239, 2),
+(240, 2),
+(241, 2);
 
 -- --------------------------------------------------------
 
@@ -2770,7 +2859,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=636;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=659;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -2780,12 +2869,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=107;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=636;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=660;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -2830,12 +2919,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=101;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=102;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=606;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=620;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -2855,7 +2944,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=102;
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=229;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=242;
 --
 -- AUTO_INCREMENT for table `state`
 --
