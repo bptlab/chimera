@@ -79,6 +79,12 @@ public class ScenarioInstance {
                 terminatedControlNodeInstances.remove(controlNodeInstance);
             }
         }
+        updatedList = new LinkedList<ControlNodeInstance>(controlNodeInstances);
+        for(ControlNodeInstance controlNodeInstance: updatedList){
+            if(controlNodeInstance.fragmentInstance_id == fragmentInstance_id){
+                controlNodeInstances.remove(controlNodeInstance);
+            }
+        }
     }
 
     public void initializeDataObjects(){
@@ -110,5 +116,12 @@ public class ScenarioInstance {
                 ((ActivityInstance) activityInstance).checkDataFlowEnabled();
             }
         }
+    }
+
+    public Boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id){
+        for(ControlNodeInstance controlNodeInstance: terminatedControlNodeInstances){
+            if(controlNodeInstance.controlNode_id == controlNode_id) return true;
+        }
+        return false;
     }
 }

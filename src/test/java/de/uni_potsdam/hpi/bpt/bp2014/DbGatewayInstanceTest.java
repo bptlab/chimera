@@ -18,6 +18,6 @@ public class DbGatewayInstanceTest {
     @Test
     public void testGetState(){
         DbGatewayInstance gatewayInstance = new DbGatewayInstance();
-        assertEquals("Init", gatewayInstance.getState(100));
+        assertEquals("init", gatewayInstance.getState(100));
     }
 }
