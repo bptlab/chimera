@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,7 @@ public class JComparser {
         boolean bpmn_img_retrieval = false;
 
         /* Initialization */
-        String XML_response = "";
+        String xml_response = "";
         String Processeditor_server_url = "http://172.16.64.113:1205/";
 
         if(file_upload){
@@ -43,8 +41,8 @@ public class JComparser {
 
             for(int i=0; i < models_size; i++) {
             //    response_item = response_list.get(i);
-                XML_response = jRetrieval.getHTML(Processeditor_server_url + "models/" + response_item + ".pm");
-                pcm.add(XML_response);
+                xml_response = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "models/" + response_item + ".pm");
+                pcm.add(xml_response);
             }
             //handleFileRetrieval(pcm);
 
@@ -58,9 +56,9 @@ public class JComparser {
             System.out.println(in);
 
             // jRetrieval = new Retrieval();
-            XML_response = jRetrieval.getHTML(Processeditor_server_url);
-            XML_response = XML_response.replaceAll("[^\\x20-\\x7e]", "");
-            handleFileRetrieval(XML_response);
+            xml_response = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url);
+            xml_response = xml_response.replaceAll("[^\\x20-\\x7e]", "");
+            handleFileRetrieval(xml_response);
         }
 
         if(bpmn_img_retrieval) {
