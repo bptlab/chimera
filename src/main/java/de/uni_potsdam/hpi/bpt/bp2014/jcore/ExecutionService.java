@@ -27,12 +27,18 @@ public class ExecutionService {
         return scenarioInstance.scenarioInstance_id;
     }
 
-    public void openExistingScenarioInstance(int scenario_id, int scenarioInstance_id){
+    public Boolean openExistingScenarioInstance(int scenario_id, int scenarioInstance_id){
         if(!sortedScenarioInstances.containsKey(scenarioInstance_id)) {
-            ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id, scenarioInstance_id);
-            scenarioInstances.add(scenarioInstance);
-            sortedScenarioInstances.put(scenarioInstance_id, scenarioInstance);
+            if(existScenarioInstance(scenarioInstance_id)) {
+                ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id, scenarioInstance_id);
+                scenarioInstances.add(scenarioInstance);
+                sortedScenarioInstances.put(scenarioInstance_id, scenarioInstance);
+                return true;
+            }else{
+                return false;
+            }
         }
+        return true;
     }
 
     public LinkedList<Integer> getAllScenarioIDs(){
@@ -50,6 +56,11 @@ public class ExecutionService {
 
     public Boolean existScenarioInstance(int scenario_id, int scenarioInstance_id){
         if(dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)) return true;
+        return false;
+    }
+
+    public Boolean existScenario(int scenario_id){
+        if(dbScenario.existScenario(scenario_id)) return true;
         return false;
     }
 
