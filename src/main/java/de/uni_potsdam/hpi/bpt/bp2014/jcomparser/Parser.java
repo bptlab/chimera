@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import com.sun.org.apache.xpath.internal.NodeSet;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -7,6 +8,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +24,13 @@ As a part of the JComparser we need to parse the retrieved XML doc in order to p
  */
 public class Parser {
 
-    /* parse the XML File */
-    public static void parsePCM(List pcm) {
+    public static void main(String[] args) {
+        parsePCM();
+    }
 
+    /* parse the XML File */
+  public static void parsePCM() {
+/*
         Connector jHandler = new Connector();
         int pcm_size = pcm.size();
         String pcm_item = "";
@@ -46,6 +55,33 @@ public class Parser {
         } catch (IOException e) {
             printErrorMessage(e);
         }
+    }*/
+
+    // FileUpload f = new FileUpload();
+    //JDBCHandler jHandler = new JDBCHandler();
+      Connector jHandler = new Connector();
+    try
+
+    {
+        File models = new File("src/main/resources/fragmentlein.xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+                .newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(models);
+        doc.getDocumentElement().normalize();
+        System.out.println("Root Element:"
+                + doc.getDocumentElement().getNodeName());
+        fillTables(doc, jHandler);
+    }
+
+    catch(ParserConfigurationException|SAXException|
+    IOException e
+    )
+
+    {
+        // TODO Auto-generated catch block
+        printErrorMessage(e);
+    }
     }
 
     public static List<String> parseModelList(String xml_list) {
@@ -72,7 +108,7 @@ public class Parser {
     }
 
     private static void fillTables(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
-        filluserTask(doc, jHandler);
+        /*filluserTask(doc, jHandler);
         fillAssociation(doc, jHandler);
         fillDataObject(doc, jHandler);
         fillEvent(doc, jHandler);
@@ -83,7 +119,7 @@ public class Parser {
         fillReference(doc, jHandler);
         fillScenario(doc, jHandler);
         fillSequenceflow(doc, jHandler);
-        fillSet(doc, jHandler);
+        fillSet(doc, jHandler);*/
     }
 
     private static void fillSet(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
@@ -186,20 +222,28 @@ public class Parser {
 
     }
 
-    private static void filluserTask(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
-        NodeList nList = doc.getElementsByTagName("userTask");
-        if (nList.getLength() != 0)
-            System.out.println("\nActivities detected");
-        else
-            System.out.println("No Activities found");
-        for (int i = 0; i < nList.getLength(); i++) {
-            Node nNode = nList.item(i);
-            System.out.println("userTask: " + nNode.getNodeName());
-            Element eElement = (Element) nNode;
-            System.out.println(eElement.getAttribute("name"));
-            jHandler.insertActivityIntoDatabase(eElement.getAttribute("name"));
-        }
+    private static void filluserTask(Document fragmentXML, int fragmentID, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
 
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+
+        String xPathQuery = "/model/nodes/node/property[contains(@value,'net.frapu.code.visualization.bpmn.Task')]/preceding-sibling::property[@name='text']/@value";
+
+        try {
+            NodeList nList = (NodeList) xPath.compile(xPathQuery).evaluate(fragmentXML, XPathConstants.NODESET);
+
+            if (nList.getLength() != 0) {
+                System.out.println("\nActivities detected");
+                for (int i = 0; i < nList.getLength(); i++) {
+                    System.out.println("userTask: " + nList.item(i).getNodeValue());
+                    jHandler.insertActivityIntoDatabase(nList.item(i).getNodeValue(), fragmentID);
+                }
+            }
+            else
+                System.out.println("No Activities found");
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void printErrorMessage(Exception e) {

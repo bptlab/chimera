@@ -35,9 +35,11 @@ foreach ($scenarios as &$scenario_value) {
     $instances = ShowScenarioInstances($scenario_value);
     foreach ($instances as &$instances_value) {
             echo "<h3>".$instances_value."</h3>";
+            
             echo "<h4>Activities as 'begin' </h4>";
             $activities_begin =  GetActivities($scenario_value, $instances_value, "begin");
             print_r($activities_begin);
+
             echo "<h4>Activities as 'terminate' </h4>";
             $activities_terminate =  GetActivities($scenario_value, $instances_value, "terminate");
             print_r($activities_terminate);
