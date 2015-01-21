@@ -9,10 +9,14 @@ function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
 	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_status;
 	$get_json = file_get_contents($URL);
 	$get_response_as_array = json_decode($get_json,true);
+	if($get_response_as_array){
+                die("ERROR: decoding within GetActivities failed");
+    }
+
 	if($debug){
 		error_log("HTTP GET on ".$URL);
 		error_log("Returned ".$get_json);
-		error_log("Decoded json as ".$get_response_as_array);
+		error_log("Decoded json as ".print_r($get_response_as_array));
 	}
 	return $get_respone_as_array;
 }
@@ -22,10 +26,13 @@ function ShowScenarios() {
 	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/Show";
 	$get_json = file_get_contents($URL);
 	$get_response_as_array = json_decode($get_json,true);
+	if($get_response_as_array){
+                die("ERROR: decoding within ShowScenarios failed");
+    }
 	if($debug){
 		error_log("HTTP GET on ".$URL);
 		error_log("Returned ".$get_json);
-		error_log("Decoded json as ".$get_response_as_array);
+		error_log("Decoded json as ".var_dump($get_response_as_array));
 	}
 	return $get_respone_as_array['ids'];
 }
@@ -35,10 +42,13 @@ function ShowScenarioInstances($PCM_Scenario) {
 	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/Instances/".$PCM_Scenario;
 	$get_json = file_get_contents($URL);
 	$get_response_as_array = json_decode($get_json,true);
-	if($debug){
+	if($get_response_as_array){
+                die("ERROR: decoding within ShowScenarioInstances failed");
+    }
+    if($debug){
 		error_log("HTTP GET on ".$URL);
 		error_log("Returned ".$get_json);
-		error_log("Decoded json as ".$get_response_as_array);
+		error_log("Decoded json as ".print_r($get_response_as_array));
 	}
 	return $get_respone_as_array['ids'];
 }
