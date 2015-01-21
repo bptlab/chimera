@@ -1,10 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import javax.annotation.Resource;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 public class Connection {
     private static Connection instance = null;
@@ -18,6 +21,11 @@ public class Connection {
     private DataSource ds;
 
     private Connection(){
+        try {
+            Context ctx = new InitialContext();
+            ds = (DataSource)ctx.lookup("java:comp/env/jdbc/mkyongdb");
+        } catch (NamingException e) {
+        }
     }
 
     public static Connection getInstance(String path) {
@@ -43,9 +51,7 @@ public class Connection {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
         }
         BufferedReader br = new BufferedReader(fr);
         String username = "";
@@ -53,9 +59,7 @@ public class Connection {
             username = br.readLine();
         } catch (IOException e) {
             //e.printStackTrace();
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
         }
         return username;
     }
@@ -65,9 +69,7 @@ public class Connection {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
         }
         BufferedReader br = new BufferedReader(fr);
         String password = "";
@@ -76,9 +78,7 @@ public class Connection {
             password = br.readLine();
         } catch (IOException e) {
             //e.printStackTrace();
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
         }
         return password;
     }
@@ -87,9 +87,7 @@ public class Connection {
         try {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
         }
         //System.err.println(file.getAbsoluteFile());
         BufferedReader br = new BufferedReader(fr);
@@ -99,9 +97,7 @@ public class Connection {
             br.readLine();
             url = br.readLine();
         } catch (IOException e) {
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
             //e.printStackTrace();
         }
         return url;
@@ -135,9 +131,7 @@ public class Connection {
             password = this.getPassword();
             url = this.getUrl();
         }catch(Exception e) {
-            username = "root";
-            password = "samsa";
-            url = "jdbc:mysql://127.0.0.1/JEngineV2";
+
         }
 
     }
