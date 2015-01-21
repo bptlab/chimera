@@ -1,4 +1,4 @@
-% THIS IS SIGPROC-SP.TEX - VERSION 3.1
+\message{ !name(JEngine-docu.tex)}% THIS IS SIGPROC-SP.TEX - VERSION 3.1
 % WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
 % APRIL 2009
 %
@@ -17,6 +17,9 @@
 \usepackage{stmaryrd}
 
 \begin{document}
+
+\message{ !name(JEngine-docu.tex) !offset(-3) }
+
 
 \title{Documentation zur JEngine}
 \numberofauthors{1} 
@@ -76,23 +79,23 @@ Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost
 
 
 @GET:
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\\{ScenarioID\}/\{ScenarioInstanceID\}/\{Status\}}\\
-Status = \{terminated, enabled\}\\
+http://172.16.64.113:8080/JEngine/Scenario/{ScenarioID}/{ScenarioInstanceID}/{Status}/\\
+Status = {terminated, enabled}\\
 throw: error: not a correct scenario instance\\
 error: status not clear\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Show}\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Instances/\\\{ScenarioInstanceID\}}\\
+http://172.16.64.113:8080/JEngine/Scenario/Show\\
+http://172.16.64.113:8080/JEngine/Scenario/Instances/{ScenarioInstanceID}\\
 throw: error: not a correct scenario\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/DataObjects/\\\{ScenarioID\}/\{ScenarioInstanceID\}}\\
+http://172.16.64.113:8080/JEngine/Scenario/DataObjects/{ScenarioID}/{ScenarioInstanceID}\\
 throw: error: not a correct scenario instance\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Get/\\ScenarioID/\{ScenarioInstanceID\}}\\
+http://172.16.64.113:8080/JEngine/Scenario/Get/ScenarioID/{ScenarioInstanceID}\\
 throw: error: not a correct scenario instance\\\\
 
-@POST:  \textbf{http://172.16.64.113:8080/JEngine/Scenario/\\ScenarioID/ScenarioInstanceID/activityID/status/comment}\\
-Status = \{terminate, begin\}\\
-e.g. \textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/\\terminate/comment}\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/begin/\\comment}\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Start/\\\{ScenarioID\}}\\
+@POST:  http://172.16.64.113:8080/JEngine/Scenario/ScenarioID/ScenarioInstanceID/activityID/status/comment\\
+Status = {terminate, begin}\\
+e.g. http://172.16.64.113:8080/JEngine/Scenario/1/47/4/terminate/comment\\
+http://172.16.64.113:8080/JEngine/Scenario/1/47/4/begin/comment\\
+http://172.16.64.113:8080/JEngine/Scenario/Start/{ScenarioID}\\
 throw: -1 (Dann wenn es kein Scenario mit der ID gibt)\\
 %
 %
@@ -295,3 +298,5 @@ You can create a variation of an existing PCM Fragment using the Plug-in
 %
 %
 \end{document}
+
+\message{ !name(JEngine-docu.tex) !offset(-302) }
