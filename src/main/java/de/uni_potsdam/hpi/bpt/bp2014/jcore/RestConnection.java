@@ -58,6 +58,18 @@ public class RestConnection {
 
     }
 
+    @GET
+    @Path("instances/{Instance}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String showScenarioInstances(@PathParam("Instance") int scenarioID){
+        LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
+        Gson gson = new Gson();
+        JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
+        String jsonRepresentation = gson.toJson(json);
+        return jsonRepresentation;
+
+    }
+
 
     @POST
     @Path("{Scenarioname}/{Instance}/{Activity}/{Status}/{Comment}")
