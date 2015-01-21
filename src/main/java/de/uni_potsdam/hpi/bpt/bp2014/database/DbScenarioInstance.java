@@ -188,4 +188,42 @@ public class DbScenarioInstance {
         }
         return results;
     }
+    public int getScenarioID(int scenarioInstance_id) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int results = -1;
+        if (conn == null) return results;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "SELECT scenario_id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            results = rs.getInt("scenario_id");
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+
 }
