@@ -47,7 +47,7 @@ public class RestConnection {
     }
 
     @GET
-    @Path("show")
+    @Path("Show")
     @Produces(MediaType.APPLICATION_JSON)
     public String showScenarios(){
         LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
@@ -59,7 +59,7 @@ public class RestConnection {
     }
 
     @GET
-    @Path("instances/{Instance}")
+    @Path("Instances/{Instance}")
     @Produces(MediaType.APPLICATION_JSON)
     public String showScenarioInstances(@PathParam("Instance") int scenarioID){
         LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
