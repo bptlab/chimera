@@ -1,49 +1,31 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
-public class Seed {
-
-    public void getDBcontent(){
-
-    }
-
-
-    public void setDBcontent(){
-
-    }
-
-    public ArrayList<Integer> getAllActivityIDByFragmentID(int id) {
-
-        Connector jHandler = new Connector();
-
-        de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector connect;
-        Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
-
+/**
+ * Created by jaspar.mang on 21.01.15.
+ */
+public class DbState {
+    public String getStateName(int id) {
+        java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        ArrayList<Integer> results = new ArrayList<Integer>();
+        String results = "";
         if (conn == null) return results;
 
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM ProcessElement WHERE type = 'Activity' AND fragment_id = "+id+" ORDER BY id";
-
+            String sql = "SELECT name FROM state WHERE id = " + id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
-                results.add(rs.getInt("id"));
-            }
-
+            rs.next();
+            results = rs.getString("name");
             //Clean-up environment
             rs.close();
             stmt.close();
             conn.close();
-
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
@@ -61,7 +43,6 @@ public class Seed {
                 se.printStackTrace();
             }
         }
-
         return results;
     }
 }
