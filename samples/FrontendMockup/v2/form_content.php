@@ -2,10 +2,11 @@
 include 'config.php';
 
 $PCM_Scenario = "1";
-$PCM_Fragment = "1";
-$PCM_options = "closed";
+$PCM_Fragment = "47";
+$PCM_status = "enabled";
+$PCM_comment = "comment";
 
-$get_json = file_get_contents($JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_options);
+$get_json = file_get_contents($JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_status."/".$PCM_comment);
 
 //Exmaple JSON String: '{"ids":[2,4],"label":{"2":"Essen kochen","4":"Zutaten kaufen"}}';
 $get_response = json_decode($get_json,true);
