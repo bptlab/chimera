@@ -1,9 +1,0 @@
-<Context>
-
-    <Resource name="jdbc/jengine" auth="Container" type="javax.sql.DataSource"
-              maxActive="50" maxIdle="30" maxWait="10000"
-              username="root" password="samsa"
-              driverClassName="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://127.0.0.1/JEngineV2"/>
-
-</Context>
