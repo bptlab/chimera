@@ -119,7 +119,7 @@
                     <ul>
                         <div id="container">
                        		 <br><br><br>
-                      		  <i>waiting for HANA..</i><br><br><img src="ajax-loader.gif"><br><br><br><br><br><br><br>
+                      		  <i>waiting for HANA..</i><br><br><img src="img/loading-green.gif"><br><br><br><br><br><br><br>
              	       </div>
                     </ul>
                 <h3>interdepend Task</h3>

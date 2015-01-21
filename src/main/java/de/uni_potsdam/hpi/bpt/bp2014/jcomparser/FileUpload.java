@@ -21,7 +21,7 @@ As a part of the JComparser we need to provide a manual XML File upload.
 
 public class FileUpload extends HttpServlet {
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+   /* public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doPost(request, response);
     }
 
@@ -81,11 +81,11 @@ public class FileUpload extends HttpServlet {
 
         // Calling the postprocessing asynchronously
 
-        /* we aint support java 1.8 :(
+        *//* we aint support java 1.8 :(
         Thread a = new Thread(() -> {
             de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.handleFileUpload(pcm);
         });
-        */
+        *//*
 
         new Thread()
         {
@@ -93,5 +93,5 @@ public class FileUpload extends HttpServlet {
                 de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.handleFileUpload(pcm);
             }
         }.start();
-    }
+    }*/
 }
