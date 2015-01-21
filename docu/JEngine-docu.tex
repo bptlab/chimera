@@ -76,10 +76,15 @@ Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost
 
 
 @GET:  http://172.16.64.113:8080/JEngine/Scenario/{ScenarioID}/{ScenarioInstanceID}/{Status}/
+Status = {terminated, enabled}
+throw: error: not a correct scenario instance
+error: status not clear
 http://172.16.64.113:8080/JEngine/Scenario/Show
 http://172.16.64.113:8080/JEngine/Scenario/Instances/{ScenarioInstanceID}
+throw: error: not a correct scenario
 
 @POST:  http://172.16.64.113:8080/JEngine/Scenario/ScenarioID/ScenarioInstanceID/activityID/status/comment
+Status = {terminate, begin}
 e.g. http://172.16.64.113:8080/JEngine/Scenario/1/47/4/terminate/comment
 http://172.16.64.113:8080/JEngine/Scenario/1/47/4/begin/comment
 %
