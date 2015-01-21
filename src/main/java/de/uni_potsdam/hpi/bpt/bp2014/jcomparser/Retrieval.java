@@ -17,6 +17,13 @@ public class Retrieval {
             "<property name='pwd' value='%s'/>%n" +
             "</user>";
 
+    /**
+     *
+     * @param urlToRead
+     * @return
+     * @Deprecated Use this method only if you don't want any authentification
+     */
+    @Deprecated
     public String getHTML(String urlToRead) {
         /* credits to Kalpak http://stackoverflow.com/questions/1485708/how-do-i-do-a-http-get-in-java */
         URL url;
