@@ -21,8 +21,7 @@ public class RestConnection {
     @Produces(MediaType.APPLICATION_JSON)
     public String showEnabledActivities( @PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID,  @PathParam("Status") String status ){
         if (status.equals("enabled")) {
-            executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-            //int id = executionService.startNewScenarioInstance(new Integer(scenarioID));
+            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) return "error: not a correct scenario instance";
             LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
             Gson gson = new Gson();
