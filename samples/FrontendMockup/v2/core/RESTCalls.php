@@ -1,5 +1,5 @@
 <?php
-
+include 'config.php';
 
 ###################################################
 #
@@ -25,7 +25,7 @@ function ShowScenarioInstances($PCM_Scenario) {
 function PostActivities($PCM_Scenario, $PCM_Fragment, $PCM_Activity, $PCM_status, $PCM_comment) {
 	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_Activity."/".$PCM_status."/".$PCM_comment;
 	//$data = array('key1' => 'value1', 'key2' => 'value2');
-	$data = array()
+	$data = array();
 	$result = PostWrapper($URL, $data);
 	if($result){
 		return true;
