@@ -21,25 +21,21 @@ public class RestConnection {
     @Produces(MediaType.APPLICATION_JSON)
     public String showEnabledActivities( @PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID,  @PathParam("Status") String status ){
         if (status.equals("enabled")) {
-            executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-            //int id = executionService.startNewScenarioInstance(new Integer(scenarioID));
+            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) return "error: not a correct scenario instance";
             LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
+            if(enabledActivitiesIDs.size() == 0) return "empty";
             Gson gson = new Gson();
             JsonActivities json = new JsonActivities(enabledActivitiesIDs, labels);
             String jsonRepresentation = gson.toJson(json);
             return jsonRepresentation;
         }else if(status.equals("terminated")){
-            //LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
-            //HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
-            LinkedList<Integer> closedActivitiesIDs = new LinkedList<Integer>();
-            closedActivitiesIDs.add(2);
-            closedActivitiesIDs.add(4);
-            HashMap<Integer, String> labels = new HashMap<Integer, String>();
+            if(!executionService.existScenarioInstance(scenarioID,scenarioInstanceID)) return "error: not a correct scenario instance";
+            LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
+            HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
+            if(terminatedActivities.size() == 0) return "empty";
             Gson gson = new Gson();
-            labels.put(2, "Essen kochen");
-            labels.put(4, "Zutaten kaufen");
-            JsonActivities json = new JsonActivities(closedActivitiesIDs, labels);
+            JsonActivities json = new JsonActivities(terminatedActivities, labels);
             String jsonRepresentation = gson.toJson(json);
             return jsonRepresentation;
         }
@@ -51,6 +47,7 @@ public class RestConnection {
     @Produces(MediaType.APPLICATION_JSON)
     public String showScenarios(){
         LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
+        if(scenarioIDs.size() == 0) return "empty";
         Gson gson = new Gson();
         JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
         String jsonRepresentation = gson.toJson(json);
@@ -62,7 +59,9 @@ public class RestConnection {
     @Path("Instances/{Instance}")
     @Produces(MediaType.APPLICATION_JSON)
     public String showScenarioInstances(@PathParam("Instance") int scenarioID){
+        if(!executionService.existScenario(scenarioID)) return "error: not a correct scenario";
         LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
+        if(scenarioIDs.size() == 0) return "empty";
         Gson gson = new Gson();
         JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
         String jsonRepresentation = gson.toJson(json);
@@ -73,32 +72,16 @@ public class RestConnection {
 
     @POST
     @Path("{Scenarioname}/{Instance}/{Activity}/{Status}/{Comment}")
-    public void doActivity( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Activity") int activityInstanceID, @PathParam("Status") String status, @PathParam("Comment") String comment ){
+    public Boolean doActivity( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Activity") int activityInstanceID, @PathParam("Status") String status, @PathParam("Comment") String comment ){
         executionService.openExistingScenarioInstance(new Integer(scenarioID),new Integer(scenarioInstanceID));
         if (status.equals("begin")) {
             executionService.beginActivity(scenarioInstanceID, activityInstanceID);
         }else if(status.equals("terminate")) {
             executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
         }
+        return true;
     }
 
-    @GET
-    @Path( "{Scenarioname}/{Instance}/closed" )
-    @Produces(MediaType.APPLICATION_JSON)
-    public String showClosedActivities( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") String scenarioInstanceID ){
-        //LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
-        //HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
-        LinkedList<Integer> closedActivitiesIDs = new LinkedList<Integer>();
-        closedActivitiesIDs.add(2);
-        closedActivitiesIDs.add(4);
-        HashMap<Integer, String> labels = new HashMap<Integer, String>();
-        Gson gson = new Gson();
-        labels.put(2, "Essen kochen");
-        labels.put(4, "Zutaten kaufen");
-        JsonActivities json = new JsonActivities(closedActivitiesIDs, labels);
-        String jsonRepresentation = gson.toJson(json);
-        return jsonRepresentation;
-    }
     class JsonActivities{
         private LinkedList<Integer> ids;
         private HashMap<Integer, String> label;
