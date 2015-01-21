@@ -44,7 +44,7 @@ public class Connection {
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         BufferedReader br = new BufferedReader(fr);
@@ -54,7 +54,7 @@ public class Connection {
         } catch (IOException e) {
             //e.printStackTrace();
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         return username;
@@ -66,7 +66,7 @@ public class Connection {
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         BufferedReader br = new BufferedReader(fr);
@@ -77,7 +77,7 @@ public class Connection {
         } catch (IOException e) {
             //e.printStackTrace();
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         return password;
@@ -88,7 +88,7 @@ public class Connection {
             fr = new FileReader(file);
         } catch (FileNotFoundException e) {
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
         //System.err.println(file.getAbsoluteFile());
@@ -100,7 +100,7 @@ public class Connection {
             url = br.readLine();
         } catch (IOException e) {
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
             //e.printStackTrace();
         }
@@ -111,7 +111,7 @@ public class Connection {
         java.sql.Connection conn = null;
         try {
 
-             //   return ds.getConnection();
+            //   return ds.getConnection();
             //Register JDBC driver
             Class.forName("com.mysql.jdbc.Driver");
             //Open a connection
@@ -136,7 +136,7 @@ public class Connection {
             url = this.getUrl();
         }catch(Exception e) {
             username = "root";
-            password = "samsa";
+            password = "foi6cixoo0Quah2e";
             url = "jdbc:mysql://127.0.0.1/JEngineV2";
         }
 

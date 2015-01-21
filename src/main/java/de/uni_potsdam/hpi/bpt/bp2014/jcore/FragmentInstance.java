@@ -1,9 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.LinkedList;
 /*
@@ -40,6 +37,9 @@ public class FragmentInstance {
         LinkedList<Integer> activities = dbControlNodeInstance.getActivitiesForFragmentInstanceID(fragmentInstance_id);
         for(int activity: activities) {
             ActivityInstance activityInstance = new ActivityInstance(activity, fragmentInstance_id, scenarioInstance);
+        }LinkedList<Integer> gateways = dbControlNodeInstance.getGatewaysForFragmentInstanceID(fragmentInstance_id);
+        for(int gateway: gateways) {
+            GatewayInstance gatewayInstance = new GatewayInstance(gateway, fragmentInstance_id, scenarioInstance);
         }
     }
     private void initializeNodeInstanceForFragment(){

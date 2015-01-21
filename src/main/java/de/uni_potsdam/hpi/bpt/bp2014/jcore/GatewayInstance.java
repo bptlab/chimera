@@ -30,6 +30,7 @@ public class GatewayInstance extends ControlNodeInstance {
         }//TODO: XOR Here
         scenarioInstance.controlNodeInstances.add(this);
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
+            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             //TODO: gatewas exist
         } else {
             if (isAND) {
@@ -39,8 +40,8 @@ public class GatewayInstance extends ControlNodeInstance {
             if (isAND) {
                 dbGatewayInstance.createNewGatewayInstance(controlNodeInstance_id, "AND", "init");
             }//TODO: XOR Here
-            this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
         }
+        this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
     }
 
     public void terminate(){

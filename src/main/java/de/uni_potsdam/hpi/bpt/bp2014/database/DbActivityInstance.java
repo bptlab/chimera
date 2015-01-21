@@ -107,7 +107,45 @@ public class DbActivityInstance {
             }
         }
     }
+    public LinkedList<Integer> getTerminatedActivitiesForFragmentInstance(int fragmentInstance_id) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        LinkedList<Integer> results = new LinkedList<Integer>();
+        if (conn == null) return results;
 
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "SELECT controlnode_id FROM activityinstance, controlnodeinstance WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' AND activity_state = 'terminated' AND fragmentinstance_id = "+ fragmentInstance_id;
+            rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                results.add(rs.getInt("controlnode_id"));
+            }
+
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
     public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
