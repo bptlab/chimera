@@ -28,9 +28,11 @@ public class ExecutionService {
     }
 
     public void openExistingScenarioInstance(int scenario_id, int scenarioInstance_id){
-        ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id, scenarioInstance_id);
-        scenarioInstances.add(scenarioInstance);
-        sortedScenarioInstances.put(scenarioInstance_id, scenarioInstance);
+        if(!sortedScenarioInstances.containsKey(scenarioInstance_id)) {
+            ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id, scenarioInstance_id);
+            scenarioInstances.add(scenarioInstance);
+            sortedScenarioInstances.put(scenarioInstance_id, scenarioInstance);
+        }
     }
 
     public LinkedList<Integer> getAllScenarioIDs(){
