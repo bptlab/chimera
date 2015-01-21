@@ -1,5 +1,6 @@
 <?php
-include 'config.php';
+include 'core/config.php';
+include 'core/RESTCalls.php';
 
 //update Cookie Values in case of POST is set.
 if(isset($_POST["ScenarioID"])){
@@ -28,16 +29,18 @@ echo"<html><body>
 
 
 
-
-
-$get_json = file_get_contents($JEngine_Server_URL."/".$JCore_REST_Interface."/Show");
-
-//Exmaple JSON String: '{"ids":[2,4],"label":{"2":"Essen kochen","4":"Zutaten kaufen"}}';
-$get_response = json_decode($get_json,true);
-
-$response_amount_of_ids = count($get_response['ids']);
-$response_label = $get_response['label'];
-
-if($response_amount_of_ids == 0){
-  die (" no ids provided");
+$scenarios = ShowScenarios();
+foreach ($scenarios as &$scenario_value) {
+    echo "<h3>".$scenario_value."</h3>";
+    $instances = ShowScenarioInstances($scenario_value);
+    foreach ($instances as &$instances_value) {
+            echo "<h3>".$instances_value."</h3>";
+            echo "<h4>Activities as 'begin' </h4>";
+            $activities_begin =  GetActivities($scenario_value, $instances_value, "begin");
+            print_r($activities_begin);
+            echo "<h4>Activities as 'terminate' </h4>";
+            $activities_terminate =  GetActivities($scenario_value, $instances_value, "terminate");
+            print_r($activities_terminate);
+    }
 }
+
