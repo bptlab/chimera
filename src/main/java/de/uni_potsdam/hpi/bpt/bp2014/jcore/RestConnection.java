@@ -46,6 +46,30 @@ public class RestConnection {
         return "error: status not clear";
     }
 
+    @GET
+    @Path("Show")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String showScenarios(){
+        LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
+        Gson gson = new Gson();
+        JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
+        String jsonRepresentation = gson.toJson(json);
+        return jsonRepresentation;
+
+    }
+
+    @GET
+    @Path("Instances/{Instance}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String showScenarioInstances(@PathParam("Instance") int scenarioID){
+        LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
+        Gson gson = new Gson();
+        JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
+        String jsonRepresentation = gson.toJson(json);
+        return jsonRepresentation;
+
+    }
+
 
     @POST
     @Path("{Scenarioname}/{Instance}/{Activity}/{Status}/{Comment}")
@@ -82,6 +106,13 @@ public class RestConnection {
         public JsonActivities(LinkedList<Integer> activitiesIDs, HashMap<Integer, String> labels){
             this.ids = activitiesIDs;
             this.label = labels;
+        }
+    }
+    class JsonScenarioIDS{
+        private LinkedList<Integer> ids;
+
+        public JsonScenarioIDS(LinkedList<Integer> scenarioIDs){
+            this.ids = scenarioIDs;
         }
     }
 }
