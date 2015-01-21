@@ -73,6 +73,15 @@ Dazu zählt zum Beispiel auch die REST-API.
 %
 \subsubsection{REST-API}
 Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost:8080/Scenario/\textit{\{ScenarioID\}}/\\\textit{\{ScenarioInstanceID\}}} abrufen.
+
+
+@GET:  http://172.16.64.113:8080/JEngine/Scenario/ScenarioID/ScenarioInstanceID/status/
+
+@POST:  http://172.16.64.113:8080/JEngine/Scenario/ScenarioID/ScenarioInstanceID/activityID/status/comment
+e.g. http://172.16.64.113:8080/JEngine/Scenario/1/47/4/terminate/comment
+http://172.16.64.113:8080/JEngine/Scenario/1/47/4/begin/comment
+%
+%
 \subsubsection{ExecutionService}
 
 %
