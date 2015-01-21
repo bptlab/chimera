@@ -26,7 +26,7 @@ public class RestConnection {
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
             if(enabledActivitiesIDs.size() == 0) return "empty";
             Gson gson = new Gson();
-            JsonActivities json = new JsonActivities(enabledActivitiesIDs, labels);
+            JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
             String jsonRepresentation = gson.toJson(json);
             return jsonRepresentation;
         }else if(status.equals("terminated")){
@@ -35,11 +35,25 @@ public class RestConnection {
             HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
             if(terminatedActivities.size() == 0) return "empty";
             Gson gson = new Gson();
-            JsonActivities json = new JsonActivities(terminatedActivities, labels);
+            JsonHashMapIntegerString json = new JsonHashMapIntegerString(terminatedActivities, labels);
             String jsonRepresentation = gson.toJson(json);
             return jsonRepresentation;
         }
         return "error: status not clear";
+    }
+
+    @GET
+    @Path("DataObjects/{Scenarioname}/{Instance}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String showDataObjects( @PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID,  @PathParam("Status") String status ){
+        if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) return "error: not a correct scenario instance";
+        LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
+        HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
+        if(dataObjects.size() == 0) return "empty";
+        Gson gson = new Gson();
+        JsonHashMapIntegerString json = new JsonHashMapIntegerString(dataObjects, labels);
+        String jsonRepresentation = gson.toJson(json);
+        return jsonRepresentation;
     }
 
     @GET
@@ -49,7 +63,20 @@ public class RestConnection {
         LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
         if(scenarioIDs.size() == 0) return "empty";
         Gson gson = new Gson();
-        JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
+        JsonIntegerList json = new JsonIntegerList(scenarioIDs);
+        String jsonRepresentation = gson.toJson(json);
+        return jsonRepresentation;
+
+    }
+
+    @GET
+    @Path("Get/ScenarioID/{ScenarioInstance}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getScenarioID(@PathParam("ScenarioInstance") int scenarioInstanceID){
+        if(!executionService.existScenarioInstance(scenarioInstanceID)) return "error: not a correct scenario instance";
+        int scenarioID = executionService.getScenarioIDForScenarioInstance(scenarioInstanceID);
+        Gson gson = new Gson();
+        JsonInteger json = new JsonInteger(scenarioID);
         String jsonRepresentation = gson.toJson(json);
         return jsonRepresentation;
 
@@ -63,7 +90,7 @@ public class RestConnection {
         LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
         if(scenarioIDs.size() == 0) return "empty";
         Gson gson = new Gson();
-        JsonScenarioIDS json = new JsonScenarioIDS(scenarioIDs);
+        JsonIntegerList json = new JsonIntegerList(scenarioIDs);
         String jsonRepresentation = gson.toJson(json);
         return jsonRepresentation;
 
@@ -82,20 +109,37 @@ public class RestConnection {
         return true;
     }
 
-    class JsonActivities{
+    @POST
+    @Path("Start/{Scenarioname}")
+    public int startNewActivity( @PathParam("Scenarioname") int scenarioID){
+        if(executionService.existScenario(scenarioID)) {
+            return executionService.startNewScenarioInstance(scenarioID);
+        }else{
+            return -1;
+        }
+    }
+
+    class JsonHashMapIntegerString{
         private LinkedList<Integer> ids;
         private HashMap<Integer, String> label;
 
-        public JsonActivities(LinkedList<Integer> activitiesIDs, HashMap<Integer, String> labels){
-            this.ids = activitiesIDs;
+        public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels){
+            this.ids = ids;
             this.label = labels;
         }
     }
-    class JsonScenarioIDS{
+    class JsonIntegerList{
         private LinkedList<Integer> ids;
 
-        public JsonScenarioIDS(LinkedList<Integer> scenarioIDs){
-            this.ids = scenarioIDs;
+        public JsonIntegerList(LinkedList<Integer> ids){
+            this.ids = ids;
+        }
+    }
+    class JsonInteger{
+        private Integer id;
+
+        public JsonInteger(Integer id){
+            this.id = id;
         }
     }
 }
