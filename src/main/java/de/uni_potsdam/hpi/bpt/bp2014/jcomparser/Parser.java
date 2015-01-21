@@ -108,18 +108,18 @@ public class Parser {
     }
 
     private static void fillTables(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
-        /*filluserTask(doc, jHandler);
+        //filluserTask(doc, jHandler);
         fillAssociation(doc, jHandler);
         fillDataObject(doc, jHandler);
         fillEvent(doc, jHandler);
-        fillFragment(doc, jHandler);
+        //fillFragment(doc, jHandler);
         fillGateway(doc, jHandler);
         fillGatewayRule(doc, jHandler);
         fillProcessElement(doc, jHandler);
         fillReference(doc, jHandler);
         fillScenario(doc, jHandler);
         fillSequenceflow(doc, jHandler);
-        fillSet(doc, jHandler);*/
+        fillSet(doc, jHandler);
     }
 
     private static void fillSet(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
@@ -138,27 +138,15 @@ public class Parser {
 
     }
 
-    private static void fillScenario(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
-        NodeList nList = doc.getElementsByTagName("termination");
-        if (nList.getLength() != 0)
-            System.out.println("\nScenarios detected");
-        else
-            System.out.println("No Scenarios found");
-        for (int i = 0; i < nList.getLength(); i++) {
-            Node nTer = nList.item(i);
-            Element eTerElement = (Element) nTer;
-            NodeList nListCondition = eTerElement.getElementsByTagName("dataObject");
-            for (int j = 0; j < nListCondition.getLength(); j++) {
-                Node nCondition = nListCondition.item(j);
-                Element eConElement = (Element) nCondition;
-                // String name =
-                // eElement.getElementsByTagName("name").item(0).getTextContent();
-                String ter = eConElement.getAttribute("name")
-                        + " muss im Zustand " + eConElement.getAttribute("state")+ " sein.";
-                // System.out.println(eElement.getElementsByTagName("name").item(0).getTextContent());
-                System.out.println(ter);
-                jHandler.insertScenarioIntoDatabase("name", ter);
-            }
+    private static void fillScenario(Document scenarioXML, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
+
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/@name";
+        try {
+            String scenarioName = xPath.compile(xPathQuery).evaluate(scenarioXML);
+            System.out.println("Szenarioname:" + scenarioName);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -187,7 +175,19 @@ public class Parser {
         }
     }
 
-    private static void fillFragment(Document doc, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
+    private static void fillFragment(Document fragmentXML, int scenarioID, de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler) {
+
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/@name";
+        try {
+            String fragmentName = xPath.compile(xPathQuery).evaluate(fragmentXML);
+            System.out.println("FragmentName:" + fragmentName);
+            jHandler.insertFragmentIntoDatabase(fragmentName, scenarioID);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 

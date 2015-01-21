@@ -22,7 +22,7 @@ public class Seed {
         Connector jHandler = new Connector();
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector connect;
-        Connection conn = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector.connect();
+        Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
 
         Statement stmt = null;
         ResultSet rs = null;
