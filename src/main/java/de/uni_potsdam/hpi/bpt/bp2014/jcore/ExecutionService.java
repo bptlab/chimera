@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -68,6 +69,10 @@ public class ExecutionService {
         return dbScenarioInstance.getScenarioInstances(scenario_id);
     }
 
+    public int getScenarioIDForScenarioInstance(int scenarioInstance_id){
+        return dbScenarioInstance.getScenarioID(scenarioInstance_id);
+    }
+
     public LinkedList<Integer> getEnabledActivitiesIDsForScenarioInstance(int scenarioInstance_id){
         LinkedList<Integer> ids = new LinkedList<Integer>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
@@ -116,11 +121,16 @@ public class ExecutionService {
         return dataObjectIDs;
     }
 
-    public LinkedList<Integer> getAllDataObjectStateIDs(int scenarioInstance_id){
-        LinkedList<Integer> dataObjectStateIDs = new LinkedList<Integer>();
-        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances) dataObjectStateIDs.add(dataObject.state_id);
-        return dataObjectStateIDs;
+    public HashMap<Integer, String> getAllDataObjectStates(int scenarioInstance_id){
+        DbState dbState = new DbState();
+        HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
+        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances){
+            dataObjectStates.put(dataObject.dataObject_id, dbState.getStateName(dataObject.state_id));
+        }
+        return dataObjectStates;
     }
+
+
 
     //Debug only
     public ExecutionService(ScenarioInstance scenarioInstance){
