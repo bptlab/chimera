@@ -11,6 +11,7 @@ public class ActivityStateMachine extends StateMachine {
         this.controlNodeInstance_id = activityInstance_id;
         this.controlNodeInstance = controlNodeInstance;
         state = getDBState();
+        //adds the Activity Instance to the correct list in Scenario Instance, decides on the state of the Activity
         if (state.equals("ready")){
             scenarioInstance.controlFlowEnabledControlNodeInstances.add(controlNodeInstance);
             scenarioInstance.dataEnabledControlNodeInstances.add(controlNodeInstance);

@@ -13,8 +13,10 @@ public class GatewayInstance extends ControlNodeInstance {
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
     public GatewayInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
+        //looks if the Gateway Instance has already been initialized
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances) {
             if (controlNodeInstance.fragmentInstance_id == controlNodeInstance_id && controlNodeInstance.controlNode_id == controlNode_id) {
+                //if it exist, only checks the control flow
                 controlNodeInstance.incomingBehavior.enableControlFlow();
                 return;
             }
@@ -22,17 +24,12 @@ public class GatewayInstance extends ControlNodeInstance {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
-        if (dbControlNode.getType(controlNode_id).equals("AND")) {
-            this.isAND = true;
-            this.isXOR = false;
-            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
-            this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
-        }//TODO: XOR Here
         scenarioInstance.controlNodeInstances.add(this);
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
+            //initializes all Gateway Instances in the database
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
-            //TODO: gatewas exist
         } else {
+            //creates a new Gateway Instance also in database
             if (isAND) {
                 dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
             }//TODO: XOR Here
@@ -42,6 +39,12 @@ public class GatewayInstance extends ControlNodeInstance {
             }//TODO: XOR Here
         }
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
+        if (dbControlNode.getType(controlNode_id).equals("AND")) {
+            this.isAND = true;
+            this.isXOR = false;
+            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
+            this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
+        }//TODO: XOR Here
     }
 
     public void terminate(){

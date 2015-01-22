@@ -22,10 +22,11 @@ public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for(int followingControlNode_id: followingControlNode_ids){
             ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
+            //enable following instances
             followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
-
+    //get the following control node instance, also initialize them
     private ControlNodeInstance getFollowingNodeInstance(int controlNode_id){
         for(ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances){
             if(controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;

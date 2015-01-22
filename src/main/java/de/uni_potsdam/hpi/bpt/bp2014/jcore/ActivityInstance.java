@@ -25,23 +25,20 @@ public class ActivityInstance extends ControlNodeInstance {
         this.label = dbControlNode.getLabel(controlNode_id);
         scenarioInstance.controlNodeInstances.add(this);
         if(dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)){
-            System.out.println("Activity exist");
+            //creates an existing Activity Instance using the database information
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
-            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
-            this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
-            this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
         }else {
-            System.out.println("Activity not exist");
+            //creates a new Activity Instance also in database
             dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine)stateMachine).enableControlFlow();
-            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
-            this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
-            this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
         }
+        this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
+        this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
+        this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
     }
 
     public Boolean begin(){
@@ -52,6 +49,7 @@ public class ActivityInstance extends ControlNodeInstance {
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
         return workingFine;
     }
+    //checks if the Activity is now data enabled
     public void checkDataFlowEnabled(){
         ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
     }

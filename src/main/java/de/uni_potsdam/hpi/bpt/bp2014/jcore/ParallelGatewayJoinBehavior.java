@@ -23,7 +23,9 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
 
     private Boolean checkEnabled(){
         LinkedList<Integer> predecessors = dbControlFlow.getPredecessorControlNodes(controlNodeInstance.controlNode_id);
+        //if a start Event ist before this Gateway it is enabled
         if(predecessors.size() == 1 && dbControlNode.getType(predecessors.get(0)).equals("Startevent")) return true;
+        //looks that all predecessors are terminated
         for(int controlNode: predecessors){
             if(!scenarioInstance.terminatedControlNodeInstancesContainControlNodeID(controlNode)){
                 return false;

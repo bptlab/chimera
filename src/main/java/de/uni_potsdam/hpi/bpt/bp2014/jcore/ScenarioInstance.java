@@ -32,19 +32,18 @@ public class ScenarioInstance {
     public ScenarioInstance(int scenario_id, int scenarioInstance_id){
         this.scenario_id = scenario_id;
         if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)){
+            //creates an existing Scenario Instance using the database information
             this.scenarioInstance_id = scenarioInstance_id;
-            System.out.println("Scenario exist");
-            this.initializeDataObjects();
-            this.initializeFragments();
         } else {
-            System.out.println("Scenario exist not");
+            //creates a new Scenario Instance also in database, using autoincrement to getting the scenario instances id
             dbScenarioInstance.createNewScenarioInstance(scenario_id);
             this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
-            this.initializeDataObjects();
-            this.initializeFragments();
         }
+        this.initializeDataObjects();
+        this.initializeFragments();
     }
 
+    //starts a new scenario instance
     public ScenarioInstance(int scenario_id){
         this.scenario_id = scenario_id;
         dbScenarioInstance.createNewScenarioInstance(scenario_id);
@@ -72,6 +71,8 @@ public class ScenarioInstance {
         }
         fragmentInstances.remove(fragmentInstance);
         fragmentInstance.terminate();
+
+        //removes the old control node instances
         LinkedList<ControlNodeInstance> updatedList = new LinkedList<ControlNodeInstance>(terminatedControlNodeInstances);
         for(ControlNodeInstance controlNodeInstance: updatedList){
             if(controlNodeInstance.fragmentInstance_id == fragmentInstance_id){

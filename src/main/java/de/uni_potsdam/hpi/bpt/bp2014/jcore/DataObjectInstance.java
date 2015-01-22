@@ -17,9 +17,11 @@ public class DataObjectInstance {
         this.scenario_id = scenario_id;
         this.scenarioInstance_id = scenarioInstance_id;
         if(dbDataObjectInstance.existDataObjectInstance(scenarioInstance_id, dataObject_id)){
+            //creates an existing DataObject Instance using the database information
             dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
             state_id = dbDataObjectInstance.getStateID(dataObjectInstance_id);
         }else{
+            //creates a new DataObject Instance also in database
             state_id = dbDataObject.getStartStateID(dataObject_id);
             dbDataObjectInstance.createNewDataObjectInstance(scenarioInstance_id, state_id, dataObject_id);
             dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
