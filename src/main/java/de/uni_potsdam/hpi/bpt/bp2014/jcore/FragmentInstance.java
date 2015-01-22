@@ -23,26 +23,30 @@ public class FragmentInstance {
         this.fragment_id = fragment_id;
         this.scenarioInstance_id = scenarioInstance_id;
         if (dbFragmentInstance.existFragment(fragment_id, scenarioInstance_id)){
+            //creates an existing Fragment Instance using the database information
             fragmentInstance_id = dbFragmentInstance.getFragmentInstanceID(fragment_id, scenarioInstance_id);
             this.initializeExistingNodeInstanceForFragment();
-            System.out.println("Fragment exist, ScenarioInstanceID: "+scenarioInstance_id);
         }else {
+            //creates a new Fragment Instance also in database
             dbFragmentInstance.createNewFragmentInstance(fragment_id, scenarioInstance_id);
             fragmentInstance_id = dbFragmentInstance.getFragmentInstanceID(fragment_id, scenarioInstance_id);
-            this.initializeNodeInstanceForFragment();
-            System.out.println("Fragment not exist");
+            this.initializeNewNodeInstanceForFragment();
         }
     }
     private void initializeExistingNodeInstanceForFragment(){
+        //initializes all Activity Instances in the database
         LinkedList<Integer> activities = dbControlNodeInstance.getActivitiesForFragmentInstanceID(fragmentInstance_id);
         for(int activity: activities) {
             ActivityInstance activityInstance = new ActivityInstance(activity, fragmentInstance_id, scenarioInstance);
-        }LinkedList<Integer> gateways = dbControlNodeInstance.getGatewaysForFragmentInstanceID(fragmentInstance_id);
+        }
+        //initializes all Gateway Instances in the database
+        LinkedList<Integer> gateways = dbControlNodeInstance.getGatewaysForFragmentInstanceID(fragmentInstance_id);
         for(int gateway: gateways) {
             GatewayInstance gatewayInstance = new GatewayInstance(gateway, fragmentInstance_id, scenarioInstance);
         }
     }
-    private void initializeNodeInstanceForFragment(){
+    private void initializeNewNodeInstanceForFragment(){
+        //gets the Start Event and then the following Control Node to initialize it
         int startEvent = dbControlNode.getStartEventID(fragment_id);
         int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
         String controlNodeType = dbControlNode.getType(controlNode);
@@ -54,6 +58,8 @@ public class FragmentInstance {
             gatewayInstance.incomingBehavior.enableControlFlow();
         }
     }
+
+    //sets a Fragment Instances as terminated in the database
     public void terminate(){
         dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
     }

@@ -7,6 +7,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+//handles all Scenario Instances, can create new Instances, can activate Activities
 public class ExecutionService {
     //Debug only
     private ScenarioInstance scenarioInstance_debug;
