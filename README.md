@@ -15,5 +15,7 @@ As of now the server will give you an response on localhost:8080/rest and will g
 This JEngine does execute
 * sequential
 * usertasks
+* data objects
+* AND gateways
 
 :-)
