@@ -12,8 +12,7 @@ function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
 		return $get_json;
 	} else {
 		$get_response_as_array = json_decode($get_json,true);
-
-		if(!$get_response_as_array){
+		if(empty($get_response_as_array)){
 	                die("ERROR: decoding within GetActivities failed");
 	    } elseif(strpos($get_response_as_array, 'Error')){
 	    			echo "There is an REST Error..";
@@ -24,7 +23,7 @@ function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
 			error_log("Returned ".$get_json);
 			error_log("Decoded json as ".print_r($get_response_as_array));
 		}
-		return $get_respone_as_array;
+		return $get_response_as_array;
 	}
 }
 
