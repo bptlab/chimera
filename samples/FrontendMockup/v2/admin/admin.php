@@ -1,6 +1,6 @@
 <?php
-include 'core/config.php';
-include 'core/RESTCalls.php';
+include '../core/config.php';
+include '../core/RESTCalls.php';
 ?>
 <html>
 <head>
@@ -64,11 +64,14 @@ echo"<form action='admin.php' method='post'>
     </form> ";
 
 
+if(!isset($_POST["ScenarioID"])){
 ?>
+
 <div id="container">
     <br><br><br>
-    <i>waiting for HANA..</i><br><br><img src="img/loading-green.gif"><br><br><br><br><br><br><br>
+    <i>waiting for HANA..</i><br><br><img src="../img/loading-green.gif"><br><br><br><br><br><br><br>
 </div>
 
+<?php } ?>
 
 
