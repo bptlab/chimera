@@ -11,6 +11,8 @@ function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
 	$get_response_as_array = json_decode($get_json,true);
 	if(!$get_response_as_array){
                 die("ERROR: decoding within GetActivities failed");
+    } elseif(strpos($get_response_as_array, 'Error'){
+    			echo "There is an REST Error..";
     }
 
 	if($debug){
@@ -28,6 +30,8 @@ function ShowScenarios() {
 	$get_response_as_array = json_decode($get_json,true);
 	if(!$get_response_as_array){
                 die("ERROR: decoding within ShowScenarios failed");
+    } elseif(strpos($get_response_as_array, 'Error'){
+    			echo "There is an REST Error..";
     }
 	if($debug){
 		error_log("HTTP GET on ".$URL);
@@ -44,6 +48,8 @@ function ShowScenarioInstances($PCM_Scenario) {
 	$get_response_as_array = json_decode($get_json,true);
 	if(!$get_response_as_array){
                 die("ERROR: decoding within ShowScenarioInstances failed");
+    } elseif(strpos($get_response_as_array, 'Error'){
+    			echo "There is an REST Error..";
     }
     if($debug){
 		error_log("HTTP GET on ".$URL);
