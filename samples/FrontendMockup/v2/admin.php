@@ -11,7 +11,7 @@ if(isset($_POST["ScenarioID"])){
   echo "update successful.";
 }
 
-if(!isset($_COOKIE['ScenarioID'])) {
+if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 
   $JEngine_ScenarioInstanceID ="1";
   $JEngine_ActivityID = "1";
@@ -19,11 +19,11 @@ if(!isset($_COOKIE['ScenarioID'])) {
   $JEngine_ScenarioID = ShowScenarios();
   $JEngine_ScenarioID = $JEngine_ScenarioID["ids"][0];
 
-  setcookie("JEngine_ScenarioID", $JEngine_ScenarioID[0]);
+  setcookie("JEngine_ScenarioID", $JEngine_ScenarioID);
   setcookie("JEngine_ScenarioInstanceID", $JEngine_ScenarioInstanceID);
   setcookie("JEngine_ActivityID", $JEngine_ActivityID);
   setcookie("JEngine_UserID", $JEngine_UserID);
-  echo "generating user profile successful.";
+  echo "generating user profile successful.<br>";
 }
 
 //if cookie is set, do ... else you could automatically generate IDs..
@@ -39,28 +39,28 @@ echo"<html><body>
         JEngine_ActivityID: <input type='text' name='ActivityID' value='".$_COOKIE['JEngine_ActivityID']."'><br>
         JEngine_UserID: <input type='text' name='UserID' value='".$_COOKIE['JEngine_UserID']."'><br>
       <input type='submit'>
-    </form>
-    </body></html> ";
+    </form> ";
 
 
 
 $scenarios = ShowScenarios();
 $ScenarioIDs = $scenarios["ids"];
-echo "Scenarios: <ul>";
+var_dump($ScenarioIDs);
 foreach ($ScenarioIDs as &$scenario_values) {
-    echo "<li>".$scenario_values."</li>";
+    echo "<b> Scenario: ".$scenario_values."</b>";
     $instances_array = ShowScenarioInstances($scenario_values);
     $instances = $instances_array["ids"];
+    var_dump($instances);
     foreach ($instances as &$instances_value) {
             echo "<p>".$instances_value."</p>";
-            echo "<h4>Activities as 'enabled' </h4>";
-            $activities_begin =  GetActivities($scenario_value, $instances_value, "enabled");
+            echo "<i>Activities as 'enabled' </i><br>";
+            $activities_begin =  GetActivities($scenario_values, $instances_value, "enabled");
             var_dump($activities_begin);
 
-            echo "<h4>Activities as 'terminated' </h4>";
-            $activities_terminate =  GetActivities($scenario_value, $instances_value, "terminated");
+            echo "<br><i>Activities as 'terminated' </i><br>";
+            $activities_terminate =  GetActivities($scenario_values, $instances_value, "terminated");
             var_dump($activities_terminate);
     }
-    echo "---";
+     echo "--";
 }
-echo "</ul>";
+
