@@ -105,7 +105,7 @@ public class RestConnection {
         String label = executionService.getLabelForControlNodeID(activityInstanceID);
         if(label.equals("")) return Response.serverError().entity("Error: not correct Activity ID").build();
         Gson gson = new Gson();
-        String jsonRepresentation = gson.toJson(label);
+        String jsonRepresentation = gson.toJson("{"+label+"}");
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
