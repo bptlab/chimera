@@ -8,10 +8,16 @@ function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
 	global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
 	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_status;
 	$get_json = file_get_contents($URL);
-	$get_response_as_array = json_decode($get_json,true);
+
+	if($get_json ==="{empty}") {
+		$get_response_as_array = "{empty}";
+	} else {
+		$get_response_as_array = json_decode($get_json,true);
+	}
+
 	if(!$get_response_as_array){
                 die("ERROR: decoding within GetActivities failed");
-    } elseif(strpos($get_response_as_array, 'Error'){
+    } elseif(strpos($get_response_as_array, 'Error')){
     			echo "There is an REST Error..";
     }
 
@@ -30,7 +36,7 @@ function ShowScenarios() {
 	$get_response_as_array = json_decode($get_json,true);
 	if(!$get_response_as_array){
                 die("ERROR: decoding within ShowScenarios failed");
-    } elseif(strpos($get_response_as_array, 'Error'){
+    } elseif(strpos($get_response_as_array, 'Error')){
     			echo "There is an REST Error..";
     }
 	if($debug){
@@ -48,7 +54,7 @@ function ShowScenarioInstances($PCM_Scenario) {
 	$get_response_as_array = json_decode($get_json,true);
 	if(!$get_response_as_array){
                 die("ERROR: decoding within ShowScenarioInstances failed");
-    } elseif(strpos($get_response_as_array, 'Error'){
+    } elseif(strpos($get_response_as_array, 'Error')){
     			echo "There is an REST Error..";
     }
     if($debug){
