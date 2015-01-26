@@ -6,7 +6,7 @@ if(isset($_COOKIE['JEngine_ActivityID'])) {
 	$PCM_ActivityID = $_COOKIE['JEngine_ActivityID'];
 	$get_response = GetActivitiesLabelByID($PCM_ActivityID);
 	
-	$PCM_ActivityLabel
+	//$PCM_ActivityLabel
 
 	echo "<form class='form-horizontal no-margin' />
             <div class='control-group'>
@@ -33,7 +33,7 @@ if(isset($_COOKIE['JEngine_ActivityID'])) {
             </div>
             <input type='hidden' name='form_token' value='4329074'>
           </form>";
-	}
+	
 } else {
 	?>
           <form class="form-horizontal no-margin" />
