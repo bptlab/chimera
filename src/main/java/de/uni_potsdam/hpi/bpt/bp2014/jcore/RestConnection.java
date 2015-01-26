@@ -4,8 +4,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  * Created by Ihdefix on 05.01.2015.
  */
 import com.google.gson.Gson;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
