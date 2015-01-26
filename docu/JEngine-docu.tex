@@ -121,6 +121,15 @@ Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface 
 \textbf{Dabei kann folgender Fehler geworfen werden:}\\
 \textit{Error: not a correct scenario instance} \\ Wurde eine ScenarioInstanzID angegeben, die nicht existiert, wird dieser Fehler geworfen.\\
 
+1.6.\\ Wenn man eine AktivitätsInstanzId besitzt, und das dazugehörige Label wissen möchte, kann man einen GET-Request mit folgender URL ausführen:\\
+\textit{\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\ActivityID/\{Activity\}}}
+
+\textbf{Variable die benutzt wird:}\\
+\textit{Activity:} hier wird die ID der AktivitätsInstanz erwartet. Dabei handelt es sich um einen Integer-Wert.\\
+
+\textbf{Dabei kann folgender Fehler geworfen werden:}\\
+\textit{Error: not correct Activity ID}\\ Wurde eine AktivitätsInstanzID angegeben, die nicht existiert, wird dieser Fehler geworfen.\\
+
 \item \textbf{@POST:}\\
 Über POST-Request ist es möglich, Aktivitäten zu starten sowie gestartete Aktivitäten zu terminieren. Außerdem besteht auch die Möglichkeit ganze Szenarien zu starten, falls dies benötigt wird. All dies soll mit der Funktion ausgestattet sein, dass man dazu noch einen Kommentar abgeben kann.\\
 
