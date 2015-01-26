@@ -8,19 +8,22 @@ As a part of the JComparser we need to seed the parsed information's into the JE
 
 public class Connector {
 
-    public void insertScenarioIntoDatabase(String name) {
+    public int insertScenarioIntoDatabase(String name) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return;
-
+        if (conn == null) return -1;
+        int result = -1;
         try {
 
             String sql = "INSERT INTO scenario (name) VALUES (?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, name);
-            stmt.executeUpdate();
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -41,6 +44,7 @@ public class Connector {
                 se.printStackTrace();
             }
         }
+        return result;
     }
 
     public void insertGatewayIntoDatabase(String textContent) {
