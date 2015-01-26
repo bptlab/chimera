@@ -82,17 +82,18 @@ public class DbGatewayInstance {
         }
         return results;
     }
-    public int createNewGatewayInstance(int controlNodeInstance_id, String type, String state) {
+    public void createNewGatewayInstance(int controlNodeInstance_id, String type, String state) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return -1;
+        if (conn == null) return;
         int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO gatewayinstance (id, gatewayinstance.type, gateway_state) VALUES (" + controlNodeInstance_id + ", '"+ type +"', '" + state + "')";
-            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -113,7 +114,6 @@ public class DbGatewayInstance {
                 se.printStackTrace();
             }
         }
-        return result;
     }
     public void setState(int id, String state) {
         java.sql.Connection conn = Connection.getInstance().connect();

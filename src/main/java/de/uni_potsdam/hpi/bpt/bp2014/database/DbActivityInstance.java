@@ -85,7 +85,10 @@ public class DbActivityInstance {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO activityinstance (id, type, role_id, activity_state, workitem_state) VALUES (" + controlNodeInstance_id + ", '"+ ActivityType +"', 1,'" + ActivityState + "', 'init')";
-            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();

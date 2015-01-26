@@ -30,8 +30,7 @@ public class ActivityInstance extends ControlNodeInstance {
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
         }else {
             //creates a new Activity Instance also in database
-            dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+            this.controlNodeInstance_id  = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
             dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine)stateMachine).enableControlFlow();

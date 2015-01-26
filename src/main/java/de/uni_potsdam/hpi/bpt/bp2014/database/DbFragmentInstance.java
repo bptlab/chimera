@@ -52,7 +52,10 @@ public class DbFragmentInstance {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO fragmentinstance (fragment_id, scenarioinstance_id) VALUES (" + fragment_id + ", "+ scenarioInstance_id +")";
-            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();

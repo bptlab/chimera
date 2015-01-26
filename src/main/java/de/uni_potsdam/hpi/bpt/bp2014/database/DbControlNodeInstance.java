@@ -53,7 +53,10 @@ public class DbControlNodeInstance {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, fragmentinstance_id) VALUES ('" + controlNodeType + "', "+ controlNode_id +", " + fragmentInstance_id + ")";
-            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();
