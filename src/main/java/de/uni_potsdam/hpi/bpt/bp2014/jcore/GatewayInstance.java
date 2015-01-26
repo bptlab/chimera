@@ -25,26 +25,25 @@ public class GatewayInstance extends ControlNodeInstance {
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
         scenarioInstance.controlNodeInstances.add(this);
-        if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
-            //initializes all Gateway Instances in the database
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
-        } else {
-            //creates a new Gateway Instance also in database
-            if (isAND) {
-                dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
-            }//TODO: XOR Here
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
-            if (isAND) {
-                dbGatewayInstance.createNewGatewayInstance(controlNodeInstance_id, "AND", "init");
-            }//TODO: XOR Here
-        }
-        this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
         if (dbControlNode.getType(controlNode_id).equals("AND")) {
             this.isAND = true;
             this.isXOR = false;
             this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
             this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
         }//TODO: XOR Here
+        if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
+            //initializes all Gateway Instances in the database
+            this.controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+        } else {
+            //creates a new Gateway Instance also in database
+            if (isAND) {
+                this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
+            }//TODO: XOR Here
+            if (isAND) {
+                dbGatewayInstance.createNewGatewayInstance(controlNodeInstance_id, "AND", "init");
+            }//TODO: XOR Here
+        }
+        this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
     }
 
     public void terminate(){

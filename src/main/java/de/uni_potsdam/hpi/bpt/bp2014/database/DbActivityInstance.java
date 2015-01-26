@@ -75,17 +75,20 @@ public class DbActivityInstance {
             }
         }
     }
-    public void createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
+    public int createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return;
-
+        if (conn == null) return -1;
+        int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO activityinstance (id, type, role_id, activity_state, workitem_state) VALUES (" + controlNodeInstance_id + ", '"+ ActivityType +"', 1,'" + ActivityState + "', 'init')";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -106,6 +109,7 @@ public class DbActivityInstance {
                 se.printStackTrace();
             }
         }
+        return result;
     }
     public LinkedList<Integer> getTerminatedActivitiesForFragmentInstance(int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
