@@ -90,7 +90,11 @@ public class DbScenarioInstance {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO scenarioinstance (scenario_id) VALUES (" + id + ")";
-            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
+
             //Clean-up environment
             stmt.close();
             conn.close();

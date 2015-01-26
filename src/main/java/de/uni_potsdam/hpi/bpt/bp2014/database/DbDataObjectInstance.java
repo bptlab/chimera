@@ -88,7 +88,11 @@ public class DbDataObjectInstance {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", "+ state_id +", " + dataObject_id+")";
-            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
+
             //Clean-up environment
             stmt.close();
             conn.close();

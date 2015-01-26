@@ -33,13 +33,12 @@ public class GatewayInstance extends ControlNodeInstance {
         }//TODO: XOR Here
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
             //initializes all Gateway Instances in the database
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+            this.controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
         } else {
             //creates a new Gateway Instance also in database
             if (isAND) {
-                dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
+                this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
             }//TODO: XOR Here
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             if (isAND) {
                 dbGatewayInstance.createNewGatewayInstance(controlNodeInstance_id, "AND", "init");
             }//TODO: XOR Here
