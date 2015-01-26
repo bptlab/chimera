@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
@@ -17,6 +18,7 @@ public class ExecutionService {
     private HashMap<Integer, ScenarioInstance> sortedScenarioInstances = new HashMap<Integer, ScenarioInstance>();
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbScenario dbScenario = new DbScenario();
+    private DbControlNode dbControlNode = new DbControlNode();
 
     public ExecutionService(){
 
@@ -104,6 +106,10 @@ public class ExecutionService {
                 return;
             }
         }
+    }
+
+    public String getLabelForControlNodeID(int controlNode_id){
+        return dbControlNode.getLabel(controlNode_id);
     }
 
     public void terminateActivity(int scenarioInstance_id, int activity_id){
