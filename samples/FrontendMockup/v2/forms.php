@@ -117,7 +117,7 @@
             
                 <h3>open Task</h3>
                     <ul>
-                        <div id="container">
+                      <div id="form_content_list">
                        		 <br><br><br>
                       		  <i>waiting for HANA..</i><br><br><img src="img/loading-green.gif"><br><br><br><br><br><br><br>
              	       </div>
@@ -175,51 +175,10 @@
                   </div>
                 </div>
                 <div class="widget-body">
-                  <form class="form-horizontal no-margin" />
-                    <div class="control-group">
-                      <label class="control-label">
-                        Name
-                      </label>
-                      <div class="controls">
-                        <input type="text" placeholder="Abcdef - You are logged in as" disabled="" />
-                      </div>
-                    </div>
-                    <div class="control-group">
-                      <label class="control-label">
-                        Email
-                      </label>
-                      <div class="controls">
-                        <input type="email" placeholder="abcdef@gmail.com - You are logged in as" disabled="" />
-                      </div>
-                    </div>
-                    <div class="control-group">
-                      <label class="control-label">
-                        Subject
-                      </label>
-                      <div class="controls">
-                        <select id="subject">
-                          <option />General Question
-                          <option />Technical Support
-                          <option />Sales
-                          <option />Email
-                          <option />Other
-                        </select>
-                      </div>
-                    </div>
-                    <div class="control-group">
-                      <label class="control-label">
-                        Message
-                      </label>
-                      <div class="controls">
-                        <textarea class="input-block-level" placeholder="Enter text ..." style="height: 100px"></textarea>
-                      </div>
-                    </div>
-                    <div class="control-group">
-                      <div class="controls">
-                        <button type="submit" class="btn btn-info">Submit</button>
-                      </div>
-                    </div>
-                  </form>
+                  <div id="form_content_form">
+                           <br><br><br>
+                            <i>waiting for HANA..</i><br><br><img src="img/loading-green.gif"><br><br><br><br><br><br><br>
+                  </div>
                 </div>
               </div>
           </div>
