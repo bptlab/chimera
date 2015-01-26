@@ -10,8 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.lang.String;
 
 
@@ -41,7 +40,6 @@ public class JComparser {
             ArrayList<String> scenarioXML_List = new ArrayList<>();
             List<String> scenariosURL_list = new ArrayList<>();
 
-
             String response_list = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "models");
             scenariosURL_list = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.selectScenarioURLS(response_list);
             String modelXML = "";
@@ -50,13 +48,19 @@ public class JComparser {
                 modelXML = jRetrieval.getHTMLwithAuth(Processeditor_server_url, scenariosURL_list.get(i));
                 scenarioXML_List.add(modelXML);
             }
+            int fragmentID;
+            ArrayList<String> controlNodes;
             for(String scenarioXML: scenarioXML_List){
                 int scenarioId;
-                Parser parser = new Parser(scenarioXML);
-                Connector jHandler = new Connector();
+                Parser parser = new Parser(scenarioXML); //extract scenarioName
+                Connector connector = new Connector();
+                scenarioId = connector.insertScenarioIntoDatabase(parser.getScenarioName());
+                HashMap<Integer, String> fragments = parser.getFragmentDetails();
+                for (Map.Entry<Integer, String> fragment: fragments.entrySet()) {
+                    fragmentID =  connector.insertFragmentIntoDatabase(fragment.getValue(), scenarioId);
+                    controlNodes = parser.getControlNodesForFragment(fragment.getKey());
 
-                scenarioId = jHandler.insertScenarioIntoDatabase("scenario namen");
-                //gib scnearionamen
+                }
             }
 
 
