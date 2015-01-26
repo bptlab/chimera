@@ -55,7 +55,7 @@ public class RestConnection {
         Gson gson = new Gson();
         JsonHashMapIntegerString json = new JsonHashMapIntegerString(dataObjects, labels);
         String jsonRepresentation = gson.toJson(json);
-        return Response.ok(jsonRepresentation,MediaType.APPLICATION_JSON).build();
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
     @GET    //um IDs aller Szenarien anzuzeigen
@@ -104,9 +104,7 @@ public class RestConnection {
     public Response showLabelForActivity(@PathParam("Activity") int activityInstanceID){
         String label = executionService.getLabelForControlNodeID(activityInstanceID);
         if(label.equals("")) return Response.serverError().entity("Error: not correct Activity ID").build();
-        Gson gson = new Gson();
-        String jsonRepresentation = gson.toJson("{"+label+"}");
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        return Response.ok(new String("{"+label+"}"), MediaType.APPLICATION_JSON).build();
     }
 
 
