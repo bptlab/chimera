@@ -26,7 +26,7 @@ public class RestConnection {
             }
             LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
-            if(enabledActivitiesIDs.size() == 0) return Response.serverError().entity("Error: empty").build();
+            if(enabledActivitiesIDs.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
             Gson gson = new Gson();
             JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
             String jsonRepresentation = gson.toJson(json);
@@ -35,7 +35,7 @@ public class RestConnection {
             if(!executionService.existScenarioInstance(scenarioID,scenarioInstanceID)) return Response.serverError().entity("Error: not a correct scenario instance").build();
             LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
-            if(terminatedActivities.size() == 0) return Response.serverError().entity("Error: empty").build();
+            if(terminatedActivities.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
             Gson gson = new Gson();
             JsonHashMapIntegerString json = new JsonHashMapIntegerString(terminatedActivities, labels);
             String jsonRepresentation = gson.toJson(json);
@@ -51,7 +51,7 @@ public class RestConnection {
         if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) return Response.serverError().entity("Error: not a correct scenario instance").build();
         LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
         HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
-        if(dataObjects.size() == 0) return Response.serverError().entity("Error: empty").build();
+        if(dataObjects.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
         Gson gson = new Gson();
         JsonHashMapIntegerString json = new JsonHashMapIntegerString(dataObjects, labels);
         String jsonRepresentation = gson.toJson(json);
@@ -63,7 +63,7 @@ public class RestConnection {
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarios(){
         LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
-        if(scenarioIDs.size() == 0) return Response.serverError().entity("Error: empty").build();
+        if(scenarioIDs.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
         Gson gson = new Gson();
         JsonIntegerList json = new JsonIntegerList(scenarioIDs);
         String jsonRepresentation = gson.toJson(json);
@@ -85,12 +85,12 @@ public class RestConnection {
     }
 
     @GET
-    @Path("Instances/{Instance}")
+    @Path("Instances/{Scenarioname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showScenarioInstances(@PathParam("Instance") int scenarioID){
+    public Response showScenarioInstances(@PathParam("Scenarioname") int scenarioID){
         if(!executionService.existScenario(scenarioID)) return Response.serverError().entity("Error: not a correct scenario").build();
         LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
-        if(scenarioIDs.size() == 0) return Response.serverError().entity("Error: empty").build();
+        if(scenarioIDs.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
         Gson gson = new Gson();
         JsonIntegerList json = new JsonIntegerList(scenarioIDs);
         String jsonRepresentation = gson.toJson(json);
