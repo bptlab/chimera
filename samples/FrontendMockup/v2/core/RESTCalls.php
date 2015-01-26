@@ -34,7 +34,7 @@ function ShowScenarios() {
 		error_log("Returned ".$get_json);
 		error_log("Decoded json as ".var_dump($get_response_as_array));
 	}
-	return $get_respone_as_array['ids'];
+	return $get_response_as_array;
 }
 
 function ShowScenarioInstances($PCM_Scenario) {
@@ -50,7 +50,7 @@ function ShowScenarioInstances($PCM_Scenario) {
 		error_log("Returned ".$get_json);
 		error_log("Decoded json as ".print_r($get_response_as_array));
 	}
-	return $get_respone_as_array['ids'];
+	return $get_response_as_array;
 }
 
 function PostActivities($PCM_Scenario, $PCM_Fragment, $PCM_Activity, $PCM_status, $PCM_comment) {
