@@ -104,7 +104,7 @@ public class RestConnection {
     public Response showLabelForActivity(@PathParam("Activity") int activityInstanceID){
         String label = executionService.getLabelForControlNodeID(activityInstanceID);
         if(label.equals("")) return Response.serverError().entity("Error: not correct Activity ID").build();
-        return Response.ok(new String("{"+label+"}"), MediaType.APPLICATION_JSON).build();
+        return Response.ok(new String("{\""+label+"\"}"), MediaType.APPLICATION_JSON).build();
     }
 
 
