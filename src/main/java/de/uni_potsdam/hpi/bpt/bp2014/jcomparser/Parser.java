@@ -1,12 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import com.sun.org.apache.xpath.internal.NodeSet;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,10 +12,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -28,6 +25,8 @@ public class Parser {
     private String scenarioXML;
 
     static de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector jHandler;
+    private String scenarioName;
+    private HashMap<Integer, String> fragments;
 
     public Parser(String scenarioXML){
         this.scenarioXML = scenarioXML;
@@ -76,7 +75,7 @@ public class Parser {
             ArrayList<String> ResultList = new ArrayList<>();
 
             for (int i = 0; i < scenarioName.getLength(); i++) {
-
+//TODO: richtige URIs zurückgeben anstelle von Stringersetzung
                 String scenario = scenarioName.item(i).toString();
               String[] TransformScenarioName = scenario.split(":");
                 String NewScenarioName = "localhost:" + TransformScenarioName[TransformScenarioName.length-1] + ".pm";
@@ -159,17 +158,7 @@ public class Parser {
     }
 
     private static void fillGateway(Document doc) {
-        NodeList nList = doc.getElementsByTagName("Gateway");
-        if(nList.getLength() != 0) System.out.println("Gateways detected");
-        else System.out.println("No Gateways found");
-        for(int i = 0; i < nList.getLength(); i++){
-            Node nNode = nList.item(i);
-            System.out.println("\nGateway: " + nNode.getNodeName());
-            Element eElement = (Element) nNode;
-            System.out.println(eElement.getTextContent());
-            jHandler.insertGatewayIntoDatabase(eElement.getTextContent());
         }
-    }
 
     private static void fillFragment(Document fragmentXML, int scenarioID) {
 
@@ -188,26 +177,7 @@ public class Parser {
     }
 
     private static void fillEvent(Document doc) {
-        NodeList nListA = doc.getElementsByTagName("startEvent");
-        NodeList nListE = doc.getElementsByTagName("endEvent");
-        if (nListA.getLength() != 0 || nListE.getLength() != 0)
-            System.out.println("\nEvents detected");
-        else
-            System.out.println("No Events found");
-        for (int i = 0; i < nListA.getLength(); i++) {
-            Node nNode = nListA.item(i);
-            System.out.println("Event: " + nNode.getNodeName());
-            Element eElement = (Element) nNode;
-            System.out.println(eElement.getAttribute("name"));
-            jHandler.insertEventIntoDatabase("Start");
-        }
-        for (int i = 0; i < nListE.getLength(); i++) {
-            Node nNode = nListE.item(i);
-            System.out.println("Event: " + nNode.getNodeName());
-            Element eElement = (Element) nNode;
-            System.out.println(eElement.getAttribute("name"));
-            jHandler.insertEventIntoDatabase("End");
-        }
+
     }
 
     private static void fillDataObject(Document doc) {
@@ -231,7 +201,7 @@ public class Parser {
                 System.out.println("\nActivities detected");
                 for (int i = 0; i < nList.getLength(); i++) {
                     System.out.println("userTask: " + nList.item(i).getNodeValue());
-                    jHandler.insertActivityIntoDatabase(nList.item(i).getNodeValue(), fragmentID);
+                    //jHandler.insertActivityIntoDatabase(nList.item(i).getNodeValue(), fragmentID);
                 }
             }
             else
@@ -252,5 +222,17 @@ public class Parser {
         } else {
             e.printStackTrace();
         }
+    }
+
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    public HashMap<Integer, String> getFragmentDetails() {
+        return fragments;
+    }
+
+    public ArrayList<String> getControlNodesForFragment(Integer id) {
+        return null;
     }
 }

@@ -98,6 +98,16 @@ public class RestConnection {
 
     }
 
+    @GET    //um das Label einer Aktivitaet zu bekommen für eine aktivitaetsID
+    @Path("ActivityID/{Activity}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response showLabelForActivity(@PathParam("Activity") int activityInstanceID){
+        String label = executionService.getLabelForControlNodeID(activityInstanceID);
+        Gson gson = new Gson();
+        String jsonRepresentation = gson.toJson(label);
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
 
     @POST   //um eine Aktivitaet zu beginnen/beenden + Kommentar
     @Path("{Scenarioname}/{Instance}/{Activity}/{Status}/{Comment}")    //scenarioID = (int) Scenarioname, scenarioInstanceID = (int) Instance, activityInstanceID = (int) Activity, status = {enabled, terminated}, comment = Comment
