@@ -105,10 +105,12 @@ public class RestConnection {
         executionService.openExistingScenarioInstance(new Integer(scenarioID),new Integer(scenarioInstanceID));
         if (status.equals("begin")) {
             executionService.beginActivity(scenarioInstanceID, activityInstanceID);
+            return true;
         }else if(status.equals("terminate")) {
             executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @POST
