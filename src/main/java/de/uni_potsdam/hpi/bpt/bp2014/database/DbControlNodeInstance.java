@@ -43,17 +43,17 @@ public class DbControlNodeInstance {
         }
         return false;
     }
-    public void createNewControlNodeInstance(int controlNode_id, String controlNodeType, int fragmentInstance_id) {
+    public int createNewControlNodeInstance(int controlNode_id, String controlNodeType, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return;
-
+        if (conn == null) return -1;
+        int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, fragmentinstance_id) VALUES ('" + controlNodeType + "', "+ controlNode_id +", " + fragmentInstance_id + ")";
-            stmt.executeUpdate(sql);
+            result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -74,6 +74,7 @@ public class DbControlNodeInstance {
                 se.printStackTrace();
             }
         }
+        return result;
     }
     public int getControlNodeInstanceID(int controlNode_id, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
