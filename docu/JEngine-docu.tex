@@ -116,7 +116,7 @@ Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface 
 \textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/\\Get/ScenarioID/\{ScenarioInstanceID\}}}\\
 
 \textbf{Variable die benutzt wird:}\\
-\textit{ScenarioInstanceID:}\\ hier wird die ID der ScenarioInstanz erwartet. Dabei handelt es sich um einen Integer-Wert.\\
+\textit{ScenarioInstanceID:} hier wird die ID der ScenarioInstanz erwartet. Dabei handelt es sich um einen Integer-Wert.\\
 
 \textbf{Dabei kann folgender Fehler geworfen werden:}\\
 \textit{Error: not a correct scenario instance} \\ Wurde eine ScenarioInstanzID angegeben, die nicht existiert, wird dieser Fehler geworfen.\\
@@ -134,16 +134,16 @@ Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface 
 \textit{Status:} Der Status ist vom Typ String und muss ein Element der Menge\textbf{\textit{\{terminate, begin\}}} sein.\\
 
 \textbf{Im Fehlerfall:}\\
-Wird versucht eine Aktivität zu starten, die nicht existiert bzw. eine Aktivität zu beenden, die gar nicht gestartet war, wird einem ein Boolean zurückgegeben mit dem Wert \textit{false}.\\
+Wird versucht eine Aktivität zu starten, die nicht existiert bzw. eine Aktivität zu beenden, die gar nicht gestartet war, wird einem ein Boolean mit dem Wert \textit{false} zurückgegeben.\\
 
 2.2.\\ Wenn eine neue Instanz eines Szenarios gestartet werden soll, nutzt man den POST-Request mit folgender URL:\\
 \textit{\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\Start/\{ScenarioID\}}}\\
 
 \textbf{Variable die benutzt wird:}\\
-\textit{ScenarioID:}\\ hier wird die ID des Scenarios erwartet. Dabei handelt es sich um einen Integer-Wert.\\
+\textit{ScenarioID:} hier wird die ID des Scenarios erwartet. Dabei handelt es sich um einen Integer-Wert.\\
 
 \textbf{Im Fehlerfall:}\\
-Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integer zurückgegeben mit dem Wert \textit{-1}.\\
+Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integer mit dem Wert \textit{-1} zurückgegeben.\\
 %
 %
 \end{enumerate}
