@@ -15,27 +15,27 @@ public class RestConnection {
     private ExecutionService executionService = new ExecutionService();
     private HistoryService historyService = new HistoryService();
 
-    @GET    //um Aktivit√§ten zu bekommen
+    @GET    //um Aktivit‰ten zu bekommen
     @Path("{Scenarioname}/{Instance}/{Status}") //scenarioID = (int) Scenarioname, scenarioInstanceID = (int) Instance, status = {enabled, terminated}
     @Produces(MediaType.APPLICATION_JSON)
     public Response showEnabledActivities( @PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID,  @PathParam("Status") String status ){
-        if (status.equals("enabled")) {//offene Aktivit√§ten
+        if (status.equals("enabled")) {//offene Aktivit‰ten
             if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))){
                 return Response.serverError().entity("Error: not a correct scenario instance").build();
                 
             }
             LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
-            if(enabledActivitiesIDs.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//keine offenen Aktivit√§ten vorhanden
+            if(enabledActivitiesIDs.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//keine offenen Aktivit‰ten vorhanden
             Gson gson = new Gson();
             JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
             String jsonRepresentation = gson.toJson(json);
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-        }else if(status.equals("terminated")){//geschlossene Aktivit√§ten
+        }else if(status.equals("terminated")){//geschlossene Aktivit‰ten
             if(!executionService.existScenarioInstance(scenarioID,scenarioInstanceID)) return Response.serverError().entity("Error: not a correct scenario instance").build();
             LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
-            if(terminatedActivities.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//keine geschlossenen Aktivit√§ten vorhanden
+            if(terminatedActivities.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//keine geschlossenen Aktivit‰ten vorhanden
             Gson gson = new Gson();
             JsonHashMapIntegerString json = new JsonHashMapIntegerString(terminatedActivities, labels);
             String jsonRepresentation = gson.toJson(json);
@@ -99,16 +99,18 @@ public class RestConnection {
     }
 
 
-    @POST   //um eine Aktivit√§t zu beginnen/beenden + Kommentar
+    @POST   //um eine Aktivit‰t zu beginnen/beenden + Kommentar
     @Path("{Scenarioname}/{Instance}/{Activity}/{Status}/{Comment}")    //scenarioID = (int) Scenarioname, scenarioInstanceID = (int) Instance, activityInstanceID = (int) Activity, status = {enabled, terminated}, comment = Comment
     public Boolean doActivity( @PathParam("Scenarioname") String scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Activity") int activityInstanceID, @PathParam("Status") String status, @PathParam("Comment") String comment ){
         executionService.openExistingScenarioInstance(new Integer(scenarioID),new Integer(scenarioInstanceID));
-        if (status.equals("begin")) {//Aktivit√§t beginnen
+        if (status.equals("begin")) {//Aktivit‰t beginnen
             executionService.beginActivity(scenarioInstanceID, activityInstanceID);
-        }else if(status.equals("terminate")) {//Aktivit√§t beenden
+            return true;
+        }else if(status.equals("terminate")) {//Aktivit‰t beenden
             executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @POST   //um eine Instanz eines Szenarios zu starten
@@ -120,7 +122,7 @@ public class RestConnection {
             return -1;
         }
     }
-    //Alles hier darunter wird benutzt um ein von Nikolai's entwickelten Front-End verst√§ndliches Json zu erzeugen
+    //Alles hier darunter wird benutzt um ein von Nikolai's entwickelten Front-End verst‰ndliches Json zu erzeugen
     class JsonHashMapIntegerString{
         private LinkedList<Integer> ids;
         private HashMap<Integer, String> label;
