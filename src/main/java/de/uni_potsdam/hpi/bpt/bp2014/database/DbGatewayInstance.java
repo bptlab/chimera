@@ -87,12 +87,13 @@ public class DbGatewayInstance {
         Statement stmt = null;
         ResultSet rs = null;
         if (conn == null) return;
-
+        int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO gatewayinstance (id, gatewayinstance.type, gateway_state) VALUES (" + controlNodeInstance_id + ", '"+ type +"', '" + state + "')";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
             //Clean-up environment
             stmt.close();
             conn.close();

@@ -36,8 +36,7 @@ public class ScenarioInstance {
             this.scenarioInstance_id = scenarioInstance_id;
         } else {
             //creates a new Scenario Instance also in database, using autoincrement to getting the scenario instances id
-            dbScenarioInstance.createNewScenarioInstance(scenario_id);
-            this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+            this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         }
         this.initializeDataObjects();
         this.initializeFragments();
@@ -46,8 +45,7 @@ public class ScenarioInstance {
     //starts a new scenario instance
     public ScenarioInstance(int scenario_id){
         this.scenario_id = scenario_id;
-        dbScenarioInstance.createNewScenarioInstance(scenario_id);
-        this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+        this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         this.initializeDataObjects();
         this.initializeFragments();
     }

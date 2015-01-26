@@ -72,23 +72,35 @@ Dazu zählt zum Beispiel auch die REST-API.
 %
 %
 \subsubsection{REST-API}
-Man kann offene Aktivitäten über einen GET-Request der Form: \textbf{localhost:8080/Scenario/\textit{\{ScenarioID\}}/\\\textit{\{ScenarioInstanceID\}}} abrufen.
+Um eine Kommunikation zwischen unseren verschieden Elementen der Engine und des Front-Ends zu ermöglichen, haben wir uns für ein REST-Interface entschieden. Dabei unterstützen wir bisher 2 Methoden: GET und POST.
+\begin{enumerate}
+%hier beginnt Aufzählung unserer REST Methoden
+\item \textbf{@GET:}\\
+Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface eine Möglichkeit zu bieten, einzusehen welche Aktivitäten noch zu bearbeiten sind (also offen sind) bzw. welche Aktivitäten zu welcher Scenarioinstanz gehören und ähnliches. \\
+
+Um offene bzw. geschlossene Aktivitäten einer ScenarioInstanz ausgegeben zu bekommen, muss ein GET mit folgender URL ausgeführt werden:\\
+\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/\\\{ScenarioID\}/\{ScenarioInstanceID\}/\{Status\}}}\\
+\textbf{Variablen die benutzt werden:}\\
+\textit{ScenarioID:} hier wird die ID des Scenarios erwartet. Dabei handelt es sich um einen Integer-Wert.\\
+\textit{ScenarioInstanceID:} hier wird die ID der ScenarioInstanz erwartet. Dabei handelt es sich um einen Integer-Wert.\\
+\textit{Status:} Der Status ist vom Typ String und muss ein Element der Menge\textbf{\textit{\{terminated, enabled\}}} sein.\\
+
+\textbf{Dabei können folgende Fehler geworfen werden:}\\
+\textit{Error: not a correct scenario instance} Dies bedeutet das eine ScenarioInstanzID angegeben worden ist, die nicht existiert.\\
+\textit{Error: status not clear} Dieser Fehler besagt, dass ein Status angegeben wurde, der nicht der Menge \textbf{\textit{\{terminated, enabled\}}} entspricht.\\
+
+\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/Show}}\\
+\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/Instances/\\\{ScenarioInstanceID\}}}\\
+throw: Error: not a correct scenario\\
+\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/DataObjects/\\\{ScenarioID\}/\{ScenarioInstanceID\}}}\\
+throw: Error: not a correct scenario instance\\
+\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/Get/\\ScenarioID/\{ScenarioInstanceID\}}}\\
+throw: Error: not a correct scenario instance\\\\
+
+\item \textbf{@POST:}\\
 
 
-@GET:
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\\{ScenarioID\}/\{ScenarioInstanceID\}/\{Status\}}\\
-Status = \{terminated, enabled\}\\
-throw: error: not a correct scenario instance\\
-error: status not clear\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Show}\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Instances/\\\{ScenarioInstanceID\}}\\
-throw: error: not a correct scenario\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/DataObjects/\\\{ScenarioID\}/\{ScenarioInstanceID\}}\\
-throw: error: not a correct scenario instance\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Get/\\ScenarioID/\{ScenarioInstanceID\}}\\
-throw: error: not a correct scenario instance\\\\
-
-@POST:  \textbf{http://172.16.64.113:8080/JEngine/Scenario/\\ScenarioID/ScenarioInstanceID/activityID/status/comment}\\
+\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\ScenarioID/ScenarioInstanceID/activityID/status/comment}\\
 Status = \{terminate, begin\}\\
 e.g. \textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/\\terminate/comment}\\
 \textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/begin/\\comment}\\
@@ -96,6 +108,7 @@ e.g. \textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/\\terminate/comme
 throw: -1 (Dann wenn es kein Scenario mit der ID gibt)\\
 %
 %
+\end{enumerate}
 \subsubsection{ExecutionService}
 
 %

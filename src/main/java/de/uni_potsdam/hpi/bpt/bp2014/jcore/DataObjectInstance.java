@@ -23,8 +23,7 @@ public class DataObjectInstance {
         }else{
             //creates a new DataObject Instance also in database
             state_id = dbDataObject.getStartStateID(dataObject_id);
-            dbDataObjectInstance.createNewDataObjectInstance(scenarioInstance_id, state_id, dataObject_id);
-            dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
+            this. dataObjectInstance_id = dbDataObjectInstance.createNewDataObjectInstance(scenarioInstance_id, state_id, dataObject_id);
         }
     }
 

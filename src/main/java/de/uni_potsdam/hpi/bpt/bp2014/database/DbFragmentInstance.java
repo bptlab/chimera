@@ -42,17 +42,20 @@ public class DbFragmentInstance {
         }
         return false;
     }
-    public void createNewFragmentInstance(int fragment_id, int scenarioInstance_id) {
+    public int createNewFragmentInstance(int fragment_id, int scenarioInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return;
-
+        if (conn == null) return -1;
+        int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO fragmentinstance (fragment_id, scenarioinstance_id) VALUES (" + fragment_id + ", "+ scenarioInstance_id +")";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -73,6 +76,7 @@ public class DbFragmentInstance {
                 se.printStackTrace();
             }
         }
+        return result;
     }
     public int getFragmentInstanceID(int fragment_id, int scenarioInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
