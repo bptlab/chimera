@@ -8,6 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -19,17 +20,20 @@ public class RestConnection {
     @GET
     @Path("{Scenarioname}/{Instance}/{Status}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String showEnabledActivities( @PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID,  @PathParam("Status") String status ){
+    public Response showEnabledActivities( @PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID,  @PathParam("Status") String status ){
         if (status.equals("enabled")) {
-            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) return "error: not a correct scenario instance";
+            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))){
+                return Response.status(500).build();
+                //return "error: not a correct scenario instance";
+            }
             LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
-            if(enabledActivitiesIDs.size() == 0) return "empty";
+            //if(enabledActivitiesIDs.size() == 0) return "empty";
             Gson gson = new Gson();
             JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
             String jsonRepresentation = gson.toJson(json);
-            return jsonRepresentation;
-        }else if(status.equals("terminated")){
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        }/*else if(status.equals("terminated")){
             if(!executionService.existScenarioInstance(scenarioID,scenarioInstanceID)) return "error: not a correct scenario instance";
             LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
@@ -39,7 +43,8 @@ public class RestConnection {
             String jsonRepresentation = gson.toJson(json);
             return jsonRepresentation;
         }
-        return "error: status not clear";
+        return "error: status not clear";*/
+        return Response.ok().build();
     }
 
     @GET
