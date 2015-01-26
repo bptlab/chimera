@@ -48,12 +48,12 @@
         <script type="text/javascript">
         $(document).ready(function(){    
                 var a = $(this).attr('id');
-                $.post("form_content.php", {
+                $.post("form_content_list.php", {
                 }, function(response){
-                    $('#container').fadeOut();
-                    $('#container').html(unescape(response));
-                    $('#container').fadeIn();
-                    setTimeout("finishAjax('container', '"+escape(response)+"')", 400);
+                    $('#form_content_list').fadeOut();
+                    $('#form_content_list').html(unescape(response));
+                    $('#form_content_list').fadeIn();
+                    setTimeout("finishAjax('form_content_list', '"+escape(response)+"')", 400);
                 });  
         });    
         function finishAjax(id, response){
@@ -61,6 +61,22 @@
           $('#'+id).fadeIn();
         } 
         </script>	
+        <script type="text/javascript">
+        $(document).ready(function(){    
+                var a = $(this).attr('id');
+                $.post("form_content_form.php", {
+                }, function(response){
+                    $('#form_content_form').fadeOut();
+                    $('#form_content_form').html(unescape(response));
+                    $('#form_content_form').fadeIn();
+                    setTimeout("finishAjax('form_content_form', '"+escape(response)+"')", 400);
+                });  
+        });    
+        function finishAjax(id, response){
+          $('#'+id).html(unescape(response));
+          $('#'+id).fadeIn();
+        } 
+        </script> 
   </head>
   <body>
     <header>

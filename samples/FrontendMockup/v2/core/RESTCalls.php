@@ -27,6 +27,29 @@ function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
 	}
 }
 
+function GetActivitiesLabelByID($PCM_ActivityID) {
+	global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
+	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/ActivityID/".$PCM_ActivityID;
+	$get_json = file_get_contents($URL);
+	if($get_json === "{empty}") {
+		return $get_json;
+	} else {
+		$get_response_as_array = json_decode($get_json,true);
+		if(empty($get_response_as_array)){
+	                die("ERROR: decoding within GetActivities failed");
+	    } elseif(strpos($get_response_as_array, 'Error')){
+	    			echo "There is an REST Error..";
+	    }
+
+		if($debug){
+			error_log("HTTP GET on ".$URL);
+			error_log("Returned ".$get_json);
+			error_log("Decoded json as ".print_r($get_response_as_array));
+		}
+		return $get_response_as_array;
+	}
+}
+
 function ShowScenarios() {
 	global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
 	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/Show";
