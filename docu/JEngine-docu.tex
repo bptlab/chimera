@@ -93,9 +93,6 @@ Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface 
 1.2. \\Wenn man wissen möchte, welche Szenarien man in der JEngine starten kann, erhält man diese über folgende GET URL:\\
 \textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/\\Show}}\\
 
-\textbf{Dabei kann folgender Fehler geworfen werden:}\\
-\textit{Error: empty}\\ Dies bedeutet, dass keine Szenarien gefunden werden konnten.\\
-
 1.3.\\ Um alle ScenarioInstanzen eines Szenarios zu bekommen, muss ein GET-Request mit folgender URL ausgeführt werden:\\
 \textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/\\Instances/\{ScenarioID\}}}\\
 
@@ -103,7 +100,7 @@ Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface 
 \textit{ScenarioID:} Dabei handelt es sich um einen Integer, der die ID des zu betrachtenden Szenarios angibt.\\
 
 \textbf{Dabei kann folgender Fehler geworfen werden:}\\
-\textit{Error: not a correct scenario} Dieser tritt auf, wenn eine ID übergeben wurde, die nicht existiert.\\
+\textit{Error: not a correct scenario}\\ Dieser tritt auf, wenn eine ID übergeben wurde, die nicht existiert.\\
 
 1.4.\\ Wenn man alle Datenobjekte in ihren entsprechenden Zuständen anzeigen möchte, bezogen auf eine ScenarioInstanz, muss ein GET-Request mit folgender URL ausgfeührt werden:\\
 \textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/\\DataObjects/\{ScenarioID\}/\{ScenarioInstanceID\}}}\\
@@ -113,19 +110,23 @@ Die GET-Requests existieren, um den Nutzern der Engine über ein User Interface 
 \textit{ScenarioInstanceID:} hier wird die ID der ScenarioInstanz erwartet. Dabei handelt es sich um einen Integer-Wert.\\
 
 \textbf{Dabei kann folgender Fehler geworfen werden:}\\
-\textit{Error: not a correct scenario instance} Wenn eine falsche ScenarioInstanzID angegeben wird, produziert es diesen Fehler.\\
+\textit{Error: not a correct scenario instance}\\ Wenn eine falsche ScenarioInstanzID angegeben wird, produziert es diesen Fehler.\\
 
-\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/Get/\\ScenarioID/\{ScenarioInstanceID\}}}\\
-throw: Error: not a correct scenario instance\\\\
+1.5.\\ Um von einer SzenrioInstanzID die dazugehörige ScenrioID zu erhalten, kann ein GET-Request mit folgender URL ausgeführt werden:\\ 
+\textbf{\textit{http://172.16.64.113:8080/JEngine/Scenario/\\Get/ScenarioID/\{ScenarioInstanceID\}}}\\
+
+\textbf{Variablen die benutzt werden:}\\
+\textit{ScenarioInstanceID:}\\ hier wird die ID der ScenarioInstanz erwartet. Dabei handelt es sich um einen Integer-Wert.\\
+
+\textbf{Dabei kann folgender Fehler geworfen werden:}\\
+\textit{Error: not a correct scenario instance} \\ Wurde eine ScenarioInstanzID angegeben, die nicht existiert, wird dieser Fehler geworfen.\\
 
 \item \textbf{@POST:}\\
+Über POST-Request ist es möglich, Aktivitäten zu starten sowie gestartete Aktivitäten zu terminieren. Außerdem besteht auch die Möglichkeit ganze Szenarien zu starten, falls dies benötigt wird.\\
 
-
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\ScenarioID/ScenarioInstanceID/activityID/status/comment}\\
+\textit{\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\ScenarioID/ScenarioInstanceID/activityID/\\status/comment}}\\
 Status = \{terminate, begin\}\\
-e.g. \textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/\\terminate/comment}\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/1/47/4/begin/\\comment}\\
-\textbf{http://172.16.64.113:8080/JEngine/Scenario/Start/\\\{ScenarioID\}}\\
+\textit{\textbf{http://172.16.64.113:8080/JEngine/Scenario/\\Start/\{ScenarioID\}}}\\
 throw: -1 (Dann wenn es kein Scenario mit der ID gibt)\\
 %
 %
