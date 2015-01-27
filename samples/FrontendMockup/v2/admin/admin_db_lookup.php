@@ -1,6 +1,6 @@
 <?php
-include 'core/config.php';
-include 'core/RESTCalls.php';
+include '../core/config.php';
+include '../core/RESTCalls.php';
 
 $scenarios = ShowScenarios();
 $ScenarioIDs = $scenarios["ids"];
@@ -18,7 +18,7 @@ foreach ($ScenarioIDs as &$scenario_values) {
             } else {
                 $activities_begin_array = $activities_begin["ids"];
                 foreach ($activities_begin_array as &$activities_begin_array_value) {
-                    echo $activities_begin["label"][$activities_begin_array_value]."<br>";
+                    echo $activities_begin_array_value.":".$activities_begin["label"][$activities_begin_array_value]."<br>";
                 }
             }
             echo "<br><i>Activities as 'terminated' </i><br>";
@@ -28,7 +28,7 @@ foreach ($ScenarioIDs as &$scenario_values) {
             } else {
                 $activities_terminate_array = $activities_terminate["ids"];
                 foreach ($activities_terminate_array as &$activities_terminate_array_value) {
-                    echo $activities_terminate["label"][$activities_terminate_array_value] ."<br>";
+                    echo $activities_terminate_array_value.":".$activities_terminate["label"][$activities_terminate_array_value] ."<br>";
                 }
             }
             echo "</th>";
