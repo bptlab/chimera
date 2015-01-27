@@ -56,11 +56,11 @@ public class ControlNode implements IDeserialisation
 
     /**
      * Sets all its attributes from a given XML-Snippet
-     * @param element The XML-Element
+     * @param node The XML-Node
      */
     @Override
-    public void initializeInstanceFromXML(Element element) {
-        NodeList properties = element.getElementsByTagName("property");
+    public void initializeInstanceFromXML(Node node) {
+        NodeList properties = node.getChildNodes();
         for (int i = 0; i < properties.getLength(); i++) {
             Node property = properties.item(i);
             initializeField(property);
