@@ -72,17 +72,17 @@ public class Parser {
 
             NodeList scenarioName = (NodeList) xPath.compile(xPathQuery).evaluate(xml_list, XPathConstants.NODESET);
 
-            ArrayList<String> ResultList = new ArrayList<>();
+            ArrayList<String> resultList = new ArrayList<>();
 
             for (int i = 0; i < scenarioName.getLength(); i++) {
-//TODO: richtige URIs zurückgeben anstelle von Stringersetzung
+            //TODO: richtige URIs zurückgeben anstelle von Stringersetzung
                 String scenario = scenarioName.item(i).toString();
-              String[] TransformScenarioName = scenario.split(":");
-                String NewScenarioName = "localhost:" + TransformScenarioName[TransformScenarioName.length-1] + ".pm";
-                ResultList.add(NewScenarioName);
+              String[] transformScenarioName = scenario.split(":");
+                String newScenarioName = "localhost:" + transformScenarioName[transformScenarioName.length-1] + ".pm";
+                resultList.add(newScenarioName);
             }
 
-            return ResultList;
+            return resultList;
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         } catch (SAXException e) {
