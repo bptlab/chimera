@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import org.w3c.dom.Node;
+
 /***********************************************************************************
 *   
 *   _________ _______  _        _______ _________ _        _______ 
@@ -20,5 +22,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 ************************************************************************************/
 
 
-public class Edge {
+public class Edge implements IDeserialisation{
+    @Override
+    public void initializeInstanceFromXML(Node element) {
+
+    }
 }
