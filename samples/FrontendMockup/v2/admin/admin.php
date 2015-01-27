@@ -1,6 +1,6 @@
 <?php
-include 'core/config.php';
-include 'core/RESTCalls.php';
+include '../core/config.php';
+include '../core/RESTCalls.php';
 ?>
 <html>
 <head>
@@ -25,14 +25,6 @@ include 'core/RESTCalls.php';
 <body>
 
 <?php
-//update Cookie Values in case of POST is set.
-if(isset($_POST["ScenarioID"])){
-  setcookie("JEngine_ScenarioID", $_POST["ScenarioID"]);
-  setcookie("JEngine_ScenarioInstanceID", $_POST["ScenarioInstanceID"]);
-  setcookie("JEngine_ActivityID", $_POST["ActivityID"]);
-  setcookie("JEngine_UserID", $_POST["UserID"]);
-  echo "update successful.";
-}
 
 if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 
@@ -49,6 +41,22 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
   echo "generating user profile successful.<br>";
 }
 
+//update Cookie Values in case of POST is set.
+if(isset($_POST["ScenarioID"])){
+  
+   unset($_COOKIE['JEngine_ScenarioID']);
+   setcookie("JEngine_ScenarioID", $_POST["ScenarioID"]);
+   unset($_COOKIE['JEngine_ScenarioInstanceID']);
+   setcookie("JEngine_ScenarioInstanceID", $_POST["ScenarioInstanceID"]);
+   unset($_COOKIE['JEngine_ActivityID']);
+   setcookie("JEngine_ActivityID", $_POST["ActivityID"]);
+   unset($_COOKIE['JEngine_UserID']);
+   setcookie("JEngine_UserID", $_POST["UserID"]);
+
+  echo "<br>update successful.<br>";
+}
+
+
 //if cookie is set, do ... else you could automatically generate IDs..
 if(isset($_COOKIE['ScenarioID']) && $_COOKIE['JEngine_ScenarioInstanceID'] === "1") {
 
@@ -64,11 +72,14 @@ echo"<form action='admin.php' method='post'>
     </form> ";
 
 
+if(!isset($_POST["ScenarioID"])){
 ?>
+
 <div id="container">
     <br><br><br>
-    <i>waiting for HANA..</i><br><br><img src="img/loading-green.gif"><br><br><br><br><br><br><br>
+    <i>waiting for HANA..</i><br><br><img src="../img/loading-green.gif"><br><br><br><br><br><br><br>
 </div>
 
+<?php } ?>
 
 

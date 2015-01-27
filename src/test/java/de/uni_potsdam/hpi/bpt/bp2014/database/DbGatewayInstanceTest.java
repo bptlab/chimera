@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014;
+package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 /**
  * Created by jaspar.mang on 14.01.15.
