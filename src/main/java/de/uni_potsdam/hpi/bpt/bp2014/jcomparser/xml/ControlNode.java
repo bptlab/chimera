@@ -1,10 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.util.HashMap;
+
 /***********************************************************************************
  *
  *   _________ _______  _        _______ _________ _        _______
@@ -25,10 +29,30 @@ import org.w3c.dom.NodeList;
  ************************************************************************************/
 public class ControlNode implements IDeserialisation
 {
+    // Attributes from the XML
     private String type;
     private int id;
     private String text;
     private boolean global;
+    // Saves the realtion between the types used in the processeditor end the one used in the database of the JEngine
+    private HashMap<String, String> peTypeToDbType;
+    // Database specific Attributes
+    private int databaseID;
+
+
+    public ControlNode() {
+        initializeTypeMap();
+    }
+
+    private void initializeTypeMap() {
+        peTypeToDbType = new HashMap<String, String>();
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.Task", "Activity");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.EndEvent", "Endevent");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.StartEvent", "Startevent");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.ParallelGateway", "AND");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.ExclusiveGateway", "XOR");
+    }
+
 
     /**
      * Sets all its attributes from a given XML-Snippet
@@ -71,7 +95,59 @@ public class ControlNode implements IDeserialisation
      * Writes the information of the object to the database
      * @return int - the autoincrement id of the newly created row
      */
-    public int writeToDatabase() {
-        return 0;
+    public int writeToDatabase(int fragmentId) {
+        Connector connector = new Connector();
+        databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
+        return databaseID;
     }
+
+    // BEGIN: Getter & Setter
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public boolean isGlobal() {
+        return global;
+    }
+
+    public void setGlobal(boolean global) {
+        this.global = global;
+    }
+
+    public HashMap<String, String> getPeTypeToDbType() {
+        return peTypeToDbType;
+    }
+
+    public void setPeTypeToDbType(HashMap<String, String> peTypeToDbType) {
+        this.peTypeToDbType = peTypeToDbType;
+    }
+
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    public void setDatabaseID(int databaseID) {
+        this.databaseID = databaseID;
+    }
+    // END: Getter & Setter
 }
