@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014;
+package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import org.junit.Test;

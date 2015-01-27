@@ -2,6 +2,27 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import java.sql.*;
 
+
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
 /*
 As a part of the JComparser we need to seed the parsed information's into the JEngine Database.
  */
@@ -407,6 +428,41 @@ public class Connector {
         }
     }
 
+    public void insertReferenceIntoDatabase(int controlNodeID1, int controlNodeID2){
+        insertReferenceOnSideIntoDatabase(controlNodeID1, controlNodeID2);
+        insertReferenceOnSideIntoDatabase(controlNodeID2, controlNodeID1);
+    }
+
+    private void insertReferenceOnSideIntoDatabase(int controlNodeID1, int controlNodeID2) {
+
+        java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
+        Statement stmt = null;
+        if (conn == null) return;
+        try {
+
+            String sql = "INSERT INTO reference (controlnode_id1, controlnode_id2) VALUES (" + controlNodeID1 +", " + controlNodeID2 + ")";
+            stmt.executeUpdate(sql);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
 
 
 

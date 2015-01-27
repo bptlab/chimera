@@ -36,7 +36,7 @@ function GetActivitiesLabelByID($PCM_ActivityID) {
 	} else {
 		$get_response_as_array = json_decode($get_json,true);
 		if(empty($get_response_as_array)){
-	                die("ERROR: decoding within GetActivities failed");
+	                die("ERROR: decoding within GetActivitiesLabelByID failed");
 	    } elseif(strpos($get_response_as_array, 'Error')){
 	    			echo "There is an REST Error..";
 	    }
