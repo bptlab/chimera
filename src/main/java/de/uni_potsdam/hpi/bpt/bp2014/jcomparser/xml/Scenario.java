@@ -46,12 +46,26 @@ public class Scenario implements IDeserialisable, IPersistable {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
         writeDataObjectsToDatabase();
+        writeDataNodesToDatabase();
         return this.databaseID;
     }
 
     private void writeDataObjectsToDatabase() {
         for (DataObject dataObject : dataObjects.values()) {
             dataObject.writeToDatabase();
+        }
+    }
+
+    private void writeDataNodesToDatabase() {
+        Connector connector = new Connector();
+        for (DataObject dataObject : dataObjects.values()) {
+            for (ControlNode dataNode : dataObject.getDataNodes()) {
+                connector.insertDataObjectIntoDatabase(
+                        dataNode.getText(),
+                        dataNode.getClassId(),
+                        databaseID,
+                        dataObject.getInitState());
+            }
         }
     }
 
