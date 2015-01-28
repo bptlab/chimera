@@ -37,27 +37,39 @@ public class Fragment implements IDeserialisable, IPersistable {
             String xPathQuery = "/model/edges/edge";
             NodeList edgeNodes = (NodeList) xPath.compile(xPathQuery).evaluate(this.fragmentXML, XPathConstants.NODESET);
             this.edges = new ArrayList<Edge>(edgeNodes.getLength());
+
+            //NodeList edgeNodes = fragmentXML.getFirstChild().getNextSibling().getChildNodes();
+            //this.edges = new ArrayList<Edge>(edgeNodes.getLength());
+
             for(int i = 0; i < edgeNodes.getLength(); i++) {
                 Edge currentEdge = new Edge();
                 currentEdge.initializeInstanceFromXML(edgeNodes.item(i));
                 currentEdge.setControlNodes(controlNodes);
                 this.edges.add(currentEdge);
             }
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
+
+    } catch (XPathExpressionException e) {
+        e.printStackTrace();
+    }
+
     }
 
     private void generateControlNodes() {
 
         try {
+
             //get all nodes from fragmentXML
-            XPath xPath =  XPathFactory.newInstance().newXPath();
+            XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery = "/model/nodes/node";
             NodeList nodes = (NodeList) xPath.compile(xPathQuery).evaluate(this.fragmentXML, XPathConstants.NODESET);
             this.controlNodes = new HashMap<Integer, ControlNode>(nodes.getLength());
 
-            for(int i = 0; i < nodes.getLength(); i++) {
+            //NodeList nodes = fragmentXML.getFirstChild().getChildNodes();
+            //this.controlNodes = new HashMap<Integer, ControlNode>();
+
+            for (int i = 0; i < nodes.getLength(); i++) {
+                if (nodes.item(i) == null)
+                    System.out.println("DOOF!");
                 ControlNode currentControlNode = new ControlNode();
                 currentControlNode.initializeInstanceFromXML(nodes.item(i));
                 this.controlNodes.put(currentControlNode.getId(), currentControlNode);
