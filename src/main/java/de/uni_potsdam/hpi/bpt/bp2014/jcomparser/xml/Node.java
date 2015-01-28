@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
@@ -25,7 +24,7 @@ import java.util.HashMap;
  *   Please be aware of the License. You may found it in the root directory.
  *
  ************************************************************************************/
-public class ControlNode implements IDeserialisable, IPersistable {
+public class Node implements IDeserialisable, IPersistable {
 
     // Attributes from the XML
     private String type;
@@ -42,7 +41,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
     private int classId;
 
 
-    public ControlNode() {
+    public Node() {
         initializeTypeMap();
     }
 
@@ -61,10 +60,10 @@ public class ControlNode implements IDeserialisable, IPersistable {
      * @param node The XML-Node
      */
     @Override
-    public void initializeInstanceFromXML(Node node) {
+    public void initializeInstanceFromXML(org.w3c.dom.Node node) {
         NodeList properties = node.getChildNodes();
         for (int i = 0; i < properties.getLength(); i++) {
-            Node property = properties.item(i);
+            org.w3c.dom.Node property = properties.item(i);
             initializeField(property);
         }
     }
@@ -73,7 +72,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
      * If possible the field, which is described by the given property, is set.
      * @param property the describing property
      */
-    private void initializeField(Node property) {
+    private void initializeField(org.w3c.dom.Node property) {
         NamedNodeMap attributes = property.getAttributes();
         String name = attributes.getNamedItem("name").getTextContent();
         String value = attributes.getNamedItem("value").getTextContent();

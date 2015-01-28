@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class ControlNodeTest {
+public class NodeTest {
     private Document document = new DocumentImpl(null);
     private Element activityNode;
     private Element startEventNode;
@@ -70,7 +70,7 @@ public class ControlNodeTest {
 
     @Test
     public void testGlobalActivityDeserialization() {
-        ControlNode activity = new ControlNode();
+        Node activity = new Node();
         activity.initializeInstanceFromXML(activityNode);
         Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil transportieren", activity.getText());
@@ -80,7 +80,7 @@ public class ControlNodeTest {
 
     @Test
     public void testStartEventyDeserialization() {
-        ControlNode startEvent = new ControlNode();
+        Node startEvent = new Node();
         startEvent.initializeInstanceFromXML(startEventNode);
         Assert.assertEquals("Id has not been set correctly", 368338489, startEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "Start", startEvent.getText());
@@ -89,7 +89,7 @@ public class ControlNodeTest {
 
     @Test
     public void testEndEventDeserialization() {
-        ControlNode endEvent = new ControlNode();
+        Node endEvent = new Node();
         endEvent.initializeInstanceFromXML(endEventNode);
         Assert.assertEquals("Id has not been set correctly", 368338489, endEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "End", endEvent.getText());
@@ -98,7 +98,7 @@ public class ControlNodeTest {
 
     @Test
     public void testXorDeserialization() {
-        ControlNode xor = new ControlNode();
+        Node xor = new Node();
         xor.initializeInstanceFromXML(xorNode);
         Assert.assertEquals("Id has not been set correctly", 368338489, xor.getId());
         Assert.assertEquals("Text has not been set correctly", "XOR", xor.getText());
@@ -107,7 +107,7 @@ public class ControlNodeTest {
 
     @Test
     public void testAndDeserialization() {
-        ControlNode xor = new ControlNode();
+        Node xor = new Node();
         xor.initializeInstanceFromXML(andNode);
         Assert.assertEquals("Id has not been set correctly", 368338489, xor.getId());
         Assert.assertEquals("Text has not been set correctly", "AND", xor.getText());
