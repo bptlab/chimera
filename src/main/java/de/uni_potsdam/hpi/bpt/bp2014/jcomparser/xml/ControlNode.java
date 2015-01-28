@@ -86,9 +86,11 @@ public class ControlNode implements IDeserialisable, IPersistable {
      * @param property the describing property
      */
     private void initializeField(Node property) {
+
         NamedNodeMap attributes = property.getAttributes();
         String name = attributes.getNamedItem("name").getTextContent();
         String value = attributes.getNamedItem("value").getTextContent();
+
         switch (name) {
             case "#type" :
                 type = value;
