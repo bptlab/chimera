@@ -464,6 +464,44 @@ public class Connector {
         }
     }
 
+    public int insertStandardEmailTemplateIntoDatabase(int controlNode_id) {
+
+        java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) return -1;
+        int result = -1;
+        try {
+
+            String sql = "INSERT INTO emailconfiguration (receivermailaddress, sendmailaddress, subject, message, controlnode_id) VALUES ('test@test.com', 'test@test.com', 'test', 'test', "+ controlNode_id +")";
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+
 
 
 }

@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.Map;
@@ -28,25 +27,24 @@ import java.util.Map;
 
 
 public class Edge implements IDeserialisable, IPersistable {
-    private Map<Integer, ControlNode> controlNodes;
+    protected Map<Integer, Node> controlNodes;
     private int id;
-    private int sourceNodeId;
-    private int targetNodeId;
+    protected int sourceNodeId;
+    protected int targetNodeId;
     private String type;
     private String label;
-
-    // Database specific values
-    private int databaseId;
+    // If it is an association setId is the database id of the corresponding I/O-Set
+    private int setId = -1;
 
 
     @Override
-    public void initializeInstanceFromXML(Node element) {
+    public void initializeInstanceFromXML(org.w3c.dom.Node element) {
         if (null == controlNodes) {
             return;
         }
         NodeList properties = element.getChildNodes();
         for (int i = 0; i < properties.getLength(); i++) {
-            Node property = properties.item(i);
+            org.w3c.dom.Node property = properties.item(i);
             initializeField(property);
         }
     }
@@ -58,7 +56,15 @@ public class Edge implements IDeserialisable, IPersistable {
         Connector connector = new Connector();
         if (type.contains("SequnceFlow")) {
             connector.insertControlFlowIntoDatabase(sourceDatabaseId, targetDatabaseId, label);
-        } // TODO: Association
+        } else if (type.contains("Association")) {
+            Node controlNode = (controlNodes.get(sourceNodeId).isDataNode()) ?
+                    controlNodes.get(targetNodeId) :
+                    controlNodes.get(sourceNodeId);
+            connector.insertDataFlowIntoDatabase(
+                    controlNode.getDatabaseID(),
+                    setId,
+                    controlNodes.get(targetNodeId).isDataNode());
+        }
         return 0;
     }
 
@@ -66,7 +72,7 @@ public class Edge implements IDeserialisable, IPersistable {
      * If possible the field, which is described by the given property, is set.
      * @param property the describing property
      */
-    private void initializeField(Node property) {
+    private void initializeField(org.w3c.dom.Node property) {
         NamedNodeMap attributes = property.getAttributes();
         String name = attributes.getNamedItem("name").getTextContent();
         String value = attributes.getNamedItem("value").getTextContent();
@@ -90,11 +96,11 @@ public class Edge implements IDeserialisable, IPersistable {
     }
 
     // BEGIN: Getter & SETTER
-    public void setControlNodes(Map<Integer, ControlNode> controlNodes) {
+    public void setControlNodes(Map<Integer, Node> controlNodes) {
         this.controlNodes = controlNodes;
     }
 
-    public Map<Integer, ControlNode> getControlNodes() {
+    public Map<Integer, Node> getControlNodes() {
         return controlNodes;
     }
 
@@ -114,12 +120,24 @@ public class Edge implements IDeserialisable, IPersistable {
         return label;
     }
 
-    public int getDatabaseId() {
-        return databaseId;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public Node getTarget() {
+        return controlNodes.get(targetNodeId);
+    }
+
+    public Node getSource() {
+        return controlNodes.get(sourceNodeId);
+    }
+
+    public void setSetId(int setId) {
+        this.setId = setId;
+    }
+
+    public int getSetId() {
+        return setId;
     }
     // END: Getter & Setter
 }

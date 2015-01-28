@@ -59,7 +59,8 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
         }
         String type = dbControlNode.getType(controlNode_id);
         ControlNodeInstance controlNodeInstance = null;
-        if(type.equals("Activity")){
+        //TODO type
+        if(type.equals("Activity") || type.equals("EmailTask")){
             controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
         }else if(type.equals("Endevent")){
             controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");

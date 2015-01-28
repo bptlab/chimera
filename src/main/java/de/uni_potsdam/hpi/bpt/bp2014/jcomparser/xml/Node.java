@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;
@@ -29,7 +28,7 @@ import java.util.HashMap;
  *   Please be aware of the License. You may found it in the root directory.
  *
  ************************************************************************************/
-public class ControlNode implements IDeserialisable, IPersistable {
+public class Node implements IDeserialisable, IPersistable {
 
     // Attributes from the XML
     private String type;
@@ -39,12 +38,14 @@ public class ControlNode implements IDeserialisable, IPersistable {
     // Saves the relation between the types used in the processeditor end the one used in the database of the JEngine
     private HashMap<String, String> peTypeToDbType;
     // Database specific Attributes
-    private int databaseID;
+    private int databaseID = -1;
     // The Database ID of the fragment which consists the node
     private int fragmentId = -1;
+    private String state;
+    private int classId;
 
 
-    public ControlNode() {
+    public Node() {
         initializeTypeMap();
     }
 
@@ -63,7 +64,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
      * @param node The XML-Node
      */
     @Override
-    public void initializeInstanceFromXML(Node node) {
+    public void initializeInstanceFromXML(org.w3c.dom.Node node) {
 //        try {
 //            XPath xPath =  XPathFactory.newInstance().newXPath();
 //             String xPathQuery = "/node/property";
@@ -72,7 +73,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
             NodeList properties = node.getChildNodes();
             for (int i = 0; i < properties.getLength(); i++) {
                 if (properties.item(i).getNodeName().equals("property")) {
-                    Node property = properties.item(i);
+                    org.w3c.dom.Node property = properties.item(i);
                     initializeField(property);
                 }
             }
@@ -85,7 +86,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
      * If possible the field, which is described by the given property, is set.
      * @param property the describing property
      */
-    private void initializeField(Node property) {
+    private void initializeField(org.w3c.dom.Node property) {
 
         NamedNodeMap attributes = property.getAttributes();
         String name = attributes.getNamedItem("name").getTextContent();
@@ -104,6 +105,9 @@ public class ControlNode implements IDeserialisable, IPersistable {
             case "global" :
                 global = value.equals("1") ? true : false;
                 break;
+            case "state" :
+                state = value;
+                break;
         }
     }
 
@@ -117,7 +121,11 @@ public class ControlNode implements IDeserialisable, IPersistable {
             return -1;
         }
         Connector connector = new Connector();
-        databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
+        if (type.contains("DataObject")) {
+            // Data Objects will be done in DataObject
+        } else {
+            databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
+        }
         return databaseID;
     }
 
@@ -172,6 +180,18 @@ public class ControlNode implements IDeserialisable, IPersistable {
 
     public void setFragmentId(int fragmentId) {
         this.fragmentId = fragmentId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public boolean isDataNode() {
+        return null != type && type.contains("DataObject");
+    }
+
+    public int getClassId() {
+        return classId;
     }
     // END: Getter & Setter
 }
