@@ -35,9 +35,10 @@ public class ControlNode implements IDeserialisable, IPersistable {
     // Saves the relation between the types used in the processeditor end the one used in the database of the JEngine
     private HashMap<String, String> peTypeToDbType;
     // Database specific Attributes
-    private int databaseID;
+    private int databaseID = -1;
     // The Database ID of the fragment which consists the node
     private int fragmentId = -1;
+    private String state;
 
 
     public ControlNode() {
@@ -88,6 +89,9 @@ public class ControlNode implements IDeserialisable, IPersistable {
             case "global" :
                 global = value.equals("1") ? true : false;
                 break;
+            case "state" :
+                state = value;
+                break;
         }
     }
 
@@ -101,7 +105,10 @@ public class ControlNode implements IDeserialisable, IPersistable {
             return -1;
         }
         Connector connector = new Connector();
-        databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
+        if (type.contains("DataObject")) {
+        } else {
+            databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
+        }
         return databaseID;
     }
 
@@ -156,6 +163,14 @@ public class ControlNode implements IDeserialisable, IPersistable {
 
     public void setFragmentId(int fragmentId) {
         this.fragmentId = fragmentId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public boolean isDataNode() {
+        return null != type && type.contains("DataObject");
     }
     // END: Getter & Setter
 }
