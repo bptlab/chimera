@@ -10,32 +10,32 @@ import java.util.Map;
 public class DataObject implements IPersistable {
 
     // A list of all dataNodes which represent the DataObject
-    private List<ControlNode> dataNodes;
+    private List<Node> dataNodes;
     // Saves all states with their name (key) and their databaseId (value)
     private Map<String, Integer> states;
     // The database Id of the data class related to this data Object
     private int classId = -1;
     // The database Id of the scenario
-    private int scenarioid = -1;
+    private int scenarioId = -1;
     // The database ID of the data Object
     private int databaseId;
     // Teh database ID of the initial State
     private Integer initState;
 
     public DataObject() {
-        dataNodes = new LinkedList<ControlNode>();
+        dataNodes = new LinkedList<Node>();
         states = new HashMap<String, Integer>();
     }
 
-    public DataObject(List<ControlNode> dataNodes) {
-        this.dataNodes = new LinkedList<ControlNode>(dataNodes);
+    public DataObject(List<Node> dataNodes) {
+        this.dataNodes = new LinkedList<Node>(dataNodes);
         initializeStates();
     }
 
     private void initializeStates() {
         Connector connector = new Connector();
         classId = connector.insertDataClassIntoDatabase(dataNodes.get(0).getText());
-        for (ControlNode dataNode : dataNodes) {
+        for (Node dataNode : dataNodes) {
             if (!states.containsKey(dataNode.getState())) {
                 int stateId = connector.insertStateIntoDatabase(dataNode.getState(), classId);
                 states.put(dataNode.getState(), stateId);
@@ -49,7 +49,7 @@ public class DataObject implements IPersistable {
      *
      * @param dataNode the new node which will be added
      */
-    public void addDataNode(ControlNode dataNode) {
+    public void addDataNode(Node dataNode) {
         if (dataNode.isDataNode()) {
             dataNodes.add(dataNode);
         }
@@ -69,25 +69,37 @@ public class DataObject implements IPersistable {
 
     @Override
     public int writeToDatabase() {
-        if (0 >= scenarioid || 0 >= classId) {
+        if (0 >= scenarioId || 0 >= classId) {
             return -1;
         }
         Connector connector = new Connector();
         // We assume, that every DataObject starts with the state "init"
         initState = states.get("init");
-        databaseId = connector.insertDataObjectIntoDatabase(dataNodes.get(0).getText(), classId, scenarioid, initState);
-        return 0;
+        databaseId = connector.insertDataObjectIntoDatabase(dataNodes.get(0).getText(), classId, scenarioId, initState);
+        writeDataNotesToDatabase();
+        return databaseId;
     }
 
-    public int getScenarioid() {
-        return scenarioid;
+    private void writeDataNotesToDatabase() {
+        Connector connector = new Connector();
+        for (Node dataNode : dataNodes) {
+            connector.insertDataNodeIntoDatabase(
+                    scenarioId,
+                    states.get(dataNode.getState()),
+                    dataNode.getClassId(),
+                    initState);
+        }
     }
 
-    public void setScenarioid(int scenarioid) {
-        this.scenarioid = scenarioid;
+    public int getScenarioId() {
+        return scenarioId;
     }
 
-    public List<ControlNode> getDataNodes() {
+    public void setScenarioId(int scenarioId) {
+        this.scenarioId = scenarioId;
+    }
+
+    public List<Node> getDataNodes() {
         return dataNodes;
     }
 
