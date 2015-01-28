@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.ControlNode;
 
 import java.util.LinkedList;
 
@@ -145,5 +146,20 @@ public class ScenarioInstance {
             if(controlNodeInstance.controlNode_id == controlNode_id) return true;
         }
         return false;
+    }
+
+    public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id){
+        for(ControlNodeInstance controlNodeInstance: enabledControlNodeInstances){
+            if(controlNodeInstance.controlNode_id == controlNode_id){
+                if (controlNodeInstance.getClass() == ActivityInstance.class) ((ActivityInstance)controlNodeInstance).begin();
+
+
+                //TODO: DEBUG ONLY:
+                if (controlNodeInstance.getClass() == ActivityInstance.class) ((ActivityInstance)controlNodeInstance).terminate();
+                //----------------------------------------------------------------------------------------------------------------
+
+
+            }
+        }
     }
 }

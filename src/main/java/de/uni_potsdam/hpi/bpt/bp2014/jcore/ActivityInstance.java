@@ -3,6 +3,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
+
+import java.util.LinkedList;
 
 
 /***********************************************************************************
@@ -35,16 +38,21 @@ the constructor looks for an activity instance in the database or create a new o
 public class ActivityInstance extends ControlNodeInstance {
     public TaskExecutionBehavior taskExecutionBehavior;
     public ScenarioInstance scenarioInstance;
-    public DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-    public DbActivityInstance dbActivityInstance = new DbActivityInstance();
-    public DbControlNode dbControlNode = new DbControlNode();
     public String label;
+    public LinkedList<Integer> references;
+    //Database Connection objects
+    private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+    private DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    private DbControlNode dbControlNode = new DbControlNode();
+    private DbReference dbReference = new DbReference();
+
 
     public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance){
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
         this.label = dbControlNode.getLabel(controlNode_id);
+        this.references = dbReference.getReferenceActivitiesForActivity(controlNode_id);
         scenarioInstance.controlNodeInstances.add(this);
         if(dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)){
             //creates an existing Activity Instance using the database information
@@ -63,7 +71,11 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     public Boolean begin(){
-        return ((ActivityStateMachine) stateMachine).begin();
+        Boolean started = ((ActivityStateMachine) stateMachine).begin();
+        if(started) ((TaskIncomingControlFlowBehavior)incomingBehavior).startReferences();
+        return started;
+
+
     }
     public Boolean terminate(){
         Boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
