@@ -41,10 +41,10 @@ public class Fragment implements IDeserialisable, IPersistable {
             String xPathQuery = "/model/edges/edge";
             NodeList edgeNodes = (NodeList) xPath.compile(xPathQuery).evaluate(this.fragmentXML, XPathConstants.NODESET);
             this.edges = new ArrayList<Edge>(edgeNodes.getLength());
-
             for(int i = 0; i < edgeNodes.getLength(); i++) {
                 Edge currentEdge = new Edge();
                 currentEdge.initializeInstanceFromXML(edgeNodes.item(i));
+                currentEdge.setControlNodes(controlNodes);
                 this.edges.add(currentEdge);
             }
         } catch (XPathExpressionException e) {
