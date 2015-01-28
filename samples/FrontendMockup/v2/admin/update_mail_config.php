@@ -16,7 +16,7 @@ if(isset($_POST['receivermailaddress'])) {
         die('Ungültige Anfrage: ' . mysql_error());
     } 
     header("Location: admin.php");
-	die();
+	  die();
 } else {
 	echo "there is an error..";
 }
