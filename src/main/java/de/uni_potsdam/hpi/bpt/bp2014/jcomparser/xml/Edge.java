@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.Map;
@@ -28,7 +27,7 @@ import java.util.Map;
 
 
 public class Edge implements IDeserialisable, IPersistable {
-    private Map<Integer, ControlNode> controlNodes;
+    private Map<Integer, Node> controlNodes;
     private int id;
     private int sourceNodeId;
     private int targetNodeId;
@@ -40,13 +39,13 @@ public class Edge implements IDeserialisable, IPersistable {
 
 
     @Override
-    public void initializeInstanceFromXML(Node element) {
+    public void initializeInstanceFromXML(org.w3c.dom.Node element) {
         if (null == controlNodes) {
             return;
         }
         NodeList properties = element.getChildNodes();
         for (int i = 0; i < properties.getLength(); i++) {
-            Node property = properties.item(i);
+            org.w3c.dom.Node property = properties.item(i);
             initializeField(property);
         }
     }
@@ -66,7 +65,7 @@ public class Edge implements IDeserialisable, IPersistable {
      * If possible the field, which is described by the given property, is set.
      * @param property the describing property
      */
-    private void initializeField(Node property) {
+    private void initializeField(org.w3c.dom.Node property) {
         NamedNodeMap attributes = property.getAttributes();
         String name = attributes.getNamedItem("name").getTextContent();
         String value = attributes.getNamedItem("value").getTextContent();
@@ -90,11 +89,11 @@ public class Edge implements IDeserialisable, IPersistable {
     }
 
     // BEGIN: Getter & SETTER
-    public void setControlNodes(Map<Integer, ControlNode> controlNodes) {
+    public void setControlNodes(Map<Integer, Node> controlNodes) {
         this.controlNodes = controlNodes;
     }
 
-    public Map<Integer, ControlNode> getControlNodes() {
+    public Map<Integer, Node> getControlNodes() {
         return controlNodes;
     }
 
