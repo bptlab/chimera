@@ -1,0 +1,581 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=prv_JEngine-docu 2015.1.21)  21 JAN 2015 16:42
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**&prv_JEngine-docu _region_.tex
+(./_region_.tex
+LaTeX2e <2014/05/01>
+Babel <3.9k> and hyphenation patterns for 78 languages loaded.
+CUSTOMISED FORMAT. Preloaded files:
+        .
+acm_proc_article-sp.cls    2009/04/22 - V3.2SP - based on esub2acm.sty <23 Apri
+l 96>
+  epsfig.sty    1999/02/16 v1.7a (e)psfig emulation (SPQR)
+graphicx.sty    2014/04/25 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+  keyval.sty    2014/05/08 v1.15 key=value parser (DPC)
+graphics.sty    2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+    trig.sty    1999/03/16 v1.09 sin cos tan (DPC)
+graphics.cfg    2010/04/23 v1.9 graphics configuration of TeX Live
+  pdftex.def    2011/05/27 v0.06d Graphics/color for pdfTeX
+infwarerr.sty    2010/04/08 v1.3 Providing info/warning/error messages (HO)
+ ltxcmds.sty    2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+ amssymb.sty    2013/01/14 v3.01 AMS font symbols
+amsfonts.sty    2013/01/14 v3.01 Basic AMSFonts support
+ amsmath.sty    2013/01/14 v2.14 AMS math features
+ amstext.sty    2000/06/29 v2.01
+  amsgen.sty    1999/11/30 v2.0
+  amsbsy.sty    1999/11/29 v1.2d
+  amsopn.sty    1999/12/14 v2.01 operator names
+latexsym.sty    1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+ fontenc.sty
+   t1enc.def    2005/09/27 v1.99g Standard LaTeX file
+   t1aer.fd    1997/11/16 Font definitions for T1/aer.
+inputenc.sty    2014/04/30 v1.2b Input encoding file
+    utf8.def    2008/04/05 v1.1m UTF-8 support for inputenc
+   t1enc.dfu    2008/04/05 v1.1m UTF-8 support for inputenc
+  ot1enc.dfu    2008/04/05 v1.1m UTF-8 support for inputenc
+  omsenc.dfu    2008/04/05 v1.1m UTF-8 support for inputenc
+ fontenc.sty
+   t1enc.def    2005/09/27 v1.99g Standard LaTeX file
+   babel.sty    2014/03/24 3.9k The Babel package
+ ngerman.ldf    2013/12/13 v2.7 German support for babel (new orthography)
+fancyhdr.sty    
+enumerate.sty    1999/03/05 v3.00 enumerate extensions (DPC)
+enumitem.sty    2011/09/28 v3.5.2 Customized lists
+stmaryrd.sty    1994/03/03 St Mary's Road symbol package
+    umsa.fd    2013/01/14 v3.01 AMS symbols A
+    umsb.fd    2013/01/14 v3.01 AMS symbols B
+   ulasy.fd    1998/08/17 v2.2e LaTeX symbol font definitions
+  Ustmry.fd
+  t1aett.fd    1997/11/16 Font definitions for T1/aett.
+  t1aess.fd    1997/11/16 Font definitions for T1/aess.
+        .
+No file _region_.aux.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+
+(/Applications/Aquamacs.app/Contents/Resources/lisp/aquamacs/edit-modes/auctex/
+latex/preview.sty
+Package: preview 2010/02/14 11.87 (AUCTeX/preview-latex)
+
+(/Applications/Aquamacs.app/Contents/Resources/lisp/aquamacs/edit-modes/auctex/
+latex/prtightpage.def
+\PreviewBorder=\dimen125
+)
+(/Applications/Aquamacs.app/Contents/Resources/lisp/aquamacs/edit-modes/auctex/
+latex/prauctex.def
+No auxiliary output files.
+
+
+\hbadness=\count111
+\hfuzz=\dimen126
+
+(/Applications/Aquamacs.app/Contents/Resources/lisp/aquamacs/edit-modes/auctex/
+latex/prauctex.cfg))
+(/Applications/Aquamacs.app/Contents/Resources/lisp/aquamacs/edit-modes/auctex/
+latex/prfootnotes.def)
+\pr@snippet=\count112
+\pr@box=\box31
+\pr@output=\toks40
+
+Preview: Fontsize 9pt
+Preview: PDFoutput 1
+) (/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count113
+\scratchdimen=\dimen127
+\scratchbox=\box32
+\nofMPsegments=\count114
+\nofMParguments=\count115
+\everyMPshowfont=\toks41
+\MPscratchCnt=\count116
+\MPscratchDim=\dimen128
+\MPnumerator=\count117
+\makeMPintoPDFobject=\count118
+\everyMPtoPDFconversion=\toks42
+) (/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+))
+(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+ !name(JEngine-docu.tex) !offset(-3) 
+! Misplaced \crcr.
+\endtabular ->\crcr 
+                    \egroup \egroup $\egroup 
+l.30 \alignauthor
+                 
+I can't figure out why you would want to use a tab mark
+or \cr or \span just now. If something like a right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+! Too many }'s.
+\endtabular ->\crcr \egroup \egroup 
+                                    $\egroup 
+l.30 \alignauthor
+                 
+You've closed more groups than you opened.
+Such booboos are generally harmless, so keep going.
+
+! Extra }, or forgotten $.
+<recently read> \egroup 
+                        
+l.30 \alignauthor
+                 
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+! LaTeX Error: \begin{document} ended by \end{tabular}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.30 \alignauthor
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.30 \alignauthor
+                 
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.30 \alignauthor
+                 
+Things are pretty mixed up, but I think the worst is over.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.39 \maketitle
+               
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.39 \maketitle
+               
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \cr inserted.
+<inserted text> 
+                \cr 
+l.39 \maketitle
+               
+I'm guessing that you meant to end an alignment here.
+
+! Missing { inserted.
+<inserted text> 
+                {
+l.39 \maketitle
+               
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.39 \maketitle
+               
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.39 \maketitle
+               
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.39 \maketitle
+               
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Preview: Snippet 1 started.
+<-><->
+      
+l.39 \maketitle
+               
+Not a real error.
+
+Preview: Tightpage -32891 -32891 32891 32891
+! Preview: Snippet 1 ended.(4718592+0x15728640).
+<-><->
+      
+l.39 \maketitle
+               
+Not a real error.
+
+[1]
+! Preview: Snippet 2 ended.(541848+9432x15728640).
+<-><->
+      
+l.43 \begin{abstract}
+                     
+Not a real error.
+
+[2{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+! Preview: Snippet 3 ended.(-136848+0x15728640).
+<-><->
+      
+l.49 \section{Introduction}
+                           
+Not a real error.
+
+[3
+
+]
+
+LaTeX Warning: Citation `ImplementationFrameworkPCM' on page \thepage  undefine
+d on input line 50.
+
+
+LaTeX Warning: Reference `fig:PCMmetaModell' on page \thepage  undefined on inp
+ut line 50.
+
+! Preview: Snippet 4 ended.(-136848+0x15728640).
+<-><->
+      
+l.54 \section{MetaModell}
+                         
+Not a real error.
+
+[4
+
+] <img/MetaModell_classDiagramm.jpg, id=16, 3760.0475pt x 2344.76pt>
+File: img/MetaModell_classDiagramm.jpg Graphic file (type jpg)
+
+<use img/MetaModell_classDiagramm.jpg>
+Package pdftex.def Info: img/MetaModell_classDiagramm.jpg used on input line 59
+.
+(pdftex.def)             Requested size: 216.81pt x 135.1697pt.
+
+! Preview: Snippet 5 ended.(10234737+114423x15728640).
+<-><->
+      
+l.62 \end{figure}
+                 
+Not a real error.
+
+[5
+
+
+ <./img/MetaModell_classDiagramm.jpg>]
+! Preview: Snippet 6 ended.(-71180+0x15728640).
+<-><->
+      
+l.66 \section{JEngine}
+                      
+Not a real error.
+
+[6
+
+]
+! Preview: Snippet 7 ended.(-71180+0x15728640).
+<-><->
+      
+l.71 \subsection{JCore}
+                       
+Not a real error.
+
+[7
+
+]
+! Preview: Snippet 8 ended.(-190722+0x15728640).
+<-><->
+      
+l.77 \subsubsection{REST-API}
+                             
+Not a real error.
+
+[8
+
+]
+! Preview: Snippet 9 ended.(-190722+0x15728640).
+<-><->
+      
+l.102 \subsubsection{ExecutionService}
+                                      
+Not a real error.
+
+[9
+
+]
+! Preview: Snippet 10 ended.(13363+0x15728640).
+<-><->
+      
+l.106 \subsection{JComparser}
+                             
+Not a real error.
+
+[10
+
+]
+! Preview: Snippet 11 ended.(-71180+0x15728640).
+<-><->
+      
+l.110 \subsection{JFrontEnd}
+                            
+Not a real error.
+
+[11
+
+]
+! Preview: Snippet 12 ended.(-71180+0x15728640).
+<-><->
+      
+l.114 \subsection{JDatabase}
+                            
+Not a real error.
+
+[12
+
+]
+! Preview: Snippet 13 ended.(-136848+0x15728640).
+<-><->
+      
+l.118 \section{Processeditor}
+                             
+Not a real error.
+
+[13
+
+]
+! Preview: Snippet 14 ended.(780656+0x15728640).
+<-><->
+      
+l.122 ...on{PCM modelling using the Processeditor}
+                                                  \label{pcm-modelling-using...
+
+Not a real error.
+
+[14
+
+]
+! Preview: Snippet 15 ended.(13363+0x15728640).
+<-><->
+      
+l.129 \subsection{Preparations}
+                               \label{preparations}
+Not a real error.
+
+[15
+
+]
+! Preview: Snippet 16 ended.(13363+0x15728640).
+<-><->
+      
+l.136 \subsection{PCM Fragments}
+                                \label{pcm-fragments}
+Not a real error.
+
+[16
+
+]
+! Preview: Snippet 17 ended.(-51946+0x15728640).
+<-><->
+      
+l.161 \subsubsection{Marking a Task as Global}
+                                              \label{marking-a-task-as-global}
+Not a real error.
+
+[17
+
+]
+! Preview: Snippet 18 ended.(-51946+0x15728640).
+<-><->
+      
+l.180 Task}
+           \label{copy-and-refer-an-existing-task}
+Not a real error.
+
+[18
+
+]
+! Preview: Snippet 19 ended.(-136848+0x15728640).
+<-><->
+      
+l.199 \subsection{PCM Scenario}
+                               \label{pcm-scenario}
+Not a real error.
+
+[19
+
+]
+! Preview: Snippet 20 ended.(-51946+0x15728640).
+<-><->
+      
+l.206 \subsubsection{Defining a PCM Scenario}
+                                             \label{defining-a-pcm-scenario}
+Not a real error.
+
+[20
+
+]
+! Preview: Snippet 21 ended.(-51946+0x15728640).
+<-><->
+      
+l.228 Scenario}
+               \label{removing-a-fragment-from-an-scenario}
+Not a real error.
+
+[21
+
+]
+! Preview: Snippet 22 ended.(-190722+0x15728640).
+<-><->
+      
+l.244 Condition}
+                \label{set-a-termination-condition}
+Not a real error.
+
+[22
+
+]
+! Preview: Snippet 23 ended.(-51946+0x15728640).
+<-><->
+      
+l.265 Fragment}
+               \label{copy-and-alter-a-complete-fragment}
+Not a real error.
+
+[23
+
+]
+! Preview: Snippet 24 ended.(-136848+0x15728640).
+<-><->
+      
+l.284 \subsection{Processeditor Server}
+                                       
+Not a real error.
+
+[24
+
+]
+! Preview: Snippet 25 ended.(-136848+0x15728640).
+<-><->
+      
+l.289 \subsection{Processeditor Client}
+                                       
+Not a real error.
+
+[25
+
+]
+No file _region_.bbl.
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 872 strings out of 489739
+ 14051 string characters out of 6093438
+ 126193 words of memory out of 5000000
+ 7561 multiletter control sequences out of 15000+600000
+ 49287 words of font info for 65 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 38i,10n,23p,415b,260s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/tex
+live/2014/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2014/
+texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on _region_.pdf (25 pages, 551253 bytes).
+PDF statistics:
+ 99 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+
