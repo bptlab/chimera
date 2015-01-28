@@ -27,7 +27,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private int scenarioID;
     private Node scenarioXML;
     private List<Fragment> fragments;
-    private String processeditor_server_url = "http://172.16.64.113:1205/";
+    private String processeditor_server_url = "http://localhost:1205/";
     private int databaseID;
 
     @Override
@@ -35,7 +35,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
         this.scenarioXML = element;
         setScenarioName();
-        //generateFragmentList();
+        generateFragmentList();
     }
 
     public int writeToDatabase() {
@@ -70,7 +70,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                 doc.getDocumentElement().normalize();
                 Fragment fragment = new Fragment();
                 fragment.setScenarioID(this.scenarioID);
-                fragment.initializeInstanceFromXML((Node)doc.getDocumentElement());
+                //fragment.initializeInstanceFromXML((Node)doc.getDocumentElement());
+                fragment.initializeInstanceFromXML(doc.getDocumentElement());
                 this.fragments.add(fragment);
             }
         } catch (XPathExpressionException e) {

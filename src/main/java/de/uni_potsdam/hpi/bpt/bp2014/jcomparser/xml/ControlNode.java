@@ -5,6 +5,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.HashMap;
 
 /***********************************************************************************
@@ -60,11 +64,21 @@ public class ControlNode implements IDeserialisable, IPersistable {
      */
     @Override
     public void initializeInstanceFromXML(Node node) {
-        NodeList properties = node.getChildNodes();
-        for (int i = 0; i < properties.getLength(); i++) {
-            Node property = properties.item(i);
-            initializeField(property);
-        }
+//        try {
+//            XPath xPath =  XPathFactory.newInstance().newXPath();
+//             String xPathQuery = "/node/property";
+//           NodeList properties = (NodeList) xPath.compile(xPathQuery).evaluate(node, XPathConstants.NODESET);
+
+            NodeList properties = node.getChildNodes();
+            for (int i = 0; i < properties.getLength(); i++) {
+                if (properties.item(i).getNodeName().equals("property")) {
+                    Node property = properties.item(i);
+                    initializeField(property);
+                }
+            }
+//        } catch (XPathExpressionException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
