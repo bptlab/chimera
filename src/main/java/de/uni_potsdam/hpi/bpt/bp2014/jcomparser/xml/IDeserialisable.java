@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 ************************************************************************************/
 
 
-public interface IDeserialisation {
+public interface IDeserialisable {
 
     public void initializeInstanceFromXML(Node element);
 }
