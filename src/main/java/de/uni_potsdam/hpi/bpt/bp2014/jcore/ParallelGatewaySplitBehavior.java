@@ -54,13 +54,13 @@ public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
         }
         String type = dbControlNode.getType(controlNode_id);
         ControlNodeInstance controlNodeInstance = null;
-        if(type.equals("Activity")){
+        //TODO type
+        if(type.equals("Activity") || type.equals("EmailTask")){
             controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
         }else if(type.equals("Endevent")){
             controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
         }else if(type.equals("XOR") || type.equals("AND")){
             controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
         }
-        return controlNodeInstance;
-    }
+        return controlNodeInstance;    }
 }

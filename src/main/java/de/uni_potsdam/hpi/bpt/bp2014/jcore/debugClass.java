@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,8 +67,20 @@ public class debugClass {
         String scenarioID = selectScenario();
         String scenarioInstanceID = selectScenarioInstance();
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
+        while(true){
 
-/*        int id = executionService.startNewScenarioInstance(new Integer(1));
+
+            ExecutionService executionService = new ExecutionService(scenarioInstance);
+            LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
+            System.out.println("enabled Aktivität ID");
+            for(int activityID: activitiesIDs){
+                System.out.println(activityID);
+            }
+            System.out.println("Select Activity");
+            executionService.startActivity(new Integer(readLine()));
+        }
+
+        /*        int id = executionService.startNewScenarioInstance(new Integer(1));
         LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
         HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(id);
         for(int activityID: enabledActivitiesIDs) {
@@ -87,19 +100,5 @@ public class debugClass {
         for(int activityID: activitiesIDs){
             System.out.println(activityID);
         }*/
-
-
-        while(true){
-
-
-            ExecutionService executionService = new ExecutionService(scenarioInstance);
-            LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
-            System.out.println("enabled Aktivität ID");
-            for(int activityID: activitiesIDs){
-                System.out.println(activityID);
-            }
-            System.out.println("Select Activity");
-            executionService.startActivity(new Integer(readLine()));
-        }
     }
 }

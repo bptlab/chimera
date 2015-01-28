@@ -40,6 +40,7 @@ public class ActivityInstance extends ControlNodeInstance {
     public ScenarioInstance scenarioInstance;
     public String label;
     public LinkedList<Integer> references;
+    public Boolean isMailTask;
     //Database Connection objects
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
@@ -65,7 +66,13 @@ public class ActivityInstance extends ControlNodeInstance {
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine)stateMachine).enableControlFlow();
         }
-        this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
+        if(dbControlNode.getType(controlNode_id).equals("EmailTask")){
+            this.taskExecutionBehavior = new EmailTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
+            this.isMailTask = true;
+        }else {
+            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
+            this.isMailTask = false;
+        }
         this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
         this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
     }
@@ -73,6 +80,7 @@ public class ActivityInstance extends ControlNodeInstance {
     public Boolean begin(){
         Boolean started = ((ActivityStateMachine) stateMachine).begin();
         if(started) ((TaskIncomingControlFlowBehavior)incomingBehavior).startReferences();
+        taskExecutionBehavior.execute();
         return started;
 
 

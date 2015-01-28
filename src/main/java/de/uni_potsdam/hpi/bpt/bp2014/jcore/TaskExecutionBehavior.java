@@ -25,4 +25,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 public class TaskExecutionBehavior {
     protected ScenarioInstance scenarioInstance;
     protected int activityInstance_id;
+    protected ControlNodeInstance controlNodeInstance;
+
+    public TaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
+        this.activityInstance_id = activityInstance_id;
+        this.scenarioInstance = scenarioInstance;
+        this.controlNodeInstance = controlNodeInstance;
+    }
+
+        public void execute(){}
 }

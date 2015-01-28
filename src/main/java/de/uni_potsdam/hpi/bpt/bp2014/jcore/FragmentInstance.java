@@ -72,7 +72,8 @@ public class FragmentInstance {
         int startEvent = dbControlNode.getStartEventID(fragment_id);
         int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
         String controlNodeType = dbControlNode.getType(controlNode);
-        if (controlNodeType.equals("Activity")){
+        //TODO: type
+        if (controlNodeType.equals("Activity") || controlNodeType.equals("EmailTask")){
             ActivityInstance activityInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
             activityInstance.incomingBehavior.enableControlFlow();
         }else if(controlNodeType.equals("AND") || controlNodeType.equals("XOR")){

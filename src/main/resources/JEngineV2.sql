@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 28. Jan 2015 um 11:19
+-- Erstellungszeit: 28. Jan 2015 um 14:44
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -949,6 +949,9 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (12, 14, ''),
 (15, 16, ''),
 (16, 17, ''),
+(18, 19, ''),
+(19, 20, ''),
+(20, 21, ''),
 (101, 102, ''),
 (102, 103, ''),
 (102, 104, ''),
@@ -991,6 +994,10 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`) VALUES
 (15, 'StartEventFragment4', 'Startevent', 4),
 (16, 'ActivityFragment4', 'Activity', 4),
 (17, 'EndeventFragment4', 'Endevent', 4),
+(18, 'StarteventScenario3', 'Startevent', 5),
+(19, 'Activity1Scenario3', 'Activity', 5),
+(20, 'EmailTaskScenario3', 'Emailtask', 5),
+(21, 'EndeventScenario3', 'Endevent', 5),
 (100, 'TestAND', 'AND', 100),
 (101, 'Startevent', 'Startevent', 101),
 (102, 'AND', 'AND', 101),
@@ -1955,6 +1962,19 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `dataattributeinstance`
+--
+
+CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
+`id` int(11) NOT NULL,
+  `value` varchar(1024) NOT NULL,
+  `dataattribute_id` int(11) NOT NULL,
+  `dataobjectinstance_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `dataclass`
 --
 
@@ -2327,6 +2347,27 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `emailconfiguration`
+--
+
+CREATE TABLE IF NOT EXISTS `emailconfiguration` (
+`id` int(11) NOT NULL,
+  `receivermailaddress` varchar(1024) NOT NULL,
+  `subject` varchar(2048) NOT NULL,
+  `message` text NOT NULL,
+  `controlnode_id` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `emailconfiguration`
+--
+
+INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `subject`, `message`, `controlnode_id`) VALUES
+(1, 'TestReceiver@server.de', 'Test Message', 'Test\r\n\r\nTest\r\n\r\nTest', 20);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `eventinstance`
 --
 
@@ -2369,6 +2410,7 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`) VALUES
 (2, 'fragment2', 1),
 (3, 'fragment3', 1),
 (4, 'fragment4', 1),
+(5, 'Fragment1Scenario3', 3),
 (100, 'testfragment', 101),
 (101, 'fragmentScenario2', 2);
 
@@ -3338,6 +3380,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
 INSERT INTO `scenario` (`id`, `name`) VALUES
 (1, 'HELLOWORLD'),
 (2, 'helloWorld2'),
+(3, 'EmailTest'),
 (100, 'TestScenario'),
 (101, 'Test Insert Scenario');
 
@@ -3775,6 +3818,12 @@ ALTER TABLE `dataattribute`
  ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `dataattributeinstance`
+--
+ALTER TABLE `dataattributeinstance`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `dataclass`
 --
 ALTER TABLE `dataclass`
@@ -3815,6 +3864,12 @@ ALTER TABLE `dataset`
 --
 ALTER TABLE `datasetconsistsofdatanode`
  ADD PRIMARY KEY (`dataset_id`,`datanode_id`);
+
+--
+-- Indexes for table `emailconfiguration`
+--
+ALTER TABLE `emailconfiguration`
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `eventinstance`
@@ -3972,6 +4027,11 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=995;
 ALTER TABLE `dataattribute`
 MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `dataattributeinstance`
+--
+ALTER TABLE `dataattributeinstance`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `dataclass`
 --
 ALTER TABLE `dataclass`
@@ -3996,6 +4056,11 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=193;
 --
 ALTER TABLE `dataset`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT for table `emailconfiguration`
+--
+ALTER TABLE `emailconfiguration`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `eventinstance`
 --
