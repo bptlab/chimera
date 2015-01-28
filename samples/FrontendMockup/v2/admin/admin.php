@@ -45,9 +45,6 @@ $link_content = $_GET['l'];
 
 <?php
 
-
-if(!isset($_POST["ScenarioID"])){
-
 if(isset($link_content)){
 ?>
     <div id="container">
@@ -55,7 +52,9 @@ if(isset($link_content)){
         <i>waiting for HANA..</i><br><br><img src="../img/loading-green.gif"><br><br><br><br><br><br><br>
     </div>
 <?php 
-  }
-} ?>
+} else {
+  echo "welcome to the admin backend! :) please choose from menu.. ";
+}
+?>
 
 
