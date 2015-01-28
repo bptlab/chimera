@@ -19,8 +19,8 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
     private DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 
 
-    public EmailTaskExecutionBehavior(int controlNode_id){
-        this.controlNode_id = controlNode_id;
+    public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
+        super(activityInstance_id,scenarioInstance,controlNodeInstance);
     }
 
     @Override
