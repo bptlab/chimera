@@ -5,6 +5,26 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
 public class DbControlNodeInstance {
     public Boolean existControlNodeInstance(int controlNode_id, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -43,17 +63,20 @@ public class DbControlNodeInstance {
         }
         return false;
     }
-    public void createNewControlNodeInstance(int controlNode_id, String controlNodeType, int fragmentInstance_id) {
+    public int createNewControlNodeInstance(int controlNode_id, String controlNodeType, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return;
-
+        if (conn == null) return -1;
+        int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, fragmentinstance_id) VALUES ('" + controlNodeType + "', "+ controlNode_id +", " + fragmentInstance_id + ")";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -74,6 +97,7 @@ public class DbControlNodeInstance {
                 se.printStackTrace();
             }
         }
+        return result;
     }
     public int getControlNodeInstanceID(int controlNode_id, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();

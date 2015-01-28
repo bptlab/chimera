@@ -4,9 +4,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by jaspar.mang on 05.01.15.
- */
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
 public class DbDataObjectInstance {
 
     public Boolean existDataObjectInstance(int scenarioInstance_id, int dataObject_id) {
@@ -78,17 +95,21 @@ public class DbDataObjectInstance {
             }
         }
     }
-    public void createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
+    public int createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return;
-
+        if (conn == null) return -1;
+        int result = -1;
         try {
             //Execute a query
             stmt = conn.createStatement();
             String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", "+ state_id +", " + dataObject_id+")";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
+
             //Clean-up environment
             stmt.close();
             conn.close();
@@ -109,6 +130,7 @@ public class DbDataObjectInstance {
                 se.printStackTrace();
             }
         }
+        return result;
     }
     public int getDataObjectInstanceID(int scenarioInstance_id, int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();

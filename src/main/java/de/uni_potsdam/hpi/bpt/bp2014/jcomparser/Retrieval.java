@@ -5,11 +5,46 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
+import java.util.Map;
+
+
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
 
 /*
 As a part of the JComparser we need to retrieve XML docus from a source URL like the Repo from the Processeditor.
  */
 public class Retrieval {
+    private final String loginRequest = "<user>%n" +
+            "<property name='name' value='%s'/>%n" +
+            "<property name='pwd' value='%s'/>%n" +
+            "</user>";
+
+    /**
+     *
+     * @param urlToRead
+     * @return
+     * @Deprecated Use this method only if you don't want any authentification
+     */
+    @Deprecated
     public String getHTML(String urlToRead) {
         /* credits to Kalpak http://stackoverflow.com/questions/1485708/how-do-i-do-a-http-get-in-java */
         URL url;
@@ -20,7 +55,7 @@ public class Retrieval {
         try {
             url = new URL(urlToRead);
             conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod("POST");
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             while ((line = rd.readLine()) != null) {
                 result += line;
@@ -43,19 +78,39 @@ public class Retrieval {
         HttpURLConnection conn;
 
         try {
-            Base64 base64 = new Base64();
-            connection = (HttpURLConnection) new URL(hosturl + "user/login").openConnection();
-            String encoded = (String)base64.encode(username + ":" + password);
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
+            CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
 
-            connection.setRequestMethod("GET");
+            Base64 base64 = new Base64();
+            connection = (HttpURLConnection) new URL(hosturl + "users/login").openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/xml");
+            connection.setInstanceFollowRedirects(false);
+            OutputStream os = connection.getOutputStream();
+            PrintWriter osw = new PrintWriter(os);
+            osw.println(String.format(loginRequest, username, password));
+            osw.flush();
+            osw.close();
+            connection.getResponseCode();
+            connection.getResponseMessage();
+            HttpURLConnection modelsConnection = (HttpURLConnection) new URL(urlToRead).openConnection();
+            modelsConnection.setInstanceFollowRedirects(false);
+            modelsConnection.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(modelsConnection.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                stringBuilder.append(line + "\n");
+            }
+            modelsConnection.disconnect();
+            connection.disconnect();
+            return stringBuilder.toString();
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (EncoderException e) {
+            System.err.println("Request failed.");
             e.printStackTrace();
         }
-        // TODO: Return value
         return null;
     }
 }

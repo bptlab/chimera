@@ -5,6 +5,29 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 
 import java.util.LinkedList;
+
+
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
+
 /*
 represents a scenario instance
 the constructor looks for an scenario instance in the database or create a new one in the database
@@ -32,23 +55,20 @@ public class ScenarioInstance {
     public ScenarioInstance(int scenario_id, int scenarioInstance_id){
         this.scenario_id = scenario_id;
         if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)){
+            //creates an existing Scenario Instance using the database information
             this.scenarioInstance_id = scenarioInstance_id;
-            System.out.println("Scenario exist");
-            this.initializeDataObjects();
-            this.initializeFragments();
         } else {
-            System.out.println("Scenario exist not");
-            dbScenarioInstance.createNewScenarioInstance(scenario_id);
-            this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
-            this.initializeDataObjects();
-            this.initializeFragments();
+            //creates a new Scenario Instance also in database, using autoincrement to getting the scenario instances id
+            this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         }
+        this.initializeDataObjects();
+        this.initializeFragments();
     }
 
+    //starts a new scenario instance
     public ScenarioInstance(int scenario_id){
         this.scenario_id = scenario_id;
-        dbScenarioInstance.createNewScenarioInstance(scenario_id);
-        this.scenarioInstance_id = dbScenarioInstance.getScenarioInstanceID(scenario_id);
+        this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         this.initializeDataObjects();
         this.initializeFragments();
     }
@@ -72,6 +92,8 @@ public class ScenarioInstance {
         }
         fragmentInstances.remove(fragmentInstance);
         fragmentInstance.terminate();
+
+        //removes the old control node instances
         LinkedList<ControlNodeInstance> updatedList = new LinkedList<ControlNodeInstance>(terminatedControlNodeInstances);
         for(ControlNodeInstance controlNodeInstance: updatedList){
             if(controlNodeInstance.fragmentInstance_id == fragmentInstance_id){

@@ -4,6 +4,28 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 
+
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
+
 /*
 represents the activity instance, it save the state of the activity in the statemachine, it has an outgoing behavior and
 an incoming behavior
@@ -25,23 +47,19 @@ public class ActivityInstance extends ControlNodeInstance {
         this.label = dbControlNode.getLabel(controlNode_id);
         scenarioInstance.controlNodeInstances.add(this);
         if(dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)){
-            System.out.println("Activity exist");
+            //creates an existing Activity Instance using the database information
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
-            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
-            this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
-            this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
         }else {
-            System.out.println("Activity not exist");
-            dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+            //creates a new Activity Instance also in database
+            this.controlNodeInstance_id  = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
             dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine)stateMachine).enableControlFlow();
-            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
-            this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
-            this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
         }
+        this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance);
+        this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
+        this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
     }
 
     public Boolean begin(){
@@ -52,6 +70,7 @@ public class ActivityInstance extends ControlNodeInstance {
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
         return workingFine;
     }
+    //checks if the Activity is now data enabled
     public void checkDataFlowEnabled(){
         ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
     }

@@ -21,5 +21,7 @@ We support RESTful interfaces on all possible sides around the JEngine. The fron
 This JEngine does execute
 * sequential
 * usertasks
+* data objects
+* AND gateways
 
 :-)

@@ -4,6 +4,27 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 
 import java.util.LinkedList;
 
+
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
 public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
     private DbDataFlow dbDataFlow = new DbDataFlow();
 
@@ -22,10 +43,11 @@ public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for(int followingControlNode_id: followingControlNode_ids){
             ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
+            //enable following instances
             followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
-
+    //get the following control node instance, also initialize them
     private ControlNodeInstance getFollowingNodeInstance(int controlNode_id){
         for(ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances){
             if(controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;

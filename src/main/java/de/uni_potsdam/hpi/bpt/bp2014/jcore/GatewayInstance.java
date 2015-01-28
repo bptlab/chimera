@@ -4,6 +4,25 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
 public class GatewayInstance extends ControlNodeInstance {
     public Boolean isXOR;
     public Boolean isAND;
@@ -13,8 +32,10 @@ public class GatewayInstance extends ControlNodeInstance {
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
     public GatewayInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
+        //looks if the Gateway Instance has already been initialized
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances) {
             if (controlNodeInstance.fragmentInstance_id == controlNodeInstance_id && controlNodeInstance.controlNode_id == controlNode_id) {
+                //if it exist, only checks the control flow
                 controlNodeInstance.incomingBehavior.enableControlFlow();
                 return;
             }
@@ -22,21 +43,21 @@ public class GatewayInstance extends ControlNodeInstance {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
+        scenarioInstance.controlNodeInstances.add(this);
         if (dbControlNode.getType(controlNode_id).equals("AND")) {
             this.isAND = true;
             this.isXOR = false;
             this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
             this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
         }//TODO: XOR Here
-        scenarioInstance.controlNodeInstances.add(this);
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
-            //TODO: gatewas exist
+            //initializes all Gateway Instances in the database
+            this.controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
         } else {
+            //creates a new Gateway Instance also in database
             if (isAND) {
-                dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
+                this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "AND", fragmentInstance_id);
             }//TODO: XOR Here
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             if (isAND) {
                 dbGatewayInstance.createNewGatewayInstance(controlNodeInstance_id, "AND", "init");
             }//TODO: XOR Here

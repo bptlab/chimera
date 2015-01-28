@@ -6,6 +6,26 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
+
+
 public class Seed {
 
     public void getDBcontent(){
@@ -22,7 +42,7 @@ public class Seed {
         Connector jHandler = new Connector();
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector connect;
-        Connection conn = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector.connect();
+        Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
 
         Statement stmt = null;
         ResultSet rs = null;

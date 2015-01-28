@@ -10,24 +10,42 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.lang.String;
+
+
+/***********************************************************************************
+*   
+*   _________ _______  _        _______ _________ _        _______ 
+*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
+*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
+*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
+*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+*
+*******************************************************************
+*
+*   Copyright © All Rights Reserved 2014 - 2015
+*
+*   Please be aware of the License. You may found it in the root directory.
+*
+************************************************************************************/
 
 
 public class JComparser {
 
-   /* public static void main(String args[]) {
+    public static void main(String args[]) {
 
-        *//* Settings *//*
+        /* Settings */
         boolean retrieval_by_url = true;
         boolean rest_option = false;
         boolean file_upload = true;
 
         boolean bpmn_img_retrieval = false;
 
-        *//* Initialization *//*
-        String XML_response = "";
+        /* Initialization */
         String Processeditor_server_url = "http://172.16.64.113:1205/";
 
         if (file_upload) {
@@ -39,35 +57,43 @@ public class JComparser {
         }
         if (retrieval_by_url) {
             Retrieval jRetrieval = new Retrieval();
-            List<String> pcm = new ArrayList<String>();
-            List<String> models_list = new ArrayList<String>();
-
+            ArrayList<String> scenarioXML_List = new ArrayList<>();
+            List<String> scenariosURL_list = new ArrayList<>();
 
             String response_list = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "models");
-            models_list = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parseModelList(response_list);
-            int models_size = models_list.size();
-            String response_item = "";
+            scenariosURL_list = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.selectScenarioURLS(response_list);
+            String modelXML = "";
 
-            for (int i = 0; i < models_size; i++) {
-                //    response_item = response_list.get(i);
-                XML_response = jRetrieval.getHTML(Processeditor_server_url + "models/" + response_item + ".pm");
-                pcm.add(XML_response);
+            for (int i = 0; i < scenariosURL_list.size(); i++) {
+                modelXML = jRetrieval.getHTMLwithAuth(Processeditor_server_url, scenariosURL_list.get(i));
+                scenarioXML_List.add(modelXML);
             }
-            //handleFileRetrieval(pcm);
+            int fragmentID;
+            ArrayList<String> controlNodes;
+            for(String scenarioXML: scenarioXML_List){
+                int scenarioId;
+                Parser parser = new Parser(scenarioXML); //extract scenarioName
+                Connector connector = new Connector();
+                scenarioId = connector.insertScenarioIntoDatabase(parser.getScenarioName());
+                HashMap<Integer, String> fragments = parser.getFragmentDetails();
+                for (Map.Entry<Integer, String> fragment: fragments.entrySet()) {
+                    fragmentID =  connector.insertFragmentIntoDatabase(fragment.getValue(), scenarioId);
+                    controlNodes = parser.getControlNodesForFragment(fragment.getKey());
+
+                }
+            }
 
 
-            InputStream in = null;
-            *//* try {
-               in = post.getResponseBodyAsStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*//*
-            System.out.println(in);
 
-            // jRetrieval = new Retrieval();
-            XML_response = jRetrieval.getHTML(Processeditor_server_url);
-            XML_response = XML_response.replaceAll("[^\\x20-\\x7e]", "");
-            handleFileRetrieval(XML_response);
+            //de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(scenarioXML_List);
+
+
+
+            /*???????????????????????
+            String xml_response ="";
+            xml_response = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url);
+            xml_response = xml_response.replaceAll("[^\\x20-\\x7e]", "");
+            handleFileRetrieval(xml_response);*/
         }
 
         if (bpmn_img_retrieval) {
@@ -82,12 +108,12 @@ public class JComparser {
     }
 
     public static void handleFileUpload(List pcm) {
-
+/*
         int pcm_size = pcm.size();
         String pcm_item = "";
 
-        // List<String> pcm_list = new ArrayList<String>();
-        // Object xml_path_url = pcm.get(1);
+        List<String> pcm_list = new ArrayList<String>();
+        Object xml_path_url = pcm.get(1);
 
         for(int i=0; i < pcm_size; i++) {
             pcm_item = (String) pcm.get(i);
@@ -104,15 +130,15 @@ public class JComparser {
         }
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm);
-
+*/
     }
 
     public static void handleFileRetrieval(String pcm) {
 
-        List<String> pcm_list = new ArrayList<String>();
+        ArrayList<String> pcm_list = new ArrayList<String>();
         pcm_list.add(pcm);
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
-    }*/
+    }
 
 }
