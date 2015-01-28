@@ -50,3 +50,5 @@ echo"<form action='admin.php' method='post'>
       <input type='submit'>
     </form> ";
 
+if(!isset($_POST["ScenarioID"])){
+}

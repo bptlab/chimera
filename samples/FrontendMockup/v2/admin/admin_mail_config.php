@@ -8,6 +8,10 @@ include '../core/db_connection.php';
 $result = mysql_query("SELECT * FROM `emailconfiguration`");
 
 while($row = mysql_fetch_array($result)) {
+    $label_row = mysql_query("SELECT label FROM `controlnode` WHERE id= '".$row['controlnode_id']."'");
+    $label = mysql_fetch_row($label_row);
+    echo "<h4>".$label[0]."</h4>";
+
     echo "
         <form action='update_mail_config.php' method='post'>
             <input type='hidden' name='id' value='".$row['id']."'><br>
@@ -18,6 +22,8 @@ while($row = mysql_fetch_array($result)) {
             <input type='submit'>
         </form>
     ";
+
+
     //print_r($row);
 }
 
