@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -8,18 +9,33 @@ import org.apache.commons.mail.SimpleEmail;
  * Created by jaspar.mang on 28.01.15.
  */
 public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
-    int port;
-    String serverAddress;
-    String receiverMail;
-    String sendMail;
-    String subject;
-    String message;
+    private int port;
+    private String serverAddress;
+    private String receiverMail;
+    private String sendMail;
+    private String subject;
+    private String message;
+    private int controlNode_id;
+    private DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 
+
+    public EmailTaskExecutionBehavior(int controlNode_id){
+        this.controlNode_id = controlNode_id;
+    }
 
     @Override
     public void execute(){
-        this.setFakeValues();
+        this.setValues();
         this.sendMail();
+    }
+
+    private void setValues(){
+        port = 1024;
+        serverAddress = "localhost";
+        receiverMail = emailConfiguration.getReceiverEmailAddress(controlNode_id);
+        sendMail = emailConfiguration.getSendEmailAddress(controlNode_id);
+        subject = emailConfiguration.getSubject(controlNode_id);
+        message = emailConfiguration.getMessage(controlNode_id);
     }
 
     private void setFakeValues(){
