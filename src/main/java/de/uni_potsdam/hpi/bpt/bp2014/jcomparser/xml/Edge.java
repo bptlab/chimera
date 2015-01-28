@@ -27,15 +27,14 @@ import java.util.Map;
 
 
 public class Edge implements IDeserialisable, IPersistable {
-    private Map<Integer, Node> controlNodes;
+    protected Map<Integer, Node> controlNodes;
     private int id;
-    private int sourceNodeId;
-    private int targetNodeId;
+    protected int sourceNodeId;
+    protected int targetNodeId;
     private String type;
     private String label;
-
-    // Database specific values
-    private int databaseId;
+    // If it is an association setId is the database id of the corresponding I/O-Set
+    private int setId = -1;
 
 
     @Override
@@ -57,7 +56,15 @@ public class Edge implements IDeserialisable, IPersistable {
         Connector connector = new Connector();
         if (type.contains("SequnceFlow")) {
             connector.insertControlFlowIntoDatabase(sourceDatabaseId, targetDatabaseId, label);
-        } // TODO: Association
+        } else if (type.contains("Association")) {
+            Node controlNode = (controlNodes.get(sourceNodeId).isDataNode()) ?
+                    controlNodes.get(targetNodeId) :
+                    controlNodes.get(sourceNodeId);
+            connector.insertDataFlowIntoDatabase(
+                    controlNode.getDatabaseID(),
+                    setId,
+                    controlNodes.get(targetNodeId).isDataNode());
+        }
         return 0;
     }
 
@@ -113,12 +120,24 @@ public class Edge implements IDeserialisable, IPersistable {
         return label;
     }
 
-    public int getDatabaseId() {
-        return databaseId;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public Node getTarget() {
+        return controlNodes.get(targetNodeId);
+    }
+
+    public Node getSource() {
+        return controlNodes.get(sourceNodeId);
+    }
+
+    public void setSetId(int setId) {
+        this.setId = setId;
+    }
+
+    public int getSetId() {
+        return setId;
     }
     // END: Getter & Setter
 }
