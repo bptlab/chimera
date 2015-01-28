@@ -19,7 +19,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Scenario implements IDeserialisable, IPersistable {
 
@@ -29,6 +31,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private List<Fragment> fragments;
     private String processeditor_server_url = "http://172.16.64.113:1205/";
     private int databaseID;
+    private Map<String, DataObject> dataObjects = new HashMap<String, DataObject>();
 
     @Override
     public void initializeInstanceFromXML(Node element) {
@@ -36,13 +39,33 @@ public class Scenario implements IDeserialisable, IPersistable {
         this.scenarioXML = element;
         setScenarioName();
         //generateFragmentList();
+        createDataObjects();
     }
 
     public int writeToDatabase() {
-
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
+        writeDataObjectsToDatabase();
         return this.databaseID;
+    }
+
+    private void writeDataObjectsToDatabase() {
+        for (DataObject dataObject : dataObjects.values()) {
+            dataObject.writeToDatabase();
+        }
+    }
+
+    private void createDataObjects() {
+        for (Fragment fragment : fragments) {
+            for (ControlNode node : fragment.getControlNodes().values()) {
+                if (node.isDataNode()) {
+                    if (null == dataObjects.get(node.getText())) {
+                        dataObjects.put(node.getText(), new DataObject());
+                    }
+                    dataObjects.get(node.getText()).addDataNode(node);
+                }
+            }
+        }
     }
 
 

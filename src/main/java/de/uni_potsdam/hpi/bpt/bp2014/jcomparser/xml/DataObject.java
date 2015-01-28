@@ -16,7 +16,7 @@ public class DataObject implements IPersistable {
     private int classId = -1;
     // The database Id of the scenario
     private int scenarioid = -1;
-    // The database Id of the DataObject
+    // The
     private int databaseId;
 
     public DataObject() {
