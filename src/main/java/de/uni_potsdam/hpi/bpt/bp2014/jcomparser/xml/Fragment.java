@@ -34,7 +34,6 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     private void generateEdges() {
-
         try {
             //get all edges from fragmentXML
             XPath xPath =  XPathFactory.newInstance().newXPath();
