@@ -74,4 +74,10 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior{
         }
         return loopCheck;
     }
+
+    public void startReferences(){
+        for(int activity_id: ((ActivityInstance)controlNodeInstance).references){
+            scenarioInstance.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);
+        }
+    }
 }
