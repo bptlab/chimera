@@ -1,6 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.Map;
 
 /***********************************************************************************
 *   
@@ -23,13 +28,98 @@ import org.w3c.dom.Node;
 
 
 public class Edge implements IDeserialisable, IPersistable {
+    private Map<Integer, ControlNode> controlNodes;
+    private int id;
+    private int sourceNodeId;
+    private int targetNodeId;
+    private String type;
+    private String label;
+
+    // Database specific values
+    private int databaseId;
+
+
     @Override
     public void initializeInstanceFromXML(Node element) {
-
+        if (null == controlNodes) {
+            return;
+        }
+        NodeList properties = element.getChildNodes();
+        for (int i = 0; i < properties.getLength(); i++) {
+            Node property = properties.item(i);
+            initializeField(property);
+        }
     }
 
     @Override
     public int writeToDatabase() {
+        int targetDatabaseId = controlNodes.get(targetNodeId).getDatabaseID();
+        int sourceDatabaseId = controlNodes.get(sourceNodeId).getDatabaseID();
+        Connector connector = new Connector();
+        if (type.contains("SequnceFlow")) {
+            connector.insertControlFlowIntoDatabase(sourceDatabaseId, targetDatabaseId, label);
+        } // TODO: Association
         return 0;
     }
+
+    /**
+     * If possible the field, which is described by the given property, is set.
+     * @param property the describing property
+     */
+    private void initializeField(Node property) {
+        NamedNodeMap attributes = property.getAttributes();
+        String name = attributes.getNamedItem("name").getTextContent();
+        String value = attributes.getNamedItem("value").getTextContent();
+        switch (name) {
+            case "#type" :
+                type = value;
+                break;
+            case "#id" :
+                id = Integer.parseInt(value);
+                break;
+            case "label" :
+                label = value;
+                break;
+            case "#source" :
+                sourceNodeId = Integer.parseInt(value);
+                break;
+            case "#target" :
+                targetNodeId = Integer.parseInt(value);
+                break;
+        }
+    }
+
+    // BEGIN: Getter & SETTER
+    public void setControlNodes(Map<Integer, ControlNode> controlNodes) {
+        this.controlNodes = controlNodes;
+    }
+
+    public Map<Integer, ControlNode> getControlNodes() {
+        return controlNodes;
+    }
+
+    public int getSourceNodeId() {
+        return sourceNodeId;
+    }
+
+    public int getTargetNodeId() {
+        return targetNodeId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public int getId() {
+        return id;
+    }
+    // END: Getter & Setter
 }
