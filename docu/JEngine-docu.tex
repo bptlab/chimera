@@ -67,7 +67,10 @@ Overall JEngine
 %
 \subsection{JCore}
 Der JCore umfasst mehrere Hauptkomponenten unserer Engine. Dazu zählt die Auswertung der Datenbank und das Entscheiden von enableden Aktivitäten etc.\\
-Dazu zählt zum Beispiel auch die REST-API.
+Dazu zählt zum Beispiel auch die REST-API sowie der ExecutionService.\\
+In der JCore liegen die grundsächlichsten Funktionalitäten, die unsere JEngine anbietet. Zu diesen gehören zum einen die Möglichkeit, dass man Aktivitäten sequenziell ausführen kann. Bei den Aktivitäten, die man ausführen kann, handelt es sich bisher nur um User-Tasks, die später noch mit E-Mail-Tasks erweitert werden sollen.\\
+Bei PCM können Aktivitäten aus Datenfluss- und Datenobjektflusssicht enabled werden. Dies ist auch der Grund, weshalb wir Datenobjekte unterstützen, sowie deren Zustandsübergänge. Außerdem können in PCM Aktivitäten referenziert werden, das bei der Ausführung die Folge hat, dass wenn referenzierte Aktivitäten enabled sind und dieselben Vor- und Nachbedngungen haben, auch beide in dne Zustand running wechseln, sobald eine von ihnen gestartet wird.\\
+Darüberhinaus bestehen PCM-Fragmente aus einem Subset von BPMN. Davon unterstützen wir zur Zeit Start-/Endevents, Aktivitäten und AND-Gateways.
 
 %
 %
@@ -157,6 +160,7 @@ Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integ
 %
 \end{enumerate}
 \subsubsection{ExecutionService}
+Der ExecutionService ist die Komponente, auf die die REST-API aufbaut. Diese Komponente der JEngine ist essentiell um Anfragen, die über das REST-Interface entgegengenommen werden, zu bearbeiten. Dabei stellt es eine Verbindung zur Datenbank her, um auf dieser Queries auszuführen. Die meisten Abfragen benötigen eine ID des Objekts, um mehr Informationen über dieses zu gewinnen. Es gibt zudem auch Methoden um Aktivitäten bzw. ganze Szenarien zu instanziieren.
 
 %
 %
