@@ -22,9 +22,14 @@ import org.w3c.dom.Node;
 ************************************************************************************/
 
 
-public class Edge implements IDeserialisation{
+public class Edge implements IDeserialisable, IPersistable {
     @Override
     public void initializeInstanceFromXML(Node element) {
 
+    }
+
+    @Override
+    public int writeToDatabase() {
+        return 0;
     }
 }
