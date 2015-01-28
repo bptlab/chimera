@@ -39,6 +39,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
     // The Database ID of the fragment which consists the node
     private int fragmentId = -1;
     private String state;
+    private int classId;
 
 
     public ControlNode() {
@@ -106,6 +107,7 @@ public class ControlNode implements IDeserialisable, IPersistable {
         }
         Connector connector = new Connector();
         if (type.contains("DataObject")) {
+            // Data Objects will be written inside the Scenario
         } else {
             databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
         }
@@ -171,6 +173,10 @@ public class ControlNode implements IDeserialisable, IPersistable {
 
     public boolean isDataNode() {
         return null != type && type.contains("DataObject");
+    }
+
+    public int getClassId() {
+        return classId;
     }
     // END: Getter & Setter
 }

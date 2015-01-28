@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataObject implements IPersistable {
+
     // A list of all dataNodes which represent the DataObject
     private List<ControlNode> dataNodes;
     // Saves all states with their name (key) and their databaseId (value)
@@ -16,8 +17,10 @@ public class DataObject implements IPersistable {
     private int classId = -1;
     // The database Id of the scenario
     private int scenarioid = -1;
-    // The
+    // The database ID of the data Object
     private int databaseId;
+    // Teh database ID of the initial State
+    private Integer initState;
 
     public DataObject() {
         dataNodes = new LinkedList<ControlNode>();
@@ -71,7 +74,8 @@ public class DataObject implements IPersistable {
         }
         Connector connector = new Connector();
         // We assume, that every DataObject starts with the state "init"
-        databaseId = connector.insertDataObjectIntoDatabase(dataNodes.get(0).getText(), classId, scenarioid, states.get("init"));
+        initState = states.get("init");
+        databaseId = connector.insertDataObjectIntoDatabase(dataNodes.get(0).getText(), classId, scenarioid, initState);
         return 0;
     }
 
@@ -81,5 +85,13 @@ public class DataObject implements IPersistable {
 
     public void setScenarioid(int scenarioid) {
         this.scenarioid = scenarioid;
+    }
+
+    public List<ControlNode> getDataNodes() {
+        return dataNodes;
+    }
+
+    public Integer getInitState() {
+        return initState;
     }
 }
