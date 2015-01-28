@@ -21,6 +21,8 @@ public class Fragment implements IDeserialisable, IPersistable {
     private Map<Integer, Node> controlNodes;
     private List<Edge> edges;
     private int databaseID;
+    private List<InputSet> inputSets;
+    private List<OutputSet> outputSets;
 
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node element) {
@@ -29,7 +31,23 @@ public class Fragment implements IDeserialisable, IPersistable {
         setFragmentName();
         generateControlNodes();
         generateEdges();
+        generateSets();
 
+    }
+
+    private void generateSets() {
+        for (Node node : controlNodes.values()) {
+            if (!node.isDataNode()) {
+                InputSet iSet = InputSet.createInputSetForTaskAndEdges(node, edges);
+                if (null != iSet) {
+                    inputSets.add(iSet);
+                }
+                OutputSet oSet = OutputSet.createOutputSetForTaskAndEdges(node, edges);
+                if (null != oSet) {
+                    outputSets.add(oSet);
+                }
+            }
+        }
     }
 
     private void generateEdges() {
@@ -84,6 +102,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         this.scenarioID = id;
     }
 
+    @Override
     public int writeToDatabase() {
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(this.fragmentName, this.scenarioID);
@@ -91,7 +110,20 @@ public class Fragment implements IDeserialisable, IPersistable {
             node.setFragmentId(databaseID);
             node.writeToDatabase();
         }
+        writeSetToDatabase();
+        for (Edge edge : edges) {
+            edge.writeToDatabase();
+        }
         return databaseID;
+    }
+
+    private void writeSetToDatabase() {
+        for (InputSet set : inputSets) {
+            set.writeToDatabase();
+        }
+        for (OutputSet set : outputSets) {
+            set.writeToDatabase();
+        }
     }
 
     public List<Edge> getEdges () {

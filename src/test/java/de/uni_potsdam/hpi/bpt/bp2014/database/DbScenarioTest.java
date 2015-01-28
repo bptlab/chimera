@@ -18,7 +18,8 @@ public class DbScenarioTest {
         LinkedList<Integer> scenarios = dbScenario.getScenarioIDs();
         assertEquals(1, (int) scenarios.get(0));
         assertEquals(2, (int) scenarios.get(1));
-        assertEquals(100, (int) scenarios.get(2));
-        assertEquals(101, (int) scenarios.get(3));
+        assertEquals(3, (int) scenarios.get(2));
+        assertEquals(100, (int) scenarios.get(3));
+        assertEquals(101, (int) scenarios.get(4));
     }
 }

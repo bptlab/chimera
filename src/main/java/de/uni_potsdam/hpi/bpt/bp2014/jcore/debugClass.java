@@ -64,7 +64,7 @@ public class debugClass {
     }
 
     public static void main(String args[]){
-        EmailTaskExecutionBehavior emailTaskExecutionBehavior = new EmailTaskExecutionBehavior();
+        EmailTaskExecutionBehavior emailTaskExecutionBehavior = new EmailTaskExecutionBehavior(20);
         emailTaskExecutionBehavior.execute();
 
 
