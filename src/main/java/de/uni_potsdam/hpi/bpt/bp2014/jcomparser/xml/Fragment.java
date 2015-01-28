@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;
@@ -17,14 +16,14 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     private int scenarioID;
     private String fragmentName;
-    private Node fragmentXML;
+    private org.w3c.dom.Node fragmentXML;
     private int fragmentID;
-    private Map<Integer, ControlNode> controlNodes;
+    private Map<Integer, Node> controlNodes;
     private List<Edge> edges;
     private int databaseID;
 
     @Override
-    public void initializeInstanceFromXML(Node element) {
+    public void initializeInstanceFromXML(org.w3c.dom.Node element) {
 
         this.fragmentXML = element;
         setFragmentName();
@@ -58,12 +57,12 @@ public class Fragment implements IDeserialisable, IPersistable {
             XPath xPath =  XPathFactory.newInstance().newXPath();
             String xPathQuery = "/model/nodes/node";
             NodeList nodes = (NodeList) xPath.compile(xPathQuery).evaluate(this.fragmentXML, XPathConstants.NODESET);
-            this.controlNodes = new HashMap<Integer, ControlNode>(nodes.getLength());
+            this.controlNodes = new HashMap<Integer, Node>(nodes.getLength());
 
             for(int i = 0; i < nodes.getLength(); i++) {
-                ControlNode currentControlNode = new ControlNode();
-                currentControlNode.initializeInstanceFromXML(nodes.item(i));
-                this.controlNodes.put(currentControlNode.getId(), currentControlNode);
+                Node currentNode = new Node();
+                currentNode.initializeInstanceFromXML(nodes.item(i));
+                this.controlNodes.put(currentNode.getId(), currentNode);
             }
         } catch (XPathExpressionException e) {
             e.printStackTrace();
@@ -88,7 +87,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     public int writeToDatabase() {
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(this.fragmentName, this.scenarioID);
-        for (ControlNode node : controlNodes.values()) {
+        for (Node node : controlNodes.values()) {
             node.setFragmentId(databaseID);
             node.writeToDatabase();
         }
@@ -107,7 +106,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         this.databaseID = databaseID;
     }
 
-    public Map<Integer, ControlNode> getControlNodes() {
+    public Map<Integer, Node> getControlNodes() {
         return controlNodes;
     }
 }

@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -27,14 +26,14 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     private String scenarioName;
     private int scenarioID;
-    private Node scenarioXML;
+    private org.w3c.dom.Node scenarioXML;
     private List<Fragment> fragments;
     private String processeditor_server_url = "http://172.16.64.113:1205/";
     private int databaseID;
     private Map<String, DataObject> dataObjects = new HashMap<String, DataObject>();
 
     @Override
-    public void initializeInstanceFromXML(Node element) {
+    public void initializeInstanceFromXML(org.w3c.dom.Node element) {
 
         this.scenarioXML = element;
         setScenarioName();
@@ -46,7 +45,6 @@ public class Scenario implements IDeserialisable, IPersistable {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
         writeDataObjectsToDatabase();
-        writeDataNodesToDatabase();
         return this.databaseID;
     }
 
@@ -56,22 +54,9 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
-    private void writeDataNodesToDatabase() {
-        Connector connector = new Connector();
-        for (DataObject dataObject : dataObjects.values()) {
-            for (ControlNode dataNode : dataObject.getDataNodes()) {
-                connector.insertDataObjectIntoDatabase(
-                        dataNode.getText(),
-                        dataNode.getClassId(),
-                        databaseID,
-                        dataObject.getInitState());
-            }
-        }
-    }
-
     private void createDataObjects() {
         for (Fragment fragment : fragments) {
-            for (ControlNode node : fragment.getControlNodes().values()) {
+            for (Node node : fragment.getControlNodes().values()) {
                 if (node.isDataNode()) {
                     if (null == dataObjects.get(node.getText())) {
                         dataObjects.put(node.getText(), new DataObject());
@@ -107,7 +92,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                 doc.getDocumentElement().normalize();
                 Fragment fragment = new Fragment();
                 fragment.setScenarioID(this.scenarioID);
-                fragment.initializeInstanceFromXML((Node)doc.getDocumentElement());
+                fragment.initializeInstanceFromXML((org.w3c.dom.Node)doc.getDocumentElement());
                 this.fragments.add(fragment);
             }
         } catch (XPathExpressionException e) {
