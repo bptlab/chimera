@@ -40,6 +40,7 @@ public class ActivityInstance extends ControlNodeInstance {
     public ScenarioInstance scenarioInstance;
     public String label;
     public LinkedList<Integer> references;
+    public Boolean isMailTask;
     //Database Connection objects
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
@@ -48,6 +49,7 @@ public class ActivityInstance extends ControlNodeInstance {
 
 
     public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance){
+        this.isMailTask = false;
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
