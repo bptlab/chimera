@@ -21,6 +21,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 
     public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
         super(activityInstance_id,scenarioInstance,controlNodeInstance);
+        controlNode_id = controlNodeInstance.controlNode_id;
     }
 
     @Override
