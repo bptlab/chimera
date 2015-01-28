@@ -21,13 +21,14 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Scenario implements IDeserialisation{
+public class Scenario implements IDeserialisable, IPersistable {
 
     private String scenarioName;
     private int scenarioID;
     private Node scenarioXML;
     private List<Fragment> fragments;
     private String processeditor_server_url = "http://172.16.64.113:1205/";
+    private int databaseID;
 
     @Override
     public void initializeInstanceFromXML(Node element) {
@@ -37,10 +38,11 @@ public class Scenario implements IDeserialisation{
         //generateFragmentList();
     }
 
-    public void writeToDatabase() {
+    public int writeToDatabase() {
 
         Connector conn = new Connector();
-        this.scenarioID = conn.insertScenarioIntoDatabase(this.scenarioName);
+        this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
+        return this.databaseID;
     }
 
 
@@ -97,5 +99,17 @@ public class Scenario implements IDeserialisation{
 
     public String getScenarioName() {
         return this.scenarioName;
+    }
+
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    public void setDatabaseID(int databaseID) {
+        this.databaseID = databaseID;
+    }
+
+    public void setScenarioID(int scenarioID) {
+        this.scenarioID = scenarioID;
     }
 }

@@ -11,7 +11,7 @@ import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment implements IDeserialisation{
+public class Fragment implements IDeserialisable, IPersistable {
 
     private int scenarioID;
     private String fragmentName;
@@ -19,8 +19,10 @@ public class Fragment implements IDeserialisation{
     private int fragmentID;
     private List<ControlNode> controlNodes;
     private List<Edge> edges;
+    private int databaseID;
 
     @Override
+
     public void initializeInstanceFromXML(Node element) {
 
         this.fragmentXML = element;
@@ -83,9 +85,10 @@ public class Fragment implements IDeserialisation{
         this.scenarioID = id;
     }
 
-    public void writeToDatabase() {
+    public int writeToDatabase() {
         Connector conn = new Connector();
-        this.fragmentID = conn.insertFragmentIntoDatabase(this.fragmentName, this.scenarioID);
+        this.databaseID = conn.insertFragmentIntoDatabase(this.fragmentName, this.scenarioID);
+        return databaseID;
     }
 
     public List<ControlNode> getControlNodes () {
@@ -94,5 +97,13 @@ public class Fragment implements IDeserialisation{
 
     public List<Edge> getEdges () {
         return this.edges;
+    }
+
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    public void setDatabaseID(int databaseID) {
+        this.databaseID = databaseID;
     }
 }

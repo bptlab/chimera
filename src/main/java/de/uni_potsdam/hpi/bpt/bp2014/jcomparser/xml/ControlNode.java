@@ -1,8 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,17 +25,19 @@ import java.util.HashMap;
  *   Please be aware of the License. You may found it in the root directory.
  *
  ************************************************************************************/
-public class ControlNode implements IDeserialisation
-{
+public class ControlNode implements IDeserialisable, IPersistable {
+
     // Attributes from the XML
     private String type;
     private int id;
     private String text;
     private boolean global;
-    // Saves the realtion between the types used in the processeditor end the one used in the database of the JEngine
+    // Saves the relation between the types used in the processeditor end the one used in the database of the JEngine
     private HashMap<String, String> peTypeToDbType;
     // Database specific Attributes
     private int databaseID;
+    // The Database ID of the fragment which consists the node
+    private int fragmentId = -1;
 
 
     public ControlNode() {
@@ -95,7 +95,11 @@ public class ControlNode implements IDeserialisation
      * Writes the information of the object to the database
      * @return int - the autoincrement id of the newly created row
      */
-    public int writeToDatabase(int fragmentId) {
+    @Override
+    public int writeToDatabase() {
+        if (fragmentId <= 0) {
+            return -1;
+        }
         Connector connector = new Connector();
         databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
         return databaseID;
@@ -148,6 +152,10 @@ public class ControlNode implements IDeserialisation
 
     public void setDatabaseID(int databaseID) {
         this.databaseID = databaseID;
+    }
+
+    public void setFragmentId(int fragmentId) {
+        this.fragmentId = fragmentId;
     }
     // END: Getter & Setter
 }
