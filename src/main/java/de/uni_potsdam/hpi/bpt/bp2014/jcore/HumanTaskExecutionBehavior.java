@@ -25,9 +25,8 @@ import java.util.HashMap;
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior{
 
 
-    public HumanTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance){
-        this.activityInstance_id = activityInstance_id;
-        this.scenarioInstance = scenarioInstance;
+    public HumanTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
+        super(activityInstance_id,scenarioInstance,controlNodeInstance);
     }
 
 }

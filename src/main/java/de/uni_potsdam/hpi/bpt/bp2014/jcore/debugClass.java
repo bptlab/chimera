@@ -64,13 +64,6 @@ public class debugClass {
     }
 
     public static void main(String args[]){
-        EmailTaskExecutionBehavior emailTaskExecutionBehavior = new EmailTaskExecutionBehavior(20);
-        emailTaskExecutionBehavior.execute();
-
-
-
-
-        /*
         String scenarioID = selectScenario();
         String scenarioInstanceID = selectScenarioInstance();
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
@@ -86,7 +79,7 @@ public class debugClass {
             System.out.println("Select Activity");
             executionService.startActivity(new Integer(readLine()));
         }
-        */
+
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));
         LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
         HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(id);
