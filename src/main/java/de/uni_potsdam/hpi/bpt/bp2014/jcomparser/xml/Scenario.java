@@ -45,27 +45,12 @@ public class Scenario implements IDeserialisable, IPersistable {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
         writeDataObjectsToDatabase();
-        writeDataNodesToDatabase();
         return this.databaseID;
     }
 
     private void writeDataObjectsToDatabase() {
         for (DataObject dataObject : dataObjects.values()) {
             dataObject.writeToDatabase();
-        }
-    }
-
-    // TODO: I think this should be in the ControlNode class or something else
-    private void writeDataNodesToDatabase() {
-        Connector connector = new Connector();
-        for (DataObject dataObject : dataObjects.values()) {
-            for (Node dataNode : dataObject.getDataNodes()) {
-                connector.insertDataNodeIntoDatabase(
-                        databaseID,
-                        dataObject.getStateIdForState(dataNode.getState()),
-                        dataNode.getClassId(),
-                        dataObject.getInitState());
-            }
         }
     }
 
