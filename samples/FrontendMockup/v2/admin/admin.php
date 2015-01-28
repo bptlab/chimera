@@ -2,7 +2,7 @@
 include '../core/config.php';
 include '../core/RESTCalls.php';
 
-$link_content = $GET['l'];
+$link_content = $_GET['l'];
 
 ?>
 <html>
@@ -10,30 +10,36 @@ $link_content = $GET['l'];
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <?php
     if(isset($link_content)){
-            echo "   
-                <script type='text/javascript'>
-                $(document).ready(function(){    
+            ?>  
+                <script type="text/javascript">
+                    $(document).ready(function(){    
                         var a = $(this).attr('id');
-                        $.post('admin_".$link_content.".php', {
+                        $.post('admin_<?php echo $link_content;?>.php', {
                         }, function(response){
                             $('#container').fadeOut();
                             $('#container').html(unescape(response));
                             $('#container').fadeIn();
-                            setTimeout('finishAjax('container', ''+escape(response)+'')', 400);
+                            setTimeout("finishAjax('container', '"+escape(response)+"')", 400);
                         });  
-                });    
-                function finishAjax(id, response){
-                  $('#'+id).html(unescape(response));
-                  $('#'+id).fadeIn();
-                } 
-                </script> ";
+                    });    
+                    function finishAjax(id, response){
+                      $('#'+id).html(unescape(response));
+                      $('#'+id).fadeIn();
+                    } 
+                    </script>
+     <?php
     }
     ?>
+
+    
+
+
 </head>
 <body>
 
 <a href="admin.php?l=db_lookup">see total database</a> |
-<a href="admin.php?l=mail_config">see mailconfig</a>
+<a href="admin.php?l=mail_config">see mailconfig</a> |
+<br><br>
 
 <?php
 
@@ -85,7 +91,7 @@ echo"<form action='admin.php' method='post'>
 
 if(!isset($_POST["ScenarioID"])){
 
-if($link_content){
+if(isset($link_content)){
 ?>
     <div id="container">
         <br><br><br>

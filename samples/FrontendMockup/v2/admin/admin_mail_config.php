@@ -3,3 +3,4 @@ include '../core/config.php';
 include '../core/RESTCalls.php';
 
 
+echo "test";
