@@ -39,13 +39,13 @@ public class Edge implements IDeserialisable, IPersistable {
 
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node element) {
-        if (null == controlNodes) {
-            return;
-        }
+
         NodeList properties = element.getChildNodes();
         for (int i = 0; i < properties.getLength(); i++) {
-            org.w3c.dom.Node property = properties.item(i);
-            initializeField(property);
+            if (properties.item(i).getNodeName().equals("property")) {
+                org.w3c.dom.Node property = properties.item(i);
+                initializeField(property);
+            }
         }
     }
 
@@ -54,7 +54,7 @@ public class Edge implements IDeserialisable, IPersistable {
         int targetDatabaseId = controlNodes.get(targetNodeId).getDatabaseID();
         int sourceDatabaseId = controlNodes.get(sourceNodeId).getDatabaseID();
         Connector connector = new Connector();
-        if (type.contains("SequnceFlow")) {
+        if (type.contains("SequenceFlow")) {
             connector.insertControlFlowIntoDatabase(sourceDatabaseId, targetDatabaseId, label);
         } else if (type.contains("Association")) {
             Node controlNode = (controlNodes.get(sourceNodeId).isDataNode()) ?
@@ -86,10 +86,10 @@ public class Edge implements IDeserialisable, IPersistable {
             case "label" :
                 label = value;
                 break;
-            case "#source" :
+            case "#sourceNode" :
                 sourceNodeId = Integer.parseInt(value);
                 break;
-            case "#target" :
+            case "#targetNode" :
                 targetNodeId = Integer.parseInt(value);
                 break;
         }

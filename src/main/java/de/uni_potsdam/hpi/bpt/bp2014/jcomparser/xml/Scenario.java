@@ -44,8 +44,16 @@ public class Scenario implements IDeserialisable, IPersistable {
     public int writeToDatabase() {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
+        writeFragmentsToDatabase();
         writeDataObjectsToDatabase();
         return this.databaseID;
+    }
+
+    private void writeFragmentsToDatabase() {
+        for (Fragment fragment : fragments) {
+            fragment.setScenarioID(databaseID);
+            fragment.writeToDatabase();
+        }
     }
 
     private void writeDataObjectsToDatabase() {
@@ -91,7 +99,6 @@ public class Scenario implements IDeserialisable, IPersistable {
                 doc = dBuilder.parse(new InputSource(new ByteArrayInputStream(currentFragmentXML.getBytes("utf-8"))));
                 doc.getDocumentElement().normalize();
                 Fragment fragment = new Fragment();
-                fragment.setScenarioID(this.scenarioID);
                 fragment.initializeInstanceFromXML((org.w3c.dom.Node)doc.getDocumentElement());
                 this.fragments.add(fragment);
             }
@@ -133,5 +140,9 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     public void setScenarioID(int scenarioID) {
         this.scenarioID = scenarioID;
+    }
+
+    public List<Fragment> getFragments() {
+        return this.fragments;
     }
 }
