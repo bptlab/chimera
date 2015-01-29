@@ -39,6 +39,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO scenario (scenario.name) VALUES ('" + name + "')";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -76,6 +77,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO fragment (fragment.name, scenario_id) VALUES ('" + fragmentName + "', " + scenarioID +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -113,6 +115,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO controlnode (label, controlnode.type, fragment_id) VALUES ('" + label + "', '" + type + "', " + fragmentID +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -146,8 +149,8 @@ public class Connector {
         Statement stmt = null;
         if (conn == null) return;
         try {
-
-            String sql = "INSERT INTO controlflow (controlnode_id1, controlnode_id2, condition) VALUES (" + controlNodeID1 +", " + controlNodeID2 + ", '" + condition + "')";
+            String sql = "INSERT INTO controlflow VALUES (" + controlNodeID1 +", " + controlNodeID2 + ", '" + condition + "')";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             //Clean-up environment
             stmt.close();
@@ -218,6 +221,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO state (state.name, olc_id) VALUES ('" + name + "', " + olc_id +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -255,6 +259,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO dataclass (dataclass.name) VALUES ('" + name + "')";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -333,7 +338,8 @@ public class Connector {
         int result = -1;
         try {
 
-            String sql = "INSERT INTO dataset (dataset) VALUES (" + inputAsInt +")";
+            String sql = "INSERT INTO dataset (input) VALUES (" + inputAsInt +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -405,6 +411,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO dataflow (controlnode_id, dataset_id, input) VALUES (" + controlNodeID +", " + dataSetID + ", " + inputAsInt + ")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             //Clean-up environment
             stmt.close();

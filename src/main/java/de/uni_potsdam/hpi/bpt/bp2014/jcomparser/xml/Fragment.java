@@ -7,10 +7,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Fragment implements IDeserialisable, IPersistable {
 
@@ -36,6 +33,8 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     private void generateSets() {
+        inputSets = new LinkedList<InputSet>();
+        outputSets = new LinkedList<OutputSet>();
         for (Node node : controlNodes.values()) {
             if (!node.isDataNode()) {
                 InputSet iSet = InputSet.createInputSetForTaskAndEdges(node, edges);
