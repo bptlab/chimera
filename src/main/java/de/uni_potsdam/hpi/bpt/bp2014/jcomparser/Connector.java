@@ -184,6 +184,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO dataobject (dataobject.name, dataclass_id, scenario_id, start_state_id) VALUES ('" + name + "', " + dataClassID +", " + scenarioID +", " + startStateID +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -297,6 +298,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO datanode (scenario_id, state_id, dataclass_id, dataobject_id) VALUES (" + scenarioID +", " + stateID +", " + dataClassID + ", " + dataObjectID +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -375,6 +377,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO datasetconsistofdatanode (dataset_id, datanode_id) VALUES (" + dataSetID +", " + dataNodeID + ")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             //Clean-up environment
             stmt.close();
@@ -448,6 +451,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO reference (controlnode_id1, controlnode_id2) VALUES (" + controlNodeID1 +", " + controlNodeID2 + ")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             //Clean-up environment
             stmt.close();
@@ -481,6 +485,7 @@ public class Connector {
         try {
 
             String sql = "INSERT INTO emailconfiguration (receivermailaddress, sendmailaddress, subject, message, controlnode_id) VALUES ('test@test.com', 'test@test.com', 'test', 'test', "+ controlNode_id +")";
+            stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();

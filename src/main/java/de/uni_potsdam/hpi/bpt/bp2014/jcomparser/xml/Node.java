@@ -193,5 +193,9 @@ public class Node implements IDeserialisable, IPersistable {
     public int getClassId() {
         return classId;
     }
+
+    public boolean isTask() {
+        return null != type && type.contains("Task");
+    }
     // END: Getter & Setter
 }

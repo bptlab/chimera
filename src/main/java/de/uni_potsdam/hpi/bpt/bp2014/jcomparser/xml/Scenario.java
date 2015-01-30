@@ -58,6 +58,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     private void writeDataObjectsToDatabase() {
         for (DataObject dataObject : dataObjects.values()) {
+            dataObject.setScenarioId(databaseID);
             dataObject.writeToDatabase();
         }
     }
