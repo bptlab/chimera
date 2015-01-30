@@ -36,13 +36,20 @@ public class Fragment implements IDeserialisable, IPersistable {
         inputSets = new LinkedList<InputSet>();
         outputSets = new LinkedList<OutputSet>();
         for (Node node : controlNodes.values()) {
-            if (!node.isDataNode()) {
+            boolean isInput = false;
+            boolean isOutput = false;
+            for (Edge edge : edges) {
+                if (edge.getSource() == node && edge.getTarget().isDataNode()) isOutput = true;
+                if (edge.getTarget() == node && edge.getSource().isDataNode()) isInput = true;
+                if (isInput && isOutput) break;
+            }
+            if (node.isTask()) {
                 InputSet iSet = InputSet.createInputSetForTaskAndEdges(node, edges);
-                if (null != iSet) {
+                if (null != iSet && isInput) {
                     inputSets.add(iSet);
                 }
                 OutputSet oSet = OutputSet.createOutputSetForTaskAndEdges(node, edges);
-                if (null != oSet) {
+                if (null != oSet && isOutput) {
                     outputSets.add(oSet);
                 }
             }
