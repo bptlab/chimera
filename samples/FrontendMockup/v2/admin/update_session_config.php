@@ -15,7 +15,7 @@ if(isset($_POST["ScenarioID"])){
    unset($_COOKIE['JEngine_Role']);
    setcookie("JEngine_Role", $_POST["Role"], time()+3600, '/', NULL, 0);
 
-   header("Location: admin.php");
+   header("Location: admin.php?l=session_config");
 	die();
 
 } else {
