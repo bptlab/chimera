@@ -18,6 +18,8 @@
 
 \begin{document}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   HEADER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \title{Documentation zur JEngine}
 \numberofauthors{1} 
 
@@ -34,6 +36,8 @@ Jaspar, Jan, Sven, Stephan, Juliane, Jannik\\
 \date{28 December 2014}
 
 \maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   BODY   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %
 %
@@ -52,7 +56,6 @@ Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFramewo
 
 \begin{figure}
 \centering
-%\psfig{file=rosette.ps, height=1in, width=1in,}
 \includegraphics[width=3in]{img/MetaModell_classDiagramm.jpg}
 \caption{Meta Modell von PCM.}
 \label{fig:PCMmetaModell}
@@ -62,6 +65,14 @@ Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFramewo
 %
 \section{JEngine}
 Overall JEngine
+
+\begin{figure}
+\centering
+\includegraphics[width=3in]{img/JEngine_overview.png}
+\caption{Meta Modell von PCM.}
+\label{fig:PCMmetaModell}
+\end{figure}
+
 
 %
 %
@@ -156,9 +167,11 @@ Wird versucht eine Aktivität zu starten, die nicht existiert bzw. eine Aktivit�
 
 \textbf{Im Fehlerfall:}\\
 Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integer mit dem Wert \textit{-1} zurückgegeben.\\
-%
-%
+
 \end{enumerate}
+
+%
+%
 \subsubsection{ExecutionService}
 Der ExecutionService ist die Komponente, auf die die REST-API aufbaut. Diese Komponente der JEngine ist essentiell um Anfragen, die über das REST-Interface entgegengenommen werden, zu bearbeiten. Dabei stellt es eine Verbindung zur Datenbank her, um auf dieser Queries auszuführen. Die meisten Abfragen benötigen eine ID des Objekts, um mehr Informationen über dieses zu gewinnen. Es gibt zudem auch Methoden um Aktivitäten bzw. ganze Szenarien zu instanziieren.
 
@@ -285,6 +298,8 @@ only by moving the nodes and adding/removing PCM Fragments.
 Now there should be entries for all the fragments (inside green node)
 and for all their data objects (inside white node).
 
+%
+%
 \subsubsection{Removing a Fragment From an
 Scenario}\label{removing-a-fragment-from-an-scenario}
 
@@ -301,6 +316,8 @@ Scenario}\label{removing-a-fragment-from-an-scenario}
   Click on \emph{Remove} than click \emph{Ok}
 \end{enumerate}
 
+%
+%
 \subsubsection{Set a Termination
 Condition}\label{set-a-termination-condition}
 
@@ -322,6 +339,8 @@ in one specific state is possible.
   State} fields
 \end{enumerate}
 
+%
+%
 \subsubsection{Copy and Alter a Complete
 Fragment}\label{copy-and-alter-a-complete-fragment}
 
@@ -349,6 +368,7 @@ You can create a variation of an existing PCM Fragment using the Plug-in
 %
 \subsection{Processeditor Client}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   FOOTER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %
 %
