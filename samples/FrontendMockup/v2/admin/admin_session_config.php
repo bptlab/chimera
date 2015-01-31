@@ -17,6 +17,7 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
   setcookie("JEngine_ScenarioInstanceID", $JEngine_ScenarioInstanceID);
   setcookie("JEngine_ActivityID", $JEngine_ActivityID);
   setcookie("JEngine_UserID", $JEngine_UserID);
+  setcookie("JEngine_Role", $JEngine_Role);
   echo "generating user profile successful.<br>";
 }
 
@@ -32,6 +33,7 @@ echo"<form action='update_session_config.php' method='post'>
         JEngine_ScenarioInstanceID: <input type='text' name='ScenarioInstanceID' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'><br>
         JEngine_ActivityID: <input type='text' name='ActivityID' value='".$_COOKIE['JEngine_ActivityID']."'><br>
         JEngine_UserID: <input type='text' name='UserID' value='".$_COOKIE['JEngine_UserID']."'><br>
+        JEngine_Role: <input type='text' name='Role' value='".$_COOKIE['JEngine_Role']."'><br>
       <input type='submit'>
     </form> ";
 
