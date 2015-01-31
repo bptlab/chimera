@@ -12,12 +12,13 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
   $JEngine_UserID = rand(5, 100);
   $JEngine_ScenarioID = ShowScenarios();
   $JEngine_ScenarioID = $JEngine_ScenarioID["ids"][0];
+  $JEngine_Role = 'admin';
 
-  setcookie("JEngine_ScenarioID", $JEngine_ScenarioID);
-  setcookie("JEngine_ScenarioInstanceID", $JEngine_ScenarioInstanceID);
-  setcookie("JEngine_ActivityID", $JEngine_ActivityID);
-  setcookie("JEngine_UserID", $JEngine_UserID);
-  setcookie("JEngine_Role", $JEngine_Role);
+  setcookie("JEngine_ScenarioID", $JEngine_ScenarioID, time()+3600, '/', NULL, 0);
+  setcookie("JEngine_ScenarioInstanceID", $JEngine_ScenarioInstanceID, time()+3600, '/', NULL, 0);
+  setcookie("JEngine_ActivityID", $JEngine_ActivityID, time()+3600, '/', NULL, 0);
+  setcookie("JEngine_UserID", $JEngine_UserID, time()+3600, '/', NULL, 0);
+  setcookie("JEngine_Role", $JEngine_Role, time()+3600, '/', NULL, 0);
   echo "generating user profile successful.<br>";
 }
 
