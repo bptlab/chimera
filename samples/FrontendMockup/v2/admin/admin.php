@@ -7,7 +7,7 @@ $link_content = $_GET['l'];
 ?>
 <html>
 <head>
-<title> BO2014W1 - Admin Dashboard</title>
+<title> BP2014W1 - Admin Dashboard</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport' />
     <!--[if lt IE 9]>
     <script src='assets/javascripts/html5shiv.js' type='text/javascript'></script>

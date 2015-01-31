@@ -5,19 +5,19 @@
 if(isset($_POST["ScenarioID"])){
   
    unset($_COOKIE['JEngine_ScenarioID']);
-   setcookie("JEngine_ScenarioID", $_POST["ScenarioID"]);
+   setcookie("JEngine_ScenarioID", $_POST["ScenarioID"], time()+3600, '/', NULL, 0);
    unset($_COOKIE['JEngine_ScenarioInstanceID']);
-   setcookie("JEngine_ScenarioInstanceID", $_POST["ScenarioInstanceID"]);
+   setcookie("JEngine_ScenarioInstanceID", $_POST["ScenarioInstanceID"], time()+3600, '/', NULL, 0);
    unset($_COOKIE['JEngine_ActivityID']);
-   setcookie("JEngine_ActivityID", $_POST["ActivityID"], NULL, 0);
+   setcookie("JEngine_ActivityID", $_POST["ActivityID"], time()+3600, '/', NULL, 0);
    unset($_COOKIE['JEngine_UserID']);
-   setcookie("JEngine_UserID", $_POST["UserID"]);
+   setcookie("JEngine_UserID", $_POST["UserID"], time()+3600, '/', NULL, 0);
    unset($_COOKIE['JEngine_Role']);
-   setcookie("JEngine_Role", $_POST["Role"]);
+   setcookie("JEngine_Role", $_POST["Role"], time()+3600, '/', NULL, 0);
 
    header("Location: admin.php");
 	die();
-   
+
 } else {
 	echo "there is an error..";
 }
