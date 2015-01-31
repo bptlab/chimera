@@ -86,7 +86,7 @@ public class DataObject implements IPersistable {
             connector.insertDataNodeIntoDatabase(
                     scenarioId,
                     states.get(dataNode.getState()),
-                    dataNode.getClassId(),
+                    classId,
                     initState);
         }
     }

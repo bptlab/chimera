@@ -4,6 +4,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.HashMap;
 
 /***********************************************************************************
@@ -61,11 +65,21 @@ public class Node implements IDeserialisable, IPersistable {
      */
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node node) {
-        NodeList properties = node.getChildNodes();
-        for (int i = 0; i < properties.getLength(); i++) {
-            org.w3c.dom.Node property = properties.item(i);
-            initializeField(property);
-        }
+//        try {
+//            XPath xPath =  XPathFactory.newInstance().newXPath();
+//             String xPathQuery = "/node/property";
+//           NodeList properties = (NodeList) xPath.compile(xPathQuery).evaluate(node, XPathConstants.NODESET);
+
+            NodeList properties = node.getChildNodes();
+            for (int i = 0; i < properties.getLength(); i++) {
+                if (properties.item(i).getNodeName().equals("property")) {
+                    org.w3c.dom.Node property = properties.item(i);
+                    initializeField(property);
+                }
+            }
+//        } catch (XPathExpressionException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -73,9 +87,11 @@ public class Node implements IDeserialisable, IPersistable {
      * @param property the describing property
      */
     private void initializeField(org.w3c.dom.Node property) {
+
         NamedNodeMap attributes = property.getAttributes();
         String name = attributes.getNamedItem("name").getTextContent();
         String value = attributes.getNamedItem("value").getTextContent();
+
         switch (name) {
             case "#type" :
                 type = value;
@@ -176,6 +192,10 @@ public class Node implements IDeserialisable, IPersistable {
 
     public int getClassId() {
         return classId;
+    }
+
+    public boolean isTask() {
+        return null != type && type.contains("Task");
     }
     // END: Getter & Setter
 }
