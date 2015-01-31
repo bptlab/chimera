@@ -7,10 +7,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Fragment implements IDeserialisable, IPersistable {
 
@@ -36,14 +33,23 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     private void generateSets() {
+        inputSets = new LinkedList<InputSet>();
+        outputSets = new LinkedList<OutputSet>();
         for (Node node : controlNodes.values()) {
-            if (!node.isDataNode()) {
+            boolean isInput = false;
+            boolean isOutput = false;
+            for (Edge edge : edges) {
+                if (edge.getSource() == node && edge.getTarget().isDataNode()) isOutput = true;
+                if (edge.getTarget() == node && edge.getSource().isDataNode()) isInput = true;
+                if (isInput && isOutput) break;
+            }
+            if (node.isTask()) {
                 InputSet iSet = InputSet.createInputSetForTaskAndEdges(node, edges);
-                if (null != iSet) {
+                if (null != iSet && isInput) {
                     inputSets.add(iSet);
                 }
                 OutputSet oSet = OutputSet.createOutputSetForTaskAndEdges(node, edges);
-                if (null != oSet) {
+                if (null != oSet && isOutput) {
                     outputSets.add(oSet);
                 }
             }

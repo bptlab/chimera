@@ -28,7 +28,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private int scenarioID;
     private org.w3c.dom.Node scenarioXML;
     private List<Fragment> fragments;
-    private String processeditor_server_url = "http://172.16.64.113:1205/";
+    private String processeditor_server_url = "http://localhost:1205/";
     private int databaseID;
     private Map<String, DataObject> dataObjects = new HashMap<String, DataObject>();
 
@@ -37,19 +37,28 @@ public class Scenario implements IDeserialisable, IPersistable {
 
         this.scenarioXML = element;
         setScenarioName();
-        //generateFragmentList();
+        generateFragmentList();
         createDataObjects();
     }
 
     public int writeToDatabase() {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
+        writeFragmentsToDatabase();
         writeDataObjectsToDatabase();
         return this.databaseID;
     }
 
+    private void writeFragmentsToDatabase() {
+        for (Fragment fragment : fragments) {
+            fragment.setScenarioID(databaseID);
+            fragment.writeToDatabase();
+        }
+    }
+
     private void writeDataObjectsToDatabase() {
         for (DataObject dataObject : dataObjects.values()) {
+            dataObject.setScenarioId(databaseID);
             dataObject.writeToDatabase();
         }
     }
@@ -91,7 +100,6 @@ public class Scenario implements IDeserialisable, IPersistable {
                 doc = dBuilder.parse(new InputSource(new ByteArrayInputStream(currentFragmentXML.getBytes("utf-8"))));
                 doc.getDocumentElement().normalize();
                 Fragment fragment = new Fragment();
-                fragment.setScenarioID(this.scenarioID);
                 fragment.initializeInstanceFromXML((org.w3c.dom.Node)doc.getDocumentElement());
                 this.fragments.add(fragment);
             }
@@ -133,5 +141,9 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     public void setScenarioID(int scenarioID) {
         this.scenarioID = scenarioID;
+    }
+
+    public List<Fragment> getFragments() {
+        return this.fragments;
     }
 }
