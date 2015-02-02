@@ -14,7 +14,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     private int scenarioID;
     private String fragmentName;
     private org.w3c.dom.Node fragmentXML;
-    private int fragmentID;
+    private String fragmentID;
     private Map<Integer, Node> controlNodes;
     private List<Edge> edges;
     private int databaseID;
@@ -26,10 +26,21 @@ public class Fragment implements IDeserialisable, IPersistable {
 
         this.fragmentXML = element;
         setFragmentName();
+        setFragmentID();
         generateControlNodes();
         generateEdges();
         generateSets();
 
+    }
+
+    private void setFragmentID() {
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/@id";
+        try {
+            this.fragmentID = xPath.compile(xPathQuery).evaluate(this.fragmentXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     private void generateSets() {

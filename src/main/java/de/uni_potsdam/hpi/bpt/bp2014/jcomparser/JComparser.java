@@ -1,15 +1,19 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.*;
 import java.util.*;
 import java.lang.String;
 
@@ -36,78 +40,49 @@ import java.lang.String;
 
 public class JComparser {
 
-    public static void main(String args[]) {
+    public static void writeAllScenariosToDatabase (String processeditor_server_url) throws XPathExpressionException {
 
-        /* Settings */
-        boolean retrieval_by_url = true;
-        boolean rest_option = false;
-        boolean file_upload = true;
+        String modelXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, processeditor_server_url + "models");
+        Document models = stringToDocument(modelXML);
+        if(models != null) {
+            // get all (correct) URIs of the scenarios by reading URI from models-XML and adapting it to server_url
+            XPath xPath =  XPathFactory.newInstance().newXPath();
+            // select all URIS of models whose type is scenario
+            String xPathQuery = "/models/model[type/text()='net.frapu.code.visualization.pcm.PCMScenario']/uri/text()";
+            NodeList xmlModelURIs = (NodeList) xPath.compile(xPathQuery).evaluate(models, XPathConstants.NODESET);
 
-        boolean bpmn_img_retrieval = false;
-
-        /* Initialization */
-        String Processeditor_server_url = "http://172.16.64.113:1205/";
-
-        if (file_upload) {
-            FileUpload jUpload = new FileUpload();
-        }
-
-        if (rest_option) {
-            REST jREST = new REST();
-        }
-        if (retrieval_by_url) {
-            Retrieval jRetrieval = new Retrieval();
-            ArrayList<String> scenarioXML_List = new ArrayList<>();
-            List<String> scenariosURL_list = new ArrayList<>();
-
-            String response_list = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "models");
-            scenariosURL_list = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.selectScenarioURLS(response_list);
-            String modelXML = "";
-
-            for (int i = 0; i < scenariosURL_list.size(); i++) {
-                modelXML = jRetrieval.getHTMLwithAuth(Processeditor_server_url, scenariosURL_list.get(i));
-                scenarioXML_List.add(modelXML);
+            for (int i = 0; i < xmlModelURIs.getLength(); i++) {
+                //TODO: avoid string-replacement
+                String currentXmlUri = xmlModelURIs.item(i).getTextContent();
+                String[] splittedScenarioURI = currentXmlUri.split("/");
+                String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length-1];
+                String newScenarioURI = processeditor_server_url + "models/" + currentScenarioID + ".pm";
+                Scenario scenario = new Scenario();
+                String currentScenarioXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, newScenarioURI);
+                scenario.initializeInstanceFromXML(stringToDocument(currentScenarioXML).getFirstChild());
+                scenario.writeToDatabase();
             }
-            int fragmentID;
-            ArrayList<String> controlNodes;
-            for(String scenarioXML: scenarioXML_List){
-                int scenarioId;
-                Parser parser = new Parser(scenarioXML); //extract scenarioName
-                Connector connector = new Connector();
-                scenarioId = connector.insertScenarioIntoDatabase(parser.getScenarioName());
-                HashMap<Integer, String> fragments = parser.getFragmentDetails();
-                for (Map.Entry<Integer, String> fragment: fragments.entrySet()) {
-                    fragmentID =  connector.insertFragmentIntoDatabase(fragment.getValue(), scenarioId);
-                    controlNodes = parser.getControlNodesForFragment(fragment.getKey());
-
-                }
-            }
-
-
-
-            //de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(scenarioXML_List);
-
-
-
-            /*???????????????????????
-            String xml_response ="";
-            xml_response = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url);
-            xml_response = xml_response.replaceAll("[^\\x20-\\x7e]", "");
-            handleFileRetrieval(xml_response);*/
-        }
-
-        if (bpmn_img_retrieval) {
-            //retrieve an image for each model via its modelid
-            Retrieval jRetrieval = new Retrieval();
-            List<String> pcm = new ArrayList<String>();
-            List<String> models_list = new ArrayList<String>();
-
-
-            String response_list = jRetrieval.getHTMLwithAuth(Processeditor_server_url, Processeditor_server_url + "modelid.png");
         }
     }
 
-    public static void handleFileUpload(List pcm) {
+    private static Document stringToDocument (String xml) {
+
+        try {
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(xml)));
+            doc.getDocumentElement().normalize();
+            return doc;
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+        public static void handleFileUpload(List pcm) {
 /*
         int pcm_size = pcm.size();
         String pcm_item = "";

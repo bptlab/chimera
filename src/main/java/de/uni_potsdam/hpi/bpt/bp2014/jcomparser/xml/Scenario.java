@@ -25,7 +25,7 @@ import java.util.Map;
 public class Scenario implements IDeserialisable, IPersistable {
 
     private String scenarioName;
-    private int scenarioID;
+    private String scenarioID;
     private org.w3c.dom.Node scenarioXML;
     private List<Fragment> fragments;
     private String processeditor_server_url = "http://localhost:1205/";
@@ -37,8 +37,19 @@ public class Scenario implements IDeserialisable, IPersistable {
 
         this.scenarioXML = element;
         setScenarioName();
+        setScenarioID();
         generateFragmentList();
         createDataObjects();
+    }
+
+    private void setScenarioID() {
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/@id";
+        try {
+            this.scenarioID = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     public int writeToDatabase() {
@@ -137,10 +148,6 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     public void setDatabaseID(int databaseID) {
         this.databaseID = databaseID;
-    }
-
-    public void setScenarioID(int scenarioID) {
-        this.scenarioID = scenarioID;
     }
 
     public List<Fragment> getFragments() {
