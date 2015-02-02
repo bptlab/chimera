@@ -34,7 +34,6 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node element) {
-
         this.scenarioXML = element;
         setScenarioName();
         setScenarioID();
@@ -57,6 +56,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
         writeFragmentsToDatabase();
         writeDataObjectsToDatabase();
+        writeConsistsOfToDatabase();
         return this.databaseID;
     }
 
@@ -71,6 +71,31 @@ public class Scenario implements IDeserialisable, IPersistable {
         for (DataObject dataObject : dataObjects.values()) {
             dataObject.setScenarioId(databaseID);
             dataObject.writeToDatabase();
+        }
+    }
+
+    private void writeConsistsOfToDatabase() {
+        for (Fragment frag : fragments) {
+            writeInputSetsConsistOfToDatabase(frag);
+            writeOutputSetsConsistOfToDatabase(frag);
+        }
+    }
+
+    private void writeOutputSetsConsistOfToDatabase(Fragment frag) {
+        Connector connector = new Connector();
+        for (OutputSet oSet : frag.getOutputSets()) {
+            for (Node dataNode : oSet.getOutputs()) {
+                connector.insertDataSetConsistOfDataNodeIntoDatabase(oSet.getDatabaseId(), dataNode.getDatabaseID());
+            }
+        }
+    }
+
+    private void writeInputSetsConsistOfToDatabase(Fragment frag) {
+        Connector connector = new Connector();
+        for (InputSet iSet : frag.getInputSets()) {
+            for (Node dataNode : iSet.getInputs()) {
+                connector.insertDataSetConsistOfDataNodeIntoDatabase(iSet.getDatabaseId(), dataNode.getDatabaseID());
+            }
         }
     }
 

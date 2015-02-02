@@ -158,4 +158,12 @@ public class Fragment implements IDeserialisable, IPersistable {
     public Map<Integer, Node> getControlNodes() {
         return controlNodes;
     }
+
+    public List<InputSet> getInputSets() {
+        return inputSets;
+    }
+
+    public List<OutputSet> getOutputSets() {
+        return outputSets;
+    }
 }

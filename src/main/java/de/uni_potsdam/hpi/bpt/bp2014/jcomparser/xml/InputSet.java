@@ -36,9 +36,6 @@ public class InputSet implements IPersistable {
     public int writeToDatabase() {
         Connector connector = new Connector();
         databaseId = connector.insertDataSetIntoDatabase(true);
-        for (Node dataNode : inputs) {
-            connector.insertDataSetConsistOfDataNodeIntoDatabase(databaseId, dataNode.getDatabaseID());
-        }
         updateEdges();
         return databaseId;
     }
@@ -47,5 +44,13 @@ public class InputSet implements IPersistable {
         for (Edge edge : associations) {
             edge.setSetId(databaseId);
         }
+    }
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public List<Node> getInputs() {
+        return inputs;
     }
 }
