@@ -46,6 +46,7 @@ public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     public LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
+    public LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
     public int scenarioInstance_id;
     public int scenario_id;
     private String name;
@@ -113,7 +114,13 @@ public class ScenarioInstance {
     public void initializeDataObjects(){
         LinkedList<Integer> data = dbDataObject.getDataObjectsForScenario(scenario_id);
         for(Integer dataObject: data){
-            dataObjectInstances.add(new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id));
+            DataObjectInstance dataObjectInstance = new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id);
+            //checks if dataObjectInstance is locked
+            if(dataObjectInstance.getOnChange()){
+                dataObjectInstancesOnChange.add(dataObjectInstance);
+            }else{
+                dataObjectInstances.add(dataObjectInstance);
+            }
         }
     }
 
@@ -123,12 +130,48 @@ public class ScenarioInstance {
         }
         return false;
     }
+
+
     public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id){
         for(DataObjectInstance dataObjectInstance: dataObjectInstances){
             if(dataObjectInstance.dataObject_id == dataObject_id) {
                 dataObjectInstance.setState(state_id);
                 return true;
             }
+        }
+        return false;
+    }
+
+    public Boolean setDataObjectInstanceToOnChange(int dataObject_id){
+        DataObjectInstance dataObjectInstanceOnChange = null;
+        for(DataObjectInstance dataObjectInstance: dataObjectInstances){
+            if(dataObjectInstance.dataObject_id == dataObject_id) {
+                dataObjectInstanceOnChange = dataObjectInstance;
+                break;
+            }
+        }
+        if(dataObjectInstanceOnChange != null){
+            dataObjectInstances.remove(dataObjectInstanceOnChange);
+            dataObjectInstancesOnChange.add(dataObjectInstanceOnChange);
+            dataObjectInstanceOnChange.setOnChange(true);
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean setDataObjectInstanceToNotOnChange(int dataObject_id){
+        DataObjectInstance dataObjectInstanceOnChange = null;
+        for(DataObjectInstance dataObjectInstance: dataObjectInstancesOnChange){
+            if(dataObjectInstance.dataObject_id == dataObject_id) {
+                dataObjectInstanceOnChange = dataObjectInstance;
+                break;
+            }
+        }
+        if(dataObjectInstanceOnChange != null){
+            dataObjectInstancesOnChange.remove(dataObjectInstanceOnChange);
+            dataObjectInstances.add(dataObjectInstanceOnChange);
+            dataObjectInstanceOnChange.setOnChange(false);
+            return true;
         }
         return false;
     }

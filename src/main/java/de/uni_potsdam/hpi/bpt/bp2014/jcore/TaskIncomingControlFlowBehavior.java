@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DataObject;
 
 import java.util.LinkedList;
 
@@ -78,6 +79,17 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior{
     public void startReferences(){
         for(int activity_id: ((ActivityInstance)controlNodeInstance).references){
             scenarioInstance.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);
+        }
+    }
+    public void setDataObjectInstancesOnChange(){
+        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.controlNode_id);
+        //TODO: Output Set
+        for(int outputSet: outputSets){
+            LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
+            LinkedList<Integer> states = dbDataNode.getDataStatesForDataSets(outputSet);
+            for(int i=0; i < dataObjects.size(); i++){
+                scenarioInstance.setDataObjectInstanceToOnChange(dataObjects.get(i));
+            }
         }
     }
 }

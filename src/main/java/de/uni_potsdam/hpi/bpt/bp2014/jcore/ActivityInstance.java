@@ -78,7 +78,9 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     public Boolean begin(){
+        ((TaskIncomingControlFlowBehavior)incomingBehavior).setDataObjectInstancesOnChange();
         Boolean started = ((ActivityStateMachine) stateMachine).begin();
+        scenarioInstance.checkDataFlowEnabled();
         //if(started) ((TaskIncomingControlFlowBehavior)incomingBehavior).startReferences();
         taskExecutionBehavior.execute();
         return started;

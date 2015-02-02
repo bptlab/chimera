@@ -206,5 +206,80 @@ public class DbDataObjectInstance {
         }
         return results;
     }
+    public Boolean getOnChange(int dataObjectInstance_id) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Boolean results = false;
+        if (conn == null) return results;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "SELECT onchange FROM dataobjectinstance WHERE id = " + dataObjectInstance_id;
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            results = rs.getBoolean("onchange");
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+    public void setOnChange(int id, Boolean onChange) {
+        int onChangeAsInt;
+        if(onChange){
+            onChangeAsInt = 1;
+        }else{
+            onChangeAsInt = 0;
+        }
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) return;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "UPDATE dataobjectinstance SET onchange = " + onChangeAsInt + " WHERE id = " + id;
+            stmt.executeUpdate(sql);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
 
 }
