@@ -79,7 +79,7 @@ public class ActivityInstance extends ControlNodeInstance {
 
     public Boolean begin(){
         Boolean started = ((ActivityStateMachine) stateMachine).begin();
-        if(started) ((TaskIncomingControlFlowBehavior)incomingBehavior).startReferences();
+        //if(started) ((TaskIncomingControlFlowBehavior)incomingBehavior).startReferences();
         taskExecutionBehavior.execute();
         return started;
 
