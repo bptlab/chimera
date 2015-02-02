@@ -72,12 +72,16 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
 
     private void setDataStates(){
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNode_id);
+        //TODO: Output Set
         for(int outputSet: outputSets){
             LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
             LinkedList<Integer> states = dbDataNode.getDataStatesForDataSets(outputSet);
             for(int i=0; i < dataObjects.size(); i++){
+                //resets DataObjectInstance from OnChange back to not OnChange
+                scenarioInstance.setDataObjectInstanceToNotOnChange(dataObjects.get(i));
                 scenarioInstance.changeDataObjectInstanceState(dataObjects.get(i), states.get(i));
             }
         }
     }
+
 }

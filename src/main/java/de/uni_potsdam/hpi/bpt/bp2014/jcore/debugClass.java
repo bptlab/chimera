@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 
 
 import java.io.BufferedReader;
@@ -67,17 +68,27 @@ public class debugClass {
         String scenarioID = selectScenario();
         String scenarioInstanceID = selectScenarioInstance();
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
+        System.out.println("Scenario Instance ID: " + scenarioInstance.scenarioInstance_id);
+        ExecutionService executionService = new ExecutionService(scenarioInstance);
         while(true){
-
-
-            ExecutionService executionService = new ExecutionService(scenarioInstance);
             LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
             System.out.println("enabled Aktivität ID");
             for(int activityID: activitiesIDs){
                 System.out.println(activityID);
             }
             System.out.println("Select Activity");
-            executionService.startActivity(new Integer(readLine()));
+            int read = new Integer(readLine());
+            executionService.startActivity(read);
+            System.out.println("----------start activity-----------");
+            System.out.println("enabled Aktivität ID");
+            activitiesIDs= executionService.getEnabledActivitiesIDs();
+            for(int activityID: activitiesIDs){
+                System.out.println(activityID);
+            }
+            readLine();
+            System.out.println("---------terminate activity------------");
+            executionService.terminateActivity(read);
+
         }
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));

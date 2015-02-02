@@ -181,6 +181,15 @@ public class ExecutionService {
         for(ControlNodeInstance nodeInstance: scenarioInstance_debug.enabledControlNodeInstances) {
             if (((ActivityInstance) nodeInstance).controlNode_id == id) {
                 ((ActivityInstance) nodeInstance).begin();
+                return;
+            }
+        }
+    }
+
+    //Debug Only
+    public void terminateActivity(int id){
+        for(ControlNodeInstance nodeInstance: scenarioInstance_debug.runningControlNodeInstances) {
+            if (((ActivityInstance) nodeInstance).controlNode_id == id) {
                 ((ActivityInstance) nodeInstance).terminate();
                 return;
             }
