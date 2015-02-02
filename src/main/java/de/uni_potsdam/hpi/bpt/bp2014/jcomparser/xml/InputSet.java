@@ -21,7 +21,7 @@ public class InputSet implements IPersistable {
         instance.inputs = new LinkedList<Node>();
         instance.consumer = task;
         for (Edge edge : edges) {
-            if (edge.getTargetNodeId() == instance.consumer.getId()) {
+            if (edge.getTargetNodeId() == instance.consumer.getId() && edge.getType().contains("Association")) {
                 instance.associations.add(edge);
                 instance.inputs.add(edge.getSource());
             }
@@ -36,6 +36,9 @@ public class InputSet implements IPersistable {
     public int writeToDatabase() {
         Connector connector = new Connector();
         databaseId = connector.insertDataSetIntoDatabase(true);
+        for (Node dataNode : inputs) {
+            connector.insertDataSetConsistOfDataNodeIntoDatabase(databaseId, dataNode.getDatabaseID());
+        }
         updateEdges();
         return databaseId;
     }

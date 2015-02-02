@@ -63,7 +63,7 @@ public class Edge implements IDeserialisable, IPersistable {
             connector.insertDataFlowIntoDatabase(
                     controlNode.getDatabaseID(),
                     setId,
-                    controlNodes.get(targetNodeId).isDataNode());
+                    !controlNodes.get(targetNodeId).isDataNode());
         }
         return 0;
     }

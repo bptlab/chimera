@@ -18,9 +18,9 @@ public class OutputSet implements IPersistable {
         instance.outputs = new LinkedList<Node>();
         instance.producer = task;
         for (Edge edge : edges) {
-            if (edge.getTargetNodeId() == instance.producer.getId()) {
+            if (edge.getSourceNodeId() == instance.producer.getId()) {
                 instance.associations.add(edge);
-                instance.outputs.add(edge.getSource());
+                instance.outputs.add(edge.getTarget());
             }
         }
         if (instance.outputs.isEmpty()) {

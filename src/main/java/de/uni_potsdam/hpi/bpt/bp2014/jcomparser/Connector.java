@@ -376,7 +376,7 @@ public class Connector {
         if (conn == null) return;
         try {
 
-            String sql = "INSERT INTO datasetconsistofdatanode (dataset_id, datanode_id) VALUES (" + dataSetID +", " + dataNodeID + ")";
+            String sql = "INSERT INTO datasetconsistsofdatanode (dataset_id, datanode_id) VALUES (" + dataSetID +", " + dataNodeID + ")";
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
             //Clean-up environment
