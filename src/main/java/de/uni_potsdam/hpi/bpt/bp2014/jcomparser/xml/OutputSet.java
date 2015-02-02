@@ -18,7 +18,7 @@ public class OutputSet implements IPersistable {
         instance.outputs = new LinkedList<Node>();
         instance.producer = task;
         for (Edge edge : edges) {
-            if (edge.getSourceNodeId() == instance.producer.getId()) {
+            if (edge.getSourceNodeId() == instance.producer.getId() && edge.getType().contains("Association")) {
                 instance.associations.add(edge);
                 instance.outputs.add(edge.getTarget());
             }
@@ -41,5 +41,13 @@ public class OutputSet implements IPersistable {
         for (Edge edge : associations) {
             edge.setSetId(databaseId);
         }
+    }
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public List<Node> getOutputs() {
+        return outputs;
     }
 }
