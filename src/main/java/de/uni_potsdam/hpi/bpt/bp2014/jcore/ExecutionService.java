@@ -136,7 +136,7 @@ public class ExecutionService {
 
     public void terminateActivity(int scenarioInstance_id, int activity_id){
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
-        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances) {
+        for(ControlNodeInstance nodeInstance: scenarioInstance.runningControlNodeInstances) {
             if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
                 ((ActivityInstance) nodeInstance).terminate();
                 return;
