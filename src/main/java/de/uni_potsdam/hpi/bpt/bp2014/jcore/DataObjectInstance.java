@@ -53,4 +53,11 @@ public class DataObjectInstance {
         this.state_id = state_id;
         dbDataObjectInstance.setState(dataObjectInstance_id, state_id);
     }
+    public Boolean getOnChange(){
+        return dbDataObjectInstance.getOnChange(dataObjectInstance_id);
+    }
+
+    public void setOnChange(Boolean onChange){
+        dbDataObjectInstance.setOnChange(dataObjectInstance_id, onChange);
+    }
 }
