@@ -111,11 +111,11 @@ public class ExecutionAcceptanceTest {
         //do activity 4
         System.out.println("do activity " + activity4);
         executionService.beginActivity(scenarioInstance, activity4);
-        assertArrayEquals(new Integer[]{ activity6}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         System.out.println("--- restart Service ---");
         executionService = null;
         executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(1, scenarioInstance);
+        assertArrayEquals(new Integer[]{ activity6}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         executionService.terminateActivity(scenarioInstance, activity4);
         assertArrayEquals(new Integer[]{activity6, activity3}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
