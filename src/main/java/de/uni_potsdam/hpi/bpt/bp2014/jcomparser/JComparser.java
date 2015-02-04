@@ -41,7 +41,7 @@ import java.lang.String;
 public class JComparser {
 
     public static void main(String[] args) {
-
+        //start JComparser
     }
 
     public static void writeAllScenariosToDatabase (String processeditor_server_url) throws XPathExpressionException {

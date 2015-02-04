@@ -34,9 +34,9 @@ As a part of the JComparser we need to provide a REST API in order to manage cha
 @Path("JComparser")
 public class REST {
 	//fire Comparser Execution
-    @POST   //to start an instance of a scenario
-    @Path("launch")   //scenarioID = (int) Scenarioname
-    public int startComparser( @PathParam("Scenarioname") int scenarioID){
-       return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main();
+    @POST   
+    @Path("launch")   
+    public int startComparser(){
+       //return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main();
     }
 }
