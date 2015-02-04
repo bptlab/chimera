@@ -186,6 +186,7 @@ public class NodeTest {
     public void testControlNode() {
         Node task = new Node();
         task.initializeInstanceFromXML(activityGlobalNode);
+        task.setFragmentId(424242);
         task.save();
         Assert.assertFalse("The database Id is invalid (0 or less)", 1 > task.getDatabaseID());
     }
