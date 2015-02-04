@@ -60,7 +60,7 @@ public class JComparser {
                 Scenario scenario = new Scenario();
                 String currentScenarioXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, newScenarioURI);
                 scenario.initializeInstanceFromXML(stringToDocument(currentScenarioXML).getFirstChild());
-                scenario.writeToDatabase();
+                scenario.save();
             }
         }
     }

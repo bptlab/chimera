@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -24,6 +23,6 @@ public class Ausprobieren {
         Document doc = db.parse(is);
         Scenario scen = new Scenario();
         scen.initializeInstanceFromXML(doc.getDocumentElement());
-        scen.writeToDatabase();
+        scen.save();
     }
 }

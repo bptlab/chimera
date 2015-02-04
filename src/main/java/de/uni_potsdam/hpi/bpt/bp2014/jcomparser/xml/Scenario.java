@@ -22,16 +22,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a Scenario-Model. It can be parsed from an XML and written to a Database.
+ */
 public class Scenario implements IDeserialisable, IPersistable {
 
     private String scenarioName;
     private String scenarioID;
     private org.w3c.dom.Node scenarioXML;
     private List<Fragment> fragments;
-    private String processeditor_server_url = "http://localhost:1205/";
+    private final String processeditor_server_url = "http://localhost:1205/";
     private int databaseID;
     private Map<String, DataObject> dataObjects = new HashMap<String, DataObject>();
 
+    /**
+     * This Method initializes the scanario from an XML. Be Aware, that a scenario consists of fragments, which will
+     * be loaded automatically;
+     * @param element
+     */
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node element) {
         this.scenarioXML = element;
@@ -51,37 +59,37 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
-    public int writeToDatabase() {
+    public int save() {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
-        writeFragmentsToDatabase();
-        writeDataObjectsToDatabase();
-        writeConsistsOfToDatabase();
+        saveFragments();
+        saveDataObjects();
+        saveConsistsOf();
         return this.databaseID;
     }
 
-    private void writeFragmentsToDatabase() {
+    private void saveFragments() {
         for (Fragment fragment : fragments) {
             fragment.setScenarioID(databaseID);
-            fragment.writeToDatabase();
+            fragment.save();
         }
     }
 
-    private void writeDataObjectsToDatabase() {
+    private void saveDataObjects() {
         for (DataObject dataObject : dataObjects.values()) {
             dataObject.setScenarioId(databaseID);
-            dataObject.writeToDatabase();
+            dataObject.save();
         }
     }
 
-    private void writeConsistsOfToDatabase() {
+    private void saveConsistsOf() {
         for (Fragment frag : fragments) {
-            writeInputSetsConsistOfToDatabase(frag);
-            writeOutputSetsConsistOfToDatabase(frag);
+            saveInputSetsConsistOf(frag);
+            saveOutputSetsConsistOf(frag);
         }
     }
 
-    private void writeOutputSetsConsistOfToDatabase(Fragment frag) {
+    private void saveOutputSetsConsistOf(Fragment frag) {
         Connector connector = new Connector();
         for (OutputSet oSet : frag.getOutputSets()) {
             for (Node dataNode : oSet.getOutputs()) {
@@ -90,7 +98,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
-    private void writeInputSetsConsistOfToDatabase(Fragment frag) {
+    private void saveInputSetsConsistOf(Fragment frag) {
         Connector connector = new Connector();
         for (InputSet iSet : frag.getInputSets()) {
             for (Node dataNode : iSet.getInputs()) {

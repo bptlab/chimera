@@ -116,13 +116,13 @@ public class Node implements IDeserialisable, IPersistable {
      * @return int - the autoincrement id of the newly created row
      */
     @Override
-    public int writeToDatabase() {
+    public int save() {
         if (fragmentId <= 0) {
             return -1;
         }
         Connector connector = new Connector();
         if (type.contains("DataObject")) {
-            // Data Objects will be done in DataObject
+            // DataObject (Which mean DataNodes) will be done in DataObject
         } else {
             databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
         }

@@ -28,5 +28,5 @@ public interface IPersistable {
      *
      * @return The ID of the newly created entry
      */
-    public int writeToDatabase();
+    public int save();
 }
