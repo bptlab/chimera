@@ -9,6 +9,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.HashMap;
+import java.util.Map;
 
 /***********************************************************************************
  *
@@ -30,7 +31,7 @@ import java.util.HashMap;
  ************************************************************************************/
 public class Node implements IDeserialisable, IPersistable {
 
-    // Attributes from the XML
+   // Attributes from the XML
     private String type;
     private int id;
     private String text;
@@ -65,10 +66,6 @@ public class Node implements IDeserialisable, IPersistable {
      */
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node node) {
-//        try {
-//            XPath xPath =  XPathFactory.newInstance().newXPath();
-//             String xPathQuery = "/node/property";
-//           NodeList properties = (NodeList) xPath.compile(xPathQuery).evaluate(node, XPathConstants.NODESET);
 
             NodeList properties = node.getChildNodes();
             for (int i = 0; i < properties.getLength(); i++) {
@@ -77,9 +74,6 @@ public class Node implements IDeserialisable, IPersistable {
                     initializeField(property);
                 }
             }
-//        } catch (XPathExpressionException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**
@@ -162,12 +156,12 @@ public class Node implements IDeserialisable, IPersistable {
         this.global = global;
     }
 
-    public HashMap<String, String> getPeTypeToDbType() {
+    /**
+     * The returned Map is not a Copy. So if you change the Map you will change the state of the Node.
+     * @return
+     */
+    public Map<String, String> getPeTypeToDbType() {
         return peTypeToDbType;
-    }
-
-    public void setPeTypeToDbType(HashMap<String, String> peTypeToDbType) {
-        this.peTypeToDbType = peTypeToDbType;
     }
 
     public int getDatabaseID() {
