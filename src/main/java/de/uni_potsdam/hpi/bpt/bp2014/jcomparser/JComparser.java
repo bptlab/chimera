@@ -40,6 +40,10 @@ import java.lang.String;
 
 public class JComparser {
 
+    public static void main(String[] args) {
+
+    }
+
     public static void writeAllScenariosToDatabase (String processeditor_server_url) throws XPathExpressionException {
 
         String modelXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, processeditor_server_url + "models");
