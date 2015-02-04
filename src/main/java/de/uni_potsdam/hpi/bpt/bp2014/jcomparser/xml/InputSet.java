@@ -6,15 +6,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A class which represents a InputSet
+ * A class which represents an InputSet
  */
 public class InputSet implements IPersistable {
+    /* A List of all (DataFlow-) Edges which have any of the (Data-) Nodes of the Input-Set as source and the activity
+     * of the InputSet as the Target
+     */
     private List<Edge> associations;
+    // All DataObject which are part of this InputSet
     private List<Node> inputs;
-    // The task which has the input set
+    // The Activity (Node) which has this InputSet
     private Node consumer;
+    // The databaseID of the InputSet
     private int databaseId;
 
+    /**
+     * creates a new InputSet for a Task and a List of edges
+     * @param task The task which has an input set
+     * @param edges The List of all edges of the control Flow
+     * @return The newly Created InputSet
+     */
     public static InputSet createInputSetForTaskAndEdges(Node task, List<Edge> edges) {
         InputSet instance = new InputSet();
         instance.associations = new LinkedList<Edge>();
@@ -40,15 +51,20 @@ public class InputSet implements IPersistable {
         return databaseId;
     }
 
+    /**
+     * adds the databaseId of the Set to the edge so it can be written to the Database.
+     */
     private void updateEdges() {
         for (Edge edge : associations) {
             edge.setSetId(databaseId);
         }
     }
 
+
     public int getDatabaseId() {
         return databaseId;
     }
+
 
     public List<Node> getInputs() {
         return inputs;

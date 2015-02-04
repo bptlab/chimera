@@ -9,16 +9,29 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.*;
 
+/**
+ * Represents a Fragment of the XML-Model. It implements the IDeserialisabel interface which allows to initialize
+ * a Fragment Object from an XML and the IPersistable Interface which allows to save the Object to the Database.
+ */
 public class Fragment implements IDeserialisable, IPersistable {
 
-    private int scenarioID;
+    // The databaseID of the scenario.
+    private int scenarioID = -1;
+    // The name of the Fragment
     private String fragmentName;
+    // The XML of this fragment Model
     private org.w3c.dom.Node fragmentXML;
+    // The Model-XML-Id of the Fragment
     private String fragmentID;
+    // A Map which maps Model-XML-Element-IDs to ControlNodes
     private Map<Integer, Node> controlNodes;
+    // The List of Edges created from the FragmentXML
     private List<Edge> edges;
+    // The database ID of the fragment
     private int databaseID;
+    // A list of all Inputs sets which are used by any Activities inside this Fragment
     private List<InputSet> inputSets;
+    // A List of all Outputs sets which are used by any Activities inside this Fragment
     private List<OutputSet> outputSets;
 
     @Override
@@ -33,6 +46,9 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     }
 
+    /**
+     * This method extracts the id from the Model-XML and saves it inside the fragmentID field
+     */
     private void setFragmentID() {
         XPath xPath =  XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
@@ -43,6 +59,10 @@ public class Fragment implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * generates Sets (I/O) for all Activities which are part of DataFlow inside the Fragment.
+     * Assert that first all ControlNodes have to be initialized.
+     */
     private void generateSets() {
         inputSets = new LinkedList<InputSet>();
         outputSets = new LinkedList<OutputSet>();
@@ -67,6 +87,9 @@ public class Fragment implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Extracts all Edges from the XML and creates Edge objects
+     */
     private void generateEdges() {
         try {
             //get all edges from fragmentXML
@@ -85,6 +108,9 @@ public class Fragment implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Extracts all Nodes from the XML and creates Node objects
+     */
     private void generateControlNodes() {
 
         try {
@@ -104,6 +130,9 @@ public class Fragment implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method extracts the name from the Model-XML and saves it inside the fragmentName field
+     */
     private void setFragmentName() {
 
         XPath xPath =  XPathFactory.newInstance().newXPath();

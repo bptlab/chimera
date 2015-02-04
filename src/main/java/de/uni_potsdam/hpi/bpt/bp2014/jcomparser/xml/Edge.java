@@ -27,11 +27,17 @@ import java.util.Map;
 
 
 public class Edge implements IDeserialisable, IPersistable {
+    // Maps the Model-Node-ID (from the XML) to the ControlNode Object
     protected Map<Integer, Node> controlNodes;
+    // The Database ID of the Edge
     private int id;
+    // The Model-Node-ID (from the XML) of the source Node of the edge
     protected int sourceNodeId;
+    // The Model-Node-ID (from the XML) of the target Node of the edge
     protected int targetNodeId;
+    // The type of the edge. Could be either "*Association" (DataFlow) or "*SequenceFlow"
     private String type;
+    // The label of the edge (Maybe the condition string of the flow)
     private String label;
     // If it is an association setId is the database id of the corresponding I/O-Set
     private int setId = -1;
@@ -100,6 +106,10 @@ public class Edge implements IDeserialisable, IPersistable {
         this.controlNodes = controlNodes;
     }
 
+    /**
+     * This is no copy. It is the the Map saved inside the Edge. If you change the content of the Map you will
+     * change the state of the edge.
+     */
     public Map<Integer, Node> getControlNodes() {
         return controlNodes;
     }

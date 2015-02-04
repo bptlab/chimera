@@ -49,6 +49,9 @@ public class Scenario implements IDeserialisable, IPersistable {
         createDataObjects();
     }
 
+    /**
+     * Extracts and saves Scenario ID from the ModelXML
+     */
     private void setScenarioID() {
         XPath xPath =  XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
@@ -59,6 +62,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+    @Override
     public int save() {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
@@ -68,6 +72,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         return this.databaseID;
     }
 
+    /**
+     * Saves the Fragments of the Scenario to the Database.
+     * First the Scenarios have to be saved and the Fragments have to be initialized
+     */
     private void saveFragments() {
         for (Fragment fragment : fragments) {
             fragment.setScenarioID(databaseID);
@@ -75,6 +83,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Saves the DataObjects of the Scenario to the Database.
+     * First the Scenarios have to be saved and the DataObjects have to be initialized
+     */
     private void saveDataObjects() {
         for (DataObject dataObject : dataObjects.values()) {
             dataObject.setScenarioId(databaseID);
@@ -82,6 +94,11 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+
+    /**
+     * Saves the relation of DataSets to DataNodes to the Database. Take care that all DtaNode and Input and Output
+     * nodes are implemented
+     */
     private void saveConsistsOf() {
         for (Fragment frag : fragments) {
             saveInputSetsConsistOf(frag);
@@ -89,6 +106,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Saves the relation of output set to data nodes of one Fragment to the database.
+     * @param frag The fragment which contains the Output set
+     */
     private void saveOutputSetsConsistOf(Fragment frag) {
         Connector connector = new Connector();
         for (OutputSet oSet : frag.getOutputSets()) {
@@ -98,6 +119,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Saves the relation of input sets to data nodes of one Fragment to the database.
+     * @param frag The fragment which contains the Input set
+     */
     private void saveInputSetsConsistOf(Fragment frag) {
         Connector connector = new Connector();
         for (InputSet iSet : frag.getInputSets()) {
@@ -107,6 +132,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Saves the dataObjects of the scenario to the database. Fragments (with Control Nodes)
+     * have to be created and saved first.
+     */
     private void createDataObjects() {
         for (Fragment fragment : fragments) {
             for (Node node : fragment.getControlNodes().values()) {
@@ -121,8 +150,10 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
 
+    /**
+     * Generates a List of Fragments from the ScenarioXML.
+     */
     private void generateFragmentList() {
-
         try {
             //look for all fragments in the scenarioXML and save their IDs
             XPath xPath =  XPathFactory.newInstance().newXPath();
@@ -160,6 +191,9 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Sets the name of the Scenario based on the value of the "name" attribute of the ScenarioXML Root-Element.
+     */
     private void setScenarioName() {
 
         XPath xPath =  XPathFactory.newInstance().newXPath();

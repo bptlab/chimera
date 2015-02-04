@@ -7,6 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a DataObject. A DataObject is an entity which is shown inside the Scneario and represented
+ * by one or more DataNodes inside all of the Fragments.
+ */
 public class DataObject implements IPersistable {
 
     // A list of all dataNodes which represent the DataObject
@@ -22,16 +26,26 @@ public class DataObject implements IPersistable {
     // Teh database ID of the initial State
     private Integer initState;
 
+    /**
+     * Creates a new DataObject with an empty set of states and an empty set of nodes.
+     */
     public DataObject() {
         dataNodes = new LinkedList<Node>();
         states = new HashMap<String, Integer>();
     }
 
+    /**
+     * Creates a new DataObject with a given set of nodes. The states will be extracted and added automatically.
+     * @param dataNodes the initial set of nodes. All nodes may have the type DataObject.
+     */
     public DataObject(List<Node> dataNodes) {
         this.dataNodes = new LinkedList<Node>(dataNodes);
         initializeStates();
     }
 
+    /**
+     * This method extracts all the dataStates from the added DataNodes.
+     */
     private void initializeStates() {
         Connector connector = new Connector();
         classId = connector.insertDataClassIntoDatabase(dataNodes.get(0).getText());
@@ -56,6 +70,12 @@ public class DataObject implements IPersistable {
         addState(dataNode.getState());
     }
 
+    /**
+     * Adds a state to the list of states. If there is no class associated with the data Object a new "Dummy"-Class will
+     * be created
+     *
+     * @param state - The name of the state which will be added to the States of the DataObject
+     */
     private void addState(String state) {
         Connector connector = new Connector();
         if (0 >= classId) {
@@ -80,6 +100,10 @@ public class DataObject implements IPersistable {
         return databaseId;
     }
 
+    /**
+     * Saves the data Nodes to the database. Also the databaseID will be set for each node.
+     *
+     */
     private void saveDataNodes() {
         Connector connector = new Connector();
         for (Node dataNode : dataNodes) {
@@ -100,10 +124,21 @@ public class DataObject implements IPersistable {
         this.scenarioId = scenarioId;
     }
 
+    /**
+     * Returnes the list of dataNodes. Be aware that it is no copy. (It is more a composition than an aggregation)
+     * This means, if you change the list you change the dataObject
+     *
+     * @return the list of DataNodes inside the DataObject
+     */
     public List<Node> getDataNodes() {
         return dataNodes;
     }
 
+    /**
+     * Returns the databaseID of the inital State. (We assume that the initial State is ("init")
+     *
+     * @return
+     */
     public Integer getInitState() {
         return initState;
     }
