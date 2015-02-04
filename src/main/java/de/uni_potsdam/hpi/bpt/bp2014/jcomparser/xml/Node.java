@@ -164,10 +164,6 @@ public class Node implements IDeserialisable, IPersistable {
         return peTypeToDbType;
     }
 
-    public void setPeTypeToDbType(HashMap<String, String> peTypeToDbType) {
-        this.peTypeToDbType = peTypeToDbType;
-    }
-
     public int getDatabaseID() {
         return databaseID;
     }

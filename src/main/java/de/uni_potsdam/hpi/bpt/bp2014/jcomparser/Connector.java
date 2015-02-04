@@ -143,6 +143,40 @@ public class Connector {
         return result;
     }
 
+    public void insertTerminationConditionIntoDatabase(int conditionID, int dataObjectID, int stateID, int scenarioID) {
+
+        java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int result = -1;
+        try {
+
+            String sql = "INSERT INTO terminationcondition (conditionset_id, dataobject_id, state_id, scenario_id) VALUES (" + conditionID + ", " + dataObjectID + ", " + stateID + ", " + scenarioID+")";
+
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
     public void insertControlFlowIntoDatabase(int controlNodeID1, int controlNodeID2, String condition) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();

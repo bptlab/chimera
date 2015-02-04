@@ -34,6 +34,8 @@ public class Scenario implements IDeserialisable, IPersistable {
     private final String processeditor_server_url = "http://localhost:1205/";
     private int databaseID;
     private Map<String, DataObject> dataObjects = new HashMap<String, DataObject>();
+    private Node terminatingDataNode;
+    private DataObject terminatingDataObject;
 
     /**
      * This Method initializes the scanario from an XML. Be Aware, that a scenario consists of fragments, which will
@@ -47,6 +49,48 @@ public class Scenario implements IDeserialisable, IPersistable {
         setScenarioID();
         generateFragmentList();
         createDataObjects();
+        setTerminationCondition();
+    }
+
+    private void setTerminationCondition() {
+        String objectName = getTerminatingObjectName();
+        String objectState = getTerminatingObjectState();
+        if (objectName.equals("") || objectState.equals("[]"))
+            return;
+
+        for (Map.Entry<String, DataObject> dataObject : dataObjects.entrySet()) {
+            if (dataObject.getKey().equals(objectName)) {
+                for (Node dataNode : dataObject.getValue().getDataNodes()) {
+                    //TODO: state in terminationCondition in Scenario-XML and in Node of Fragment-XML should not differ in the usage of "[]"
+                    if (objectState.equals("[" + dataNode.getState() + "]")) {
+                        terminatingDataNode = dataNode;
+                    }
+                }
+                terminatingDataObject = dataObject.getValue();
+            }
+        }
+    }
+
+    private String getTerminatingObjectState() {
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/properties/property[@name = 'Termination State']/@value";
+        try {
+            return xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String getTerminatingObjectName() {
+        XPath xPath =  XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/properties/property[@name = 'Termination Data Object']/@value";
+        try {
+            return xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -69,7 +113,15 @@ public class Scenario implements IDeserialisable, IPersistable {
         saveFragments();
         saveDataObjects();
         saveConsistsOf();
+        if (terminatingDataObject != null && terminatingDataNode != null)
+            saveTerminationCondition();
         return this.databaseID;
+    }
+
+    private void saveTerminationCondition() {
+        Connector conn = new Connector();
+        // first parameter currently irrelevant due to the restriction of the terminationCondition
+        conn.insertTerminationConditionIntoDatabase(1, terminatingDataObject.getDatabaseId(), terminatingDataObject.getStates().get(terminatingDataNode.getState()), databaseID);
     }
 
     /**
@@ -148,7 +200,6 @@ public class Scenario implements IDeserialisable, IPersistable {
             }
         }
     }
-
 
     /**
      * Generates a List of Fragments from the ScenarioXML.
