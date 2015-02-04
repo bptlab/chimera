@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 public class ExecutionAcceptanceTest {
     @Test
     public void testScenario2(){
+        System.out.println("\n ------------------ test Scenario 2 ------------------\n");
         int activity1 = 103;
         int activity2 = 104;
         ExecutionService executionService = new ExecutionService();
@@ -64,6 +65,7 @@ public class ExecutionAcceptanceTest {
 
     @Test
     public void testScenario1(){
+        System.out.println("\n ------------------ test Scenario 1 ------------------\n");
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(1);
         int activity1 = 2;
