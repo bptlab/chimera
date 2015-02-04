@@ -22,16 +22,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a Scenario-Model. It can be parsed from an XML and written to a Database.
+ */
 public class Scenario implements IDeserialisable, IPersistable {
 
     private String scenarioName;
     private String scenarioID;
     private org.w3c.dom.Node scenarioXML;
     private List<Fragment> fragments;
-    private String processeditor_server_url = "http://localhost:1205/";
+    private final String processeditor_server_url = "http://localhost:1205/";
     private int databaseID;
     private Map<String, DataObject> dataObjects = new HashMap<String, DataObject>();
 
+    /**
+     * This Method initializes the scanario from an XML. Be Aware, that a scenario consists of fragments, which will
+     * be loaded automatically;
+     * @param element
+     */
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node element) {
         this.scenarioXML = element;

@@ -83,11 +83,12 @@ public class DataObject implements IPersistable {
     private void writeDataNodesToDatabase() {
         Connector connector = new Connector();
         for (Node dataNode : dataNodes) {
-            connector.insertDataNodeIntoDatabase(
+            int nodeId = connector.insertDataNodeIntoDatabase(
                     scenarioId,
                     states.get(dataNode.getState()),
                     classId,
                     initState);
+            dataNode.setDatabaseID(nodeId);
         }
     }
 

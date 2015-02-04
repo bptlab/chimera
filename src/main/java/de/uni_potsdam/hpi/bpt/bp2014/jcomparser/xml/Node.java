@@ -122,7 +122,7 @@ public class Node implements IDeserialisable, IPersistable {
         }
         Connector connector = new Connector();
         if (type.contains("DataObject")) {
-            // Data Objects will be done in DataObject
+            // DataObject (Which mean DataNodes) will be done in DataObject
         } else {
             databaseID = connector.insertControlNodeIntoDatabase(text, peTypeToDbType.get(type), fragmentId);
         }
