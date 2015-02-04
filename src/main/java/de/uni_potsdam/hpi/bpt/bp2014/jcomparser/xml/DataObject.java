@@ -111,7 +111,7 @@ public class DataObject implements IPersistable {
                     scenarioId,
                     states.get(dataNode.getState()),
                     classId,
-                    initState);
+                    databaseId);
             dataNode.setDatabaseID(nodeId);
         }
     }
