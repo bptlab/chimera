@@ -107,4 +107,12 @@ public class DataObject implements IPersistable {
     public Integer getInitState() {
         return initState;
     }
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public Map<String, Integer> getStates () {
+        return states;
+    }
 }
