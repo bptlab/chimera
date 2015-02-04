@@ -55,6 +55,8 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void setTerminationCondition() {
         String objectName = getTerminatingObjectName();
         String objectState = getTerminatingObjectState();
+        if (objectName.equals("") || objectState.equals("[]"))
+            return;
 
         for (Map.Entry<String, DataObject> dataObject : dataObjects.entrySet()) {
             if (dataObject.getKey().equals(objectName)) {
@@ -111,7 +113,8 @@ public class Scenario implements IDeserialisable, IPersistable {
         saveFragments();
         saveDataObjects();
         saveConsistsOf();
-        saveTerminationCondition();
+        if (terminatingDataObject != null && terminatingDataNode != null)
+            saveTerminationCondition();
         return this.databaseID;
     }
 
