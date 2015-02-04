@@ -127,14 +127,14 @@ public class Fragment implements IDeserialisable, IPersistable {
             node.setFragmentId(databaseID);
             node.save();
         }
-        writeSetToDatabase();
+        saveSet();
         for (Edge edge : edges) {
             edge.save();
         }
         return databaseID;
     }
 
-    private void writeSetToDatabase() {
+    private void saveSet() {
         for (InputSet set : inputSets) {
             set.save();
         }
