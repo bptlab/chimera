@@ -68,7 +68,7 @@ public class DataObject implements IPersistable {
     }
 
     @Override
-    public int writeToDatabase() {
+    public int save() {
         if (0 >= scenarioId || 0 >= classId) {
             return -1;
         }

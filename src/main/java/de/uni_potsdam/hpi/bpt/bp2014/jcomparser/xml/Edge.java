@@ -50,7 +50,7 @@ public class Edge implements IDeserialisable, IPersistable {
     }
 
     @Override
-    public int writeToDatabase() {
+    public int save() {
         int targetDatabaseId = controlNodes.get(targetNodeId).getDatabaseID();
         int sourceDatabaseId = controlNodes.get(sourceNodeId).getDatabaseID();
         Connector connector = new Connector();

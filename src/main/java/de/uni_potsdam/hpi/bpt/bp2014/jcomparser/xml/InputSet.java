@@ -33,7 +33,7 @@ public class InputSet implements IPersistable {
     }
 
     @Override
-    public int writeToDatabase() {
+    public int save() {
         Connector connector = new Connector();
         databaseId = connector.insertDataSetIntoDatabase(true);
         updateEdges();

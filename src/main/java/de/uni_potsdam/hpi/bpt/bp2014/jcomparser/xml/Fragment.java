@@ -120,26 +120,26 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     @Override
-    public int writeToDatabase() {
+    public int save() {
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(this.fragmentName, this.scenarioID);
         for (Node node : controlNodes.values()) {
             node.setFragmentId(databaseID);
-            node.writeToDatabase();
+            node.save();
         }
         writeSetToDatabase();
         for (Edge edge : edges) {
-            edge.writeToDatabase();
+            edge.save();
         }
         return databaseID;
     }
 
     private void writeSetToDatabase() {
         for (InputSet set : inputSets) {
-            set.writeToDatabase();
+            set.save();
         }
         for (OutputSet set : outputSets) {
-            set.writeToDatabase();
+            set.save();
         }
     }
 

@@ -59,7 +59,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
     }
 
-    public int writeToDatabase() {
+    public int save() {
         Connector conn = new Connector();
         this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
         writeFragmentsToDatabase();
@@ -71,14 +71,14 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void writeFragmentsToDatabase() {
         for (Fragment fragment : fragments) {
             fragment.setScenarioID(databaseID);
-            fragment.writeToDatabase();
+            fragment.save();
         }
     }
 
     private void writeDataObjectsToDatabase() {
         for (DataObject dataObject : dataObjects.values()) {
             dataObject.setScenarioId(databaseID);
-            dataObject.writeToDatabase();
+            dataObject.save();
         }
     }
 

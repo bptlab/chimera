@@ -116,7 +116,7 @@ public class Node implements IDeserialisable, IPersistable {
      * @return int - the autoincrement id of the newly created row
      */
     @Override
-    public int writeToDatabase() {
+    public int save() {
         if (fragmentId <= 0) {
             return -1;
         }
