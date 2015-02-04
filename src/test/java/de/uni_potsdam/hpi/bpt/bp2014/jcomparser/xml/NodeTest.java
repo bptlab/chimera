@@ -10,7 +10,8 @@ import org.w3c.dom.Element;
 
 public class NodeTest {
     private Document document = new DocumentImpl(null);
-    private Element activityNode;
+    private Element activityGlobalNode;
+    private Element activityLocalNode;
     private Element startEventNode;
     private Element endEventNode;
     private Element xorNode;
@@ -18,12 +19,21 @@ public class NodeTest {
 
     @Before
     public void setUpGlobalTask() {
-        activityNode = document.createElement("node");
-        activityNode.appendChild(createProperty("text", "Teil transportieren"));
-        activityNode.appendChild(createProperty("global", "1"));
-        activityNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
-        activityNode.appendChild(createProperty("#id", "368338489"));
+        activityGlobalNode = document.createElement("node");
+        activityGlobalNode.appendChild(createProperty("text", "Teil transportieren"));
+        activityGlobalNode.appendChild(createProperty("global", "1"));
+        activityGlobalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
+        activityGlobalNode.appendChild(createProperty("#id", "368338489"));
 
+    }
+
+    @Before
+    public void setUpLocalTask() {
+        activityLocalNode = document.createElement("node");
+        activityLocalNode.appendChild(createProperty("text", "Teil kleben"));
+        activityLocalNode.appendChild(createProperty("global", "0"));
+        activityLocalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
+        activityLocalNode.appendChild(createProperty("#id", "368338489"));
     }
 
     @Before
@@ -71,11 +81,25 @@ public class NodeTest {
     @Test
     public void testGlobalActivityDeserialization() {
         Node activity = new Node();
-        activity.initializeInstanceFromXML(activityNode);
+        activity.initializeInstanceFromXML(activityGlobalNode);
         Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil transportieren", activity.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
         Assert.assertEquals("Global has not been set correctly", true, activity.isGlobal());
+        Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
+        Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+    }
+
+    @Test
+    public void testLocalActivityDeserialization() {
+        Node activity = new Node();
+        activity.initializeInstanceFromXML(activityLocalNode);
+        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Text has not been set correctly", "Teil kleben", activity.getText());
+        Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
+        Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
+        Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
+        Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
     }
 
     @Test
@@ -85,6 +109,8 @@ public class NodeTest {
         Assert.assertEquals("Id has not been set correctly", 368338489, startEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "Start", startEvent.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.StartEvent", startEvent.getType());
+        Assert.assertFalse("The Node is a StartEvent but isTask returns true", startEvent.isTask());
+        Assert.assertFalse("The Node is a StartEvent but isDataNode returns true", startEvent.isDataNode());
     }
 
     @Test
@@ -94,6 +120,8 @@ public class NodeTest {
         Assert.assertEquals("Id has not been set correctly", 368338489, endEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "End", endEvent.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.EndEvent", endEvent.getType());
+        Assert.assertFalse("The Node is a endEvent but isTask returns true", endEvent.isTask());
+        Assert.assertFalse("The Node is a endEvent but isDataNode returns true", endEvent.isDataNode());
     }
 
     @Test
@@ -103,14 +131,18 @@ public class NodeTest {
         Assert.assertEquals("Id has not been set correctly", 368338489, xor.getId());
         Assert.assertEquals("Text has not been set correctly", "XOR", xor.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ExclusiveGateway", xor.getType());
+        Assert.assertFalse("The Node is a xorGateway but isTask returns true", xor.isTask());
+        Assert.assertFalse("The Node is a xorGateway but isDataNode returns true", xor.isDataNode());
     }
 
     @Test
     public void testAndDeserialization() {
-        Node xor = new Node();
-        xor.initializeInstanceFromXML(andNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, xor.getId());
-        Assert.assertEquals("Text has not been set correctly", "AND", xor.getText());
-        Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ParallelGateway", xor.getType());
+        Node and = new Node();
+        and.initializeInstanceFromXML(andNode);
+        Assert.assertEquals("Id has not been set correctly", 368338489, and.getId());
+        Assert.assertEquals("Text has not been set correctly", "AND", and.getText());
+        Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ParallelGateway", and.getType());
+        Assert.assertFalse("The Node is a andGateway but isTask returns true", and.isTask());
+        Assert.assertFalse("The Node is a andGateway but isDataNode returns true", and.isDataNode());
     }
 }

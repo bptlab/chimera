@@ -137,7 +137,7 @@ public class DataObject implements IPersistable {
     /**
      * Returns the databaseID of the inital State. (We assume that the initial State is ("init")
      *
-     * @return
+     * @return the databaseId of the state "init"
      */
     public Integer getInitState() {
         return initState;
