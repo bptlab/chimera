@@ -172,6 +172,12 @@ public class Fragment implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * Returns the list of edges. This is a Composition if you change the list you will change the state of the
+     * Fragment.
+     *
+     * @return The List of Edges
+     */
     public List<Edge> getEdges () {
         return this.edges;
     }
@@ -184,14 +190,29 @@ public class Fragment implements IDeserialisable, IPersistable {
         this.databaseID = databaseID;
     }
 
+    /**
+     * Returns a Map of Node-Ids (from XML) and their nodes. Any changes will manipulate the state of teh Fragment.
+     *
+     * @return Map<XML_ID, ControlNode>
+     */
     public Map<Integer, Node> getControlNodes() {
         return controlNodes;
     }
 
+    /**
+     * The list of inputSets. Changes will alter the state of the fragment.
+     *
+     * @return List of InputSets
+     */
     public List<InputSet> getInputSets() {
         return inputSets;
     }
 
+    /**
+     * The list of OutputSets. Changes will affect the state of the fragment.
+     *
+     * @return List of Output Sets
+     */
     public List<OutputSet> getOutputSets() {
         return outputSets;
     }
