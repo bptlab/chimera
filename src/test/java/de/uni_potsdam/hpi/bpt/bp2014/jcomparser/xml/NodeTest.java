@@ -184,8 +184,9 @@ public class NodeTest {
      */
     @Test
     public void testControlNode() {
-        Node data = new Node();
-        data.initializeInstanceFromXML(dataNode);
-        data.save();
+        Node task = new Node();
+        task.initializeInstanceFromXML(activityGlobalNode);
+        task.save();
+        Assert.assertFalse("The database Id is invalid (0 or less)", 1 > task.getDatabaseID());
     }
 }
