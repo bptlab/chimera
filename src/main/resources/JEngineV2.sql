@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 04. Feb 2015 um 11:18
+-- Erstellungszeit: 04. Feb 2015 um 11:29
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -5417,7 +5417,7 @@ CREATE TABLE IF NOT EXISTS `successor` (
 --
 
 CREATE TABLE IF NOT EXISTS `terminationcondition` (
-  `id` int(11) NOT NULL,
+  `conditionset_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL
@@ -5662,7 +5662,7 @@ ALTER TABLE `successor`
 -- Indexes for table `terminationcondition`
 --
 ALTER TABLE `terminationcondition`
- ADD PRIMARY KEY (`id`,`dataobject_id`,`state_id`), ADD KEY `dataobject_id` (`dataobject_id`), ADD KEY `state_id` (`state_id`);
+ ADD PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`), ADD KEY `dataobject_id` (`dataobject_id`), ADD KEY `state_id` (`state_id`);
 
 --
 -- Indexes for table `user`
