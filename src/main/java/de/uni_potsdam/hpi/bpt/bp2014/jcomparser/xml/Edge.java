@@ -43,6 +43,10 @@ public class Edge implements IDeserialisable, IPersistable {
     private int setId = -1;
 
 
+    /**
+     * It is important
+     * @param element The xml element of the
+     */
     @Override
     public void initializeInstanceFromXML(org.w3c.dom.Node element) {
 
