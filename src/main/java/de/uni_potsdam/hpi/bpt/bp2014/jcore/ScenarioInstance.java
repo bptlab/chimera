@@ -1,8 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 
 import java.util.LinkedList;
@@ -53,6 +51,7 @@ public class ScenarioInstance {
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbFragment dbFragment = new DbFragment();
     private DbDataObject dbDataObject = new DbDataObject();
+    private DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
 
     public ScenarioInstance(int scenario_id, int scenarioInstance_id){
         this.scenario_id = scenario_id;
@@ -64,7 +63,9 @@ public class ScenarioInstance {
             this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         }
         this.initializeDataObjects();
-        this.initializeFragments();
+        if(dbScenarioInstance.getTerminated(this.scenarioInstance_id) == 0) {
+            this.initializeFragments();
+        }
     }
 
     //starts a new scenario instance
@@ -114,7 +115,7 @@ public class ScenarioInstance {
     public void initializeDataObjects(){
         LinkedList<Integer> data = dbDataObject.getDataObjectsForScenario(scenario_id);
         for(Integer dataObject: data){
-            DataObjectInstance dataObjectInstance = new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id);
+            DataObjectInstance dataObjectInstance = new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id, this);
             //checks if dataObjectInstance is locked
             if(dataObjectInstance.getOnChange()){
                 dataObjectInstancesOnChange.add(dataObjectInstance);
@@ -204,5 +205,49 @@ public class ScenarioInstance {
 
             }
         }
+    }
+
+    public Boolean checkTerminationCondition(){
+        Boolean terminated = false;
+        //get the condition Set IDs
+        LinkedList<Integer> conditionsSets = dbTerminationCondition.getConditionsSetIDsForScenario(scenario_id);
+        for(int conditionSet: conditionsSets){
+            LinkedList<Condition> conditions = dbTerminationCondition.getConditionsForConditionSetAndScenario(scenario_id, conditionSet);
+            //prove every condition in condition set
+            for(Condition condition: conditions){
+                DataObjectInstance dataObjectInstance = null;
+                for(DataObjectInstance currentDataObjectInstance: dataObjectInstances){
+                    if(currentDataObjectInstance.dataObject_id == condition.getDataObject_id()){
+                        dataObjectInstance = currentDataObjectInstance;
+                    }
+                }
+                if(dataObjectInstance != null){
+                    if(dataObjectInstance.state_id == condition.getState_id()){
+                        terminated = true;
+                    }else{
+                        terminated = false;
+                        break;
+                    }
+                }
+            }
+            //termination condition is true
+            if(terminated) break;
+        }
+        //terminate the scenario
+        if(terminated){
+            System.out.println("terminiere Szenario");
+            this.terminate();
+        }
+        return terminated;
+    }
+
+    private void terminate(){
+        dbScenarioInstance.setTerminated(scenarioInstance_id, true);
+        controlNodeInstances.clear();
+        enabledControlNodeInstances.clear();
+        controlFlowEnabledControlNodeInstances.clear();
+        dataEnabledControlNodeInstances.clear();
+        runningControlNodeInstances.clear();
+        terminatedControlNodeInstances.clear();
     }
 }

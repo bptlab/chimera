@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 
 
 import java.io.BufferedReader;
@@ -65,6 +66,7 @@ public class debugClass {
     }
 
     public static void main(String args[]){
+
         String scenarioID = selectScenario();
         String scenarioInstanceID = selectScenarioInstance();
         ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
@@ -85,7 +87,7 @@ public class debugClass {
             for(int activityID: activitiesIDs){
                 System.out.println(activityID);
             }
-            readLine();
+            //readLine();
             System.out.println("---------terminate activity------------");
             executionService.terminateActivity(read);
 

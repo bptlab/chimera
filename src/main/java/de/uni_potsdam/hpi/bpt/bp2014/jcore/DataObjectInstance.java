@@ -31,10 +31,12 @@ public class DataObjectInstance {
     public int dataObject_id;
     public int scenario_id;
     public int scenarioInstance_id;
+    private ScenarioInstance scenarioInstance;
     private DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
     private DbDataObject dbDataObject = new DbDataObject();
 
-    public DataObjectInstance(int dataObject_id, int scenario_id, int scenarioInstance_id){
+    public DataObjectInstance(int dataObject_id, int scenario_id, int scenarioInstance_id, ScenarioInstance scenarioInstance){
+        this.scenarioInstance = scenarioInstance;
         this.dataObject_id = dataObject_id;
         this.scenario_id = scenario_id;
         this.scenarioInstance_id = scenarioInstance_id;
@@ -52,6 +54,7 @@ public class DataObjectInstance {
     public void setState(int state_id){
         this.state_id = state_id;
         dbDataObjectInstance.setState(dataObjectInstance_id, state_id);
+        scenarioInstance.checkTerminationCondition();
     }
     public Boolean getOnChange(){
         return dbDataObjectInstance.getOnChange(dataObjectInstance_id);

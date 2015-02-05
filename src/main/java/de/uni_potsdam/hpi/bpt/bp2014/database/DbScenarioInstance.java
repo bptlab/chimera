@@ -250,5 +250,81 @@ public class DbScenarioInstance {
         }
         return results;
     }
+    public int getTerminated(int scenarioInstance_id) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int results = -1;
+        if (conn == null) return results;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+            rs = stmt.executeQuery(sql);
+            rs.next();
+            results = rs.getInt("terminated");
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+    public void setTerminated(int scenarioInstance_id, boolean terminated) {
+        int terminatedAsInt;
+        if(terminated){
+            terminatedAsInt = 1;
+        }else{
+            terminatedAsInt = 0;
+        }
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) return;
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            String sql = "UPDATE scenarioinstance SET scenarioinstance.terminated = " + terminatedAsInt + " WHERE id = " + scenarioInstance_id;
+            stmt.executeUpdate(sql);
+            //Clean-up environment
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
 
 }
