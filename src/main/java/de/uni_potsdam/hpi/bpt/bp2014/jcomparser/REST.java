@@ -36,7 +36,8 @@ public class REST {
 	//fire Comparser Execution
     @POST   
     @Path("launch")   
-    public void startComparser(){
-       //return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main();
+    public int startComparser(){
+       //result = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main();
+    	return 1;
     }
 }
