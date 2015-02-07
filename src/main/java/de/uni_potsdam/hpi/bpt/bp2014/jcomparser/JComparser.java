@@ -40,8 +40,9 @@ import java.lang.String;
 
 public class JComparser {
 
-    public static void main(String[] args) {
-        //start JComparser
+    public static int main() {
+        //TODO: start the comparser
+        return 1;
     }
 
     public static void writeAllScenariosToDatabase (String processeditor_server_url) throws XPathExpressionException {
@@ -119,5 +120,4 @@ public class JComparser {
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
     }
-
 }

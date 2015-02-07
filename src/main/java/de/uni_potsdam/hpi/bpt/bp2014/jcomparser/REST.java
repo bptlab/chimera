@@ -37,7 +37,6 @@ public class REST {
     @POST   
     @Path("launch")   
     public int startComparser(){
-       //result = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main();
-    	return 1;
+       return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main();
     }
 }
