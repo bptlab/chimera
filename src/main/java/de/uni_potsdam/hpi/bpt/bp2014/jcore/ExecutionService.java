@@ -32,10 +32,6 @@ import java.util.LinkedList;
 
 //handles all Scenario Instances, can create new Instances, can activate Activities
 public class ExecutionService {
-    //Debug only
-    private ScenarioInstance scenarioInstance_debug;
-
-
     private LinkedList<ScenarioInstance> scenarioInstances = new LinkedList<ScenarioInstance>();
     private HashMap<Integer, ScenarioInstance> sortedScenarioInstances = new HashMap<Integer, ScenarioInstance>();
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
@@ -159,42 +155,12 @@ public class ExecutionService {
         return dataObjectStates;
     }
 
-
-
-    //Debug only
-    public ExecutionService(ScenarioInstance scenarioInstance){
-        this.scenarioInstance_debug=scenarioInstance;
-    }
-    //Debug only
-    public LinkedList<Integer> getEnabledActivitiesIDs(){
-        LinkedList<Integer> ids = new LinkedList<Integer>();
-        for(ControlNodeInstance nodeInstance: scenarioInstance_debug.enabledControlNodeInstances){
-            if(nodeInstance instanceof ActivityInstance){
-                ids.add(((ActivityInstance) nodeInstance).controlNode_id);
-            }
-        }
-
-        return ids;
-    }
-    //Debug only
-    public void startActivity(int id){
-        for(ControlNodeInstance nodeInstance: scenarioInstance_debug.enabledControlNodeInstances) {
-            if (((ActivityInstance) nodeInstance).controlNode_id == id) {
-                ((ActivityInstance) nodeInstance).begin();
-                return;
-            }
+    public boolean checkTerminationForScenarioInstance(int scenarioInstance){
+        DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
+        if (dbScenarioInstance.getTerminated(scenarioInstance) == 1) {
+            return true;
+        }else{
+            return false;
         }
     }
-
-    //Debug Only
-    public void terminateActivity(int id){
-        for(ControlNodeInstance nodeInstance: scenarioInstance_debug.runningControlNodeInstances) {
-            if (((ActivityInstance) nodeInstance).controlNode_id == id) {
-                ((ActivityInstance) nodeInstance).terminate();
-                return;
-            }
-        }
-    }
-
-
 }

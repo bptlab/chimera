@@ -98,7 +98,7 @@ public class debugClass {
             //readLine();
             System.out.println("---------terminate activity------------");
             executionService.terminateActivity(scenarioInstanceID, read);
-
+            if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID)) System.out.println("Scenario ist terminiert");
         }
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));

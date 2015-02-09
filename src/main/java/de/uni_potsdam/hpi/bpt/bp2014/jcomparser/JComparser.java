@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

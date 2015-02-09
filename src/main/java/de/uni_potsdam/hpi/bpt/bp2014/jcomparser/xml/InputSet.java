@@ -69,4 +69,12 @@ public class InputSet implements IPersistable {
     public List<Node> getInputs() {
         return inputs;
     }
+
+    public Node getConsumer() {
+        return consumer;
+    }
+
+    public List<Edge> getAssociations() {
+        return associations;
+    }
 }
