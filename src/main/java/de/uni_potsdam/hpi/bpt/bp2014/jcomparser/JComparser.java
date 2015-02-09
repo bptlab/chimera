@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -53,6 +54,31 @@ public class JComparser {
         scen.initializeInstanceFromXML(doc.getDocumentElement());
         scen.save();
         return 1;
+    }
+
+    public HashMap<String, String> getScenarioNamesAndIDs(String processeditor_server_url) throws XPathExpressionException {
+        String modelXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, processeditor_server_url + "models");
+        Document modelDoc = stringToDocument(modelXML);
+        if(modelDoc != null) {
+            HashMap<String, String> result = new HashMap<>();
+            XPath xPath =  XPathFactory.newInstance().newXPath();
+            // select all models whose type is scenario
+            String xPathQuery = "/models/model[type/text()='net.frapu.code.visualization.pcm.PCMScenario']";
+            NodeList models = (NodeList) xPath.compile(xPathQuery).evaluate(modelDoc, XPathConstants.NODESET);
+
+            for (int i = 0; i < models.getLength(); i++) {
+                xPathQuery = "uri/text()";
+                String currentURI = (String) xPath.compile(xPathQuery).evaluate(models.item(i), XPathConstants.STRING);
+                // split the URI by "/" --> the last field is the ID of the scenario
+                String[] splittedScenarioURI = currentURI.split("/");
+                String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length-1];
+                xPathQuery = "name/text()";
+                String currentName = xPath.compile(xPathQuery).evaluate(models.item(i));
+                result.put(currentScenarioID, currentName);
+            }
+            return result;
+        }
+        return null;
     }
 
     public static void writeAllScenariosToDatabase (String processeditor_server_url) throws XPathExpressionException {
