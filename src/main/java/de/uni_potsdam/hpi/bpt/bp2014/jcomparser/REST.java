@@ -7,6 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,22 +40,29 @@ As a part of the JComparser we need to provide a REST API in order to manage cha
 
 @Path("JComparser")
 public class REST {
+    String pcm_url = "http://localhost:1205/models/";
+    String processserver = "http://localhost:1205";
+
 
     //fire Comparser Execution
     @POST
-    @Path("launch")
-    public int startComparser() throws IOException, SAXException, ParserConfigurationException {
-        String $pcm_url = "http://localhost:1205/models/936367220.pm";
-        String $processserver = "http://localhost:1205";
-
-        return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main($pcm_url, $processserver);
+    @Path("launch/{scenarioID}")
+    public int startComparser(@PathParam("scenarioID")  int scenarioID) throws IOException, SAXException, ParserConfigurationException {
+        pcm_url = pcm_url + scenarioID + ".pem";
+        return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(pcm_url, processserver);
     }
 
     @GET    //to show ids and labels of all available scenarios
     @Path("Scenarios")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarios() {
-        LinkedList<Integer> scenarioIDs = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.getAllScenarios();
+        HashMap<String, String> scenarioIDs = null;
+
+        try {
+            scenarioIDs = JComparser.getScenarioNamesAndIDs(processserver);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
 
         if (scenarioIDs.size() == 0)
             return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
@@ -79,11 +87,13 @@ public class REST {
     }
 
     class JsonIntegerList {
-        private LinkedList<Integer> ids;
+        private HashMap<String, String> ids;
 
-        public JsonIntegerList(LinkedList<Integer> ids) {
+        public JsonIntegerList(HashMap<String, String> ids) {
             this.ids = ids;
         }
+
+
     }
 
     class JsonInteger {
