@@ -1,33 +1,19 @@
 <?php
-
-if(isset($_POST['scenarioID'])) {
-   if(is_int($_POST['scenarioID'])){
-      $check = PostScenarios($_POST['scenarioID']);
-      if($check){
-         header( 'Location: admin.php?l=jcomparser' ) ;
-         die;
-      } else {
-         echo "ERROR: something went wrong with the POST";
-         die;  
-      }
-   } else {
-      echo "ERROR: scenarioID wasnt an ID... ".$_POST['scenarioID'];
-      die;
-   }
-}
-
-
 include '../core/config.php';
 include '../core/RESTCalls.php';
 
-var_dump(GetAvailableScenarios());
+
+$scenarios_array = GetAvailableScenarios();
+$scenarios = $scenarios_array['ids'];
+
+foreach ($scenarios as $scenario_value => $scenario_label) {
+    echo "<hr>Scenario: <b> ".$scenario_label."</b> with the ID ".$scenario_value;
+    echo "<form action='update_jcomparser.php'>
+             <input type='hidden' name='scenarioID' value='".$scenario_value."'>
+             <input type='submit' value='Submit'>
+          </form> ";
+}
 
 ?>
 
-<form action="admin_jcomparser.php">
-Scenario ID:<br>
-<input type="text" name="scenarioID" value="scenarioID">
-<br><br>
-<input type="submit" value="Submit">
-</form> 
 

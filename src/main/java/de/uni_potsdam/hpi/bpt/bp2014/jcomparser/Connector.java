@@ -94,7 +94,7 @@ public class Connector {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException se2) {
-            }// nothing we can do
+            } // nothing we can do
             try {
                 if (conn != null)
                     conn.close();

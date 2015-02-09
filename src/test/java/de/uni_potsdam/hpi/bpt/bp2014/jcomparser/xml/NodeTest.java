@@ -167,4 +167,27 @@ public class NodeTest {
         Assert.assertFalse("The Node is a dataObject, but isTask returns true", data.isTask());
         Assert.assertTrue("The Node is a dataobject, but isDataNode returns false", data.isDataNode());
     }
+
+    /**
+     * Actually the save operation does not write DataObjects to the Database.
+     * We are testing that no exception occurs
+     */
+    @Test
+    public void testSaveDataObject() {
+        Node data = new Node();
+        data.initializeInstanceFromXML(dataNode);
+        data.save();
+    }
+
+    /**
+     * Actually we are only testing that no exception occurs and that the databaeId will be valid afterwards.
+     */
+    @Test
+    public void testControlNode() {
+        Node task = new Node();
+        task.initializeInstanceFromXML(activityGlobalNode);
+        task.setFragmentId(424242);
+        task.save();
+        Assert.assertFalse("The database Id is invalid (0 or less)", 1 > task.getDatabaseID());
+    }
 }

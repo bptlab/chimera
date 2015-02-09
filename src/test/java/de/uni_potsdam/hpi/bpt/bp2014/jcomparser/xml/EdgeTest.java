@@ -107,6 +107,7 @@ public class EdgeTest {
         controlFlowEdge.getSource().setDatabaseID(424242);
         controlFlowEdge.getTarget().setDatabaseID(212121);
         dataFlowEdge.save();
+        Assert.assertFalse("The Value of the database ID of the Edge is invalid (0 or less)", 1 > controlFlowEdge.getId());
     }
 
     @Test
@@ -114,6 +115,7 @@ public class EdgeTest {
         controlFlowEdge.getSource().setDatabaseID(212121);
         controlFlowEdge.getTarget().setDatabaseID(424242);
         controlFlowEdge.save();
+        Assert.assertFalse("The Value of the database ID of the Edge is invalid (0 or less)", 1 > controlFlowEdge.getId());
     }
     // END: Tests
 

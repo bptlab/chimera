@@ -24,5 +24,10 @@ import org.w3c.dom.Node;
 
 public interface IDeserialisable {
 
-    public void initializeInstanceFromXML(Node element);
+    /**
+     * A Method to deserialize a model element from XML.
+     *
+     * @param element The XML Node which will be used for deserialisation
+     */
+    void initializeInstanceFromXML(Node element);
 }
