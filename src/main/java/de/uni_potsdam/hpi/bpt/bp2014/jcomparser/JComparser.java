@@ -40,8 +40,18 @@ import java.lang.String;
 
 public class JComparser {
 
-    public static int main() {
-        //TODO: start the comparser
+    public static int main(String $pcm_url, String $processserver) throws ParserConfigurationException, IOException, SAXException {
+
+        Retrieval jRetrieval = new Retrieval();
+        String scenarioXML = jRetrieval.getHTMLwithAuth($pcm_url, $processserver);
+
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(scenarioXML));
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = db.parse(is);
+        Scenario scen = new Scenario();
+        scen.initializeInstanceFromXML(doc.getDocumentElement());
+        scen.save();
         return 1;
     }
 
