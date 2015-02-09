@@ -207,8 +207,12 @@ public class ScenarioInstance {
         }
     }
 
-    public Boolean checkTerminationCondition(){
-        Boolean terminated = false;
+    /**
+     * check termination condition
+     * get all termination condition and prove the condition for every condition set
+     */
+    public boolean checkTerminationCondition(){
+        boolean terminated = false;
         //get the condition Set IDs
         LinkedList<Integer> conditionsSets = dbTerminationCondition.getConditionsSetIDsForScenario(scenario_id);
         for(int conditionSet: conditionsSets){
