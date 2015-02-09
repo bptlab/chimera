@@ -41,7 +41,7 @@ public class REST {
 	//fire Comparser Execution
     @POST   
     @Path("launch")   
-    public void startComparser() throws IOException, SAXException, ParserConfigurationException {
+    public int startComparser() throws IOException, SAXException, ParserConfigurationException {
         String $pcm_url = "http://localhost:1205/models/936367220.pm";
         String $processserver = "http://localhost:1205";
 
@@ -52,7 +52,7 @@ public class REST {
     @Path("Scenarios")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarios(){
-        LinkedList<Integer> scenarioIDs = executionService.de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.getAllScenarios();
+        LinkedList<Integer> scenarioIDs = de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.getAllScenarios();
 
         if(scenarioIDs.size() == 0) return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
 
@@ -62,5 +62,30 @@ public class REST {
 
         return Response.ok(jsonRepresentation,MediaType.APPLICATION_JSON).build();
 
+    }
+
+    //Everything below is needed to make a Json that Janny's Front-End understands
+    class JsonHashMapIntegerString{
+        private LinkedList<Integer> ids;
+        private HashMap<Integer, String> label;
+
+        public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels){
+            this.ids = ids;
+            this.label = labels;
+        }
+    }
+    class JsonIntegerList{
+        private LinkedList<Integer> ids;
+
+        public JsonIntegerList(LinkedList<Integer> ids){
+            this.ids = ids;
+        }
+    }
+    class JsonInteger{
+        private Integer id;
+
+        public JsonInteger(Integer id){
+            this.id = id;
+        }
     }
 }
