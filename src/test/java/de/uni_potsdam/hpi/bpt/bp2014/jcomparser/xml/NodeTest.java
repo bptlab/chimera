@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 
 import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -41,8 +41,19 @@ import java.lang.String;
 
 public class JComparser {
 
-    public static void main(String[] args) {
-        //start JComparser
+    public static int main(String $pcm_url, String $processserver) throws ParserConfigurationException, IOException, SAXException {
+
+        Retrieval jRetrieval = new Retrieval();
+        String scenarioXML = jRetrieval.getHTMLwithAuth($pcm_url, $processserver);
+
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(scenarioXML));
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = db.parse(is);
+        Scenario scen = new Scenario();
+        scen.initializeInstanceFromXML(doc.getDocumentElement());
+        scen.save();
+        return 1;
     }
 
     public HashMap<String, String> getScenarioNamesAndIDs(String processeditor_server_url) throws XPathExpressionException {
@@ -145,5 +156,4 @@ public class JComparser {
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
     }
-
 }
