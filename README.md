@@ -17,5 +17,6 @@ This JEngine does execute
 * usertasks
 * data objects
 * AND gateways
+* termination condition for scenarios
 
 :-)
