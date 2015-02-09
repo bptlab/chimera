@@ -10,7 +10,7 @@ public class OutputSet implements IPersistable {
     private List<Edge> associations;
     // The (DataObjects) which are part of the DataNode
     private List<Node> outputs;
-    // The task which has the input set
+    // The task which has the output set
     private Node producer;
     // The Database ID of the OutputSet
     private int databaseId = - 1;
@@ -63,5 +63,13 @@ public class OutputSet implements IPersistable {
 
     public List<Node> getOutputs() {
         return outputs;
+    }
+
+    public Node getProducer() {
+        return producer;
+    }
+
+    public List<Edge> getAssociations() {
+        return associations;
     }
 }
