@@ -132,10 +132,57 @@ function PostActivities($PCM_Scenario, $PCM_Fragment, $PCM_Activity, $PCM_status
 }
 
 
+###################################################
+#
+#	Functions for JComparser Calls
+#
+function GetAvailableScenarios() {
+	global $JEngine_Server_URL, $JComparser_REST_Interface, $debug;
+	$URL = $JEngine_Server_URL."/".$JComparser_REST_Interface."/scenarios";
+	
+	# fire HTTP GET to URL in order to recieve json
+	$get_json = file_get_contents($URL);
+	# parsing json as array
+	$get_response_as_array = json_decode($get_json,true);
+	
+	if(!$get_response_as_array){
+                die("ERROR: decoding within ShowScenarios failed");
+    } elseif(strpos($get_response_as_array, 'Error')){
+    			echo "There is an REST Error..";
+    }
+	if($debug){
+		error_log("HTTP GET on ".$URL);
+		error_log("Returned ".$get_json);
+		error_log("Decoded json as ".var_dump($get_response_as_array));
+	}
+	
+	return $get_response_as_array;
+}
+
+function PostScenarios($scenarioID) {
+	global $JEngine_Server_URL, $JComparser_REST_Interface, $debug;
+	$URL = $JEngine_Server_URL."/".$JComparser_REST_Interface."/launch/".$scenarioID;
+	
+	//$data = array('key1' => 'value1', 'key2' => 'value2');
+	$data = array();
+	# fire HTTP POST to URL in order to update data
+	$result = PostWrapper($URL, $data);
+
+	if($debug){
+		error_log("HTTP GET on ".$URL);
+		error_log("Returned ".$result);
+	}
+	if($result){
+		return true;
+	} else {
+		return false;
+	}
+}
+
 
 ###################################################
 #
-#	Functions for JEngine Calls
+#	POST Calls
 #
 function PostWrapper($URL, $data) {
 	//$data = array('key1' => 'value1', 'key2' => 'value2');
@@ -151,3 +198,5 @@ function PostWrapper($URL, $data) {
 	
 	return $result;
 }
+
+
