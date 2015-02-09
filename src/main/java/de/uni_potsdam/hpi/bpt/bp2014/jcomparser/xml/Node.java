@@ -61,6 +61,7 @@ public class Node implements IDeserialisable, IPersistable {
      * Will be set as soon as the node is written to the database.
      */
     private int databaseID = -1;
+
     /**
      * The Database ID of the fragment which consists the node.
      */
@@ -244,6 +245,34 @@ public class Node implements IDeserialisable, IPersistable {
      */
     public boolean isTask() {
         return null != type && type.contains("Task");
+    }
+
+    /**
+     * Sets the fragment id.
+     * @param newFragmentId should be the database ID of a fragment.
+     */
+    public void setFragmentId(final int newFragmentId) {
+        this.fragmentId = newFragmentId;
+    }
+
+    /**
+     * Sets the database id for an Node.
+     * Used for DataNodes.
+     *
+     * @param newDatabaseID the new database ID
+     */
+    public void setDatabaseID(final int newDatabaseID) {
+        this.databaseID = newDatabaseID;
+    }
+
+    /**
+     * Sets the Id of the Node.
+     * Currenctly only used by tests.
+     *
+     * @param newId the new id of the data Node.
+     */
+    protected void setId(final int newId) {
+        this.id = newId;
     }
     // END: Getter & Setter
 }

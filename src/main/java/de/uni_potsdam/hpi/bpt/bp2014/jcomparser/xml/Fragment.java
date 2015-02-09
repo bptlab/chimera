@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;

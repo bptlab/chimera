@@ -62,6 +62,7 @@ public class InputSetTest {
 
         // activity/ConsumerNode
         activity = new Node();
+
         activity.setId(1);
         nodes.put(1, activity);
 
