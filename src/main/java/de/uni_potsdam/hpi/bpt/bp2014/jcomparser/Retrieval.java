@@ -101,7 +101,8 @@ public class Retrieval {
             String line = null;
             while ((line = reader.readLine()) != null)
             {
-                stringBuilder.append(line + "\n");
+                stringBuilder.append(line);
+                stringBuilder.append("\n");
             }
             modelsConnection.disconnect();
             connection.disconnect();

@@ -20,13 +20,16 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
  ************************************************************************************/
 
 /**
- * This Interface will consists of a method that allows him to be saved in the database
+ * The Interface for database persistence.
+ * The Interface consists of a method, which allows
+ * the implementer to be saved in the database.
  */
 public interface IPersistable {
     /**
-     * Writes the data from the object to the database and return the id of the created row
+     * Writes the data from the object to the database.
+     * The id will be returned.
      *
      * @return The ID of the newly created entry
      */
-    public int writeToDatabase();
+    int save();
 }

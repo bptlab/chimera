@@ -18,35 +18,77 @@ import java.util.*;
 import java.lang.String;
 
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ *
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ *
+ * ******************************************************************
+ *
+ * Copyright © All Rights Reserved 2014 - 2015
+ *
+ * Please be aware of the License. You may found it in the root directory.
+ *
+ * **********************************************************************************
+ */
 
 
 public class JComparser {
 
-    public static void writeAllScenariosToDatabase (String processeditor_server_url) throws XPathExpressionException {
+    public static int main(String pcm_url, String processserver) throws ParserConfigurationException, IOException, SAXException {
+
+        Retrieval jRetrieval = new Retrieval();
+        String scenarioXML = jRetrieval.getHTMLwithAuth(processserver, pcm_url);
+
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(scenarioXML));
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = db.parse(is);
+        Scenario scen = new Scenario();
+        scen.initializeInstanceFromXML(doc.getDocumentElement());
+        scen.save();
+        return 1;
+    }
+
+    public static HashMap<String, String> getScenarioNamesAndIDs(String processeditor_server_url) throws XPathExpressionException {
+        String modelXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, processeditor_server_url + "models");
+        Document modelDoc = stringToDocument(modelXML);
+        if (modelDoc != null) {
+            HashMap<String, String> result = new HashMap<>();
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            // select all models whose type is scenario
+            String xPathQuery = "/models/model[type/text()='net.frapu.code.visualization.pcm.PCMScenario']";
+            NodeList models = (NodeList) xPath.compile(xPathQuery).evaluate(modelDoc, XPathConstants.NODESET);
+
+            for (int i = 0; i < models.getLength(); i++) {
+                xPathQuery = "uri/text()";
+                String currentURI = (String) xPath.compile(xPathQuery).evaluate(models.item(i), XPathConstants.STRING);
+                // split the URI by "/" --> the last field is the ID of the scenario
+                String[] splittedScenarioURI = currentURI.split("/");
+                String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length - 1];
+                xPathQuery = "name/text()";
+                String currentName = xPath.compile(xPathQuery).evaluate(models.item(i));
+                result.put(currentScenarioID, currentName);
+            }
+            return result;
+        }
+        return null;
+    }
+
+    public static void writeAllScenariosToDatabase(String processeditor_server_url) throws XPathExpressionException {
 
         String modelXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, processeditor_server_url + "models");
         Document models = stringToDocument(modelXML);
-        if(models != null) {
+        if (models != null) {
             // get all (correct) URIs of the scenarios by reading URI from models-XML and adapting it to server_url
-            XPath xPath =  XPathFactory.newInstance().newXPath();
+            XPath xPath = XPathFactory.newInstance().newXPath();
             // select all URIS of models whose type is scenario
             String xPathQuery = "/models/model[type/text()='net.frapu.code.visualization.pcm.PCMScenario']/uri/text()";
             NodeList xmlModelURIs = (NodeList) xPath.compile(xPathQuery).evaluate(models, XPathConstants.NODESET);
@@ -55,17 +97,17 @@ public class JComparser {
                 //TODO: avoid string-replacement
                 String currentXmlUri = xmlModelURIs.item(i).getTextContent();
                 String[] splittedScenarioURI = currentXmlUri.split("/");
-                String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length-1];
+                String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length - 1];
                 String newScenarioURI = processeditor_server_url + "models/" + currentScenarioID + ".pm";
                 Scenario scenario = new Scenario();
                 String currentScenarioXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, newScenarioURI);
                 scenario.initializeInstanceFromXML(stringToDocument(currentScenarioXML).getFirstChild());
-                scenario.writeToDatabase();
+                scenario.save();
             }
         }
     }
 
-    private static Document stringToDocument (String xml) {
+    private static Document stringToDocument(String xml) {
 
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -82,7 +124,7 @@ public class JComparser {
         return null;
     }
 
-        public static void handleFileUpload(List pcm) {
+    public static void handleFileUpload(List pcm) {
 /*
         int pcm_size = pcm.size();
         String pcm_item = "";
@@ -115,5 +157,4 @@ public class JComparser {
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
     }
-
 }

@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 
 
 import java.io.BufferedReader;
@@ -65,30 +62,43 @@ public class debugClass {
     }
 
     public static void main(String args[]){
-        String scenarioID = selectScenario();
-        String scenarioInstanceID = selectScenarioInstance();
-        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-        System.out.println("Scenario Instance ID: " + scenarioInstance.scenarioInstance_id);
-        ExecutionService executionService = new ExecutionService(scenarioInstance);
+
+        int scenarioID = new Integer(selectScenario());
+        int scenarioInstanceID = new Integer(selectScenarioInstance());
+        ExecutionService executionService = new ExecutionService();
+        if (scenarioInstanceID == -1) {
+            scenarioInstanceID = executionService.startNewScenarioInstance(scenarioID);
+            System.out.println("neues Scenario geöffnet, Scenario Instance ID: " + scenarioInstanceID);
+        }else {
+            if(executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)){
+                System.out.println("Scenario Instance geöffnet");
+            }else{
+                System.out.println("Scenario Instance existiert nicht");
+            }
+        }
+
         while(true){
-            LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
+            LinkedList<Integer> activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
+            HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
             System.out.println("enabled Aktivität ID");
             for(int activityID: activitiesIDs){
-                System.out.println(activityID);
+                System.out.println(activityID + ", " + labels.get(activityID));
             }
-            System.out.println("Select Activity");
+
+            System.out.println("Select Activity ID");
             int read = new Integer(readLine());
-            executionService.startActivity(read);
+            executionService.beginActivity(scenarioInstanceID, read);
             System.out.println("----------start activity-----------");
             System.out.println("enabled Aktivität ID");
-            activitiesIDs= executionService.getEnabledActivitiesIDs();
+            activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
+            labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
             for(int activityID: activitiesIDs){
-                System.out.println(activityID);
+                System.out.println(activityID + ", " + labels.get(activityID));
             }
-            readLine();
+            //readLine();
             System.out.println("---------terminate activity------------");
-            executionService.terminateActivity(read);
-
+            executionService.terminateActivity(scenarioInstanceID, read);
+            if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID)) System.out.println("Scenario ist terminiert");
         }
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));

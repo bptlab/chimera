@@ -6,12 +6,33 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OutputSet implements IPersistable {
+    /**
+     * The list of (Associations-)Edges.
+     * Each each has a (DataObject-) Node as the target
+     * and a (Control) Node as the source.
+     */
     private List<Edge> associations;
+    /**
+     * The (DataObjects) which are part of the DataNode
+     */
     private List<Node> outputs;
-    // The task which has the input set
+    /**
+     * The task which has the input set
+     */
     private Node producer;
-    private int databaseId;
+    /**
+     * The Database ID of the OutputSet
+     */
+    private int databaseId = -1;
 
+    /**
+     * Creates an Output Set for the given Node (task) and the given Edges (edges). The edges should at least contain
+     * all outgoing associations of the task, but can contain more edges.
+     *
+     * @param task  - The (Task)Node which has the OutputSet
+     * @param edges - The List of Edges
+     * @return the newly created OutputSet or null if now Outgoing (DataFlow)-Association was found.
+     */
     public static OutputSet createOutputSetForTaskAndEdges(Node task, List<Edge> edges) {
         OutputSet instance = new OutputSet();
         instance.associations = new LinkedList<Edge>();
@@ -30,13 +51,17 @@ public class OutputSet implements IPersistable {
     }
 
     @Override
-    public int writeToDatabase() {
+    public int save() {
         Connector connector = new Connector();
         databaseId = connector.insertDataSetIntoDatabase(false);
         updateEdges();
         return databaseId;
     }
 
+    /**
+     * Adds the Database ID of the Set to the edges, so that the edges can be saved to the database.
+     * Assert that the OutputSet has been written to the Database.
+     */
     private void updateEdges() {
         for (Edge edge : associations) {
             edge.setSetId(databaseId);
@@ -49,5 +74,13 @@ public class OutputSet implements IPersistable {
 
     public List<Node> getOutputs() {
         return outputs;
+    }
+
+    public Node getProducer() {
+        return producer;
+    }
+
+    public List<Edge> getAssociations() {
+        return associations;
     }
 }
