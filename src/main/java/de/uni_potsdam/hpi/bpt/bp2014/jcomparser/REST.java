@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 /**
  * ********************************************************************************
- * <p/>
+ *
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -23,13 +23,13 @@ import java.util.LinkedList;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
+ *
  * ******************************************************************
- * <p/>
+ *
  * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
+ *
  * Please be aware of the License. You may found it in the root directory.
- * <p/>
+ *
  * **********************************************************************************
  */
 
@@ -38,7 +38,7 @@ import java.util.LinkedList;
 As a part of the JComparser we need to provide a REST API in order to manage changes or updates in the JEngine Database.
  */
 
-@Path("JComparser")
+@Path("jcomparser")
 public class REST {
     String pcm_url = "http://localhost:1205/models/";
     String processserver = "http://localhost:1205";
@@ -53,7 +53,7 @@ public class REST {
     }
 
     @GET    //to show ids and labels of all available scenarios
-    @Path("Scenarios")
+    @Path("scenarios")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarios() {
         HashMap<String, String> scenarioIDs = null;
