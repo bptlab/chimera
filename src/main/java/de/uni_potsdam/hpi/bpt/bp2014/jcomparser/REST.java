@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 /**
  * ********************************************************************************
- * <p/>
+ *
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -23,13 +23,13 @@ import java.util.LinkedList;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
+ *
  * ******************************************************************
- * <p/>
+ *
  * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
+ *
  * Please be aware of the License. You may found it in the root directory.
- * <p/>
+ *
  * **********************************************************************************
  */
 
@@ -38,22 +38,22 @@ import java.util.LinkedList;
 As a part of the JComparser we need to provide a REST API in order to manage changes or updates in the JEngine Database.
  */
 
-@Path("JComparser")
+@Path("jcomparser")
 public class REST {
-    String pcm_url = "http://localhost:1205/models/";
-    String processserver = "http://localhost:1205/";
+    String pcm_url = "http://172.16.64.113:1205/models/";
+    String processserver = "http://172.16.64.113:1205/";
 
 
     //fire Comparser Execution
     @POST
     @Path("launch/{scenarioID}")
     public int startComparser(@PathParam("scenarioID")  int scenarioID) throws IOException, SAXException, ParserConfigurationException {
-        pcm_url = pcm_url + scenarioID + ".pem";
-        return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(pcm_url, processserver);
+        String scenario_url = pcm_url + scenarioID + ".pm";
+        return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(scenario_url, processserver);
     }
 
     @GET    //to show ids and labels of all available scenarios
-    @Path("Scenarios")
+    @Path("scenarios")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarios() {
         HashMap<String, String> scenarioIDs = null;
