@@ -40,16 +40,16 @@ As a part of the JComparser we need to provide a REST API in order to manage cha
 
 @Path("jcomparser")
 public class REST {
-    String pcm_url = "http://localhost:1205/models/";
-    String processserver = "http://localhost:1205/";
+    String pcm_url = "http://172.16.64.113:1205/models/";
+    String processserver = "http://172.16.64.113:1205/";
 
 
     //fire Comparser Execution
     @POST
     @Path("launch/{scenarioID}")
     public int startComparser(@PathParam("scenarioID")  int scenarioID) throws IOException, SAXException, ParserConfigurationException {
-        pcm_url = pcm_url + scenarioID + ".pem";
-        return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(pcm_url, processserver);
+        String scenario_url = pcm_url + scenarioID + ".pm";
+        return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(scenario_url, processserver);
     }
 
     @GET    //to show ids and labels of all available scenarios
