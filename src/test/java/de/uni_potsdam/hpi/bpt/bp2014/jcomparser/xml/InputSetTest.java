@@ -97,7 +97,7 @@ public class InputSetTest {
     @Test
     public void testSaveSequenceFlow() {
         inputSet.save();
-        Assert.assertNotNull("No database-ID set", inputSet.getDatabaseId());
+        Assert.assertTrue("No database-ID set", inputSet.getDatabaseId() != 0);
     }
     // END: Tests
 
