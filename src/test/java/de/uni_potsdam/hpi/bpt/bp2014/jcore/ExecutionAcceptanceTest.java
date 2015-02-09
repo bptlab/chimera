@@ -191,6 +191,7 @@ public class ExecutionAcceptanceTest {
         assertArrayEquals(new Integer[]{}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
+        //check termination in database
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertEquals(1, dbScenarioInstance.getTerminated(scenarioInstance));
     }

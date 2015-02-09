@@ -1,9 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 
 
 import java.io.BufferedReader;
