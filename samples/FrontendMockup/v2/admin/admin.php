@@ -106,6 +106,12 @@ $link_content = $_GET['l'];
         <span>session_config</span>
     </a>
 </li>
+<li class='active'>
+    <a href="admin.php?l=jcomparser">
+        <i class='icon-globe'></i>
+        <span>jcomparser</span>
+    </a>
+</li>
 </ul>
 </div>
 </nav>
