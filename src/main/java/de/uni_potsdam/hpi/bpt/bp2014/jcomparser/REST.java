@@ -41,7 +41,7 @@ As a part of the JComparser we need to provide a REST API in order to manage cha
 @Path("JComparser")
 public class REST {
     String pcm_url = "http://localhost:1205/models/";
-    String processserver = "http://localhost:1205";
+    String processserver = "http://localhost:1205/";
 
 
     //fire Comparser Execution

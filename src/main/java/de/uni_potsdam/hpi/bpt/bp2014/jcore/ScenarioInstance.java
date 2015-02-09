@@ -239,7 +239,6 @@ public class ScenarioInstance {
         }
         //terminate the scenario
         if(terminated){
-            System.out.println("terminiere Szenario");
             this.terminate();
         }
         return terminated;
