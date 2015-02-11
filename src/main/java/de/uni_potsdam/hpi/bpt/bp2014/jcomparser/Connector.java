@@ -29,7 +29,7 @@ As a part of the JComparser we need to seed the parsed information's into the JE
 
 public class Connector {
 
-    public int insertScenarioIntoDatabase(String name, int modelID, int modelVersion) {
+    public int insertScenarioIntoDatabase(String name, long modelID, int modelVersion) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
         Statement stmt = null;
