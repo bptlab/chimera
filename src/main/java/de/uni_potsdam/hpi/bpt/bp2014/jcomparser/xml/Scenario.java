@@ -229,7 +229,53 @@ public class Scenario implements IDeserialisable, IPersistable {
         if (terminatingDataObject != null && terminatingDataNode != null) {
             saveTerminationCondition();
         }
+        saveReferences();
         return this.databaseID;
+    }
+
+    /**
+     * Save the referenced activities of the Scenario to the database
+     */
+    private void saveReferences() {
+        HashMap<Integer, List<Integer>> activities = getActivityDatabaseIDsForEachActivityModelID();
+        Connector conn = new Connector();
+        for (Map.Entry<Integer, List<Integer>> activity : activities.entrySet()) {
+            // if List has size 1, there is no reference to this activity as they are indicated by the same model-ID
+            if (activity.getValue().size() > 1) {
+                int firstIndex = 0;
+                int secondIndex = firstIndex + 1;
+                for (int i = 0; i < activity.getValue().size()-1; i++) {
+                    while (secondIndex <= activity.getValue().size()-1) {
+                        conn.insertReferenceIntoDatabase(activity.getValue().get(firstIndex), activity.getValue().get(secondIndex));
+                        secondIndex++;
+                    }
+                    firstIndex++;
+                    secondIndex = firstIndex + 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * for each model-ID of the activities collect database-Ids of activities that share the same model-ID
+     */
+    private HashMap<Integer,List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+        HashMap<Integer, List<Integer>> result = new HashMap<>();
+        for (Fragment fragment : fragments) {
+            Map<Integer, Node> fragmentNodes = fragment.getControlNodes();
+            for (Map.Entry<Integer, Node> node : fragmentNodes.entrySet()) {
+                if (node.getValue().isTask()) {
+                    if (result.get(node.getKey()) == null) {
+                        List<Integer> activityDatabaseIDs = new ArrayList<Integer>();
+                        activityDatabaseIDs.add(node.getValue().getDatabaseID());
+                        result.put(node.getKey(), activityDatabaseIDs);
+                    } else {
+                        result.get(node.getKey()).add(node.getValue().getDatabaseID());
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
