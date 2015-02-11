@@ -113,13 +113,13 @@ public class ActivityStateMachine extends StateMachine {
             this.setState("referentialRunning");
             scenarioInstance.getReferentialRunningControlNodeInstances().add(controlNodeInstance);
             scenarioInstance.getControlFlowEnabledControlNodeInstances().remove(controlNodeInstance);
+            scenarioInstance.getDataEnabledControlNodeInstances().remove(controlNodeInstance);
+            scenarioInstance.getEnabledControlNodeInstances().remove(controlNodeInstance);
             return true;
         } else if (state.equals("ready(ControlFlow)")) {
             this.setState("referentialRunning");
             scenarioInstance.getReferentialRunningControlNodeInstances().add(controlNodeInstance);
             scenarioInstance.getControlFlowEnabledControlNodeInstances().remove(controlNodeInstance);
-            scenarioInstance.getDataEnabledControlNodeInstances().remove(controlNodeInstance);
-            scenarioInstance.getEnabledControlNodeInstances().remove(controlNodeInstance);
             return true;
         }
         return false;
