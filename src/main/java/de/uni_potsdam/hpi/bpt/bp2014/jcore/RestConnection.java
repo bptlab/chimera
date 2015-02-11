@@ -3,8 +3,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -38,20 +40,23 @@ public class RestConnection {
     private ExecutionService executionService = new ExecutionService();
     private HistoryService historyService = new HistoryService();
 
+
     // GET open / closed activities
     @GET
-    @Path("scenario/{scenarioID}/interface/{instanceID}/{Status}")
+    @Path("scenario/{scenarioID}/interface/{instanceID}/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showEnabledActivities(@PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Status") String status) {
+    public Response showEnabledActivities(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @QueryParam("status") String status, @QueryParam("limit") String limit) {
+
+        //TODO: Limit has to be implemented
 
         if (status.equals("enabled")) {//open activities
 
-            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) {
+            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
                 return Response.serverError().entity("Error: not a correct scenario instance").build();
 
             }
-            LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
-            HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
+            LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
+            HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
             if (enabledActivitiesIDs.size() == 0)
                 return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no open activities present
             Gson gson = new Gson();
@@ -61,11 +66,11 @@ public class RestConnection {
 
         } else if (status.equals("terminated")) {//closed activities
 
-            if (!executionService.existScenarioInstance(scenarioID, scenarioInstanceID))
+            if (!executionService.existScenarioInstance(scenarioID, instanceID))
                 return Response.serverError().entity("Error: not a correct scenario instance").build();
 
-            LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(scenarioInstanceID);
-            HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(scenarioInstanceID);
+            LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(instanceID);
+            HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
 
             if (terminatedActivities.size() == 0)
                 return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no closed activities present
@@ -81,8 +86,10 @@ public class RestConnection {
     }
 
     // GET Dataobjects & States
+/*
     @GET
     @Path("DataObjects/{Scenarioname}/{Instance}")
+    //TODO: adapt to new API Specification
     @Produces(MediaType.APPLICATION_JSON)
     public Response showDataObjects(@PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Status") String status) {
 
@@ -101,12 +108,17 @@ public class RestConnection {
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
+*/
 
     // GET scenarioIDs for a scenarioInstance
+/*
+    //TODO: not sure why we would need this
+
     @GET
-    @Path("Get/ScenarioID/{ScenarioInstance}")  //scenarioInstanceID = (int) ScenarioInstance
+    @Path("Get/ScenarioID/{ScenarioInstance}")
+    //TODO: adapt to new API Specification
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getScenarioID(@PathParam("ScenarioInstance") int scenarioInstanceID) {
+    public Response getScenarioID(@PathParam("scenarioID") int scenarioInstanceID) {
 
         if (!executionService.existScenarioInstance(scenarioInstanceID))
             return Response.serverError().entity("Error: not a correct scenario instance").build();
@@ -118,39 +130,65 @@ public class RestConnection {
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
+ */
 
-    // GET all scenarioInstanceIDs for all scenarioInstances of a scenario
+    // GET all scenarioInstanceIDs  of a scenario
     @GET
-    @Path("Instances/{Scenarioname}")   //scenarioID = (int) Scenarioname
+    @Path("scenario/{scenarioID}/instance/{instanceID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showScenarioInstances(@PathParam("Scenarioname") int scenarioID) {
+    public Response showScenarioInstances(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID) {
+        //if instanceID is null, display all available instances for the mentioned scenarioID
+        if(instanceID == 0) {
+            if (!executionService.existScenario(scenarioID))
+                return Response.serverError().entity("Error: not a correct scenario").build();
 
-        if (!executionService.existScenario(scenarioID))
-            return Response.serverError().entity("Error: not a correct scenario").build();
+            LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
 
-        LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
+            if (scenarioIDs.size() == 0)
+                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build(); //no instances present
 
-        if (scenarioIDs.size() == 0)
-            return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no instances present
+            Gson gson = new Gson();
+            JsonIntegerList json = new JsonIntegerList(scenarioIDs);
+            String jsonRepresentation = gson.toJson(json);
 
-        Gson gson = new Gson();
-        JsonIntegerList json = new JsonIntegerList(scenarioIDs);
-        String jsonRepresentation = gson.toJson(json);
-
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        }
+        //otherwise display details for this instanceID
+        //TODO: implement returning of instance details (label, timestamp..)
+        return null;
     }
 
     //GET  details for an activityID
     @GET
-    @Path("ActivityID/{Activity}/")
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showLabelForActivity(@PathParam("Activity") int activityInstanceID) {
-        String label = executionService.getLabelForControlNodeID(activityInstanceID);
+    public Response showLabelForActivity(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("activityinstanceID") int activityinstanceID ) {
 
-        if (label.equals(""))
-            return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
+        //display all open activities
+        if(activityinstanceID == 0) {
+            if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
+                return Response.serverError().entity("Error: not a correct scenario instance").build();
 
-        return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
+            }
+            LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
+            HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
+            if (enabledActivitiesIDs.size() == 0)
+                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no open activities present
+            Gson gson = new Gson();
+            JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
+            String jsonRepresentation = gson.toJson(json);
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+
+        // display details for this activityID
+        //TODO: implement returning of timestamp and additional details
+        } else {
+            String label = executionService.getLabelForControlNodeID(activityinstanceID);
+
+            if (label.equals(""))
+                return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
+
+            return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
+        }
     }
 
     //GET  information about an activityID
@@ -183,8 +221,8 @@ public class RestConnection {
 
     // POST to start/terminate an activity + comment
     @POST
-    @Path("{Scenarioname}/{Instance}/{Activity}/{Status}/{Comment}")
-    public Boolean doActivity(@PathParam("Scenarioname") String scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Activity") int activityInstanceID, @PathParam("Status") String status, @PathParam("Comment") String comment) {
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
+    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID) {
         executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
 
         if (status.equals("begin")) {//start activity
@@ -199,8 +237,8 @@ public class RestConnection {
 
     // POST to start an instance of a scenario
     @POST
-    @Path("Start/{Scenarioname}")   //scenarioID = (int) Scenarioname
-    public int startNewActivity(@PathParam("Scenarioname") int scenarioID) {
+    @Path("scenario/{scenarioID}/")
+    public int startNewActivity(@PathParam("scenarioID") int scenarioID) {
         if (executionService.existScenario(scenarioID)) {//scenario exists
             return executionService.startNewScenarioInstance(scenarioID);
         } else {//scenario does not exist
