@@ -152,6 +152,26 @@ if($JCore_REST_Interface_Version === "v1"){
 		}
 	}
 
+		function StartNewInstance($PCM_ScenarioID) {
+		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/";
+		
+		//$data = array('key1' => 'value1', 'key2' => 'value2');
+		$data = array();
+		# fire HTTP POST to URL in order to update data
+		$result = PostWrapper($URL, $data);
+
+		if($debug){
+			error_log("HTTP GET on ".$URL);
+			error_log("Returned ".$result);
+		}
+		if($result){
+			return $result;
+		} else {
+			return false;
+		}
+	}
+
 
 	###################################################
 	#
