@@ -46,6 +46,34 @@ public class RestConnection {
      * @return
      */
 
+    //GET  information about an activityID
+    @GET
+    @Path("scenario/{scenarioID}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response showDetailsForScenarios(@PathParam("scenarioID") int scenarioID) {
+        //if 0 as scenarioID is provided, list all available scenarioIDs
+        if(scenarioID == 0) {
+            LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
+
+            if (scenarioIDs.size() == 0)
+                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
+
+            Gson gson = new Gson();
+            JsonIntegerList json = new JsonIntegerList(scenarioIDs);
+            String jsonRepresentation = gson.toJson(json);
+
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+            //otherwise display the label for the scenarioID
+        } else {
+            String label = executionService.getScenarioName(scenarioID);
+
+            if (label.equals(""))
+                return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
+
+            return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
+        }
+    }
+
     // GET all scenarioInstanceIDs  of a scenario
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}")
@@ -76,7 +104,7 @@ public class RestConnection {
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showLabelForActivity(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("activityinstanceID") int activityinstanceID, @QueryParam("status") String status, @QueryParam("limit") String limit ) {
+    public Response showDetailsForActivity(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("activityinstanceID") int activityinstanceID, @QueryParam("status") String status, @QueryParam("limit") String limit ) {
 
         //display all open activities
         if(activityinstanceID == 0) {
@@ -130,33 +158,7 @@ public class RestConnection {
         }
     }
 
-    //GET  information about an activityID
-    @GET
-    @Path("scenario/{scenarioID}/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response showLabelForScenarios(@PathParam("scenarioID") int scenarioID) {
-        //if 0 as scenarioID is provided, list all available scenarioIDs
-        if(scenarioID == 0) {
-            LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
 
-            if (scenarioIDs.size() == 0)
-                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
-
-            Gson gson = new Gson();
-            JsonIntegerList json = new JsonIntegerList(scenarioIDs);
-            String jsonRepresentation = gson.toJson(json);
-
-            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-        //otherwise display the label for the scenarioID
-        } else {
-            String label = executionService.getScenarioName(scenarioID);
-
-            if (label.equals(""))
-                return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
-
-            return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
-        }
-    }
 
     /**************************************************************
      *
@@ -188,7 +190,7 @@ public class RestConnection {
     // POST to start an instance of a scenario
     @POST
     @Path("scenario/{scenarioID}/")
-    public int startNewActivity(@PathParam("scenarioID") int scenarioID) {
+    public int startNewScenarioInstance(@PathParam("scenarioID") int scenarioID) {
         if (executionService.existScenario(scenarioID)) {//scenario exists
             //return the ID of new instanceID
             return executionService.startNewScenarioInstance(scenarioID);
