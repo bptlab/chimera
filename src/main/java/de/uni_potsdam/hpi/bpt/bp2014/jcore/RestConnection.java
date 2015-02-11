@@ -68,7 +68,7 @@ public class RestConnection {
             String label = executionService.getScenarioName(scenarioID);
 
             if (label.equals(""))
-                return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
+                return Response.serverError().entity("Error: not correct scenarioID").build();//no activity with this id present
 
             return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
         }
@@ -76,7 +76,7 @@ public class RestConnection {
 
     // GET all scenarioInstanceIDs  of a scenario
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}")
+    @Path("scenario/{scenarioID}/instance/{instanceID}/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarioInstances(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID) {
         //if instanceID is null, display all available instances for the mentioned scenarioID
@@ -94,10 +94,19 @@ public class RestConnection {
             String jsonRepresentation = gson.toJson(json);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-        }
+
         //otherwise display details for this instanceID
         //TODO: implement returning of instance details (label, timestamp..)
-        return null;
+        } else {
+            String label = executionService.getScenarioNameForScenarioInstance(instanceID);
+
+            if (label.equals(""))
+                return Response.serverError().entity("Error: not correct instanceID").build();//no activity with this id present
+
+            return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
+        }
+
+
     }
 
     //GET  details for an activityID
