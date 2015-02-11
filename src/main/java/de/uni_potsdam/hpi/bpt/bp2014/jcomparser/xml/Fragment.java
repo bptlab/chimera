@@ -21,7 +21,7 @@ import java.util.*;
 
 /**
  * Represents a Fragment of the XML-Model.
- * It implements the IDeserialisabel interface,
+ * It implements the IDeserialisable interface,
  * which allows to initialize a fragment Object
  * from an XML and the IPersistable Interface,
  * which allows to save the Object to the Database.
