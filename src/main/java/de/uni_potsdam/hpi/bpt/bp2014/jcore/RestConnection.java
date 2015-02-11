@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * ********************************************************************************
- * <p/>
+ * 
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -24,13 +24,13 @@ import java.util.List;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
+ *
  * ******************************************************************
- * <p/>
+ *
  * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
+ *
  * Please be aware of the License. You may found it in the root directory.
- * <p/>
+ *
  * **********************************************************************************
  */
 
@@ -39,6 +39,15 @@ import java.util.List;
 public class RestConnection {
     private ExecutionService executionService = new ExecutionService();
     private HistoryService historyService = new HistoryService();
+
+    /***********************************************
+     *
+     * HTTP GET REQUESTS
+     *
+     * @param scenarioID
+     * @param instanceID
+     * @return
+     */
 
     // GET all scenarioInstanceIDs  of a scenario
     @GET
@@ -152,19 +161,30 @@ public class RestConnection {
         }
     }
 
+    /**************************************************************
+     *
+     * HTTP POST REQUEST
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityInstanceID
+     * @return
+     */
+
     // POST to start/terminate an activity + comment
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
-    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID) {
+    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
         executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
 
         if (status.equals("begin")) {//start activity
             executionService.beginActivity(scenarioInstanceID, activityInstanceID);
             return true;
-        } else if (status.equals("terminate")) {//terminate activity
+        } else if (status.equals("begin")) {//terminate activity
             executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
             return true;
         }
+        //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
         return false;
     }
 
@@ -173,6 +193,7 @@ public class RestConnection {
     @Path("scenario/{scenarioID}/")
     public int startNewActivity(@PathParam("scenarioID") int scenarioID) {
         if (executionService.existScenario(scenarioID)) {//scenario exists
+            //return the ID of new instanceID
             return executionService.startNewScenarioInstance(scenarioID);
         } else {//scenario does not exist
             return -1;
@@ -227,7 +248,9 @@ public class RestConnection {
  */
 
     /***************************************************************
-     * HELPER classes
+     *
+     * HELPER CLASSES
+     *
      */
 
     class JsonHashMapIntegerString {
@@ -255,22 +278,4 @@ public class RestConnection {
             this.id = id;
         }
     }
-
-    /*
-    // Credits to http://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java
-    public static Map<String, List<String>> splitQuery(URL url) throws UnsupportedEncodingException {
-        final Map<String, List<String>> query_pairs = new LinkedHashMap<String, List<String>>();
-        final String[] pairs = url.getQuery().split("&");
-        for (String pair : pairs) {
-            final int idx = pair.indexOf("=");
-            final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), "UTF-8") : pair;
-            if (!query_pairs.containsKey(key)) {
-                query_pairs.put(key, new LinkedList<String>());
-            }
-            final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), "UTF-8") : null;
-            query_pairs.get(key).add(value);
-        }
-        return query_pairs;
-    }
-    */
 }
