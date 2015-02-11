@@ -50,7 +50,7 @@ public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
     }
     //get the following control node instance, also initialize them
     private ControlNodeInstance getFollowingNodeInstance(int controlNode_id){
-        for(ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances){
+        for(ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()){
             if(controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;
         }
         String type = dbControlNode.getType(controlNode_id);

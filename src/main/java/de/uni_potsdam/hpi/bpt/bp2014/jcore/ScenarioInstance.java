@@ -36,15 +36,15 @@ instances, fragment instances and all data object instances
 the scenario instance provide methods for the administration of the data object instances
  */
 public class ScenarioInstance {
-    public LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
-    public LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    public LinkedList<ControlNodeInstance> controlFlowEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    public LinkedList<ControlNodeInstance> dataEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    public LinkedList<ControlNodeInstance> runningControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    public LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> controlFlowEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> dataEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> runningControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
+    private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
-    public LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
-    public LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
     private int scenarioInstance_id;
     private int scenario_id;
     private String name;
@@ -91,7 +91,7 @@ public class ScenarioInstance {
     public void restartFragment(int fragmentInstance_id){
         FragmentInstance fragmentInstance = null;
         for(FragmentInstance f : fragmentInstances){
-            if(f.fragmentInstance_id == fragmentInstance_id) fragmentInstance = f;
+            if(f.getFragmentInstance_id() == fragmentInstance_id) fragmentInstance = f;
         }
         fragmentInstances.remove(fragmentInstance);
         fragmentInstance.terminate();
@@ -109,7 +109,7 @@ public class ScenarioInstance {
                 controlNodeInstances.remove(controlNodeInstance);
             }
         }
-        initializeFragment(fragmentInstance.fragment_id);
+        initializeFragment(fragmentInstance.getFragment_id());
     }
 
     public void initializeDataObjects(){
@@ -270,4 +270,35 @@ public class ScenarioInstance {
         return name;
     }
 
+    public LinkedList<ControlNodeInstance> getControlNodeInstances() {
+        return controlNodeInstances;
+    }
+
+    public LinkedList<ControlNodeInstance> getEnabledControlNodeInstances() {
+        return enabledControlNodeInstances;
+    }
+
+    public LinkedList<ControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
+        return controlFlowEnabledControlNodeInstances;
+    }
+
+    public LinkedList<ControlNodeInstance> getDataEnabledControlNodeInstances() {
+        return dataEnabledControlNodeInstances;
+    }
+
+    public LinkedList<ControlNodeInstance> getRunningControlNodeInstances() {
+        return runningControlNodeInstances;
+    }
+
+    public LinkedList<ControlNodeInstance> getTerminatedControlNodeInstances() {
+        return terminatedControlNodeInstances;
+    }
+
+    public LinkedList<DataObjectInstance> getDataObjectInstances() {
+        return dataObjectInstances;
+    }
+
+    public LinkedList<DataObjectInstance> getDataObjectInstancesOnChange() {
+        return dataObjectInstancesOnChange;
+    }
 }

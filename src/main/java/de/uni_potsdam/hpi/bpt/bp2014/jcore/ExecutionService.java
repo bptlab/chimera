@@ -97,7 +97,7 @@ public class ExecutionService {
     public LinkedList<Integer> getEnabledActivitiesIDsForScenarioInstance(int scenarioInstance_id){
         LinkedList<Integer> ids = new LinkedList<Integer>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
-        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances){
+        for(ControlNodeInstance nodeInstance: scenarioInstance.getEnabledControlNodeInstances()){
             if(nodeInstance instanceof ActivityInstance){
                 ids.add(((ActivityInstance) nodeInstance).controlNode_id);
             }
@@ -108,7 +108,7 @@ public class ExecutionService {
     public HashMap<Integer, String> getEnabledActivityLabelsForScenarioInstance(int scenarioInstance_id){
         HashMap<Integer,String> labels = new HashMap<Integer, String>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
-        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances){
+        for(ControlNodeInstance nodeInstance: scenarioInstance.getEnabledControlNodeInstances()){
             if(nodeInstance instanceof ActivityInstance){
                 labels.put(((ActivityInstance) nodeInstance).controlNode_id, ((ActivityInstance) nodeInstance).getLabel());
             }
@@ -118,7 +118,7 @@ public class ExecutionService {
 
     public void beginActivity(int scenarioInstance_id, int activity_id){
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
-        for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances) {
+        for(ControlNodeInstance nodeInstance: scenarioInstance.getEnabledControlNodeInstances()) {
             if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
                 ((ActivityInstance) nodeInstance).begin();
                 return;
@@ -132,7 +132,7 @@ public class ExecutionService {
 
     public void terminateActivity(int scenarioInstance_id, int activity_id){
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
-        for(ControlNodeInstance nodeInstance: scenarioInstance.runningControlNodeInstances) {
+        for(ControlNodeInstance nodeInstance: scenarioInstance.getRunningControlNodeInstances()) {
             if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
                 ((ActivityInstance) nodeInstance).terminate();
                 return;
@@ -142,14 +142,14 @@ public class ExecutionService {
 
     public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id){
         LinkedList<Integer> dataObjectIDs = new LinkedList<Integer>();
-        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances) dataObjectIDs.add(dataObject.getDataObject_id());
+        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) dataObjectIDs.add(dataObject.getDataObject_id());
         return dataObjectIDs;
     }
 
     public HashMap<Integer, String> getAllDataObjectStates(int scenarioInstance_id){
         DbState dbState = new DbState();
         HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
-        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances){
+        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()){
             dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
         }
         return dataObjectStates;

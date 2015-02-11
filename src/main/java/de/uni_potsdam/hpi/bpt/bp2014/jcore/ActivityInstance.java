@@ -54,7 +54,7 @@ public class ActivityInstance extends ControlNodeInstance {
         this.fragmentInstance_id = fragmentInstance_id;
         this.label = dbControlNode.getLabel(controlNode_id);
         this.references = dbReference.getReferenceActivitiesForActivity(controlNode_id);
-        scenarioInstance.controlNodeInstances.add(this);
+        scenarioInstance.getControlNodeInstances().add(this);
         if(dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)){
             //creates an existing Activity Instance using the database information
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);

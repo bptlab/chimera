@@ -34,7 +34,7 @@ public class GatewayInstance extends ControlNodeInstance {
 
     public GatewayInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
         //looks if the Gateway Instance has already been initialized
-        for (ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances) {
+        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
             if (controlNodeInstance.fragmentInstance_id == controlNodeInstance_id && controlNodeInstance.controlNode_id == controlNode_id) {
                 //if it exist, only checks the control flow
                 controlNodeInstance.incomingBehavior.enableControlFlow();
@@ -44,7 +44,7 @@ public class GatewayInstance extends ControlNodeInstance {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
-        scenarioInstance.controlNodeInstances.add(this);
+        scenarioInstance.getControlNodeInstances().add(this);
         if (dbControlNode.getType(controlNode_id).equals("AND")) {
             this.isAND = true;
             this.isXOR = false;

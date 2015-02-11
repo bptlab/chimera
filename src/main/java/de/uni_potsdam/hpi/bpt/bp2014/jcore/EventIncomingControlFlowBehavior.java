@@ -23,7 +23,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
 public class EventIncomingControlFlowBehavior extends IncomingBehavior{
-    String type;
+    private String type;
 
     public EventIncomingControlFlowBehavior(ControlNodeInstance controlNodeInstance, ScenarioInstance scenarioInstance, String type){
         this.controlNodeInstance = controlNodeInstance;
@@ -35,5 +35,13 @@ public class EventIncomingControlFlowBehavior extends IncomingBehavior{
     @Override
     public void enableControlFlow(){
         scenarioInstance.restartFragment(this.controlNodeInstance.fragmentInstance_id);
+    }
+
+    /*
+     * Getter
+     */
+
+    public String getType() {
+        return type;
     }
 }

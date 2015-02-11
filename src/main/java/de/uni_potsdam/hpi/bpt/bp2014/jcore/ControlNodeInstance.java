@@ -23,10 +23,38 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
 public class ControlNodeInstance {
-    public OutgoingBehavior outgoingBehavior;
-    public IncomingBehavior incomingBehavior;
+    protected OutgoingBehavior outgoingBehavior;
+    protected IncomingBehavior incomingBehavior;
     protected StateMachine stateMachine;
-    public int fragmentInstance_id;
-    public int controlNodeInstance_id;
-    public int controlNode_id;
+    protected int fragmentInstance_id;
+    protected int controlNodeInstance_id;
+    protected int controlNode_id;
+
+    /*
+     * Getter
+     */
+
+    public OutgoingBehavior getOutgoingBehavior() {
+        return outgoingBehavior;
+    }
+
+    public IncomingBehavior getIncomingBehavior() {
+        return incomingBehavior;
+    }
+
+    public StateMachine getStateMachine() {
+        return stateMachine;
+    }
+
+    public int getFragmentInstance_id() {
+        return fragmentInstance_id;
+    }
+
+    public int getControlNodeInstance_id() {
+        return controlNodeInstance_id;
+    }
+
+    public int getControlNode_id() {
+        return controlNode_id;
+    }
 }

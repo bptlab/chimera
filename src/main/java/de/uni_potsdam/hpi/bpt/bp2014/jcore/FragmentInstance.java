@@ -33,9 +33,10 @@ the constructor also initialize the control nodes
  */
 public class FragmentInstance {
     private ScenarioInstance scenarioInstance;
-    public int fragment_id;
-    public int fragmentInstance_id;
+    private int fragment_id;
+    private int fragmentInstance_id;
     private int scenarioInstance_id;
+    //Database Connection objects
     private DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbControlFlow dbControlFlow = new DbControlFlow();
@@ -87,4 +88,23 @@ public class FragmentInstance {
         dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
     }
 
+    /*
+     * Getter
+     */
+
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
+    }
+
+    public int getFragment_id() {
+        return fragment_id;
+    }
+
+    public int getFragmentInstance_id() {
+        return fragmentInstance_id;
+    }
+
+    public int getScenarioInstance_id() {
+        return scenarioInstance_id;
+    }
 }
