@@ -3,11 +3,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.List;
 
 /**
  * ********************************************************************************
- * 
+ *
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
