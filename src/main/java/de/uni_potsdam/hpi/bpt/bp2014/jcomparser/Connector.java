@@ -473,11 +473,11 @@ public class Connector {
     }
 
     public void insertReferenceIntoDatabase(int controlNodeID1, int controlNodeID2){
-        insertReferenceOnSideIntoDatabase(controlNodeID1, controlNodeID2);
-        insertReferenceOnSideIntoDatabase(controlNodeID2, controlNodeID1);
+        insertReferenceOneSideIntoDatabase(controlNodeID1, controlNodeID2);
+        insertReferenceOneSideIntoDatabase(controlNodeID2, controlNodeID1);
     }
 
-    private void insertReferenceOnSideIntoDatabase(int controlNodeID1, int controlNodeID2) {
+    private void insertReferenceOneSideIntoDatabase(int controlNodeID1, int controlNodeID2) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
         Statement stmt = null;

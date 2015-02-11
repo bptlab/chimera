@@ -4,24 +4,26 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 public class GatewayInstance extends ControlNodeInstance {
     private Boolean isXOR;
@@ -66,8 +68,8 @@ public class GatewayInstance extends ControlNodeInstance {
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
     }
 
-    public void terminate(){
-        ((GatewayStateMachine)stateMachine).terminate();
+    public void terminate() {
+        ((GatewayStateMachine) stateMachine).terminate();
         outgoingBehavior.terminate();
     }
     /*

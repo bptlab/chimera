@@ -20,17 +20,17 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 
 
     public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
-        super(activityInstance_id,scenarioInstance,controlNodeInstance);
+        super(activityInstance_id, scenarioInstance, controlNodeInstance);
         controlNode_id = controlNodeInstance.controlNode_id;
     }
 
     @Override
-    public void execute(){
+    public void execute() {
         this.setValues();
         this.sendMail();
     }
 
-    private void setValues(){
+    private void setValues() {
         port = 1024;
         serverAddress = "localhost";
         receiverMail = emailConfiguration.getReceiverEmailAddress(controlNode_id);
@@ -39,7 +39,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         message = emailConfiguration.getMessage(controlNode_id);
     }
 
-    private void setFakeValues(){
+    private void setFakeValues() {
         port = 1024;
         serverAddress = "localhost";
         sendMail = "sender@server.de";
@@ -48,7 +48,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         message = "Hello, i'm writing you.";
     }
 
-    private void sendMail(){
+    private void sendMail() {
         Email email = new SimpleEmail();
         email.setHostName(serverAddress);
         email.setSmtpPort(port);
