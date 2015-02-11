@@ -32,14 +32,17 @@ import java.util.LinkedList;
 handles the behavior of a terminating activity instance
  */
 public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
+    private ControlNodeInstance controlNodeInstance;
     //Database Connection objects
     private DbDataNode dbDataNode = new DbDataNode();
     private DbDataFlow dbDataFlow = new DbDataFlow();
 
-    public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id) {
+
+    public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id, ControlNodeInstance controlNodeInstance) {
         this.controlNode_id = activity_id;
         this.scenarioInstance = scenarioInstance;
         this.fragmentInstance_id = fragmentInstance_id;
+        this.controlNodeInstance = controlNodeInstance;
     }
 
     @Override
@@ -88,4 +91,9 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
         }
     }
 
+    public void terminateReferences() {
+        for (int activity_id : ((ActivityInstance) controlNodeInstance).getReferences()) {
+            scenarioInstance.terminateReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);
+        }
+    }
 }

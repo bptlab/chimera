@@ -199,16 +199,19 @@ public class ExecutionAcceptanceTest {
 
     //test References1
     @Test
-    public void testScenario106() {
-        System.out.println("\n ------------------ test Scenario 106 ------------------\n");
+    public void testScenario111() {
+        System.out.println("\n ------------------ test Scenario 111 ------------------\n");
+        DbActivityInstance dbActivityInstance = new DbActivityInstance();
         ExecutionService executionService = new ExecutionService();
-        int scenarioInstance = executionService.startNewScenarioInstance(106);
-        int activity1 = 139;
-        int activity2 = 140;
-        int activity3 = 137;
-        int activity4 = 134;
+        int scenarioInstance = executionService.startNewScenarioInstance(111);
+        int activity1 = 183;
+        int activity2 = 184;
+        int activity3 = 191;
+        int activity4 = 193;
+        int activity5 = 187;
+        int activity6 = 189;
 
-        System.out.println("Start Scenario 106");
+        System.out.println("Start Scenario 111");
         System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity1}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
@@ -229,13 +232,14 @@ public class ExecutionAcceptanceTest {
         System.out.println("do activity " + activity2);
         executionService.beginActivity(scenarioInstance, activity2);
         assertArrayEquals(new Integer[]{}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        assertEquals("referentialRunning", dbActivityInstance.getState(activity3instance_id));
         executionService.terminateActivity(scenarioInstance, activity2);
-        assertArrayEquals(new Integer[]{activity4}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        assertArrayEquals(new Integer[]{activity6, activity4, activity5}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
-        DbActivityInstance dbActivityInstance = new DbActivityInstance();
+
         assertEquals("terminated", dbActivityInstance.getState(activity2instance_id));
-        //assertEquals("terminated", dbActivityInstance.getState(activity3instance_id));
+        assertEquals("terminated", dbActivityInstance.getState(activity3instance_id));
     }
 
 }

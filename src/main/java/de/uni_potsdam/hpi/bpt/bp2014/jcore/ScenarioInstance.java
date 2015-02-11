@@ -201,10 +201,43 @@ public class ScenarioInstance {
     }
 
     public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
-        for (ControlNodeInstance controlNodeInstance : enabledControlNodeInstances) {
+        for (ControlNodeInstance controlNodeInstance : controlFlowEnabledControlNodeInstances) {
             if (controlNodeInstance.controlNode_id == controlNode_id) {
                 if (controlNodeInstance.getClass() == ActivityInstance.class) {
-                    ((ActivityInstance) controlNodeInstance).referenceStarted();
+                    if(enabledControlNodeInstances.contains(controlNodeInstance)) {
+                        ((ActivityInstance) controlNodeInstance).referenceStarted();
+                        return;
+                    }
+
+
+
+                }
+            }
+        }
+
+    }
+
+    private boolean compareOutputs(ControlNodeInstance controlNodeInstance1, ControlNodeInstance controlNodeInstance2) {
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        DbDataNode dbDataNode = new DbDataNode();
+        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeInstance1.controlNode_id);
+        //TODO: Output Set
+        for (int outputSet : outputSets) {
+            LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
+            LinkedList<Integer> states = dbDataNode.getDataStatesForDataSets(outputSet);
+            for (int i = 0; i < dataObjects.size(); i++) {
+
+            }
+        }
+        return true;
+    }
+
+    public void terminateReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
+        for (ControlNodeInstance controlNodeInstance : referentialRunningControlNodeInstances) {
+            if (controlNodeInstance.controlNode_id == controlNode_id) {
+                if (controlNodeInstance.getClass() == ActivityInstance.class) {
+                    ((ActivityInstance) controlNodeInstance).referenceTerminated();
+                    return;
                 }
             }
         }
@@ -308,4 +341,6 @@ public class ScenarioInstance {
     public LinkedList<ControlNodeInstance> getReferentialRunningControlNodeInstances() {
         return referentialRunningControlNodeInstances;
     }
+
+
 }

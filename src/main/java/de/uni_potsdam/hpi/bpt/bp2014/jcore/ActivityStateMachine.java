@@ -125,6 +125,17 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    public boolean referenceTerminated() {
+        if (state.equals("referentialRunning")) {
+            this.setState("terminated");
+            scenarioInstance.getReferentialRunningControlNodeInstances().remove(controlNodeInstance);
+            scenarioInstance.getControlNodeInstances().remove(controlNodeInstance);
+            scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+            return true;
+        }
+        return false;
+    }
+
     public boolean begin() {
         //String state = this.getState();
         if (state.equals("ready")) {
@@ -143,12 +154,6 @@ public class ActivityStateMachine extends StateMachine {
         if (state.equals("running")) {
             this.setState("terminated");
             scenarioInstance.getRunningControlNodeInstances().remove(controlNodeInstance);
-            scenarioInstance.getControlNodeInstances().remove(controlNodeInstance);
-            scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
-            return true;
-        } else if (state.equals("referentialRunning")) {
-            this.setState("terminated");
-            scenarioInstance.getReferentialRunningControlNodeInstances().remove(controlNodeInstance);
             scenarioInstance.getControlNodeInstances().remove(controlNodeInstance);
             scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
             return true;

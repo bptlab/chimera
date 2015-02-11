@@ -76,7 +76,7 @@ public class ActivityInstance extends ControlNodeInstance {
             this.isMailTask = false;
         }
         this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
-        this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
+        this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
     }
 
     public boolean begin() {
@@ -97,8 +97,15 @@ public class ActivityInstance extends ControlNodeInstance {
         return ((ActivityStateMachine) stateMachine).referenceStarted();
     }
 
+    public boolean referenceTerminated(){
+        boolean workFine = ((ActivityStateMachine) stateMachine).referenceTerminated();
+        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).enableFollowing();
+        return workFine;
+    }
+
     public boolean terminate() {
         boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
+        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
         return workingFine;
     }
