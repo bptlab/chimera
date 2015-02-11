@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
-//import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.xml.sax.SAXException;
 
@@ -56,7 +55,7 @@ public class REST {
         return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(scenario_url, processserver);
     }
 
-    @GET    //to show ids and labels of all available scenarios
+    @GET
     @Path("scenarios")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showScenarios() {
@@ -79,7 +78,7 @@ public class REST {
 
     }
 
-    @GET    //to show ids and labels of all available scenarios
+    @GET
     @Path("scenarios/{scenarioID}/image/")
     @Produces("image/png")
     public Response showScenarioImage(@PathParam("scenarioID") String scenarioID) {
@@ -105,7 +104,7 @@ public class REST {
         return null;
     }
 
-    //Everything below is needed to make a Json that Janny's Front-End understands
+    //Necessary for JSON encoding
     class JsonHashMapIntegerString {
         private LinkedList<Integer> ids;
         private HashMap<Integer, String> label;
