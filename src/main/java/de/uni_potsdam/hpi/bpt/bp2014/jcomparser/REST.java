@@ -1,13 +1,17 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
+//import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -73,6 +77,32 @@ public class REST {
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 
+    }
+
+    @GET    //to show ids and labels of all available scenarios
+    @Path("scenarios/{scenarioID}/image/")
+    @Produces("image/png")
+    public Response showScenarioImage(@PathParam("scenarioID") String scenarioID) {
+
+        try {
+            Image scenario_image = JComparser.getScenarioImage(processserver, scenarioID);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write((java.awt.image.RenderedImage) scenario_image, "png", baos);
+            byte[] imageData = baos.toByteArray();
+
+            // uncomment line below to send non-streamed
+            return Response.ok(imageData).build();
+
+            // uncomment line below to send streamed
+            //return Response.ok(new ByteArrayInputStream(imageData)).build();
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //Everything below is needed to make a Json that Janny's Front-End understands
