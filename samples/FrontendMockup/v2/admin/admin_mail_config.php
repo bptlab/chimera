@@ -16,11 +16,11 @@ while($row = mysql_fetch_array($result)) {
         <form action='update_mail_config.php' method='post'>
             <input type='hidden' name='id' value='".$row['id']."'><br>
             
-            receivermailaddress: <input type='text' name='receivermailaddress' value='".$row['receivermailaddress']."'><br>
+            receiver: <input type='text' name='receivermailaddress' value='".$row['receivermailaddress']."'><br>
             subject: <input type='text' name='subject' value='".$row['subject']."'><br>
-            message: <textarea type='text' name='message'rows='2' cols='20'>".$row['message']."</textarea><br>
+            message: <textarea type='text' name='message'rows='4' cols='40'>".$row['message']."</textarea><br>
             <input type='submit'>
-        </form>
+        </form><br>
     ";
 
 

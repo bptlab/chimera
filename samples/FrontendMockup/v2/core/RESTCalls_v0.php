@@ -1,75 +1,19 @@
 <?php
 /**************************************************
 *
-* Serving the API specification of REST interface v1
+* Serving the API specification of REST interface v0
 * 
 */
 
-$debug = false;
-
-if($JCore_REST_Interface_Version === "v1"){
+	$JCore_REST_Interface = "JEngine/Scenario"; #overwriting because of old ressource..
 
 	###################################################
 	#
 	#	Functions for JEngine Calls
 	#
-
-
-	/******************************************************
-	*
-	* HTTP POST REQUESTS
-	*
-	*/
-
-		function ShowScenarios() {
+	function GetActivities($PCM_Scenario, $PCM_ScenarioInstance, $PCM_status) {
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/0/";
-		
-		# fire HTTP GET to URL in order to recieve json
-		$get_json = file_get_contents($URL);
-		# parsing json as array
-		$get_response_as_array = json_decode($get_json,true);
-		
-		if(!$get_response_as_array){
-	                die("ERROR: decoding within ShowScenarios failed");
-	    } elseif(strpos($get_response_as_array, 'Error')){
-	    			echo "There is an REST Error..";
-	    }
-		if($debug){
-			error_log("HTTP GET on ".$URL);
-			error_log("Returned ".$get_json);
-			error_log("Decoded json as ".var_dump($get_response_as_array));
-		}
-		
-		return $get_response_as_array;
-	}
-
-	function ShowScenarioInstances($PCM_ScenarioID) {
-		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/0/";
-		
-		# fire HTTP GET to URL in order to recieve json
-		$get_json = file_get_contents($URL);
-		# parsing json as array
-		$get_response_as_array = json_decode($get_json,true);
-		
-		if(!$get_response_as_array){
-	                die("ERROR: decoding within ShowScenarioInstances failed");
-	    } elseif(strpos($get_response_as_array, 'Error')){
-	    			echo "There is an REST Error..";
-	    }
-	    if($debug){
-			error_log("HTTP GET on ".$URL);
-			error_log("Returned ".$get_json);
-			error_log("Decoded json as ".print_r($get_response_as_array));
-		}
-		
-		return $get_response_as_array;
-	}
-
-	function GetActivities($PCM_ScenarioID, $PCM_ScenarioInstanceID, $PCM_status) {
-		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/0/?status=".$PCM_status;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_ScenarioInstance."/".$PCM_status;
 		
 		# fire HTTP GET to URL in order to recieve json
 		$get_json = file_get_contents($URL);
@@ -95,13 +39,13 @@ if($JCore_REST_Interface_Version === "v1"){
 		}
 	}
 
-	function GetActivitiesLabelByID($PCM_ScenarioID, $PCM_ScenarioInstanceID, $PCM_ActivityInstanceID) {
-		if(empty($PCM_ActivityInstanceID)){
-			die("$PCM_ActivityInstanceID is empty which has to be set for REST call");
+	function GetActivitiesLabelByID($PCM_ActivityID) {
+		if(empty($PCM_ActivityID)){
+			die("$PCM_ActivityID is empty which has to be set for REST call");
 		}
-		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/."$PCM_ActivityInstanceID."/";
 
+		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/ActivityID/".$PCM_ActivityID."/";
 		
 		# fire HTTP GET to URL in order to recieve json
 		$get_json = file_get_contents($URL);
@@ -127,11 +71,52 @@ if($JCore_REST_Interface_Version === "v1"){
 		}
 	}
 
-	/******************************************************
-	*
-	* HTTP POST REQUESTS
-	*
-	*/
+	function ShowScenarios() {
+		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/Show";
+		
+		# fire HTTP GET to URL in order to recieve json
+		$get_json = file_get_contents($URL);
+		# parsing json as array
+		$get_response_as_array = json_decode($get_json,true);
+		
+		if(!$get_response_as_array){
+	                die("ERROR: decoding within ShowScenarios failed");
+	    } elseif(strpos($get_response_as_array, 'Error')){
+	    			echo "There is an REST Error..";
+	    }
+		if($debug){
+			error_log("HTTP GET on ".$URL);
+			error_log("Returned ".$get_json);
+			error_log("Decoded json as ".var_dump($get_response_as_array));
+		}
+		
+		return $get_response_as_array;
+	}
+
+	function ShowScenarioInstances($PCM_Scenario) {
+		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/Instances/".$PCM_Scenario;
+		
+		# fire HTTP GET to URL in order to recieve json
+		$get_json = file_get_contents($URL);
+		# parsing json as array
+		$get_response_as_array = json_decode($get_json,true);
+		
+		if(!$get_response_as_array){
+	                die("ERROR: decoding within ShowScenarioInstances failed");
+	    } elseif(strpos($get_response_as_array, 'Error')){
+	    			echo "There is an REST Error..";
+	    }
+	    if($debug){
+			error_log("HTTP GET on ".$URL);
+			error_log("Returned ".$get_json);
+			error_log("Decoded json as ".print_r($get_response_as_array));
+		}
+		
+		return $get_response_as_array;
+	}
+
 	function PostActivities($PCM_Scenario, $PCM_ScenarioInstance, $PCM_Activity, $PCM_status, $PCM_comment) {
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
 		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_ScenarioInstance."/".$PCM_Activity."/".$PCM_status."/".$PCM_comment;
@@ -220,11 +205,3 @@ if($JCore_REST_Interface_Version === "v1"){
 		return $result;
 	}
 
-} elseif (($JCore_REST_Interface_Version === "v0")) {
-
-	include 'RESTCalls_v0.php';
-
-} else {
-	echo "API Version unclear";
-	die();
-}
