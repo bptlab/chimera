@@ -5,12 +5,14 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -81,27 +83,11 @@ public class REST {
     @GET
     @Path("scenarios/{scenarioID}/image/")
     @Produces("image/png")
-    public Response showScenarioImage(@PathParam("scenarioID") String scenarioID) {
+    public Image showScenarioImage(@PathParam("scenarioID") String scenarioID) {
 
-        try {
-            Image scenario_image = JComparser.getScenarioImage(processserver, scenarioID);
+            BufferedImage scenario_image = new Retrieval().getImagewithAuth(processserver, scenarioID);
+            return scenario_image;
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write((java.awt.image.RenderedImage) scenario_image, "png", baos);
-            byte[] imageData = baos.toByteArray();
-
-            // uncomment line below to send non-streamed
-            return Response.ok(imageData).build();
-
-            // uncomment line below to send streamed
-            //return Response.ok(new ByteArrayInputStream(imageData)).build();
-
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     //Necessary for JSON encoding

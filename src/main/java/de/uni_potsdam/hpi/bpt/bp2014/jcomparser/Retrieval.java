@@ -3,10 +3,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.binary.Base64;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.List;
 import java.util.Map;
+import java.awt.image.BufferedImage;
 
 
 /***********************************************************************************
@@ -107,6 +110,45 @@ public class Retrieval {
             modelsConnection.disconnect();
             connection.disconnect();
             return stringBuilder.toString();
+
+        } catch (IOException e) {
+            System.err.println("Request failed.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BufferedImage getImagewithAuth(String hosturl, String urlToRead) {
+        /* credits to  http://www.avajava.com/tutorials/lessons/how-do-i-connect-to-a-url-using-basic-authentication.html */
+
+        HttpURLConnection connection = null;
+        String username = "root";
+        String password = "inubit";
+        HttpURLConnection conn;
+
+        try {
+            CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
+
+            Base64 base64 = new Base64();
+            connection = (HttpURLConnection) new URL(hosturl + "users/login").openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/xml");
+            connection.setInstanceFollowRedirects(false);
+            OutputStream os = connection.getOutputStream();
+            PrintWriter osw = new PrintWriter(os);
+            osw.println(String.format(loginRequest, username, password));
+            osw.flush();
+            osw.close();
+            connection.getResponseCode();
+            connection.getResponseMessage();
+            HttpURLConnection modelsConnection = (HttpURLConnection) new URL(urlToRead).openConnection();
+            modelsConnection.setInstanceFollowRedirects(false);
+            modelsConnection.setRequestMethod("GET");
+
+            BufferedImage image = null;
+            image = ImageIO.read(modelsConnection.getInputStream());
+            return image;
 
         } catch (IOException e) {
             System.err.println("Request failed.");
