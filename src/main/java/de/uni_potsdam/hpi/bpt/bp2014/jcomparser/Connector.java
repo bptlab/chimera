@@ -67,7 +67,7 @@ public class Connector {
         return result;
     }
 
-    public int insertFragmentIntoDatabase(String fragmentName, int scenarioID, int modelID, int modelVersion) {
+    public int insertFragmentIntoDatabase(String fragmentName, int scenarioID, long modelID, int modelVersion) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
         Statement stmt = null;

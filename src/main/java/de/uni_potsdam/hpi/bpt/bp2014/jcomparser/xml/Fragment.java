@@ -47,7 +47,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * The Model-XML-Id of the Fragment.
      */
-    private int fragmentID;
+    private long fragmentID;
     /**
      * A Map which maps Model-XML-Element-IDs to ControlNodes.
      */
@@ -149,7 +149,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
         try {
-            this.fragmentID = Integer.parseInt(xPath
+            this.fragmentID = Long.parseLong(xPath
                     .compile(xPathQuery)
                     .evaluate(this.fragmentXML));
         } catch (XPathExpressionException e) {
