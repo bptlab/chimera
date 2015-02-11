@@ -100,7 +100,7 @@ if($JCore_REST_Interface_Version === "v1"){
 			die("$PCM_ActivityInstanceID is empty which has to be set for REST call");
 		}
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/."$PCM_ActivityInstanceID."/";
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/".$PCM_ActivityInstanceID."/";
 
 		
 		# fire HTTP GET to URL in order to recieve json

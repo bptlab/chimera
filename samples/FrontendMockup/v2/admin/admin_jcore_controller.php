@@ -25,7 +25,7 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 	$scenarioinstances = ShowScenarioInstances($_COOKIE['JEngine_ScenarioID']);
 	$scenarioinstanceIds = $scenarioinstances["ids"];
 	?>
-		<h4> Please select your Scenario</h4>
+		<h4> Please select your ScenarioInstance</h4>
 		<form action='update_jcore_controller.php' method='post'>
 		<select name="pcm_scenarioinstances">
 		<option value=""></option>
