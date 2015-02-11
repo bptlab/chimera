@@ -1,12 +1,22 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -18,6 +28,10 @@ import java.util.*;
  */
 public class Fragment implements IDeserialisable, IPersistable {
 
+    /**
+     * The url of the process Editor.
+     */
+    private final String processeditorServerUrl = "http://localhost:1205/";
     /**
      * The databaseID of the scenario.
      */
@@ -33,7 +47,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * The Model-XML-Id of the Fragment.
      */
-    private String fragmentID;
+    private int fragmentID;
     /**
      * A Map which maps Model-XML-Element-IDs to ControlNodes.
      */
@@ -56,6 +70,10 @@ public class Fragment implements IDeserialisable, IPersistable {
      * which are used by any Activities inside this Fragment.
      */
     private List<OutputSet> outputSets;
+    /**
+     * The version of the current Scenario
+     */
+    private int versionNumber;
 
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
@@ -66,7 +84,61 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateControlNodes();
         generateEdges();
         generateSets();
+        setVersionNumber();
+    }
 
+    /**
+     * Extracts the Version from the XML.
+     * Corresponding values will be saved to the corresponding fields.
+     */
+    private void setVersionNumber() {
+        Element versionXML = fetchVersionXML();
+        if (versionXML != null) {
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String xPathQuery = "/versions/version";
+            try {
+                NodeList versions = (NodeList) xPath.compile(xPathQuery).evaluate(versionXML, XPathConstants.NODESET);
+                int maxID = 0;
+                // We assume that the version that needs to be saved is the newest one
+                //TODO: Do we want to save versions that are currently not in the Database?
+                for (int i = 0; i < versions.getLength(); i++) {
+                    xPathQuery = "@id";
+                    int currentID = Integer.parseInt((String) xPath.compile(xPathQuery).evaluate(versions.item(i), XPathConstants.STRING));
+                    if (maxID < currentID)
+                        maxID = currentID;
+                }
+                versionNumber = maxID;
+            } catch (XPathExpressionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Get the XML which contains all the versions of the current scenario from the processEditorServer
+     */
+    private Element fetchVersionXML() {
+        try {
+            Retrieval jRetrieval = new Retrieval();
+            String versionXML = jRetrieval.getHTMLwithAuth(
+                    processeditorServerUrl,
+                    processeditorServerUrl + "models/" + fragmentID + "/versions");
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(versionXML));
+            DocumentBuilder db = null;
+            db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(is);
+            return doc.getDocumentElement();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -77,9 +149,9 @@ public class Fragment implements IDeserialisable, IPersistable {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
         try {
-            this.fragmentID = xPath
+            this.fragmentID = Integer.parseInt(xPath
                     .compile(xPathQuery)
-                    .evaluate(this.fragmentXML);
+                    .evaluate(this.fragmentXML));
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
@@ -213,7 +285,9 @@ public class Fragment implements IDeserialisable, IPersistable {
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(
                 this.fragmentName,
-                this.scenarioID);
+                this.scenarioID,
+                this.fragmentID,
+                this.versionNumber);
         for (Node node : controlNodes.values()) {
             node.setFragmentId(databaseID);
             node.save();

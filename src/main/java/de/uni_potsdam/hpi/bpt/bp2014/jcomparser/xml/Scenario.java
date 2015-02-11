@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -16,6 +17,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * The model Id of the scenario.
      */
-    private String scenarioID;
+    private int scenarioID;
     /**
      * The XML which holds all information from the model.
      */
@@ -67,6 +69,10 @@ public class Scenario implements IDeserialisable, IPersistable {
      * It is part of the termination condition.
      */
     private DataObject terminatingDataObject;
+    /**
+     * The version of the current Scenario
+     */
+    private int versionNumber;
 
     /**
      * This Method initializes the scanario from an XML.
@@ -83,6 +89,61 @@ public class Scenario implements IDeserialisable, IPersistable {
         generateFragmentList();
         createDataObjects();
         setTerminationCondition();
+        setVersionNumber();
+    }
+
+    /**
+     * Extracts the Version from the XML.
+     * Corresponding values will be saved to the corresponding fields.
+     */
+    private void setVersionNumber() {
+        Element versionXML = fetchVersionXML();
+        if (versionXML != null) {
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String xPathQuery = "/versions/version";
+            try {
+                NodeList versions = (NodeList) xPath.compile(xPathQuery).evaluate(versionXML, XPathConstants.NODESET);
+                int maxID = 0;
+                // We assume that the version that needs to be saved is the newest one
+                //TODO: Do we want to save versions that are currently not in the Database?
+                for (int i = 0; i < versions.getLength(); i++) {
+                    xPathQuery = "@id";
+                    int currentID = Integer.parseInt((String) xPath.compile(xPathQuery).evaluate(versions.item(i), XPathConstants.STRING));
+                    if (maxID < currentID)
+                        maxID = currentID;
+                }
+                versionNumber = maxID;
+            } catch (XPathExpressionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Get the XML which contains all the versions of the current scenario from the processEditorServer
+     */
+    private Element fetchVersionXML() {
+        try {
+            Retrieval jRetrieval = new Retrieval();
+            String versionXML = jRetrieval.getHTMLwithAuth(
+                    processeditorServerUrl,
+                    processeditorServerUrl + "models/" + scenarioID + "/versions");
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(versionXML));
+            DocumentBuilder db = null;
+            db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(is);
+            return doc.getDocumentElement();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -150,9 +211,9 @@ public class Scenario implements IDeserialisable, IPersistable {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
         try {
-            this.scenarioID = xPath
+            this.scenarioID = Integer.parseInt(xPath
                     .compile(xPathQuery)
-                    .evaluate(this.scenarioXML);
+                    .evaluate(this.scenarioXML));
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
@@ -161,7 +222,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     @Override
     public int save() {
         Connector conn = new Connector();
-        this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName);
+        this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName, scenarioID, versionNumber);
         saveFragments();
         saveDataObjects();
         saveConsistsOf();

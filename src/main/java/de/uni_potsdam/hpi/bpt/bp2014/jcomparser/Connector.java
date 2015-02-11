@@ -29,7 +29,7 @@ As a part of the JComparser we need to seed the parsed information's into the JE
 
 public class Connector {
 
-    public int insertScenarioIntoDatabase(String name) {
+    public int insertScenarioIntoDatabase(String name, int modelID, int modelVersion) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
         Statement stmt = null;
@@ -38,7 +38,7 @@ public class Connector {
         int result = -1;
         try {
 
-            String sql = "INSERT INTO scenario (scenario.name) VALUES ('" + name + "')";
+            String sql = "INSERT INTO scenario (scenario.name, modelid, modelversion) VALUES ('" + name + "', " + modelID +", " + modelVersion +")";
             stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
@@ -67,7 +67,7 @@ public class Connector {
         return result;
     }
 
-    public int insertFragmentIntoDatabase(String fragmentName, int scenarioID) {
+    public int insertFragmentIntoDatabase(String fragmentName, int scenarioID, int modelID, int modelVersion) {
 
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
         Statement stmt = null;
@@ -76,7 +76,7 @@ public class Connector {
         int result = -1;
         try {
 
-            String sql = "INSERT INTO fragment (fragment.name, scenario_id) VALUES ('" + fragmentName + "', " + scenarioID +")";
+            String sql = "INSERT INTO fragment (fragment.name, scenario_id, modelid, modelversion) VALUES ('" + fragmentName + "', " + scenarioID + "," + modelID + ","+ modelVersion + ")";
             stmt = conn.createStatement();
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
