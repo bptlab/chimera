@@ -102,23 +102,6 @@ public class RestConnection {
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
-    // Show IDS of all scenarios
-    @GET
-    @Path("Show")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response showScenarios() {
-        LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
-
-        if (scenarioIDs.size() == 0)
-            return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
-
-        Gson gson = new Gson();
-        JsonIntegerList json = new JsonIntegerList(scenarioIDs);
-        String jsonRepresentation = gson.toJson(json);
-
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-    }
-
     // GET scenarioIDs for a scenarioInstance
     @GET
     @Path("Get/ScenarioID/{ScenarioInstance}")  //scenarioInstanceID = (int) ScenarioInstance
@@ -157,9 +140,9 @@ public class RestConnection {
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
-    //GET  the label of an activityID
+    //GET  details for an activityID
     @GET
-    @Path("ActivityID/{Activity}")
+    @Path("ActivityID/{Activity}/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showLabelForActivity(@PathParam("Activity") int activityInstanceID) {
         String label = executionService.getLabelForControlNodeID(activityInstanceID);
@@ -170,17 +153,32 @@ public class RestConnection {
         return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
     }
 
-    //GET  the label of an activityID
+    //GET  information about an activityID
     @GET
-    @Path("{scenarioID}/label")
+    @Path("scenario/{scenarioID}/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showLabelForScenarios(@PathParam("scenarioID") int scenarioID) {
-        String label = executionService.getLabelForControlNodeID(scenarioID);
+        //if 0 as scenarioID is provided, list all available scenarioIDs
+        if(scenarioID == 0) {
+            LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
 
-        if (label.equals(""))
-            return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
+            if (scenarioIDs.size() == 0)
+                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
 
-        return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
+            Gson gson = new Gson();
+            JsonIntegerList json = new JsonIntegerList(scenarioIDs);
+            String jsonRepresentation = gson.toJson(json);
+
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        //otherwise display the label for the scenarioID
+        } else {
+            String label = executionService.getScenarioName(scenarioID);
+
+            if (label.equals(""))
+                return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
+
+            return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
+        }
     }
 
     // POST to start/terminate an activity + comment
@@ -211,7 +209,11 @@ public class RestConnection {
     }
 
 
-    //Everything below is needed to make a Json that Janny's Front-End understands
+
+    /***************************************************************
+     * HELPER classes
+     */
+
     class JsonHashMapIntegerString {
         private LinkedList<Integer> ids;
         private HashMap<Integer, String> label;
