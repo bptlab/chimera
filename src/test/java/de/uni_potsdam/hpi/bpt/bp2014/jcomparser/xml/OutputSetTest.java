@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InputSetTest {
+public class OutputSetTest {
 
     private Document document = new DocumentImpl();
     private List<Element> dataFlows;
     private List<Edge> dataFlowEdges;
     private Node activity;
-    private InputSet inputSet;
+    private OutputSet outputSet;
     private List<Node> dataNodes;
 
     // BEGIN: Set-Up
@@ -26,7 +26,7 @@ public class InputSetTest {
         setUpDataFlows();
         setUpEdges();
         setUpNodes();
-        setUpInputSet();
+        setUpOutputSet();
     }
 
     private void setUpDataFlows() {
@@ -35,15 +35,15 @@ public class InputSetTest {
         dataFlow.appendChild(createProperty("label", ""));
         dataFlow.appendChild(createProperty("#id", "4"));
         dataFlow.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Association"));
-        dataFlow.appendChild(createProperty("#sourceNode", "2"));
-        dataFlow.appendChild(createProperty("#targetNode", "1"));
+        dataFlow.appendChild(createProperty("#sourceNode", "1"));
+        dataFlow.appendChild(createProperty("#targetNode", "2"));
         dataFlows.add(dataFlow);
         dataFlow = document.createElement("edge");
         dataFlow.appendChild(createProperty("label", ""));
         dataFlow.appendChild(createProperty("#id", "5"));
         dataFlow.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Association"));
-        dataFlow.appendChild(createProperty("#sourceNode", "3"));
-        dataFlow.appendChild(createProperty("#targetNode", "1"));
+        dataFlow.appendChild(createProperty("#sourceNode", "1"));
+        dataFlow.appendChild(createProperty("#targetNode", "3"));
         dataFlows.add(dataFlow);
     }
 
@@ -62,7 +62,6 @@ public class InputSetTest {
 
         // activity/ConsumerNode
         activity = new Node();
-
         activity.setId(1);
         nodes.put(1, activity);
 
@@ -82,23 +81,23 @@ public class InputSetTest {
         }
     }
 
-    public void setUpInputSet() {
-        inputSet = InputSet.createInputSetForTaskAndEdges(activity, dataFlowEdges);
+    public void setUpOutputSet() {
+        outputSet = OutputSet.createOutputSetForTaskAndEdges(activity, dataFlowEdges);
     }
     // END: Set-Up
 
     // BEGIN: Tests
     @Test
-    public void testInputSetDeserialization() {
-        Assert.assertEquals("The consumer-Node has not been set correctly", activity, inputSet.getConsumer());
-        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes, inputSet.getInputs());
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges, inputSet.getAssociations());
+    public void testOutputSetDeserialization() {
+        Assert.assertEquals("The producer-Node has not been set correctly", activity, outputSet.getProducer());
+        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes, outputSet.getOutputs());
+        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges, outputSet.getAssociations());
     }
 
     @Test
     public void testSaveSequenceFlow() {
-        inputSet.save();
-        Assert.assertTrue("No database-ID set", inputSet.getDatabaseId() != 0);
+        outputSet.save();
+        Assert.assertTrue("No database-ID set", outputSet.getDatabaseId() != 0);
     }
     // END: Tests
 
@@ -113,5 +112,6 @@ public class InputSetTest {
         return property;
     }
     // END: Util-Methods
+
 
 }

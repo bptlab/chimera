@@ -158,10 +158,11 @@ public class JComparser {
     }
 
     public static void handleFileRetrieval(String pcm) {
-
+/*
         ArrayList<String> pcm_list = new ArrayList<String>();
         pcm_list.add(pcm);
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
+*/
     }
 }

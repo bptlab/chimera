@@ -6,19 +6,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OutputSet implements IPersistable {
-    // The list of (Associations-)Edges which have a (DataObject-) Node as the target and a (Control) Node as the source.
+    /**
+     * The list of (Associations-)Edges.
+     * Each each has a (DataObject-) Node as the target
+     * and a (Control) Node as the source.
+     */
     private List<Edge> associations;
-    // The (DataObjects) which are part of the DataNode
+    /**
+     * The (DataObjects) which are part of the DataNode
+     */
     private List<Node> outputs;
-    // The task which has the input set
+    /**
+     * The task which has the input set
+     */
     private Node producer;
-    // The Database ID of the OutputSet
-    private int databaseId = - 1;
+    /**
+     * The Database ID of the OutputSet
+     */
+    private int databaseId = -1;
 
     /**
      * Creates an Output Set for the given Node (task) and the given Edges (edges). The edges should at least contain
      * all outgoing associations of the task, but can contain more edges.
-     * @param task - The (Task)Node which has the OutputSet
+     *
+     * @param task  - The (Task)Node which has the OutputSet
      * @param edges - The List of Edges
      * @return the newly created OutputSet or null if now Outgoing (DataFlow)-Association was found.
      */
@@ -63,5 +74,13 @@ public class OutputSet implements IPersistable {
 
     public List<Node> getOutputs() {
         return outputs;
+    }
+
+    public Node getProducer() {
+        return producer;
+    }
+
+    public List<Edge> getAssociations() {
+        return associations;
     }
 }
