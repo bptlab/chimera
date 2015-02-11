@@ -27,6 +27,7 @@ import java.util.LinkedList;
 
 
 public class TaskIncomingControlFlowBehavior extends IncomingBehavior{
+    //Database Connection objects
     private DbDataFlow dbDataFlow = new DbDataFlow();
     private DbDataNode dbDataNode = new DbDataNode();
 
@@ -77,7 +78,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior{
     }
 
     public void startReferences(){
-        for(int activity_id: ((ActivityInstance)controlNodeInstance).references){
+        for(int activity_id: ((ActivityInstance)controlNodeInstance).getReferences()){
             scenarioInstance.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);
         }
     }

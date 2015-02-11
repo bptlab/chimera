@@ -45,8 +45,8 @@ public class ScenarioInstance {
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     public LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
     public LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
-    public int scenarioInstance_id;
-    public int scenario_id;
+    private int scenarioInstance_id;
+    private int scenario_id;
     private String name;
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbFragment dbFragment = new DbFragment();
@@ -127,7 +127,7 @@ public class ScenarioInstance {
 
     public Boolean checkDataObjectState(int dataObject_id, int state_id){
         for(DataObjectInstance dataObjectInstance: dataObjectInstances){
-            if(dataObjectInstance.dataObject_id == dataObject_id && dataObjectInstance.state_id == state_id) return true;
+            if(dataObjectInstance.getDataObject_id() == dataObject_id && dataObjectInstance.getState_id() == state_id) return true;
         }
         return false;
     }
@@ -135,7 +135,7 @@ public class ScenarioInstance {
 
     public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id){
         for(DataObjectInstance dataObjectInstance: dataObjectInstances){
-            if(dataObjectInstance.dataObject_id == dataObject_id) {
+            if(dataObjectInstance.getDataObject_id() == dataObject_id) {
                 dataObjectInstance.setState(state_id);
                 return true;
             }
@@ -146,7 +146,7 @@ public class ScenarioInstance {
     public Boolean setDataObjectInstanceToOnChange(int dataObject_id){
         DataObjectInstance dataObjectInstanceOnChange = null;
         for(DataObjectInstance dataObjectInstance: dataObjectInstances){
-            if(dataObjectInstance.dataObject_id == dataObject_id) {
+            if(dataObjectInstance.getDataObject_id() == dataObject_id) {
                 dataObjectInstanceOnChange = dataObjectInstance;
                 break;
             }
@@ -163,7 +163,7 @@ public class ScenarioInstance {
     public Boolean setDataObjectInstanceToNotOnChange(int dataObject_id){
         DataObjectInstance dataObjectInstanceOnChange = null;
         for(DataObjectInstance dataObjectInstance: dataObjectInstancesOnChange){
-            if(dataObjectInstance.dataObject_id == dataObject_id) {
+            if(dataObjectInstance.getDataObject_id() == dataObject_id) {
                 dataObjectInstanceOnChange = dataObjectInstance;
                 break;
             }
@@ -221,12 +221,12 @@ public class ScenarioInstance {
             for(Condition condition: conditions){
                 DataObjectInstance dataObjectInstance = null;
                 for(DataObjectInstance currentDataObjectInstance: dataObjectInstances){
-                    if(currentDataObjectInstance.dataObject_id == condition.getDataObject_id()){
+                    if(currentDataObjectInstance.getDataObject_id() == condition.getDataObject_id()){
                         dataObjectInstance = currentDataObjectInstance;
                     }
                 }
                 if(dataObjectInstance != null){
-                    if(dataObjectInstance.state_id == condition.getState_id()){
+                    if(dataObjectInstance.getState_id() == condition.getState_id()){
                         terminated = true;
                     }else{
                         terminated = false;
@@ -253,4 +253,21 @@ public class ScenarioInstance {
         runningControlNodeInstances.clear();
         terminatedControlNodeInstances.clear();
     }
+
+    /*
+     * Getter
+     */
+
+    public int getScenarioInstance_id() {
+        return scenarioInstance_id;
+    }
+
+    public int getScenario_id() {
+        return scenario_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }

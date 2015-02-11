@@ -28,6 +28,7 @@ import java.util.LinkedList;
 
 
 public class HistoryService {
+    //Database Connection objects
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
     private DbControlNode dbControlNode = new DbControlNode();
 

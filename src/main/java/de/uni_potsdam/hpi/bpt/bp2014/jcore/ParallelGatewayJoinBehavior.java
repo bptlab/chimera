@@ -26,6 +26,7 @@ import java.util.LinkedList;
 
 
 public class ParallelGatewayJoinBehavior extends IncomingBehavior {
+    //Database Connection objects
     private DbControlFlow dbControlFlow = new DbControlFlow();
     private DbControlNode dbControlNode = new DbControlNode();
 

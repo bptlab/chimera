@@ -24,9 +24,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 ************************************************************************************/
 
 public class GatewayInstance extends ControlNodeInstance {
-    public Boolean isXOR;
-    public Boolean isAND;
-    public ScenarioInstance scenarioInstance;
+    private Boolean isXOR;
+    private Boolean isAND;
+    private ScenarioInstance scenarioInstance;
+    //Database Connection objects
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
@@ -68,5 +69,20 @@ public class GatewayInstance extends ControlNodeInstance {
     public void terminate(){
         ((GatewayStateMachine)stateMachine).terminate();
         outgoingBehavior.terminate();
+    }
+    /*
+     * Getter
+     */
+
+    public Boolean getIsXOR() {
+        return isXOR;
+    }
+
+    public Boolean getIsAND() {
+        return isAND;
+    }
+
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
     }
 }

@@ -23,7 +23,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
 
 public class GatewayStateMachine extends StateMachine {
+    //Database Connection objects
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
+
     public GatewayStateMachine(int gateway_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance){
         this.scenarioInstance = scenarioInstance;
         this.controlNodeInstance_id = gateway_id;

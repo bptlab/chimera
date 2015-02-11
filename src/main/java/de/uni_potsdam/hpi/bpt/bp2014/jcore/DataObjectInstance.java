@@ -26,11 +26,12 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 
 
 public class DataObjectInstance {
-    public int state_id;
-    public int dataObjectInstance_id;
-    public int dataObject_id;
-    public int scenario_id;
-    public int scenarioInstance_id;
+    private int state_id;
+    private int dataObjectInstance_id;
+    private int dataObject_id;
+    private int scenario_id;
+    private int scenarioInstance_id;
+    //Database Connection objects
     private ScenarioInstance scenarioInstance;
     private DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
     private DbDataObject dbDataObject = new DbDataObject();
@@ -62,5 +63,32 @@ public class DataObjectInstance {
 
     public void setOnChange(Boolean onChange){
         dbDataObjectInstance.setOnChange(dataObjectInstance_id, onChange);
+    }
+
+    /*
+     * Getter
+     */
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
+    }
+
+    public int getScenarioInstance_id() {
+        return scenarioInstance_id;
+    }
+
+    public int getScenario_id() {
+        return scenario_id;
+    }
+
+    public int getDataObject_id() {
+        return dataObject_id;
+    }
+
+    public int getDataObjectInstance_id() {
+        return dataObjectInstance_id;
+    }
+
+    public int getState_id() {
+        return state_id;
     }
 }

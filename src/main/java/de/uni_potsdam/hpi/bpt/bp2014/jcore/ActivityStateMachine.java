@@ -25,6 +25,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 
 
 public class ActivityStateMachine extends StateMachine {
+    //Database Connection objects
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
 
 

@@ -26,6 +26,7 @@ import java.util.LinkedList;
 
 
 public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
+    //Database Connection objects
     private DbDataFlow dbDataFlow = new DbDataFlow();
 
     ParallelGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id){

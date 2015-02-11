@@ -45,8 +45,8 @@ public class ExecutionService {
     public int startNewScenarioInstance(int scenario_id){
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id);
         scenarioInstances.add(scenarioInstance);
-        sortedScenarioInstances.put(scenarioInstance.scenarioInstance_id, scenarioInstance);
-        return scenarioInstance.scenarioInstance_id;
+        sortedScenarioInstances.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
+        return scenarioInstance.getScenarioInstance_id();
     }
 
     public Boolean openExistingScenarioInstance(int scenario_id, int scenarioInstance_id){
@@ -110,7 +110,7 @@ public class ExecutionService {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for(ControlNodeInstance nodeInstance: scenarioInstance.enabledControlNodeInstances){
             if(nodeInstance instanceof ActivityInstance){
-                labels.put(((ActivityInstance) nodeInstance).controlNode_id, ((ActivityInstance) nodeInstance).label);
+                labels.put(((ActivityInstance) nodeInstance).controlNode_id, ((ActivityInstance) nodeInstance).getLabel());
             }
         }
         return labels;
@@ -142,7 +142,7 @@ public class ExecutionService {
 
     public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id){
         LinkedList<Integer> dataObjectIDs = new LinkedList<Integer>();
-        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances) dataObjectIDs.add(dataObject.dataObject_id);
+        for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances) dataObjectIDs.add(dataObject.getDataObject_id());
         return dataObjectIDs;
     }
 
@@ -150,7 +150,7 @@ public class ExecutionService {
         DbState dbState = new DbState();
         HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
         for(DataObjectInstance dataObject: sortedScenarioInstances.get(scenarioInstance_id).dataObjectInstances){
-            dataObjectStates.put(dataObject.dataObject_id, dbState.getStateName(dataObject.state_id));
+            dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
         }
         return dataObjectStates;
     }

@@ -36,11 +36,11 @@ the constructor looks for an activity instance in the database or create a new o
  */
 
 public class ActivityInstance extends ControlNodeInstance {
-    public TaskExecutionBehavior taskExecutionBehavior;
-    public ScenarioInstance scenarioInstance;
-    public String label;
-    public LinkedList<Integer> references;
-    public Boolean isMailTask;
+    private TaskExecutionBehavior taskExecutionBehavior;
+    private ScenarioInstance scenarioInstance;
+    private String label;
+    private LinkedList<Integer> references;
+    private Boolean isMailTask;
     //Database Connection objects
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
@@ -96,4 +96,26 @@ public class ActivityInstance extends ControlNodeInstance {
     public void checkDataFlowEnabled(){
         ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
     }
+
+
+    public TaskExecutionBehavior getTaskExecutionBehavior() {
+        return taskExecutionBehavior;
+    }
+
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public LinkedList<Integer> getReferences() {
+        return references;
+    }
+
+    public Boolean getIsMailTask() {
+        return isMailTask;
+    }
+
 }

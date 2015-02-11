@@ -30,8 +30,9 @@ import java.util.LinkedList;
 handles the behavior of a terminating activity instance
  */
 public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior{
-    public DbDataNode dbDataNode = new DbDataNode();
-    public DbDataFlow dbDataFlow = new DbDataFlow();
+    //Database Connection objects
+    private DbDataNode dbDataNode = new DbDataNode();
+    private DbDataFlow dbDataFlow = new DbDataFlow();
 
     public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id){
         this.controlNode_id = activity_id;
