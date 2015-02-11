@@ -131,7 +131,7 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 if (enabledActivitiesIDs.size() == 0)
-                    return Response.ok(new String("{empty}" + instanceID), MediaType.APPLICATION_JSON_TYPE).build();//no open activities present
+                    return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no open activities present
                 Gson gson = new Gson();
                 JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
                 String jsonRepresentation = gson.toJson(json);
