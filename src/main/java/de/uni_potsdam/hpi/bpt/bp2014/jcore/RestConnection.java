@@ -120,6 +120,10 @@ public class RestConnection {
 
             //TODO: Limit has to be implemented
 
+            if(status == null) {
+                status = "enabled"; //set status enabled for default value
+            }
+            
             if (status.equals("enabled")) { //open activities;
 
                 if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
