@@ -120,7 +120,7 @@ public class RestConnection {
 
             //TODO: Limit has to be implemented
 
-            if (status.equals("enabled") || status.equals("")) { //open activities; use as default
+            if (status.equals("enabled")) { //open activities;
 
                 if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
                     return Response.serverError().entity("Error: not a correct scenario instance").build();
@@ -164,47 +164,6 @@ public class RestConnection {
                 return Response.serverError().entity("Error: not correct Activity ID").build();//no activity with this id present
 
             return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
-        }
-    }
-
-
-
-    /**************************************************************
-     *
-     * HTTP POST REQUEST
-     *
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityInstanceID
-     * @return
-     */
-
-    // POST to start/terminate an activity + comment
-    @POST
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
-    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
-        executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-
-        if (status.equals("begin")) {//start activity
-            executionService.beginActivity(scenarioInstanceID, activityInstanceID);
-            return true;
-        } else if (status.equals("begin")) {//terminate activity
-            executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
-            return true;
-        }
-        //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
-        return false;
-    }
-
-    // POST to start an instance of a scenario
-    @POST
-    @Path("scenario/{scenarioID}/")
-    public int startNewScenarioInstance(@PathParam("scenarioID") int scenarioID) {
-        if (executionService.existScenario(scenarioID)) {//scenario exists
-            //return the ID of new instanceID
-            return executionService.startNewScenarioInstance(scenarioID);
-        } else {//scenario does not exist
-            return -1;
         }
     }
 
@@ -254,6 +213,46 @@ public class RestConnection {
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
  */
+
+    /**************************************************************
+     *
+     * HTTP POST REQUEST
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityInstanceID
+     * @return
+     */
+
+    // POST to start an instance of a scenario
+    @POST
+    @Path("scenario/{scenarioID}/")
+    public int startNewScenarioInstance(@PathParam("scenarioID") int scenarioID) {
+        if (executionService.existScenario(scenarioID)) {//scenario exists
+            //return the ID of new instanceID
+            return executionService.startNewScenarioInstance(scenarioID);
+        } else {//scenario does not exist
+            return -1;
+        }
+    }
+
+    // POST to start/terminate an activity + comment
+    @POST
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
+    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
+        executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
+
+        if (status.equals("begin")) {//start activity
+            executionService.beginActivity(scenarioInstanceID, activityInstanceID);
+            return true;
+        } else if (status.equals("begin")) {//terminate activity
+            executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
+            return true;
+        }
+        //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
+        return false;
+    }
+
 
     /***************************************************************
      *
