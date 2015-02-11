@@ -52,8 +52,11 @@ public class ScenarioInstance {
     private DbFragment dbFragment = new DbFragment();
     private DbDataObject dbDataObject = new DbDataObject();
     private DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
+    private DbScenario dbScenario = new DbScenario();
 
+    //open existing scenario instance
     public ScenarioInstance(int scenario_id, int scenarioInstance_id){
+        this.name = dbScenario.getScenarioName(scenario_id);
         this.scenario_id = scenario_id;
         if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)){
             //creates an existing Scenario Instance using the database information
@@ -70,6 +73,7 @@ public class ScenarioInstance {
 
     //starts a new scenario instance
     public ScenarioInstance(int scenario_id){
+        this.name = dbScenario.getScenarioName(scenario_id);
         this.scenario_id = scenario_id;
         this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         this.initializeDataObjects();

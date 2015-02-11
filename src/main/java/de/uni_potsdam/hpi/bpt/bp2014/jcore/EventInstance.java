@@ -28,7 +28,7 @@ public class EventInstance extends ControlNodeInstance {
     //Only support Event is an End Event
     //Don't writes anything in the database
 
-    public EventInstance(int fragmentInstance_id, ScenarioInstance scenarioInstance,String type){
+    public EventInstance(int fragmentInstance_id, ScenarioInstance scenarioInstance,String type) {
         this.scenarioInstance = scenarioInstance;
         this.fragmentInstance_id = fragmentInstance_id;
         this.type = type;
