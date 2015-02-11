@@ -38,7 +38,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * The model Id of the scenario.
      */
-    private int scenarioID;
+    private long scenarioID;
     /**
      * The XML which holds all information from the model.
      */
@@ -211,7 +211,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
         try {
-            this.scenarioID = Integer.parseInt(xPath
+            this.scenarioID = Long.parseLong(xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML));
         } catch (XPathExpressionException e) {

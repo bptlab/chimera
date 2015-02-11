@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class ExecutionAcceptanceTest {
 
     //test AND
     @Test
-    public void testScenario2(){
+    public void testScenario2() {
         System.out.println("\n ------------------ test Scenario 2 ------------------\n");
         int activity1 = 103;
         int activity2 = 104;
@@ -68,7 +69,7 @@ public class ExecutionAcceptanceTest {
 
     //test DataObjects
     @Test
-    public void testScenario1(){
+    public void testScenario1() {
         System.out.println("\n ------------------ test Scenario 1 ------------------\n");
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(1);
@@ -138,7 +139,7 @@ public class ExecutionAcceptanceTest {
 
     //test Termination Condition
     @Test
-    public void testScenario105(){
+    public void testScenario105() {
         System.out.println("\n ------------------ test Scenario 105 ------------------\n");
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(105);
@@ -194,6 +195,47 @@ public class ExecutionAcceptanceTest {
         //check termination in database
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertEquals(1, dbScenarioInstance.getTerminated(scenarioInstance));
+    }
+
+    //test References1
+    @Test
+    public void testScenario106() {
+        System.out.println("\n ------------------ test Scenario 106 ------------------\n");
+        ExecutionService executionService = new ExecutionService();
+        int scenarioInstance = executionService.startNewScenarioInstance(106);
+        int activity1 = 139;
+        int activity2 = 140;
+        int activity3 = 137;
+        int activity4 = 134;
+
+        System.out.println("Start Scenario 106");
+        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+
+        //do activity 1
+        System.out.println("do activity " + activity1);
+        executionService.beginActivity(scenarioInstance, activity1);
+        assertArrayEquals(new Integer[]{}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        executionService.terminateActivity(scenarioInstance, activity1);
+        assertArrayEquals(new Integer[]{activity3, activity2}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+
+
+        int activity3instance_id = executionService.getScenarioInstance(scenarioInstance).getEnabledControlNodeInstances().getFirst().getControlNodeInstance_id();
+        int activity2instance_id = executionService.getScenarioInstance(scenarioInstance).getEnabledControlNodeInstances().get(1).getControlNodeInstance_id();
+
+
+        //do activity 2
+        System.out.println("do activity " + activity2);
+        executionService.beginActivity(scenarioInstance, activity2);
+        assertArrayEquals(new Integer[]{}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        executionService.terminateActivity(scenarioInstance, activity2);
+        assertArrayEquals(new Integer[]{activity4}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+
+        DbActivityInstance dbActivityInstance = new DbActivityInstance();
+        assertEquals("terminated", dbActivityInstance.getState(activity2instance_id));
+        //assertEquals("terminated", dbActivityInstance.getState(activity3instance_id));
     }
 
 }
