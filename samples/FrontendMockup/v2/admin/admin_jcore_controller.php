@@ -13,7 +13,7 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 		<?php 
 		    foreach($ScenarioIDs as $key => $value) 
 		    {
-		       $category = htmlspecialchars($category); 
+		       $value = htmlspecialchars($value); 
 		       echo '<option value="'. $value .'">'. $value .'</option>';
 		    }
 		?>
@@ -41,12 +41,12 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 		</form><br>
 		<?php
         echo "<form action='update_jcore_controller.php' method='post'>
-		            <input type='hidden' name='pcm_scenarioID' value='"$_COOKIE['JEngine_ScenarioID']."'><br>
+		            <input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'><br>
 		            <input type='submit' value='create new Instance'>
 		        </form><br>";
 
 } 
 
-if((isset($_COOKIE['JEngine_ScenarioInstanceID']) && isset($_COOKIE['JEngine_ScenarioID'])){
+if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_ScenarioID']))) {
 
 }

@@ -112,6 +112,12 @@ $link_content = $_GET['l'];
         <span>jcomparser</span>
     </a>
 </li>
+<li class='active'>
+    <a href="admin.php?l=jcore_controller">
+        <i class='icon-globe'></i>
+        <span>jcore_controller</span>
+    </a>
+</li>
 </ul>
 </div>
 </nav>

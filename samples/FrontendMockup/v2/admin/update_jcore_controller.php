@@ -9,27 +9,18 @@ if(isset($_POST["ScenarioID"])){
    setcookie("JEngine_ScenarioID", $_POST["pcm_scenario"], time()+3600, '/', NULL, 0);
    header("Location: admin.php?l=jcore_controller");
    die();
-}
-
-if(isset($_POST["pcm_scenarioinstances"])){
+} elseif(isset($_POST["pcm_scenarioinstances"])){
 
    unset($_COOKIE['JEngine_ScenarioInstanceID']);
    setcookie("JEngine_ScenarioInstanceID", $_POST["pcm_scenarioinstances"], time()+3600, '/', NULL, 0);
    header("Location: admin.php?l=jcore_controller");
    die();
-}
-
-if(isset($_POST["pcm_scenarioID"])){
+} elseif(isset($_POST["pcm_scenarioID"])){
    
    $newInstanceID = StartNewInstance($_POST["pcm_scenarioID"]);
    setcookie("JEngine_ScenarioInstanceID", $newInstanceID, time()+3600, '/', NULL, 0);
    header("Location: admin.php?l=jcore_controller");
    die();
-}
-
-
-  
-
 } else {
-	echo "there is an error..";
+   echo "something went wrong..";
 }
