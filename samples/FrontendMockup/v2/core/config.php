@@ -8,7 +8,8 @@ $JEngine_Server_URL = "http://172.16.64.113:8080";
 ###################################################
 #
 #	REST Interface of the JEngine
-$JCore_REST_Interface = "JEngine/Scenario";
+$JCore_REST_Interface_Version = "v1";
+$JCore_REST_Interface = "JEngine/interface/".$JCore_REST_Interface_Version."/en";
 
 ###################################################
 #

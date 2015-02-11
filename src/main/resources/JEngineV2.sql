@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 11. Feb 2015 um 14:20
+-- Erstellungszeit: 11. Feb 2015 um 16:35
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2517 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2582 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -2151,7 +2151,72 @@ INSERT INTO `activityinstance` (`id`, `type`, `role_id`, `activity_state`, `work
 (2513, 'HumanTask', 1, 'referentialRunning', 'init'),
 (2514, 'HumanTask', 1, 'terminated', 'init'),
 (2515, 'HumanTask', 1, 'terminated', 'init'),
-(2516, 'HumanTask', 1, 'ready(ControlFlow)', 'init');
+(2516, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2517, 'HumanTask', 1, 'ready', 'init'),
+(2518, 'HumanTask', 1, 'referentialRunning', 'init'),
+(2519, 'HumanTask', 1, 'terminated', 'init'),
+(2520, 'HumanTask', 1, 'terminated', 'init'),
+(2521, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2522, 'HumanTask', 1, 'ready', 'init'),
+(2523, 'HumanTask', 1, 'referentialRunning', 'init'),
+(2524, 'HumanTask', 1, 'terminated', 'init'),
+(2525, 'HumanTask', 1, 'terminated', 'init'),
+(2526, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2527, 'HumanTask', 1, 'ready', 'init'),
+(2528, 'HumanTask', 1, 'terminated', 'init'),
+(2529, 'HumanTask', 1, 'terminated', 'init'),
+(2530, 'HumanTask', 1, 'terminated', 'init'),
+(2531, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2532, 'HumanTask', 1, 'ready', 'init'),
+(2533, 'HumanTask', 1, 'terminated', 'init'),
+(2534, 'HumanTask', 1, 'terminated', 'init'),
+(2535, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2536, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2537, 'HumanTask', 1, 'terminated', 'init'),
+(2538, 'HumanTask', 1, 'terminated', 'init'),
+(2539, 'HumanTask', 1, 'terminated', 'init'),
+(2540, 'HumanTask', 1, 'terminated', 'init'),
+(2541, 'HumanTask', 1, 'terminated', 'init'),
+(2542, 'HumanTask', 1, 'terminated', 'init'),
+(2543, 'HumanTask', 1, 'ready', 'init'),
+(2544, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2545, 'HumanTask', 1, 'ready', 'init'),
+(2546, 'HumanTask', 1, 'terminated', 'init'),
+(2547, 'HumanTask', 1, 'terminated', 'init'),
+(2548, 'HumanTask', 1, 'ready', 'init'),
+(2549, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2550, 'HumanTask', 1, 'ready', 'init'),
+(2551, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2552, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2553, 'HumanTask', 1, 'ready', 'init'),
+(2554, 'HumanTask', 1, 'terminated', 'init'),
+(2555, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2556, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2557, 'HumanTask', 1, 'running', 'init'),
+(2558, 'HumanTask', 1, 'terminated', 'init'),
+(2559, 'HumanTask', 1, 'terminated', 'init'),
+(2560, 'HumanTask', 1, 'ready', 'init'),
+(2561, 'HumanTask', 1, 'terminated', 'init'),
+(2562, 'HumanTask', 1, 'ready', 'init'),
+(2563, 'HumanTask', 1, 'ready', 'init'),
+(2564, 'HumanTask', 1, 'terminated', 'init'),
+(2565, 'HumanTask', 1, 'terminated', 'init'),
+(2566, 'HumanTask', 1, 'ready', 'init'),
+(2567, 'HumanTask', 1, 'terminated', 'init'),
+(2568, 'HumanTask', 1, 'ready', 'init'),
+(2569, 'HumanTask', 1, 'ready', 'init'),
+(2570, 'HumanTask', 1, 'terminated', 'init'),
+(2571, 'HumanTask', 1, 'terminated', 'init'),
+(2572, 'HumanTask', 1, 'ready', 'init'),
+(2573, 'HumanTask', 1, 'terminated', 'init'),
+(2574, 'HumanTask', 1, 'ready', 'init'),
+(2575, 'HumanTask', 1, 'ready', 'init'),
+(2576, 'HumanTask', 1, 'terminated', 'init'),
+(2577, 'HumanTask', 1, 'terminated', 'init'),
+(2578, 'HumanTask', 1, 'ready', 'init'),
+(2579, 'HumanTask', 1, 'terminated', 'init'),
+(2580, 'HumanTask', 1, 'ready', 'init'),
+(2581, 'HumanTask', 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -2252,7 +2317,44 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (137, 138, ''),
 (139, 140, ''),
 (140, 142, ''),
-(141, 139, '');
+(141, 139, ''),
+(143, 144, ''),
+(144, 145, ''),
+(146, 147, ''),
+(147, 148, ''),
+(149, 150, ''),
+(150, 152, ''),
+(151, 149, ''),
+(153, 154, ''),
+(154, 155, ''),
+(156, 157, ''),
+(157, 158, ''),
+(159, 160, ''),
+(160, 162, ''),
+(161, 159, ''),
+(163, 164, ''),
+(164, 166, ''),
+(165, 163, ''),
+(167, 168, ''),
+(168, 169, ''),
+(170, 171, ''),
+(171, 172, ''),
+(173, 174, ''),
+(174, 176, ''),
+(175, 173, ''),
+(177, 178, ''),
+(178, 179, ''),
+(180, 181, ''),
+(181, 182, ''),
+(183, 184, ''),
+(184, 187, ''),
+(186, 183, ''),
+(187, 185, ''),
+(188, 191, ''),
+(189, 190, ''),
+(191, 189, ''),
+(192, 193, ''),
+(193, 194, '');
 
 -- --------------------------------------------------------
 
@@ -2265,7 +2367,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=143 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=195 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -2335,7 +2437,59 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`) VALUES
 (139, 'TestAct1', 'Activity', 112),
 (140, 'TestAct2', 'Activity', 112),
 (141, '', 'Startevent', 112),
-(142, '', 'Endevent', 112);
+(142, '', 'Endevent', 112),
+(143, '', 'Startevent', 113),
+(144, 'RESET', 'Activity', 113),
+(145, '', 'Endevent', 113),
+(146, '', 'Startevent', 114),
+(147, 'TestAct2', 'Activity', 114),
+(148, '', 'Endevent', 114),
+(149, 'TestAct1', 'Activity', 115),
+(150, 'TestAct2', 'Activity', 115),
+(151, '', 'Startevent', 115),
+(152, '', 'Endevent', 115),
+(153, '', 'Startevent', 116),
+(154, 'RESET', 'Activity', 116),
+(155, '', 'Endevent', 116),
+(156, '', 'Startevent', 117),
+(157, 'TestAct2', 'Activity', 117),
+(158, '', 'Endevent', 117),
+(159, 'TestAct1', 'Activity', 118),
+(160, 'TestAct2', 'Activity', 118),
+(161, '', 'Startevent', 118),
+(162, '', 'Endevent', 118),
+(163, 'TestAct1', 'Activity', 119),
+(164, 'TestAct2', 'Activity', 119),
+(165, '', 'Startevent', 119),
+(166, '', 'Endevent', 119),
+(167, '', 'Startevent', 120),
+(168, 'TestAct2', 'Activity', 120),
+(169, '', 'Endevent', 120),
+(170, '', 'Startevent', 121),
+(171, 'RESET', 'Activity', 121),
+(172, '', 'Endevent', 121),
+(173, 'TestAct1', 'Activity', 122),
+(174, 'TestAct2', 'Activity', 122),
+(175, '', 'Startevent', 122),
+(176, '', 'Endevent', 122),
+(177, '', 'Startevent', 123),
+(178, 'TestAct2', 'Activity', 123),
+(179, '', 'Endevent', 123),
+(180, '', 'Startevent', 124),
+(181, 'RESET', 'Activity', 124),
+(182, '', 'Endevent', 124),
+(183, 'TestAct1', 'Activity', 125),
+(184, 'TestAct2', 'Activity', 125),
+(185, '', 'Endevent', 125),
+(186, '', 'Startevent', 125),
+(187, 'TestAct4', 'Activity', 125),
+(188, '', 'Startevent', 126),
+(189, 'TestAct3', 'Activity', 126),
+(190, '', 'Endevent', 126),
+(191, 'TestAct2', 'Activity', 126),
+(192, '', 'Startevent', 127),
+(193, 'RESET', 'Activity', 127),
+(194, '', 'Endevent', 127);
 
 -- --------------------------------------------------------
 
@@ -2348,7 +2502,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2517 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2582 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -4796,7 +4950,72 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (2513, 'Activity', 137, 1715),
 (2514, 'Activity', 139, 1716),
 (2515, 'Activity', 140, 1716),
-(2516, 'Activity', 139, 1717);
+(2516, 'Activity', 139, 1717),
+(2517, 'Activity', 134, 1718),
+(2518, 'Activity', 137, 1719),
+(2519, 'Activity', 139, 1720),
+(2520, 'Activity', 140, 1720),
+(2521, 'Activity', 139, 1721),
+(2522, 'Activity', 134, 1722),
+(2523, 'Activity', 137, 1723),
+(2524, 'Activity', 139, 1724),
+(2525, 'Activity', 140, 1724),
+(2526, 'Activity', 139, 1725),
+(2527, 'Activity', 134, 1726),
+(2528, 'Activity', 137, 1727),
+(2529, 'Activity', 139, 1728),
+(2530, 'Activity', 140, 1728),
+(2531, 'Activity', 139, 1729),
+(2532, 'Activity', 144, 1730),
+(2533, 'Activity', 147, 1731),
+(2534, 'Activity', 149, 1732),
+(2535, 'Activity', 150, 1732),
+(2536, 'Activity', 147, 1733),
+(2537, 'Activity', 183, 1734),
+(2538, 'Activity', 191, 1735),
+(2539, 'Activity', 193, 1736),
+(2540, 'Activity', 184, 1734),
+(2541, 'Activity', 187, 1734),
+(2542, 'Activity', 183, 1737),
+(2543, 'Activity', 193, 1738),
+(2544, 'Activity', 184, 1737),
+(2545, 'Activity', 189, 1735),
+(2546, 'Activity', 183, 1739),
+(2547, 'Activity', 191, 1740),
+(2548, 'Activity', 193, 1741),
+(2549, 'Activity', 184, 1739),
+(2550, 'Activity', 189, 1740),
+(2551, 'Activity', 144, 1742),
+(2552, 'Activity', 147, 1743),
+(2553, 'Activity', 149, 1744),
+(2554, 'Activity', 183, 1745),
+(2555, 'Activity', 191, 1746),
+(2556, 'Activity', 193, 1747),
+(2557, 'Activity', 184, 1745),
+(2558, 'Activity', 183, 1748),
+(2559, 'Activity', 191, 1749),
+(2560, 'Activity', 193, 1750),
+(2561, 'Activity', 184, 1748),
+(2562, 'Activity', 189, 1749),
+(2563, 'Activity', 187, 1748),
+(2564, 'Activity', 183, 1751),
+(2565, 'Activity', 191, 1752),
+(2566, 'Activity', 193, 1753),
+(2567, 'Activity', 184, 1751),
+(2568, 'Activity', 189, 1752),
+(2569, 'Activity', 187, 1751),
+(2570, 'Activity', 183, 1754),
+(2571, 'Activity', 191, 1755),
+(2572, 'Activity', 193, 1756),
+(2573, 'Activity', 184, 1754),
+(2574, 'Activity', 189, 1755),
+(2575, 'Activity', 187, 1754),
+(2576, 'Activity', 183, 1757),
+(2577, 'Activity', 191, 1758),
+(2578, 'Activity', 193, 1759),
+(2579, 'Activity', 184, 1757),
+(2580, 'Activity', 189, 1758),
+(2581, 'Activity', 187, 1757);
 
 -- --------------------------------------------------------
 
@@ -4835,7 +5054,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 CREATE TABLE IF NOT EXISTS `dataclass` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Daten für Tabelle `dataclass`
@@ -4848,7 +5067,13 @@ INSERT INTO `dataclass` (`id`, `name`) VALUES
 (4, 'A'),
 (5, 'A'),
 (6, 'a'),
-(7, 'a');
+(7, 'a'),
+(8, 'a'),
+(9, 'a'),
+(10, 'a'),
+(11, 'a'),
+(12, 'a'),
+(13, 'a');
 
 -- --------------------------------------------------------
 
@@ -4875,6 +5100,14 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 (-1, 36, 1),
 (-1, 37, 0),
 (-1, 38, 0),
+(-1, 47, 1),
+(-1, 48, 0),
+(-1, 49, 1),
+(-1, 50, 0),
+(-1, 51, 1),
+(-1, 52, 1),
+(-1, 53, 0),
+(-1, 54, 0),
 (2, 1, 1),
 (2, 5, 0),
 (4, 2, 1),
@@ -4912,7 +5145,47 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 (139, 43, 1),
 (139, 45, 0),
 (140, 44, 1),
-(140, 46, 0);
+(140, 46, 0),
+(144, 55, 1),
+(144, 56, 0),
+(147, 57, 1),
+(147, 58, 0),
+(149, 59, 1),
+(149, 61, 0),
+(150, 60, 1),
+(150, 62, 0),
+(154, 63, 1),
+(154, 64, 0),
+(157, 65, 1),
+(157, 66, 0),
+(159, 67, 1),
+(159, 69, 0),
+(160, 68, 1),
+(160, 70, 0),
+(163, 71, 1),
+(163, 73, 0),
+(164, 72, 1),
+(164, 74, 0),
+(168, 75, 1),
+(168, 76, 0),
+(171, 77, 1),
+(171, 78, 0),
+(173, 79, 1),
+(173, 81, 0),
+(174, 80, 1),
+(174, 82, 0),
+(178, 83, 1),
+(178, 84, 0),
+(181, 85, 1),
+(181, 86, 0),
+(183, 87, 1),
+(183, 89, 0),
+(184, 88, 1),
+(184, 90, 0),
+(191, 91, 1),
+(191, 92, 0),
+(193, 93, 1),
+(193, 94, 0);
 
 -- --------------------------------------------------------
 
@@ -4926,7 +5199,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=71 ;
 
 --
 -- Daten für Tabelle `datanode`
@@ -4967,7 +5240,42 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 (32, 106, 21, 7, 8),
 (33, 106, 20, 7, 8),
 (34, 106, 19, 7, 8),
-(35, 106, 21, 7, 8);
+(35, 106, 21, 7, 8),
+(36, 107, 25, 9, 9),
+(37, 107, 26, 9, 9),
+(38, 107, 26, 9, 9),
+(39, 107, 27, 9, 9),
+(40, 107, 26, 9, 9),
+(41, 107, 25, 9, 9),
+(42, 107, 27, 9, 9),
+(43, 108, 28, 10, 10),
+(44, 108, 29, 10, 10),
+(45, 108, 29, 10, 10),
+(46, 108, 30, 10, 10),
+(47, 108, 29, 10, 10),
+(48, 108, 28, 10, 10),
+(49, 108, 30, 10, 10),
+(50, 109, 31, 11, 11),
+(51, 109, 32, 11, 11),
+(52, 109, 33, 11, 11),
+(53, 109, 31, 11, 11),
+(54, 109, 33, 11, 11),
+(55, 109, 32, 11, 11),
+(56, 109, 31, 11, 11),
+(57, 110, 34, 12, 12),
+(58, 110, 35, 12, 12),
+(59, 110, 36, 12, 12),
+(60, 110, 34, 12, 12),
+(61, 110, 36, 12, 12),
+(62, 110, 35, 12, 12),
+(63, 110, 34, 12, 12),
+(64, 111, 37, 13, 13),
+(65, 111, 38, 13, 13),
+(66, 111, 39, 13, 13),
+(67, 111, 37, 13, 13),
+(68, 111, 39, 13, 13),
+(69, 111, 38, 13, 13),
+(70, 111, 37, 13, 13);
 
 -- --------------------------------------------------------
 
@@ -4981,7 +5289,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
   `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
   `start_state_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Daten für Tabelle `dataobject`
@@ -4995,7 +5303,12 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 (5, 'A', 3, 102, 7),
 (6, 'A', 4, 104, 11),
 (7, 'A', 5, 105, 12),
-(8, 'a', 7, 106, 19);
+(8, 'a', 7, 106, 19),
+(9, 'a', 9, 107, 25),
+(10, 'a', 10, 108, 28),
+(11, 'a', 11, 109, 32),
+(12, 'a', 12, 110, 35),
+(13, 'a', 13, 111, 38);
 
 -- --------------------------------------------------------
 
@@ -5009,7 +5322,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=431 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=443 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -5439,7 +5752,19 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (427, 531, 6, 2, 0),
 (428, 532, 21, 8, 1),
 (429, 533, 20, 8, 0),
-(430, 534, 20, 8, 0);
+(430, 534, 20, 8, 0),
+(431, 535, 20, 8, 0),
+(432, 536, 20, 8, 0),
+(433, 537, 20, 8, 0),
+(434, 538, 26, 9, 0),
+(435, 539, 37, 13, 0),
+(436, 540, 37, 13, 0),
+(437, 541, 25, 9, 0),
+(438, 542, 39, 13, 1),
+(439, 543, 37, 13, 0),
+(440, 544, 37, 13, 0),
+(441, 545, 37, 13, 0),
+(442, 546, 37, 13, 0);
 
 -- --------------------------------------------------------
 
@@ -5450,7 +5775,7 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 CREATE TABLE IF NOT EXISTS `dataset` (
 `id` int(11) NOT NULL,
   `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=95 ;
 
 --
 -- Daten für Tabelle `dataset`
@@ -5502,7 +5827,55 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 (43, 1),
 (44, 1),
 (45, 0),
-(46, 0);
+(46, 0),
+(47, 1),
+(48, 0),
+(49, 1),
+(50, 0),
+(51, 1),
+(52, 1),
+(53, 0),
+(54, 0),
+(55, 1),
+(56, 0),
+(57, 1),
+(58, 0),
+(59, 1),
+(60, 1),
+(61, 0),
+(62, 0),
+(63, 1),
+(64, 0),
+(65, 1),
+(66, 0),
+(67, 1),
+(68, 1),
+(69, 0),
+(70, 0),
+(71, 1),
+(72, 1),
+(73, 0),
+(74, 0),
+(75, 1),
+(76, 0),
+(77, 1),
+(78, 0),
+(79, 1),
+(80, 1),
+(81, 0),
+(82, 0),
+(83, 1),
+(84, 0),
+(85, 1),
+(86, 0),
+(87, 1),
+(88, 1),
+(89, 0),
+(90, 0),
+(91, 1),
+(92, 0),
+(93, 1),
+(94, 0);
 
 -- --------------------------------------------------------
 
@@ -5565,7 +5938,55 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 (43, 34),
 (44, 35),
 (45, 35),
-(46, 33);
+(46, 33),
+(47, -1),
+(48, -1),
+(49, -1),
+(50, -1),
+(51, -1),
+(52, -1),
+(53, -1),
+(54, -1),
+(55, 37),
+(56, 36),
+(57, 39),
+(58, 38),
+(59, 41),
+(60, 42),
+(61, 42),
+(62, 40),
+(63, 44),
+(64, 43),
+(65, 46),
+(66, 45),
+(67, 48),
+(68, 49),
+(69, 49),
+(70, 47),
+(71, 51),
+(72, 52),
+(73, 52),
+(74, 50),
+(75, 54),
+(76, 53),
+(77, 56),
+(78, 55),
+(79, 58),
+(80, 59),
+(81, 59),
+(82, 57),
+(83, 61),
+(84, 60),
+(85, 63),
+(86, 62),
+(87, 65),
+(88, 66),
+(89, 66),
+(90, 64),
+(91, 68),
+(92, 67),
+(93, 70),
+(94, 69);
 
 -- --------------------------------------------------------
 
@@ -5623,15 +6044,15 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `modellid` int(11) NOT NULL DEFAULT '-1',
-  `modellversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=113 ;
+  `modelid` bigint(11) NOT NULL DEFAULT '-1',
+  `modelversion` int(11) NOT NULL DEFAULT '-1'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=128 ;
 
 --
 -- Daten für Tabelle `fragment`
 --
 
-INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modellid`, `modellversion`) VALUES
+INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) VALUES
 (1, 'fragment1', 1, 0, 0),
 (2, 'fragment2', 1, 0, 0),
 (3, 'fragment3', 1, 0, 0),
@@ -5649,7 +6070,22 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modellid`, `modellversion`
 (109, 'FragmentC', 105, 0, 0),
 (110, 'FragmentRESETReferenceTest1', 106, -1, -1),
 (111, 'FragmentBReferenceTest1', 106, -1, -1),
-(112, 'FragmentAReferenceTest1', 106, -1, -1);
+(112, 'FragmentAReferenceTest1', 106, -1, -1),
+(113, 'FragmentRESETReferenceTest1', 107, 895316243, 0),
+(114, 'FragmentBReferenceTest1', 107, 1844511714, 0),
+(115, 'FragmentAReferenceTest1', 107, 466282425, 0),
+(116, 'FragmentRESETReferenceTest1', 108, 895316243, 0),
+(117, 'FragmentBReferenceTest1', 108, 1844511714, 0),
+(118, 'FragmentAReferenceTest1', 108, 466282425, 0),
+(119, 'FragmentAReferenceTest1', 109, 466282425, 0),
+(120, 'FragmentBReferenceTest1', 109, 1844511714, 0),
+(121, 'FragmentRESETReferenceTest1', 109, 895316243, 0),
+(122, 'FragmentAReferenceTest1', 110, 466282425, 0),
+(123, 'FragmentBReferenceTest1', 110, 1844511714, 0),
+(124, 'FragmentRESETReferenceTest1', 110, 895316243, 0),
+(125, 'FragmentAReferenceTest2_2', 111, 4230671258813802220, 1),
+(126, 'FragmentBReferenceTest2_2', 111, 8309794372883612434, 0),
+(127, 'FragmentRESETReferenceTest1', 111, 895316243, 0);
 
 -- --------------------------------------------------------
 
@@ -5662,7 +6098,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1718 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1760 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -7308,7 +7744,49 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (1714, 0, 110, 534),
 (1715, 0, 111, 534),
 (1716, 1, 112, 534),
-(1717, 0, 112, 534);
+(1717, 0, 112, 534),
+(1718, 0, 110, 535),
+(1719, 0, 111, 535),
+(1720, 1, 112, 535),
+(1721, 0, 112, 535),
+(1722, 0, 110, 536),
+(1723, 0, 111, 536),
+(1724, 1, 112, 536),
+(1725, 0, 112, 536),
+(1726, 0, 110, 537),
+(1727, 0, 111, 537),
+(1728, 1, 112, 537),
+(1729, 0, 112, 537),
+(1730, 0, 113, 538),
+(1731, 1, 114, 538),
+(1732, 0, 115, 538),
+(1733, 0, 114, 538),
+(1734, 1, 125, 539),
+(1735, 0, 126, 539),
+(1736, 1, 127, 539),
+(1737, 0, 125, 539),
+(1738, 0, 127, 539),
+(1739, 0, 125, 540),
+(1740, 0, 126, 540),
+(1741, 0, 127, 540),
+(1742, 0, 113, 541),
+(1743, 0, 114, 541),
+(1744, 0, 115, 541),
+(1745, 0, 125, 542),
+(1746, 0, 126, 542),
+(1747, 0, 127, 542),
+(1748, 0, 125, 543),
+(1749, 0, 126, 543),
+(1750, 0, 127, 543),
+(1751, 0, 125, 544),
+(1752, 0, 126, 544),
+(1753, 0, 127, 544),
+(1754, 0, 125, 545),
+(1755, 0, 126, 545),
+(1756, 0, 127, 545),
+(1757, 0, 125, 546),
+(1758, 0, 126, 546),
+(1759, 0, 127, 546);
 
 -- --------------------------------------------------------
 
@@ -7705,7 +8183,9 @@ CREATE TABLE IF NOT EXISTS `reference` (
 
 INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
 (137, 140),
-(140, 137);
+(140, 137),
+(184, 191),
+(191, 184);
 
 -- --------------------------------------------------------
 
@@ -7749,15 +8229,15 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 CREATE TABLE IF NOT EXISTS `scenario` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
-  `modellid` int(11) DEFAULT '-1',
-  `modellversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=107 ;
+  `modelid` bigint(11) DEFAULT '-1',
+  `modelversion` int(11) NOT NULL DEFAULT '-1'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=112 ;
 
 --
 -- Daten für Tabelle `scenario`
 --
 
-INSERT INTO `scenario` (`id`, `name`, `modellid`, `modellversion`) VALUES
+INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`) VALUES
 (1, 'HELLOWORLD', 0, 0),
 (2, 'helloWorld2', 0, 0),
 (3, 'EmailTest', 0, 0),
@@ -7765,7 +8245,8 @@ INSERT INTO `scenario` (`id`, `name`, `modellid`, `modellversion`) VALUES
 (101, 'Test Insert Scenario', 0, 0),
 (103, 'ScenarioTest1', 0, 0),
 (105, 'TestScenarioTerminationCondition', 0, 0),
-(106, 'ReferenceTest1', -1, -1);
+(106, 'ReferenceTest1', -1, -1),
+(111, 'Test2_2ReferenceTest', 483134892, 0);
 
 -- --------------------------------------------------------
 
@@ -7777,7 +8258,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 `id` int(11) NOT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=535 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=547 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -8270,7 +8751,19 @@ INSERT INTO `scenarioinstance` (`id`, `terminated`, `scenario_id`) VALUES
 (531, 0, 1),
 (532, 0, 106),
 (533, 0, 106),
-(534, 0, 106);
+(534, 0, 106),
+(535, 0, 106),
+(536, 0, 106),
+(537, 0, 106),
+(538, 0, 107),
+(539, 0, 111),
+(540, 0, 111),
+(541, 0, 107),
+(542, 0, 111),
+(543, 0, 111),
+(544, 0, 111),
+(545, 0, 111),
+(546, 0, 111);
 
 -- --------------------------------------------------------
 
@@ -8282,7 +8775,7 @@ CREATE TABLE IF NOT EXISTS `state` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `olc_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
 
 --
 -- Daten für Tabelle `state`
@@ -8309,7 +8802,25 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 (18, 'bereit', 6),
 (19, 'init', 7),
 (20, 'fertig', 7),
-(21, 'bereit', 7);
+(21, 'bereit', 7),
+(22, 'init', 8),
+(23, 'fertig', 8),
+(24, 'bereit', 8),
+(25, 'init', 9),
+(26, 'fertig', 9),
+(27, 'bereit', 9),
+(28, 'init', 10),
+(29, 'fertig', 10),
+(30, 'bereit', 10),
+(31, 'fertig', 11),
+(32, 'init', 11),
+(33, 'bereit', 11),
+(34, 'fertig', 12),
+(35, 'init', 12),
+(36, 'bereit', 12),
+(37, 'fertig', 13),
+(38, 'init', 13),
+(39, 'bereit', 13);
 
 -- --------------------------------------------------------
 
@@ -8621,7 +9132,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2517;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2582;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -8631,12 +9142,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=143;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=195;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2517;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2582;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -8651,27 +9162,27 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `dataclass`
 --
 ALTER TABLE `dataclass`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `datanode`
 --
 ALTER TABLE `datanode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=71;
 --
 -- AUTO_INCREMENT for table `dataobject`
 --
 ALTER TABLE `dataobject`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=431;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=443;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
 ALTER TABLE `dataset`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=47;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=95;
 --
 -- AUTO_INCREMENT for table `emailconfiguration`
 --
@@ -8691,12 +9202,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=113;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=128;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1718;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1760;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
@@ -8721,17 +9232,17 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `scenario`
 --
 ALTER TABLE `scenario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=107;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=112;
 --
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=535;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=547;
 --
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `user`
 --
