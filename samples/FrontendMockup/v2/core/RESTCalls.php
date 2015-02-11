@@ -69,7 +69,7 @@ if($JCore_REST_Interface_Version === "v1"){
 
 	function GetActivities($PCM_ScenarioID, $PCM_ScenarioInstanceID, $PCM_status) {
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/".$PCM_ScenarioInstance."/".$PCM_status;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/0/?status=".$PCM_status;
 		
 		# fire HTTP GET to URL in order to recieve json
 		$get_json = file_get_contents($URL);
@@ -95,13 +95,13 @@ if($JCore_REST_Interface_Version === "v1"){
 		}
 	}
 
-	function GetActivitiesLabelByID($PCM_ActivityID) {
-		if(empty($PCM_ActivityID)){
-			die("$PCM_ActivityID is empty which has to be set for REST call");
+	function GetActivitiesLabelByID($PCM_ScenarioID, $PCM_ScenarioInstanceID, $PCM_ActivityInstanceID) {
+		if(empty($PCM_ActivityInstanceID)){
+			die("$PCM_ActivityInstanceID is empty which has to be set for REST call");
 		}
-
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/ActivityID/".$PCM_ActivityID."/";
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/."$PCM_ActivityInstanceID."/";
+
 		
 		# fire HTTP GET to URL in order to recieve json
 		$get_json = file_get_contents($URL);
