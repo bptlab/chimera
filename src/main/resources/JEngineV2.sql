@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
@@ -4927,15 +4927,15 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `modellid` int(11) NOT NULL,
-  `modellversion` int(11) NOT NULL
+  `modelid` int(11) NOT NULL,
+  `modelversion` int(11) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=110 ;
 
 --
 -- Daten für Tabelle `fragment`
 --
 
-INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modellid`, `modellversion`) VALUES
+INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) VALUES
 (1, 'fragment1', 1, 0, 0),
 (2, 'fragment2', 1, 0, 0),
 (3, 'fragment3', 1, 0, 0),
@@ -6818,15 +6818,15 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 CREATE TABLE IF NOT EXISTS `scenario` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
-  `modellid` int(11) NOT NULL,
-  `modellversion` int(11) NOT NULL
+  `modelid` int(11) NOT NULL,
+  `modelversion` int(11) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=106 ;
 
 --
 -- Daten für Tabelle `scenario`
 --
 
-INSERT INTO `scenario` (`id`, `name`, `modellid`, `modellversion`) VALUES
+INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`) VALUES
 (1, 'HELLOWORLD', 0, 0),
 (2, 'helloWorld2', 0, 0),
 (3, 'EmailTest', 0, 0),
