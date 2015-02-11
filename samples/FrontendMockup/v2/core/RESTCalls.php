@@ -5,9 +5,9 @@ $debug = false;
 #
 #	Functions for JEngine Calls
 #
-function GetActivities($PCM_Scenario, $PCM_Fragment, $PCM_status) {
+function GetActivities($PCM_Scenario, $PCM_ScenarioInstance, $PCM_status) {
 	global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_status;
+	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_ScenarioInstance."/".$PCM_status;
 	
 	# fire HTTP GET to URL in order to recieve json
 	$get_json = file_get_contents($URL);
@@ -111,9 +111,9 @@ function ShowScenarioInstances($PCM_Scenario) {
 	return $get_response_as_array;
 }
 
-function PostActivities($PCM_Scenario, $PCM_Fragment, $PCM_Activity, $PCM_status, $PCM_comment) {
+function PostActivities($PCM_Scenario, $PCM_ScenarioInstance, $PCM_Activity, $PCM_status, $PCM_comment) {
 	global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_Fragment."/".$PCM_Activity."/".$PCM_status."/".$PCM_comment;
+	$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_ScenarioInstance."/".$PCM_Activity."/".$PCM_status."/".$PCM_comment;
 	
 	//$data = array('key1' => 'value1', 'key2' => 'value2');
 	$data = array();
