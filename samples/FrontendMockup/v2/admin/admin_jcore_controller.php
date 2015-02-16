@@ -1,8 +1,10 @@
 <?php
 include '../core/config.php';
 include '../core/RESTCalls.php';
+global $reset;
+echo $reset;
 
-if(!isset($_COOKIE['JEngine_ScenarioID'])) {
+if(!isset($_COOKIE['JEngine_ScenarioID']) || ($reset == "scenarioID")) {
 	$scenarios = ShowScenarios();
 	$ScenarioIDs = $scenarios["ids"];
 	?>
@@ -20,7 +22,7 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 		<input type='submit' value='Submit'>
 		</form>
 
-<?php } elseif(!isset($_COOKIE['JEngine_ScenarioInstanceID'])) {
+<?php } elseif(!isset($_COOKIE['JEngine_ScenarioInstanceID']) || ($reset == "scenarioinstanceID")) {
 	$scenarioinstances = ShowScenarioInstances($_COOKIE['JEngine_ScenarioID']);
 	$scenarioinstanceIds = $scenarioinstances["ids"];
 	?>
@@ -54,6 +56,8 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 	            <input type='hidden' name='pcm_scenarioID_new_Instance' value='".$_COOKIE['JEngine_ScenarioID']."'>
 	            <input type='submit' class="btn btn-link" value='create new Instance'>
 		</form> 
+		| <a href="admin.php?l=jcore_controller&reset=scenarioID">change ScenarioID</a>
+		| <a href="admin.php?l=jcore_controller&reset=scenarioinstanceID">change scenarioinstanceID</a>
     </div>
 <?php 
 	$enabled_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "enabled");

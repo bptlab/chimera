@@ -3,6 +3,7 @@ include '../core/config.php';
 include '../core/RESTCalls.php';
 
 $link_content = $_GET['l'];
+$reset = $_GET['reset'];
 
 ?>
 <html>
