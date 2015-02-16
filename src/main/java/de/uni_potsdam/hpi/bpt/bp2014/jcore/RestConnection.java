@@ -241,16 +241,14 @@ public class RestConnection {
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
         executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
-        
+
         if (status.equals("begin")) {//start activity
-            executionService.beginActivity(scenarioInstanceID, activityInstanceID);
-            return true;
+            return executionService.beginActivity(scenarioInstanceID, activityInstanceID);
         } else if (status.equals("terminate")) {//terminate activity
-            executionService.beginActivity(scenarioInstanceID, activityInstanceID);
-            executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
-            return true;
+            return executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
         }
         //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
+        System.err.print("ERROR: no status defined " + status);
         return false;
     }
 
