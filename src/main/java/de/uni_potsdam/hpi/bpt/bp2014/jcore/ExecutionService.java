@@ -117,28 +117,28 @@ public class ExecutionService {
         return labels;
     }
 
-    public void beginActivity(int scenarioInstance_id, int activity_id) {
+    public boolean beginActivity(int scenarioInstance_id, int activity_id) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
             if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
-                ((ActivityInstance) nodeInstance).begin();
-                return;
+                return ((ActivityInstance) nodeInstance).begin();
             }
         }
+        return false;
     }
 
     public String getLabelForControlNodeID(int controlNode_id) {
         return dbControlNode.getLabel(controlNode_id);
     }
 
-    public void terminateActivity(int scenarioInstance_id, int activity_id) {
+    public boolean terminateActivity(int scenarioInstance_id, int activity_id) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
             if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
-                ((ActivityInstance) nodeInstance).terminate();
-                return;
+                return ((ActivityInstance) nodeInstance).terminate();
             }
         }
+        return false;
     }
 
     public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id) {
