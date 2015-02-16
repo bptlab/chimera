@@ -60,6 +60,7 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 		| <a href="admin.php?l=jcore_controller&reset=scenarioinstanceID">change scenarioinstanceID</a>
     </div>
 <?php 
+
 	$enabled_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "enabled");
     
     echo "<h4>enabled Activities</h4>

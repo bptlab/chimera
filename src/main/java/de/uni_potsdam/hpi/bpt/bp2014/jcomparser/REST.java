@@ -84,7 +84,7 @@ public class REST {
     @Path("scenarios/{modelID}/image/")
     @Produces("image/png")
     public Response showModelImage(@PathParam("modelID") String modelID) {
-        String urlToRead = processserver + "models/" + modelID + ".png";
+            String urlToRead = processserver + "models/" + modelID + ".png";
 
             Response scenario_image = new Retrieval().getImagewithAuth(processserver, urlToRead);
             return scenario_image;
