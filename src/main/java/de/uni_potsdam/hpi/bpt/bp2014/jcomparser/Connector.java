@@ -47,8 +47,10 @@ public class Connector {
     public int insertScenarioIntoDatabase(final String name,
                                           final long modelID,
                                           final int modelVersion) {
-        String sql = "INSERT INTO scenario (scenario.name, modelid, modelversion) " +
-               "VALUES ('" + name + "', " + modelID + ", " + modelVersion + ")";
+        String sql = "INSERT INTO scenario " +
+                "(scenario.name, modelid, modelversion) " +
+                "VALUES ('" + name + "', " + modelID +
+                ", " + modelVersion + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -66,8 +68,10 @@ public class Connector {
                                           final int scenarioID,
                                           final long modelID,
                                           final int modelVersion) {
-        String sql = "INSERT INTO fragment (fragment.name, scenario_id, modelid, modelversion) " +
-                "VALUES ('" + fragmentName + "', " + scenarioID + "," + modelID + "," + modelVersion + ")";
+        String sql = "INSERT INTO fragment " +
+                "(fragment.name, scenario_id, modelid, modelversion) " +
+                "VALUES ('" + fragmentName + "', " + scenarioID +
+                "," + modelID + "," + modelVersion + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -84,8 +88,10 @@ public class Connector {
                                              final String type,
                                              final int fragmentID) {
 
-        String sql = "INSERT INTO controlnode (label, controlnode.type, fragment_id) " +
-                "VALUES ('" + label + "', '" + type + "', " + fragmentID + ")";
+        String sql = "INSERT INTO controlnode " +
+                "(label, controlnode.type, fragment_id) " +
+                "VALUES ('" + label + "', '" +
+                type + "', " + fragmentID + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -94,10 +100,10 @@ public class Connector {
      * Information necessary for the insertion are given to
      * the database.
      *
-     * @param conditionID The Id of the condition inside the model (currently default).
-     * @param dataObjectID The Id of the dataObject which is part of the condition.
-     * @param stateID The ID of the state which is inside the condition
-     * @param scenarioID The Id of the scenario which has the term. condition
+     * @param conditionID The Id of the condition inside the model.
+     * @param dataObjectID The Id of the dataObj. as a part of the condition.
+     * @param stateID The ID of the state which is inside the condition.
+     * @param scenarioID The Id of the scenario which has the term. condition.
      */
     public void insertTerminationConditionIntoDatabase(final int conditionID,
                                                        final int dataObjectID,
@@ -136,16 +142,17 @@ public class Connector {
      * @param dataClassID The database Id of the class, which
      *                    describes the DataObject.
      * @param scenarioID The database id of the scenario.
-     * @param startStateID the database id of the initial State
-     * @return
+     * @param startStateID the database id of the initial State.
+     * @return the id of the newly created dataobject entry.
      */
     public int insertDataObjectIntoDatabase(final String name,
                                             final int dataClassID,
                                             final int scenarioID,
                                             final int startStateID) {
         String sql = "INSERT INTO dataobject" +
-                "(dataobject.name, dataclass_id, scenario_id, start_state_id) " +
-                "VALUES ('" + name + "', " + dataClassID + ", " + scenarioID + ", " + startStateID + ")";
+            "(dataobject.name, dataclass_id, scenario_id, start_state_id) " +
+            "VALUES ('" + name + "', " + dataClassID + ", " + scenarioID +
+            ", " + startStateID + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -219,7 +226,7 @@ public class Connector {
      * @param dataNodeID the database id of the datanode.
      */
     public void insertDataSetConsistOfDataNodeIntoDatabase(final int dataSetID,
-                                                           final int dataNodeID) {
+                                                       final int dataNodeID) {
         String sql = "INSERT INTO datasetconsistsofdatanode " +
                 "(dataset_id, datanode_id) " +
                 "VALUES (" + dataSetID + ", " + dataNodeID + ")";
@@ -266,8 +273,9 @@ public class Connector {
      */
     private void insertReferenceOneSideIntoDatabase(final int sourceNodeId,
                                                     final int targetNodeId) {
-        String sql = "INSERT INTO reference (controlnode_id1, controlnode_id2) " +
-                "VALUES (" + sourceNodeId + ", " + targetNodeId + ")";
+        String sql = "INSERT INTO reference (controlnode_id1," +
+                " controlnode_id2) VALUES (" + sourceNodeId +
+                ", " + targetNodeId + ")";
         performDefaultSQLInsertStatement(sql);
     }
 
@@ -275,44 +283,58 @@ public class Connector {
      * Inserts a EmailTemplate into the database
      * currently not used.
      *
-     * @param controlNodeId the database id of the node which will send the mail.
+     * @param controlNodeId the database id of the node which is the mail task.
      * @return returns the newly created Ids.
      */
     public int insertStandardEmailTemplateIntoDatabase(final int controlNodeId) {
         String sql = "INSERT INTO emailconfiguration " +
-                "(receivermailaddress, sendmailaddress, subject, message, controlnode_id) " +
-                "VALUES ('test@test.com', 'test@test.com', 'test', 'test', " + controlNodeId + ")";
+                "(receivermailaddress, sendmailaddress, subject," +
+                " message, controlnode_id) VALUES ('test@test.com'," +
+                " 'test@test.com', 'test', 'test', " +
+                controlNodeId + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
+    /**
+     * Perform a insert statement for the database.
+     * Nothing will be returned. Exceptions will be catched and handled.
+     * @param statement the statement to be executed.
+     */
     private void performDefaultSQLInsertStatement(final String statement) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
-        if (conn == null) return;
+        if (conn == null) {
+            System.err.println("Could not create a Connection instance.");
+            return;
+        }
         try {
             stmt = conn.createStatement();
             stmt.executeUpdate(statement);
         } catch (SQLException se) {
-            //Handle errors for JDBC
+            System.err.println("Error occured executing the statement:");
+            System.err.println(statement);
             se.printStackTrace();
         } finally {
-            //Clean-up environment
-            //finally block used to close resources
+            // Close used resources (Statement/Connection)
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
-            } catch (SQLException se2) {
-            } // nothing we can do
-            try {
-                if (conn != null)
+                }
+                if (conn != null) {
                     conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
+                }
+            } catch (SQLException se2) {
+                System.err.println("An error occurred closing a resource");
             }
         }
-
     }
 
+    /**
+     * Performs a sql insert statement.
+     * This method contains an basic error handling. Resources will be closed.
+     * @param statement the statement to be executed.
+     * @return the auto increment id of the newly created entry.
+     */
     private int performSQLInsertStatementWithAutoId(final String statement) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -325,22 +347,20 @@ public class Connector {
             rs.next();
             result = rs.getInt(1);
         } catch (SQLException se) {
-            //Handle errors from JDBC
+            System.err.println("Error occured executing the statement:");
+            System.err.println(statement);
             se.printStackTrace();
         } finally {
-            //finally block used to close resources
-            //Clean-up environment
+            // Close used resources (Statement/Connection)
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
-            } catch (SQLException se2) {
-                // nothing we can do
-            }
-            try {
-                if (conn != null)
+                }
+                if (conn != null) {
                     conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
+                }
+            } catch (SQLException se2) {
+                System.err.println("An error occurred closing a resource");
             }
         }
         return result;
