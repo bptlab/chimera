@@ -8,23 +8,26 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 
 public class RestTest {
+    String Server_URL = "http://172.16.64.113:8080/";
 
-   /*  @Before
-   public void setUpAndNode() {
-        andNode = document.createElement("node");
-        andNode.appendChild(createProperty("text", "AND"));
-        andNode.appendChild(createProperty("#id", "368338489"));
-        andNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.ParallelGateway"));
-    }*/
-
-
-    @Test
-    public void testGet() {
+    public void setUpAndNode() {
 
     }
 
     @Test
-    public void testPost() {
+    public void testGetScenarios() {
+       String url = Server_URL + "jcomparser/scenarios/";
+    }
 
+    @Test
+    public void testGetScenarioImage() {
+        String scenarioID = "000000";
+        String url = Server_URL + "jcomparser/launch/" + scenarioID + "/image/";
+    }
+
+    @Test
+    public void testPost() {
+       String scenarioID = "000000";
+       String url = Server_URL + "jcomparser/launch/" + scenarioID + "/";
     }
 }

@@ -209,7 +209,7 @@ if($JCore_REST_Interface_Version === "v1"){
 	   // return file_get_contents($URL);
 
 		$imginfo = getimagesize($URL);
-		header("Content-type: $imginfo['mime']");
+		header("Content-type: ".$imginfo."['mime']");
 		return readfile($URL);
 
 		//return file_get_contents($URL);
