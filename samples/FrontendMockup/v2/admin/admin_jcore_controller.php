@@ -11,8 +11,7 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 		<select name="pcm_scenarioID">
 		<option value=""></option>
 		<?php 
-		    foreach($ScenarioIDs as $key => $value) 
-		    {
+		    foreach($ScenarioIDs as $key => $value) {
 		       $value = htmlspecialchars($value); 
 		       echo '<option value="'. $value .'">'. $value .'</option>';
 		    }
@@ -30,8 +29,7 @@ if(!isset($_COOKIE['JEngine_ScenarioID'])) {
 		<select name="pcm_scenarioinstances">
 		<option value=""></option>
 		<?php 
-		    foreach($scenarioinstanceIds as $key => $value) 
-		    {
+		    foreach($scenarioinstanceIds as $key => $value) {
 		       $category = htmlspecialchars($category); 
 		       echo '<option value="'. $value .'">'. $value .'</option>';
 		    }
@@ -51,15 +49,52 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 
     <div class="alert alert-info">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
-        <strong>Note!</strong> Please read the comments carefully.
-    </div>
- 
-    <p>Current Scenario ID: <?php echo $_COOKIE['JEngine_ScenarioID']; ?> <a href="#" data-toggle="modal" data-target="#ScenarioModal">Change me</a> </p>
-    <p>Current Instance ID: <?php echo $_COOKIE['JEngine_ScenarioInstanceID']; ?> <a href="#" data-toggle="modal" data-target="#ScenarioInstanceModal">Change me</a> </p>
-    <p><form action='update_jcore_controller.php' method='post'>
+        <strong>Current Working Set</strong> Scenario ID: <?php echo $_COOKIE['JEngine_ScenarioID']; ?> | Instance ID: <?php echo $_COOKIE['JEngine_ScenarioInstanceID']; ?> |     
+        <form action='update_jcore_controller.php' method='post'>
 	            <input type='hidden' name='pcm_scenarioID_new_Instance' value='".$_COOKIE['JEngine_ScenarioID']."'>
-	            <input type='submit' value='create new Instance'>
-	</form></p>
+	            <input type='submit' class="btn btn-link" value='create new Instance'>
+		</form> 
+    </div>
+<?php 
+	$enabled_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "enabled");
+    
+    echo "<h4>enabled Activities</h4>
+    		<table>
+    			<tr>
+    				<th>Activity ID</th>
+    				<th>Activity Label</th>
+    				<th>Action</th>
+    			</tr>";
+    foreach($enabled_activities["label"] as $key => $value) {
+			  echo "<tr>";
+			  echo "<th>".$key."</th>";
+			  echo "<th>".$value."</th>";
+			  echo "<th><form action='update_jcore_controller.php' method='post'>
+	            			<input type='hidden' name='update_activity_status' value='true'>
+	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
+	            			<input type='hidden' name='pcm_scenarioinstances' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'>
+	            			<input type='hidden' name='pcm_activity' value='".key."'>
+	          				<input type='submit' class='btn btn-link' value='terminate'>
+						</form> </th>";
+			  echo "</tr>";
+	}
+	echo "</table>
+		  <br><hr>";
 
-
-<?php } ?>
+    $terminated_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "terminated");
+    
+    echo "<h4>terminated Activities</h4>
+    		<table>
+    			<tr>
+    				<th>Activity ID</th>
+    				<th>Activity Label</th>
+    			</tr>
+    			<tr>";
+    foreach($terminated_activities["label"] as $key => $value) {
+    	      echo "<tr>";
+			  echo "<th>".$key."</th>";
+			  echo "<th>".$value."</th>";
+		      echo "</tr>";
+	}
+	echo "</table>";
+} ?>

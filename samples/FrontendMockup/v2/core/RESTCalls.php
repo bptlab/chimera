@@ -20,8 +20,7 @@ if($JCore_REST_Interface_Version === "v1"){
 	* HTTP POST REQUESTS
 	*
 	*/
-
-		function ShowScenarios() {
+	function ShowScenarios() {
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
 		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/0/";
 		
