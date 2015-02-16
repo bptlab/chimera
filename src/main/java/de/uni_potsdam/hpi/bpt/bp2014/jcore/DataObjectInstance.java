@@ -25,7 +25,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
  * **********************************************************************************
  */
 
-
+/**
+ * Represents data object instances.
+ */
 public class DataObjectInstance {
     private int state_id;
     private int dataObjectInstance_id;

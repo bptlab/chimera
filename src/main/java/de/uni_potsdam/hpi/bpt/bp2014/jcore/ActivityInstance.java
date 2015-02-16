@@ -31,10 +31,9 @@ import java.util.LinkedList;
 
 
 
-/*
-represents the activity instance, it save the state of the activity in the statemachine, it has an outgoing behavior and
-an incoming behavior
-the constructor looks for an activity instance in the database or create a new one in the database
+/**
+ * Represents the activity instance.
+ * It save the state of the activity in the state machine. It has an outgoing behavior and an incoming behavior.
  */
 
 public class ActivityInstance extends ControlNodeInstance {

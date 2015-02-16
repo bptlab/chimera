@@ -24,7 +24,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
  * **********************************************************************************
  */
 
-
+/**
+ * Handles the state for an activity instance.
+ */
 public class ActivityStateMachine extends StateMachine {
     //Database Connection objects
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
