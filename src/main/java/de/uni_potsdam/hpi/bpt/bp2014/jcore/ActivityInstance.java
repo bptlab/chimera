@@ -79,6 +79,10 @@ public class ActivityInstance extends ControlNodeInstance {
         this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean begin() {
         if (((ActivityStateMachine) stateMachine).isEnabled()) {
             ((ActivityStateMachine) stateMachine).begin();
@@ -93,6 +97,10 @@ public class ActivityInstance extends ControlNodeInstance {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean referenceStarted() {
         return ((ActivityStateMachine) stateMachine).referenceStarted();
     }
@@ -115,7 +123,9 @@ public class ActivityInstance extends ControlNodeInstance {
         ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
     }
 
-
+    /*
+     * Getter
+     */
     public TaskExecutionBehavior getTaskExecutionBehavior() {
         return taskExecutionBehavior;
     }

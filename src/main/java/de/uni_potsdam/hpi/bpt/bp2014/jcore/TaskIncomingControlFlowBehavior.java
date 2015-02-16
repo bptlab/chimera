@@ -81,7 +81,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
 
     public void startReferences() {
         for (int activity_id : ((ActivityInstance) controlNodeInstance).getReferences()) {
-            scenarioInstance.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);
+            scenarioInstance.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(controlNodeInstance.getControlNode_id(), activity_id);
         }
     }
 

@@ -200,36 +200,25 @@ public class ScenarioInstance {
         return false;
     }
 
-    public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
+    /**
+     * checks if the referenced controlNode can be started.
+     * The referenced controlNode have to be control flow enabled and (data flow enabled or must have the same data output)
+     * @param controlNode_id
+     * @param referencedControlNode_id
+     */
+    public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id, int referencedControlNode_id) {
         for (ControlNodeInstance controlNodeInstance : controlFlowEnabledControlNodeInstances) {
-            if (controlNodeInstance.controlNode_id == controlNode_id) {
+            if (controlNodeInstance.controlNode_id == referencedControlNode_id) {
                 if (controlNodeInstance.getClass() == ActivityInstance.class) {
-                    if(enabledControlNodeInstances.contains(controlNodeInstance)) {
+                    DbControlNode dbControlNode = new DbControlNode();
+                    if(enabledControlNodeInstances.contains(controlNodeInstance) || dbControlNode.controlNodesHaveSameOutputs(controlNode_id, referencedControlNode_id)) {
                         ((ActivityInstance) controlNodeInstance).referenceStarted();
                         return;
                     }
-
-
-
                 }
             }
         }
 
-    }
-
-    private boolean compareOutputs(ControlNodeInstance controlNodeInstance1, ControlNodeInstance controlNodeInstance2) {
-        DbDataFlow dbDataFlow = new DbDataFlow();
-        DbDataNode dbDataNode = new DbDataNode();
-        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeInstance1.controlNode_id);
-        //TODO: Output Set
-        for (int outputSet : outputSets) {
-            LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
-            LinkedList<Integer> states = dbDataNode.getDataStatesForDataSets(outputSet);
-            for (int i = 0; i < dataObjects.size(); i++) {
-
-            }
-        }
-        return true;
     }
 
     public void terminateReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
