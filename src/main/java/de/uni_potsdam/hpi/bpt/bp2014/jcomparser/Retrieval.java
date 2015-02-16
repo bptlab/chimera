@@ -13,24 +13,26 @@ import java.util.Map;
 import java.awt.image.BufferedImage;
 
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ *
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ *
+ * ******************************************************************
+ *
+ * Copyright © All Rights Reserved 2014 - 2015
+ *
+ * Please be aware of the License. You may found it in the root directory.
+ *
+ * **********************************************************************************
+ */
 
 
 /*
@@ -43,7 +45,6 @@ public class Retrieval {
             "</user>";
 
     /**
-     *
      * @param urlToRead
      * @return
      * @Deprecated Use this method only if you don't want any authentification
@@ -82,7 +83,7 @@ public class Retrieval {
         HttpURLConnection conn;
 
         try {
-            CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
             Base64 base64 = new Base64();
             connection = (HttpURLConnection) new URL(hosturl + "users/login").openConnection();
@@ -103,8 +104,7 @@ public class Retrieval {
             BufferedReader reader = new BufferedReader(new InputStreamReader(modelsConnection.getInputStream()));
             StringBuilder stringBuilder = new StringBuilder();
             String line = null;
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
                 stringBuilder.append("\n");
             }
@@ -128,7 +128,7 @@ public class Retrieval {
         HttpURLConnection conn;
 
         try {
-            CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
             Base64 base64 = new Base64();
             connection = (HttpURLConnection) new URL(hosturl + "users/login").openConnection();
@@ -156,7 +156,7 @@ public class Retrieval {
             return Response.ok(imageData).build();
 
             // uncomment line below to send streamed
-             //return Response.ok(new ByteArrayInputStream(imageData)).build();
+            //return Response.ok(new ByteArrayInputStream(imageData)).build();
 
         } catch (IOException e) {
             System.err.println("Request failed.");

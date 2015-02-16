@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -8,7 +9,7 @@ import java.sql.Statement;
 
 /**
  * ********************************************************************************
- * <p/>
+ *
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -17,13 +18,13 @@ import java.sql.Statement;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
+ *
  * ******************************************************************
- * <p/>
+ *
  * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
+ *
  * Please be aware of the License. You may found it in the root directory.
- * <p/>
+ *
  * **********************************************************************************
  */
 
@@ -39,8 +40,8 @@ public class Connector {
      * The parameter are all the information needed to
      * create a scenario entry.
      *
-     * @param name The name of the scenario.
-     * @param modelID The ID used inside the xml representation.
+     * @param name         The name of the scenario.
+     * @param modelID      The ID used inside the xml representation.
      * @param modelVersion The version number of the model.
      * @return returns the database id on success or -1 if insertion failed.
      */
@@ -59,8 +60,8 @@ public class Connector {
      * The parameters contain all necessary information.
      *
      * @param fragmentName The name of the fragment.
-     * @param scenarioID The database id of the scenario (foreign key).
-     * @param modelID The ID used for the fragment inside the xml.
+     * @param scenarioID   The database id of the scenario (foreign key).
+     * @param modelID      The ID used for the fragment inside the xml.
      * @param modelVersion The version number of the model.
      * @return returns the database id on success or -1 if insertion failed.
      */
@@ -79,8 +80,9 @@ public class Connector {
      * Inserts a Control Node into the Database.
      * The Parameters contain all information for the insertion
      * are given as a parameter
-     * @param label The label of the node.
-     * @param type The type of the node (StartEvent/EndEvent/Task).
+     *
+     * @param label      The label of the node.
+     * @param type       The type of the node (StartEvent/EndEvent/Task).
      * @param fragmentID The database ID of the Fragment.
      * @return The newly created database entry.
      */
@@ -100,10 +102,10 @@ public class Connector {
      * Information necessary for the insertion are given to
      * the database.
      *
-     * @param conditionID The Id of the condition inside the model.
+     * @param conditionID  The Id of the condition inside the model.
      * @param dataObjectID The Id of the dataObj. as a part of the condition.
-     * @param stateID The ID of the state which is inside the condition.
-     * @param scenarioID The Id of the scenario which has the term. condition.
+     * @param stateID      The ID of the state which is inside the condition.
+     * @param scenarioID   The Id of the scenario which has the term. condition.
      */
     public void insertTerminationConditionIntoDatabase(final int conditionID,
                                                        final int dataObjectID,
@@ -120,8 +122,8 @@ public class Connector {
      * Inserts a control flow into the database.
      * The parameters contain all necessary information.
      *
-     * @param sourceID the database id of the sourceNode.
-     * @param targetID the database id of the target node
+     * @param sourceID  the database id of the sourceNode.
+     * @param targetID  the database id of the target node
      * @param condition the condition which is label of the flow.
      */
     public void insertControlFlowIntoDatabase(final int sourceID,
@@ -138,10 +140,10 @@ public class Connector {
      * Inserts a DataObject into the database.
      * The necessary information will be given as parameters.
      *
-     * @param name The name of the DataObject.
-     * @param dataClassID The database Id of the class, which
-     *                    describes the DataObject.
-     * @param scenarioID The database id of the scenario.
+     * @param name         The name of the DataObject.
+     * @param dataClassID  The database Id of the class, which
+     *                     describes the DataObject.
+     * @param scenarioID   The database id of the scenario.
      * @param startStateID the database id of the initial State.
      * @return the id of the newly created dataobject entry.
      */
@@ -150,9 +152,9 @@ public class Connector {
                                             final int scenarioID,
                                             final int startStateID) {
         String sql = "INSERT INTO dataobject" +
-            "(dataobject.name, dataclass_id, scenario_id, start_state_id) " +
-            "VALUES ('" + name + "', " + dataClassID + ", " + scenarioID +
-            ", " + startStateID + ")";
+                "(dataobject.name, dataclass_id, scenario_id, start_state_id) " +
+                "VALUES ('" + name + "', " + dataClassID + ", " + scenarioID +
+                ", " + startStateID + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -160,7 +162,7 @@ public class Connector {
      * This methods inserts a State into the Database.
      * All needed information will be given as parameters.
      *
-     * @param name The name of the state.
+     * @param name        The name of the state.
      * @param dataClassId The id of the class which can have the state.
      * @return the database id of the newly created entry.
      */
@@ -187,9 +189,9 @@ public class Connector {
      * This Methods inserts a new DataNode into the Database.
      * All necessary information are given as a parameter.
      *
-     * @param scenarioID The database Id of the corresponding scenario.
-     * @param stateID The database Id of the state of the Node.
-     * @param dataClassID The data class which describes the data object.
+     * @param scenarioID   The database Id of the corresponding scenario.
+     * @param stateID      The database Id of the state of the Node.
+     * @param dataClassID  The data class which describes the data object.
      * @param dataObjectID The data Object which is represented by the node.
      * @return the autoincrement id of the newly created entry.
      */
@@ -222,11 +224,11 @@ public class Connector {
      * Inserts a relation of a datanode to a dataset.
      * All necessary information are given as a parameter.
      *
-     * @param dataSetID the database id of the dataset.
+     * @param dataSetID  the database id of the dataset.
      * @param dataNodeID the database id of the datanode.
      */
     public void insertDataSetConsistOfDataNodeIntoDatabase(final int dataSetID,
-                                                       final int dataNodeID) {
+                                                           final int dataNodeID) {
         String sql = "INSERT INTO datasetconsistsofdatanode " +
                 "(dataset_id, datanode_id) " +
                 "VALUES (" + dataSetID + ", " + dataNodeID + ")";
@@ -238,8 +240,8 @@ public class Connector {
      * All necessary information are provided by parameters.
      *
      * @param controlNodeID the id of the control node (source or target).
-     * @param dataSetID the id of the dataSet (source or target).
-     * @param isInput describes the direction, weather it is an input or output.
+     * @param dataSetID     the id of the dataSet (source or target).
+     * @param isInput       describes the direction, weather it is an input or output.
      */
     public void insertDataFlowIntoDatabase(final int controlNodeID,
                                            final int dataSetID,
@@ -256,6 +258,7 @@ public class Connector {
      * inserts a new Reference into the Database.
      * The references describe the equivalence relation
      * between tasks.
+     *
      * @param controlNodeID1 the id of the first node.
      * @param controlNodeID2 the id of the second node.
      */
@@ -298,6 +301,7 @@ public class Connector {
     /**
      * Perform a insert statement for the database.
      * Nothing will be returned. Exceptions will be catched and handled.
+     *
      * @param statement the statement to be executed.
      */
     private void performDefaultSQLInsertStatement(final String statement) {
@@ -332,6 +336,7 @@ public class Connector {
     /**
      * Performs a sql insert statement.
      * This method contains an basic error handling. Resources will be closed.
+     *
      * @param statement the statement to be executed.
      * @return the auto increment id of the newly created entry.
      */
