@@ -19,7 +19,7 @@ import java.util.LinkedList;
 
 /**
  * ********************************************************************************
- *
+ * 
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -52,7 +52,7 @@ public class REST {
     //fire Comparser Execution
     @POST
     @Path("launch/{scenarioID}")
-    public int startComparser(@PathParam("scenarioID")  int scenarioID) throws IOException, SAXException, ParserConfigurationException {
+    public int startComparser(@PathParam("scenarioID") int scenarioID) throws IOException, SAXException, ParserConfigurationException {
         String scenario_url = pcm_url + scenarioID + ".pm";
         return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(scenario_url, processserver);
     }
@@ -84,10 +84,10 @@ public class REST {
     @Path("scenarios/{modelID}/image/")
     @Produces("image/png")
     public Response showModelImage(@PathParam("modelID") String modelID) {
-            String urlToRead = processserver + "models/" + modelID + ".png";
+        String urlToRead = processserver + "models/" + modelID + ".png";
 
-            Response scenario_image = new Retrieval().getImagewithAuth(processserver, urlToRead);
-            return scenario_image;
+        Response scenario_image = new Retrieval().getImagewithAuth(processserver, urlToRead);
+        return scenario_image;
 
     }
 
