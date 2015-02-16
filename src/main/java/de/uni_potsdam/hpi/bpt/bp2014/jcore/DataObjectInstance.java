@@ -25,7 +25,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
  * **********************************************************************************
  */
 
-
+/**
+ * Represents data object instances.
+ */
 public class DataObjectInstance {
     private int state_id;
     private int dataObjectInstance_id;
@@ -37,6 +39,15 @@ public class DataObjectInstance {
     private DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
     private DbDataObject dbDataObject = new DbDataObject();
 
+    /**
+     * Creates and initializes a new data object instance.
+     * Reads the information for an existing data object instance from the database or creates a new one if no one
+     * exist in the database.
+     * @param dataObject_id This is the database id from the data object instance.
+     * @param scenario_id This is the database id from the scenario.
+     * @param scenarioInstance_id This is the database id from the scenario instance.
+     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     */
     public DataObjectInstance(int dataObject_id, int scenario_id, int scenarioInstance_id, ScenarioInstance scenarioInstance) {
         this.scenarioInstance = scenarioInstance;
         this.dataObject_id = dataObject_id;
@@ -53,17 +64,29 @@ public class DataObjectInstance {
         }
     }
 
+    /**
+     * Sets the state for the data object instance in database and attribute.
+     * @param state_id This is the new state id.
+     */
     public void setState(int state_id) {
         this.state_id = state_id;
         dbDataObjectInstance.setState(dataObjectInstance_id, state_id);
         scenarioInstance.checkTerminationCondition();
     }
 
-    public Boolean getOnChange() {
+    /**
+     * Checks if the data object get edited right now.
+     * @return true if the data object get edited right now. false if not.
+     */
+    public boolean getOnChange() {
         return dbDataObjectInstance.getOnChange(dataObjectInstance_id);
     }
 
-    public void setOnChange(Boolean onChange) {
+    /**
+     * Sets on change from the data object instance.
+     * @param onChange This the value on change get set to.
+     */
+    public void setOnChange(boolean onChange) {
         dbDataObjectInstance.setOnChange(dataObjectInstance_id, onChange);
     }
 

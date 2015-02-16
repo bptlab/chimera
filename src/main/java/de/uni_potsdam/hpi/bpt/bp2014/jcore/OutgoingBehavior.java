@@ -25,7 +25,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
  */
 
 
-public class OutgoingBehavior {
+public abstract class OutgoingBehavior {
     protected DbControlFlow dbControlFlow = new DbControlFlow();
     protected DbControlNode dbControlNode = new DbControlNode();
     protected ScenarioInstance scenarioInstance;
