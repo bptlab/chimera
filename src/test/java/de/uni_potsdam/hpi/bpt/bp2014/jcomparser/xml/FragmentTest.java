@@ -44,7 +44,7 @@ public class FragmentTest {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             fragmentDoc = dBuilder.parse(fragmentXML);
             fragmentDoc.getDocumentElement().normalize();
-            fragment = new Fragment();
+            fragment = new Fragment("unwichtig");
             fragment.initializeInstanceFromXML(fragmentDoc.getDocumentElement());
         } catch (SAXException e) {
             e.printStackTrace();

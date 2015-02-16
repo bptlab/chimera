@@ -31,7 +31,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * The url of the process Editor.
      */
-    private final String processeditorServerUrl = "http://localhost:1205/";
+    private String processeditorServerUrl;
     /**
      * The databaseID of the scenario.
      */
@@ -74,6 +74,10 @@ public class Fragment implements IDeserialisable, IPersistable {
      * The version of the current Scenario
      */
     private int versionNumber;
+
+    public Fragment(String serverURL){
+        processeditorServerUrl = serverURL;
+    }
 
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {

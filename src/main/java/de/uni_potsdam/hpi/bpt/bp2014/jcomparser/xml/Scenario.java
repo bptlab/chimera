@@ -50,7 +50,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * The url of the process Editor.
      */
-    private final String processeditorServerUrl = "http://localhost:1205/";
+    private String processeditorServerUrl;
     /**
      * The database ID of the scenario.
      */
@@ -73,6 +73,11 @@ public class Scenario implements IDeserialisable, IPersistable {
      * The version of the current Scenario
      */
     private int versionNumber;
+
+
+    public Scenario(String serverURL) {
+        processeditorServerUrl = serverURL;
+    }
 
     /**
      * This Method initializes the scanario from an XML.
@@ -415,7 +420,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                                 new ByteArrayInputStream(
                                         currentFragmentXML.getBytes("utf-8"))));
                 doc.getDocumentElement().normalize();
-                Fragment fragment = new Fragment();
+                Fragment fragment = new Fragment(processeditorServerUrl);
                 fragment.initializeInstanceFromXML(
                         (org.w3c.dom.Node) doc.getDocumentElement());
                 this.fragments.add(fragment);

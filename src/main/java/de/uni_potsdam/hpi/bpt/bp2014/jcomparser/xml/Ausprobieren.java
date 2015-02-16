@@ -33,7 +33,7 @@ public class Ausprobieren {
         Retrieval jRetrieval = new Retrieval();
         String scenarioXML = jRetrieval.getHTMLwithAuth(
                 "http://localhost:1205/",
-                "http://localhost:1205/models/494340875.pm");
+                "http://localhost:1205/models/198773537.pm");
 
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(scenarioXML));
@@ -41,7 +41,7 @@ public class Ausprobieren {
                 .newInstance()
                 .newDocumentBuilder();
         Document doc = db.parse(is);
-        Scenario scen = new Scenario();
+        Scenario scen = new Scenario("http://localhost:1205/");
         scen.initializeInstanceFromXML(doc.getDocumentElement());
         scen.save();
     }
