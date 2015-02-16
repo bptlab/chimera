@@ -42,7 +42,6 @@ public class RestConnection {
      * HTTP GET REQUESTS
      *
      * @param scenarioID
-     * @param instanceID
      * @return
      */
 
@@ -123,17 +122,16 @@ public class RestConnection {
             if(status == null) {
                 status = "enabled"; //set status enabled for default value
             }
-            
+
             if (status.equals("enabled")) { //open activities;
 
                 if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
                     return Response.serverError().entity("Error: not a correct scenario instance").build();
                 }
-
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 if (enabledActivitiesIDs.size() == 0)
-                    return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no open activities present
+                    return Response.ok(new String("{empty}" + instanceID), MediaType.APPLICATION_JSON_TYPE).build();//no open activities present
                 Gson gson = new Gson();
                 JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
                 String jsonRepresentation = gson.toJson(json);
@@ -223,8 +221,6 @@ public class RestConnection {
      * HTTP POST REQUEST
      *
      * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityInstanceID
      * @return
      */
 
