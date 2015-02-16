@@ -1,10 +1,11 @@
-% THIS IS SIGPROC-SP.TEX - VERSION 3.1
-% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
-% APRIL 2009
-%
-% For tracking purposes - this is V3.1SP - APRIL 2009
+%% ----------------------------------------------------------------
+%% Report.tex
+%% ---------------------------------------------------------------- 
+\documentclass{template/ecsreport}      % Use the Report Style
+\graphicspath{{../Figures/}}   % Location of your graphics files
+\usepackage{natbib}            % Use Natbib style for the refs.
+\hypersetup{colorlinks=true}   % Set to false for black/white printing
 
-\documentclass{acm_proc_article-sp}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
@@ -16,30 +17,41 @@
 \usepackage{enumitem}
 \usepackage{stmaryrd}
 
+\input{Definitions}            % Include your abbreviations
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   HEADER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
-
+\frontmatter
 \title{Documentation zur JEngine}
-\numberofauthors{1} 
-
-%
-%
-\author{
-\alignauthor
-Jaspar, Jan, Sven, Stephan, Juliane, Jannik\\
-       \affaddr{Hasso Plattner Institute}\\
-       \affaddr{Prof.-Dr.-Helmert-Str. 2-3}\\
-       \affaddr{14482 Potsdam, Germany}\\
-       \email{\footnotesize  \{Jaspar,Jan,Sven,Stephan,Juliane,Jannik\}@student.hpi.de}
-}
-\date{28 December 2014}
-
+\authors    {\texorpdfstring
+             {\href{mailto:S.R.Gunn@ecs.soton.ac.uk}{Steve R. Gunn}}
+             {Steve R. Gunn}
+            }
+\addresses  {\groupname\\\deptname\\\univname}
+\date       {\today}
+\subject    {}
+\keywords   {}
 \maketitle
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   BODY   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %
 %
 \begin{abstract}
-Diese Dokumentation ist entstanden im Rahmen des Bachelorprojekts BP2014W1 am Lehrstuhl für ``Business Process Technology'' betreut durch Prof. Dr. Matthias Weske. Es dient zu Dokumentierung der konzipierten und implementierten JEngine um ein Proof-of-Concept zu ermöglichen und gleichzeitig als Prototype für Anwendungsfälle von Bosch Software Innovations zu fungieren.
+Diese Dokumentation ist entstanden im Rahmen des Bachelorprojekts BP2014W1 am Lehrstuhl für ``Business Process Technology'' betreut durch Prof. Dr. Mathias Weske. Es dient zu Dokumentierung der konzipierten und implementierten JEngine um ein Proof-of-Concept zu ermöglichen und gleichzeitig als Prototype für Anwendungsfälle von Bosch Software Innovations zu fungieren.
 \end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings
+\listofsymbols{ll}{$w$ & The weight vector}
+\acknowledgements{Thanks to no one.}
+\dedicatory{To \dots}
+\mainmatter
 
 %
 %
@@ -52,7 +64,6 @@ Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFramewo
 
 \begin{figure}
 \centering
-%\psfig{file=rosette.ps, height=1in, width=1in,}
 \includegraphics[width=3in]{img/MetaModell_classDiagramm.jpg}
 \caption{Meta Modell von PCM.}
 \label{fig:PCMmetaModell}
@@ -63,11 +74,22 @@ Productive Case Management (PCM) beschreibt eine.... \cite{ImplementationFramewo
 \section{JEngine}
 Overall JEngine
 
+\begin{figure}
+\centering
+\includegraphics[width=3in]{img/JEngine_overview.png}
+\caption{Meta Modell von PCM.}
+\label{fig:PCMmetaModell}
+\end{figure}
+
+
 %
 %
 \subsection{JCore}
 Der JCore umfasst mehrere Hauptkomponenten unserer Engine. Dazu zählt die Auswertung der Datenbank und das Entscheiden von enableden Aktivitäten etc.\\
-Dazu zählt zum Beispiel auch die REST-API.
+Dazu zählt zum Beispiel auch die REST-API sowie der ExecutionService.\\
+In der JCore liegen die grundsächlichsten Funktionalitäten, die unsere JEngine anbietet. Zu diesen gehören zum einen die Möglichkeit, dass man Aktivitäten sequenziell ausführen kann. Bei den Aktivitäten, die man ausführen kann, handelt es sich bisher nur um User-Tasks, die später noch mit E-Mail-Tasks erweitert werden sollen.\\
+Bei PCM können Aktivitäten aus Datenfluss- und Datenobjektflusssicht enabled werden. Dies ist auch der Grund, weshalb wir Datenobjekte unterstützen, sowie deren Zustandsübergänge. Außerdem können in PCM Aktivitäten referenziert werden, das bei der Ausführung die Folge hat, dass wenn referenzierte Aktivitäten enabled sind und dieselben Vor- und Nachbedngungen haben, auch beide in dne Zustand running wechseln, sobald eine von ihnen gestartet wird.\\
+Darüberhinaus bestehen PCM-Fragmente aus einem Subset von BPMN. Davon unterstützen wir zur Zeit Start-/Endevents, Aktivitäten und AND-Gateways.
 
 %
 %
@@ -153,10 +175,44 @@ Wird versucht eine Aktivität zu starten, die nicht existiert bzw. eine Aktivit�
 
 \textbf{Im Fehlerfall:}\\
 Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integer mit dem Wert \textit{-1} zurückgegeben.\\
-%
-%
+
 \end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Überarbeitet %%%%%%%%%%%%%%%%%%%%%%%%
+
+Default URL:
+http://172.16.64.113:8080/JEngine/interface/\{version\}/\{language\}/?
+
+as parameter:
+scenario
+returns all scenarios
+ 
+scenario=1
+returns all instances
+
+scenario=1&runtime
+returns all instances with runtime
+
+instanceid=1&status=enabled
+returns all enabled activities
+
+activityid=2
+returns all information for this activity
+
+users
+returns all users
+
+roles
+roles returns all roles
+
+
+timestamp ISO-8601
+
+%
+%
 \subsubsection{ExecutionService}
+Der ExecutionService ist die Komponente, auf die die REST-API aufbaut. Diese Komponente der JEngine ist essentiell um Anfragen, die über das REST-Interface entgegengenommen werden, zu bearbeiten. Dabei stellt es eine Verbindung zur Datenbank her, um auf dieser Queries auszuführen. Die meisten Abfragen benötigen eine ID des Objekts, um mehr Informationen über dieses zu gewinnen. Es gibt zudem auch Methoden um Aktivitäten bzw. ganze Szenarien zu instanziieren.
 
 %
 %
@@ -281,6 +337,8 @@ only by moving the nodes and adding/removing PCM Fragments.
 Now there should be entries for all the fragments (inside green node)
 and for all their data objects (inside white node).
 
+%
+%
 \subsubsection{Removing a Fragment From an
 Scenario}\label{removing-a-fragment-from-an-scenario}
 
@@ -297,6 +355,8 @@ Scenario}\label{removing-a-fragment-from-an-scenario}
   Click on \emph{Remove} than click \emph{Ok}
 \end{enumerate}
 
+%
+%
 \subsubsection{Set a Termination
 Condition}\label{set-a-termination-condition}
 
@@ -318,6 +378,8 @@ in one specific state is possible.
   State} fields
 \end{enumerate}
 
+%
+%
 \subsubsection{Copy and Alter a Complete
 Fragment}\label{copy-and-alter-a-complete-fragment}
 
@@ -345,6 +407,9 @@ You can create a variation of an existing PCM Fragment using the Plug-in
 %
 \subsection{Processeditor Client}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   FOOTER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\backmatter
 
 %
 %

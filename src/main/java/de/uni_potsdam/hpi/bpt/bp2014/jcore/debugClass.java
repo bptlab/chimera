@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,29 +8,30 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
-
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 public class debugClass {
-    public static String selectScenario(){
+    public static String selectScenario() {
 
         System.out.print("Select Scenario: ");
         String scID = readLine();
@@ -40,7 +39,7 @@ public class debugClass {
         return scID;
     }
 
-    public static String selectScenarioInstance(){
+    public static String selectScenarioInstance() {
 
         System.out.print("Select Scenario Instance: ");
         String scID = readLine();
@@ -48,26 +47,61 @@ public class debugClass {
         return scID;
     }
 
-    public static String readLine(){
+    public static String readLine() {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
         String back = null;
         try {
             back = br.readLine();
         } catch (IOException e) {
-            System.out.print("ERROR: "+e);
+            System.out.print("ERROR: " + e);
             e.printStackTrace();
         }
 
         return back;
     }
 
-    public static void main(String args[]){
-        String scenarioID = selectScenario();
-        String scenarioInstanceID = selectScenarioInstance();
-        ScenarioInstance scenarioInstance = new ScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
+    public static void main(String args[]) {
+        int scenarioID = new Integer(selectScenario());
+        int scenarioInstanceID = new Integer(selectScenarioInstance());
+        ExecutionService executionService = new ExecutionService();
+        String scenarioName = executionService.getScenarioName(scenarioID);
+        if (scenarioInstanceID == -1) {
+            scenarioInstanceID = executionService.startNewScenarioInstance(scenarioID);
+            System.out.println("neues Scenario " + scenarioName + " geöffnet, Scenario Instance ID: " + scenarioInstanceID);
+        } else {
+            if (executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+                System.out.println("Scenario Instance geöffnet vom Scenario " + scenarioName);
+            } else {
+                System.out.println("Scenario Instance existiert nicht");
+            }
+        }
+        while (true) {
+            LinkedList<Integer> activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
+            HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
+            System.out.println("\nenabled Aktivität ID");
+            for (int activityID : activitiesIDs) {
+                System.out.println(activityID + ", " + labels.get(activityID));
+            }
 
-/*        int id = executionService.startNewScenarioInstance(new Integer(1));
+            System.out.println("Select Activity ID");
+            int read = new Integer(readLine());
+            executionService.beginActivity(scenarioInstanceID, read);
+            System.out.println("----------start activity-----------");
+            System.out.println("enabled Aktivität ID");
+            activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
+            labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
+            for (int activityID : activitiesIDs) {
+                System.out.println(activityID + ", " + labels.get(activityID));
+            }
+            //readLine();
+            System.out.println("---------terminate activity------------");
+            executionService.terminateActivity(scenarioInstanceID, read);
+            if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
+                System.out.println("Scenario ist terminiert");
+        }
+
+        /*        int id = executionService.startNewScenarioInstance(new Integer(1));
         LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
         HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(id);
         for(int activityID: enabledActivitiesIDs) {
@@ -87,19 +121,5 @@ public class debugClass {
         for(int activityID: activitiesIDs){
             System.out.println(activityID);
         }*/
-
-
-        while(true){
-
-
-            ExecutionService executionService = new ExecutionService(scenarioInstance);
-            LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDs();
-            System.out.println("enabled Aktivität ID");
-            for(int activityID: activitiesIDs){
-                System.out.println(activityID);
-            }
-            System.out.println("Select Activity");
-            executionService.startActivity(new Integer(readLine()));
-        }
     }
 }

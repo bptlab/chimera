@@ -67,7 +67,9 @@
             <!-- /navbar-inner -->
           </div>
 
+<?php if($_COOKIE['JEngine_Role'] === "admin"){ ?>
           <div class="row-fluid">
+
             <div class="span2">
               <div class="widget">
                 <div class="widget-header">
@@ -170,8 +172,10 @@
             </div>
 
           </div>
-
+<? } ?>
           <div class="row-fluid">
+
+<?php if($_COOKIE['JEngine_Role'] === "admin"){ ?>
             <div class="span8">
               <div class="widget">
                 <div class="widget-header">
@@ -189,7 +193,7 @@
                 </div>
               </div>
             </div>
-
+<? } ?>
             <div class="span4">
               <div class="widget">
                 <div class="widget-header">

@@ -15,7 +15,7 @@ public class DbControlNodeInstanceTest {
         assertTrue(dbControlNodeInstance.existControlNodeInstance(4, 126));
         assertFalse(dbControlNodeInstance.existControlNodeInstance(4, 100));
         assertFalse(dbControlNodeInstance.existControlNodeInstance(999, 100));
-        assertFalse(dbControlNodeInstance.existControlNodeInstance(4, 999));
+        assertFalse(dbControlNodeInstance.existControlNodeInstance(3, 999));
         assertFalse(dbControlNodeInstance.existControlNodeInstance(999, 999));
     }
     @Test

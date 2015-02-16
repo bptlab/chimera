@@ -14,9 +14,9 @@ public class DbDataObjectInstanceTest {
     @Test
     public void testExistDataObjectInstance(){
         DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
-        assertTrue(dbDataObjectInstance.existDataObjectInstance(62, 1));
+        assertTrue(dbDataObjectInstance.existDataObjectInstance(62, 2));
         assertFalse(dbDataObjectInstance.existDataObjectInstance(62,10));
-        assertFalse(dbDataObjectInstance.existDataObjectInstance(1,2));
+        assertFalse(dbDataObjectInstance.existDataObjectInstance(2,2));
         assertFalse(dbDataObjectInstance.existDataObjectInstance(622,120));
     }
 

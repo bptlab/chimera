@@ -28,8 +28,8 @@
     </title>
     <meta name="author" content="" />
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="description" content="FrontEnd Part for the JEngine." />
+    <meta name="author" content="JEngine Team" />
     <!-- bootstrap css -->
     <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
     </script>

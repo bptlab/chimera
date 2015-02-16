@@ -4,36 +4,39 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 public class GatewayInstance extends ControlNodeInstance {
-    public Boolean isXOR;
-    public Boolean isAND;
-    public ScenarioInstance scenarioInstance;
+    private Boolean isXOR;
+    private Boolean isAND;
+    private ScenarioInstance scenarioInstance;
+    //Database Connection objects
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
     public GatewayInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
         //looks if the Gateway Instance has already been initialized
-        for (ControlNodeInstance controlNodeInstance : scenarioInstance.controlNodeInstances) {
+        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
             if (controlNodeInstance.fragmentInstance_id == controlNodeInstance_id && controlNodeInstance.controlNode_id == controlNode_id) {
                 //if it exist, only checks the control flow
                 controlNodeInstance.incomingBehavior.enableControlFlow();
@@ -43,7 +46,7 @@ public class GatewayInstance extends ControlNodeInstance {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
-        scenarioInstance.controlNodeInstances.add(this);
+        scenarioInstance.getControlNodeInstances().add(this);
         if (dbControlNode.getType(controlNode_id).equals("AND")) {
             this.isAND = true;
             this.isXOR = false;
@@ -65,8 +68,23 @@ public class GatewayInstance extends ControlNodeInstance {
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
     }
 
-    public void terminate(){
-        ((GatewayStateMachine)stateMachine).terminate();
+    public void terminate() {
+        ((GatewayStateMachine) stateMachine).terminate();
         outgoingBehavior.terminate();
+    }
+    /*
+     * Getter
+     */
+
+    public Boolean getIsXOR() {
+        return isXOR;
+    }
+
+    public Boolean getIsAND() {
+        return isAND;
+    }
+
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
     }
 }
