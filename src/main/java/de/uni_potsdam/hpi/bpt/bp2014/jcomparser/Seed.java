@@ -6,34 +6,36 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ *
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ *
+ * ******************************************************************
+ *
+ * Copyright © All Rights Reserved 2014 - 2015
+ *
+ * Please be aware of the License. You may found it in the root directory.
+ *
+ * **********************************************************************************
+ */
 
 
 public class Seed {
 
-    public void getDBcontent(){
+    public void getDBcontent() {
 
     }
 
 
-    public void setDBcontent(){
+    public void setDBcontent() {
 
     }
 
@@ -52,10 +54,10 @@ public class Seed {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM ProcessElement WHERE type = 'Activity' AND fragment_id = "+id+" ORDER BY id";
+            String sql = "SELECT id FROM ProcessElement WHERE type = 'Activity' AND fragment_id = " + id + " ORDER BY id";
 
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 results.add(rs.getInt("id"));
             }
 

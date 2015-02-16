@@ -1,8 +1,8 @@
 <?php
 include '../core/config.php';
 include '../core/RESTCalls.php';
-global $reset;
-echo $reset;
+
+$reset = $_GET['reset'];
 
 if(!isset($_COOKIE['JEngine_ScenarioID']) || ($reset == "scenarioID")) {
 	$scenarios = ShowScenarios();
@@ -56,8 +56,14 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 	            <input type='hidden' name='pcm_scenarioID_new_Instance' value='".$_COOKIE['JEngine_ScenarioID']."'>
 	            <input type='submit' class="btn btn-link" value='create new Instance'>
 		</form> 
-		| <a href="admin.php?l=jcore_controller&reset=scenarioID">change ScenarioID</a>
-		| <a href="admin.php?l=jcore_controller&reset=scenarioinstanceID">change scenarioinstanceID</a>
+		| <form action='update_jcore_controller.php' method='post'>
+	            <input type='hidden' name='reset_scenarioID' value='true'>
+	            <input type='submit' class="btn btn-link" value='change scenarioID'>
+		</form> 
+		| <form action='update_jcore_controller.php' method='post'>
+	            <input type='hidden' name='reset_scenarioinstanceID' value='true'>
+	            <input type='submit' class="btn btn-link" value='change scenarioinstanceID'>
+		</form> 
     </div>
 <?php 
 
@@ -70,18 +76,53 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     				<th>Activity Label</th>
     				<th>Action</th>
     			</tr>";
-    foreach($enabled_activities["label"] as $key => $value) {
+
+    $amount_of_enabled_activities = count($enabled_activities["ids"]);
+    for ($i = 0; $i < $amount_of_enabled_activities; $i++) {
+    	 $key = $enabled_activities["ids"][$i];
+    	 $value = $enabled_activities["label"][$key];
+    //foreach($enabled_activities["label"] as $key => $value) {
 			  echo "<tr>";
 			  echo "<th>".$key."</th>";
 			  echo "<th>".$value."</th>";
 			  echo "<th><form action='update_jcore_controller.php' method='post'>
-	            			<input type='hidden' name='update_activity_status' value='true'>
+	            			<input type='hidden' name='update_activity_status_begin' value='true'>
+	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
+	            			<input type='hidden' name='pcm_scenarioinstances' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'>
+	            			<input type='hidden' name='pcm_activity' value='".$key."'>
+	          				<input type='submit' class='btn btn-link' value='begin'>
+						</form> </th>";
+			  echo "</tr>";
+	}
+	echo "</table>
+		  <br><hr>";
+	$running_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "running");
+    			
+    echo "<h4>running Activities</h4>
+    		<table>
+    			<tr>
+    				<th>Activity ID</th>
+    				<th>Activity Label</th>
+    			</tr>
+    			<tr>";
+
+    $amount_of_running_activities = count($running_activities["ids"]);
+    for ($i = 0; $i < $amount_of_running_activities; $i++) {
+    	 $key = $running_activities["ids"][$i];
+    	 $value = $running_activities["label"][$key];;
+	//}
+    //foreach($running_activities["label"] as $key => $value) {
+    	      echo "<tr>";
+			  echo "<th>".$key."</th>";
+			  echo "<th>".$value."</th>";
+			  echo "<th><form action='update_jcore_controller.php' method='post'>
+	            			<input type='hidden' name='update_activity_status_terminate' value='true'>
 	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
 	            			<input type='hidden' name='pcm_scenarioinstances' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'>
 	            			<input type='hidden' name='pcm_activity' value='".$key."'>
 	          				<input type='submit' class='btn btn-link' value='terminate'>
-						</form> </th>";
-			  echo "</tr>";
+						</form></th>";
+		      echo "</tr>";
 	}
 	echo "</table>
 		  <br><hr>";
@@ -95,7 +136,12 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     				<th>Activity Label</th>
     			</tr>
     			<tr>";
-    foreach($terminated_activities["label"] as $key => $value) {
+
+    $amount_of_terminated_activities = count($terminated_activities["ids"]);
+    for ($i = 0; $i < $amount_of_terminated_activities; $i++) {
+    	 $key = $terminated_activities["ids"][$i];
+    	 $value = $terminated_activities["label"][$key];
+    //foreach($terminated_activities["label"] as $key => $value) {
     	      echo "<tr>";
 			  echo "<th>".$key."</th>";
 			  echo "<th>".$value."</th>";
