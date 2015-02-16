@@ -52,7 +52,7 @@ public class REST {
     //fire Comparser Execution
     @POST
     @Path("launch/{scenarioID}")
-    public int startComparser(@PathParam("scenarioID") int scenarioID) throws IOException, SAXException, ParserConfigurationException {
+    public int startComparser(@PathParam("scenarioID") String scenarioID) throws IOException, SAXException, ParserConfigurationException {
         String scenario_url = pcm_url + scenarioID + ".pm";
         return de.uni_potsdam.hpi.bpt.bp2014.jcomparser.JComparser.main(scenario_url, processserver);
     }
