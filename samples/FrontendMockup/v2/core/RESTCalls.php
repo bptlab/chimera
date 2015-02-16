@@ -200,6 +200,21 @@ if($JCore_REST_Interface_Version === "v1"){
 		return $get_response_as_array;
 	}
 
+	function GetScenarioImage($PCM_ScenarioID) {
+		global $JEngine_Server_URL, $JComparser_REST_Interface, $debug;
+		$URL = $JEngine_Server_URL."/".$JComparser_REST_Interface."/scenarios/".$PCM_ScenarioID."/image/";
+
+	  //  header('Content-Type: image/jpeg');
+	   // header('Content-Length: ' . filesize($URL));
+	   // return file_get_contents($URL);
+
+		$imginfo = getimagesize($URL);
+		header("Content-type: $imginfo['mime']");
+		return readfile($URL);
+
+		//return file_get_contents($URL);
+	}
+
 	function PostScenarios($scenarioID) {
 		global $JEngine_Server_URL, $JComparser_REST_Interface, $debug;
 		$URL = $JEngine_Server_URL."/".$JComparser_REST_Interface."/launch/".$scenarioID;
