@@ -5,7 +5,7 @@ include '../core/RESTCalls.php';
 //update Cookie Values in case of POST is set.
 if(isset($_POST['update_activity_status'])) {
 
-   $result = PostActivities($_POST['pcm_scenarioID'], $_POST['pcm_scenarioinstances'], $_POST['pcm_activity'], "terminated", "");
+   $result = PostActivities($_POST['pcm_scenarioID'], $_POST['pcm_scenarioinstances'], $_POST['pcm_activity'], "terminate", "");
    if($result) {
       header("Location: admin.php?l=jcore_controller");
       die();

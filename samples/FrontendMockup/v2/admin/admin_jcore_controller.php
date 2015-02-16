@@ -77,7 +77,7 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 	            			<input type='hidden' name='update_activity_status' value='true'>
 	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
 	            			<input type='hidden' name='pcm_scenarioinstances' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'>
-	            			<input type='hidden' name='pcm_activity' value='".key."'>
+	            			<input type='hidden' name='pcm_activity' value='".$key."'>
 	          				<input type='submit' class='btn btn-link' value='terminate'>
 						</form> </th>";
 			  echo "</tr>";

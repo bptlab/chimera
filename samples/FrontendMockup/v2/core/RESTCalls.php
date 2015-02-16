@@ -131,12 +131,13 @@ if($JCore_REST_Interface_Version === "v1"){
 	* HTTP POST REQUESTS
 	*
 	*/
-	function PostActivities($PCM_Scenario, $PCM_ScenarioInstance, $PCM_Activity, $PCM_status, $PCM_comment) {
+	function PostActivities($PCM_ScenarioID, $PCM_ScenarioInstanceID, $PCM_ActivityID, $PCM_status, $PCM_comment) {
 		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
-		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/".$PCM_Scenario."/".$PCM_ScenarioInstance."/".$PCM_Activity."/".$PCM_status."/".$PCM_comment;
-		
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/activityinstance/".$PCM_ActivityID."/?status=".$PCM_status;
+		error_log($URL);
+
 		//$data = array('key1' => 'value1', 'key2' => 'value2');
-		$data = array();
+		//$data = array();
 		# fire HTTP POST to URL in order to update data
 		$result = PostWrapper($URL, $data);
 

@@ -245,7 +245,7 @@ public class RestConnection {
         if (status.equals("begin")) {//start activity
             executionService.beginActivity(scenarioInstanceID, activityInstanceID);
             return true;
-        } else if (status.equals("begin")) {//terminate activity
+        } else if (status.equals("terminate")) {//terminate activity
             executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
             return true;
         }
