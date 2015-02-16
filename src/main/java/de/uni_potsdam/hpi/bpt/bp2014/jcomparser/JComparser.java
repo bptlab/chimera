@@ -6,6 +6,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -81,12 +82,6 @@ public class JComparser {
             return result;
         }
         return null;
-    }
-
-    public static java.awt.Image getScenarioImage(String processeditor_server_url, String scenarioID) throws XPathExpressionException {
-        java.awt.Image image = java.awt.Toolkit.getDefaultToolkit().createImage( new Retrieval().getHTMLwithAuth(processeditor_server_url, processeditor_server_url + "models/" + scenarioID + ".png"));
-       // BufferedImage scenario_image =
-        return image;
     }
 
     public static void writeAllScenariosToDatabase(String processeditor_server_url) throws XPathExpressionException {

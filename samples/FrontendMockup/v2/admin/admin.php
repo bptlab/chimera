@@ -3,6 +3,7 @@ include '../core/config.php';
 include '../core/RESTCalls.php';
 
 $link_content = $_GET['l'];
+$reset = $_GET['reset'];
 
 ?>
 <html>
@@ -41,6 +42,12 @@ $link_content = $_GET['l'];
     <link href='assets/stylesheets/demo.css' media='all' rel='stylesheet' type='text/css' />
     -->
 
+    <!-- avoid new line in HTML form -->
+    <style type="text/css">
+		form, table {display:inline; margin:0px; padding:0px;}
+	</style>
+
+	<!-- load content based on parameter -->
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <?php
     if(isset($link_content)){
