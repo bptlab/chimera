@@ -97,7 +97,7 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 	echo "</table>
 		  <br><hr>";
 	$running_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "running");
-    			var_dump($running_activities);
+    			
     echo "<h4>running Activities</h4>
     		<table>
     			<tr>
@@ -124,7 +124,8 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 						</form></th>";
 		      echo "</tr>";
 	}
-	echo "</table>";
+	echo "</table>
+		  <br><hr>";
 
     $terminated_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "terminated");
     

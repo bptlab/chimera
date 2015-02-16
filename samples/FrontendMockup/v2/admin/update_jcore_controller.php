@@ -56,7 +56,8 @@ if(isset($_POST['update_activity_status_terminate'])) {
    
    unset($_COOKIE['JEngine_ScenarioID']);
    unset($_COOKIE['JEngine_ScenarioInstanceID']); //if we reset the ScenarioID we should also reset the ScenarioInstanceID 
-
+   setcookie("JEngine_ScenarioInstanceID", "", time(), '/', NULL, 0);
+   setcookie("JEngine_ScenarioID", "", time(), '/', NULL, 0);
    header("Location: admin.php?l=jcore_controller");
    die();
 
@@ -64,6 +65,7 @@ if(isset($_POST['update_activity_status_terminate'])) {
 } elseif(isset($_POST['reset_scenarioinstanceID'])){
    
    unset($_COOKIE['JEngine_ScenarioInstanceID']);
+   setcookie("JEngine_ScenarioInstanceID", "", time(), '/', NULL, 0);
 
    header("Location: admin.php?l=jcore_controller");
    die();
