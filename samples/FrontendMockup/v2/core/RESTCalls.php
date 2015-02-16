@@ -137,7 +137,7 @@ if($JCore_REST_Interface_Version === "v1"){
 		error_log($URL);
 
 		//$data = array('key1' => 'value1', 'key2' => 'value2');
-		//$data = array();
+		$data = array();
 		# fire HTTP POST to URL in order to update data
 		$result = PostWrapper($URL, $data);
 
