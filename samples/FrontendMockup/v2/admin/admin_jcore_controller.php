@@ -75,16 +75,39 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 			  echo "<th>".$key."</th>";
 			  echo "<th>".$value."</th>";
 			  echo "<th><form action='update_jcore_controller.php' method='post'>
-	            			<input type='hidden' name='update_activity_status' value='true'>
+	            			<input type='hidden' name='update_activity_status_terminate' value='true'>
 	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
 	            			<input type='hidden' name='pcm_scenarioinstances' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'>
 	            			<input type='hidden' name='pcm_activity' value='".$key."'>
 	          				<input type='submit' class='btn btn-link' value='terminate'>
+						</form>
+						<form action='update_jcore_controller.php' method='post'>
+	            			<input type='hidden' name='update_activity_status_begin' value='true'>
+	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
+	            			<input type='hidden' name='pcm_scenarioinstances' value='".$_COOKIE['JEngine_ScenarioInstanceID']."'>
+	            			<input type='hidden' name='pcm_activity' value='".$key."'>
+	          				<input type='submit' class='btn btn-link' value='begin'>
 						</form> </th>";
 			  echo "</tr>";
 	}
 	echo "</table>
 		  <br><hr>";
+	$running_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "running");
+    
+    echo "<h4>terminated Activities</h4>
+    		<table>
+    			<tr>
+    				<th>Activity ID</th>
+    				<th>Activity Label</th>
+    			</tr>
+    			<tr>";
+    foreach($running_activities["label"] as $key => $value) {
+    	      echo "<tr>";
+			  echo "<th>".$key."</th>";
+			  echo "<th>".$value."</th>";
+		      echo "</tr>";
+	}
+	echo "</table>";
 
     $terminated_activities = GetActivities($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID'], "terminated");
     

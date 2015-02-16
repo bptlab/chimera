@@ -37,7 +37,7 @@ public class RestConnection {
     private ExecutionService executionService = new ExecutionService();
     private HistoryService historyService = new HistoryService();
 
-    /***********************************************
+    /*
      *
      * HTTP GET REQUESTS
      *
@@ -153,6 +153,20 @@ public class RestConnection {
                 String jsonRepresentation = gson.toJson(json);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+            } else if(status.equals("running")) { //running activities;
+
+                if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
+                    return Response.serverError().entity("Error: not a correct scenario instance").build();
+                }
+                LinkedList<Integer> enabledActivitiesIDs = executionService.getRunningActivitiesIDsForScenarioInstance(instanceID);
+                HashMap<Integer, String> labels = executionService.getRunningActivityLabelsForScenarioInstance(instanceID);
+                if (enabledActivitiesIDs.size() == 0)
+                    return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no running activities present
+                Gson gson = new Gson();
+                JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
+                String jsonRepresentation = gson.toJson(json);
+                return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+
             }
 
             return Response.serverError().entity("Error: status not clear").build();//status != {enabled,terminated}
