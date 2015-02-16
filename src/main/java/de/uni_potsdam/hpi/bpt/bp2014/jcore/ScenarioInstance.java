@@ -221,6 +221,11 @@ public class ScenarioInstance {
 
     }
 
+    /**
+     * checks if the referenced controlNode can be terminated.
+     * The referenced controlNode have to be referential running
+     * @param controlNode_id
+     */
     public void terminateReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : referentialRunningControlNodeInstances) {
             if (controlNodeInstance.controlNode_id == controlNode_id) {
