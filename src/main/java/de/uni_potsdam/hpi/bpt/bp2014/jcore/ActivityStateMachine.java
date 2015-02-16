@@ -24,12 +24,20 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
  * **********************************************************************************
  */
 
-
+/**
+ * Handles the state for an activity instance.
+ */
 public class ActivityStateMachine extends StateMachine {
     //Database Connection objects
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
 
-
+    /**
+     * Creates and initialize a activity state machine for an activity.
+     * Reads the state from the database of the activity and add the activity to the correct lists in scenario instance.
+     * @param activityInstance_id This is the database id from the activity instance.
+     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+     */
     public ActivityStateMachine(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
         this.scenarioInstance = scenarioInstance;
         this.controlNodeInstance_id = activityInstance_id;
@@ -55,10 +63,18 @@ public class ActivityStateMachine extends StateMachine {
         }
     }
 
+    /**
+     * Returns the state from the database for the activity instance specified in attributes.
+     * @return the state from the database for the specific activity instance.
+     */
     private String getDBState() {
         return dbActivityInstance.getState(controlNodeInstance_id);
     }
 
+    /**
+     * Enables the control flow for the activity instance specified in attributes.
+     * @return true if the state could been updated. false if the state couldn't been updated.
+     */
     public boolean enableControlFlow() {
         //String state = this.getState();
         if (state.equals("init")) {
@@ -76,6 +92,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Enables the data flow for the activity instance specified in attributes.
+     * @return true if the state could been updated. false if the state couldn't been updated.
+     */
     public boolean enableData() {
         //String state = this.getState();
         if (state.equals("init")) {
@@ -93,6 +113,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Disables the data flow for the activity instance specified in attributes.
+     * @return true if the state could been updated. false if the state couldn't been updated.
+     */
     public boolean disableData() {
         //String state = this.getState();
         if (state.equals("ready(Data)")) {
@@ -108,6 +132,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Sets the state from the activity instance specified in attributes to referential running.
+     * @return true if the state could been set to referential running. false if the state couldn't been set.
+     */
     public boolean referenceStarted() {
         if (state.equals("ready")) {
             this.setState("referentialRunning");
@@ -125,6 +153,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Sets the state from the activity instance specified in attributes from referential running to terminated.
+     * @return true if the state could been set to referential running. false if the state couldn't been set.
+     */
     public boolean referenceTerminated() {
         if (state.equals("referentialRunning")) {
             this.setState("terminated");
@@ -136,6 +168,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Sets the state from the activity instance specified in attributes from ready to running.
+     * @return true if the state could been set to running. false if the state couldn't been set.
+     */
     public boolean begin() {
         //String state = this.getState();
         if (state.equals("ready")) {
@@ -149,6 +185,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Sets the state from the activity instance specified in attributes from running to terminated.
+     * @return true if the state could been set to terminated. false if the state couldn't been set.
+     */
     public boolean terminate() {
         //String state = this.getState();
         if (state.equals("running")) {
@@ -161,6 +201,10 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Sets the state from the activity instance specified in attributes to skipped.
+     * @return true if the state could been set. false if the state couldn't been set.
+     */
     public boolean skip() {
         //String state = this.getState();
         if (state.equals("init") || this.isReady(state)) {
@@ -170,11 +214,19 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Checks if the state ist enabled
+     * @return true if the state is ready, ready(ControlFlow) or ready(data).
+     */
     public boolean isEnabled() {
         if (this.state.equals("ready")) return true;
         return false;
     }
 
+    /**
+     * Checks if the state ist enabled
+     * @return true if the state is ready, ready(ControlFlow) or ready(data).
+     */
     private boolean isReady(String state) {
         if (state.equals("ready") || state.equals("ready(ControlFlow)") || state.equals("ready(Data)")) {
             return true;
@@ -182,6 +234,11 @@ public class ActivityStateMachine extends StateMachine {
         return false;
     }
 
+    /**
+     * Sets the state.
+     * Updates the state in database and in attributes
+     * @param state This is the new state.
+     */
     private void setState(String state) {
         this.state = state;
         dbActivityInstance.setState(controlNodeInstance_id, state);

@@ -28,10 +28,8 @@ import java.util.LinkedList;
 
 
 
-/*
-represents a fragment instance
-the constructor looks for an fragment instance in the database or create a new one in the database
-the constructor also initialize the control nodes
+/**
+ * Represents a fragment instance.
  */
 public class FragmentInstance {
     private ScenarioInstance scenarioInstance;
