@@ -4,6 +4,7 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
+import javax.ws.rs.core.Response;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -118,7 +119,7 @@ public class Retrieval {
         return null;
     }
 
-    public BufferedImage getImagewithAuth(String hosturl, String urlToRead) {
+    public Response getImagewithAuth(String hosturl, String urlToRead) {
         /* credits to  http://www.avajava.com/tutorials/lessons/how-do-i-connect-to-a-url-using-basic-authentication.html */
 
         HttpURLConnection connection = null;
@@ -146,9 +147,16 @@ public class Retrieval {
             modelsConnection.setInstanceFollowRedirects(false);
             modelsConnection.setRequestMethod("GET");
 
-            BufferedImage image = null;
-            image = ImageIO.read(modelsConnection.getInputStream());
-            return image;
+            BufferedImage image = ImageIO.read(modelsConnection.getInputStream());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            byte[] imageData = baos.toByteArray();
+
+            // uncomment line below to send non-streamed
+            return Response.ok(imageData).build();
+
+            // uncomment line below to send streamed
+             //return Response.ok(new ByteArrayInputStream(imageData)).build();
 
         } catch (IOException e) {
             System.err.println("Request failed.");

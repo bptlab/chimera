@@ -81,11 +81,12 @@ public class REST {
     }
 
     @GET
-    @Path("scenarios/{scenarioID}/image/")
+    @Path("scenarios/{modelID}/image/")
     @Produces("image/png")
-    public Image showScenarioImage(@PathParam("scenarioID") String scenarioID) {
+    public Response showModelImage(@PathParam("modelID") String modelID) {
+        String urlToRead = processserver + "models/" + modelID + ".png";
 
-            BufferedImage scenario_image = new Retrieval().getImagewithAuth(processserver, scenarioID);
+            Response scenario_image = new Retrieval().getImagewithAuth(processserver, urlToRead);
             return scenario_image;
 
     }
