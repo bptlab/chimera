@@ -117,6 +117,28 @@ public class ExecutionService {
         return labels;
     }
 
+    public LinkedList<Integer> getRunningActivitiesIDsForScenarioInstance(int scenarioInstance_id) {
+        LinkedList<Integer> ids = new LinkedList<Integer>();
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
+            if (nodeInstance instanceof ActivityInstance) {
+                ids.add(((ActivityInstance) nodeInstance).controlNode_id);
+            }
+        }
+        return ids;
+    }
+
+    public HashMap<Integer, String> getRunningActivityLabelsForScenarioInstance(int scenarioInstance_id) {
+        HashMap<Integer, String> labels = new HashMap<Integer, String>();
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
+            if (nodeInstance instanceof ActivityInstance) {
+                labels.put(((ActivityInstance) nodeInstance).controlNode_id, ((ActivityInstance) nodeInstance).getLabel());
+            }
+        }
+        return labels;
+    }
+
     public boolean beginActivity(int scenarioInstance_id, int activity_id) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
