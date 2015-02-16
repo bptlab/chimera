@@ -53,10 +53,6 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
         <a href="#" class="close" data-dismiss="alert">&times;</a>
         <strong>Current Working Set</strong> Scenario ID: <?php echo $_COOKIE['JEngine_ScenarioID']; ?> | Instance ID: <?php echo $_COOKIE['JEngine_ScenarioInstanceID']; ?> |     
         <form action='update_jcore_controller.php' method='post'>
-	            <input type='hidden' name='pcm_scenarioID_new_Instance' value='".$_COOKIE['JEngine_ScenarioID']."'>
-	            <input type='submit' class="btn btn-link" value='create new Instance'>
-		</form> 
-		| <form action='update_jcore_controller.php' method='post'>
 	            <input type='hidden' name='reset_scenarioID' value='true'>
 	            <input type='submit' class="btn btn-link" value='change scenarioID'>
 		</form> 
@@ -72,8 +68,8 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     echo "<h4>enabled Activities</h4>
     		<table>
     			<tr>
-    				<th>Activity ID</th>
-    				<th>Activity Label</th>
+    				<th> ID</th>
+    				<th> Label</th>
     				<th>Action</th>
     			</tr>";
 
@@ -81,6 +77,9 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     for ($i = 0; $i < $amount_of_enabled_activities; $i++) {
     	 $key = $enabled_activities["ids"][$i];
     	 $value = $enabled_activities["label"][$key];
+    	 if($key == "{" || $value == "{") {
+    	 	continue;
+    	 }
     //foreach($enabled_activities["label"] as $key => $value) {
 			  echo "<tr>";
 			  echo "<th>".$key."</th>";
@@ -101,15 +100,18 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     echo "<h4>running Activities</h4>
     		<table>
     			<tr>
-    				<th>Activity ID</th>
-    				<th>Activity Label</th>
+    				<th> ID</th>
+    				<th> Label</th>
     			</tr>
     			<tr>";
 
     $amount_of_running_activities = count($running_activities["ids"]);
     for ($i = 0; $i < $amount_of_running_activities; $i++) {
     	 $key = $running_activities["ids"][$i];
-    	 $value = $running_activities["label"][$key];;
+    	 $value = $running_activities["label"][$key];
+    	 if($key == "{" || $value == "{") {
+    	 	continue;
+    	 }
 	//}
     //foreach($running_activities["label"] as $key => $value) {
     	      echo "<tr>";
@@ -132,8 +134,8 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     echo "<h4>terminated Activities</h4>
     		<table>
     			<tr>
-    				<th>Activity ID</th>
-    				<th>Activity Label</th>
+    				<th> ID</th>
+    				<th> Label</th>
     			</tr>
     			<tr>";
 
@@ -141,6 +143,9 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     for ($i = 0; $i < $amount_of_terminated_activities; $i++) {
     	 $key = $terminated_activities["ids"][$i];
     	 $value = $terminated_activities["label"][$key];
+    	 if($key == "{" || $value == "{") {
+    	 	continue;
+    	 }
     //foreach($terminated_activities["label"] as $key => $value) {
     	      echo "<tr>";
 			  echo "<th>".$key."</th>";
