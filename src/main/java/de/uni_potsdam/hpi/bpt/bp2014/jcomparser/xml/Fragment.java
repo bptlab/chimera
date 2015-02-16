@@ -45,7 +45,7 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     private org.w3c.dom.Node fragmentXML;
     /**
-     * The Model-XML-Id of the Fragment.
+     * The Model-XML-ID of the Fragment.
      */
     private long fragmentID;
     /**
@@ -84,7 +84,6 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateControlNodes();
         generateEdges();
         generateSets();
-        setVersionNumber();
     }
 
     /**
@@ -282,6 +281,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
+        setVersionNumber();
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(
                 this.fragmentName,
@@ -349,4 +349,22 @@ public class Fragment implements IDeserialisable, IPersistable {
     public List<OutputSet> getOutputSets() {
         return outputSets;
     }
+
+    /**
+     * Returns the name of the fragment.
+     * @return fragmentName
+     */
+    public String getFragmentName() {
+        return fragmentName;
+    }
+
+    /**
+     * Returns the Model-XML-ID of the Fragment.
+     * @return fragmentID
+     */
+    public long getFragmentID() {
+        return fragmentID;
+    }
+
+
 }
