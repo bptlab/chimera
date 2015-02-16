@@ -34,7 +34,7 @@ public class Edge implements IDeserialisable, IPersistable {
      */
     private Map<Integer, Node> controlNodes;
     /**
-     * The Database ID of the Edge.
+     * The Model-XML-ID of the Edge.
      */
     private int id;
     /**
@@ -193,7 +193,7 @@ public class Edge implements IDeserialisable, IPersistable {
     }
 
     /**
-     * returns the database Id of the edge.
+     * returns the Model-XML-ID of the edge.
      *
      * @return the database ID.
      */
