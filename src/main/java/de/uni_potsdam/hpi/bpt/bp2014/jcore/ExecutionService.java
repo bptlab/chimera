@@ -176,6 +176,12 @@ public class ExecutionService {
         return ids;
     }
 
+    /**
+     * Returns the Labels of enabled activities for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
+     */
     public HashMap<Integer, String> getEnabledActivityLabelsForScenarioInstance(int scenarioInstance_id) {
         HashMap<Integer, String> labels = new HashMap<Integer, String>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
@@ -187,6 +193,12 @@ public class ExecutionService {
         return labels;
     }
 
+    /**
+     * Gives all activity ids for a scenario instance which are running.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a list of the ids of activities.
+     */
     public LinkedList<Integer> getRunningActivitiesIDsForScenarioInstance(int scenarioInstance_id) {
         LinkedList<Integer> ids = new LinkedList<Integer>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
@@ -198,6 +210,12 @@ public class ExecutionService {
         return ids;
     }
 
+    /**
+     * Returns the Labels of running activities for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
+     */
     public HashMap<Integer, String> getRunningActivityLabelsForScenarioInstance(int scenarioInstance_id) {
         HashMap<Integer, String> labels = new HashMap<Integer, String>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
@@ -209,6 +227,12 @@ public class ExecutionService {
         return labels;
     }
 
+    /**
+     * Starts the execution of an activity which is enabled.
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @param activity_id This is the id of the activity.
+     * @return true if the activity could been started. false if not.
+     */
     public boolean beginActivity(int scenarioInstance_id, int activity_id) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
@@ -219,10 +243,12 @@ public class ExecutionService {
         return false;
     }
 
-    public String getLabelForControlNodeID(int controlNode_id) {
-        return dbControlNode.getLabel(controlNode_id);
-    }
-
+    /**
+     * Terminates an activity which is running.
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @param activity_id This is the id of the activity.
+     * @return true if the activity could been terminated. false if not.
+     */
     public boolean terminateActivity(int scenarioInstance_id, int activity_id) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
@@ -233,6 +259,21 @@ public class ExecutionService {
         return false;
     }
 
+    /**
+     * Gives the label of a given control node.
+     * @param controlNode_id This is the database id from the control node.
+     * @return the label of the control node.
+     */
+    public String getLabelForControlNodeID(int controlNode_id) {
+        return dbControlNode.getLabel(controlNode_id);
+    }
+
+    /**
+     * Gives all data object ids for a scenario instance.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a list of the ids of data objects.
+     */
     public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id) {
         LinkedList<Integer> dataObjectIDs = new LinkedList<Integer>();
         for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances())
@@ -240,6 +281,12 @@ public class ExecutionService {
         return dataObjectIDs;
     }
 
+    /**
+     * Returns the states of data objects for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a Map. Keys are the data objects ids. Values are the states of the data objects.
+     */
     public HashMap<Integer, String> getAllDataObjectStates(int scenarioInstance_id) {
         DbState dbState = new DbState();
         HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
@@ -249,19 +296,34 @@ public class ExecutionService {
         return dataObjectStates;
     }
 
-    public boolean checkTerminationForScenarioInstance(int scenarioInstance) {
+    /**
+     * Checks if a scenario instance is terminated.
+     * @param scenarioInstance_id This is the database id from the scenario instance id.
+     * @return true if the scenario instance ist terminated. false if not.
+     */
+    public boolean checkTerminationForScenarioInstance(int scenarioInstance_id) {
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        if (dbScenarioInstance.getTerminated(scenarioInstance) == 1) {
+        if (dbScenarioInstance.getTerminated(scenarioInstance_id) == 1) {
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * Returns the scenario name for a given scenario id.
+     * @param scenario_id This is the database id from the scenario id.
+     * @return the scenario name in a String.
+     */
     public String getScenarioName(int scenario_id) {
         return dbScenario.getScenarioName(scenario_id);
     }
 
+    /**
+     * Returns the scenario name for a given scenario instance id.
+     * @param scenarioInstance_id This is the database id from the scenario instance id.
+     * @return the scenario name in a String.
+     */
     public String getScenarioNameForScenarioInstance(int scenarioInstance_id) {
         return dbScenario.getScenarioName(dbScenarioInstance.getScenarioID(scenarioInstance_id));
     }
