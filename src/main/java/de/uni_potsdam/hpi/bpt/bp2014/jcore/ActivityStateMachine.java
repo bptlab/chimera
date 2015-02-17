@@ -34,8 +34,9 @@ public class ActivityStateMachine extends StateMachine {
     /**
      * Creates and initialize a activity state machine for an activity.
      * Reads the state from the database of the activity and add the activity to the correct lists in scenario instance.
+     *
      * @param activityInstance_id This is the database id from the activity instance.
-     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
      */
     public ActivityStateMachine(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
@@ -65,6 +66,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Returns the state from the database for the activity instance specified in attributes.
+     *
      * @return the state from the database for the specific activity instance.
      */
     private String getDBState() {
@@ -73,6 +75,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Enables the control flow for the activity instance specified in attributes.
+     *
      * @return true if the state could been updated. false if the state couldn't been updated.
      */
     public boolean enableControlFlow() {
@@ -94,6 +97,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Enables the data flow for the activity instance specified in attributes.
+     *
      * @return true if the state could been updated. false if the state couldn't been updated.
      */
     public boolean enableData() {
@@ -115,6 +119,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Disables the data flow for the activity instance specified in attributes.
+     *
      * @return true if the state could been updated. false if the state couldn't been updated.
      */
     public boolean disableData() {
@@ -134,6 +139,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Sets the state from the activity instance specified in attributes to referential running.
+     *
      * @return true if the state could been set to referential running. false if the state couldn't been set.
      */
     public boolean referenceStarted() {
@@ -155,6 +161,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Sets the state from the activity instance specified in attributes from referential running to terminated.
+     *
      * @return true if the state could been set to referential running. false if the state couldn't been set.
      */
     public boolean referenceTerminated() {
@@ -170,6 +177,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Sets the state from the activity instance specified in attributes from ready to running.
+     *
      * @return true if the state could been set to running. false if the state couldn't been set.
      */
     public boolean begin() {
@@ -187,6 +195,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Sets the state from the activity instance specified in attributes from running to terminated.
+     *
      * @return true if the state could been set to terminated. false if the state couldn't been set.
      */
     public boolean terminate() {
@@ -203,6 +212,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Sets the state from the activity instance specified in attributes to skipped.
+     *
      * @return true if the state could been set. false if the state couldn't been set.
      */
     public boolean skip() {
@@ -216,6 +226,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Checks if the state ist enabled
+     *
      * @return true if the state is ready, ready(ControlFlow) or ready(data).
      */
     public boolean isEnabled() {
@@ -225,6 +236,7 @@ public class ActivityStateMachine extends StateMachine {
 
     /**
      * Checks if the state ist enabled
+     *
      * @return true if the state is ready, ready(ControlFlow) or ready(data).
      */
     private boolean isReady(String state) {
@@ -237,6 +249,7 @@ public class ActivityStateMachine extends StateMachine {
     /**
      * Sets the state.
      * Updates the state in database and in attributes
+     *
      * @param state This is the new state.
      */
     private void setState(String state) {

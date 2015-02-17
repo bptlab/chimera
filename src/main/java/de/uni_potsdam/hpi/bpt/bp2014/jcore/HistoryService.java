@@ -34,7 +34,7 @@ public class HistoryService {
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
     private DbControlNode dbControlNode = new DbControlNode();
 
-    public LinkedList<Integer> getTerminatedActivitysForScenarioInstance(int scenarioInstance_id) {
+    public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
         LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstance_id);
         return ids;
     }

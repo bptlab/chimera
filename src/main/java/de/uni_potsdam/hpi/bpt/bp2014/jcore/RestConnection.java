@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * ********************************************************************************
- *
+ * <p/>
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -21,13 +21,13 @@ import java.util.List;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- *
+ * <p/>
  * ******************************************************************
- *
+ * <p/>
  * Copyright © All Rights Reserved 2014 - 2015
- *
+ * <p/>
  * Please be aware of the License. You may found it in the root directory.
- *
+ * <p/>
  * **********************************************************************************
  */
 
@@ -142,7 +142,7 @@ public class RestConnection {
                 if (!executionService.existScenarioInstance(scenarioID, instanceID))
                     return Response.serverError().entity("Error: not a correct scenario instance").build();
 
-                LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(instanceID);
+                LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitiesForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
 
                 if (terminatedActivities.size() == 0)
