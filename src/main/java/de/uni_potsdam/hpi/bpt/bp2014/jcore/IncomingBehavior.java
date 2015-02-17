@@ -30,7 +30,8 @@ public abstract class IncomingBehavior {
     protected ControlNodeInstance controlNodeInstance;
     protected StateMachine stateMachine;
 
-
-    public void enableControlFlow() {
-    }
+    /**
+     * Enable the control flow for the control node instance.
+     */
+    public abstract void enableControlFlow();
 }

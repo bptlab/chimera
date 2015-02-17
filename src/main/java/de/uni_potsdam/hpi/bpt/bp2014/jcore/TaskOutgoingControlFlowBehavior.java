@@ -28,16 +28,24 @@ import java.util.LinkedList;
 
 
 
-/*
-handles the behavior of a terminating activity instance
+/**
+ * Handles the behavior of a terminating activity instance.
  */
 public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
     private ControlNodeInstance controlNodeInstance;
-    //Database Connection objects
+    /**
+     * Database Connection objects
+     */
     private DbDataNode dbDataNode = new DbDataNode();
     private DbDataFlow dbDataFlow = new DbDataFlow();
 
-
+    /**
+     * Initializes the TaskOutgoingControlFlowBehavior
+     * @param activity_id This is the database id from the activity instance.
+     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param fragmentInstance_id This is the database id from the fragment instance.
+     * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+     */
     public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id, ControlNodeInstance controlNodeInstance) {
         this.controlNode_id = activity_id;
         this.scenarioInstance = scenarioInstance;
@@ -45,6 +53,9 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
         this.controlNodeInstance = controlNodeInstance;
     }
 
+    /**
+     * Terminates the control node instance.
+     */
     @Override
     public void terminate() {
         setDataStates();
@@ -52,15 +63,23 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
         this.enableFollowing();
     }
 
+    /**
+     * Set all following control nodes to control flow enabled and initializes them.
+     */
     public void enableFollowing() {
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for (int followingControlNode_id : followingControlNode_ids) {
-            ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
+            ControlNodeInstance followingControlNodeInstance = createFollowingNodeInstance(followingControlNode_id);
             followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
 
-    private ControlNodeInstance getFollowingNodeInstance(int controlNode_id) {
+    /**
+     * Initializes and creates the following control node instance for the given control node instance id.
+     * @param controlNode_id This is the database id from the control node instance.
+     * @return the created control node instance.
+     */
+    private ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
             if (controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;
         }
@@ -77,6 +96,9 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
         return controlNodeInstance;
     }
 
+    /**
+     * Sets the states of the data object to the output states of the activity.
+     */
     private void setDataStates() {
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNode_id);
         //TODO: Output Set
@@ -91,6 +113,9 @@ public class TaskOutgoingControlFlowBehavior extends OutgoingBehavior {
         }
     }
 
+    /**
+     * Terminates all referential running activities.
+     */
     public void terminateReferences() {
         for (int activity_id : ((ActivityInstance) controlNodeInstance).getReferences()) {
             scenarioInstance.terminateReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);

@@ -87,12 +87,14 @@ public class FragmentInstance {
         }
     }
 
-    //sets a Fragment Instances as terminated in the database
+    /**
+     * Sets the fragment instances to terminated in the database.
+     */
     public void terminate() {
         dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
     }
 
-    /*
+    /**
      * Getter
      */
 

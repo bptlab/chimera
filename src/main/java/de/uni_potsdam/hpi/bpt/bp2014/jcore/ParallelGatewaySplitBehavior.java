@@ -27,7 +27,7 @@ import java.util.LinkedList;
  */
 
 
-public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
+public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
     //Database Connection objects
     private DbDataFlow dbDataFlow = new DbDataFlow();
 
@@ -43,17 +43,24 @@ public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
         this.enableFollowing();
     }
 
+    /**
+     * Set all following control nodes to control flow enabled and initializes them.
+     */
     public void enableFollowing() {
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for (int followingControlNode_id : followingControlNode_ids) {
-            ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
+            ControlNodeInstance followingControlNodeInstance = createFollowingNodeInstance(followingControlNode_id);
             //enable following instances
             followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
 
-    //get the following control node instance, also initialize them
-    private ControlNodeInstance getFollowingNodeInstance(int controlNode_id) {
+    /**
+     * Initializes and creates the following control node instance for the given control node instance id.
+     * @param controlNode_id This is the database id from the control node instance.
+     * @return the created control node instance.
+     */
+    private ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
             if (controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;
         }

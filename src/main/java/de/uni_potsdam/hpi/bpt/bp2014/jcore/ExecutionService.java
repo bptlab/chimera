@@ -31,7 +31,9 @@ import java.util.LinkedList;
  */
 
 
-//handles all Scenario Instances, can create new Instances, can activate Activities
+/**
+ * Handles all scenario instances.
+ */
 public class ExecutionService {
     /**
      * This are the Lists for all opened scenario instances.
@@ -268,8 +270,8 @@ public class ExecutionService {
      * Gives the scenario instance for a scenario instance id.
      * Only for Tests.
      *
-     * @param scenarioInstanceID
-     * @return
+     * @param scenarioInstanceID This is the id of the scenario instance.
+     * @return a instance of the class ScenarioInstance.
      */
     public ScenarioInstance getScenarioInstance(int scenarioInstanceID) {
         return sortedScenarioInstances.get(scenarioInstanceID);
