@@ -123,13 +123,13 @@ public class RestConnection {
     /**
      * GET  details for an activityID
      *
-     * @param scenarioID the ID of the related scenario
-     * @param instanceID the ID of the related scenario instance
+     * @param scenarioID         the ID of the related scenario
+     * @param instanceID         the ID of the related scenario instance
      * @param activityinstanceID the ID of the related activity instance
-     * @param status the new status of the activity which is supposed to be updated
-     * @param limit a limit which is not used yet but defined through API specs
+     * @param status             the new status of the activity which is supposed to be updated
+     * @param limit              a limit which is not used yet but defined through API specs
      * @return details for an activity
-     *
+     * <p/>
      * TODO: Limit has to be implemented
      */
 
@@ -158,7 +158,7 @@ public class RestConnection {
                 JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
                 String jsonRepresentation = gson.toJson(json);
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-            // if status is terminated -> return all terminated activities
+                // if status is terminated -> return all terminated activities
             } else if (status.equals("terminated")) {
 
                 if (!executionService.existScenarioInstance(scenarioID, instanceID))
@@ -175,7 +175,7 @@ public class RestConnection {
                 String jsonRepresentation = gson.toJson(json);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-            // if status is running -> return all running activities
+                // if status is running -> return all running activities
             } else if (status.equals("running")) { //running activities;
 
                 if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
@@ -197,7 +197,7 @@ public class RestConnection {
 
             // display details for this activityID
             //TODO: implement returning of timestamp and additional details
-        //if activity ID is != 0 then display details for this activity
+            //if activity ID is != 0 then display details for this activity
         } else {
             String label = executionService.getLabelForControlNodeID(activityinstanceID);
             //if no activity with this id present
@@ -275,7 +275,7 @@ public class RestConnection {
      * #############################################################################
      */
 
-     /**
+    /**
      * POST to start a new instance
      *
      * @param scenarioID defines the ID of the scenario
@@ -289,7 +289,7 @@ public class RestConnection {
         if (executionService.existScenario(scenarioID)) {
             //return the ID of new instanceID
             return executionService.startNewScenarioInstance(scenarioID);
-        // else scenario does not exist
+            // else scenario does not exist
         } else {
             return -1;
         }
@@ -298,10 +298,10 @@ public class RestConnection {
     /**
      * POST to change status of an activity
      *
-     * @param scenarioID the ID of the related scenario
+     * @param scenarioID         the ID of the related scenario
      * @param scenarioInstanceID the ID of the related scenario instance
      * @param activityInstanceID the ID of the related activity instance
-     * @param status the new status of the activity which is supposed to be updated
+     * @param status             the new status of the activity which is supposed to be updated
      * @return
      */
 
@@ -312,7 +312,7 @@ public class RestConnection {
         // check on status, if begin -> start the activity
         if (status.equals("begin")) {
             return executionService.beginActivity(scenarioInstanceID, activityInstanceID);
-        // otherwise when terminate -> terminate the activity
+            // otherwise when terminate -> terminate the activity
         } else if (status.equals("terminate")) {
             return executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
         }

@@ -34,12 +34,20 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
     private DbControlFlow dbControlFlow = new DbControlFlow();
     private DbControlNode dbControlNode = new DbControlNode();
 
-
+    /**
+     * Initializes the ParallelGatewayJoinBehavior.
+     *
+     * @param gatewayInstance  This is an instance from the class GatewayInstance.
+     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     */
     ParallelGatewayJoinBehavior(GatewayInstance gatewayInstance, ScenarioInstance scenarioInstance) {
         this.scenarioInstance = scenarioInstance;
         this.controlNodeInstance = gatewayInstance;
     }
 
+    /**
+     * Enable the control flow for the control node instance.
+     */
     @Override
     public void enableControlFlow() {
         if (checkEnabled()) {
@@ -47,10 +55,17 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
         }
     }
 
+    /**
+     * Checks if all control node instances before this gateway have been terminated
+     *
+     * @return true if this gateway can get enabled. false if not.
+     */
     private Boolean checkEnabled() {
         LinkedList<Integer> predecessors = dbControlFlow.getPredecessorControlNodes(controlNodeInstance.controlNode_id);
         //if a start Event ist before this Gateway it is enabled
-        if (predecessors.size() == 1 && dbControlNode.getType(predecessors.get(0)).equals("Startevent")) return true;
+        if (predecessors.size() == 1 && dbControlNode.getType(predecessors.get(0)).equals("Startevent")) {
+            return true;
+        }
         //looks that all predecessors are terminated
         for (int controlNode : predecessors) {
             if (!scenarioInstance.terminatedControlNodeInstancesContainControlNodeID(controlNode)) {

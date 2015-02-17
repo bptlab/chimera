@@ -25,9 +25,18 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
 
 public class GatewayStateMachine extends StateMachine {
-    //Database Connection objects
+    /**
+     * Database Connection objects
+     */
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
+    /**
+     * Initializes the GatewayStateMachine
+     *
+     * @param gateway_id          This is the id of the gateway.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+     */
     public GatewayStateMachine(int gateway_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
         this.scenarioInstance = scenarioInstance;
         this.controlNodeInstance_id = gateway_id;
@@ -35,6 +44,10 @@ public class GatewayStateMachine extends StateMachine {
         this.state = dbGatewayInstance.getState(controlNodeInstance.controlNodeInstance_id);
     }
 
+    /**
+     * Terminates the gateway instance.
+     * Sets the state for the gateway instance in the database to terminated.
+     */
     public void terminate() {
         state = "terminated";
         dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);

@@ -28,14 +28,13 @@ import java.util.LinkedList;
  */
 
 
-
-/*
-represents a scenario instance
-the constructor looks for an scenario instance in the database or create a new one in the database
-the constructor also initialize the fragment instances and data object instances
-the scenario instance has Lists for all enabled, control flow enabled, data flow enabled, running and terminated activity
-instances, fragment instances and all data object instances
-the scenario instance provide methods for the administration of the data object instances
+/**
+ * Represents a scenario instance.
+ * The constructor looks for an scenario instance in the database or create a new one in the database.
+ * The constructor also initialize the fragment instances and data object instances.
+ * The scenario instance has Lists for all enabled, control flow enabled, data flow enabled, running and
+ * terminated activity instances, fragment instances and all data object instances.
+ * The scenario instance provide methods for the administration of the data object instances
  */
 public class ScenarioInstance {
     private LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
@@ -286,7 +285,7 @@ public class ScenarioInstance {
         terminatedControlNodeInstances.clear();
     }
 
-    /*
+    /**
      * Getter
      */
 

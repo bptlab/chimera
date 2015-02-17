@@ -72,7 +72,7 @@ public class GatewayInstance extends ControlNodeInstance {
         ((GatewayStateMachine) stateMachine).terminate();
         outgoingBehavior.terminate();
     }
-    /*
+    /**
      * Getter
      */
 
