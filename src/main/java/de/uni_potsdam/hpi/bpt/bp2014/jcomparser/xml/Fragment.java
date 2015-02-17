@@ -75,8 +75,18 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     private int versionNumber;
 
+    /**
+     * Sets the processeditorServerUrl which is needed for connecting to the server
+     * in order to get the XML-files for the fragments.
+     */
     public Fragment(String serverURL){
         processeditorServerUrl = serverURL;
+    }
+
+    /**
+     * This constructor is only used for testcases as a connection to the server is not needed therefore
+     */
+    public Fragment(){
     }
 
     @Override
