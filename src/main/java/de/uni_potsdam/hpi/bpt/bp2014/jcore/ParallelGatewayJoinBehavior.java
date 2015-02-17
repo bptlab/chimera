@@ -45,9 +45,6 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
         this.controlNodeInstance = gatewayInstance;
     }
 
-    /**
-     * Enable the control flow for the control node instance.
-     */
     @Override
     public void enableControlFlow() {
         if (checkEnabled()) {

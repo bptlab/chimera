@@ -53,9 +53,6 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
         this.controlNodeInstance = controlNodeInstance;
     }
 
-    /**
-     * Terminates the control node instance.
-     */
     @Override
     public void terminate() {
         setDataStates();

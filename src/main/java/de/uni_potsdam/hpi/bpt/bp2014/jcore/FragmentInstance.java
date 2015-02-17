@@ -38,12 +38,23 @@ public class FragmentInstance {
     private int fragment_id;
     private int fragmentInstance_id;
     private int scenarioInstance_id;
-    //Database Connection objects
+    /**
+     * Database Connection objects
+     */
     private DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbControlFlow dbControlFlow = new DbControlFlow();
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 
+    /**
+     * Creates and initializes a new fragment instance.
+     * Reads the information for an existing fragment instance from the database or creates a new one if no one
+     * exist in the database.
+     *
+     * @param fragment_id         This is the database id from the fragment.
+     * @param scenarioInstance_id This is the database id from the scenario instance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     */
     public FragmentInstance(int fragment_id, int scenarioInstance_id, ScenarioInstance scenarioInstance) {
         this.scenarioInstance = scenarioInstance;
         this.fragment_id = fragment_id;
@@ -59,6 +70,10 @@ public class FragmentInstance {
         }
     }
 
+
+    /**
+     * Creates and initializes control node instances from the database
+     */
     private void initializeExistingNodeInstanceForFragment() {
         //initializes all Activity Instances in the database
         LinkedList<Integer> activities = dbControlNodeInstance.getActivitiesForFragmentInstanceID(fragmentInstance_id);
@@ -72,6 +87,10 @@ public class FragmentInstance {
         }
     }
 
+    /**
+     * Creates new control node instances.
+     * Write the new instances in the database
+     */
     private void initializeNewNodeInstanceForFragment() {
         //gets the Start Event and then the following Control Node to initialize it
         int startEvent = dbControlNode.getStartEventID(fragment_id);

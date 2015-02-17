@@ -51,9 +51,6 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
         }
     }
 
-    /**
-     * Enable the control flow for the control node instance.
-     */
     @Override
     public void enableControlFlow() {
         ((ActivityStateMachine) stateMachine).enableControlFlow();
