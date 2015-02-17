@@ -42,9 +42,6 @@ public class EventIncomingControlFlowBehavior extends IncomingBehavior {
         this.type = type;
     }
 
-    /**
-     * Restarts the complete fragment.
-     */
     @Override
     public void enableControlFlow() {
         scenarioInstance.restartFragment(this.controlNodeInstance.fragmentInstance_id);

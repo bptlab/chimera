@@ -29,11 +29,22 @@ public class GatewayInstance extends ControlNodeInstance {
     private Boolean isXOR;
     private Boolean isAND;
     private ScenarioInstance scenarioInstance;
-    //Database Connection objects
+    /**
+     * Database Connection objects
+     */
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
+    /**
+     * Creates and initializes a new gateway instance.
+     * Reads the information for an existing gateway instance from the database or creates a new one if no one
+     * exist in the database.
+     *
+     * @param controlNode_id      This is the id of the control node.
+     * @param fragmentInstance_id This is the id of the fragment instance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     */
     public GatewayInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
         //looks if the Gateway Instance has already been initialized
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
@@ -68,10 +79,15 @@ public class GatewayInstance extends ControlNodeInstance {
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
     }
 
+    /**
+     * Terminates the gateway instance.
+     * Set the state in database.
+     */
     public void terminate() {
         ((GatewayStateMachine) stateMachine).terminate();
         outgoingBehavior.terminate();
     }
+
     /**
      * Getter
      */

@@ -229,8 +229,9 @@ public class ExecutionService {
 
     /**
      * Starts the execution of an activity which is enabled.
+     *
      * @param scenarioInstance_id This is the id of the scenario instance.
-     * @param activity_id This is the id of the activity.
+     * @param activity_id         This is the id of the activity.
      * @return true if the activity could been started. false if not.
      */
     public boolean beginActivity(int scenarioInstance_id, int activity_id) {
@@ -245,8 +246,9 @@ public class ExecutionService {
 
     /**
      * Terminates an activity which is running.
+     *
      * @param scenarioInstance_id This is the id of the scenario instance.
-     * @param activity_id This is the id of the activity.
+     * @param activity_id         This is the id of the activity.
      * @return true if the activity could been terminated. false if not.
      */
     public boolean terminateActivity(int scenarioInstance_id, int activity_id) {
@@ -261,6 +263,7 @@ public class ExecutionService {
 
     /**
      * Gives the label of a given control node.
+     *
      * @param controlNode_id This is the database id from the control node.
      * @return the label of the control node.
      */
@@ -298,6 +301,7 @@ public class ExecutionService {
 
     /**
      * Checks if a scenario instance is terminated.
+     *
      * @param scenarioInstance_id This is the database id from the scenario instance id.
      * @return true if the scenario instance ist terminated. false if not.
      */
@@ -312,6 +316,7 @@ public class ExecutionService {
 
     /**
      * Returns the scenario name for a given scenario id.
+     *
      * @param scenario_id This is the database id from the scenario id.
      * @return the scenario name in a String.
      */
@@ -321,6 +326,7 @@ public class ExecutionService {
 
     /**
      * Returns the scenario name for a given scenario instance id.
+     *
      * @param scenarioInstance_id This is the database id from the scenario instance id.
      * @return the scenario name in a String.
      */

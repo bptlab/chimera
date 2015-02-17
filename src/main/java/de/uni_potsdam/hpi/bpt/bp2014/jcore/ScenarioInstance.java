@@ -123,6 +123,7 @@ public class ScenarioInstance {
     /**
      * Restarts the fragment specified by the fragment id.
      * Removes all control nodes from the fragment from all lists and create and initializes the fragment again.
+     *
      * @param fragmentInstance_id This is the database id from the fragment instance.
      */
     public void restartFragment(int fragmentInstance_id) {
@@ -167,8 +168,9 @@ public class ScenarioInstance {
 
     /**
      * Compares the given state for a data object with the state from the data object in the scenario.
+     *
      * @param dataObject_id This is the database id from the data object.
-     * @param state_id This is the database id from the state.
+     * @param state_id      This is the database id from the state.
      * @return true if the data object has the same state. false if not
      */
     public Boolean checkDataObjectState(int dataObject_id, int state_id) {
@@ -192,6 +194,7 @@ public class ScenarioInstance {
     /**
      * Sets the data object to on change.
      * Write this into the database.
+     *
      * @param dataObject_id This is the database id from the data object.
      * @return true if the on change could been set. false if not.
      */
@@ -215,6 +218,7 @@ public class ScenarioInstance {
     /**
      * Sets the data object to not on change.
      * Write this into the database.
+     *
      * @param dataObject_id This is the database id from the data object.
      * @return true if the on change could been set. false if not.
      */
@@ -248,6 +252,7 @@ public class ScenarioInstance {
 
     /**
      * Checks if the list terminatedControlNodeInstances contains the control node.
+     *
      * @param controlNode_id This is the database id from the control node.
      * @return true if the terminated control node instances contains the control node. false if not.
      */
@@ -262,7 +267,7 @@ public class ScenarioInstance {
      * checks if the referenced controlNode can be started.
      * The referenced controlNode have to be control flow enabled and (data flow enabled or must have the same data output)
      *
-     * @param controlNode_id This is the database id from a control node.
+     * @param controlNode_id           This is the database id from a control node.
      * @param referencedControlNode_id This is the database id from a control node.
      */
     public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id, int referencedControlNode_id) {

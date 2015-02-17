@@ -42,9 +42,6 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
         this.fragmentInstance_id = fragmentInstance_id;
     }
 
-    /**
-     * Terminates the control node instance.
-     */
     @Override
     public void terminate() {
         scenarioInstance.checkDataFlowEnabled();

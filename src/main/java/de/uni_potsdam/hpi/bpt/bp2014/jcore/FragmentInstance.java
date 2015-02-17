@@ -40,7 +40,7 @@ public class FragmentInstance {
     private int scenarioInstance_id;
     /**
      * Database Connection objects
-    */
+     */
     private DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
     private DbControlNode dbControlNode = new DbControlNode();
     private DbControlFlow dbControlFlow = new DbControlFlow();
@@ -51,7 +51,7 @@ public class FragmentInstance {
      * Reads the information for an existing fragment instance from the database or creates a new one if no one
      * exist in the database.
      *
-     * @param fragment_id      This is the database id from the fragment.
+     * @param fragment_id         This is the database id from the fragment.
      * @param scenarioInstance_id This is the database id from the scenario instance.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      */
