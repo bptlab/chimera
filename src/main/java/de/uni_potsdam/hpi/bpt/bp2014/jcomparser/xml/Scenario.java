@@ -77,6 +77,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     public Scenario(String serverURL) {
         processeditorServerUrl = serverURL;
+        System.err.println("Debug");
     }
 
     /**
