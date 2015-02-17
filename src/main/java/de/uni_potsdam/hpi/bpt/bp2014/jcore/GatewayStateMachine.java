@@ -42,6 +42,10 @@ public class GatewayStateMachine extends StateMachine {
         this.controlNodeInstance_id = gateway_id;
         this.controlNodeInstance = controlNodeInstance;
         this.state = dbGatewayInstance.getState(controlNodeInstance.controlNodeInstance_id);
+        if (state == "terminated") {
+            scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+        }
+        scenarioInstance.getControlNodeInstances().add(controlNodeInstance);
     }
 
     /**
@@ -51,5 +55,6 @@ public class GatewayStateMachine extends StateMachine {
     public void terminate() {
         state = "terminated";
         dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);
+        scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
     }
 }

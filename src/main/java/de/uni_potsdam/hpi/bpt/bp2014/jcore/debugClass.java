@@ -94,7 +94,7 @@ public class debugClass {
             for (int activityID : activitiesIDs) {
                 System.out.println(activityID + ", " + labels.get(activityID));
             }
-            readLine();
+            //readLine();
             System.out.println("---------terminate activity------------");
             executionService.terminateActivity(scenarioInstanceID, read);
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))

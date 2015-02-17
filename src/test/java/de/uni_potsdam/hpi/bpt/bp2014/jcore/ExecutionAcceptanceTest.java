@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class ExecutionAcceptanceTest {
 
-    //test AND
+    //test AND1
     @Test
     public void testScenario2() {
         System.out.println("\n ------------------ test Scenario 2 ------------------\n");
@@ -64,6 +64,25 @@ public class ExecutionAcceptanceTest {
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity1, activity2}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+
+    }
+
+    //test AND2
+    @Test
+    public void testScenario118() {
+        System.out.println("\n ------------------ test Scenario 118 ------------------\n");
+        DbActivityInstance dbActivityInstance = new DbActivityInstance();
+        ExecutionService executionService = new ExecutionService();
+        int scenarioInstance = executionService.startNewScenarioInstance(118);
+        int activity246 = 246;
+        int activity243 = 243;
+        int activity245 = 245;
+
+
+        System.out.println("Start Scenario 118");
+        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{ activity246, activity243, activity245}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+
 
     }
 
