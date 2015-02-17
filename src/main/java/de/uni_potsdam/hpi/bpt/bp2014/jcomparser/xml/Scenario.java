@@ -214,6 +214,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Extracts and saves Scenario ID from the ModelXML.
      */
     private void setScenarioID() {
+        System.err.println("setScenarioID starten");
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
         try {
@@ -389,6 +390,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void generateFragmentList() {
         try {
+            System.err.println("generateFragmentList starten");
             //look for all fragments in the scenarioXML and save their IDs
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery =
@@ -406,6 +408,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             DocumentBuilderFactory dbFactory;
             DocumentBuilder dBuilder;
             Document doc;
+            System.err.println("Anzahl Fragmente:" + fragmentIDsList.getLength());
 
             for (int i = 0; i < fragmentIDsList.getLength(); i++) {
                 currentFragmentXML = jRetrieval.getHTMLwithAuth(
@@ -446,7 +449,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * of the ScenarioXML Root-Element.
      */
     private void setScenarioName() {
-
+        System.err.println("setScenarioName starten");
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@name";
         try {
