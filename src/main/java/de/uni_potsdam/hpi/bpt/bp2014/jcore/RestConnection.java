@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * ********************************************************************************
- * <p/>
+ *
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -21,31 +21,38 @@ import java.util.List;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
+ *
  * ******************************************************************
- * <p/>
+ *
  * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
+ *
  * Please be aware of the License. You may found it in the root directory.
- * <p/>
+ *
  * **********************************************************************************
  */
 
-
+/**
+ *
+ */
 @Path("interface/v1/en/") //defining also version and language
 public class RestConnection {
     private ExecutionService executionService = new ExecutionService();
     private HistoryService historyService = new HistoryService();
 
-    /*
+    /* ######################################################
      *
      * HTTP GET REQUESTS
      *
-     * @param scenarioID
-     * @return
+     * #######################################################
      */
 
-    //GET  information about an activityID
+    /**
+     * GET  information about an activityID
+     *
+     * @param scenarioID the ID of the related scenario
+     * @return returns JSON containing details for scenarios
+     */
+
     @GET
     @Path("scenario/{scenarioID}/")
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,7 +80,14 @@ public class RestConnection {
         }
     }
 
-    // GET all scenarioInstanceIDs  of a scenario
+    /**
+     * GET all scenarioInstanceIDs  of a scenario
+     *
+     * @param scenarioID the ID of the related scenario
+     * @param instanceID the ID of the related scenario instance
+     * @return details for a scenario instance or a error code
+     */
+
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/")
     @Produces(MediaType.APPLICATION_JSON)
@@ -108,7 +122,17 @@ public class RestConnection {
 
     }
 
-    //GET  details for an activityID
+    /**
+     * GET  details for an activityID
+     *
+     * @param scenarioID the ID of the related scenario
+     * @param instanceID the ID of the related scenario instance
+     * @param activityinstanceID the ID of the related activity instance
+     * @param status the new status of the activity which is supposed to be updated
+     * @param limit a limit which is not used yet but defined through API specs
+     * @return details for an activity
+     */
+
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     @Produces(MediaType.APPLICATION_JSON)
@@ -183,8 +207,15 @@ public class RestConnection {
         }
     }
 
-    // GET Dataobjects & States
-/*
+    /**
+     * GET Dataobjects & States
+     *
+     * @param scenarioID the ID of the related scenario
+     * @param scenarioInstanceID the ID of the related scenario instance
+     * @param status the new status of the activity which is supposed to be updated
+     * @return unkown
+     */
+ /*
     @GET
     @Path("DataObjects/{Scenarioname}/{Instance}")
     //TODO: adapt to new API Specification
@@ -208,10 +239,18 @@ public class RestConnection {
     }
 */
 
-    // GET scenarioIDs for a scenarioInstance
-/*
+
+
+
     //TODO: not sure why we would need this
 
+    /**
+     * GET scenarioIDs for a scenarioInstance
+     *
+     * @param scenarioInstanceID the ID of the related scenario instance
+     * @return unkown
+     */
+/*
     @GET
     @Path("Get/ScenarioID/{ScenarioInstance}")
     //TODO: adapt to new API Specification
@@ -228,29 +267,45 @@ public class RestConnection {
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
- */
+*/
 
-    /**
-     * ***********************************************************
-     * <p/>
+    /* #############################################################################
+     *
      * HTTP POST REQUEST
      *
-     * @param scenarioID
-     * @return
+     * #############################################################################
+     */
+
+     /**
+     * POST to start a new instance
+     *
+     * @param scenarioID defines the ID of the scenario
+     * @return error status or id of new instance
      */
 
     // POST to start an instance of a scenario
     @POST
     @Path("scenario/{scenarioID}/")
     public int startNewScenarioInstance(@PathParam("scenarioID") int scenarioID) {
-        if (executionService.existScenario(scenarioID)) {//scenario exists
+        // if scenario exists
+        if (executionService.existScenario(scenarioID)) {
             //return the ID of new instanceID
             return executionService.startNewScenarioInstance(scenarioID);
-        } else {//scenario does not exist
+        // else scenario does not exist
+        } else {
             return -1;
         }
     }
 
+    /**
+     * POST to change status of an activity
+     *
+     * @param scenarioID the ID of the related scenario
+     * @param scenarioInstanceID the ID of the related scenario instance
+     * @param activityInstanceID the ID of the related activity instance
+     * @param status the new status of the activity which is supposed to be updated
+     * @return
+     */
     // POST to start/terminate an activity + comment
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
@@ -268,9 +323,8 @@ public class RestConnection {
     }
 
 
-    /**
-     * ************************************************************
-     * <p/>
+    /*
+     *
      * HELPER CLASSES
      */
 
