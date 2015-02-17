@@ -417,6 +417,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                                 "models/" +
                                 fragmentIDsList.item(i).getNodeValue() +
                                 ".pm");
+                System.err.println("XML vom aktuellen Fragment:\n");
+                System.err.println(currentFragmentXML);
                 dbFactory = DocumentBuilderFactory.newInstance();
                 dBuilder = dbFactory.newDocumentBuilder();
                 doc = dBuilder.parse(
@@ -449,13 +451,13 @@ public class Scenario implements IDeserialisable, IPersistable {
      * of the ScenarioXML Root-Element.
      */
     private void setScenarioName() {
-        System.err.println("setScenarioName starten");
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@name";
         try {
             this.scenarioName = xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML);
+            System.err.println("ScenarioName: " + scenarioName);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
