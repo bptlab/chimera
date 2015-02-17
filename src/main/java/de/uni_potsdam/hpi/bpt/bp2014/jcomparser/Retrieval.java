@@ -68,6 +68,7 @@ public class Retrieval {
                 stringBuilder.append(line);
                 stringBuilder.append("\n");
             }
+            inputStream.close();
             return stringBuilder.toString();
         } catch (IOException e) {
             System.err.println("Request failed.");
@@ -91,6 +92,7 @@ public class Retrieval {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(image, "png", baos);
             byte[] imageData = baos.toByteArray();
+            inputStream.close();
 
             // uncomment line below to send non-streamed
             return Response.ok(imageData).build();
@@ -135,7 +137,6 @@ public class Retrieval {
              modelsConnection.setInstanceFollowRedirects(false);
              modelsConnection.setRequestMethod("GET");
              InputStream inputStream = modelsConnection.getInputStream();
-             modelsConnection.disconnect();
              connection.disconnect();
              return inputStream;
          } catch (IOException e) {
