@@ -181,6 +181,13 @@ public class ScenarioInstance {
         return false;
     }
 
+    /**
+     * Change the state of the given data object.
+     *
+     * @param dataObject_id This is the database id from the data object.
+     * @param state_id      This is the database id from the state.
+     * @return true if the data object state could been changed. false if not
+     */
     public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id) {
         for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
             if (dataObjectInstance.getDataObject_id() == dataObject_id) {

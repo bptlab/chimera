@@ -1,9 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -298,6 +295,22 @@ public class ExecutionService {
         }
         return dataObjectStates;
     }
+
+    /**
+     * Returns the names of data objects for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a Map. Keys are the data objects ids. Values are the names of the data objects.
+     */
+    public HashMap<Integer, String> getAllDataObjectNames(int scenarioInstance_id) {
+        DbDataObject dbDataObject = new DbDataObject();
+        HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
+        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
+            dataObjectStates.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getState_id()));
+        }
+        return dataObjectStates;
+    }
+
 
     /**
      * Checks if a scenario instance is terminated.
