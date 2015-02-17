@@ -13,12 +13,14 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
         LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         for (int followingControlNode_id : followingControlNode_ids) {
             ControlNodeInstance followingControlNodeInstance = createFollowingNodeInstance(followingControlNode_id);
+            //enable following instances
             followingControlNodeInstance.incomingBehavior.enableControlFlow();
         }
     }
 
     /**
      * Initializes and creates the following control node instance for the given control node instance id.
+     *
      * @param controlNode_id This is the database id from the control node instance.
      * @return the created control node instance.
      */

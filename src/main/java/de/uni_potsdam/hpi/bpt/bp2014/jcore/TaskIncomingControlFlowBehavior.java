@@ -37,9 +37,10 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
 
     /**
      * Initializes the TaskIncomingControlFlowBehavior.
+     *
      * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
-     * @param scenarioInstance This is an instance from the class ScenarioInstance.
-     * @param stateMachine This is an instance from the class StateMachine.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     * @param stateMachine        This is an instance from the class StateMachine.
      */
     public TaskIncomingControlFlowBehavior(ControlNodeInstance controlNodeInstance, ScenarioInstance scenarioInstance, StateMachine stateMachine) {
         this.controlNodeInstance = controlNodeInstance;
@@ -75,6 +76,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
 
     /**
      * Checks if the input data objects have the same state as the data object of the scenario instance.
+     *
      * @return true if the data object have the same state as the inputs of the activity. false if not.
      */
     private Boolean checkInputObjects() {
@@ -90,7 +92,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
                     break;
                 }
             }
-            if (loopCheck == true){
+            if (loopCheck == true) {
                 break;
             }
         }

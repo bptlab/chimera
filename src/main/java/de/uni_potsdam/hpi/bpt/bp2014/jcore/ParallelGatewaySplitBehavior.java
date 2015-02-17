@@ -28,52 +28,26 @@ import java.util.LinkedList;
 
 
 public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
-    //Database Connection objects
-    private DbDataFlow dbDataFlow = new DbDataFlow();
 
+    /**
+     * Initializes the ParallelGatewaySplitBehavior.
+     *
+     * @param gateway_id          This is the database id from the gateway.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     * @param fragmentInstance_id This is the database id from the fragment instance.
+     */
     ParallelGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id) {
         this.controlNode_id = gateway_id;
         this.scenarioInstance = scenarioInstance;
         this.fragmentInstance_id = fragmentInstance_id;
     }
 
+    /**
+     * Terminates the control node instance.
+     */
     @Override
     public void terminate() {
         scenarioInstance.checkDataFlowEnabled();
         this.enableFollowing();
-    }
-
-    /**
-     * Set all following control nodes to control flow enabled and initializes them.
-     */
-    public void enableFollowing() {
-        LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
-        for (int followingControlNode_id : followingControlNode_ids) {
-            ControlNodeInstance followingControlNodeInstance = createFollowingNodeInstance(followingControlNode_id);
-            //enable following instances
-            followingControlNodeInstance.incomingBehavior.enableControlFlow();
-        }
-    }
-
-    /**
-     * Initializes and creates the following control node instance for the given control node instance id.
-     * @param controlNode_id This is the database id from the control node instance.
-     * @return the created control node instance.
-     */
-    private ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
-        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;
-        }
-        String type = dbControlNode.getType(controlNode_id);
-        ControlNodeInstance controlNodeInstance = null;
-        //TODO type
-        if (type.equals("Activity") || type.equals("EmailTask")) {
-            controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-        } else if (type.equals("Endevent")) {
-            controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
-        } else if (type.equals("XOR") || type.equals("AND")) {
-            controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-        }
-        return controlNodeInstance;
     }
 }
