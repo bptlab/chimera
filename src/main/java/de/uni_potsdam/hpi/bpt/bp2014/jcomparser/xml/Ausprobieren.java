@@ -41,7 +41,7 @@ public class Ausprobieren {
                 .newInstance()
                 .newDocumentBuilder();
         Document doc = db.parse(is);
-        Scenario scen = new Scenario();
+        Scenario scen = new Scenario("http://localhost:1205/");
         scen.initializeInstanceFromXML(doc.getDocumentElement());
         scen.save();
     }

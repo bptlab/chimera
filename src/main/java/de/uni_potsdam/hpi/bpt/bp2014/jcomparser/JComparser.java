@@ -53,7 +53,7 @@ public class JComparser {
         is.setCharacterStream(new StringReader(scenarioXML));
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = db.parse(is);
-        Scenario scen = new Scenario();
+        Scenario scen = new Scenario(processserver);
         scen.initializeInstanceFromXML(doc.getDocumentElement());
         scen.save();
         return 1;
@@ -101,7 +101,7 @@ public class JComparser {
                 String[] splittedScenarioURI = currentXmlUri.split("/");
                 String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length - 1];
                 String newScenarioURI = processeditor_server_url + "models/" + currentScenarioID + ".pm";
-                Scenario scenario = new Scenario();
+                Scenario scenario = new Scenario(processeditor_server_url);
                 String currentScenarioXML = new Retrieval().getHTMLwithAuth(processeditor_server_url, newScenarioURI);
                 scenario.initializeInstanceFromXML(stringToDocument(currentScenarioXML).getFirstChild());
                 scenario.save();
