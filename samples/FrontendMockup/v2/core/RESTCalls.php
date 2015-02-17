@@ -30,7 +30,7 @@ if($JCore_REST_Interface_Version === "v1"){
 		$get_response_as_array = json_decode($get_json,true);
 		
 		if(!$get_response_as_array){
-	                die("ERROR: decoding within ShowScenarios failed");
+	                //die("ERROR: decoding within ShowScenarios failed"); # makes no sense in case of there is no scenario in database
 	    } elseif(strpos($get_response_as_array, 'Error')){
 	    			echo "There is an REST Error..";
 	    }
@@ -53,7 +53,7 @@ if($JCore_REST_Interface_Version === "v1"){
 		$get_response_as_array = json_decode($get_json,true);
 		
 		if(!$get_response_as_array){
-	                die("ERROR: decoding within ShowScenarioInstances failed");
+	           //     die("ERROR: decoding within ShowScenarioInstances failed"); # doesnt make sense in case of there is no instance created initial
 	    } elseif(strpos($get_response_as_array, 'Error')){
 	    			echo "There is an REST Error..";
 	    }
