@@ -36,9 +36,10 @@ public class EventInstance extends ControlNodeInstance {
 
     /**
      * Creates and initializes a new event instance.
-     * @param type This is the type of the event.
+     *
+     * @param type                This is the type of the event.
      * @param fragmentInstance_id This is the database id from the fragment instance.
-     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      */
     public EventInstance(int fragmentInstance_id, ScenarioInstance scenarioInstance, String type) {
         this.scenarioInstance = scenarioInstance;

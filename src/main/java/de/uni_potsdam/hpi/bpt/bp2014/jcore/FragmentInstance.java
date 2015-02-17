@@ -1,6 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 
 import java.util.LinkedList;
 
@@ -25,7 +28,6 @@ import java.util.LinkedList;
  * <p/>
  * **********************************************************************************
  */
-
 
 
 /**

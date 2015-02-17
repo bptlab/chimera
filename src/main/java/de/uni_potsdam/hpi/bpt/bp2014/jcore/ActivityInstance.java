@@ -30,7 +30,6 @@ import java.util.LinkedList;
  */
 
 
-
 /**
  * Represents the activity instance.
  * It save the state of the activity in the state machine. It has an outgoing behavior and an incoming behavior.
@@ -52,9 +51,10 @@ public class ActivityInstance extends ControlNodeInstance {
      * Creates and initializes a new activity instance.
      * Reads the information for an existing activity instance from the database or creates a new one if no one
      * exist in the database.
-     * @param controlNode_id This is the database id from the control node.
+     *
+     * @param controlNode_id      This is the database id from the control node.
      * @param fragmentInstance_id This is the database id from the fragment instance.
-     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      */
     public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
         this.scenarioInstance = scenarioInstance;
@@ -88,6 +88,7 @@ public class ActivityInstance extends ControlNodeInstance {
     /**
      * Starts the activity instance.
      * Sets the state of the activity to enabled. Starts the referential activities. Perform the execution behavior.
+     *
      * @return true if the activity could started. false if the activity couldn't started.
      */
     public boolean begin() {
@@ -106,6 +107,7 @@ public class ActivityInstance extends ControlNodeInstance {
 
     /**
      * Sets an activity to referential running.
+     *
      * @return true if the activity could set to referential running. false if the activity couldn't set.
      */
     public boolean referenceStarted() {
@@ -115,9 +117,10 @@ public class ActivityInstance extends ControlNodeInstance {
     /**
      * Terminates a referential running activity.
      * Enables the following control nodes.
+     *
      * @return true if the activity could set to terminated. false if the activity couldn't set.
      */
-    public boolean referenceTerminated(){
+    public boolean referenceTerminated() {
         boolean workFine = ((ActivityStateMachine) stateMachine).referenceTerminated();
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).enableFollowing();
         return workFine;
@@ -126,6 +129,7 @@ public class ActivityInstance extends ControlNodeInstance {
     /**
      * Terminates a running activity.
      * Enables the following control nodes and sets the data outputs.
+     *
      * @return true if the activity could set to terminated. false if the activity couldn't set.
      */
     public boolean terminate() {

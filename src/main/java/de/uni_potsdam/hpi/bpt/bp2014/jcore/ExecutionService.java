@@ -33,16 +33,27 @@ import java.util.LinkedList;
 
 //handles all Scenario Instances, can create new Instances, can activate Activities
 public class ExecutionService {
+    /**
+     * This are the Lists for all opened scenario instances.
+     */
     private LinkedList<ScenarioInstance> scenarioInstances = new LinkedList<ScenarioInstance>();
     private HashMap<Integer, ScenarioInstance> sortedScenarioInstances = new HashMap<Integer, ScenarioInstance>();
+    /**
+     * Database Connection.
+     */
     private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
     private DbScenario dbScenario = new DbScenario();
     private DbControlNode dbControlNode = new DbControlNode();
 
     public ExecutionService() {
-
     }
 
+    /**
+     * Starts a new scenario instance for the given scenario id.
+     *
+     * @param scenario_id This is the id of the scenario.
+     * @return the id of the new scenario instance.
+     */
     public int startNewScenarioInstance(int scenario_id) {
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id);
         scenarioInstances.add(scenarioInstance);
@@ -50,6 +61,13 @@ public class ExecutionService {
         return scenarioInstance.getScenarioInstance_id();
     }
 
+    /**
+     * Open a existing scenario instance.
+     *
+     * @param scenario_id         This is the id of the scenario.
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return true if the scenario instance could been open and exist. false if the scenario instance couldn't been open.
+     */
     public boolean openExistingScenarioInstance(int scenario_id, int scenarioInstance_id) {
         if (!sortedScenarioInstances.containsKey(scenarioInstance_id)) {
             if (existScenarioInstance(scenarioInstance_id)) {
@@ -64,37 +82,87 @@ public class ExecutionService {
         return true;
     }
 
+    /**
+     * Gives all scenarios in the database.
+     *
+     * @return all list with all ids of all scenarios in the database.
+     */
     public LinkedList<Integer> getAllScenarioIDs() {
         return dbScenario.getScenarioIDs();
     }
 
+    /**
+     * Checks if the scenario instance have been open.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return true if the scenario instance have been open. false if not.
+     */
     public boolean scenarioInstanceIsRunning(int scenarioInstance_id) {
         return sortedScenarioInstances.containsKey(scenarioInstance_id);
     }
 
+    /**
+     * Checks if the scenario instance exist in the database.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return true if the scenario instance exist in the database. false if not.
+     */
     public boolean existScenarioInstance(int scenarioInstance_id) {
-        if (dbScenarioInstance.existScenario(scenarioInstance_id)) return true;
+        if (dbScenarioInstance.existScenario(scenarioInstance_id)) {
+            return true;
+        }
         return false;
     }
 
+    /**
+     * Checks if the scenario instance exist in the database.
+     *
+     * @param scenario_id         This is the id of the scenario.
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return true if the scenario instance exist in the database. false if not.
+     */
     public boolean existScenarioInstance(int scenario_id, int scenarioInstance_id) {
         if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)) return true;
         return false;
     }
 
+    /**
+     * Checks if the scenario exist in the database.
+     *
+     * @param scenario_id This is the id of the scenario.
+     * @return true if the scenario exist in the database. false if not.
+     */
     public boolean existScenario(int scenario_id) {
         if (dbScenario.existScenario(scenario_id)) return true;
         return false;
     }
 
+    /**
+     * Gives all scenario instance id for a scenario id.
+     *
+     * @param scenario_id This is the id of the scenario.
+     * @return a list of all scenario instance ids for a the given scenario id.
+     */
     public LinkedList<Integer> listAllScenarioInstancesForScenario(int scenario_id) {
         return dbScenarioInstance.getScenarioInstances(scenario_id);
     }
 
+    /**
+     * Gives the database id from the scenario for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return the database id for a scenario.
+     */
     public int getScenarioIDForScenarioInstance(int scenarioInstance_id) {
         return dbScenarioInstance.getScenarioID(scenarioInstance_id);
     }
 
+    /**
+     * Gives all activity ids for a scenario instance which are enabled.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a list of the ids of activities.
+     */
     public LinkedList<Integer> getEnabledActivitiesIDsForScenarioInstance(int scenarioInstance_id) {
         LinkedList<Integer> ids = new LinkedList<Integer>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
@@ -196,7 +264,13 @@ public class ExecutionService {
         return dbScenario.getScenarioName(dbScenarioInstance.getScenarioID(scenarioInstance_id));
     }
 
-    //for tests
+    /**
+     * Gives the scenario instance for a scenario instance id.
+     * Only for Tests.
+     *
+     * @param scenarioInstanceID
+     * @return
+     */
     public ScenarioInstance getScenarioInstance(int scenarioInstanceID) {
         return sortedScenarioInstances.get(scenarioInstanceID);
     }

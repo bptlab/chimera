@@ -31,9 +31,10 @@ public class EventIncomingControlFlowBehavior extends IncomingBehavior {
     /**
      * Creates and initializes an event incoming control flow behavior.
      * This behavior is only for an end event.
+     *
      * @param controlNodeInstance This is an instance of the class ControlNodeInstance.
-     * @param scenarioInstance This is an instance of the class ScenarioInstance.
-     * @param type This is the type of the event.
+     * @param scenarioInstance    This is an instance of the class ScenarioInstance.
+     * @param type                This is the type of the event.
      */
     public EventIncomingControlFlowBehavior(ControlNodeInstance controlNodeInstance, ScenarioInstance scenarioInstance, String type) {
         this.controlNodeInstance = controlNodeInstance;

@@ -203,6 +203,7 @@ public class ScenarioInstance {
     /**
      * checks if the referenced controlNode can be started.
      * The referenced controlNode have to be control flow enabled and (data flow enabled or must have the same data output)
+     *
      * @param controlNode_id
      * @param referencedControlNode_id
      */
@@ -211,7 +212,7 @@ public class ScenarioInstance {
             if (controlNodeInstance.controlNode_id == referencedControlNode_id) {
                 if (controlNodeInstance.getClass() == ActivityInstance.class) {
                     DbControlNode dbControlNode = new DbControlNode();
-                    if(enabledControlNodeInstances.contains(controlNodeInstance) || dbControlNode.controlNodesHaveSameOutputs(controlNode_id, referencedControlNode_id)) {
+                    if (enabledControlNodeInstances.contains(controlNodeInstance) || dbControlNode.controlNodesHaveSameOutputs(controlNode_id, referencedControlNode_id)) {
                         ((ActivityInstance) controlNodeInstance).referenceStarted();
                         return;
                     }
@@ -224,6 +225,7 @@ public class ScenarioInstance {
     /**
      * checks if the referenced controlNode can be terminated.
      * The referenced controlNode have to be referential running
+     *
      * @param controlNode_id
      */
     public void terminateReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
