@@ -60,8 +60,6 @@ public class JComparser {
             throws ParserConfigurationException, IOException, SAXException {
         Retrieval jRetrieval = new Retrieval();
         String scenarioXML = jRetrieval.getHTMLwithAuth(processServer, pcmUrl);
-        System.err.println("SzenarioXML:\n");
-        System.err.println(scenarioXML);
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(scenarioXML));
         DocumentBuilder db = DocumentBuilderFactory

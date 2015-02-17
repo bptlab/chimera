@@ -81,7 +81,6 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     public Fragment(String serverURL){
         processeditorServerUrl = serverURL;
-        System.err.println("Fragment created");
     }
 
     /**

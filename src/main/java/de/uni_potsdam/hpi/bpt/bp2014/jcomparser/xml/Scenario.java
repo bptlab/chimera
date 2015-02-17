@@ -77,7 +77,6 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     public Scenario(String serverURL) {
         processeditorServerUrl = serverURL;
-        System.err.println("Konstruktor Szenario, serverURL:" + serverURL);
     }
 
     /**
@@ -214,7 +213,6 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Extracts and saves Scenario ID from the ModelXML.
      */
     private void setScenarioID() {
-        System.err.println("setScenarioID starten");
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
         try {
@@ -390,7 +388,6 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void generateFragmentList() {
         try {
-            System.err.println("generateFragmentList starten");
             //look for all fragments in the scenarioXML and save their node
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery =
@@ -407,7 +404,6 @@ public class Scenario implements IDeserialisable, IPersistable {
             DocumentBuilderFactory dbFactory;
             DocumentBuilder dBuilder;
             Document doc;
-            System.err.println("Anzahl Fragmente:" + fragmentNodes.getLength());
 
             for (int i = 0; i < fragmentNodes.getLength(); i++) {
                 // get the ID of the current node
@@ -421,8 +417,6 @@ public class Scenario implements IDeserialisable, IPersistable {
                                 "models/" +
                                 currentNodeID +
                                 ".pm");
-                System.err.println("XML vom aktuellen Fragment:\n");
-                System.err.println(currentFragmentXML);
                 dbFactory = DocumentBuilderFactory.newInstance();
                 dBuilder = dbFactory.newDocumentBuilder();
                 doc = dBuilder.parse(
@@ -430,7 +424,6 @@ public class Scenario implements IDeserialisable, IPersistable {
                                 new ByteArrayInputStream(
                                         currentFragmentXML.getBytes("utf-8"))));
                 doc.getDocumentElement().normalize();
-                System.err.println("neues Fragment instanziieren");
                 Fragment fragment = new Fragment(processeditorServerUrl);
                 fragment.initializeInstanceFromXML(
                         (org.w3c.dom.Node) doc.getDocumentElement());
@@ -461,7 +454,6 @@ public class Scenario implements IDeserialisable, IPersistable {
             this.scenarioName = xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML);
-            System.err.println("ScenarioName: " + scenarioName);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
