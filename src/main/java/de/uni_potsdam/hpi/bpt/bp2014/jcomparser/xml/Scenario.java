@@ -391,31 +391,35 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void generateFragmentList() {
         try {
             System.err.println("generateFragmentList starten");
-            //look for all fragments in the scenarioXML and save their IDs
+            //look for all fragments in the scenarioXML and save their node
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery =
-                    "/model/nodes/node/property[@name = '#type' and " +
-                    "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']" +
-                    "/preceding-sibling::property[@name='fragment mid']/@value";
-            NodeList fragmentIDsList = (NodeList) xPath
+                    "/model/nodes/node[property[@name = '#type' and " +
+                    "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']]";
+            NodeList fragmentNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);
 
             // create URI from fragmentID and retrieve xml for all fragments of the scenario
             Retrieval jRetrieval = new Retrieval();
-            this.fragments = new ArrayList<Fragment>(fragmentIDsList.getLength());
+            this.fragments = new ArrayList<Fragment>(fragmentNodes.getLength());
             String currentFragmentXML;
             DocumentBuilderFactory dbFactory;
             DocumentBuilder dBuilder;
             Document doc;
-            System.err.println("Anzahl Fragmente:" + fragmentIDsList.getLength());
+            System.err.println("Anzahl Fragmente:" + fragmentNodes.getLength());
 
-            for (int i = 0; i < fragmentIDsList.getLength(); i++) {
+            for (int i = 0; i < fragmentNodes.getLength(); i++) {
+                // get the ID of the current node
+                xPathQuery = "property[@name = 'fragment mid']/@value";
+                String currentNodeID = xPath
+                        .compile(xPathQuery)
+                        .evaluate(fragmentNodes.item(i));
                 currentFragmentXML = jRetrieval.getHTMLwithAuth(
                         this.processeditorServerUrl,
                         this.processeditorServerUrl +
                                 "models/" +
-                                fragmentIDsList.item(i).getNodeValue() +
+                                currentNodeID +
                                 ".pm");
                 System.err.println("XML vom aktuellen Fragment:\n");
                 System.err.println(currentFragmentXML);
