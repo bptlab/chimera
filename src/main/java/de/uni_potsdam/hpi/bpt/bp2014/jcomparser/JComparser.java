@@ -70,7 +70,7 @@ public class JComparser {
         Scenario scen = new Scenario(processServer);
         scen.initializeInstanceFromXML(doc.getDocumentElement());
         scen.save();
-        return 0;
+        return 1;
     }
 
     /**

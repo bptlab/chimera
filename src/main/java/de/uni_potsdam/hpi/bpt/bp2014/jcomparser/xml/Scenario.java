@@ -77,7 +77,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     public Scenario(String serverURL) {
         processeditorServerUrl = serverURL;
-        System.err.println("Debug");
+        System.err.println("Konstruktor Szenario, serverURL:" + serverURL);
     }
 
     /**
@@ -421,6 +421,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                                 new ByteArrayInputStream(
                                         currentFragmentXML.getBytes("utf-8"))));
                 doc.getDocumentElement().normalize();
+                System.err.println("neues Fragment instanziieren");
                 Fragment fragment = new Fragment(processeditorServerUrl);
                 fragment.initializeInstanceFromXML(
                         (org.w3c.dom.Node) doc.getDocumentElement());
