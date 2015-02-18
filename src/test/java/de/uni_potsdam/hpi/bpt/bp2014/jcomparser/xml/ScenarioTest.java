@@ -8,9 +8,8 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,7 +17,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 
 /**
  * This class tests the Scenario.
@@ -134,7 +132,7 @@ public class ScenarioTest {
 
     /**
      * This Methods Tests weather the version is set correctly or not.
-     * @throws Exception Occurres while creating the MockObject.
+     * @throws Exception occurs while creating the MockObject.
      */
     @Test
     public void testVersion() throws Exception {
