@@ -64,9 +64,7 @@ public class RestConnection {
             if (scenarioIDs.size() == 0)
                 return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
 
-            Gson gson = new Gson();
-            JsonIntegerList json = new JsonIntegerList(scenarioIDs);
-            String jsonRepresentation = gson.toJson(json);
+            String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
             //otherwise display the label for the scenarioID
@@ -102,9 +100,7 @@ public class RestConnection {
             if (scenarioIDs.size() == 0)
                 return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build(); //no instances present
 
-            Gson gson = new Gson();
-            JsonIntegerList json = new JsonIntegerList(scenarioIDs);
-            String jsonRepresentation = gson.toJson(json);
+            String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 
@@ -112,7 +108,7 @@ public class RestConnection {
             //TODO: implement returning of instance details (label, timestamp..)
         } else {
             String label = executionService.getScenarioNameForScenarioInstance(instanceID);
-
+            //int scenarioID = executionService.getScenarioIDForScenarioInstance(scenarioInstanceID); //get the scenarioID for this instance
             if (label.equals(""))
                 return Response.serverError().entity("Error: not correct instanceID").build();//no activity with this id present
 
@@ -123,13 +119,13 @@ public class RestConnection {
     /**
      * GET  details for an activityID
      *
-     * @param scenarioID         the ID of the related scenario
-     * @param instanceID         the ID of the related scenario instance
+     * @param scenarioID the ID of the related scenario
+     * @param instanceID the ID of the related scenario instance
      * @param activityinstanceID the ID of the related activity instance
-     * @param status             the new status of the activity which is supposed to be updated
-     * @param limit              a limit which is not used yet but defined through API specs
+     * @param status the new status of the activity which is supposed to be updated
+     * @param limit a limit which is not used yet but defined through API specs
      * @return details for an activity
-     * <p/>
+     *
      * TODO: Limit has to be implemented
      */
 
@@ -154,11 +150,11 @@ public class RestConnection {
                 // iff no open activities present return {empty}
                 if (enabledActivitiesIDs.size() == 0)
                     return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
-                Gson gson = new Gson();
-                JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
-                String jsonRepresentation = gson.toJson(json);
+
+                String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
+
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-                // if status is terminated -> return all terminated activities
+            // if status is terminated -> return all terminated activities
             } else if (status.equals("terminated")) {
 
                 if (!executionService.existScenarioInstance(scenarioID, instanceID))
@@ -170,12 +166,10 @@ public class RestConnection {
                 if (terminatedActivities.size() == 0)
                     return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
 
-                Gson gson = new Gson();
-                JsonHashMapIntegerString json = new JsonHashMapIntegerString(terminatedActivities, labels);
-                String jsonRepresentation = gson.toJson(json);
+                String jsonRepresentation = JsonWrapperHashMap(terminatedActivities, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-                // if status is running -> return all running activities
+            // if status is running -> return all running activities
             } else if (status.equals("running")) { //running activities;
 
                 if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
@@ -186,9 +180,9 @@ public class RestConnection {
                 // if no running activities present -> return {empty}
                 if (enabledActivitiesIDs.size() == 0)
                     return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
-                Gson gson = new Gson();
-                JsonHashMapIntegerString json = new JsonHashMapIntegerString(enabledActivitiesIDs, labels);
-                String jsonRepresentation = gson.toJson(json);
+
+                String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
+
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 
             }
@@ -197,7 +191,7 @@ public class RestConnection {
 
             // display details for this activityID
             //TODO: implement returning of timestamp and additional details
-            //if activity ID is != 0 then display details for this activity
+        //if activity ID is != 0 then display details for this activity
         } else {
             String label = executionService.getLabelForControlNodeID(activityinstanceID);
             //if no activity with this id present
@@ -209,64 +203,34 @@ public class RestConnection {
     }
 
     /**
-     * GET Dataobjects & States
+     * GET Dataobjects and States
      *
      * @param scenarioID the ID of the related scenario
      * @param scenarioInstanceID the ID of the related scenario instance
      * @param status the new status of the activity which is supposed to be updated
-     * @return unkown
+     * @return json representation of all available dataobjects
      *
-     * TODO: adapt to new API Specification
      */
- /*
+ 
     @GET
-    @Path("DataObjects/{Scenarioname}/{Instance}")
+    @Path("scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataobjectID}/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response showDataObjects(@PathParam("Scenarioname") int scenarioID, @PathParam("Instance") int scenarioInstanceID, @PathParam("Status") String status) {
+    public Response showDataObjects(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("dataobjectID") int dataobjectID, @QueryParam("status") String status, @QueryParam("limit") String limit) {
 
         if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID)))
-            return Response.serverError().entity("Error: not a correct scenario instance").build();
+            return Response.serverError().entity("Error: there is no existing open scenario instance").build();
 
         LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
         HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
-
+        //if no dataobject is available -> return {empty}
         if (dataObjects.size() == 0)
-            return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no dataobjects present
+            return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
 
-        Gson gson = new Gson();
-        JsonHashMapIntegerString json = new JsonHashMapIntegerString(dataObjects, labels);
-        String jsonRepresentation = gson.toJson(json);
+        String jsonRepresentation = JsonWrapperHashMap(dataObjects, labels) {
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
-*/
 
-    /**
-     * GET scenarioIDs for a scenarioInstance
-     *
-     * @param scenarioInstanceID the ID of the related scenario instance
-     * @return unkown
-     *
-     * TODO: not sure why we would need this
-     * TODO: adapt to new API Specification
-     */
-/*
-    @GET
-    @Path("Get/ScenarioID/{ScenarioInstance}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getScenarioID(@PathParam("scenarioID") int scenarioInstanceID) {
-
-        if (!executionService.existScenarioInstance(scenarioInstanceID))
-            return Response.serverError().entity("Error: not a correct scenario instance").build();
-
-        int scenarioID = executionService.getScenarioIDForScenarioInstance(scenarioInstanceID);
-        Gson gson = new Gson();
-        JsonInteger json = new JsonInteger(scenarioID);
-        String jsonRepresentation = gson.toJson(json);
-
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-    }
-*/
 
     /* #############################################################################
      *
@@ -275,7 +239,7 @@ public class RestConnection {
      * #############################################################################
      */
 
-    /**
+     /**
      * POST to start a new instance
      *
      * @param scenarioID defines the ID of the scenario
@@ -289,7 +253,7 @@ public class RestConnection {
         if (executionService.existScenario(scenarioID)) {
             //return the ID of new instanceID
             return executionService.startNewScenarioInstance(scenarioID);
-            // else scenario does not exist
+        // else scenario does not exist
         } else {
             return -1;
         }
@@ -298,23 +262,36 @@ public class RestConnection {
     /**
      * POST to change status of an activity
      *
-     * @param scenarioID         the ID of the related scenario
+     * @param scenarioID the ID of the related scenario
      * @param scenarioInstanceID the ID of the related scenario instance
      * @param activityInstanceID the ID of the related activity instance
-     * @param status             the new status of the activity which is supposed to be updated
-     * @return
+     * @param status the new status of the activity which is supposed to be updated
+     * @return true or false
      */
 
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
+        Boolean result;
         executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID));
         // check on status, if begin -> start the activity
         if (status.equals("begin")) {
-            return executionService.beginActivity(scenarioInstanceID, activityInstanceID);
-            // otherwise when terminate -> terminate the activity
+            result = executionService.beginActivity(scenarioInstanceID, activityInstanceID);
+            if (result){
+                return true;
+            } else {
+                System.err.print("ERROR within the executionService.beginActivity during REST Call doActivity");
+                return false;
+            }
+        // otherwise when terminate -> terminate the activity
         } else if (status.equals("terminate")) {
-            return executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
+            result = executionService.terminateActivity(scenarioInstanceID, activityInstanceID);
+            if (result){
+                return true;
+            } else {
+                System.err.print("ERROR within the executionService.terminateActivity during REST Call doActivity");
+                return false;
+            }
         }
         //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
         System.err.print("ERROR: no status defined " + status);
@@ -328,6 +305,20 @@ public class RestConnection {
      *
      * ##########################################################################
      */
+
+    // we are so cool, we dont need any libraries :/
+    class JsonWrapperLinkedList(LinkedList<Integer> content) {
+            Gson gson = new Gson();
+            JsonIntegerList json = new JsonIntegerList(content);
+            return gson.toJson(json);
+    }
+
+    // we are so cool, we dont need any libraries :/
+    class JsonWrapperHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels) {
+            Gson gson = new Gson();
+            JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels);
+            return gson.toJson(json);
+    }
 
     class JsonHashMapIntegerString {
         private LinkedList<Integer> ids;
