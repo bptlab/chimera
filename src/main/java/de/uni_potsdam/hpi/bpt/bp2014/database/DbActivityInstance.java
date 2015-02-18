@@ -24,8 +24,17 @@ import java.util.LinkedList;
 *
 ************************************************************************************/
 
+/**
+ * Represents the activity instance of the database
+ * Methods are mostly used by the HistoryService so you can get all terminated activities or start new ones
+ */
 
 public class DbActivityInstance {
+    /**
+     *
+     * @param id This is the database Id of an activity instance
+     * @return the state of the activity as a String
+     */
     public String getState(int id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -63,6 +72,12 @@ public class DbActivityInstance {
         }
         return results;
     }
+
+    /**
+     *
+     * @param id This is the ID of an activity instance which is found in the database
+     * @param state This is the state in which an activity should be after executing setState
+     */
     public void setState(int id, String state) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -95,6 +110,14 @@ public class DbActivityInstance {
             }
         }
     }
+
+    /**
+     *
+     * @param controlNodeInstance_id This is the ID of a controlNode instance which is found in the database
+     * @param ActivityType This is the type of an activity
+     * @param ActivityState this is the state of an activity
+     * @return an Integer which is -1 if something went wrong else it is the database ID of the newly created activity instance
+     */
     public int createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -131,6 +154,12 @@ public class DbActivityInstance {
         }
         return result;
     }
+
+    /**
+     *
+     * @param fragmentInstance_id This is the database ID of a fragment instance
+     * @return a list of activity ID's which belong to the fragment instance and are terminated
+     */
     public LinkedList<Integer> getTerminatedActivitiesForFragmentInstance(int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -170,6 +199,12 @@ public class DbActivityInstance {
         }
         return results;
     }
+
+    /**
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance
+     * @return a list of activity ID's which belong to the scenario instance and are terminated
+     */
     public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;

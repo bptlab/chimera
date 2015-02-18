@@ -24,8 +24,17 @@ import java.util.LinkedList;
 *
 ************************************************************************************/
 
+/**
+ * Represents the ControlFlow in the database
+ * Mostly used to get predecessors and successors of a controlNode
+ */
 
 public class DbControlFlow {
+    /**
+     *
+     * @param controlNode_id This is the database ID of a controlNode
+     * @return -1 if something went wrong else it returns the database ID of a controlNode which is right after a startEvent
+     */
     public int getNextControlNodeAfterStartEvent(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -63,6 +72,12 @@ public class DbControlFlow {
         }
         return results;
     }
+
+    /**
+     *
+     * @param controlNode_id This is the database ID of a controlNode
+     * @return a list of database ID's of controlNodes which success the given controlNode
+     */
     public LinkedList<Integer> getFollowingControlNodes(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -101,6 +116,12 @@ public class DbControlFlow {
         }
         return results;
     }
+
+    /**
+     *
+     * @param controlNode_id This is the database ID of a controlNode
+     * @return a list of database ID's of controlNodes which precede the given controlNode
+     */
     public LinkedList<Integer> getPredecessorControlNodes(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
