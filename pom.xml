@@ -95,7 +95,12 @@
             <version>2.4.0</version>
             <scope>test</scope>
         </dependency>
-
+	<dependency>
+           <groupId>com.jayway.restassured</groupId>
+           <artifactId>json-schema-validator</artifactId>
+           <version>2.4.0</version>
+           <scope>test</scope>
+        </dependency>
     </dependencies>
     <properties>
         <jersey.version>2.13</jersey.version>
