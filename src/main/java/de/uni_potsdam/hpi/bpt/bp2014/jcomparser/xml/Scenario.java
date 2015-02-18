@@ -430,6 +430,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);
 
+            // TODO: Extract fragment retrieval
             // create URI from fragmentID
             // and retrieve xml for all fragments of the scenario
             Retrieval jRetrieval = new Retrieval();
@@ -558,7 +559,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * Returns the DataNode, which is part of the TerminationCondition.
      *
-     * @return the dataNode of the TermiantionCondition.
+     * @return the dataNode of the TerminationCondition.
      */
     public Node getTerminatingDataNode() {
         return terminatingDataNode;
