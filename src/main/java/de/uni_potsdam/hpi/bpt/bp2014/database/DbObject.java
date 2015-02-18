@@ -11,23 +11,27 @@ import java.util.LinkedList;
  */
 public class DbObject {
     /**
-     * Executes SQL statement and returns the result.
+     * Executes the given select SQL statement and returns the result in List with Integer.
      *
-     * @return
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return List with Integer.
      */
-    public LinkedList<Integer> executeStatementReturnsListInt(String sql, String column) {
+    public LinkedList<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
         LinkedList<Integer> results = new LinkedList<Integer>();
-        if (conn == null) return results;
+        if (conn == null) {
+            return results;
+        }
 
         try {
             //Execute a query
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                results.add(rs.getInt(column));
+                results.add(rs.getInt(columnLabel));
             }
             //Clean-up environment
             rs.close();
@@ -37,13 +41,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -51,7 +58,14 @@ public class DbObject {
         return results;
     }
 
-    public String executeStatementReturnsString(String sql, String column) {
+    /**
+     * Executes the given select SQL statement and returns the result as String.
+     *
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return String.
+     */
+    public String executeStatementReturnsString(String sql, String columnLabel) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -64,7 +78,7 @@ public class DbObject {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                results = rs.getString(column);
+                results = rs.getString(columnLabel);
             }
             //Clean-up environment
             rs.close();
@@ -74,13 +88,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -88,19 +105,28 @@ public class DbObject {
         return results;
     }
 
-    public int executeStatementReturnsInt(String sql, String column) {
+    /**
+     * Executes the given select SQL statement and returns the result as int.
+     *
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return int.
+     */
+    public int executeStatementReturnsInt(String sql, String columnLabel) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
         int results = -1;
-        if (conn == null) return results;
+        if (conn == null) {
+            return results;
+        }
 
         try {
             //Execute a query
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                results = rs.getInt(column);
+                results = rs.getInt(columnLabel);
             }
             //Clean-up environment
             rs.close();
@@ -112,13 +138,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -126,7 +155,15 @@ public class DbObject {
         return results;
     }
 
-    public boolean executeStatementReturnsBoolean(String sql, String column) {
+    /**
+     * Executes the given select SQL statement and returns the result as boolean.
+     *
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return boolean.
+     */
+
+    public boolean executeStatementReturnsBoolean(String sql, String columnLabel) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -139,7 +176,7 @@ public class DbObject {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                results = rs.getBoolean(column);
+                results = rs.getBoolean(columnLabel);
             }
             //Clean-up environment
             rs.close();
@@ -149,13 +186,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -163,6 +203,12 @@ public class DbObject {
         return results;
     }
 
+    /**
+     * Executes the given select SQL statement.
+     *
+     * @param sql This is a given SQL Statement.
+     * @return true if there is a result for the statement. false if not.
+     */
     public boolean executeExistStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -186,13 +232,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -200,11 +249,19 @@ public class DbObject {
         return false;
     }
 
+    /**
+     * Executes the given insert SQL statement.
+     *
+     * @param sql This is a given SQL Statement.
+     * @return the generated key for the insert statement.
+     */
     public int executeInsertStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         int result = -1;
         try {
             //Execute a query
@@ -220,13 +277,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -234,6 +294,11 @@ public class DbObject {
         return result;
     }
 
+    /**
+     * Executes the given SQL Statement. Which should be a update or insert statement.
+     *
+     * @param sql This is a given SQL Statement.
+     */
     public void executeUpdateStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -251,13 +316,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }

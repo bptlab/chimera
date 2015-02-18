@@ -19,10 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a Scenario-Model.
@@ -429,15 +426,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             NodeList fragmentNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);
-
-            // create URI from fragmentID
-            // and retrieve xml for all fragments of the scenario
-            Retrieval jRetrieval = new Retrieval();
-            this.fragments = new ArrayList<Fragment>(fragmentNodes.getLength());
-            String currentFragmentXML;
-            DocumentBuilderFactory dbFactory;
-            DocumentBuilder dBuilder;
-            Document doc;
+            this.fragments = new LinkedList<Fragment>();
 
             for (int i = 0; i < fragmentNodes.getLength(); i++) {
                 // get the ID of the current node
@@ -445,35 +434,52 @@ public class Scenario implements IDeserialisable, IPersistable {
                 String currentNodeID = xPath
                         .compile(xPathQuery)
                         .evaluate(fragmentNodes.item(i));
-                currentFragmentXML = jRetrieval.getHTMLwithAuth(
-                        this.processeditorServerUrl,
-                        this.processeditorServerUrl +
-                                "models/" +
-                                currentNodeID +
-                                ".pm");
-                dbFactory = DocumentBuilderFactory.newInstance();
-                dBuilder = dbFactory.newDocumentBuilder();
-                doc = dBuilder.parse(
-                        new InputSource(
-                                new ByteArrayInputStream(
-                                        currentFragmentXML.getBytes("utf-8"))));
-                doc.getDocumentElement().normalize();
-                Fragment fragment = new Fragment(processeditorServerUrl);
-                fragment.initializeInstanceFromXML(
-                        (org.w3c.dom.Node) doc.getDocumentElement());
-                this.fragments.add(fragment);
+                this.fragments.add(createAndInitializeFragment(currentNodeID));
             }
         } catch (XPathExpressionException e) {
             e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates a Fragment based on a specific fragmentID.
+     * Therefore it fetches the XML from a Server.
+     * @param fragmentID The ID of the Fragment.
+     * @return The newly created Fragment Object.
+     */
+    private Fragment createAndInitializeFragment(String fragmentID) {
+        Retrieval retrieval = new Retrieval();
+        String fragmentXML = retrieval.getHTMLwithAuth(
+                this.processeditorServerUrl,
+                this.processeditorServerUrl +
+                        "models/" + fragmentID + ".pm");
+        Fragment fragment = new Fragment();
+        fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
+        return fragment;
+    }
+
+    /**
+     * Casts a XML from its String Representation to a w3c Document.
+     *
+     * @param xml The String representation of the XML.
+     * @return The from String created Document.
+     */
+    private Document stringToDocument(final String xml) {
+        try {
+            DocumentBuilder db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(xml)));
+            doc.getDocumentElement().normalize();
+            return doc;
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -558,7 +564,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * Returns the DataNode, which is part of the TerminationCondition.
      *
-     * @return the dataNode of the TermiantionCondition.
+     * @return the dataNode of the TerminationCondition.
      */
     public Node getTerminatingDataNode() {
         return terminatingDataNode;

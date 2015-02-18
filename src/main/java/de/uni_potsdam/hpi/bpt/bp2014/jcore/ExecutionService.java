@@ -132,8 +132,11 @@ public class ExecutionService {
      * @return true if the scenario exist in the database. false if not.
      */
     public boolean existScenario(int scenario_id) {
-        if (dbScenario.existScenario(scenario_id)) return true;
-        return false;
+        if (dbScenario.existScenario(scenario_id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

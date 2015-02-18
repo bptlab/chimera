@@ -29,7 +29,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
  */
 public class ActivityStateMachine extends StateMachine {
     /**
-     * Database Connection objects
+     * Database Connection objects.
      */
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
 
@@ -232,13 +232,15 @@ public class ActivityStateMachine extends StateMachine {
      * @return true if the state is ready, ready(ControlFlow) or ready(data).
      */
     public boolean isEnabled() {
-        if (this.state.equals("ready")) return true;
+        if (this.state.equals("ready")) {
+            return true;
+        }
         return false;
     }
 
     /**
-     * Checks if the state ist enabled
-     *
+     * Checks if the state is enabled.
+     * @param state The state which should be checked.
      * @return true if the state is ready, ready(ControlFlow) or ready(data).
      */
     private boolean isReady(String state) {

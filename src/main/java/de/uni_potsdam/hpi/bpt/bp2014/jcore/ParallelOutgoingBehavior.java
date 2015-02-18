@@ -26,7 +26,9 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
      */
     private ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;
+            if (controlNode_id == controlNodeInstance.controlNode_id) {
+                return controlNodeInstance;
+            }
         }
         String type = dbControlNode.getType(controlNode_id);
         ControlNodeInstance controlNodeInstance = null;

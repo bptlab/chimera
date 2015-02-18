@@ -39,7 +39,7 @@ public class FragmentTest {
      */
     public void setupFragment() {
         try {
-            File fragmentXML = new File("src/main/resources/TestFragment2.xml");
+            File fragmentXML = new File("src/test/resources/TestFragment.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             fragmentDoc = dBuilder.parse(fragmentXML);

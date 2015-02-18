@@ -42,7 +42,7 @@ public class ActivityInstance extends ControlNodeInstance {
     private LinkedList<Integer> references;
     private boolean isMailTask;
     /**
-     * Database Connection objects
+     * Database Connection objects.
      */
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
@@ -137,7 +137,7 @@ public class ActivityInstance extends ControlNodeInstance {
     public boolean terminate() {
         boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
-        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
+        outgoingBehavior.terminate();
         return workingFine;
     }
 

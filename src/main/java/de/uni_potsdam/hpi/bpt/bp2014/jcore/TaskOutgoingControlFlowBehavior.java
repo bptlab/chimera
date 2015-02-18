@@ -33,13 +33,13 @@ import java.util.LinkedList;
 public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
     private ControlNodeInstance controlNodeInstance;
     /**
-     * Database Connection objects
+     * Database Connection objects.
      */
     private DbDataNode dbDataNode = new DbDataNode();
     private DbDataFlow dbDataFlow = new DbDataFlow();
 
     /**
-     * Initializes the TaskOutgoingControlFlowBehavior
+     * Initializes the TaskOutgoingControlFlowBehavior.
      *
      * @param activity_id         This is the database id from the activity instance.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
