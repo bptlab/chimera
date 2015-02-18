@@ -1,8 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.util.LinkedList;
 
 
@@ -35,7 +33,7 @@ public class DbScenarioInstance extends DbObject {
     /**
      * Checks if a scenario instance belongs to the right scenario
      *
-     * @param scenario_id This is the database ID of a scenario
+     * @param scenario_id         This is the database ID of a scenario
      * @param scenarioInstance_id This is the database ID of a scenario instance
      * @return if the check was positive(true) or not(false)
      */
@@ -114,7 +112,7 @@ public class DbScenarioInstance extends DbObject {
      * This sets the terminated status of a scenario instance
      *
      * @param scenarioInstance_id This is the database ID of a scenario instance
-     * @param terminated This is the changed status of the scenario instance
+     * @param terminated          This is the changed status of the scenario instance
      */
     public void setTerminated(int scenarioInstance_id, boolean terminated) {
         int terminatedAsInt;

@@ -38,7 +38,7 @@ public class DbTerminationCondition extends DbObject {
     /**
      * Creates a list of conditions from an ID of a scenario and the corresponding conditionSet
      *
-     * @param scenario_id This is the database ID of a scenario
+     * @param scenario_id     This is the database ID of a scenario
      * @param conditionSet_id This is the database ID of a conditionSet which belongs to the scenario
      * @return a list of conditions for a scenario and the corresponding conditionSet
      */

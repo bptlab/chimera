@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * ********************************************************************************
@@ -31,6 +28,7 @@ import java.sql.Statement;
 public class DbState extends DbObject {
     /**
      * This creates and executes a sql statement to get the state name of a dataObject
+     *
      * @param id This is the database ID of a state
      * @return the name of the state as a String
      */
