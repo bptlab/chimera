@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -47,80 +48,6 @@ public class ScenarioTest {
             = "createDataObjects";
 
     /**
-     * Also we provide a simple scenario as XML.
-     */
-    private static final String SCENARIO1_XML =
-            "<model xmlns=\"http://frapu.net/xsd/ProcessEditor\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" id=\"514683112\" name=\"bikeScenario\" type=\"net.frapu.code.visualization.pcm.PCMScenario\" xsi:schemaLocation=\"http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd\">\n" +
-            "<nodes>\n" +
-            "<node>\n" +
-            "<property name=\"shadow\" value=\"0\"/>\n" +
-            "<property name=\"color_background\" value=\"-1\"/>\n" +
-            "<property name=\"#nodes\" value=\"\"/>\n" +
-            "<property name=\"collapsed\" value=\"0\"/>\n" +
-            "<property name=\"x\" value=\"700\"/>\n" +
-            "<property name=\"width\" value=\"200\"/>\n" +
-            "<property name=\"y\" value=\"500\"/>\n" +
-            "<property name=\"text\" value=\"\"/>\n" +
-            "<property name=\"stereotype\" value=\"\"/>\n" +
-            "<property name=\"#id\" value=\"1340431798\"/>\n" +
-            "<property name=\"#type\" value=\"net.frapu.code.visualization.pcm.PCMFragmentCollection\"/>\n" +
-            "<property name=\"height\" value=\"500\"/>\n" +
-            "</node>\n" +
-            "<node>\n" +
-            "<property name=\"shadow\" value=\"0\"/>\n" +
-            "<property name=\"color_background\" value=\"-1\"/>\n" +
-            "<property name=\"#nodes\" value=\"\"/>\n" +
-            "<property name=\"collapsed\" value=\"0\"/>\n" +
-            "<property name=\"x\" value=\"500\"/>\n" +
-            "<property name=\"width\" value=\"200\"/>\n" +
-            "<property name=\"y\" value=\"500\"/>\n" +
-            "<property name=\"text\" value=\"\"/>\n" +
-            "<property name=\"stereotype\" value=\"\"/>\n" +
-            "<property name=\"#id\" value=\"1256273478\"/>\n" +
-            "<property name=\"#type\" value=\"net.frapu.code.visualization.pcm.PCMDataObjectCollection\"/>\n" +
-            "<property name=\"height\" value=\"500\"/>\n" +
-            "</node>\n" +
-            "<node>\n" +
-            "<property name=\"fragment mid\" value=\"1386518929\"/>\n" +
-            "<property name=\"shadow\" value=\"0\"/>\n" +
-            "<property name=\"color_background\" value=\"-1\"/>\n" +
-            "<property name=\"x\" value=\"700\"/>\n" +
-            "<property name=\"width\" value=\"100\"/>\n" +
-            "<property name=\"y\" value=\"270\"/>\n" +
-            "<property name=\"text\" value=\"assembleBike\"/>\n" +
-            "<property name=\"stereotype\" value=\"\"/>\n" +
-            "<property name=\"#id\" value=\"2060128231\"/>\n" +
-            "<property name=\"#type\" value=\"net.frapu.code.visualization.pcm.PCMFragmentNode\"/>\n" +
-            "<property name=\"height\" value=\"20\"/>\n" +
-            "</node>\n" +
-            "<node>\n" +
-            "<property name=\"shadow\" value=\"0\"/>\n" +
-            "<property name=\"color_background\" value=\"-1\"/>\n" +
-            "<property name=\"Data class\" value=\"\"/>\n" +
-            "<property name=\"x\" value=\"500\"/>\n" +
-            "<property name=\"width\" value=\"100\"/>\n" +
-            "<property name=\"y\" value=\"290\"/>\n" +
-            "<property name=\"text\" value=\"bike\"/>\n" +
-            "<property name=\"stereotype\" value=\"\"/>\n" +
-            "<property name=\"#id\" value=\"970817444\"/>\n" +
-            "<property name=\"#type\" value=\"net.frapu.code.visualization.pcm.PCMDataObjectNode\"/>\n" +
-            "<property name=\"height\" value=\"20\"/>\n" +
-            "</node>\n" +
-            "</nodes>\n" +
-            "<edges/>\n" +
-            "<properties>\n" +
-            "<property name=\"author\" value=\"\"/>\n" +
-            "<property name=\"Termination State\" value=\"[]\"/>\n" +
-            "<property name=\"#folder\" value=\"/\"/>\n" +
-            "<property name=\"name\" value=\"bikeScenario\"/>\n" +
-            "<property name=\"#uri\" value=\"/models/514683112/versions/0\"/>\n" +
-            "<property name=\"comment\" value=\"\"/>\n" +
-            "<property name=\"#creationDate\" value=\"18. Februar 2015 10:53:43 MEZ\"/>\n" +
-            "<property name=\"Termination Data Object\" value=\"\"/>\n" +
-            "</properties>\n" +
-            "</model>";
-
-    /**
      * This scenario will be used to be tested.
      */
     Scenario scenario;
@@ -142,7 +69,7 @@ public class ScenarioTest {
      */
     @Test
     public void testInitializeFromXMLRunsWithoutException() throws Exception {
-        Document bikeScenario = stringToDocument(SCENARIO1_XML);
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/TestScenario.xml"));
         PowerMock.expectPrivate(scenario, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenario, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenario, CREATE_DO_METHOD).andVoid();
@@ -158,7 +85,7 @@ public class ScenarioTest {
      */
     @Test
     public void testMetaData() throws Exception {
-        Document bikeScenario = stringToDocument(SCENARIO1_XML);
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/TestScenario.xml"));
         PowerMock.expectPrivate(scenario, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenario, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenario, CREATE_DO_METHOD).andVoid();
@@ -167,7 +94,7 @@ public class ScenarioTest {
         Assert.assertEquals("The name of the scenario has not been set correctly",
                 "bikeScenario",
                 scenario.getScenarioName());
-        Assert.assertEquals("The id of the scneario has not been set correctly",
+        Assert.assertEquals("The id of the scenario has not been set correctly",
                 514683112L,
                 scenario.getScenarioID());
         PowerMock.verify(scenario);
@@ -178,14 +105,13 @@ public class ScenarioTest {
      * @param xml The String representation of the XML.
      * @return The from String created Document.
      */
-    private Document stringToDocument(final String xml) {
+    private Document getDocumentFromXmlFile(final File xml) {
         try {
-            DocumentBuilder db = DocumentBuilderFactory
-                    .newInstance()
-                    .newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(xml)));
-            doc.getDocumentElement().normalize();
-            return doc;
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document scenario = dBuilder.parse(xml);
+            scenario.getDocumentElement().normalize();
+            return scenario;
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
