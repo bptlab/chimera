@@ -152,10 +152,9 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 			  echo "<th>".$value."</th>";
 		      echo "</tr>";
 	}
-	echo "</table>";
+	echo "</table><br><br>";
 
 	$dataobjects = GetAllDataobject($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID']);
-	var_dump($dataobjects);
 
     echo "<h4>Dataobject</h4>
     		<table>
