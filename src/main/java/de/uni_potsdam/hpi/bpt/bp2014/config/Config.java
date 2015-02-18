@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+package de.uni_potsdam.hpi.bpt.bp2014.config;
 
 /**
  * ********************************************************************************
@@ -22,9 +22,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
  */
 
 
-public class config {
+public class Config {
     // Processeditor URL
     public static String processeditorServerUrl = "http://172.16.64.113:1205/";
+    public static String processeditorServerName = "root";
+    public static String processeditorServerPassword = "inubit";
 
     // Comparser URL
     public static String jcomparserServerUrl = "http://172.16.64.113:8080/";

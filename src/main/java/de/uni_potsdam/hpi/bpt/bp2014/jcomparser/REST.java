@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
+import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 import org.xml.sax.SAXException;
 
 import javax.ws.rs.*;
@@ -45,12 +46,11 @@ public class REST {
     /**
      * The URL to the ProcessEditor Model repository.
      */
-
-    private static final String PCM_URL = "http://172.16.64.113:1205/models/";
+    private static final String PCM_URL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerUrl +  "models/";
     /**
      * The URL to the ProcessEditor.
      */
-    private static final String PROCESS_SERVER_URI = "http://172.16.64.113:1205/";
+    private static final String PROCESS_SERVER_URI = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerUrl;
 
     /**
      * This methods parses a new scenario and saves it to the database.

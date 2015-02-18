@@ -31,14 +31,16 @@ import java.util.ArrayList;
 public class Seed {
 
     public void getDBcontent() {
-
     }
-
 
     public void setDBcontent() {
-
     }
 
+    /**
+     *
+     * @param id some id..
+     * @return
+     */
     public ArrayList<Integer> getAllActivityIDByFragmentID(int id) {
 
         Connector jHandler = new Connector();
