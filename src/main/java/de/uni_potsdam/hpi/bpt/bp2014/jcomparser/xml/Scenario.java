@@ -492,4 +492,91 @@ public class Scenario implements IDeserialisable, IPersistable {
             e.printStackTrace();
         }
     }
+
+    // Getters - Currently used for Tests only
+
+    /**
+     * Returns the name of the Scenario.
+     * @return The Name of the Scenario
+     */
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    /**
+     * Returns the ID of the scenario used in the XML.
+     * @return The id from the XML.
+     */
+    public long getScenarioID() {
+        return scenarioID;
+    }
+
+    /**
+     * Returns the Node Object, which represents the XML.
+     * @return the XML of representing the Scenario.
+     */
+    public org.w3c.dom.Node getScenarioXML() {
+        return scenarioXML;
+    }
+
+    /**
+     * Returns a List of all Fragments.
+     * Be aware, that changes to this List
+     * will change the state of the scenario.
+     * @return the List of fragments.
+     */
+    public List<Fragment> getFragments() {
+        return fragments;
+    }
+
+    /**
+     * The URL of the ProcessEditor Server.
+     * @return The PE-Server URL.
+     */
+    public String getProcesseditorServerUrl() {
+        return processeditorServerUrl;
+    }
+
+    /**
+     * Returns the Database ID of the Scenario.
+     * Returns -1 if Scenario is not saved to the database.
+     * @return The ID used inside the database.
+     */
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    /**
+     * Returns a List of all DataObjects of the Scenario.
+     * Changes will affect the scenario directly.
+     * @return the DataObjects of the scenario.
+     */
+    public Map<String, DataObject> getDataObjects() {
+        return dataObjects;
+    }
+
+    /**
+     * Returns the DataNode, which is part of the TerminationCondition.
+     *
+     * @return the dataNode of the TermiantionCondition.
+     */
+    public Node getTerminatingDataNode() {
+        return terminatingDataNode;
+    }
+
+    /**
+     * Returns the DataObject, which is represented by the TerminatingDataNode.
+     * @return the DataObject which is part of the TerminationCondition.
+     */
+    public DataObject getTerminatingDataObject() {
+        return terminatingDataObject;
+    }
+
+    /**
+     * Returns an integer Representing the version of the Scenario.
+     * @return the Version of the Scenario.
+     */
+    public int getVersionNumber() {
+        return versionNumber;
+    }
 }
