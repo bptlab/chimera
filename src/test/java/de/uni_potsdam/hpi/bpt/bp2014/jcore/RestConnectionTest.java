@@ -9,9 +9,9 @@ import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.jayway.restassured.RestAssured.*;
-import com.jayway.restassured.matcher.RestAssuredMatchers.*;
-import com.jayway.restassured.*;
+import static com.jayway.restassured.RestAssured.*;
+import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
+import static com.jayway.restassured.*;
 import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 
 import java.util.LinkedList;
@@ -38,7 +38,9 @@ public class RestConnectionTest {
 
     @Test
     public void testGetScenarios() {
+        String getUrl = "/jcomparser/scenarios/0/";
 
+        //mock executionService class so we provide what we expect
         try {
             PowerMock.expectPrivate(executionService, GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
                 @Override
@@ -54,17 +56,16 @@ public class RestConnectionTest {
             e.printStackTrace();
         }
 
-        int scenarioID = 1;
-        int newInstanceID =executionService.startNewScenarioInstance(scenarioID);
-        String url = serverURL + "jcomparser/scenarios/" + scenarioID +"/instance/" + newInstanceID + "/activityinstance/0/";
-        get("/products").then().assertThat().body(matchesJsonSchemaInClasspath("json/products-schema.json"));
+        //retrieve GET and check if it is as expected
+        get(getUrl).
+                then().assertThat().body(matchesJsonSchemaInClasspath("json/all-scenarios-schema.json"));
     }
 
     @Test
     public void testGetAllEnabledActivities() {
         int scenarioID = 1;
-        int newInstanceID =executionService.startNewScenarioInstance(scenarioID);
-        String url = serverURL + "jcomparser/scenarios/" + scenarioID +"/instance/" + newInstanceID + "/activityinstance/0/";
+        int newInstanceID = executionService.startNewScenarioInstance(scenarioID);
+        String url = serverURL + "jcomparser/scenarios/" + scenarioID + "/instance/" + newInstanceID + "/activityinstance/0/";
         get("/products").then().assertThat().body(matchesJsonSchemaInClasspath("json/products-schema.json"));
     }
     //create a new instance for our test
