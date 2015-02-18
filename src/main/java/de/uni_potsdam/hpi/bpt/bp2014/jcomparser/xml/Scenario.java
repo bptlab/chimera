@@ -19,10 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a Scenario-Model.
@@ -429,6 +426,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             NodeList fragmentNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);
+            this.fragments = new LinkedList<Fragment>();
 
             for (int i = 0; i < fragmentNodes.getLength(); i++) {
                 // get the ID of the current node
