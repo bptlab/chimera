@@ -7,8 +7,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-
 
 /**
  * ********************************************************************************
@@ -31,9 +29,7 @@ import java.util.List;
  * **********************************************************************************
  */
 
-/**
- *
- */
+
 @Path("interface/v1/en/") //defining also version and language
 public class RestConnection {
     private ExecutionService executionService = new ExecutionService();
@@ -60,20 +56,20 @@ public class RestConnection {
         //if 0 as scenarioID is provided, list all available scenarioIDs
         if (scenarioID == 0) {
             LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
-
+            //if no scenario is present -> return empty
             if (scenarioIDs.size() == 0) {
-                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
+                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
             }
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-            //otherwise display the label for the scenarioID
+        //otherwise display the label for the scenarioID
         } else {
             String label = executionService.getScenarioName(scenarioID);
-
-            if (label.equals(""))
-                return Response.serverError().entity("Error: not correct scenarioID").build();//no activity with this id present
-
+            //if no activity with this id is present -> throw error
+            if (label.equals("")) {
+                return Response.serverError().entity("Error: not correct scenarioID").build();
+            }
             return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
         }
     }
@@ -93,13 +89,14 @@ public class RestConnection {
     public Response showScenarioInstances(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID) {
         //if instanceID is null, display all available instances for the mentioned scenarioID
         if (instanceID == 0) {
+            // if no Scenario exists
             if (!executionService.existScenario(scenarioID)) {
                 return Response.serverError().entity("Error: not a correct scenario").build();
             }
             LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
-
+            //if no scenario is present -> return empty
             if (scenarioIDs.size() == 0) {
-                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build(); //no instances present
+                return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
             }
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
@@ -109,9 +106,12 @@ public class RestConnection {
             //TODO: implement returning of instance details (label, timestamp..)
         } else {
             String label = executionService.getScenarioNameForScenarioInstance(instanceID);
-            //int scenarioID = executionService.getScenarioIDForScenarioInstance(scenarioInstanceID); //get the scenarioID for this instance
+            //get the scenarioID for this instance
+            //int scenarioID = executionService.getScenarioIDForScenarioInstance(instanceID);
+
+            //if no scenario instance with this id is present -> throw error
             if (label.equals("")) {
-                return Response.serverError().entity("Error: not correct instanceID").build();//no activity with this id present
+                return Response.serverError().entity("Error: not correct instanceID").build();
             }
             return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
         }
@@ -138,10 +138,10 @@ public class RestConnection {
         if (activityinstanceID == 0) {
             // if status is not set, set default value
             if (status == null) {
-                status = "enabled"; //set status enabled for default value
+                status = "enabled";
             }
             // if status is enabled -> return all enabled activities
-            if (status.equals("enabled")) { //open activities;
+            if (status.equals("enabled")) {
 
                 if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(instanceID))) {
                     return Response.serverError().entity("Error: not a correct scenario instance").build();
