@@ -57,7 +57,18 @@ public class ScenarioTest {
      * It will be initialized without a Version.
      */
     Scenario scenarioWOVersion;
+    /**
+     * This scenario will be used for testing.
+     * It will be initialized with a Version Number.
+     * Extracted from the Version_XML.
+     */
     Scenario scenarioWVersion;
+    /**
+     * This scenario will be used for testing
+     * It will be initialized with a Fragment.
+     *
+     */
+    Scenario scenarioWFragment;
 
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
@@ -89,6 +100,9 @@ public class ScenarioTest {
         PowerMock.verify(scenarioWOVersion);
     }
 
+    /**
+     * Tests if the url is set correctly inside the constructor.
+     */
     @Test
     public void testConstructorWithURL() {
         Scenario scenario = new Scenario("processeditor");
@@ -118,6 +132,10 @@ public class ScenarioTest {
         PowerMock.verify(scenarioWOVersion);
     }
 
+    /**
+     * This Methods Tests weather the version is set correctly or not.
+     * @throws Exception Occurres while creating the MockObject.
+     */
     @Test
     public void testVersion() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
