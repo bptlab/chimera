@@ -50,10 +50,6 @@ public class DbObject {
         return results;
     }
 
-    public List<String> executeStatementReturnListString(String sql, String column){
-        return new LinkedList<String>();
-    }
-
     public String executeStatementReturnString(String sql, String column){
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -66,8 +62,9 @@ public class DbObject {
             //Execute a query
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getString(column);
+            if (rs.next()) {
+                results = rs.getString(column);
+            }
             //Clean-up environment
             rs.close();
         } catch (SQLException se) {
@@ -91,11 +88,41 @@ public class DbObject {
     }
 
     public int executeStatementReturnsInt(String sql, String column){
-        return 0;
-    }
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int results = -1;
+        if (conn == null) return results;
 
-    public boolean executeStatementReturnsBoolean(String sql, String column){
-        return true;
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                results = rs.getInt(column);
+            }
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
     }
 
     public boolean executeExistStatement(String sql){
@@ -133,6 +160,40 @@ public class DbObject {
             }
         }
         return false;
+    }
+
+    public int executeInsertStatement(String sql){
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) return -1;
+        int result = -1;
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                result = rs.getInt(1);
+            }
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return result;
     }
 
 }
