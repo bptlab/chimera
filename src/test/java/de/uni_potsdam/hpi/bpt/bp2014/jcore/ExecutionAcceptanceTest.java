@@ -13,6 +13,9 @@ import static org.junit.Assert.*;
  */
 public class ExecutionAcceptanceTest {
 
+    /**
+     * This test run scenario 2 from the database. It checks AND gateways and consistency.
+     */
     //test AND1
     @Test
     public void testScenario2() {
@@ -22,7 +25,7 @@ public class ExecutionAcceptanceTest {
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(2);
         System.out.println("Start Scenario 2");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity1, activity2}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
         //do activity 1
@@ -34,7 +37,7 @@ public class ExecutionAcceptanceTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         //do activity 2
-        System.out.println("do activity "+activity2);
+        System.out.println("do activity " + activity2);
         executionService.beginActivity(scenarioInstance, activity2);
         assertArrayEquals(new Integer[]{}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         executionService.terminateActivity(scenarioInstance, activity2);
@@ -42,7 +45,7 @@ public class ExecutionAcceptanceTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         //do activity 2
-        System.out.println("do activity "+activity2);
+        System.out.println("do activity " + activity2);
         executionService.beginActivity(scenarioInstance, activity2);
         assertArrayEquals(new Integer[]{activity1}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         executionService.terminateActivity(scenarioInstance, activity2);
@@ -67,6 +70,10 @@ public class ExecutionAcceptanceTest {
 
     }
 
+    /**
+     * This test run scenario 118 from the database.
+     * It checks that after an AND gateway could be directly another AND gateway.
+     */
     //test AND2
     @Test
     public void testScenario118() {
@@ -80,12 +87,15 @@ public class ExecutionAcceptanceTest {
 
 
         System.out.println("Start Scenario 118");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{ activity246, activity243, activity245}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity246, activity243, activity245}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
 
     }
 
+    /**
+     * This test run scenario 1 from the database. It checks data objects and consistency.
+     */
     //test DataObjects
     @Test
     public void testScenario1() {
@@ -100,7 +110,7 @@ public class ExecutionAcceptanceTest {
         int activity6 = 16;
 
         System.out.println("Start Scenario 1");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity1, activity6}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
         //do activity 1
@@ -141,7 +151,7 @@ public class ExecutionAcceptanceTest {
         executionService = null;
         executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(1, scenarioInstance);
-        assertArrayEquals(new Integer[]{ activity6}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
+        assertArrayEquals(new Integer[]{activity6}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         executionService.terminateActivity(scenarioInstance, activity4);
         assertArrayEquals(new Integer[]{activity6, activity3}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
@@ -156,6 +166,9 @@ public class ExecutionAcceptanceTest {
 
     }
 
+    /**
+     *  This test run scenario 105 from the database. It checks the termination condition and consistency.
+     */
     //test Termination Condition
     @Test
     public void testScenario105() {
@@ -168,7 +181,7 @@ public class ExecutionAcceptanceTest {
         int activity4 = 130;
 
         System.out.println("Start Scenario 105");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity1}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
         //do activity 1
@@ -216,6 +229,9 @@ public class ExecutionAcceptanceTest {
         assertEquals(1, dbScenarioInstance.getTerminated(scenarioInstance));
     }
 
+    /**
+     * This test run scenario 111 from the database. It checks referential activities and consistency.
+     */
     //test References1
     @Test
     public void testScenario111() {
@@ -231,7 +247,7 @@ public class ExecutionAcceptanceTest {
         int activity6 = 189;
 
         System.out.println("Start Scenario 111");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity1}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
         //do activity 1
@@ -261,6 +277,9 @@ public class ExecutionAcceptanceTest {
         assertEquals("terminated", dbActivityInstance.getState(activity3instance_id));
     }
 
+    /**
+     * This test run scenario 113 from the database. It checks referential activities and consistency.
+     */
     //test References2
     @Test
     public void testScenario113() {
@@ -275,7 +294,7 @@ public class ExecutionAcceptanceTest {
 
 
         System.out.println("Start Scenario 111");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity1}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
         int activity2instance_id = executionService.getScenarioInstance(scenarioInstance).getControlFlowEnabledControlNodeInstances().getFirst().getControlNodeInstance_id();
@@ -304,6 +323,9 @@ public class ExecutionAcceptanceTest {
         assertEquals("terminated", dbActivityInstance.getState(activity2instance_id));
     }
 
+    /**
+     * This test run scenario 114 from the database. It checks referential activities and consistency.
+     */
     //test References3
     @Test
     public void testScenario114() {
@@ -320,7 +342,7 @@ public class ExecutionAcceptanceTest {
 
 
         System.out.println("Start Scenario 114");
-        System.out.println("enabled Activities: "+executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
         assertArrayEquals(new Integer[]{activity210, activity216, activity218}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
 
         //do activity 216
