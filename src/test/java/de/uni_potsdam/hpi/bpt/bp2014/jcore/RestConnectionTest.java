@@ -9,5 +9,5 @@ public class RestConnectionTest {
     //get("/lotto").then().body("lotto.lottoId", equalTo(5));
     //get("/lotto").then().body("lotto.winners.winnerId", hasItems(23, 54));
 
-    get("/products").then().assertThat().body(matchesJsonSchemaInClasspath("json/products-schema.json"));
+   // get("/products").then().assertThat().body(matchesJsonSchemaInClasspath("json/products-schema.json"));
 }
