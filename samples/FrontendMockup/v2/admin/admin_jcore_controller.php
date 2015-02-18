@@ -153,4 +153,30 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
 		      echo "</tr>";
 	}
 	echo "</table>";
+
+	$dataobjects = GetAllDataobject($_COOKIE['JEngine_ScenarioID'], $_COOKIE['JEngine_ScenarioInstanceID']);
+	var_dump($dataobjects);
+
+    echo "<h4>Dataobject</h4>
+    		<table>
+    			<tr>
+    				<th> ID</th>
+    				<th> Status</th>
+    			</tr>
+    			<tr>";
+
+    $amount_of_dataobjects = count($dataobjects["ids"]);
+    for ($i = 0; $i < $amount_of_dataobjects; $i++) {
+    	 $key = $dataobjects["ids"][$i];
+    	 $value = $dataobjects["label"][$key];
+    	 if($key == "{" || $value == "{") {
+    	 	continue;
+    	 }
+    //foreach($terminated_activities["label"] as $key => $value) {
+    	      echo "<tr>";
+			  echo "<th>".$key."</th>";
+			  echo "<th>".$value."</th>";
+		      echo "</tr>";
+	}
+	echo "</table>";
 } ?>

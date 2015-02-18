@@ -9,18 +9,18 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import static org.easymock.EasyMock.createNiceMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static com.jayway.restassured.RestAssured.*;
 import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
-
-
 
 import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 import java.util.LinkedList;
 
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
+@PowerMockIgnore("javax.net.ssl.*")
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ExecutionService.class)
 public class RestConnectionTest {
@@ -46,19 +46,13 @@ public class RestConnectionTest {
 
         //mock executionService class so we provide what we expect
         try {
-            /*
-            EasyMock.expect(GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
-                @Override
-                public LinkedList answer() throws Throwable {
-                    LinkedList ll = new LinkedList();
-                    ll.add(1);
-                    ll.add(2);
-                    ll.add(3);
-                    return (ll);
-                }
-            });*/
+            LinkedList ll = new LinkedList();
+            ll.add(1);
+            ll.add(2);
+            ll.add(3);
 
-
+            EasyMock.expect(GET_ALL_SCENARIOS).andStubReturn(ll);
+/*
             PowerMock.expectPrivate(executionService, GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
                 @Override
                 public LinkedList answer() throws Throwable {
@@ -68,7 +62,7 @@ public class RestConnectionTest {
                     ll.add(3);
                     return (ll);
                 }
-            });
+            });*/
 
         } catch (Exception e) {
             e.printStackTrace();
