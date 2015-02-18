@@ -272,10 +272,10 @@ public class Scenario implements IDeserialisable, IPersistable {
                 getActivityDatabaseIDsForEachActivityModelID();
         Connector conn = new Connector();
         for (List<Integer> databaseIDs : activities.values()) {
-            if (activities.size() > 1) {
+            if (databaseIDs.size() > 1) {
                 // The next two loops find all pairs of referenced activities.
-                for (int i = 0; i < activities.size() - 1; i++) {
-                    for (int j = i + 1; j < activities.size(); j++) {
+                for (int i = 0; i < databaseIDs.size() - 1; i++) {
+                    for (int j = i + 1; j < databaseIDs.size(); j++) {
                         conn.insertReferenceIntoDatabase(databaseIDs.get(i),
                                 databaseIDs.get(j));
                     }
@@ -453,7 +453,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                 this.processeditorServerUrl,
                 this.processeditorServerUrl +
                         "models/" + fragmentID + ".pm");
-        Fragment fragment = new Fragment();
+        Fragment fragment = new Fragment(processeditorServerUrl);
         fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
         return fragment;
     }
