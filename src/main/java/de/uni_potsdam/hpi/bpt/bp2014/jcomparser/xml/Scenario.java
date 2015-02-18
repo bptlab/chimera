@@ -55,8 +55,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * A Map of the names of dataObjects and the objects themselves.
      */
-    private Map<String, DataObject> dataObjects =
-            new HashMap<String, DataObject>();
+    private Map<String, DataObject> dataObjects;
     /**
      * The DataNode which is part of the termination Condition.
      */
@@ -401,6 +400,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Fragments (with Control Nodes) have to be created and saved first.
      */
     private void createDataObjects() {
+        dataObjects = new HashMap<String, DataObject>();
         for (Fragment fragment : fragments) {
             for (Node node : fragment.getControlNodes().values()) {
                 if (node.isDataNode()) {
