@@ -29,6 +29,9 @@ import java.util.LinkedList;
  * **********************************************************************************
  */
 
+/*
+ * Jaspars Spielwiese
+ */
 
 public class debugClass {
     public static String selectScenario() {
