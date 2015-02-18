@@ -5,24 +5,26 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 public class DbDataObject {
@@ -38,7 +40,7 @@ public class DbDataObject {
             stmt = conn.createStatement();
             String sql = "SELECT id FROM dataobject WHERE scenario_id = " + scenario_id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 results.add(rs.getInt("id"));
             }
             //Clean-up environment
@@ -64,6 +66,7 @@ public class DbDataObject {
         }
         return results;
     }
+
     public int getStartStateID(int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -101,6 +104,7 @@ public class DbDataObject {
         }
         return results;
     }
+
     public String getName(int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;

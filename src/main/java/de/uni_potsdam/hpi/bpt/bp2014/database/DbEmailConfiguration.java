@@ -45,6 +45,7 @@ public class DbEmailConfiguration {
         }
         return results;
     }
+
     public String getSubject(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -82,6 +83,7 @@ public class DbEmailConfiguration {
         }
         return results;
     }
+
     public String getMessage(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -119,6 +121,7 @@ public class DbEmailConfiguration {
         }
         return results;
     }
+
     public String getSendEmailAddress(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;

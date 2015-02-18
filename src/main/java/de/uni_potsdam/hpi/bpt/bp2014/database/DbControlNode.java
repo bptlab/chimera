@@ -4,24 +4,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 public class DbControlNode {
@@ -62,6 +64,7 @@ public class DbControlNode {
         }
         return results;
     }
+
     public String getType(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -99,6 +102,7 @@ public class DbControlNode {
         }
         return results;
     }
+
     public String getLabel(int controlNode_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -148,27 +152,27 @@ public class DbControlNode {
             stmt = conn.createStatement();
             String sql = "(SELECT dataobject_id, state_id FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id1 +" AND " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id1 + " AND " +
                     "dataflow.input = 0 AND (dataobject_id, state_id) NOT IN " +
                     "(SELECT dataobject_id, state_id FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id2 +" AND " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id2 + " AND " +
                     "dataflow.input = 0)) UNION (SELECT dataobject_id, state_id " +
                     "FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id2 +" " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id2 + " " +
                     "AND dataflow.input = 0 AND (dataobject_id, state_id) NOT IN " +
                     "(SELECT dataobject_id, state_id FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id1 +" AND " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id1 + " AND " +
                     "dataflow.input = 0))";
             rs = stmt.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 rs.close();
                 stmt.close();
                 conn.close();
                 return false;
-            }else{
+            } else {
                 rs.close();
                 stmt.close();
                 conn.close();

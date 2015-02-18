@@ -7,24 +7,26 @@ import java.io.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 public class Connection {
@@ -35,7 +37,7 @@ public class Connection {
     private static String url;
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
-    private Connection(){
+    private Connection() {
     }
 
     public static Connection getInstance(String path) {
@@ -84,9 +86,9 @@ public class Connection {
         } catch (FileNotFoundException e) {
             try {
                 Context ctx = new InitialContext();
-                username = (String)ctx.lookup("java:comp/env/username");
-                password = (String)ctx.lookup("java:comp/env/password");
-                url = (String)ctx.lookup("java:comp/env/url");
+                username = (String) ctx.lookup("java:comp/env/username");
+                password = (String) ctx.lookup("java:comp/env/password");
+                url = (String) ctx.lookup("java:comp/env/url");
             } catch (NamingException e1) {
                 e1.printStackTrace();
             }
