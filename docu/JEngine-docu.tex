@@ -22,6 +22,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   HEADER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
+
+
 \frontmatter
 \title{Documentation zur JEngine}
 \authors    {\texorpdfstring
@@ -34,7 +36,10 @@
 \keywords   {}
 \maketitle
 
-
+%remove copyright box at the bottom of the first page
+\makeatletter
+\patchcmd{\maketitle}{\@copyrightspace}{}{}{}
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   BODY   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
