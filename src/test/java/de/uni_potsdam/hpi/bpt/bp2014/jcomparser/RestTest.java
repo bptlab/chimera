@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,7 +9,7 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 
 public class RestTest {
-    String Server_URL = "http://172.16.64.113:8080/";
+    String Server_URL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.jcomparserServerUrl;
 
     public void setUpAndNode() {
 
