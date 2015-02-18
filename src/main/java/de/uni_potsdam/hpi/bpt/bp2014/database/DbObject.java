@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
-import java.util.List;
+
 
 /**
  * Created by jaspar.mang on 17.02.15.
@@ -106,6 +106,43 @@ public class DbObject {
             rs.close();
             stmt.close();
             conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+
+    public boolean executeStatementReturnsBoolean(String sql, String column) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Boolean results = false;
+        if (conn == null) {
+            return results;
+        }
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                results = rs.getBoolean(column);
+            }
+            //Clean-up environment
+            rs.close();
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();

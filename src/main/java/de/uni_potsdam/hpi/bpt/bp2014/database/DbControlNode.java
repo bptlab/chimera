@@ -26,119 +26,20 @@ import java.sql.Statement;
  */
 
 
-public class DbControlNode {
+public class DbControlNode extends DbObject {
     public int getStartEventID(int fragment_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM controlnode WHERE type = 'Startevent' AND fragment_id = " + fragment_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT id FROM controlnode WHERE type = 'Startevent' AND fragment_id = " + fragment_id;
+        return this.executeStatementReturnsInt(sql, "id");
     }
 
     public String getType(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        String results = "";
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getString("type");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
+        return this.executeStatementReturnsString(sql, "type");
     }
 
     public String getLabel(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        String results = "";
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getString("label");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
+        return this.executeStatementReturnsString(sql, "label");
     }
 
     public Boolean controlNodesHaveSameOutputs(int controlNode_id1, int controlNode_id2) {

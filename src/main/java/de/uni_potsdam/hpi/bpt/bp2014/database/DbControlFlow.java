@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.LinkedList;
 
 /***********************************************************************************
@@ -29,47 +26,14 @@ import java.util.LinkedList;
  * Mostly used to get predecessors and successors of a controlNode
  */
 
-public class DbControlFlow {
+public class DbControlFlow extends DbObject {
     /**
      * @param controlNode_id This is the database ID of a controlNode
      * @return -1 if something went wrong else it returns the database ID of a controlNode which is right after a startEvent
      */
     public int getNextControlNodeAfterStartEvent(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("controlnode_id2");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
+        return this.executeStatementReturnsInt(sql, "controlnode_id2");
     }
 
     /**
@@ -77,42 +41,8 @@ public class DbControlFlow {
      * @return a list of database ID's of controlNodes which success the given controlNode
      */
     public LinkedList<Integer> getFollowingControlNodes(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                results.add(rs.getInt("controlnode_id2"));
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
+        return this.executeStatementReturnsListInt(sql, "controlnode_id2");
     }
 
     /**
@@ -120,41 +50,7 @@ public class DbControlFlow {
      * @return a list of database ID's of controlNodes which precede the given controlNode
      */
     public LinkedList<Integer> getPredecessorControlNodes(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT controlnode_id1 FROM controlflow WHERE controlnode_id2 = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                results.add(rs.getInt("controlnode_id1"));
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT controlnode_id1 FROM controlflow WHERE controlnode_id2 = " + controlNode_id;
+        return this.executeStatementReturnsListInt(sql, "controlnode_id1");
     }
 }
