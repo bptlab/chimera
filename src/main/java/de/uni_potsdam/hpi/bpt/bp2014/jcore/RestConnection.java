@@ -61,9 +61,9 @@ public class RestConnection {
         if (scenarioID == 0) {
             LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
 
-            if (scenarioIDs.size() == 0)
+            if (scenarioIDs.size() == 0) {
                 return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
-
+            }
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -93,14 +93,14 @@ public class RestConnection {
     public Response showScenarioInstances(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID) {
         //if instanceID is null, display all available instances for the mentioned scenarioID
         if (instanceID == 0) {
-            if (!executionService.existScenario(scenarioID))
+            if (!executionService.existScenario(scenarioID)) {
                 return Response.serverError().entity("Error: not a correct scenario").build();
-
+            }
             LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
 
-            if (scenarioIDs.size() == 0)
+            if (scenarioIDs.size() == 0) {
                 return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build(); //no instances present
-
+            }
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -110,9 +110,9 @@ public class RestConnection {
         } else {
             String label = executionService.getScenarioNameForScenarioInstance(instanceID);
             //int scenarioID = executionService.getScenarioIDForScenarioInstance(scenarioInstanceID); //get the scenarioID for this instance
-            if (label.equals(""))
+            if (label.equals("")) {
                 return Response.serverError().entity("Error: not correct instanceID").build();//no activity with this id present
-
+            }
             return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
         }
     }
@@ -149,24 +149,24 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 // iff no open activities present return {empty}
-                if (enabledActivitiesIDs.size() == 0)
+                if (enabledActivitiesIDs.size() == 0) {
                     return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
-
+                }
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
             // if status is terminated -> return all terminated activities
             } else if (status.equals("terminated")) {
 
-                if (!executionService.existScenarioInstance(scenarioID, instanceID))
+                if (!executionService.existScenarioInstance(scenarioID, instanceID)) {
                     return Response.serverError().entity("Error: not a correct scenario instance").build();
-
+                }
                 LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitiesForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
                 //if no closed activities present -> return {empty}
-                if (terminatedActivities.size() == 0)
+                if (terminatedActivities.size() == 0) {
                     return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
-
+                }
                 String jsonRepresentation = JsonWrapperHashMap(terminatedActivities, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -179,9 +179,9 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getRunningActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getRunningActivityLabelsForScenarioInstance(instanceID);
                 // if no running activities present -> return {empty}
-                if (enabledActivitiesIDs.size() == 0)
+                if (enabledActivitiesIDs.size() == 0) {
                     return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
-
+                }
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -196,9 +196,9 @@ public class RestConnection {
         } else {
             String label = executionService.getLabelForControlNodeID(activityinstanceID);
             //if no activity with this id present
-            if (label.equals(""))
+            if (label.equals("")) {
                 return Response.serverError().entity("Error: not correct Activity ID").build();
-
+            }
             return Response.ok(new String("{\"" + label + "\"}"), MediaType.APPLICATION_JSON).build();
         }
     }
@@ -218,15 +218,15 @@ public class RestConnection {
     @Produces(MediaType.APPLICATION_JSON)
     public Response showDataObjects(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("dataobjectID") int dataobjectID, @QueryParam("status") String status, @QueryParam("limit") String limit) {
 
-        if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID)))
+        if (!executionService.openExistingScenarioInstance(new Integer(scenarioID), new Integer(scenarioInstanceID))) {
             return Response.serverError().entity("Error: there is no existing open scenario instance").build();
-
+        }
         LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
         HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
         //if no dataobject is available -> return {empty}
-        if (dataObjects.size() == 0)
+        if (dataObjects.size() == 0) {
             return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
-
+        }
         String jsonRepresentation = JsonWrapperHashMap(dataObjects, labels);
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
