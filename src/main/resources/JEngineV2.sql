@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 16. Feb 2015 um 14:21
+-- Erstellungszeit: 18. Feb 2015 um 09:40
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2783 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3094 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -2408,7 +2408,274 @@ INSERT INTO `activityinstance` (`id`, `type`, `role_id`, `activity_state`, `work
 (2779, 'HumanTask', 1, 'terminated', 'init'),
 (2780, 'HumanTask', 1, 'ready', 'init'),
 (2781, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
-(2782, 'HumanTask', 1, 'ready', 'init');
+(2782, 'HumanTask', 1, 'ready', 'init'),
+(2783, 'HumanTask', 1, 'ready', 'init'),
+(2784, 'HumanTask', 1, 'ready', 'init'),
+(2785, 'HumanTask', 1, 'terminated', 'init'),
+(2786, 'HumanTask', 1, 'terminated', 'init'),
+(2787, 'HumanTask', 1, 'ready', 'init'),
+(2788, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2789, 'HumanTask', 1, 'ready', 'init'),
+(2790, 'HumanTask', 1, 'terminated', 'init'),
+(2791, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2792, 'HumanTask', 1, 'ready', 'init'),
+(2793, 'HumanTask', 1, 'ready', 'init'),
+(2794, 'HumanTask', 1, 'terminated', 'init'),
+(2795, 'HumanTask', 1, 'terminated', 'init'),
+(2796, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2797, 'HumanTask', 1, 'ready', 'init'),
+(2798, 'HumanTask', 1, 'terminated', 'init'),
+(2799, 'HumanTask', 1, 'terminated', 'init'),
+(2800, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2801, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2803, 'HumanTask', 1, 'terminated', 'init'),
+(2804, 'HumanTask', 1, 'terminated', 'init'),
+(2807, 'HumanTask', 1, 'terminated', 'init'),
+(2808, 'HumanTask', 1, 'terminated', 'init'),
+(2811, 'HumanTask', 1, 'ready', 'init'),
+(2812, 'HumanTask', 1, 'ready', 'init'),
+(2813, 'HumanTask', 1, 'terminated', 'init'),
+(2814, 'HumanTask', 1, 'terminated', 'init'),
+(2815, 'HumanTask', 1, 'terminated', 'init'),
+(2816, 'HumanTask', 1, 'terminated', 'init'),
+(2817, 'HumanTask', 1, 'terminated', 'init'),
+(2818, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2819, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2820, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2821, 'HumanTask', 1, 'terminated', 'init'),
+(2822, 'HumanTask', 1, 'terminated', 'init'),
+(2823, 'HumanTask', 1, 'ready', 'init'),
+(2824, 'HumanTask', 1, 'terminated', 'init'),
+(2825, 'HumanTask', 1, 'ready', 'init'),
+(2826, 'HumanTask', 1, 'ready', 'init'),
+(2827, 'HumanTask', 1, 'terminated', 'init'),
+(2828, 'HumanTask', 1, 'terminated', 'init'),
+(2829, 'HumanTask', 1, 'ready', 'init'),
+(2830, 'HumanTask', 1, 'ready', 'init'),
+(2831, 'HumanTask', 1, 'terminated', 'init'),
+(2832, 'HumanTask', 1, 'terminated', 'init'),
+(2833, 'HumanTask', 1, 'terminated', 'init'),
+(2834, 'HumanTask', 1, 'terminated', 'init'),
+(2835, 'HumanTask', 1, 'terminated', 'init'),
+(2836, 'HumanTask', 1, 'terminated', 'init'),
+(2837, 'HumanTask', 1, 'terminated', 'init'),
+(2838, 'HumanTask', 1, 'terminated', 'init'),
+(2839, 'HumanTask', 1, 'terminated', 'init'),
+(2840, 'HumanTask', 1, 'terminated', 'init'),
+(2841, 'HumanTask', 1, 'ready', 'init'),
+(2842, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2843, 'HumanTask', 1, 'ready', 'init'),
+(2844, 'HumanTask', 1, 'terminated', 'init'),
+(2846, 'HumanTask', 1, 'terminated', 'init'),
+(2847, 'HumanTask', 1, 'terminated', 'init'),
+(2848, 'HumanTask', 1, 'terminated', 'init'),
+(2850, 'HumanTask', 1, 'ready', 'init'),
+(2852, 'HumanTask', 1, 'terminated', 'init'),
+(2855, 'HumanTask', 1, 'terminated', 'init'),
+(2856, 'HumanTask', 1, 'terminated', 'init'),
+(2857, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2858, 'HumanTask', 1, 'ready', 'init'),
+(2859, 'HumanTask', 1, 'terminated', 'init'),
+(2860, 'HumanTask', 1, 'terminated', 'init'),
+(2861, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2862, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2864, 'HumanTask', 1, 'terminated', 'init'),
+(2865, 'HumanTask', 1, 'terminated', 'init'),
+(2868, 'HumanTask', 1, 'terminated', 'init'),
+(2869, 'HumanTask', 1, 'terminated', 'init'),
+(2872, 'HumanTask', 1, 'ready', 'init'),
+(2873, 'HumanTask', 1, 'ready', 'init'),
+(2874, 'HumanTask', 1, 'terminated', 'init'),
+(2875, 'HumanTask', 1, 'terminated', 'init'),
+(2876, 'HumanTask', 1, 'terminated', 'init'),
+(2877, 'HumanTask', 1, 'terminated', 'init'),
+(2878, 'HumanTask', 1, 'terminated', 'init'),
+(2879, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2880, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2881, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2882, 'HumanTask', 1, 'terminated', 'init'),
+(2883, 'HumanTask', 1, 'terminated', 'init'),
+(2884, 'HumanTask', 1, 'ready', 'init'),
+(2885, 'HumanTask', 1, 'terminated', 'init'),
+(2886, 'HumanTask', 1, 'ready', 'init'),
+(2887, 'HumanTask', 1, 'ready', 'init'),
+(2888, 'HumanTask', 1, 'terminated', 'init'),
+(2889, 'HumanTask', 1, 'terminated', 'init'),
+(2890, 'HumanTask', 1, 'ready', 'init'),
+(2891, 'HumanTask', 1, 'ready', 'init'),
+(2892, 'HumanTask', 1, 'terminated', 'init'),
+(2893, 'HumanTask', 1, 'terminated', 'init'),
+(2894, 'HumanTask', 1, 'terminated', 'init'),
+(2895, 'HumanTask', 1, 'terminated', 'init'),
+(2896, 'HumanTask', 1, 'terminated', 'init'),
+(2897, 'HumanTask', 1, 'terminated', 'init'),
+(2898, 'HumanTask', 1, 'terminated', 'init'),
+(2899, 'HumanTask', 1, 'terminated', 'init'),
+(2900, 'HumanTask', 1, 'terminated', 'init'),
+(2901, 'HumanTask', 1, 'terminated', 'init'),
+(2902, 'HumanTask', 1, 'ready', 'init'),
+(2903, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2904, 'HumanTask', 1, 'ready', 'init'),
+(2906, 'HumanTask', 1, 'terminated', 'init'),
+(2908, 'HumanTask', 1, 'terminated', 'init'),
+(2909, 'HumanTask', 1, 'terminated', 'init'),
+(2910, 'HumanTask', 1, 'terminated', 'init'),
+(2913, 'HumanTask', 1, 'ready', 'init'),
+(2915, 'HumanTask', 1, 'ready', 'init'),
+(2916, 'HumanTask', 1, 'ready', 'init'),
+(2918, 'HumanTask', 1, 'ready', 'init'),
+(2920, 'HumanTask', 1, 'ready', 'init'),
+(2921, 'HumanTask', 1, 'ready', 'init'),
+(2922, 'HumanTask', 1, 'terminated', 'init'),
+(2923, 'HumanTask', 1, 'terminated', 'init'),
+(2924, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2925, 'HumanTask', 1, 'ready', 'init'),
+(2926, 'HumanTask', 1, 'terminated', 'init'),
+(2927, 'HumanTask', 1, 'terminated', 'init'),
+(2928, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2929, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2931, 'HumanTask', 1, 'terminated', 'init'),
+(2932, 'HumanTask', 1, 'terminated', 'init'),
+(2935, 'HumanTask', 1, 'terminated', 'init'),
+(2936, 'HumanTask', 1, 'terminated', 'init'),
+(2939, 'HumanTask', 1, 'ready', 'init'),
+(2940, 'HumanTask', 1, 'ready', 'init'),
+(2941, 'HumanTask', 1, 'terminated', 'init'),
+(2942, 'HumanTask', 1, 'terminated', 'init'),
+(2943, 'HumanTask', 1, 'terminated', 'init'),
+(2944, 'HumanTask', 1, 'terminated', 'init'),
+(2945, 'HumanTask', 1, 'terminated', 'init'),
+(2946, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2947, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2948, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2949, 'HumanTask', 1, 'terminated', 'init'),
+(2950, 'HumanTask', 1, 'terminated', 'init'),
+(2951, 'HumanTask', 1, 'ready', 'init'),
+(2952, 'HumanTask', 1, 'terminated', 'init'),
+(2953, 'HumanTask', 1, 'ready', 'init'),
+(2954, 'HumanTask', 1, 'ready', 'init'),
+(2955, 'HumanTask', 1, 'terminated', 'init'),
+(2956, 'HumanTask', 1, 'terminated', 'init'),
+(2957, 'HumanTask', 1, 'ready', 'init'),
+(2958, 'HumanTask', 1, 'ready', 'init'),
+(2959, 'HumanTask', 1, 'terminated', 'init'),
+(2960, 'HumanTask', 1, 'terminated', 'init'),
+(2961, 'HumanTask', 1, 'terminated', 'init'),
+(2962, 'HumanTask', 1, 'terminated', 'init'),
+(2963, 'HumanTask', 1, 'terminated', 'init'),
+(2964, 'HumanTask', 1, 'terminated', 'init'),
+(2965, 'HumanTask', 1, 'terminated', 'init'),
+(2966, 'HumanTask', 1, 'terminated', 'init'),
+(2967, 'HumanTask', 1, 'terminated', 'init'),
+(2968, 'HumanTask', 1, 'terminated', 'init'),
+(2969, 'HumanTask', 1, 'ready', 'init'),
+(2970, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2971, 'HumanTask', 1, 'ready', 'init'),
+(2973, 'HumanTask', 1, 'ready', 'init'),
+(2975, 'HumanTask', 1, 'ready', 'init'),
+(2976, 'HumanTask', 1, 'ready', 'init'),
+(2977, 'HumanTask', 1, 'terminated', 'init'),
+(2978, 'HumanTask', 1, 'terminated', 'init'),
+(2979, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2980, 'HumanTask', 1, 'ready', 'init'),
+(2981, 'HumanTask', 1, 'terminated', 'init'),
+(2982, 'HumanTask', 1, 'terminated', 'init'),
+(2983, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2984, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(2986, 'HumanTask', 1, 'terminated', 'init'),
+(2987, 'HumanTask', 1, 'terminated', 'init'),
+(2990, 'HumanTask', 1, 'terminated', 'init'),
+(2991, 'HumanTask', 1, 'terminated', 'init'),
+(2994, 'HumanTask', 1, 'ready', 'init'),
+(2995, 'HumanTask', 1, 'ready', 'init'),
+(2996, 'HumanTask', 1, 'terminated', 'init'),
+(2997, 'HumanTask', 1, 'terminated', 'init'),
+(2998, 'HumanTask', 1, 'terminated', 'init'),
+(2999, 'HumanTask', 1, 'terminated', 'init'),
+(3000, 'HumanTask', 1, 'terminated', 'init'),
+(3001, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3002, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3003, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3004, 'HumanTask', 1, 'terminated', 'init'),
+(3005, 'HumanTask', 1, 'terminated', 'init'),
+(3006, 'HumanTask', 1, 'ready', 'init'),
+(3007, 'HumanTask', 1, 'terminated', 'init'),
+(3008, 'HumanTask', 1, 'ready', 'init'),
+(3009, 'HumanTask', 1, 'ready', 'init'),
+(3010, 'HumanTask', 1, 'terminated', 'init'),
+(3011, 'HumanTask', 1, 'terminated', 'init'),
+(3012, 'HumanTask', 1, 'ready', 'init'),
+(3013, 'HumanTask', 1, 'ready', 'init'),
+(3014, 'HumanTask', 1, 'terminated', 'init'),
+(3015, 'HumanTask', 1, 'terminated', 'init'),
+(3016, 'HumanTask', 1, 'terminated', 'init'),
+(3017, 'HumanTask', 1, 'terminated', 'init'),
+(3018, 'HumanTask', 1, 'terminated', 'init'),
+(3019, 'HumanTask', 1, 'terminated', 'init'),
+(3020, 'HumanTask', 1, 'terminated', 'init'),
+(3021, 'HumanTask', 1, 'terminated', 'init'),
+(3022, 'HumanTask', 1, 'terminated', 'init'),
+(3023, 'HumanTask', 1, 'terminated', 'init'),
+(3024, 'HumanTask', 1, 'ready', 'init'),
+(3025, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3026, 'HumanTask', 1, 'ready', 'init'),
+(3028, 'HumanTask', 1, 'ready', 'init'),
+(3030, 'HumanTask', 1, 'ready', 'init'),
+(3031, 'HumanTask', 1, 'ready', 'init'),
+(3032, 'HumanTask', 1, 'ready', 'init'),
+(3033, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3034, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3035, 'HumanTask', 1, 'ready', 'init'),
+(3037, 'HumanTask', 1, 'ready', 'init'),
+(3038, 'HumanTask', 1, 'ready', 'init'),
+(3039, 'HumanTask', 1, 'terminated', 'init'),
+(3040, 'HumanTask', 1, 'terminated', 'init'),
+(3041, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3042, 'HumanTask', 1, 'ready', 'init'),
+(3043, 'HumanTask', 1, 'terminated', 'init'),
+(3044, 'HumanTask', 1, 'terminated', 'init'),
+(3045, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3046, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3048, 'HumanTask', 1, 'terminated', 'init'),
+(3049, 'HumanTask', 1, 'terminated', 'init'),
+(3052, 'HumanTask', 1, 'terminated', 'init'),
+(3053, 'HumanTask', 1, 'terminated', 'init'),
+(3056, 'HumanTask', 1, 'ready', 'init'),
+(3057, 'HumanTask', 1, 'ready', 'init'),
+(3058, 'HumanTask', 1, 'terminated', 'init'),
+(3059, 'HumanTask', 1, 'terminated', 'init'),
+(3060, 'HumanTask', 1, 'terminated', 'init'),
+(3061, 'HumanTask', 1, 'terminated', 'init'),
+(3062, 'HumanTask', 1, 'terminated', 'init'),
+(3063, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3064, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3065, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3066, 'HumanTask', 1, 'terminated', 'init'),
+(3067, 'HumanTask', 1, 'terminated', 'init'),
+(3068, 'HumanTask', 1, 'ready', 'init'),
+(3069, 'HumanTask', 1, 'terminated', 'init'),
+(3070, 'HumanTask', 1, 'ready', 'init'),
+(3071, 'HumanTask', 1, 'ready', 'init'),
+(3072, 'HumanTask', 1, 'terminated', 'init'),
+(3073, 'HumanTask', 1, 'terminated', 'init'),
+(3074, 'HumanTask', 1, 'ready', 'init'),
+(3075, 'HumanTask', 1, 'ready', 'init'),
+(3076, 'HumanTask', 1, 'terminated', 'init'),
+(3077, 'HumanTask', 1, 'terminated', 'init'),
+(3078, 'HumanTask', 1, 'terminated', 'init'),
+(3079, 'HumanTask', 1, 'terminated', 'init'),
+(3080, 'HumanTask', 1, 'terminated', 'init'),
+(3081, 'HumanTask', 1, 'terminated', 'init'),
+(3082, 'HumanTask', 1, 'terminated', 'init'),
+(3083, 'HumanTask', 1, 'terminated', 'init'),
+(3084, 'HumanTask', 1, 'terminated', 'init'),
+(3085, 'HumanTask', 1, 'terminated', 'init'),
+(3086, 'HumanTask', 1, 'ready', 'init'),
+(3087, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(3088, 'HumanTask', 1, 'ready', 'init'),
+(3090, 'HumanTask', 1, 'ready', 'init'),
+(3092, 'HumanTask', 1, 'ready', 'init'),
+(3093, 'HumanTask', 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -2566,7 +2833,34 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (216, 214, ''),
 (218, 220, ''),
 (219, 218, ''),
-(220, 221, '');
+(220, 221, ''),
+(223, 224, ''),
+(224, 222, ''),
+(225, 227, ''),
+(226, 225, ''),
+(229, 230, ''),
+(230, 228, ''),
+(231, 233, ''),
+(232, 231, ''),
+(234, 240, ''),
+(235, 234, ''),
+(235, 237, ''),
+(235, 239, ''),
+(237, 240, ''),
+(239, 240, ''),
+(240, 236, ''),
+(241, 242, ''),
+(242, 235, ''),
+(243, 249, ''),
+(244, 249, ''),
+(245, 244, ''),
+(246, 249, ''),
+(247, 250, ''),
+(249, 248, ''),
+(250, 246, ''),
+(250, 251, ''),
+(251, 243, ''),
+(251, 245, '');
 
 -- --------------------------------------------------------
 
@@ -2579,7 +2873,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=222 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=252 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -2728,7 +3022,37 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`) VALUES
 (218, 'A4', 'Activity', 134),
 (219, '', 'Startevent', 134),
 (220, 'A1', 'Activity', 134),
-(221, '', 'Endevent', 134);
+(221, '', 'Endevent', 134),
+(222, '', 'Endevent', 135),
+(223, '', 'Startevent', 135),
+(224, '', 'Activity', 135),
+(225, '', 'Activity', 136),
+(226, '', 'Startevent', 136),
+(227, '', 'Endevent', 136),
+(228, '', 'Endevent', 137),
+(229, '', 'Startevent', 137),
+(230, '', 'Activity', 137),
+(231, '', 'Activity', 138),
+(232, '', 'Startevent', 138),
+(233, '', 'Endevent', 138),
+(234, 'a1', 'Activity', 139),
+(235, '', 'AND', 139),
+(236, '', 'Endevent', 139),
+(237, 'a2', 'Activity', 139),
+(238, 'a2', 'null', 139),
+(239, 'a3', 'Activity', 139),
+(240, '', 'AND', 139),
+(241, '', 'Startevent', 139),
+(242, 'a0', 'Activity', 139),
+(243, 'a2.1', 'Activity', 140),
+(244, 'a2.2.2', 'Activity', 140),
+(245, 'a2.2', 'Activity', 140),
+(246, 'a1', 'Activity', 140),
+(247, '', 'Startevent', 140),
+(248, '', 'Endevent', 140),
+(249, '', 'AND', 140),
+(250, '', 'AND', 140),
+(251, '', 'AND', 140);
 
 -- --------------------------------------------------------
 
@@ -2741,7 +3065,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2783 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3094 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -5455,7 +5779,318 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (2779, 'Activity', 210, 1877),
 (2780, 'Activity', 211, 1877),
 (2781, 'Activity', 214, 1876),
-(2782, 'Activity', 218, 1878);
+(2782, 'Activity', 218, 1878),
+(2783, 'Activity', 224, 1879),
+(2784, 'Activity', 225, 1880),
+(2785, 'Activity', 224, 1881),
+(2786, 'Activity', 225, 1882),
+(2787, 'Activity', 224, 1883),
+(2788, 'Activity', 225, 1884),
+(2789, 'Activity', 224, 1885),
+(2790, 'Activity', 225, 1886),
+(2791, 'Activity', 225, 1887),
+(2792, 'Activity', 230, 1888),
+(2793, 'Activity', 231, 1889),
+(2794, 'Activity', 2, 1890),
+(2795, 'Activity', 4, 1891),
+(2796, 'Activity', 10, 1892),
+(2797, 'Activity', 16, 1893),
+(2798, 'Activity', 5, 1890),
+(2799, 'Activity', 6, 1890),
+(2800, 'Activity', 4, 1894),
+(2801, 'Activity', 2, 1895),
+(2802, 'AND', 102, 1896),
+(2803, 'Activity', 103, 1896),
+(2804, 'Activity', 104, 1896),
+(2805, 'AND', 105, 1896),
+(2806, 'AND', 102, 1897),
+(2807, 'Activity', 103, 1897),
+(2808, 'Activity', 104, 1897),
+(2809, 'AND', 105, 1897),
+(2810, 'AND', 102, 1898),
+(2811, 'Activity', 103, 1898),
+(2812, 'Activity', 104, 1898),
+(2813, 'Activity', 125, 1899),
+(2814, 'Activity', 128, 1900),
+(2815, 'Activity', 130, 1901),
+(2816, 'Activity', 126, 1899),
+(2817, 'Activity', 125, 1902),
+(2818, 'Activity', 128, 1903),
+(2819, 'Activity', 126, 1902),
+(2820, 'Activity', 130, 1904),
+(2821, 'Activity', 183, 1905),
+(2822, 'Activity', 191, 1906),
+(2823, 'Activity', 193, 1907),
+(2824, 'Activity', 184, 1905),
+(2825, 'Activity', 189, 1906),
+(2826, 'Activity', 187, 1905),
+(2827, 'Activity', 202, 1908),
+(2828, 'Activity', 207, 1909),
+(2829, 'Activity', 203, 1908),
+(2830, 'Activity', 208, 1909),
+(2831, 'Activity', 210, 1910),
+(2832, 'Activity', 216, 1911),
+(2833, 'Activity', 218, 1912),
+(2834, 'Activity', 211, 1910),
+(2835, 'Activity', 214, 1911),
+(2836, 'Activity', 220, 1912),
+(2837, 'Activity', 218, 1913),
+(2838, 'Activity', 216, 1914),
+(2839, 'Activity', 220, 1913),
+(2840, 'Activity', 210, 1915),
+(2841, 'Activity', 211, 1915),
+(2842, 'Activity', 214, 1914),
+(2843, 'Activity', 218, 1916),
+(2844, 'Activity', 242, 1917),
+(2845, 'AND', 235, 1917),
+(2846, 'Activity', 234, 1917),
+(2847, 'Activity', 237, 1917),
+(2848, 'Activity', 239, 1917),
+(2849, 'AND', 240, 1917),
+(2850, 'Activity', 242, 1918),
+(2851, 'AND', 250, 1919),
+(2852, 'Activity', 246, 1919),
+(2853, 'AND', 251, 1919),
+(2854, 'AND', 249, 1919),
+(2855, 'Activity', 2, 1920),
+(2856, 'Activity', 4, 1921),
+(2857, 'Activity', 10, 1922),
+(2858, 'Activity', 16, 1923),
+(2859, 'Activity', 5, 1920),
+(2860, 'Activity', 6, 1920),
+(2861, 'Activity', 4, 1924),
+(2862, 'Activity', 2, 1925),
+(2863, 'AND', 102, 1926),
+(2864, 'Activity', 103, 1926),
+(2865, 'Activity', 104, 1926),
+(2866, 'AND', 105, 1926),
+(2867, 'AND', 102, 1927),
+(2868, 'Activity', 103, 1927),
+(2869, 'Activity', 104, 1927),
+(2870, 'AND', 105, 1927),
+(2871, 'AND', 102, 1928),
+(2872, 'Activity', 103, 1928),
+(2873, 'Activity', 104, 1928),
+(2874, 'Activity', 125, 1929),
+(2875, 'Activity', 128, 1930),
+(2876, 'Activity', 130, 1931),
+(2877, 'Activity', 126, 1929),
+(2878, 'Activity', 125, 1932),
+(2879, 'Activity', 128, 1933),
+(2880, 'Activity', 126, 1932),
+(2881, 'Activity', 130, 1934),
+(2882, 'Activity', 183, 1935),
+(2883, 'Activity', 191, 1936),
+(2884, 'Activity', 193, 1937),
+(2885, 'Activity', 184, 1935),
+(2886, 'Activity', 189, 1936),
+(2887, 'Activity', 187, 1935),
+(2888, 'Activity', 202, 1938),
+(2889, 'Activity', 207, 1939),
+(2890, 'Activity', 203, 1938),
+(2891, 'Activity', 208, 1939),
+(2892, 'Activity', 210, 1940),
+(2893, 'Activity', 216, 1941),
+(2894, 'Activity', 218, 1942),
+(2895, 'Activity', 211, 1940),
+(2896, 'Activity', 214, 1941),
+(2897, 'Activity', 220, 1942),
+(2898, 'Activity', 218, 1943),
+(2899, 'Activity', 216, 1944),
+(2900, 'Activity', 220, 1943),
+(2901, 'Activity', 210, 1945),
+(2902, 'Activity', 211, 1945),
+(2903, 'Activity', 214, 1944),
+(2904, 'Activity', 218, 1946),
+(2905, 'AND', 250, 1947),
+(2906, 'Activity', 246, 1947),
+(2907, 'AND', 251, 1947),
+(2908, 'Activity', 243, 1947),
+(2909, 'Activity', 245, 1947),
+(2910, 'Activity', 244, 1947),
+(2911, 'AND', 249, 1947),
+(2912, 'AND', 250, 1948),
+(2913, 'Activity', 246, 1948),
+(2914, 'AND', 251, 1948),
+(2915, 'Activity', 243, 1948),
+(2916, 'Activity', 245, 1948),
+(2917, 'AND', 250, 1949),
+(2918, 'Activity', 246, 1949),
+(2919, 'AND', 251, 1949),
+(2920, 'Activity', 243, 1949),
+(2921, 'Activity', 245, 1949),
+(2922, 'Activity', 2, 1950),
+(2923, 'Activity', 4, 1951),
+(2924, 'Activity', 10, 1952),
+(2925, 'Activity', 16, 1953),
+(2926, 'Activity', 5, 1950),
+(2927, 'Activity', 6, 1950),
+(2928, 'Activity', 4, 1954),
+(2929, 'Activity', 2, 1955),
+(2930, 'AND', 102, 1956),
+(2931, 'Activity', 103, 1956),
+(2932, 'Activity', 104, 1956),
+(2933, 'AND', 105, 1956),
+(2934, 'AND', 102, 1957),
+(2935, 'Activity', 103, 1957),
+(2936, 'Activity', 104, 1957),
+(2937, 'AND', 105, 1957),
+(2938, 'AND', 102, 1958),
+(2939, 'Activity', 103, 1958),
+(2940, 'Activity', 104, 1958),
+(2941, 'Activity', 125, 1959),
+(2942, 'Activity', 128, 1960),
+(2943, 'Activity', 130, 1961),
+(2944, 'Activity', 126, 1959),
+(2945, 'Activity', 125, 1962),
+(2946, 'Activity', 128, 1963),
+(2947, 'Activity', 126, 1962),
+(2948, 'Activity', 130, 1964),
+(2949, 'Activity', 183, 1965),
+(2950, 'Activity', 191, 1966),
+(2951, 'Activity', 193, 1967),
+(2952, 'Activity', 184, 1965),
+(2953, 'Activity', 189, 1966),
+(2954, 'Activity', 187, 1965),
+(2955, 'Activity', 202, 1968),
+(2956, 'Activity', 207, 1969),
+(2957, 'Activity', 203, 1968),
+(2958, 'Activity', 208, 1969),
+(2959, 'Activity', 210, 1970),
+(2960, 'Activity', 216, 1971),
+(2961, 'Activity', 218, 1972),
+(2962, 'Activity', 211, 1970),
+(2963, 'Activity', 214, 1971),
+(2964, 'Activity', 220, 1972),
+(2965, 'Activity', 218, 1973),
+(2966, 'Activity', 216, 1974),
+(2967, 'Activity', 220, 1973),
+(2968, 'Activity', 210, 1975),
+(2969, 'Activity', 211, 1975),
+(2970, 'Activity', 214, 1974),
+(2971, 'Activity', 218, 1976),
+(2972, 'AND', 250, 1977),
+(2973, 'Activity', 246, 1977),
+(2974, 'AND', 251, 1977),
+(2975, 'Activity', 243, 1977),
+(2976, 'Activity', 245, 1977),
+(2977, 'Activity', 2, 1978),
+(2978, 'Activity', 4, 1979),
+(2979, 'Activity', 10, 1980),
+(2980, 'Activity', 16, 1981),
+(2981, 'Activity', 5, 1978),
+(2982, 'Activity', 6, 1978),
+(2983, 'Activity', 4, 1982),
+(2984, 'Activity', 2, 1983),
+(2985, 'AND', 102, 1984),
+(2986, 'Activity', 103, 1984),
+(2987, 'Activity', 104, 1984),
+(2988, 'AND', 105, 1984),
+(2989, 'AND', 102, 1985),
+(2990, 'Activity', 103, 1985),
+(2991, 'Activity', 104, 1985),
+(2992, 'AND', 105, 1985),
+(2993, 'AND', 102, 1986),
+(2994, 'Activity', 103, 1986),
+(2995, 'Activity', 104, 1986),
+(2996, 'Activity', 125, 1987),
+(2997, 'Activity', 128, 1988),
+(2998, 'Activity', 130, 1989),
+(2999, 'Activity', 126, 1987),
+(3000, 'Activity', 125, 1990),
+(3001, 'Activity', 128, 1991),
+(3002, 'Activity', 126, 1990),
+(3003, 'Activity', 130, 1992),
+(3004, 'Activity', 183, 1993),
+(3005, 'Activity', 191, 1994),
+(3006, 'Activity', 193, 1995),
+(3007, 'Activity', 184, 1993),
+(3008, 'Activity', 189, 1994),
+(3009, 'Activity', 187, 1993),
+(3010, 'Activity', 202, 1996),
+(3011, 'Activity', 207, 1997),
+(3012, 'Activity', 203, 1996),
+(3013, 'Activity', 208, 1997),
+(3014, 'Activity', 210, 1998),
+(3015, 'Activity', 216, 1999),
+(3016, 'Activity', 218, 2000),
+(3017, 'Activity', 211, 1998),
+(3018, 'Activity', 214, 1999),
+(3019, 'Activity', 220, 2000),
+(3020, 'Activity', 218, 2001),
+(3021, 'Activity', 216, 2002),
+(3022, 'Activity', 220, 2001),
+(3023, 'Activity', 210, 2003),
+(3024, 'Activity', 211, 2003),
+(3025, 'Activity', 214, 2002),
+(3026, 'Activity', 218, 2004),
+(3027, 'AND', 250, 2005),
+(3028, 'Activity', 246, 2005),
+(3029, 'AND', 251, 2005),
+(3030, 'Activity', 243, 2005),
+(3031, 'Activity', 245, 2005),
+(3032, 'Activity', 2, 2006),
+(3033, 'Activity', 4, 2007),
+(3034, 'Activity', 10, 2008),
+(3035, 'Activity', 16, 2009),
+(3036, 'AND', 102, 2010),
+(3037, 'Activity', 103, 2010),
+(3038, 'Activity', 104, 2010),
+(3039, 'Activity', 2, 2011),
+(3040, 'Activity', 4, 2012),
+(3041, 'Activity', 10, 2013),
+(3042, 'Activity', 16, 2014),
+(3043, 'Activity', 5, 2011),
+(3044, 'Activity', 6, 2011),
+(3045, 'Activity', 4, 2015),
+(3046, 'Activity', 2, 2016),
+(3047, 'AND', 102, 2017),
+(3048, 'Activity', 103, 2017),
+(3049, 'Activity', 104, 2017),
+(3050, 'AND', 105, 2017),
+(3051, 'AND', 102, 2018),
+(3052, 'Activity', 103, 2018),
+(3053, 'Activity', 104, 2018),
+(3054, 'AND', 105, 2018),
+(3055, 'AND', 102, 2019),
+(3056, 'Activity', 103, 2019),
+(3057, 'Activity', 104, 2019),
+(3058, 'Activity', 125, 2020),
+(3059, 'Activity', 128, 2021),
+(3060, 'Activity', 130, 2022),
+(3061, 'Activity', 126, 2020),
+(3062, 'Activity', 125, 2023),
+(3063, 'Activity', 128, 2024),
+(3064, 'Activity', 126, 2023),
+(3065, 'Activity', 130, 2025),
+(3066, 'Activity', 183, 2026),
+(3067, 'Activity', 191, 2027),
+(3068, 'Activity', 193, 2028),
+(3069, 'Activity', 184, 2026),
+(3070, 'Activity', 189, 2027),
+(3071, 'Activity', 187, 2026),
+(3072, 'Activity', 202, 2029),
+(3073, 'Activity', 207, 2030),
+(3074, 'Activity', 203, 2029),
+(3075, 'Activity', 208, 2030),
+(3076, 'Activity', 210, 2031),
+(3077, 'Activity', 216, 2032),
+(3078, 'Activity', 218, 2033),
+(3079, 'Activity', 211, 2031),
+(3080, 'Activity', 214, 2032),
+(3081, 'Activity', 220, 2033),
+(3082, 'Activity', 218, 2034),
+(3083, 'Activity', 216, 2035),
+(3084, 'Activity', 220, 2034),
+(3085, 'Activity', 210, 2036),
+(3086, 'Activity', 211, 2036),
+(3087, 'Activity', 214, 2035),
+(3088, 'Activity', 218, 2037),
+(3089, 'AND', 250, 2038),
+(3090, 'Activity', 246, 2038),
+(3091, 'AND', 251, 2038),
+(3092, 'Activity', 243, 2038),
+(3093, 'Activity', 245, 2038);
 
 -- --------------------------------------------------------
 
@@ -5494,7 +6129,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 CREATE TABLE IF NOT EXISTS `dataclass` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Daten für Tabelle `dataclass`
@@ -5516,7 +6151,9 @@ INSERT INTO `dataclass` (`id`, `name`) VALUES
 (13, 'a'),
 (14, 'b'),
 (15, 'b'),
-(16, 'a');
+(16, 'a'),
+(17, 'a'),
+(18, 'a');
 
 -- --------------------------------------------------------
 
@@ -5644,7 +6281,11 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 (214, 107, 1),
 (214, 109, 0),
 (216, 108, 1),
-(216, 110, 0);
+(216, 110, 0),
+(225, 111, 1),
+(225, 112, 0),
+(231, 113, 1),
+(231, 114, 0);
 
 -- --------------------------------------------------------
 
@@ -5658,7 +6299,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=84 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=88 ;
 
 --
 -- Daten für Tabelle `datanode`
@@ -5747,7 +6388,11 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 (80, 113, 47, 15, 15),
 (81, 114, 48, 16, 16),
 (82, 114, 48, 16, 16),
-(83, 114, 49, 16, 16);
+(83, 114, 49, 16, 16),
+(84, 115, 50, 17, 17),
+(85, 115, 51, 17, 17),
+(86, 116, 52, 18, 18),
+(87, 116, 53, 18, 18);
 
 -- --------------------------------------------------------
 
@@ -5761,7 +6406,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
   `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
   `start_state_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Daten für Tabelle `dataobject`
@@ -5783,7 +6428,9 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 (13, 'a', 13, 111, 38),
 (14, 'b', 14, 112, 40),
 (15, 'b', 15, 113, 46),
-(16, 'a', 16, 114, 48);
+(16, 'a', 16, 114, 48),
+(17, 'a', 17, 115, 50),
+(18, 'a', 18, 116, 52);
 
 -- --------------------------------------------------------
 
@@ -5797,7 +6444,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=476 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=512 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -6272,7 +6919,43 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (472, 574, 15, 7, 0),
 (473, 575, 37, 13, 0),
 (474, 576, 47, 15, 0),
-(475, 577, 48, 16, 0);
+(475, 577, 48, 16, 0),
+(476, 578, 50, 17, 0),
+(477, 579, 51, 17, 0),
+(478, 580, 51, 17, 0),
+(479, 581, 52, 18, 0),
+(480, 582, 4, 1, 0),
+(481, 582, 6, 2, 0),
+(482, 584, 15, 7, 0),
+(483, 585, 37, 13, 0),
+(484, 586, 47, 15, 0),
+(485, 587, 48, 16, 0),
+(486, 590, 4, 1, 0),
+(487, 590, 6, 2, 0),
+(488, 592, 15, 7, 0),
+(489, 593, 37, 13, 0),
+(490, 594, 47, 15, 0),
+(491, 595, 48, 16, 0),
+(492, 598, 4, 1, 0),
+(493, 598, 6, 2, 0),
+(494, 600, 15, 7, 0),
+(495, 601, 37, 13, 0),
+(496, 602, 47, 15, 0),
+(497, 603, 48, 16, 0),
+(498, 605, 4, 1, 0),
+(499, 605, 6, 2, 0),
+(500, 607, 15, 7, 0),
+(501, 608, 37, 13, 0),
+(502, 609, 47, 15, 0),
+(503, 610, 48, 16, 0),
+(504, 612, 1, 1, 0),
+(505, 612, 5, 2, 0),
+(506, 614, 4, 1, 0),
+(507, 614, 6, 2, 0),
+(508, 616, 15, 7, 0),
+(509, 617, 37, 13, 0),
+(510, 618, 47, 15, 0),
+(511, 619, 48, 16, 0);
 
 -- --------------------------------------------------------
 
@@ -6283,7 +6966,7 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 CREATE TABLE IF NOT EXISTS `dataset` (
 `id` int(11) NOT NULL,
   `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=111 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=115 ;
 
 --
 -- Daten für Tabelle `dataset`
@@ -6399,7 +7082,11 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 (107, 1),
 (108, 1),
 (109, 0),
-(110, 0);
+(110, 0),
+(111, 1),
+(112, 0),
+(113, 1),
+(114, 0);
 
 -- --------------------------------------------------------
 
@@ -6526,7 +7213,11 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 (107, 83),
 (108, 82),
 (109, 81),
-(110, 83);
+(110, 83),
+(111, 84),
+(112, 85),
+(113, 86),
+(114, 87);
 
 -- --------------------------------------------------------
 
@@ -6586,7 +7277,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
   `scenario_id` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=135 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=141 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -6632,7 +7323,13 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) 
 (131, 'f1referencetest3', 113, 141716200, 0),
 (132, 'RT4F1', 114, 1263317340, 1),
 (133, 'RT4F2', 114, 495044646, 0),
-(134, 'RT4F3', 114, 900060190, 0);
+(134, 'RT4F3', 114, 900060190, 0),
+(135, 'TT2F1', 115, 670842831, 0),
+(136, 'TT2F2', 115, 1117519927, 0),
+(137, 'TT2F1', 116, 670842831, 0),
+(138, 'TT2F2', 116, 1117519927, 0),
+(139, 'AT2F1', 117, 642496384, 0),
+(140, 'AT3F1', 118, 1638780909, 0);
 
 -- --------------------------------------------------------
 
@@ -6645,7 +7342,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1879 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2039 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -8452,7 +9149,167 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (1875, 1, 134, 577),
 (1876, 0, 133, 577),
 (1877, 0, 132, 577),
-(1878, 0, 134, 577);
+(1878, 0, 134, 577),
+(1879, 0, 135, 578),
+(1880, 0, 136, 578),
+(1881, 1, 135, 579),
+(1882, 1, 136, 579),
+(1883, 0, 135, 579),
+(1884, 0, 136, 579),
+(1885, 0, 135, 580),
+(1886, 1, 136, 580),
+(1887, 0, 136, 580),
+(1888, 0, 137, 581),
+(1889, 0, 138, 581),
+(1890, 1, 1, 582),
+(1891, 1, 2, 582),
+(1892, 0, 3, 582),
+(1893, 0, 4, 582),
+(1894, 0, 2, 582),
+(1895, 0, 1, 582),
+(1896, 1, 101, 583),
+(1897, 1, 101, 583),
+(1898, 0, 101, 583),
+(1899, 1, 107, 584),
+(1900, 1, 108, 584),
+(1901, 1, 109, 584),
+(1902, 0, 107, 584),
+(1903, 0, 108, 584),
+(1904, 0, 109, 584),
+(1905, 0, 125, 585),
+(1906, 0, 126, 585),
+(1907, 0, 127, 585),
+(1908, 0, 130, 586),
+(1909, 0, 131, 586),
+(1910, 1, 132, 587),
+(1911, 1, 133, 587),
+(1912, 1, 134, 587),
+(1913, 1, 134, 587),
+(1914, 0, 133, 587),
+(1915, 0, 132, 587),
+(1916, 0, 134, 587),
+(1917, 1, 139, 588),
+(1918, 0, 139, 588),
+(1919, 0, 140, 589),
+(1920, 1, 1, 590),
+(1921, 1, 2, 590),
+(1922, 0, 3, 590),
+(1923, 0, 4, 590),
+(1924, 0, 2, 590),
+(1925, 0, 1, 590),
+(1926, 1, 101, 591),
+(1927, 1, 101, 591),
+(1928, 0, 101, 591),
+(1929, 1, 107, 592),
+(1930, 1, 108, 592),
+(1931, 1, 109, 592),
+(1932, 0, 107, 592),
+(1933, 0, 108, 592),
+(1934, 0, 109, 592),
+(1935, 0, 125, 593),
+(1936, 0, 126, 593),
+(1937, 0, 127, 593),
+(1938, 0, 130, 594),
+(1939, 0, 131, 594),
+(1940, 1, 132, 595),
+(1941, 1, 133, 595),
+(1942, 1, 134, 595),
+(1943, 1, 134, 595),
+(1944, 0, 133, 595),
+(1945, 0, 132, 595),
+(1946, 0, 134, 595),
+(1947, 1, 140, 596),
+(1948, 0, 140, 596),
+(1949, 0, 140, 597),
+(1950, 1, 1, 598),
+(1951, 1, 2, 598),
+(1952, 0, 3, 598),
+(1953, 0, 4, 598),
+(1954, 0, 2, 598),
+(1955, 0, 1, 598),
+(1956, 1, 101, 599),
+(1957, 1, 101, 599),
+(1958, 0, 101, 599),
+(1959, 1, 107, 600),
+(1960, 1, 108, 600),
+(1961, 1, 109, 600),
+(1962, 0, 107, 600),
+(1963, 0, 108, 600),
+(1964, 0, 109, 600),
+(1965, 0, 125, 601),
+(1966, 0, 126, 601),
+(1967, 0, 127, 601),
+(1968, 0, 130, 602),
+(1969, 0, 131, 602),
+(1970, 1, 132, 603),
+(1971, 1, 133, 603),
+(1972, 1, 134, 603),
+(1973, 1, 134, 603),
+(1974, 0, 133, 603),
+(1975, 0, 132, 603),
+(1976, 0, 134, 603),
+(1977, 0, 140, 604),
+(1978, 1, 1, 605),
+(1979, 1, 2, 605),
+(1980, 0, 3, 605),
+(1981, 0, 4, 605),
+(1982, 0, 2, 605),
+(1983, 0, 1, 605),
+(1984, 1, 101, 606),
+(1985, 1, 101, 606),
+(1986, 0, 101, 606),
+(1987, 1, 107, 607),
+(1988, 1, 108, 607),
+(1989, 1, 109, 607),
+(1990, 0, 107, 607),
+(1991, 0, 108, 607),
+(1992, 0, 109, 607),
+(1993, 0, 125, 608),
+(1994, 0, 126, 608),
+(1995, 0, 127, 608),
+(1996, 0, 130, 609),
+(1997, 0, 131, 609),
+(1998, 1, 132, 610),
+(1999, 1, 133, 610),
+(2000, 1, 134, 610),
+(2001, 1, 134, 610),
+(2002, 0, 133, 610),
+(2003, 0, 132, 610),
+(2004, 0, 134, 610),
+(2005, 0, 140, 611),
+(2006, 0, 1, 612),
+(2007, 0, 2, 612),
+(2008, 0, 3, 612),
+(2009, 0, 4, 612),
+(2010, 0, 101, 613),
+(2011, 1, 1, 614),
+(2012, 1, 2, 614),
+(2013, 0, 3, 614),
+(2014, 0, 4, 614),
+(2015, 0, 2, 614),
+(2016, 0, 1, 614),
+(2017, 1, 101, 615),
+(2018, 1, 101, 615),
+(2019, 0, 101, 615),
+(2020, 1, 107, 616),
+(2021, 1, 108, 616),
+(2022, 1, 109, 616),
+(2023, 0, 107, 616),
+(2024, 0, 108, 616),
+(2025, 0, 109, 616),
+(2026, 0, 125, 617),
+(2027, 0, 126, 617),
+(2028, 0, 127, 617),
+(2029, 0, 130, 618),
+(2030, 0, 131, 618),
+(2031, 1, 132, 619),
+(2032, 1, 133, 619),
+(2033, 1, 134, 619),
+(2034, 1, 134, 619),
+(2035, 0, 133, 619),
+(2036, 0, 132, 619),
+(2037, 0, 134, 619),
+(2038, 0, 140, 620);
 
 -- --------------------------------------------------------
 
@@ -8810,7 +9667,51 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 (2744, 'AND', 'terminated'),
 (2745, 'AND', 'terminated'),
 (2748, 'AND', 'terminated'),
-(2749, 'AND', 'terminated');
+(2749, 'AND', 'terminated'),
+(2802, 'AND', 'terminated'),
+(2805, 'AND', 'terminated'),
+(2806, 'AND', 'terminated'),
+(2809, 'AND', 'terminated'),
+(2810, 'AND', 'terminated'),
+(2845, 'AND', 'terminated'),
+(2849, 'AND', 'terminated'),
+(2851, 'AND', 'terminated'),
+(2853, 'AND', 'init'),
+(2854, 'AND', 'init'),
+(2863, 'AND', 'terminated'),
+(2866, 'AND', 'terminated'),
+(2867, 'AND', 'terminated'),
+(2870, 'AND', 'terminated'),
+(2871, 'AND', 'terminated'),
+(2905, 'AND', 'terminated'),
+(2907, 'AND', 'terminated'),
+(2911, 'AND', 'terminated'),
+(2912, 'AND', 'terminated'),
+(2914, 'AND', 'terminated'),
+(2917, 'AND', 'terminated'),
+(2919, 'AND', 'terminated'),
+(2930, 'AND', 'terminated'),
+(2933, 'AND', 'terminated'),
+(2934, 'AND', 'terminated'),
+(2937, 'AND', 'terminated'),
+(2938, 'AND', 'terminated'),
+(2972, 'AND', 'terminated'),
+(2974, 'AND', 'terminated'),
+(2985, 'AND', 'terminated'),
+(2988, 'AND', 'terminated'),
+(2989, 'AND', 'terminated'),
+(2992, 'AND', 'terminated'),
+(2993, 'AND', 'terminated'),
+(3027, 'AND', 'terminated'),
+(3029, 'AND', 'terminated'),
+(3036, 'AND', 'terminated'),
+(3047, 'AND', 'terminated'),
+(3050, 'AND', 'terminated'),
+(3051, 'AND', 'terminated'),
+(3054, 'AND', 'terminated'),
+(3055, 'AND', 'terminated'),
+(3089, 'AND', 'terminated'),
+(3091, 'AND', 'terminated');
 
 -- --------------------------------------------------------
 
@@ -8915,7 +9816,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `name` varchar(256) NOT NULL,
   `modelid` bigint(11) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=115 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=119 ;
 
 --
 -- Daten für Tabelle `scenario`
@@ -8929,11 +9830,13 @@ INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`) VALUES
 (101, 'Test Insert Scenario', 0, 0),
 (103, 'ScenarioTest1', 0, 0),
 (105, 'TestScenarioTerminationCondition', 0, 0),
-(106, 'ReferenceTest1', -1, -1),
 (111, 'Test2_2ReferenceTest', 483134892, 0),
-(112, 'referencetest3', 1207674498, 0),
 (113, 'referencetest3_2', 1607828466, 0),
-(114, 'RT4Scenario', 494340875, 0);
+(114, 'RT4Scenario', 494340875, 0),
+(115, 'TT2Scenario', 2003613382, 0),
+(116, 'TT2Scenario', 2003613382, 0),
+(117, 'AT2Scenario', 1149737035, 0),
+(118, 'AT3Scenario', 668857574, 0);
 
 -- --------------------------------------------------------
 
@@ -8945,7 +9848,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 `id` int(11) NOT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=578 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=621 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -9481,7 +10384,50 @@ INSERT INTO `scenarioinstance` (`id`, `terminated`, `scenario_id`) VALUES
 (574, 1, 105),
 (575, 0, 111),
 (576, 0, 113),
-(577, 0, 114);
+(577, 0, 114),
+(578, 0, 115),
+(579, 1, 115),
+(580, 1, 115),
+(581, 0, 116),
+(582, 0, 1),
+(583, 0, 2),
+(584, 1, 105),
+(585, 0, 111),
+(586, 0, 113),
+(587, 0, 114),
+(588, 0, 117),
+(589, 0, 118),
+(590, 0, 1),
+(591, 0, 2),
+(592, 1, 105),
+(593, 0, 111),
+(594, 0, 113),
+(595, 0, 114),
+(596, 0, 118),
+(597, 0, 118),
+(598, 0, 1),
+(599, 0, 2),
+(600, 1, 105),
+(601, 0, 111),
+(602, 0, 113),
+(603, 0, 114),
+(604, 0, 118),
+(605, 0, 1),
+(606, 0, 2),
+(607, 1, 105),
+(608, 0, 111),
+(609, 0, 113),
+(610, 0, 114),
+(611, 0, 118),
+(612, 0, 1),
+(613, 0, 2),
+(614, 0, 1),
+(615, 0, 2),
+(616, 1, 105),
+(617, 0, 111),
+(618, 0, 113),
+(619, 0, 114),
+(620, 0, 118);
 
 -- --------------------------------------------------------
 
@@ -9493,7 +10439,7 @@ CREATE TABLE IF NOT EXISTS `state` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `olc_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=54 ;
 
 --
 -- Daten für Tabelle `state`
@@ -9547,7 +10493,11 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 (46, 'init', 15),
 (47, 'b', 15),
 (48, 'init', 16),
-(49, 'a', 16);
+(49, 'a', 16),
+(50, 'init', 17),
+(51, 'b', 17),
+(52, 'init', 18),
+(53, 'b', 18);
 
 -- --------------------------------------------------------
 
@@ -9590,7 +10540,9 @@ CREATE TABLE IF NOT EXISTS `terminationcondition` (
 
 INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenario_id`) VALUES
 (1, 5, 10, 102),
-(1, 7, 15, 105);
+(1, 7, 15, 105),
+(1, 17, 51, 115),
+(1, 18, 53, 116);
 
 -- --------------------------------------------------------
 
@@ -9859,7 +10811,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2783;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3094;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -9869,12 +10821,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=222;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=252;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2783;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3094;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -9889,27 +10841,27 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `dataclass`
 --
 ALTER TABLE `dataclass`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `datanode`
 --
 ALTER TABLE `datanode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=84;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=88;
 --
 -- AUTO_INCREMENT for table `dataobject`
 --
 ALTER TABLE `dataobject`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=476;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=512;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
 ALTER TABLE `dataset`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=111;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=115;
 --
 -- AUTO_INCREMENT for table `emailconfiguration`
 --
@@ -9929,12 +10881,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=135;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=141;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1879;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2039;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
@@ -9959,17 +10911,17 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `scenario`
 --
 ALTER TABLE `scenario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=115;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=119;
 --
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=578;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=621;
 --
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT for table `user`
 --
