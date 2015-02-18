@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.jayway.restassured.RestAssured.*;
 import com.jayway.restassured.matcher.RestAssuredMatchers.*;
+import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 import org.junit.Test;
 
 
@@ -12,6 +13,7 @@ public class RestConnectionTest {
 
     @Test
     public void testGetScenarios() {
+        //String serverURL = de.uni_potsdam.hpi.bpt.bp2014.config..Config.jcomparserServerUrl;
         //Todo: retrieve serverURL from central config file
         //String url = serverURL + "jcomparser/scenarios/";
         //int instanceID =executionService.startNewScenarioInstance(scenarioID);
