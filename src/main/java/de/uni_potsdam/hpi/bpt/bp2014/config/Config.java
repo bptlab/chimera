@@ -25,9 +25,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.config;
 public class Config {
 
     // Processeditor URL
-    public static String jcoreServerUrl = "http://172.16.64.113:8080/";
-
-    // Processeditor URL
     public static String processeditorServerUrl = "http://172.16.64.113:1205/";
     public static String processeditorServerName = "root";
     public static String processeditorServerPassword = "inubit";
