@@ -46,6 +46,7 @@ public class RestConnectionTest {
 
         //mock executionService class so we provide what we expect
         try {
+            /*
             EasyMock.expect(GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
                 @Override
                 public LinkedList answer() throws Throwable {
@@ -55,9 +56,9 @@ public class RestConnectionTest {
                     ll.add(3);
                     return (ll);
                 }
-            });
+            });*/
 
-            /*
+
             PowerMock.expectPrivate(executionService, GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
                 @Override
                 public LinkedList answer() throws Throwable {
@@ -68,7 +69,7 @@ public class RestConnectionTest {
                     return (ll);
                 }
             });
-            */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
