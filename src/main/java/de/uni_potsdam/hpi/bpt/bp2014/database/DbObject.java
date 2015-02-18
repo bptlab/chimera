@@ -12,9 +12,10 @@ import java.util.List;
 public class DbObject {
     /**
      * Executes SQL statement and returns the result.
+     *
      * @return
      */
-    public List<Integer> executeStatementReturnListInt(String sql, String column){
+    public LinkedList<Integer> executeStatementReturnsListInt(String sql, String column) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -25,7 +26,7 @@ public class DbObject {
             //Execute a query
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 results.add(rs.getInt(column));
             }
             //Clean-up environment
@@ -50,7 +51,7 @@ public class DbObject {
         return results;
     }
 
-    public String executeStatementReturnString(String sql, String column){
+    public String executeStatementReturnsString(String sql, String column) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -87,7 +88,7 @@ public class DbObject {
         return results;
     }
 
-    public int executeStatementReturnsInt(String sql, String column){
+    public int executeStatementReturnsInt(String sql, String column) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -125,7 +126,7 @@ public class DbObject {
         return results;
     }
 
-    public boolean executeExistStatement(String sql){
+    public boolean executeExistStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -137,7 +138,7 @@ public class DbObject {
             //Execute a query
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 return true;
             }
             //Clean-up environment
@@ -162,7 +163,7 @@ public class DbObject {
         return false;
     }
 
-    public int executeInsertStatement(String sql){
+    public int executeInsertStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -194,6 +195,36 @@ public class DbObject {
             }
         }
         return result;
+    }
+
+    public void executeUpdateStatement(String sql) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) {
+            return;
+        }
+        try {
+            //Execute a querystmt = conn.createStatement();
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
     }
 
 }

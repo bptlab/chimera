@@ -5,24 +5,26 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 public class DbControlNodeInstance {
@@ -35,9 +37,9 @@ public class DbControlNodeInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id +" AND fragmentinstance_id = "+ fragmentInstance_id;
+            String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id + " AND fragmentinstance_id = " + fragmentInstance_id;
             rs = stmt.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 return true;
             }
             //Clean-up environment
@@ -63,6 +65,7 @@ public class DbControlNodeInstance {
         }
         return false;
     }
+
     public int createNewControlNodeInstance(int controlNode_id, String controlNodeType, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -72,7 +75,7 @@ public class DbControlNodeInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, fragmentinstance_id) VALUES ('" + controlNodeType + "', "+ controlNode_id +", " + fragmentInstance_id + ")";
+            String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, fragmentinstance_id) VALUES ('" + controlNodeType + "', " + controlNode_id + ", " + fragmentInstance_id + ")";
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -99,6 +102,7 @@ public class DbControlNodeInstance {
         }
         return result;
     }
+
     public int getControlNodeInstanceID(int controlNode_id, int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -109,7 +113,7 @@ public class DbControlNodeInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id + " AND fragmentinstance_id = "+ fragmentInstance_id;
+            String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id + " AND fragmentinstance_id = " + fragmentInstance_id;
             rs = stmt.executeQuery(sql);
             rs.next();
             results = rs.getInt("id");
@@ -136,6 +140,7 @@ public class DbControlNodeInstance {
         }
         return results;
     }
+
     public LinkedList<Integer> getActivitiesForFragmentInstanceID(int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -146,9 +151,9 @@ public class DbControlNodeInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE controlnodeinstance.Type = 'Activity' AND fragmentinstance_id = "+ fragmentInstance_id;
+            String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE controlnodeinstance.Type = 'Activity' AND fragmentinstance_id = " + fragmentInstance_id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 results.add(rs.getInt("controlnode_id"));
             }
 
@@ -175,6 +180,7 @@ public class DbControlNodeInstance {
         }
         return results;
     }
+
     public LinkedList<Integer> getGatewaysForFragmentInstanceID(int fragmentInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -185,9 +191,9 @@ public class DbControlNodeInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE (controlnodeinstance.Type = 'AND' OR controlnodeinstance.Type = 'XOR') AND fragmentinstance_id = "+ fragmentInstance_id;
+            String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE (controlnodeinstance.Type = 'AND' OR controlnodeinstance.Type = 'XOR') AND fragmentinstance_id = " + fragmentInstance_id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 results.add(rs.getInt("controlnode_id"));
             }
 

@@ -4,24 +4,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 public class DbDataObjectInstance {
@@ -35,9 +37,9 @@ public class DbDataObjectInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM dataobjectinstance WHERE scenarioinstance_id = " + scenarioInstance_id +" AND dataobject_id = "+ dataObject_id;
+            String sql = "SELECT id FROM dataobjectinstance WHERE scenarioinstance_id = " + scenarioInstance_id + " AND dataobject_id = " + dataObject_id;
             rs = stmt.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 return true;
             }
             //Clean-up environment
@@ -63,6 +65,7 @@ public class DbDataObjectInstance {
         }
         return false;
     }
+
     public void setState(int id, int state) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -95,6 +98,7 @@ public class DbDataObjectInstance {
             }
         }
     }
+
     public int createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -104,7 +108,7 @@ public class DbDataObjectInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", "+ state_id +", " + dataObject_id+")";
+            String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", " + state_id + ", " + dataObject_id + ")";
             stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             rs = stmt.getGeneratedKeys();
             rs.next();
@@ -132,6 +136,7 @@ public class DbDataObjectInstance {
         }
         return result;
     }
+
     public int getDataObjectInstanceID(int scenarioInstance_id, int dataObject_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -142,7 +147,7 @@ public class DbDataObjectInstance {
         try {
             //Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id FROM dataobjectinstance WHERE dataobject_id = " + dataObject_id + " AND scenarioinstance_id = "+ scenarioInstance_id;
+            String sql = "SELECT id FROM dataobjectinstance WHERE dataobject_id = " + dataObject_id + " AND scenarioinstance_id = " + scenarioInstance_id;
             rs = stmt.executeQuery(sql);
             rs.next();
             results = rs.getInt("id");
@@ -169,6 +174,7 @@ public class DbDataObjectInstance {
         }
         return results;
     }
+
     public int getStateID(int dataObjectInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -206,6 +212,7 @@ public class DbDataObjectInstance {
         }
         return results;
     }
+
     public Boolean getOnChange(int dataObjectInstance_id) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -243,11 +250,12 @@ public class DbDataObjectInstance {
         }
         return results;
     }
+
     public void setOnChange(int id, Boolean onChange) {
         int onChangeAsInt;
-        if(onChange){
+        if (onChange) {
             onChangeAsInt = 1;
-        }else{
+        } else {
             onChangeAsInt = 0;
         }
         java.sql.Connection conn = Connection.getInstance().connect();

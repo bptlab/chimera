@@ -28,44 +28,9 @@ import java.util.LinkedList;
 /**
  * Created by jaspar.mang on 28.01.15.
  */
-public class DbReference {
+public class DbReference extends DbObject {
     public LinkedList<Integer> getReferenceActivitiesForActivity(int activity_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT controlnode_id2 FROM reference WHERE controlnode_id1 = "+ activity_id;
-            rs = stmt.executeQuery(sql);
-            while(rs.next()){
-                results.add(rs.getInt("controlnode_id2"));
-            }
-
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT controlnode_id2 FROM reference WHERE controlnode_id1 = " + activity_id;
+        return this.executeStatementReturnsListInt(sql, "controlnode_id2");
     }
 }

@@ -6,23 +6,23 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 /***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+ *
+ *   _________ _______  _        _______ _________ _        _______
+ *   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ *      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ *      |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ *      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ *      |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ *   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ *   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ *
+ *******************************************************************
+ *
+ *   Copyright © All Rights Reserved 2014 - 2015
+ *
+ *   Please be aware of the License. You may found it in the root directory.
+ *
+ ************************************************************************************/
 
 /**
  * Represents the ControlFlow in the database
@@ -31,7 +31,6 @@ import java.util.LinkedList;
 
 public class DbControlFlow {
     /**
-     *
      * @param controlNode_id This is the database ID of a controlNode
      * @return -1 if something went wrong else it returns the database ID of a controlNode which is right after a startEvent
      */
@@ -74,7 +73,6 @@ public class DbControlFlow {
     }
 
     /**
-     *
      * @param controlNode_id This is the database ID of a controlNode
      * @return a list of database ID's of controlNodes which success the given controlNode
      */
@@ -90,7 +88,7 @@ public class DbControlFlow {
             stmt = conn.createStatement();
             String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()) {
+            while (rs.next()) {
                 results.add(rs.getInt("controlnode_id2"));
             }
             //Clean-up environment
@@ -118,7 +116,6 @@ public class DbControlFlow {
     }
 
     /**
-     *
      * @param controlNode_id This is the database ID of a controlNode
      * @return a list of database ID's of controlNodes which precede the given controlNode
      */
@@ -134,7 +131,7 @@ public class DbControlFlow {
             stmt = conn.createStatement();
             String sql = "SELECT controlnode_id1 FROM controlflow WHERE controlnode_id2 = " + controlNode_id;
             rs = stmt.executeQuery(sql);
-            while(rs.next()) {
+            while (rs.next()) {
                 results.add(rs.getInt("controlnode_id1"));
             }
             //Clean-up environment
