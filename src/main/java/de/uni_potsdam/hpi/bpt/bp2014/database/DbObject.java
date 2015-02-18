@@ -22,7 +22,9 @@ public class DbObject {
         Statement stmt = null;
         ResultSet rs = null;
         LinkedList<Integer> results = new LinkedList<Integer>();
-        if (conn == null) return results;
+        if (conn == null) {
+            return results;
+        }
 
         try {
             //Execute a query
@@ -39,13 +41,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -83,13 +88,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -109,7 +117,9 @@ public class DbObject {
         Statement stmt = null;
         ResultSet rs = null;
         int results = -1;
-        if (conn == null) return results;
+        if (conn == null) {
+            return results;
+        }
 
         try {
             //Execute a query
@@ -128,13 +138,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -173,13 +186,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -216,13 +232,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -240,7 +259,9 @@ public class DbObject {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         int result = -1;
         try {
             //Execute a query
@@ -256,13 +277,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -292,13 +316,16 @@ public class DbObject {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
