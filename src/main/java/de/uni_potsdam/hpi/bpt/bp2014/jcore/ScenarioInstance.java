@@ -1,6 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Condition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 
 
 import java.util.LinkedList;
@@ -129,7 +135,9 @@ public class ScenarioInstance {
     public void restartFragment(int fragmentInstance_id) {
         FragmentInstance fragmentInstance = null;
         for (FragmentInstance f : fragmentInstances) {
-            if (f.getFragmentInstance_id() == fragmentInstance_id) fragmentInstance = f;
+            if (f.getFragmentInstance_id() == fragmentInstance_id) {
+                fragmentInstance = f;
+            }
         }
         fragmentInstances.remove(fragmentInstance);
         fragmentInstance.terminate();
@@ -175,8 +183,9 @@ public class ScenarioInstance {
      */
     public Boolean checkDataObjectState(int dataObject_id, int state_id) {
         for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-            if (dataObjectInstance.getDataObject_id() == dataObject_id && dataObjectInstance.getState_id() == state_id)
+            if (dataObjectInstance.getDataObject_id() == dataObject_id && dataObjectInstance.getState_id() == state_id) {
                 return true;
+            }
         }
         return false;
     }
@@ -265,7 +274,9 @@ public class ScenarioInstance {
      */
     public Boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : terminatedControlNodeInstances) {
-            if (controlNodeInstance.controlNode_id == controlNode_id) return true;
+            if (controlNodeInstance.controlNode_id == controlNode_id) {
+                return true;
+            }
         }
         return false;
     }
@@ -293,8 +304,8 @@ public class ScenarioInstance {
     }
 
     /**
-     * checks if the referenced controlNode can be terminated.
-     * The referenced controlNode have to be referential running
+     * Checks if the referenced controlNode can be terminated.
+     * The referenced controlNode have to be referential running.
      *
      * @param controlNode_id This is the database id from the control node.
      */
@@ -310,8 +321,10 @@ public class ScenarioInstance {
     }
 
     /**
-     * check termination condition
-     * get all termination condition and prove the condition for every condition set
+     * Check the termination condition.
+     * Get all termination condition and prove the condition for every condition set.
+     *
+     * @return true if the condition is true. false if not.
      */
     public boolean checkTerminationCondition() {
         boolean terminated = false;
@@ -337,7 +350,9 @@ public class ScenarioInstance {
                 }
             }
             //termination condition is true
-            if (terminated) break;
+            if (terminated) {
+                break;
+            }
         }
         //terminate the scenario
         if (terminated) {

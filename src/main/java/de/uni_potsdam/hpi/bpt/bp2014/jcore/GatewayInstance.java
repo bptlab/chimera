@@ -30,7 +30,7 @@ public class GatewayInstance extends ControlNodeInstance {
     private Boolean isAND;
     private ScenarioInstance scenarioInstance;
     /**
-     * Database Connection objects
+     * Database Connection objects.
      */
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbControlNode dbControlNode = new DbControlNode();

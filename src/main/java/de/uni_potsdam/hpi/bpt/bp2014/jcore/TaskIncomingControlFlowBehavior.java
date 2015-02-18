@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DataObject;
 
 import java.util.LinkedList;
 
@@ -89,7 +88,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
                     break;
                 }
             }
-            if (loopCheck == true) {
+            if (loopCheck) {
                 break;
             }
         }
