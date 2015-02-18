@@ -12,9 +12,9 @@ public class RestConnectionTest {
 
     @Test
     public void testGetScenarios() {
-        //Todo: retrieve Server_URL from central config file
-        String url = Server_URL + "jcomparser/scenarios/";
-        int instanceID =executionService.startNewScenarioInstance(scenarioID);
+        //Todo: retrieve serverURL from central config file
+        //String url = serverURL + "jcomparser/scenarios/";
+        //int instanceID =executionService.startNewScenarioInstance(scenarioID);
     }
     //create a new instance for our test
 

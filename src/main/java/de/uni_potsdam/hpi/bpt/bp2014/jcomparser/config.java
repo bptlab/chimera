@@ -1,3 +1,5 @@
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+
 /**
  * ********************************************************************************
  *
@@ -19,14 +21,17 @@
  * **********************************************************************************
  */
 
-# Processeditor URL
-http://172.16.64.113:1205/
 
-# Comparser URL
-http://172.16.64.113:8080/
+public class config {
+    // Processeditor URL
+    public static String processeditorServerUrl = "http://172.16.64.113:1205/";
 
-# FrontEnd URL
-http://172.16.64.113/Frontend/
+    // Comparser URL
+    public static String jcomparserServerUrl = "http://172.16.64.113:8080/";
 
-# FrontEnd Admin URL
-http://172.16.64.113/Frontend/admin/
+    // FrontEnd URL
+    public static String frontendServerUrl = "http://172.16.64.113/Frontend/";
+
+    // FrontEnd Admin URL
+    public static String frontendAdminServerUrl = "http://172.16.64.113/Frontend/admin/";
+}

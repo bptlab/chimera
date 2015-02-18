@@ -223,7 +223,8 @@ public class JComparser {
 */
     }
 
-    private String getServerSpecs(String path, String requestedConfig) {
+    // replacing with a config.java file
+   /* private String getServerSpecs(String path, String requestedConfig) {
         File file = new File(path);
         if (requestedConfig.equals("processeditorServerUrl")) {
             try {
@@ -242,5 +243,5 @@ public class JComparser {
         }
         System.err.print("ERROR within the getServerSpecs; String requestedConfig not correct defined");
         return "";
-    }
+    }*/
 }
