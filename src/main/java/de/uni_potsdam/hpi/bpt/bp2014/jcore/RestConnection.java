@@ -78,6 +78,7 @@ public class RestConnection {
         }
     }
 
+
     /**
      * GET all scenarioInstanceIDs  of a scenario
      *
@@ -226,7 +227,7 @@ public class RestConnection {
         if (dataObjects.size() == 0)
             return Response.ok(new String("{empty}"), MediaType.APPLICATION_JSON_TYPE).build();
 
-        String jsonRepresentation = JsonWrapperHashMap(dataObjects, labels) {
+        String jsonRepresentation = JsonWrapperHashMap(dataObjects, labels);
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
@@ -306,19 +307,30 @@ public class RestConnection {
      * ##########################################################################
      */
 
+    /**
+     *
+     * @param content contains a LinkedList
+     * @return a wrapped json
+     */
     // we are so cool, we dont need any libraries :/
-    class JsonWrapperLinkedList(LinkedList<Integer> content) {
+     private String JsonWrapperLinkedList(LinkedList<Integer> content) {
             Gson gson = new Gson();
             JsonIntegerList json = new JsonIntegerList(content);
             return gson.toJson(json);
-    }
+     }
 
-    // we are so cool, we dont need any libraries :/
-    class JsonWrapperHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels) {
+     /**
+     *
+     * @param content contains a LinkedList
+     * @param labels contains a String
+     * @return a wrapped json
+     */
+     // we are so cool, we dont need any libraries :/
+     private String JsonWrapperHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels) {
             Gson gson = new Gson();
             JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels);
             return gson.toJson(json);
-    }
+     }
 
     class JsonHashMapIntegerString {
         private LinkedList<Integer> ids;
