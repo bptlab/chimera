@@ -60,7 +60,6 @@ public class JComparser {
             throws ParserConfigurationException, IOException, SAXException {
         Retrieval jRetrieval = new Retrieval();
         String scenarioXML = jRetrieval.getHTMLwithAuth(processServer, pcmUrl);
-
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(scenarioXML));
         DocumentBuilder db = DocumentBuilderFactory
@@ -70,7 +69,7 @@ public class JComparser {
         Scenario scen = new Scenario(processServer);
         scen.initializeInstanceFromXML(doc.getDocumentElement());
         scen.save();
-        return 0;
+        return 1;
     }
 
     /**

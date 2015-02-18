@@ -41,7 +41,9 @@ public class ActivityInstance extends ControlNodeInstance {
     private String label;
     private LinkedList<Integer> references;
     private boolean isMailTask;
-    //Database Connection objects
+    /**
+     * Database Connection objects
+     */
     private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private DbActivityInstance dbActivityInstance = new DbActivityInstance();
     private DbControlNode dbControlNode = new DbControlNode();
@@ -143,10 +145,10 @@ public class ActivityInstance extends ControlNodeInstance {
      * Checks if the Activity is now data enabled.
      */
     public void checkDataFlowEnabled() {
-        ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
+        ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabledAndEnableDataFlow();
     }
 
-    /*
+    /**
      * Getter
      */
     public TaskExecutionBehavior getTaskExecutionBehavior() {

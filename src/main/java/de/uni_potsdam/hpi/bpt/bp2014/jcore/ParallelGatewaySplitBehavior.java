@@ -27,10 +27,15 @@ import java.util.LinkedList;
  */
 
 
-public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
-    //Database Connection objects
-    private DbDataFlow dbDataFlow = new DbDataFlow();
+public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
 
+    /**
+     * Initializes the ParallelGatewaySplitBehavior.
+     *
+     * @param gateway_id          This is the database id from the gateway.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     * @param fragmentInstance_id This is the database id from the fragment instance.
+     */
     ParallelGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id) {
         this.controlNode_id = gateway_id;
         this.scenarioInstance = scenarioInstance;
@@ -41,32 +46,5 @@ public class ParallelGatewaySplitBehavior extends OutgoingBehavior {
     public void terminate() {
         scenarioInstance.checkDataFlowEnabled();
         this.enableFollowing();
-    }
-
-    public void enableFollowing() {
-        LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
-        for (int followingControlNode_id : followingControlNode_ids) {
-            ControlNodeInstance followingControlNodeInstance = getFollowingNodeInstance(followingControlNode_id);
-            //enable following instances
-            followingControlNodeInstance.incomingBehavior.enableControlFlow();
-        }
-    }
-
-    //get the following control node instance, also initialize them
-    private ControlNodeInstance getFollowingNodeInstance(int controlNode_id) {
-        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id) return controlNodeInstance;
-        }
-        String type = dbControlNode.getType(controlNode_id);
-        ControlNodeInstance controlNodeInstance = null;
-        //TODO type
-        if (type.equals("Activity") || type.equals("EmailTask")) {
-            controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-        } else if (type.equals("Endevent")) {
-            controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
-        } else if (type.equals("XOR") || type.equals("AND")) {
-            controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-        }
-        return controlNodeInstance;
     }
 }

@@ -33,7 +33,7 @@ public class Ausprobieren {
         Retrieval jRetrieval = new Retrieval();
         String scenarioXML = jRetrieval.getHTMLwithAuth(
                 "http://localhost:1205/",
-                "http://localhost:1205/models/2003613382.pm");
+                "http://localhost:1205/models/668857574.pm");
 
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(scenarioXML));

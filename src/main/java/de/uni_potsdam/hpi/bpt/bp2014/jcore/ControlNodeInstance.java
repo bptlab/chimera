@@ -33,7 +33,7 @@ public abstract class ControlNodeInstance {
     protected int controlNodeInstance_id;
     protected int controlNode_id;
 
-    /*
+    /**
      * Getter
      */
 

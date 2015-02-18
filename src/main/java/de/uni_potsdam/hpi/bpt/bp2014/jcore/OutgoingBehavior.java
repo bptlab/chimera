@@ -32,7 +32,9 @@ public abstract class OutgoingBehavior {
     protected int controlNode_id;
     protected int fragmentInstance_id;
 
-    public void terminate() {
-    }
+    /**
+     * Terminates the control node instance.
+     */
+    public abstract void terminate();
 
 }
