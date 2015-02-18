@@ -1,11 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,8 +17,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,15 +51,16 @@ public class JComparser {
 
     /**
      * A main-method which should be used for Debug only.
-     * @param pcmUrl The URL to a scenario which should be parsed.
+     *
+     * @param pcmUrl        The URL to a scenario which should be parsed.
      * @param processServer The URI to the Process server.
      * @return returns 0 if run was successful.
      * @throws ParserConfigurationException Exception while parsing.
-     * @throws IOException The file could not be found (Connection Problems).
-     * @throws SAXException An XML or query seems to be invalid.
+     * @throws IOException                  The file could not be found (Connection Problems).
+     * @throws SAXException                 An XML or query seems to be invalid.
      */
     public int fetchAndParseScenarioFromServer(final String pcmUrl,
-                                                  final String processServer)
+                                               final String processServer)
             throws ParserConfigurationException, IOException, SAXException {
         Retrieval jRetrieval = new Retrieval();
         String scenarioXML = jRetrieval.getHTMLwithAuth(processServer, pcmUrl);
@@ -74,6 +78,7 @@ public class JComparser {
 
     /**
      * This method fetches a List of all Scenarios from the Server.
+     *
      * @param processeditorServerUrl The URL of the Server
      * @return A map of scenario names and their model ids.
      * @throws XPathExpressionException The XPath Query seems to be invalid.
@@ -116,6 +121,7 @@ public class JComparser {
 
     /**
      * This Method writes all Scenarios to the database.
+     *
      * @param processeditorServerUrl The URL of the processeditor.
      * @throws XPathExpressionException The XPath or XML was wrong.
      */
@@ -160,6 +166,7 @@ public class JComparser {
 
     /**
      * Casts a XML from its String Representation to a w3c Document.
+     *
      * @param xml The String representation of the XML.
      * @return The from String created Document.
      */
@@ -214,5 +221,26 @@ public class JComparser {
 
         de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
 */
+    }
+
+    private String getServerSpecs(String path, String requestedConfig) {
+        File file = new File(path);
+        if (requestedConfig.equals("processeditorServerUrl")) {
+            try {
+                String processeditorServerUrl = (String) FileUtils.readLines(file).get(23);
+                return processeditorServerUrl;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (requestedConfig.equals("jcomparserServerUrl")) {
+            try {
+                String jcomparserServerUrl = (String) FileUtils.readLines(file).get(26);
+                return jcomparserServerUrl;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.err.print("ERROR within the getServerSpecs; String requestedConfig not correct defined");
+        return "";
     }
 }
