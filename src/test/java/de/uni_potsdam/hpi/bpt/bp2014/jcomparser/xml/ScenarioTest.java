@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
  * from communicating with the ProcessEditor Server.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Scenario.class)
+@PrepareForTest({Scenario.class,Fragment.class})
 public class ScenarioTest {
     // We need the name of all methods which communicate to the server.
     /**
@@ -255,31 +255,44 @@ public class ScenarioTest {
     /**
      * Test if the scenario is created and initialized correctly.
      */
-    //@Test
+    @Test
     public void testSaveCompleteScenario() throws Exception {
-        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenarioWTermination.xml"));
+        final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                FETCH_VERSION_METHOD);
+        PowerMock.expectPrivate(fragment, "fetchVersionXML")
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(
+                                new File("src/test/resources/Version.xml"))
+                                .getDocumentElement();
+                    }
+                });
+        fragment.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        Document bikeScenario = getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml"));
         PowerMock.expectPrivate(scenarioComplete, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
                     public Node answer() throws Throwable {
-                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                        return getDocumentFromXmlFile(
+                                new File("src/test/resources/Version.xml"))
+                                .getDocumentElement();
                     }
                 });
         PowerMock.expectPrivate(scenarioComplete, CREATE_FRAGMENT_METHOD, "1386518929")
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
                     public Fragment answer() throws Throwable {
-                        Fragment fragment = new Fragment();
-                        fragment.initializeInstanceFromXML(
-                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
                         return fragment;
                     }
                 });
-        PowerMock.replay(scenarioComplete);
+        PowerMock.replay(scenarioComplete, fragment, Fragment.class);
         scenarioComplete.initializeInstanceFromXML(bikeScenario);
         scenarioComplete.save();
         assertTrue(scenarioComplete.getDatabaseID() > 0);
-        PowerMock.verify(scenarioComplete);
+        PowerMock.verify(scenarioComplete, fragment);
     }
 
     /**
