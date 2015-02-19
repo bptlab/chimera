@@ -34,17 +34,17 @@ import java.util.LinkedList;
  * Represents a fragment instance.
  */
 public class FragmentInstance {
-    private ScenarioInstance scenarioInstance;
-    private int fragment_id;
-    private int fragmentInstance_id;
-    private int scenarioInstance_id;
+    private final ScenarioInstance scenarioInstance;
+    private final int fragment_id;
+    private final int fragmentInstance_id;
+    private final int scenarioInstance_id;
     /**
      * Database Connection objects
      */
-    private DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
-    private DbControlNode dbControlNode = new DbControlNode();
-    private DbControlFlow dbControlFlow = new DbControlFlow();
-    private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+    private final DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
+    private final DbControlNode dbControlNode = new DbControlNode();
+    private final DbControlFlow dbControlFlow = new DbControlFlow();
+    private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 
     /**
      * Creates and initializes a new fragment instance.

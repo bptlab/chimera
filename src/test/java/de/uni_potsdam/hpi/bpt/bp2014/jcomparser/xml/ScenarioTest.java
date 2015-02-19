@@ -18,6 +18,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertNotNull;
+
 /**
  * This class tests the Scenario.
  * This class uses mock objects to prevent the Scenario
@@ -46,9 +49,15 @@ public class ScenarioTest {
     private static final String CREATE_DO_METHOD = "createDataObjects";
 
     /**
-     * This  Methods fetches The Version from the PE-Server.
+     * This Method fetches The Version from the PE-Server.
      */
     private static final String FETCH_VERSION_METHOD = "fetchVersionXML";
+
+    /**
+     * This creates and initializes a fragment.
+     */
+    private static final String CREATE_FRAGMENT_METHOD
+            = "createAndInitializeFragment";
 
     /**
      * This scenario will be used to be tested.
@@ -67,12 +76,18 @@ public class ScenarioTest {
      *
      */
     Scenario scenarioWFragment;
+    /**
+     * This scenario is used for testing.
+     * All elements are initialized, in order
+     * to write them to the database.
+     */
+    Scenario scenarioComplete;
 
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         scenarioWOVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 SET_VERSION_METHOD,
@@ -81,10 +96,16 @@ public class ScenarioTest {
                 GENERATE_FRAGMENTS_METHOD,
                 CREATE_DO_METHOD,
                 FETCH_VERSION_METHOD);
+        scenarioWFragment = PowerMock.createPartialMock(Scenario.class,
+                SET_VERSION_METHOD,
+                CREATE_FRAGMENT_METHOD);
+        scenarioComplete = PowerMock.createPartialMock(Scenario.class,
+                FETCH_VERSION_METHOD,
+                CREATE_FRAGMENT_METHOD);
     }
 
     /**
-     * This Test assert parsing without exceptions.
+     * This Test asserts parsing without exceptions.
      * @throws Exception
      */
     @Test
@@ -109,7 +130,7 @@ public class ScenarioTest {
     }
 
     /**
-     * This Test assert that MetaInformation about the Scenario are Set
+     * This Test asserts that MetaInformation about the Scenario are Set
      * correctly.
      * @throws Exception
      */
@@ -131,7 +152,7 @@ public class ScenarioTest {
     }
 
     /**
-     * This Methods Tests weather the version is set correctly or not.
+     * This Methods tests whether the version is set correctly or not.
      * @throws Exception occurs while creating the MockObject.
      */
     @Test
@@ -151,6 +172,65 @@ public class ScenarioTest {
         Assert.assertEquals("The version has not been set correctly",
                 0, scenarioWVersion.getVersionNumber());
         PowerMock.verify(scenarioWVersion);
+    }
+
+    /**
+     * This Methods Tests if DataObjects are created correctly.
+     * @throws Exception occurs if creation of MockObject failed.
+     */
+    @Test
+    public void testDataObjectCreation() throws Exception {
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
+        PowerMock.expectPrivate(scenarioWFragment, SET_VERSION_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWFragment, CREATE_FRAGMENT_METHOD, "1386518929")
+                .andAnswer(new IAnswer<Fragment>() {
+                    @Override
+                    public Fragment answer() throws Throwable {
+                        Fragment fragment = new Fragment();
+                        fragment.initializeInstanceFromXML(
+                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        return fragment;
+                    }
+                });
+        PowerMock.replay(scenarioWFragment);
+        scenarioWFragment.initializeInstanceFromXML(bikeScenario);
+        assertNotNull("Map of dataobjects has not been initialized",
+                scenarioWFragment.getDataObjects());
+        Assert.assertEquals("A Wrong number of data Objects has been initialized",
+                1, scenarioWFragment.getDataObjects().size());
+        assertNotNull("Data Object has wrong key",
+                scenarioWFragment.getDataObjects().get("bike"));
+        PowerMock.verify(scenarioWFragment);
+    }
+
+    /**
+     * Test if the scenario is created and initialized correctly.
+     */
+    //@Test
+    public void testSaveCompleteScenario() throws Exception {
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
+        PowerMock.expectPrivate(scenarioComplete, FETCH_VERSION_METHOD)
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                    }
+                });
+        PowerMock.expectPrivate(scenarioComplete, CREATE_FRAGMENT_METHOD, "1386518929")
+                .andAnswer(new IAnswer<Fragment>() {
+                    @Override
+                    public Fragment answer() throws Throwable {
+                        Fragment fragment = new Fragment();
+                        fragment.initializeInstanceFromXML(
+                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        return fragment;
+                    }
+                });
+        PowerMock.replay(scenarioComplete);
+        scenarioComplete.initializeInstanceFromXML(bikeScenario);
+        scenarioComplete.save();
+        assertTrue(scenarioComplete.getDatabaseID() > 0);
+        PowerMock.verify(scenarioComplete);
     }
 
     /**

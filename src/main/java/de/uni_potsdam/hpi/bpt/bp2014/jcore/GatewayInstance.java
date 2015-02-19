@@ -32,9 +32,9 @@ public class GatewayInstance extends ControlNodeInstance {
     /**
      * Database Connection objects.
      */
-    private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-    private DbControlNode dbControlNode = new DbControlNode();
-    private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
+    private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+    private final DbControlNode dbControlNode = new DbControlNode();
+    private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
     /**
      * Creates and initializes a new gateway instance.

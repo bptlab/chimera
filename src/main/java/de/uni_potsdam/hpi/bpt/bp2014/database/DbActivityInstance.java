@@ -23,14 +23,16 @@ import java.util.LinkedList;
  ************************************************************************************/
 
 /**
- * Represents the activity instance of the database
- * Methods are mostly used by the HistoryService so you can get all terminated activities or start new ones
+ * Represents the activity instance of the database.
+ * Methods are mostly used by the HistoryService so you can get all terminated activities or start new ones.
  */
 
 public class DbActivityInstance extends DbObject {
     /**
-     * @param id This is the database Id of an activity instance
-     * @return the state of the activity as a String
+     * This method returns the actual state of an activity.
+     *
+     * @param id This is the database ID of an activity instance.
+     * @return the state of the activity as a String.
      */
     public String getState(int id) {
         String sql = "SELECT activity_state FROM activityinstance WHERE id = " + id;
@@ -38,8 +40,10 @@ public class DbActivityInstance extends DbObject {
     }
 
     /**
-     * @param id    This is the ID of an activity instance which is found in the database
-     * @param state This is the state in which an activity should be after executing setState
+     * This method sets the activity to a desirable state.
+     *
+     * @param id    This is the database ID of an activity instance which is found in the database.
+     * @param state This is the state in which an activity should be after executing setState.
      */
     public void setState(int id, String state) {
         String sql = "UPDATE activityinstance SET activity_state = '" + state + "' WHERE id = " + id;
@@ -47,10 +51,12 @@ public class DbActivityInstance extends DbObject {
     }
 
     /**
-     * @param controlNodeInstance_id This is the ID of a controlNode instance which is found in the database
-     * @param ActivityType           This is the type of an activity
-     * @param ActivityState          this is the state of an activity
-     * @return an Integer which is -1 if something went wrong else it is the database ID of the newly created activity instance
+     * This method creates and saves a new activity instance to the database int hte context of a controlNode instance.
+     *
+     * @param controlNodeInstance_id This is the ID of a controlNode instance which is found in the database.
+     * @param ActivityType           This is the type of an activity.
+     * @param ActivityState          This is the state of an activity.
+     * @return an Integer which is -1 if something went wrong else it is the database ID of the newly created activity instance.
      */
     public int createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
         String sql = "INSERT INTO activityinstance (id, type, role_id, activity_state, workitem_state) VALUES (" + controlNodeInstance_id + ", '" + ActivityType + "', 1,'" + ActivityState + "', 'init')";
@@ -58,8 +64,10 @@ public class DbActivityInstance extends DbObject {
     }
 
     /**
-     * @param fragmentInstance_id This is the database ID of a fragment instance
-     * @return a list of activity ID's which belong to the fragment instance and are terminated
+     * This method returns all database ID's for all activities who have terminated in the context of a fragment instance.
+     *
+     * @param fragmentInstance_id This is the database ID of a fragment instance.
+     * @return a list of activity ID's which belong to the fragment instance and are terminated.
      */
     public LinkedList<Integer> getTerminatedActivitiesForFragmentInstance(int fragmentInstance_id) {
         String sql = "SELECT controlnode_id FROM activityinstance, controlnodeinstance WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' AND activity_state = 'terminated' AND fragmentinstance_id = " + fragmentInstance_id;
@@ -67,8 +75,10 @@ public class DbActivityInstance extends DbObject {
     }
 
     /**
-     * @param scenarioInstance_id This is the database ID of a scenario instance
-     * @return a list of activity ID's which belong to the scenario instance and are terminated
+     * This method returns all database ID's for all activities who have terminated in the context of a scenario instance.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @return a list of activity ID's which belong to the scenario instance and are terminated.
      */
     public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
         String sql = "SELECT controlnode_id FROM activityinstance, controlnodeinstance WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' AND activity_state = 'terminated' AND fragmentinstance_id IN (Select id FROM fragmentinstance WHERE scenarioinstance_id =" + scenarioInstance_id + ")";

@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
-import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 import org.xml.sax.SAXException;
 
 import javax.ws.rs.*;
@@ -90,7 +89,7 @@ public class REST {
 
         if (scenarioIDs.size() == 0) {
             // no scenarios present
-            return Response.ok(new String("{empty}"),
+            return Response.ok("{empty}",
                     MediaType.APPLICATION_JSON_TYPE).build();
         }
 
@@ -115,9 +114,8 @@ public class REST {
     public Response showModelImage(@PathParam("modelID")final String modelID) {
         String urlToRead = PROCESS_SERVER_URI + "models/" + modelID + ".png";
 
-        Response scenarioImage = new Retrieval()
+        return new Retrieval()
                 .getImagewithAuth(PROCESS_SERVER_URI, urlToRead);
-        return scenarioImage;
 
     }
 

@@ -26,7 +26,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  * Represents the incoming behavior of end events.
  */
 public class EventIncomingControlFlowBehavior extends IncomingBehavior {
-    private String type;
+    private final String type;
 
     /**
      * Creates and initializes an event incoming control flow behavior.

@@ -76,7 +76,7 @@ public class Seed {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException se2) {
+            } catch (SQLException ignored) {
             }// nothing we can do
             try {
                 if (conn != null)

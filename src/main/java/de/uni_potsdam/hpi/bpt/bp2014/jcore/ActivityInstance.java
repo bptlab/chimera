@@ -36,18 +36,18 @@ import java.util.LinkedList;
  */
 
 public class ActivityInstance extends ControlNodeInstance {
-    private TaskExecutionBehavior taskExecutionBehavior;
-    private ScenarioInstance scenarioInstance;
-    private String label;
+    private final TaskExecutionBehavior taskExecutionBehavior;
+    private final ScenarioInstance scenarioInstance;
+    private final String label;
     private LinkedList<Integer> references;
-    private boolean isMailTask;
+    private final boolean isMailTask;
     /**
      * Database Connection objects.
      */
-    private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-    private DbActivityInstance dbActivityInstance = new DbActivityInstance();
-    private DbControlNode dbControlNode = new DbControlNode();
-    private DbReference dbReference = new DbReference();
+    private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    private final DbControlNode dbControlNode = new DbControlNode();
+    private final DbReference dbReference = new DbReference();
 
     /**
      * Creates and initializes a new activity instance.

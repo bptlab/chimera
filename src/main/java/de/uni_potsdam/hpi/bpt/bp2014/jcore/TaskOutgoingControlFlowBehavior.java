@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 
@@ -31,12 +32,12 @@ import java.util.LinkedList;
  * Handles the behavior of a terminating activity instance.
  */
 public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
-    private ControlNodeInstance controlNodeInstance;
+    private final ControlNodeInstance controlNodeInstance;
     /**
      * Database Connection objects.
      */
-    private DbDataNode dbDataNode = new DbDataNode();
-    private DbDataFlow dbDataFlow = new DbDataFlow();
+    private final DbDataNode dbDataNode = new DbDataNode();
+    private final DbDataFlow dbDataFlow = new DbDataFlow();
 
     /**
      * Initializes the TaskOutgoingControlFlowBehavior.
@@ -68,12 +69,11 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNode_id);
         //TODO: Output Set
         for (int outputSet : outputSets) {
-            LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
-            LinkedList<Integer> states = dbDataNode.getDataStatesForDataSets(outputSet);
-            for (int i = 0; i < dataObjects.size(); i++) {
+            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
+            for(DataObject dataObject : dataObjects){
                 //resets DataObjectInstance from OnChange back to not OnChange
-                scenarioInstance.setDataObjectInstanceToNotOnChange(dataObjects.get(i));
-                scenarioInstance.changeDataObjectInstanceState(dataObjects.get(i), states.get(i));
+                scenarioInstance.setDataObjectInstanceToNotOnChange(dataObject.getId());
+                scenarioInstance.changeDataObjectInstanceState(dataObject.getId(), dataObject.getStateID());
             }
         }
     }

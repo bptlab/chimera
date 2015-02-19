@@ -33,12 +33,18 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
         String type = dbControlNode.getType(controlNode_id);
         ControlNodeInstance controlNodeInstance = null;
         //TODO type
-        if (type.equals("Activity") || type.equals("EmailTask")) {
-            controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-        } else if (type.equals("Endevent")) {
-            controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
-        } else if (type.equals("XOR") || type.equals("AND")) {
-            controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+        switch (type) {
+            case "Activity":
+            case "EmailTask":
+                controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                break;
+            case "Endevent":
+                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
+                break;
+            case "XOR":
+            case "AND":
+                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                break;
         }
         return controlNodeInstance;
     }

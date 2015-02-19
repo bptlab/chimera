@@ -31,7 +31,7 @@ public class ActivityStateMachine extends StateMachine {
     /**
      * Database Connection objects.
      */
-    private DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
 
     /**
      * Creates and initialize a activity state machine for an activity.
@@ -47,22 +47,30 @@ public class ActivityStateMachine extends StateMachine {
         this.controlNodeInstance = controlNodeInstance;
         state = getDBState();
         //adds the Activity Instance to the correct list in Scenario Instance, decides on the state of the Activity
-        if (state.equals("ready")) {
-            scenarioInstance.getControlFlowEnabledControlNodeInstances().add(controlNodeInstance);
-            scenarioInstance.getDataEnabledControlNodeInstances().add(controlNodeInstance);
-            scenarioInstance.getEnabledControlNodeInstances().add(controlNodeInstance);
-        } else if (state.equals("ready(Data)")) {
-            scenarioInstance.getDataEnabledControlNodeInstances().add(controlNodeInstance);
-        } else if (state.equals("ready(ControlFlow)")) {
-            scenarioInstance.getControlFlowEnabledControlNodeInstances().add(controlNodeInstance);
-        } else if (state.equals("running")) {
-            scenarioInstance.getRunningControlNodeInstances().add(controlNodeInstance);
-        } else if (state.equals("terminated")) {
-            scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
-        } else if (state.equals("skipped")) {
-            scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
-        } else if (state.equals("referentialRunning")) {
-            scenarioInstance.getReferentialRunningControlNodeInstances().add(controlNodeInstance);
+        switch (state) {
+            case "ready":
+                scenarioInstance.getControlFlowEnabledControlNodeInstances().add(controlNodeInstance);
+                scenarioInstance.getDataEnabledControlNodeInstances().add(controlNodeInstance);
+                scenarioInstance.getEnabledControlNodeInstances().add(controlNodeInstance);
+                break;
+            case "ready(Data)":
+                scenarioInstance.getDataEnabledControlNodeInstances().add(controlNodeInstance);
+                break;
+            case "ready(ControlFlow)":
+                scenarioInstance.getControlFlowEnabledControlNodeInstances().add(controlNodeInstance);
+                break;
+            case "running":
+                scenarioInstance.getRunningControlNodeInstances().add(controlNodeInstance);
+                break;
+            case "terminated":
+                scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+                break;
+            case "skipped":
+                scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+                break;
+            case "referentialRunning":
+                scenarioInstance.getReferentialRunningControlNodeInstances().add(controlNodeInstance);
+                break;
         }
     }
 
@@ -232,22 +240,17 @@ public class ActivityStateMachine extends StateMachine {
      * @return true if the state is ready, ready(ControlFlow) or ready(data).
      */
     public boolean isEnabled() {
-        if (this.state.equals("ready")) {
-            return true;
-        }
-        return false;
+        return this.state.equals("ready");
     }
 
     /**
      * Checks if the state is enabled.
+     *
      * @param state The state which should be checked.
      * @return true if the state is ready, ready(ControlFlow) or ready(data).
      */
     private boolean isReady(String state) {
-        if (state.equals("ready") || state.equals("ready(ControlFlow)") || state.equals("ready(Data)")) {
-            return true;
-        }
-        return false;
+        return state.equals("ready") || state.equals("ready(ControlFlow)") || state.equals("ready(Data)");
     }
 
     /**

@@ -12,7 +12,7 @@ public class Condition {
     private int scenario_id;
 
     /**
-     * Initializes the Condition
+     * Initializes the Condition.
      *
      * @param conditionSet_id This is the database ID of a condition set.
      * @param state_id        This is the database ID of a state.
@@ -28,7 +28,7 @@ public class Condition {
     }
 
     /**
-     * Getter & Setter
+     * Getter & Setter.
      */
 
     public int getConditionSet_id() {

@@ -15,10 +15,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -55,8 +53,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * A Map of the names of dataObjects and the objects themselves.
      */
-    private Map<String, DataObject> dataObjects =
-            new HashMap<String, DataObject>();
+    private Map<String, DataObject> dataObjects;
     /**
      * The DataNode which is part of the termination Condition.
      */
@@ -88,7 +85,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Be Aware, that a scenario consists of fragments, which will
      * be loaded automatically;
      *
-     * @param element
+     * @param element The XML-representation for the scenario.
      */
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
@@ -154,11 +151,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .newDocumentBuilder();
             Document doc = db.parse(is);
             return doc.getDocumentElement();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -272,10 +265,10 @@ public class Scenario implements IDeserialisable, IPersistable {
                 getActivityDatabaseIDsForEachActivityModelID();
         Connector conn = new Connector();
         for (List<Integer> databaseIDs : activities.values()) {
-            if (activities.size() > 1) {
+            if (databaseIDs.size() > 1) {
                 // The next two loops find all pairs of referenced activities.
-                for (int i = 0; i < activities.size() - 1; i++) {
-                    for (int j = i + 1; j < activities.size(); j++) {
+                for (int i = 0; i < databaseIDs.size() - 1; i++) {
+                    for (int j = i + 1; j < databaseIDs.size(); j++) {
                         conn.insertReferenceIntoDatabase(databaseIDs.get(i),
                                 databaseIDs.get(j));
                     }
@@ -401,6 +394,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Fragments (with Control Nodes) have to be created and saved first.
      */
     private void createDataObjects() {
+        dataObjects = new HashMap<String, DataObject>();
         for (Fragment fragment : fragments) {
             for (Node node : fragment.getControlNodes().values()) {
                 if (node.isDataNode()) {
@@ -453,7 +447,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                 this.processeditorServerUrl,
                 this.processeditorServerUrl +
                         "models/" + fragmentID + ".pm");
-        Fragment fragment = new Fragment();
+        Fragment fragment = new Fragment(processeditorServerUrl);
         fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
         return fragment;
     }
@@ -472,11 +466,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Document doc = db.parse(new InputSource(new StringReader(xml)));
             doc.getDocumentElement().normalize();
             return doc;
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
         return null;

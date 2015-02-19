@@ -30,16 +30,16 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
  */
 public class DataObjectInstance {
     private int state_id;
-    private int dataObjectInstance_id;
-    private int dataObject_id;
-    private int scenario_id;
-    private int scenarioInstance_id;
+    private final int dataObjectInstance_id;
+    private final int dataObject_id;
+    private final int scenario_id;
+    private final int scenarioInstance_id;
     /**
      * Database Connection objects.
      */
-    private ScenarioInstance scenarioInstance;
-    private DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
-    private DbDataObject dbDataObject = new DbDataObject();
+    private final ScenarioInstance scenarioInstance;
+    private final DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
+    private final DbDataObject dbDataObject = new DbDataObject();
 
     /**
      * Creates and initializes a new data object instance.

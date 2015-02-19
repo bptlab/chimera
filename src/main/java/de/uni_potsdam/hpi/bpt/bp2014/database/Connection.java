@@ -65,9 +65,6 @@ public class Connection {
             Class.forName(JDBC_DRIVER);
             //Open a connection
             conn = DriverManager.getConnection(url, username, password);
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
         } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();

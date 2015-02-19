@@ -56,17 +56,17 @@ public class ScenarioInstance {
     private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private int scenarioInstance_id;
-    private int scenario_id;
-    private String name;
+    private final int scenarioInstance_id;
+    private final int scenario_id;
+    private final String name;
     /**
      * database connection objects.
      */
-    private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-    private DbFragment dbFragment = new DbFragment();
-    private DbDataObject dbDataObject = new DbDataObject();
-    private DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
-    private DbScenario dbScenario = new DbScenario();
+    private final DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
+    private final DbFragment dbFragment = new DbFragment();
+    private final DbDataObject dbDataObject = new DbDataObject();
+    private final DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
+    private final DbScenario dbScenario = new DbScenario();
 
     /**
      * Creates and initializes a new scenario instance from database.
@@ -121,7 +121,7 @@ public class ScenarioInstance {
      *
      * @param fragment_id This is the database id from the fragment.
      */
-    public void initializeFragment(int fragment_id) {
+    private void initializeFragment(int fragment_id) {
         FragmentInstance fragmentInstance = new FragmentInstance(fragment_id, scenarioInstance_id, this);
         fragmentInstances.add(fragmentInstance);
     }
@@ -161,7 +161,7 @@ public class ScenarioInstance {
     /**
      * Initializes all data objects for the scenario instance.
      */
-    public void initializeDataObjects() {
+    private void initializeDataObjects() {
         LinkedList<Integer> data = dbDataObject.getDataObjectsForScenario(scenario_id);
         for (Integer dataObject : data) {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(dataObject, scenario_id, scenarioInstance_id, this);

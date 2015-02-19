@@ -22,14 +22,16 @@ import java.util.LinkedList;
  ************************************************************************************/
 
 /**
- * Represents the ControlFlow in the database
- * Mostly used to get predecessors and successors of a controlNode
+ * Represents the ControlFlow in the database.
+ * Mostly used to get predecessors and successors of a controlNode.
  */
 
 public class DbControlFlow extends DbObject {
     /**
-     * @param controlNode_id This is the database ID of a controlNode
-     * @return -1 if something went wrong else it returns the database ID of a controlNode which is right after a startEvent
+     * This method returns the database Id of the first controlNode after the startEvent.
+     *
+     * @param controlNode_id This is the database ID of a controlNode.
+     * @return -1 if something went wrong else it returns the database ID of a controlNode which is right after a startEvent.
      */
     public int getNextControlNodeAfterStartEvent(int controlNode_id) {
         String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
@@ -37,8 +39,10 @@ public class DbControlFlow extends DbObject {
     }
 
     /**
-     * @param controlNode_id This is the database ID of a controlNode
-     * @return a list of database ID's of controlNodes which success the given controlNode
+     * This method returns all database ID's of all controlNodes succeeding the given controlNode.
+     *
+     * @param controlNode_id This is the database ID of a controlNode.
+     * @return a list of database ID's of controlNodes which succeed the given controlNode.
      */
     public LinkedList<Integer> getFollowingControlNodes(int controlNode_id) {
         String sql = "SELECT controlnode_id2 FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
@@ -46,8 +50,10 @@ public class DbControlFlow extends DbObject {
     }
 
     /**
-     * @param controlNode_id This is the database ID of a controlNode
-     * @return a list of database ID's of controlNodes which precede the given controlNode
+     * This method returns all database ID's of all controlNodes preceding the given controlNode.
+     *
+     * @param controlNode_id This is the database ID of a controlNode.
+     * @return a list of database ID's of controlNodes which precede the given controlNode.
      */
     public LinkedList<Integer> getPredecessorControlNodes(int controlNode_id) {
         String sql = "SELECT controlnode_id1 FROM controlflow WHERE controlnode_id2 = " + controlNode_id;
