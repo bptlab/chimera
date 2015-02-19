@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertNotNull;
 
 /**
@@ -75,12 +76,18 @@ public class ScenarioTest {
      *
      */
     Scenario scenarioWFragment;
+    /**
+     * This scenario is used for testing.
+     * All elements are initialized, in order
+     * to write them to the database.
+     */
+    Scenario scenarioComplete;
 
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         scenarioWOVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 SET_VERSION_METHOD,
@@ -91,6 +98,9 @@ public class ScenarioTest {
                 FETCH_VERSION_METHOD);
         scenarioWFragment = PowerMock.createPartialMock(Scenario.class,
                 SET_VERSION_METHOD,
+                CREATE_FRAGMENT_METHOD);
+        scenarioComplete = PowerMock.createPartialMock(Scenario.class,
+                FETCH_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD);
     }
 
@@ -191,6 +201,36 @@ public class ScenarioTest {
         assertNotNull("Data Object has wrong key",
                 scenarioWFragment.getDataObjects().get("bike"));
         PowerMock.verify(scenarioWFragment);
+    }
+
+    /**
+     * Test if the scenario is created and initialized correctly.
+     */
+    //@Test
+    public void testSaveCompleteScenario() throws Exception {
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
+        PowerMock.expectPrivate(scenarioComplete, FETCH_VERSION_METHOD)
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                    }
+                });
+        PowerMock.expectPrivate(scenarioComplete, CREATE_FRAGMENT_METHOD, "1386518929")
+                .andAnswer(new IAnswer<Fragment>() {
+                    @Override
+                    public Fragment answer() throws Throwable {
+                        Fragment fragment = new Fragment();
+                        fragment.initializeInstanceFromXML(
+                                getDocumentFromXmlFile(new File("src/test/resources/BikeFragment.xml")));
+                        return fragment;
+                    }
+                });
+        PowerMock.replay(scenarioComplete);
+        scenarioComplete.initializeInstanceFromXML(bikeScenario);
+        scenarioComplete.save();
+        assertTrue(scenarioComplete.getDatabaseID() > 0);
+        PowerMock.verify(scenarioComplete);
     }
 
     /**

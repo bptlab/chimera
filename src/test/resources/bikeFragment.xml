@@ -51,7 +51,7 @@
 <property name="y" value="66"/>
 <property name="text" value="bike"/>
 <property name="stereotype" value=""/>
-<property name="state" value="inParts"/>
+<property name="state" value="init"/>
 <property name="#id" value="1671422413"/>
 <property name="#type" value="net.frapu.code.visualization.bpmn.DataObject"/>
 <property name="height" value="60"/>
