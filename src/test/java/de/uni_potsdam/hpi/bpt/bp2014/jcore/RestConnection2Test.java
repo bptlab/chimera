@@ -17,16 +17,16 @@ import static org.junit.Assert.assertEquals;
 
 public class RestConnection2Test extends AbstractTest {
 
-    private static final String OLD_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     static {
-        SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+        TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
     }
 
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(OLD_SQL_SEED_FILE));
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
 
     @Override
