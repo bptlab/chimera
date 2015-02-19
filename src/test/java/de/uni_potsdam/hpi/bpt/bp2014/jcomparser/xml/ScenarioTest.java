@@ -188,7 +188,7 @@ public class ScenarioTest {
                     public Fragment answer() throws Throwable {
                         Fragment fragment = new Fragment();
                         fragment.initializeInstanceFromXML(
-                                getDocumentFromXmlFile(new File("src/test/resources/BikeFragment.xml")));
+                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
                         return fragment;
                     }
                 });
@@ -222,7 +222,7 @@ public class ScenarioTest {
                     public Fragment answer() throws Throwable {
                         Fragment fragment = new Fragment();
                         fragment.initializeInstanceFromXML(
-                                getDocumentFromXmlFile(new File("src/test/resources/BikeFragment.xml")));
+                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
                         return fragment;
                     }
                 });
