@@ -255,7 +255,7 @@ public class ScenarioTest {
     /**
      * Test if the scenario is created and initialized correctly.
      */
-    //@Test
+    @Test
     public void testSaveCompleteScenario() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenarioWTermination.xml"));
         PowerMock.expectPrivate(scenarioComplete, FETCH_VERSION_METHOD)
