@@ -27,36 +27,37 @@ import java.awt.image.BufferedImage;
  * **********************************************************************************
  */
 
- /**
-  * As a part of the JComparser, this class is reponsible for the retrieval
-  * of XML docus from a source URL like the repository of the Processeditor.
+/**
+ * As a part of the JComparser, this class is reponsible for the retrieval
+ * of XML docus from a source URL like the repository of the Processeditor.
  */
 public class Retrieval {
 
-     /**
-      * The pattern for setting name and password for the authentication.
-      */
-     private final String loginRequest = "<user>%n"
+    /**
+     * The pattern for setting name and password for the authentication.
+     */
+    private final String loginRequest = "<user>%n"
             + "<property name='name' value='%s'/>%n"
             + "<property name='pwd' value='%s'/>%n"
             + "</user>";
-     /**
-      * The username needed for the authentication.
-      */
-     private String username = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerName;
-     /**
-      * The password needed for the authentication.
-      */
-     private String password = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerPassword;
+    /**
+     * The username needed for the authentication.
+     */
+    private String username = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerName;
+    /**
+     * The password needed for the authentication.
+     */
+    private String password = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerPassword;
 
-     /**
-      * Get HTML from URL.
-      * @param hosturl the basic hosturl (e.g. "http://localhost:1205/")
-      * @param urlToRead contains the hosturl and additional path from which
-      *                  html should be retrieved
-      *                  (e.g. "http://localhost:1205/models/")
-      * @return the response as String from urlToRead
-      */
+    /**
+     * Get HTML from URL.
+     *
+     * @param hosturl   the basic hosturl (e.g. "http://localhost:1205/")
+     * @param urlToRead contains the hosturl and additional path from which
+     *                  html should be retrieved
+     *                  (e.g. "http://localhost:1205/models/")
+     * @return the response as String from urlToRead
+     */
     public String getHTMLwithAuth(String hosturl, String urlToRead) {
         try {
             InputStream inputStream = getInputStream(hosturl, urlToRead);
@@ -77,15 +78,16 @@ public class Retrieval {
         return null;
     }
 
-     /**
-      * Get an image from URL.
-      * @param hosturl the basic hosturl (e.g. "http://localhost:1205/")
-      * @param urlToRead contains the hosturl and additional path from which
-      *                  html should be retrieved
-      *                  (e.g. "http://localhost:1205/models/123456789.png")
-      * @return the response as an image from urlToRead
-      */
-     public Response getImagewithAuth(String hosturl, String urlToRead) {
+    /**
+     * Get an image from URL.
+     *
+     * @param hosturl   the basic hosturl (e.g. "http://localhost:1205/")
+     * @param urlToRead contains the hosturl and additional path from which
+     *                  html should be retrieved
+     *                  (e.g. "http://localhost:1205/models/123456789.png")
+     * @return the response as an image from urlToRead
+     */
+    public Response getImagewithAuth(String hosturl, String urlToRead) {
         try {
             InputStream inputStream = getInputStream(hosturl, urlToRead);
             BufferedImage image = ImageIO.read(inputStream);
@@ -106,43 +108,44 @@ public class Retrieval {
         return null;
     }
 
-     /**
-      * Get an image from URL.
-      * @param hosturl the basic hosturl (e.g. "http://localhost:1205/")
-      * @param urlToRead contains the hosturl and additional path from which
-      *                  html should be retrieved
-      *                  (e.g. "http://localhost:1205/models/123456789.png")
-      * @return the response from urlToRead as an InputStream
-      */
-     private InputStream getInputStream(String hosturl, String urlToRead) {
-         HttpURLConnection connection;
-         try {
-             CookieHandler.setDefault(new CookieManager(
-                     null, CookiePolicy.ACCEPT_ALL));
-             connection = (HttpURLConnection) new URL(hosturl + "users/login")
-                     .openConnection();
-             connection.setDoOutput(true);
-             connection.setRequestMethod("POST");
-             connection.setRequestProperty("Content-Type", "application/xml");
-             connection.setInstanceFollowRedirects(false);
-             OutputStream os = connection.getOutputStream();
-             PrintWriter osw = new PrintWriter(os);
-             osw.println(String.format(loginRequest, username, password));
-             osw.flush();
-             osw.close();
-             connection.getResponseCode();
-             connection.getResponseMessage();
-             HttpURLConnection modelsConnection = (HttpURLConnection)
-                     new URL(urlToRead).openConnection();
-             modelsConnection.setInstanceFollowRedirects(false);
-             modelsConnection.setRequestMethod("GET");
-             InputStream inputStream = modelsConnection.getInputStream();
-             connection.disconnect();
-             return inputStream;
-         } catch (IOException e) {
-             System.err.println("Request failed.");
-             e.printStackTrace();
-         }
-         return null;
-     }
+    /**
+     * Get an image from URL.
+     *
+     * @param hosturl   the basic hosturl (e.g. "http://localhost:1205/")
+     * @param urlToRead contains the hosturl and additional path from which
+     *                  html should be retrieved
+     *                  (e.g. "http://localhost:1205/models/123456789.png")
+     * @return the response from urlToRead as an InputStream
+     */
+    private InputStream getInputStream(String hosturl, String urlToRead) {
+        HttpURLConnection connection;
+        try {
+            CookieHandler.setDefault(new CookieManager(
+                    null, CookiePolicy.ACCEPT_ALL));
+            connection = (HttpURLConnection) new URL(hosturl + "users/login")
+                    .openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/xml");
+            connection.setInstanceFollowRedirects(false);
+            OutputStream os = connection.getOutputStream();
+            PrintWriter osw = new PrintWriter(os);
+            osw.println(String.format(loginRequest, username, password));
+            osw.flush();
+            osw.close();
+            connection.getResponseCode();
+            connection.getResponseMessage();
+            HttpURLConnection modelsConnection = (HttpURLConnection)
+                    new URL(urlToRead).openConnection();
+            modelsConnection.setInstanceFollowRedirects(false);
+            modelsConnection.setRequestMethod("GET");
+            InputStream inputStream = modelsConnection.getInputStream();
+            connection.disconnect();
+            return inputStream;
+        } catch (IOException e) {
+            System.err.println("Request failed.");
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

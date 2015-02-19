@@ -53,7 +53,7 @@ public class DataObject implements IPersistable {
      * The states will be extracted and added automatically.
      *
      * @param newDataNodes the initial set of nodes.
-     *                  All nodes may have the type DataObject.
+     *                     All nodes may have the type DataObject.
      */
     public DataObject(final List<Node> newDataNodes) {
         this.dataNodes = new LinkedList<Node>(newDataNodes);
@@ -145,6 +145,7 @@ public class DataObject implements IPersistable {
 
     /**
      * Sets the scenario id.
+     *
      * @param newScenarioId Should be the database Id of the Scenario.
      */
     public void setScenarioId(final int newScenarioId) {
@@ -175,6 +176,7 @@ public class DataObject implements IPersistable {
 
     /**
      * Returns the database id.
+     *
      * @return the id (int) which is primary key inside the database
      */
     public int getDatabaseId() {

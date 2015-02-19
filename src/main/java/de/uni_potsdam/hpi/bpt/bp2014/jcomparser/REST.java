@@ -45,7 +45,7 @@ public class REST {
     /**
      * The URL to the ProcessEditor Model repository.
      */
-    private static final String PCM_URL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerUrl +  "models/";
+    private static final String PCM_URL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerUrl + "models/";
     /**
      * The URL to the ProcessEditor.
      */
@@ -56,13 +56,13 @@ public class REST {
      *
      * @param scenarioID The id of the scenario to be parsed.
      * @return The successCode of the JComparser.
-     * @throws IOException Connection to the server has not been successful.
-     * @throws SAXException The XML could not be parsed.
+     * @throws IOException                  Connection to the server has not been successful.
+     * @throws SAXException                 The XML could not be parsed.
      * @throws ParserConfigurationException The parsing was not successful.
      */
     @POST
     @Path("launch/{scenarioID}")
-    public int startComparser(@PathParam("scenarioID")final int scenarioID)
+    public int startComparser(@PathParam("scenarioID") final int scenarioID)
             throws IOException, SAXException, ParserConfigurationException {
         JComparser comparser = new JComparser();
         // TODO: The Main Method should not be used!
@@ -72,6 +72,7 @@ public class REST {
 
     /**
      * Fetches a List of all Scenarios and their IDs from the PE-Server.
+     *
      * @return A response with a JSON-Map with the scenario names and ids.
      */
     @GET
@@ -111,7 +112,7 @@ public class REST {
     @GET
     @Path("scenarios/{modelID}/image/")
     @Produces("image/png")
-    public Response showModelImage(@PathParam("modelID")final String modelID) {
+    public Response showModelImage(@PathParam("modelID") final String modelID) {
         String urlToRead = PROCESS_SERVER_URI + "models/" + modelID + ".png";
 
         return new Retrieval()
