@@ -51,7 +51,7 @@ public class RestConnectionTest {
         suppress(constructor(Connection.class));
 
         String getUrl = "/jcomparser/scenarios/0/";
-
+/*
         // mock all the static methods in a class called "Static"
         PowerMockito.mockStatic(Static.class);
         // use Mockito to set up your expectation
@@ -73,7 +73,7 @@ public class RestConnectionTest {
         // Again, remember to call verifyStatic()
         PowerMockito.verifyStatic(Static.class, Mockito.never());
         Static.thirdStaticMethod();
-
+*/
 
         //mock executionService class so we provide what we expect
         try {
@@ -84,7 +84,7 @@ public class RestConnectionTest {
             ll.add(3);
             EasyMock.expect(GET_ALL_SCENARIOS).andStubReturn(ll);
             */
-
+/*
             PowerMock.expectPrivate(executionService, GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
                 @Override
                 public LinkedList answer() throws Throwable {
@@ -95,7 +95,7 @@ public class RestConnectionTest {
                     return (ll);
                 }
             });
-
+ */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,7 +106,9 @@ public class RestConnectionTest {
                 assertThat().
                 body(
                         matchesJsonSchemaInClasspath("json/all-scenarios-schema.json")
-                );
+
+               );
+
     }
 
     @Test
