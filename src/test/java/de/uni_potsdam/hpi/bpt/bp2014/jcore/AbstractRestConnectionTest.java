@@ -1,0 +1,72 @@
+package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/**
+ * An Abstract calls for Rest Tests
+ */
+public abstract class AbstractRestConnectionTest extends JerseyTest {
+    /**
+     * The Database Seed file.
+     */
+    private static final String SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+
+    /**
+     * Sets up the database for RestTests.
+     *
+     * @throws IOException  An Error while reading the SQL-File occurred.
+     * @throws SQLException An Error while executing the SQL-Script occurred.
+     */
+    @BeforeClass
+    public static void setUpDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(SQL_SEED_FILE));
+    }
+
+    /**
+     * Drops and recreates the database.
+     */
+    private static void clearDatabase() {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) {
+            return;
+        }
+        try {
+            //Execute a querystmt = conn.createStatement();
+            stmt = conn.createStatement();
+            stmt.execute("DROP DATABASE JEngineV2");
+            stmt.execute("CREATE DATABASE JEngineV2");
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+}
