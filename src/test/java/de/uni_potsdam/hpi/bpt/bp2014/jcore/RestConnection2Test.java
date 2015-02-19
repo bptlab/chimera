@@ -66,13 +66,13 @@ public class RestConnection2Test extends JerseyTest {
     @Test
     public void testGetAllActivitiesForScenarioInstance(){
         final Response test = target("/interface/v1/en/scenario/1/instance/47/activityinstance/0/").request().get();
-        assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
+        assertEquals("{\"ids\":[5,4,16],\"label\":{\"16\":\"ActivityFragment4\",\"4\":\"Activity1Fragment2\",\"5\":\"Activity2Fragment1\"}}", test.readEntity(String.class));
     }
 
     @Test
     public void testGetAllDataobjectForScenarioInstance(){
-        final Response test = target("/interface/v1/en/scenario/0/").request().get();
-        assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
+        final Response test = target("/interface/v1/en/scenario/1/instance/328/dataobject/0/").request().get();
+        assertEquals("{\"ids\":[1,2],\"label\":{\"1\":\"bearbeitet\",\"2\":\"init\"}}", test.readEntity(String.class));
     }
 
     /* #############################################################################
