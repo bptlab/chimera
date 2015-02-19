@@ -19,9 +19,11 @@
 %	PACKAGES AND DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
+% please be aware to install sudo apt-get install texlive-science
+
 \documentclass{article}
 
-\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
+%\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
 \usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
 \usepackage{graphicx} % Required for the inclusion of images
 \usepackage{natbib} % Required to change bibliography style to APA
@@ -50,9 +52,9 @@
 \begin{center}
 \begin{tabular}{l r}
 Date Performed: & January 1, 2015 \\ % Date the experiment was performed
-Betreuer: & Andreas Meyer \\ % Partner names
-& Marcin Hewelt \\
-Instructor: & Professor Dr Mathias Weske % Instructor/supervisor
+%Betreuer: & Andreas Meyer \\ % Partner names
+%& Marcin Hewelt \\
+%Instructor: & Professor Dr Mathias Weske % Instructor/supervisor
 \end{tabular}
 \end{center}
 
@@ -65,13 +67,13 @@ Instructor: & Professor Dr Mathias Weske % Instructor/supervisor
 Diese Dokumentation ist entstanden im Rahmen des Bachelorprojekts BP2014W1 am Lehrstuhl für ``Business Process Technology'' betreut durch Prof. Dr. Mathias Weske. Es dient zu Dokumentierung der konzipierten und implementierten JEngine um ein Proof-of-Concept zu ermöglichen und gleichzeitig als Prototype für Anwendungsfälle von Bosch Software Innovations zu fungieren.
 \end{abstract}
 
-\tableofcontents
-\listoffigures
-\listoftables
-\lstlistoflistings
-\listofsymbols{ll}{$w$ & The weight vector}
-\acknowledgements{Thanks to no one.}
-\dedicatory{To \dots}
+%\tableofcontents
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%\listofsymbols{ll}{$w$ & The weight vector}
+%\acknowledgements{Thanks to no one.}
+%\dedicatory{To \dots}
 %\mainmatter
 
 %----------------------------------------------------------------------------------------
@@ -205,8 +207,6 @@ Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integ
 \end{enumerate}
 
 
-%%%%%%%%%%%%%%%%%%%%%%% Überarbeitet %%%%%%%%%%%%%%%%%%%%%%%%
-
 Default URL:
 http://172.16.64.113:8080/JEngine/interface/\{version\}/\{language\}/?
 
@@ -217,10 +217,10 @@ returns all scenarios
 scenario=1
 returns all instances
 
-scenario=1&runtime
+scenario=1\& runtime
 returns all instances with runtime
 
-instanceid=1&status=enabled
+instanceid=1\& status=enabled
 returns all enabled activities
 
 activityid=2
@@ -234,6 +234,8 @@ roles returns all roles
 
 
 timestamp ISO-8601
+
+for more informations about the REST please have a look at the REST Specification..
 
 %
 %
@@ -258,24 +260,21 @@ Der ExecutionService ist die Komponente, auf die die REST-API aufbaut. Diese Kom
 
 %
 %
-\section{PCM modelling using the Processeditor}\label{pcm-modelling-using-the-processeditor}
-This document explains how to use the Processeditor to create PCM
-models. A PCM-Process can be described by many PCM fragments and one PCM
-scenario.
+\section{PCM modelling using the Processeditor}
+\label{pcm-modelling-using-the-processeditor}
+This document explains how to use the Processeditor to create PCM models. A PCM-Process can be described by many PCM fragments and one PCM scenario.
 
 %
 %
-\subsection{Preparations}\label{preparations}
-Currently you need both, the Processeditor Workbench and the
-Processeditor Server to model and Save PCM. You will use the Workbench
-for modelling and the Server as a global repository.
+\subsection{Preparations}
+\label{preparations}
+Currently you need both, the Processeditor Workbench and the Processeditor Server to model and Save PCM. You will use the Workbench for modelling and the Server as a global repository.
 
 %
 %
-\subsection{PCM Fragments}\label{pcm-fragments}
-
-PCM Fragments are small Business Process models. They can be modelled
-using a subset of the BPMN-Notation:
+\subsection{PCM Fragments}
+\label{pcm-fragments}
+PCM Fragments are small Business Process models. They can be modelled using a subset of the BPMN-Notation:
 
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -297,7 +296,8 @@ All this elements are offered by the model type PCM Fragment.
 
 %
 %
-\subsubsection{Marking a Task as Global}\label{marking-a-task-as-global}
+\subsubsection{Marking a Task as Global}
+\label{marking-a-task-as-global}
 PCM allows to use the same task in more than one fragment. To do so
 
 \begin{enumerate}
@@ -315,8 +315,8 @@ PCM allows to use the same task in more than one fragment. To do so
 
 %
 %
-\subsubsection{Copy and Refer an existing
-Task}\label{copy-and-refer-an-existing-task}
+\subsubsection{Copy and Refer an existing Task}
+\label{copy-and-refer-an-existing-task}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -335,14 +335,16 @@ Task}\label{copy-and-refer-an-existing-task}
 
 %
 %
-\subsection{PCM Scenario}\label{pcm-scenario}
+\subsection{PCM Scenario}
+\label{pcm-scenario}
 A Scenario defines which PCM Fragments are part of one Process. All PCM
 Fragments have to be saved on the Server. You can alter the Scenario
 only by moving the nodes and adding/removing PCM Fragments.
 
 %
 %
-\subsubsection{Defining a PCM Scenario}\label{defining-a-pcm-scenario}
+\subsubsection{Defining a PCM Scenario}
+\label{defining-a-pcm-scenario}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
