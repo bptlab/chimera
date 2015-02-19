@@ -56,7 +56,15 @@ public class RestTest extends AbstractTest {
     @Test
     public void testGetScenarioImage() {
        // String scenarioID = "000000";
-       // String url = serverURL + "jcomparser/launch/" + scenarioID + "/image/";
+    	final Response test = target("/jcomparser/launch/" + scenarioID + "/image/").request().get();
+        //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
+    }
+
+    @Test
+    public void testGetScenarios() {
+       // String scenarioID = "000000";
+    	final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
+        //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
     }
 
     /* #############################################################################
@@ -67,8 +75,10 @@ public class RestTest extends AbstractTest {
       */
     
     @Test
-    public void testPost() {
+    public void testPostLaunchImport() {
       // String scenarioID = "000000";
-       //String url = serverURL + "jcomparser/launch/" + scenarioID + "/";
+         	final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
+        //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
+   
     }
 }
