@@ -279,8 +279,12 @@ public class ExecutionService {
      */
     public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id) {
         LinkedList<Integer> dataObjectIDs = new LinkedList<Integer>();
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances())
+        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
             dataObjectIDs.add(dataObject.getDataObject_id());
+        }
+        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
+            dataObjectIDs.add(dataObject.getDataObject_id());
+        }
         return dataObjectIDs;
     }
 
@@ -296,6 +300,9 @@ public class ExecutionService {
         for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
             dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
         }
+        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
+            dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
+        }
         return dataObjectStates;
     }
 
@@ -309,6 +316,9 @@ public class ExecutionService {
         DbDataObject dbDataObject = new DbDataObject();
         HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
         for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
+            dataObjectStates.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getState_id()));
+        }
+        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
             dataObjectStates.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getState_id()));
         }
         return dataObjectStates;
