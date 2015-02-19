@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.io.FileReader;
@@ -12,13 +13,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * An Abstract calls for Rest Tests
+ * An Abstract class for Rest Tests
  */
 public abstract class AbstractTest extends JerseyTest {
     /**
      * The Database Seed file.
      */
-    private static final String SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    public static String SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
 
     /**
      * Sets up the database for RestTests.
@@ -26,8 +27,8 @@ public abstract class AbstractTest extends JerseyTest {
      * @throws IOException  An Error while reading the SQL-File occurred.
      * @throws SQLException An Error while executing the SQL-Script occurred.
      */
-    @BeforeClass
-    public static void setUpDatabase() throws IOException, SQLException {
+    @Before
+    public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(SQL_SEED_FILE));
@@ -36,7 +37,7 @@ public abstract class AbstractTest extends JerseyTest {
     /**
      * Drops and recreates the database.
      */
-    private static void clearDatabase() {
+    protected static void clearDatabase() {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;

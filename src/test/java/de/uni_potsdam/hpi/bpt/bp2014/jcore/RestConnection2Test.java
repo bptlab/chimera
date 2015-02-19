@@ -1,15 +1,33 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
 public class RestConnection2Test extends AbstractTest {
+
+    private static final String OLD_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    static {
+        SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+    }
+
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(OLD_SQL_SEED_FILE));
+    }
 
     @Override
     protected Application configure() {
