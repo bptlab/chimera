@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 
@@ -79,11 +80,10 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
         LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNodeInstance.controlNode_id);
         Boolean loopCheck = true;
         for (int inputSet : inputSets) {
-            LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(inputSet);
-            LinkedList<Integer> states = dbDataNode.getDataStatesForDataSets(inputSet);
-            for (int i = 0; i < dataObjects.size(); i++) {
+            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
+            for (DataObject dataObject : dataObjects) {
                 loopCheck = true;
-                if (!scenarioInstance.checkDataObjectState(dataObjects.get(i), states.get(i))) {
+                if (!scenarioInstance.checkDataObjectState(dataObject.getId(), dataObject.getStateID())) {
                     loopCheck = false;
                     break;
                 }
