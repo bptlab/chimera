@@ -35,14 +35,14 @@ public class ExecutionService {
     /**
      * This are the Lists for all opened scenario instances.
      */
-    private LinkedList<ScenarioInstance> scenarioInstances = new LinkedList<ScenarioInstance>();
-    private HashMap<Integer, ScenarioInstance> sortedScenarioInstances = new HashMap<Integer, ScenarioInstance>();
+    private final LinkedList<ScenarioInstance> scenarioInstances = new LinkedList<ScenarioInstance>();
+    private final HashMap<Integer, ScenarioInstance> sortedScenarioInstances = new HashMap<Integer, ScenarioInstance>();
     /**
      * Database Connection.
      */
-    private DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-    private DbScenario dbScenario = new DbScenario();
-    private DbControlNode dbControlNode = new DbControlNode();
+    private final DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
+    private final DbScenario dbScenario = new DbScenario();
+    private final DbControlNode dbControlNode = new DbControlNode();
 
     public ExecutionService() {
     }
@@ -107,10 +107,7 @@ public class ExecutionService {
      * @return true if the scenario instance exist in the database. false if not.
      */
     public boolean existScenarioInstance(int scenarioInstance_id) {
-        if (dbScenarioInstance.existScenario(scenarioInstance_id)) {
-            return true;
-        }
-        return false;
+        return dbScenarioInstance.existScenario(scenarioInstance_id);
     }
 
     /**
@@ -121,8 +118,7 @@ public class ExecutionService {
      * @return true if the scenario instance exist in the database. false if not.
      */
     public boolean existScenarioInstance(int scenario_id, int scenarioInstance_id) {
-        if (dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id)) return true;
-        return false;
+        return dbScenarioInstance.existScenario(scenario_id, scenarioInstance_id);
     }
 
     /**
@@ -132,11 +128,7 @@ public class ExecutionService {
      * @return true if the scenario exist in the database. false if not.
      */
     public boolean existScenario(int scenario_id) {
-        if (dbScenario.existScenario(scenario_id)) {
-            return true;
-        } else {
-            return false;
-        }
+        return dbScenario.existScenario(scenario_id);
     }
 
     /**
@@ -333,11 +325,7 @@ public class ExecutionService {
      */
     public boolean checkTerminationForScenarioInstance(int scenarioInstance_id) {
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        if (dbScenarioInstance.getTerminated(scenarioInstance_id) == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return dbScenarioInstance.getTerminated(scenarioInstance_id) == 1;
     }
 
     /**

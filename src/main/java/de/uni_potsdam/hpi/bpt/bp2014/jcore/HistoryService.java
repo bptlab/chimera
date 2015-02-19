@@ -33,8 +33,8 @@ public class HistoryService {
     /**
      * Database Connection objects
      */
-    private DbActivityInstance dbActivityInstance = new DbActivityInstance();
-    private DbControlNode dbControlNode = new DbControlNode();
+    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    private final DbControlNode dbControlNode = new DbControlNode();
 
     /**
      * Gives all ids of terminated activities for a scenario instance id.
@@ -43,8 +43,7 @@ public class HistoryService {
      * @return a list of int ids of the activities.
      */
     public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
-        LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstance_id);
-        return ids;
+        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstance_id);
     }
 
     /**

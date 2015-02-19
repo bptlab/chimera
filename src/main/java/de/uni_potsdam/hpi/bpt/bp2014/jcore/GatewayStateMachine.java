@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
+import java.util.Objects;
+
 /**
  * ********************************************************************************
  * <p/>
@@ -28,7 +30,7 @@ public class GatewayStateMachine extends StateMachine {
     /**
      * Database Connection objects
      */
-    private DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
+    private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
     /**
      * Initializes the GatewayStateMachine
@@ -42,7 +44,7 @@ public class GatewayStateMachine extends StateMachine {
         this.controlNodeInstance_id = gateway_id;
         this.controlNodeInstance = controlNodeInstance;
         this.state = dbGatewayInstance.getState(controlNodeInstance.controlNodeInstance_id);
-        if (state == "terminated") {
+        if (state.equals("terminated")) {
             scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
         }
         scenarioInstance.getControlNodeInstances().add(controlNodeInstance);

@@ -31,12 +31,12 @@ import java.util.LinkedList;
  * Handles the behavior of a terminating activity instance.
  */
 public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
-    private ControlNodeInstance controlNodeInstance;
+    private final ControlNodeInstance controlNodeInstance;
     /**
      * Database Connection objects.
      */
-    private DbDataNode dbDataNode = new DbDataNode();
-    private DbDataFlow dbDataFlow = new DbDataFlow();
+    private final DbDataNode dbDataNode = new DbDataNode();
+    private final DbDataFlow dbDataFlow = new DbDataFlow();
 
     /**
      * Initializes the TaskOutgoingControlFlowBehavior.

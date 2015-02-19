@@ -26,9 +26,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  * Performs the execution for one activity.
  */
 public class TaskExecutionBehavior {
-    protected ScenarioInstance scenarioInstance;
-    protected int activityInstance_id;
-    protected ControlNodeInstance controlNodeInstance;
+    protected final ScenarioInstance scenarioInstance;
+    protected final int activityInstance_id;
+    protected final ControlNodeInstance controlNodeInstance;
 
     /**
      * Initializes.

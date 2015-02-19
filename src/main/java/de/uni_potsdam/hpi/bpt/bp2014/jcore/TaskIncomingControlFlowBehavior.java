@@ -31,8 +31,8 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
     /**
      * Database Connection objects
      */
-    private DbDataFlow dbDataFlow = new DbDataFlow();
-    private DbDataNode dbDataNode = new DbDataNode();
+    private final DbDataFlow dbDataFlow = new DbDataFlow();
+    private final DbDataNode dbDataNode = new DbDataNode();
 
     /**
      * Initializes the TaskIncomingControlFlowBehavior.
@@ -112,8 +112,8 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
         //TODO: Output Set
         for (int outputSet : outputSets) {
             LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
-            for (int i = 0; i < dataObjects.size(); i++) {
-                scenarioInstance.setDataObjectInstanceToOnChange(dataObjects.get(i));
+            for (int dataObject : dataObjects) {
+                scenarioInstance.setDataObjectInstanceToOnChange(dataObject);
             }
         }
     }
