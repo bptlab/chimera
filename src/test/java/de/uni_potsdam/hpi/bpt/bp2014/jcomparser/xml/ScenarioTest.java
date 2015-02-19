@@ -17,9 +17,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * This class tests the Scenario.
@@ -73,9 +75,13 @@ public class ScenarioTest {
     /**
      * This scenario will be used for testing
      * It will be initialized with a Fragment.
-     *
      */
     Scenario scenarioWFragment;
+    /**
+     * This scenario will be used for testing
+     * It will be initialized with a terminationCondition.
+     */
+    Scenario scenarioWTermination;
     /**
      * This scenario is used for testing.
      * All elements are initialized, in order
@@ -102,10 +108,15 @@ public class ScenarioTest {
         scenarioComplete = PowerMock.createPartialMock(Scenario.class,
                 FETCH_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD);
+        scenarioWTermination = PowerMock.createPartialMock(Scenario.class,
+                FETCH_VERSION_METHOD,
+                SET_VERSION_METHOD,
+                CREATE_FRAGMENT_METHOD);
     }
 
     /**
      * This Test asserts parsing without exceptions.
+     *
      * @throws Exception
      */
     @Test
@@ -132,6 +143,7 @@ public class ScenarioTest {
     /**
      * This Test asserts that MetaInformation about the Scenario are Set
      * correctly.
+     *
      * @throws Exception
      */
     @Test
@@ -153,6 +165,7 @@ public class ScenarioTest {
 
     /**
      * This Methods tests whether the version is set correctly or not.
+     *
      * @throws Exception occurs while creating the MockObject.
      */
     @Test
@@ -176,6 +189,7 @@ public class ScenarioTest {
 
     /**
      * This Methods Tests if DataObjects are created correctly.
+     *
      * @throws Exception occurs if creation of MockObject failed.
      */
     @Test
@@ -203,12 +217,47 @@ public class ScenarioTest {
         PowerMock.verify(scenarioWFragment);
     }
 
+
+    /**
+     * This Methods Tests if the TerminationCondition is set correctly.
+     *
+     * @throws Exception occurs if creation of MockObject failed.
+     */
+    @Test
+    public void testTerminationCondition() throws Exception {
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenarioWTermination.xml"));
+        PowerMock.expectPrivate(scenarioWTermination, SET_VERSION_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWTermination, CREATE_FRAGMENT_METHOD, "1386518929")
+                .andAnswer(new IAnswer<Fragment>() {
+                    @Override
+                    public Fragment answer() throws Throwable {
+                        Fragment fragment = new Fragment();
+                        fragment.initializeInstanceFromXML(
+                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        return fragment;
+                    }
+                });
+        PowerMock.replay(scenarioWTermination);
+        scenarioWTermination.initializeInstanceFromXML(bikeScenario);
+        DataObject expectedDataObject = scenarioWTermination.getDataObjects().get("bike");
+        de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node expectedDataNode = null;
+        for (de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node currentNode : expectedDataObject.getDataNodes()) {
+            if (currentNode.getState().equals("assembled")) {
+                expectedDataNode = currentNode;
+                break;
+            }
+        }
+        Assert.assertEquals(expectedDataObject, scenarioWTermination.getTerminatingDataObject());
+        Assert.assertEquals(expectedDataNode, scenarioWTermination.getTerminatingDataNode());
+        PowerMock.verify(scenarioWTermination);
+    }
+
     /**
      * Test if the scenario is created and initialized correctly.
      */
     //@Test
     public void testSaveCompleteScenario() throws Exception {
-        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenarioWTermination.xml"));
         PowerMock.expectPrivate(scenarioComplete, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
@@ -235,6 +284,7 @@ public class ScenarioTest {
 
     /**
      * Casts a XML from its String Representation to a w3c Document.
+     *
      * @param xml The String representation of the XML.
      * @return The from String created Document.
      */
