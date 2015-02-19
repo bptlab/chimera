@@ -26,6 +26,9 @@ import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonS
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
+/**
+ *
+ */
 @PowerMockIgnore({"javax.net.ssl.*","java.sql.*","com.mysql.jdbc.*"})
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ExecutionService.class)
@@ -46,9 +49,15 @@ public class RestConnectionTest {
                 LIST_ALL_SCENARIO_INSTANCES);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetScenarios() {
         suppress(constructor(Connection.class));
+        //@PowerMock.mockStatic(ExecutionService.class)
+        //@PowerMock.replay(ClassThatContainsStaticMethod.class)
+        //@PowerMock.verify(ClassThatContainsStaticMethod.class)
 
         String getUrl = "/jcomparser/scenarios/0/";
 /*
@@ -84,8 +93,8 @@ public class RestConnectionTest {
             ll.add(3);
             EasyMock.expect(GET_ALL_SCENARIOS).andStubReturn(ll);
             */
-/*
-            PowerMock.expectPrivate(executionService, GET_ALL_SCENARIOS).andAnswer(new IAnswer<LinkedList>() {
+
+            PowerMock.expectPrivate(executionService, "getAllScenarioIDs").andAnswer(new IAnswer<LinkedList>() {
                 @Override
                 public LinkedList answer() throws Throwable {
                     LinkedList ll = new LinkedList();
@@ -95,7 +104,7 @@ public class RestConnectionTest {
                     return (ll);
                 }
             });
- */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,6 +120,9 @@ public class RestConnectionTest {
 
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetAllEnabledActivities() {
        /*
