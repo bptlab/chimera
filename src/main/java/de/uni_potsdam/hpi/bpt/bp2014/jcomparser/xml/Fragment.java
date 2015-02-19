@@ -79,14 +79,14 @@ public class Fragment implements IDeserialisable, IPersistable {
      * Sets the processeditorServerUrl which is needed for connecting to the server
      * in order to get the XML-files for the fragments.
      */
-    public Fragment(String serverURL){
+    public Fragment(String serverURL) {
         processeditorServerUrl = serverURL;
     }
 
     /**
      * This constructor is only used for testcases as a connection to the server is not needed therefore
      */
-    public Fragment(){
+    public Fragment() {
     }
 
     @Override
@@ -272,6 +272,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * Sets the scenario Id.
      * The scenario Id should be the primary key of the scenario
+     *
      * @param id the primary key of the scenario
      */
     public void setScenarioID(final int id) {
@@ -351,6 +352,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     /**
      * Returns the name of the fragment.
+     *
      * @return fragmentName
      */
     public String getFragmentName() {
@@ -359,6 +361,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     /**
      * Returns the Model-XML-ID of the Fragment.
+     *
      * @return fragmentID
      */
     public long getFragmentID() {

@@ -135,6 +135,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Get the XML which contains all the versions.
      * Connects to the ProcessEditor Server, in order
      * to fetch all versions of the current scenario.
+     *
      * @return A Dom-Element containing all the version information.
      */
     private Element fetchVersionXML() {
@@ -281,6 +282,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Get all referenced activities with their model ID and databaseIDs.
      * If two activities are referenced their model IDs are the same,
      * but they have different IDs inside the database.
+     *
      * @return A Map of all activity-model IDs to a List of their database IDs.
      */
     private HashMap<Integer, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
@@ -416,7 +418,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery =
                     "/model/nodes/node[property[@name = '#type' and " +
-                    "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']]";
+                            "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']]";
             NodeList fragmentNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);
@@ -438,6 +440,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * Creates a Fragment based on a specific fragmentID.
      * Therefore it fetches the XML from a Server.
+     *
      * @param fragmentID The ID of the Fragment.
      * @return The newly created Fragment Object.
      */
@@ -493,6 +496,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     /**
      * Returns the name of the Scenario.
+     *
      * @return The Name of the Scenario
      */
     public String getScenarioName() {
@@ -501,6 +505,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     /**
      * Returns the ID of the scenario used in the XML.
+     *
      * @return The id from the XML.
      */
     public long getScenarioID() {
@@ -509,6 +514,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     /**
      * Returns the Node Object, which represents the XML.
+     *
      * @return the XML of representing the Scenario.
      */
     public org.w3c.dom.Node getScenarioXML() {
@@ -519,6 +525,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Returns a List of all Fragments.
      * Be aware, that changes to this List
      * will change the state of the scenario.
+     *
      * @return the List of fragments.
      */
     public List<Fragment> getFragments() {
@@ -527,6 +534,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     /**
      * The URL of the ProcessEditor Server.
+     *
      * @return The PE-Server URL.
      */
     public String getProcesseditorServerUrl() {
@@ -536,6 +544,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * Returns the Database ID of the Scenario.
      * Returns -1 if Scenario is not saved to the database.
+     *
      * @return The ID used inside the database.
      */
     public int getDatabaseID() {
@@ -545,6 +554,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * Returns a List of all DataObjects of the Scenario.
      * Changes will affect the scenario directly.
+     *
      * @return the DataObjects of the scenario.
      */
     public Map<String, DataObject> getDataObjects() {
@@ -562,6 +572,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     /**
      * Returns the DataObject, which is represented by the TerminatingDataNode.
+     *
      * @return the DataObject which is part of the TerminationCondition.
      */
     public DataObject getTerminatingDataObject() {
@@ -570,6 +581,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     /**
      * Returns an integer Representing the version of the Scenario.
+     *
      * @return the Version of the Scenario.
      */
     public int getVersionNumber() {

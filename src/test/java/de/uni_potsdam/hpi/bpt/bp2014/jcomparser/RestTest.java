@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 
 public class RestTest {
-    String Server_URL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.jcomparserServerUrl;
+    String serverURL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.jcomparserServerUrl;
 
     public void setUpAndNode() {
 
@@ -17,18 +17,18 @@ public class RestTest {
 
     @Test
     public void testGetScenarios() {
-       String url = Server_URL + "jcomparser/scenarios/";
+       String url = serverURL + "jcomparser/scenarios/";
     }
 
     @Test
     public void testGetScenarioImage() {
         String scenarioID = "000000";
-        String url = Server_URL + "jcomparser/launch/" + scenarioID + "/image/";
+        String url = serverURL + "jcomparser/launch/" + scenarioID + "/image/";
     }
 
     @Test
     public void testPost() {
        String scenarioID = "000000";
-       String url = Server_URL + "jcomparser/launch/" + scenarioID + "/";
+       String url = serverURL + "jcomparser/launch/" + scenarioID + "/";
     }
 }

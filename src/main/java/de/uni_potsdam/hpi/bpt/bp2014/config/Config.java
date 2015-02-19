@@ -41,8 +41,4 @@ public class Config {
     // FrontEnd Admin URL
     public static String frontendAdminServerUrl = "http://172.16.64.113/Frontend/admin/";
 
-    //Database Connection via web.xml
-    //public static String databaseURL = "jdbc:mysql://127.0.0.1/JEngineV2";
-    //public static String databaseUser = "root";
-    //public static String databasePassword = "";
 }
