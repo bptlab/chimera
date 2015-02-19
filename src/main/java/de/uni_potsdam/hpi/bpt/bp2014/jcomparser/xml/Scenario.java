@@ -15,10 +15,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -87,7 +85,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Be Aware, that a scenario consists of fragments, which will
      * be loaded automatically;
      *
-     * @param element
+     * @param element The XML-representation for the scenario.
      */
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
@@ -153,11 +151,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .newDocumentBuilder();
             Document doc = db.parse(is);
             return doc.getDocumentElement();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -472,11 +466,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Document doc = db.parse(new InputSource(new StringReader(xml)));
             doc.getDocumentElement().normalize();
             return doc;
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
         return null;

@@ -49,7 +49,7 @@ public class ScenarioTest {
     private static final String CREATE_DO_METHOD = "createDataObjects";
 
     /**
-     * This Methods fetches The Version from the PE-Server.
+     * This Method fetches The Version from the PE-Server.
      */
     private static final String FETCH_VERSION_METHOD = "fetchVersionXML";
 
@@ -105,7 +105,7 @@ public class ScenarioTest {
     }
 
     /**
-     * This Test assert parsing without exceptions.
+     * This Test asserts parsing without exceptions.
      * @throws Exception
      */
     @Test
@@ -130,7 +130,7 @@ public class ScenarioTest {
     }
 
     /**
-     * This Test assert that MetaInformation about the Scenario are Set
+     * This Test asserts that MetaInformation about the Scenario are Set
      * correctly.
      * @throws Exception
      */
@@ -152,7 +152,7 @@ public class ScenarioTest {
     }
 
     /**
-     * This Methods Tests weather the version is set correctly or not.
+     * This Methods tests whether the version is set correctly or not.
      * @throws Exception occurs while creating the MockObject.
      */
     @Test
