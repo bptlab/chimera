@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
@@ -14,7 +14,7 @@ import java.sql.Statement;
 /**
  * An Abstract calls for Rest Tests
  */
-public abstract class AbstractRestConnectionTest extends JerseyTest {
+public abstract class AbstractTest extends JerseyTest {
     /**
      * The Database Seed file.
      */

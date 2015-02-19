@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 
-public class RestConnection2Test extends AbstractRestConnectionTest {
+public class RestConnection2Test extends AbstractTest {
 
     @Override
     protected Application configure() {

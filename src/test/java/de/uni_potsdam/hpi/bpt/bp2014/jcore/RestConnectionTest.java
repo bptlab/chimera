@@ -1,3 +1,4 @@
+/*
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
@@ -32,9 +33,11 @@ public class RestConnectionTest {
 
     }
 
-    /**
+    */
+/**
      *
-     */
+     *//*
+
     @Test
     public void testGetScenarios() {
 
@@ -46,17 +49,21 @@ public class RestConnectionTest {
                 get(getUrl);
     }
 
-    /**
+    */
+/**
      *
-     */
+     *//*
+
     @Test
     public void testGetAllEnabledActivities() {
-       /*
+       */
+/*
         int scenarioID = 1;
         int newInstanceID = executionService.startNewScenarioInstance(scenarioID);
         String url = serverURL + "jcomparser/scenarios/" + scenarioID + "/instance/" + newInstanceID + "/activityinstance/0/";
         get("/products").then().assertThat().body(matchesJsonSchemaInClasspath("json/products-schema.json"));
-        */
+        *//*
+
     }
     //create a new instance for our test
 
@@ -68,3 +75,4 @@ public class RestConnectionTest {
     //given().param("key1", "value1").param("key2", "value2").when().post("/somewhere").then().body(containsString("OK"));
 
 }
+*/
