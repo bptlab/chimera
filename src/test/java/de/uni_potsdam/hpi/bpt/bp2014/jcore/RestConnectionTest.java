@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import org.easymock.EasyMock;
+//import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 
-import static org.easymock.EasyMock.createNiceMock;
+//import static org.easymock.EasyMock.createNiceMock;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
+
 
 /**
  *
@@ -85,15 +86,9 @@ public class RestConnectionTest {
 */
 
         //mock executionService class so we provide what we expect
-        try {
-           /*
-            LinkedList ll = new LinkedList();
-            ll.add(1);
-            ll.add(2);
-            ll.add(3);
-            EasyMock.expect(GET_ALL_SCENARIOS).andStubReturn(ll);
-            */
-
+        /*try {
+            PowerMock.mockStatic(ExecutionService.class);
+            PowerMock.replay(ExecutionService.class);
             PowerMock.expectPrivate(executionService, "getAllScenarioIDs").andAnswer(new IAnswer<LinkedList>() {
                 @Override
                 public LinkedList answer() throws Throwable {
@@ -104,6 +99,7 @@ public class RestConnectionTest {
                     return (ll);
                 }
             });
+            PowerMock.verify(ExecutionService.class);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,6 +113,7 @@ public class RestConnectionTest {
                         matchesJsonSchemaInClasspath("json/all-scenarios-schema.json")
 
                );
+               */
 
     }
 
