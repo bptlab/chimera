@@ -1,41 +1,32 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import javax.ws.rs.core.Application;
-
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import static org.junit.Assert.*;
-
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 
-public class RestConnection2Test extends JerseyTest {
+import static org.junit.Assert.assertEquals;
 
-    /* #############################################################################
-     *
-     * TEST SETUP
-     *
-     * #############################################################################
-     */
+public class RestConnection2Test extends AbstractTest {
 
-    @Before
-    public void setUpDatabase() {
-        DbObject dbObject = new DbObject();
-        dbObject.executeUpdateStatement("DROP DATABASE JEngineV2");
-        dbObject.executeUpdateStatement("CREATE DATABASE JEngineV2");
-        Document sqlFile = getDocumentFromSQLFile(new File("src/main/resources/JEngineV2.sql"));
+    private static final String OLD_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    static {
+        SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+    }
 
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(OLD_SQL_SEED_FILE));
     }
 
     @Override
@@ -92,23 +83,6 @@ public class RestConnection2Test extends JerseyTest {
     public void testPostNewInstanceForScenario(){
         //final Response test = target("/interface/v1/en/scenario/1/").request().post();
         //assertEquals("123", test.readEntity(String.class));
-    }
-
-    private Document getDocumentFromSQLFile(final File sql) {
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(sql);
-            doc.getDocumentElement().normalize();
-            return doc;
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

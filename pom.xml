@@ -137,6 +137,11 @@
             <artifactId>jersey-test-framework-provider-inmemory</artifactId>
             <version>2.16</version>
         </dependency>
+        <dependency>
+            <groupId>com.ibatis</groupId>
+            <artifactId>ibatis2-common</artifactId>
+            <version>2.1.7.597</version>
+        </dependency>
     </dependencies>
 
 </project>
