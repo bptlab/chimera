@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ public class RestTest extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     static {
-        TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+        String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
     }
 
     @AfterClass
@@ -50,12 +51,14 @@ public class RestTest extends AbstractTest {
 
     @Test
     public void testGetScenarios() {
-       String url = serverURL + "jcomparser/scenarios/";
+        final Response test = target("jcomparser/scenarios/").request().get();
+        //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
+
     }
 
     @Test
     public void testGetScenarioImage() {
-       // String scenarioID = "000000";
+        String scenarioID = "000000";
     	final Response test = target("/jcomparser/launch/" + scenarioID + "/image/").request().get();
         //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
     }
@@ -69,16 +72,10 @@ public class RestTest extends AbstractTest {
     
     @Test
     public void testPostLaunchImport() {
-      // String scenarioID = "000000";
-         	final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
+         String scenarioID = "000000";
+         final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
         //assertEquals("{true}", test.readEntity(String.class));
    
     }
 
-    @Test
-    public void testPostScenarios() {
-       // String scenarioID = "000000";
-      final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
-        //assertEquals("{\"ids\":[1,2,3]}", test.readEntity(String.class));
-    }
 }
