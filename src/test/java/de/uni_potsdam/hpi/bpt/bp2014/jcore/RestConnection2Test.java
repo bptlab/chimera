@@ -26,7 +26,7 @@ public class RestConnection2Test extends AbstractTest {
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
     @Override
