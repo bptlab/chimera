@@ -1,4 +1,8 @@
 ![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)
+<a href="https://scan.coverity.com/projects/4326">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/4326/badge.svg"/>
+</a>
 
 # JEngine
 
