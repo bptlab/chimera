@@ -60,13 +60,6 @@ public class RestTest extends AbstractTest {
         //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
     }
 
-    @Test
-    public void testGetScenarios() {
-       // String scenarioID = "000000";
-    	final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
-        //assertEquals("{\"ids\":[1,2,3]}", test.readEntity(String.class));
-    }
-
     /* #############################################################################
       *
       * HTTP POST REQUEST
@@ -80,5 +73,12 @@ public class RestTest extends AbstractTest {
          	final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
         //assertEquals("{true}", test.readEntity(String.class));
    
+    }
+
+    @Test
+    public void testPostScenarios() {
+       // String scenarioID = "000000";
+      final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
+        //assertEquals("{\"ids\":[1,2,3]}", test.readEntity(String.class));
     }
 }
