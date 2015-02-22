@@ -13,3 +13,6 @@ before_script:
 script:
   - mysql JEngineV2 < src/main/resources/JEngineV2.sql -uroot
   - mvn test
+ 
+after_success:
+  - mvn clean cobertura:cobertura coveralls:report
