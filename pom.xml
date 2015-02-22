@@ -29,6 +29,7 @@
         <powermock.version>1.6.1</powermock.version>
         <jersey.version>2.13</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     </properties>
 
     <dependencyManagement>
