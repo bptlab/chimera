@@ -83,7 +83,7 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     //foreach($enabled_activities["label"] as $key => $value) {
 			  echo "<tr>";
 			  echo "<th>".$key."</th>";
-			  echo "<th>".$value."</th>";
+			  echo "<th>".$label."</th>";
 			  echo "<th><form action='update_jcore_controller.php' method='post'>
 	            			<input type='hidden' name='update_activity_status_begin' value='true'>
 	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
@@ -160,8 +160,8 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     		<table>
     			<tr>
     				<th> ID</th>
-    				<th> Label</th>
     				<th> States</th>
+    				<th> Label</th>
     			</tr>
     			<tr>";
 
