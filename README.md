@@ -7,13 +7,27 @@
 
 # JEngine
 
-The JEngine is a Framework for Production Case Management (PCM) containing Modeling and Execution.
+The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## RESTful
 
-To test the rest-based implementation the RestTest-Class exists to create the server, which shall be later exchanged
-with the main class that executes the main method and the server.
-As of now the server will give you an response on localhost:8080/rest and will give you an json.
+See the documentation inside the doc folder.
+
+## Deployment
+
+In order to deploy the JEngine install [Maven](http://maven.apache.org/ Maven).
+Then execute the following commands in your command line:
+
+'''
+mvn install -Dmaven.test.skip=true
+'''
+
+A war file will be created which can be executed using tomcat.
+
+## Database Setup
+
+You can use the src/main/resources/JEngineV2.sql file for your Database setup.
+Please set your database settings inside the web.xml.
 
 ## Features
 
@@ -23,5 +37,3 @@ This JEngine does execute
 * data objects
 * AND gateways
 * termination condition for scenarios
-
-:-)

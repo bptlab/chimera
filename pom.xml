@@ -38,6 +38,21 @@
                             <exclude>**/Seed.class</exclude>
                             <exclude>**/FileUpload.class</exclude>
                             <exclude>**/debugClass.class</exclude>
+                            <exclude>**/sample/**/*</exclude>
+                            <exclude>**/*.md</exclude>
+                            <exclude>**/*.sql</exclude>
+                            <exclude>**/*.sh</exclude>
+                            <exclude>**/*.yml</exclude>
+                            <exclude>**/*.json</exclude>
+                            <exclude>**/*.xml</exclude>
+                            <exclude>**/*.html</exclude>
+                            <exclude>**/*.pdf</exclude>
+                            <exclude>**/*.tex</exclude>
+                            <exclude>**/*.pages</exclude>
+                            <exclude>**/*.cls</exclude>
+                            <exclude>**/*.log</exclude>
+                            <exclude>**/docu/**/*</exclude>
+                            <exclude>**/config/**/*.sh</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
