@@ -250,7 +250,10 @@ public class Connector {
         String sql = "INSERT INTO dataflow " +
                 "(controlnode_id, dataset_id, input) " +
                 "VALUES (" + controlNodeID + ", " +
-                dataSetID + ", " + inputAsInt + ")";
+                dataSetID + ", " + inputAsInt + ")  WHERE NOT EXISTS(SELECT 1 " +
+                "FROM dataflow " +
+                "WHERE controlnodw_id = " + controlNodeID +
+                "AND dataset_id = + " + dataSetID + ")";
         performDefaultSQLInsertStatement(sql);
     }
 
