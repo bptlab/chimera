@@ -118,9 +118,5 @@ public class REST {
 
         return new Retrieval()
                 .getImagewithAuth(PROCESS_SERVER_URI, urlToRead);
-
     }
-
-    //Necessary for JSON encoding
-
 }
