@@ -1,4 +1,4 @@
-![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)(https://travis-ci.org/BP2014W1/JEngine)
+[![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)](https://travis-ci.org/BP2014W1/JEngine)
 [![Coverage Status](https://coveralls.io/repos/BP2014W1/JEngine/badge.svg?branch=dev)](https://coveralls.io/r/BP2014W1/JEngine?branch=dev)
 <a href="https://scan.coverity.com/projects/4326">
   <img alt="Coverity Scan Build Status"
