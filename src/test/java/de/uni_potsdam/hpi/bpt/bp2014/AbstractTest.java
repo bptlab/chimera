@@ -17,7 +17,7 @@ public abstract class AbstractTest extends JerseyTest {
     /**
      * The Database Seed file.
      */
-    public static String SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    public static String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
 
     /**
      * Sets up the database for RestTests.
@@ -29,7 +29,7 @@ public abstract class AbstractTest extends JerseyTest {
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(SQL_SEED_FILE));
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
 
     /**

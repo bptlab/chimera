@@ -1,4 +1,4 @@
-![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)
+[![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)](https://travis-ci.org/BP2014W1/JEngine)
 [![Coverage Status](https://coveralls.io/repos/BP2014W1/JEngine/badge.svg?branch=dev)](https://coveralls.io/r/BP2014W1/JEngine?branch=dev)
 <a href="https://scan.coverity.com/projects/4326">
   <img alt="Coverity Scan Build Status"
@@ -18,9 +18,8 @@ See the documentation inside the doc folder.
 In order to deploy the JEngine install [Maven](http://maven.apache.org/ Maven).
 Then execute the following commands in your command line:
 
-'''
-mvn install -Dmaven.test.skip=true
-'''
+    mvn install -Dmaven.test.skip=true
+
 
 A war file will be created which can be executed using tomcat.
 

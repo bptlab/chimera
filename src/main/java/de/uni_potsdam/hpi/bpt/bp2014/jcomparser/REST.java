@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
 import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
+import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.xml.sax.SAXException;
 
 import javax.ws.rs.*;
@@ -95,7 +96,7 @@ public class REST {
         }
 
         Gson gson = new Gson();
-        JsonIntegerList json = new JsonIntegerList(scenarioIDs);
+        JsonUtil.JsonStringHashMap json = new JsonUtil.JsonStringHashMap(scenarioIDs);
         String jsonRepresentation = gson.toJson(json);
 
         return Response.ok(jsonRepresentation,
@@ -121,29 +122,5 @@ public class REST {
     }
 
     //Necessary for JSON encoding
-    class JsonHashMapIntegerString {
-        private LinkedList<Integer> ids;
-        private HashMap<Integer, String> label;
 
-        public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels) {
-            this.ids = ids;
-            this.label = labels;
-        }
-    }
-
-    class JsonIntegerList {
-        private HashMap<String, String> ids;
-
-        public JsonIntegerList(HashMap<String, String> ids) {
-            this.ids = ids;
-        }
-    }
-
-    class JsonInteger {
-        private Integer id;
-
-        public JsonInteger(Integer id) {
-            this.id = id;
-        }
-    }
 }
