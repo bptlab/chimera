@@ -65,7 +65,6 @@ public class REST {
     public int startComparser(@PathParam("scenarioID") final int scenarioID)
             throws IOException, SAXException, ParserConfigurationException {
         JComparser comparser = new JComparser();
-        // TODO: The Main Method should not be used!
         String scenarioURL = PCM_URL + scenarioID + ".pm";
         return comparser.fetchAndParseScenarioFromServer(scenarioURL, PROCESS_SERVER_URI);
     }

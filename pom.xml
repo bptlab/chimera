@@ -31,6 +31,15 @@
                     <maxmem>256m</maxmem>
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
+                    <!-- Exclude Debug-Files -->
+                    <instrumentation>
+                        <excludes>
+                            <exclude>**/Ausprobieren.class</exclude>
+                            <exclude>**/Seed.class</exclude>
+                            <exclude>**/FileUpload.class</exclude>
+                            <exclude>**/debugClass.class</exclude>
+                        </excludes>
+                    </instrumentation>
                 </configuration>
             </plugin>
             <plugin>
