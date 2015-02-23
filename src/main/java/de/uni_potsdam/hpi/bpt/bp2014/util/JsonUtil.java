@@ -5,9 +5,6 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-/**
- * Created by Ihdefix on 23.02.2015.
- */
 public class JsonUtil {
     /**
      * @param content contains a LinkedList
@@ -38,7 +35,7 @@ public class JsonUtil {
      */
     public static String JsonWrapperMultipleHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels, HashMap<Integer, String> states) {
         Gson gson = new Gson();
-        JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels, states);
+        JsonHashMapMultipleIntegerString json = new JsonHashMapMultipleIntegerString(content, labels, states);
         return gson.toJson(json);
     }
 
@@ -49,6 +46,18 @@ public class JsonUtil {
         public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels) {
             this.ids = ids;
             this.label = labels;
+        }
+    }
+
+    public static class JsonHashMapMultipleIntegerString {
+        private HashMap<Integer, String> states;
+        private LinkedList<Integer> ids;
+        private HashMap<Integer, String> label;
+
+        public JsonHashMapMultipleIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels, HashMap<Integer, String> states) {
+            this.ids = ids;
+            this.label = labels;
+            this.states = states;
         }
     }
 
