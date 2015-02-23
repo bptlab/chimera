@@ -52,7 +52,7 @@ public class RestConnectionTestWithMock extends JerseyTest {
      */
     //@Test
     public void testGetScenarios() {
-
+/*
          try {
 
             PowerMock.mockStatic(ExecutionService.class);
@@ -76,6 +76,6 @@ public class RestConnectionTestWithMock extends JerseyTest {
         String getUrl = "interface/v1/en/scenarios/0/";
         final Response test = target(getUrl).request().get();
         assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
-
+*/
     }
 }
