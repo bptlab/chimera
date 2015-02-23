@@ -4,11 +4,9 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -19,7 +17,7 @@ public abstract class AbstractTest extends JerseyTest {
     /**
      * The Database Seed file.
      */
-    public static String SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    public static String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
 
     /**
      * Sets up the database for RestTests.
@@ -31,7 +29,7 @@ public abstract class AbstractTest extends JerseyTest {
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(SQL_SEED_FILE));
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
 
     /**
@@ -40,7 +38,6 @@ public abstract class AbstractTest extends JerseyTest {
     protected static void clearDatabase() {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
-        ResultSet rs = null;
         if (conn == null) {
             return;
         }
