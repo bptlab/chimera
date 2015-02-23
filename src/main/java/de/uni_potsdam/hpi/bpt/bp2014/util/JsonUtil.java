@@ -5,9 +5,6 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-/**
- * Created by Sven Ihde on 23.02.2015.
- */
 
 /**
  * This class provides the helper methods/classes used for the JSON representation for the REST connections.
@@ -35,6 +32,17 @@ public class JsonUtil {
     }
 
     /**
+     * @param content contains a LinkedList
+     * @param labels  contains a String
+     * @param states  contains a String
+     * @return a wrapped json
+     */
+    public static String JsonWrapperMultipleHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels, HashMap<Integer, String> states) {
+        Gson gson = new Gson();
+        JsonHashMapMultipleIntegerString json = new JsonHashMapMultipleIntegerString(content, labels, states);
+        return gson.toJson(json);
+    }
+    /**
      * This class is a JSON HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
      */
     public static class JsonHashMapIntegerString {
@@ -53,6 +61,17 @@ public class JsonUtil {
         }
     }
 
+    public static class JsonHashMapMultipleIntegerString {
+        private HashMap<Integer, String> states;
+        private LinkedList<Integer> ids;
+        private HashMap<Integer, String> label;
+
+        public JsonHashMapMultipleIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels, HashMap<Integer, String> states) {
+            this.ids = ids;
+            this.label = labels;
+            this.states = states;
+        }
+    }
     /**
      * This class handles the JSON representation of a list filled with database ID's.
      */

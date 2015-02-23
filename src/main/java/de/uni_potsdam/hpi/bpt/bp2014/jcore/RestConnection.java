@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.google.gson.Gson;
+import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -220,18 +221,23 @@ public class RestConnection {
     @Produces(MediaType.APPLICATION_JSON)
     public Response showDataObjects(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("dataobjectID") int dataobjectID, @QueryParam("status") String status, @QueryParam("limit") String limit) {
 
-        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.serverError().entity("Error: there is no existing open scenario instance").build();
-        }
-        LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
-        HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
-        //if no dataobject is available -> return {empty}
-        if (dataObjects.size() == 0) {
-            return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
-        }
-        String jsonRepresentation = JsonWrapperHashMap(dataObjects, labels);
+        if (dataobjectID == 0) {
+            if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+                return Response.serverError().entity("Error: there is no existing open scenario instance").build();
+            }
+            LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
+            HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
+            HashMap<Integer, String> states = executionService.getAllDataObjectNames(scenarioInstanceID);
+            //if no dataobject is available -> return {empty}
+            if (dataObjects.size() == 0) {
+                return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
+            }
+            String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
 
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        } else {
+            return Response.serverError().entity("Error: not correct dataobject ID").build();
+        }
     }
 
 
@@ -300,14 +306,4 @@ public class RestConnection {
         System.err.print("ERROR: no status defined " + status);
         return false;
     }
-
-
-    /* ##########################################################################
-     *
-     * HELPER CLASSES
-     *
-     * ##########################################################################
-     */
-
-
 }
