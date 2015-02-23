@@ -77,7 +77,7 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     for ($i = 0; $i < $amount_of_enabled_activities; $i++) {
     	 $key = $enabled_activities["ids"][$i];
     	 $label = $enabled_activities["label"][$key];
-    	 if($key == "{" || $value == "{") {
+    	 if($key == "{" || $label == "{") {
     	 	continue;
     	 }
     //foreach($enabled_activities["label"] as $key => $value) {
@@ -170,7 +170,7 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     	 $key = $dataobjects["ids"][$i];
     	 $label = $dataobjects["label"][$key];
     	 $states = $dataobjects["states"][$key];
-    	 if($key == "{" || $value == "{") {
+    	 if($key == "{" || $label == "{" || $states == "{") {
     	 	continue;
     	 }
     //foreach($terminated_activities["label"] as $key => $value) {
