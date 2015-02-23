@@ -76,14 +76,14 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     $amount_of_enabled_activities = count($enabled_activities["ids"]);
     for ($i = 0; $i < $amount_of_enabled_activities; $i++) {
     	 $key = $enabled_activities["ids"][$i];
-    	 $value = $enabled_activities["label"][$key];
-    	 if($key == "{" || $value == "{") {
+    	 $label = $enabled_activities["label"][$key];
+    	 if($key == "{" || $label == "{") {
     	 	continue;
     	 }
     //foreach($enabled_activities["label"] as $key => $value) {
 			  echo "<tr>";
 			  echo "<th>".$key."</th>";
-			  echo "<th>".$value."</th>";
+			  echo "<th>".$label."</th>";
 			  echo "<th><form action='update_jcore_controller.php' method='post'>
 	            			<input type='hidden' name='update_activity_status_begin' value='true'>
 	            			<input type='hidden' name='pcm_scenarioID' value='".$_COOKIE['JEngine_ScenarioID']."'>
@@ -160,21 +160,24 @@ if((isset($_COOKIE['JEngine_ScenarioInstanceID'])) && (isset($_COOKIE['JEngine_S
     		<table>
     			<tr>
     				<th> ID</th>
-    				<th> Status</th>
+    				<th> States</th>
+    				<th> Label</th>
     			</tr>
     			<tr>";
 
     $amount_of_dataobjects = count($dataobjects["ids"]);
     for ($i = 0; $i < $amount_of_dataobjects; $i++) {
     	 $key = $dataobjects["ids"][$i];
-    	 $value = $dataobjects["label"][$key];
-    	 if($key == "{" || $value == "{") {
+    	 $label = $dataobjects["label"][$key];
+    	 $states = $dataobjects["states"][$key];
+    	 if($key == "{" || $label == "{" || $states == "{") {
     	 	continue;
     	 }
     //foreach($terminated_activities["label"] as $key => $value) {
     	      echo "<tr>";
 			  echo "<th>".$key."</th>";
-			  echo "<th>".$value."</th>";
+			  echo "<th>".$label."</th>";
+			  echo "<th>".$states."</th>";
 		      echo "</tr>";
 	}
 	echo "</table>";

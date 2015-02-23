@@ -226,8 +226,8 @@ public class RestConnection {
                 return Response.serverError().entity("Error: there is no existing open scenario instance").build();
             }
             LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
-            HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
-            HashMap<Integer, String> states = executionService.getAllDataObjectNames(scenarioInstanceID);
+            HashMap<Integer, String> states = executionService.getAllDataObjectStates(scenarioInstanceID);
+            HashMap<Integer, String> labels = executionService.getAllDataObjectNames(scenarioInstanceID);
             //if no dataobject is available -> return {empty}
             if (dataObjects.size() == 0) {
                 return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();

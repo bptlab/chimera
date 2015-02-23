@@ -306,14 +306,14 @@ public class ExecutionService {
      */
     public HashMap<Integer, String> getAllDataObjectNames(int scenarioInstance_id) {
         DbDataObject dbDataObject = new DbDataObject();
-        HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
+        HashMap<Integer, String> dataObjectNames = new HashMap<Integer, String>();
         for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
-            dataObjectStates.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getState_id()));
+            dataObjectNames.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getDataObject_id()));
         }
         for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
-            dataObjectStates.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getState_id()));
+            dataObjectNames.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getDataObject_id()));
         }
-        return dataObjectStates;
+        return dataObjectNames;
     }
 
 
