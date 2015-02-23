@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.google.gson.Gson;
+import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -230,7 +231,7 @@ public class RestConnection {
         if (dataObjects.size() == 0) {
             return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
         }
-        String jsonRepresentation = JsonWrapperMultipleHashMap(dataObjects, labels, states);
+        String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
