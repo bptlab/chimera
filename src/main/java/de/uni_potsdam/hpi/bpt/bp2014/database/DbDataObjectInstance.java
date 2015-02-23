@@ -1,285 +1,118 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
-
-public class DbDataObjectInstance {
-
+/**
+ * This class is the representation of a dataObject instance in the database.
+ * It provides the functionality to check for existing instances or create new ones.
+ * Moreover you can get the state of the dataObject instance as well as prevent concurrent modifying of the same instance.
+ */
+public class DbDataObjectInstance extends DbObject {
+    /**
+     * This method checks if the instance of a dataObject is existing.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @param dataObject_id This is the database ID of a dataObject.
+     * @return true if DataObject is existing else false.
+     */
     public Boolean existDataObjectInstance(int scenarioInstance_id, int dataObject_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return false;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM dataobjectinstance WHERE scenarioinstance_id = " + scenarioInstance_id +" AND dataobject_id = "+ dataObject_id;
-            rs = stmt.executeQuery(sql);
-            if(rs.next()) {
-                return true;
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return false;
+        String sql = "SELECT id FROM dataobjectinstance WHERE scenarioinstance_id = " + scenarioInstance_id + " AND dataobject_id = " + dataObject_id;
+        return this.executeExistStatement(sql);
     }
+
+    /**
+     * This method sets the state of a dataObject instance to a desirable one.
+     *
+     * @param id This is the database ID of a dataObject instance.
+     * @param state This is the desirable state of a dataObject instance.
+     */
     public void setState(int id, int state) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "UPDATE dataobjectinstance SET state_id = " + state + " WHERE id = " + id;
-            stmt.executeUpdate(sql);
-            //Clean-up environment
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
+        String sql = "UPDATE dataobjectinstance SET state_id = " + state + " WHERE id = " + id;
+        this.executeUpdateStatement(sql);
     }
+
+    /**
+     * This method creates and saves a dataObject instance to the database.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @param state_id This is the initial state of a dataObject instance.
+     * @param dataObject_id This is the database ID of a dataObject.
+     * @return -1 if something went wrong else return the database ID of the newly created dataObject instance.
+     */
     public int createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return -1;
-        int result = -1;
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", "+ state_id +", " + dataObject_id+")";
-            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            rs = stmt.getGeneratedKeys();
-            rs.next();
-            result = rs.getInt(1);
-
-            //Clean-up environment
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return result;
+        String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", " + state_id + ", " + dataObject_id + ")";
+        return this.executeInsertStatement(sql);
     }
+
+    /**
+     * This method returns the dataObject instance ID of a corresponding dataObject.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @param dataObject_id This is the database ID of a dataObject.
+     * @return -1 if something went wrong else the database ID of a dataObject instance.
+     */
     public int getDataObjectInstanceID(int scenarioInstance_id, int dataObject_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM dataobjectinstance WHERE dataobject_id = " + dataObject_id + " AND scenarioinstance_id = "+ scenarioInstance_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT id FROM dataobjectinstance WHERE dataobject_id = " + dataObject_id + " AND scenarioinstance_id = " + scenarioInstance_id;
+        return this.executeStatementReturnsInt(sql, "id");
     }
+
+    /**
+     * This method returns the state ID of a given dataObject instance.
+     *
+     * @param dataObjectInstance_id This is the database ID of a dataObject instance.
+     * @return -1 if something went wrong else the database ID of the state of the dataObject instance.
+     */
     public int getStateID(int dataObjectInstance_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT state_id FROM dataobjectinstance WHERE id = " + dataObjectInstance_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("state_id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT state_id FROM dataobjectinstance WHERE id = " + dataObjectInstance_id;
+        return this.executeStatementReturnsInt(sql, "state_id");
     }
-    public Boolean getOnChange(int dataObjectInstance_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        Boolean results = false;
-        if (conn == null) return results;
 
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT onchange FROM dataobjectinstance WHERE id = " + dataObjectInstance_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getBoolean("onchange");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+    /**
+     * This method checks if the dataObject instance is in a modified state to prevent concurrency.
+     *
+     * @param dataObjectInstance_id This is the database ID of a dataObject instance.
+     * @return true if another activity is using this dataObject instance else false.
+     */
+    public boolean getOnChange(int dataObjectInstance_id) {
+        String sql = "SELECT onchange FROM dataobjectinstance WHERE id = " + dataObjectInstance_id;
+        return this.executeStatementReturnsBoolean(sql, "onchange");
     }
+
+    /**
+     * This method sets the dataObject instance to a modified state so that no other activity can work with it.
+     *
+     * @param id This is the database ID of a dataObject instance.
+     * @param onChange This is the flag set to indicate if the dataObject instance is being modified or not.
+     */
     public void setOnChange(int id, Boolean onChange) {
         int onChangeAsInt;
-        if(onChange){
+        if (onChange) {
             onChangeAsInt = 1;
-        }else{
+        } else {
             onChangeAsInt = 0;
         }
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "UPDATE dataobjectinstance SET onchange = " + onChangeAsInt + " WHERE id = " + id;
-            stmt.executeUpdate(sql);
-            //Clean-up environment
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
+        String sql = "UPDATE dataobjectinstance SET onchange = " + onChangeAsInt + " WHERE id = " + id;
+        this.executeUpdateStatement(sql);
     }
 
 }

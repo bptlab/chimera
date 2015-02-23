@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * ********************************************************************************
- *
+ * <p/>
  * _________ _______  _        _______ _________ _        _______
  * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
  * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
@@ -17,13 +17,13 @@ import java.util.ArrayList;
  * |  |  | (      | | \   || | \_  )   | |   | | \   || (
  * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
  * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- *
+ * <p/>
  * ******************************************************************
- *
+ * <p/>
  * Copyright © All Rights Reserved 2014 - 2015
- *
+ * <p/>
  * Please be aware of the License. You may found it in the root directory.
- *
+ * <p/>
  * **********************************************************************************
  */
 
@@ -31,14 +31,15 @@ import java.util.ArrayList;
 public class Seed {
 
     public void getDBcontent() {
-
     }
-
 
     public void setDBcontent() {
-
     }
 
+    /**
+     * @param id some id..
+     * @return
+     */
     public ArrayList<Integer> getAllActivityIDByFragmentID(int id) {
 
         Connector jHandler = new Connector();
@@ -74,7 +75,7 @@ public class Seed {
             try {
                 if (stmt != null)
                     stmt.close();
-            } catch (SQLException se2) {
+            } catch (SQLException ignored) {
             }// nothing we can do
             try {
                 if (conn != null)

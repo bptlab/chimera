@@ -15,8 +15,8 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
     private String sendMail;
     private String subject;
     private String message;
-    private int controlNode_id;
-    private DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
+    private final int controlNode_id;
+    private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 
 
     public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {

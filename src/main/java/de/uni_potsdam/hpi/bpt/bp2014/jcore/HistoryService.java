@@ -30,15 +30,28 @@ import java.util.LinkedList;
 
 
 public class HistoryService {
-    //Database Connection objects
-    private DbActivityInstance dbActivityInstance = new DbActivityInstance();
-    private DbControlNode dbControlNode = new DbControlNode();
+    /**
+     * Database Connection objects
+     */
+    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    private final DbControlNode dbControlNode = new DbControlNode();
 
-    public LinkedList<Integer> getTerminatedActivitysForScenarioInstance(int scenarioInstance_id) {
-        LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstance_id);
-        return ids;
+    /**
+     * Gives all ids of terminated activities for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a list of int ids of the activities.
+     */
+    public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
+        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstance_id);
     }
 
+    /**
+     * Returns the Labels of terminated activities for a scenario instance id.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
+     */
     public HashMap<Integer, String> getTerminatedActivityLabelsForScenarioInstance(int scenarioInstance_id) {
         LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstance_id);
         HashMap<Integer, String> labels = new HashMap<Integer, String>();

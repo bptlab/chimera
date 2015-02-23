@@ -4,139 +4,73 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
-
-public class DbControlNode {
+/**
+ * This class is the representation of a controlNode in the database.
+ * It provides the functionality to get the startEvent of a fragment as well as the type and label of a controlNode.
+ * Moreover it is possible to check if two controlNodes have the same output.
+ */
+public class DbControlNode extends DbObject {
+    /**
+     * This method returns the database Id of a startEvent in the context of a fragment.
+     *
+     * @param fragment_id This is the database ID of a fragment.
+     * @return -1 if something went wrong else the database ID of the startEvent.
+     */
     public int getStartEventID(int fragment_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM controlnode WHERE type = 'Startevent' AND fragment_id = " + fragment_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT id FROM controlnode WHERE type = 'Startevent' AND fragment_id = " + fragment_id;
+        return this.executeStatementReturnsInt(sql, "id");
     }
+
+    /**
+     * This method returns the type of a controlNode.
+     *
+     * @param controlNode_id This is the database ID of a controlNode.
+     * @return the type of the controlNode as a String.
+     */
     public String getType(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        String results = "";
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getString("type");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
+        return this.executeStatementReturnsString(sql, "type");
     }
+
+    /**
+     * This method returns the name of a controlNode.
+     *
+     * @param controlNode_id This is the database ID of a controlNode.
+     * @return the label of the controlNode as a String.
+     */
     public String getLabel(int controlNode_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        String results = "";
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getString("label");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
+        return this.executeStatementReturnsString(sql, "label");
     }
 
+    /**
+     * This method checks if 2 controlNodes have the same output (mostly used for shared activities).
+     *
+     * @param controlNode_id1 This is the database ID of the first controlNode.
+     * @param controlNode_id2 This is the database ID of the second controlNode.
+     * @return true if they have the same output else false.
+     */
     public Boolean controlNodesHaveSameOutputs(int controlNode_id1, int controlNode_id2) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
@@ -148,31 +82,31 @@ public class DbControlNode {
             stmt = conn.createStatement();
             String sql = "(SELECT dataobject_id, state_id FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id1 +" AND " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id1 + " AND " +
                     "dataflow.input = 0 AND (dataobject_id, state_id) NOT IN " +
                     "(SELECT dataobject_id, state_id FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id2 +" AND " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id2 + " AND " +
                     "dataflow.input = 0)) UNION (SELECT dataobject_id, state_id " +
                     "FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id2 +" " +
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id2 + " " +
                     "AND dataflow.input = 0 AND (dataobject_id, state_id) NOT IN " +
                     "(SELECT dataobject_id, state_id FROM datasetconsistsofdatanode, datanode, dataflow " +
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
-                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = "+ controlNode_id1 +" AND " +
-                    "dataflow.input = 0))";
+                    "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id1 + " AND " +
+                    "dataflow.input = 0))"; //returns nothing if they have same output else something
             rs = stmt.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 rs.close();
                 stmt.close();
                 conn.close();
-                return false;
-            }else{
+                return false;//not same output
+            } else {
                 rs.close();
                 stmt.close();
                 conn.close();
-                return true;
+                return true;//same output
             }
             //Clean-up environment
 
@@ -182,13 +116,16 @@ public class DbControlNode {
         } finally {
             //finally block used to close resources
             try {
-                if (stmt != null)
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException se2) {
-            }// nothing we can do
+                se2.printStackTrace();
+            }
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }

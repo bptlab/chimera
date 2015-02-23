@@ -1,57 +1,85 @@
-%% ----------------------------------------------------------------
-%% Report.tex
-%% ---------------------------------------------------------------- 
-\documentclass{template/ecsreport}      % Use the Report Style
-\graphicspath{{../Figures/}}   % Location of your graphics files
-\usepackage{natbib}            % Use Natbib style for the refs.
-\hypersetup{colorlinks=true}   % Set to false for black/white printing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University/School Laboratory Report
+% LaTeX Template
+% Version 3.1 (25/3/14)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Linux and Unix Users Group at Virginia Tech Wiki 
+% (https://vtluug.org/wiki/Example_LaTeX_chem_lab_report)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[ngerman]{babel}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage{amssymb}
-\usepackage{fancyhdr}
-\usepackage{enumerate}
-\usepackage{enumitem}
-\usepackage{stmaryrd}
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
 
-\input{Definitions}            % Include your abbreviations
+% please be aware to install sudo apt-get install texlive-science
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   HEADER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article}
+
+%\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
+\usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage{natbib} % Required to change bibliography style to APA
+\usepackage{amsmath} % Required for some math elements 
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%\usepackage{times} % Uncomment to use the Times New Roman font
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Documentation zur JEngine} % Title
+
+\author{BP2014W1 Team} % Author name
+
+\date{\today} % Date for the report
 
 \begin{document}
-\frontmatter
-\title{Documentation zur JEngine}
-\authors    {\texorpdfstring
-             {\href{mailto:S.R.Gunn@ecs.soton.ac.uk}{Steve R. Gunn}}
-             {Steve R. Gunn}
-            }
-\addresses  {\groupname\\\deptname\\\univname}
-\date       {\today}
-\subject    {}
-\keywords   {}
-\maketitle
 
+\maketitle % Insert the title, author and date
 
+\begin{center}
+\begin{tabular}{l r}
+Date Performed: & January 1, 2015 \\ % Date the experiment was performed
+%Betreuer: & Andreas Meyer \\ % Partner names
+%& Marcin Hewelt \\
+%Instructor: & Professor Dr Mathias Weske % Instructor/supervisor
+\end{tabular}
+\end{center}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   BODY   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------
+%	SECTION 0 
+%----------------------------------------------------------------------------------------
 
-%
-%
+% If you wish to include an abstract, uncomment the lines below
 \begin{abstract}
 Diese Dokumentation ist entstanden im Rahmen des Bachelorprojekts BP2014W1 am Lehrstuhl für ``Business Process Technology'' betreut durch Prof. Dr. Mathias Weske. Es dient zu Dokumentierung der konzipierten und implementierten JEngine um ein Proof-of-Concept zu ermöglichen und gleichzeitig als Prototype für Anwendungsfälle von Bosch Software Innovations zu fungieren.
 \end{abstract}
 
-\tableofcontents
-\listoffigures
-\listoftables
-\lstlistoflistings
-\listofsymbols{ll}{$w$ & The weight vector}
-\acknowledgements{Thanks to no one.}
-\dedicatory{To \dots}
-\mainmatter
+%\tableofcontents
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%\listofsymbols{ll}{$w$ & The weight vector}
+%\acknowledgements{Thanks to no one.}
+%\dedicatory{To \dots}
+%\mainmatter
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
 
 %
 %
@@ -179,8 +207,6 @@ Wird versucht ein Szenario zu starten, das nicht existiert, wird einem ein Integ
 \end{enumerate}
 
 
-%%%%%%%%%%%%%%%%%%%%%%% Überarbeitet %%%%%%%%%%%%%%%%%%%%%%%%
-
 Default URL:
 http://172.16.64.113:8080/JEngine/interface/\{version\}/\{language\}/?
 
@@ -191,10 +217,10 @@ returns all scenarios
 scenario=1
 returns all instances
 
-scenario=1&runtime
+scenario=1\& runtime
 returns all instances with runtime
 
-instanceid=1&status=enabled
+instanceid=1\& status=enabled
 returns all enabled activities
 
 activityid=2
@@ -208,6 +234,8 @@ roles returns all roles
 
 
 timestamp ISO-8601
+
+for more informations about the REST please have a look at the REST Specification..
 
 %
 %
@@ -232,24 +260,21 @@ Der ExecutionService ist die Komponente, auf die die REST-API aufbaut. Diese Kom
 
 %
 %
-\section{PCM modelling using the Processeditor}\label{pcm-modelling-using-the-processeditor}
-This document explains how to use the Processeditor to create PCM
-models. A PCM-Process can be described by many PCM fragments and one PCM
-scenario.
+\section{PCM modelling using the Processeditor}
+\label{pcm-modelling-using-the-processeditor}
+This document explains how to use the Processeditor to create PCM models. A PCM-Process can be described by many PCM fragments and one PCM scenario.
 
 %
 %
-\subsection{Preparations}\label{preparations}
-Currently you need both, the Processeditor Workbench and the
-Processeditor Server to model and Save PCM. You will use the Workbench
-for modelling and the Server as a global repository.
+\subsection{Preparations}
+\label{preparations}
+Currently you need both, the Processeditor Workbench and the Processeditor Server to model and Save PCM. You will use the Workbench for modelling and the Server as a global repository.
 
 %
 %
-\subsection{PCM Fragments}\label{pcm-fragments}
-
-PCM Fragments are small Business Process models. They can be modelled
-using a subset of the BPMN-Notation:
+\subsection{PCM Fragments}
+\label{pcm-fragments}
+PCM Fragments are small Business Process models. They can be modelled using a subset of the BPMN-Notation:
 
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -271,7 +296,8 @@ All this elements are offered by the model type PCM Fragment.
 
 %
 %
-\subsubsection{Marking a Task as Global}\label{marking-a-task-as-global}
+\subsubsection{Marking a Task as Global}
+\label{marking-a-task-as-global}
 PCM allows to use the same task in more than one fragment. To do so
 
 \begin{enumerate}
@@ -289,8 +315,8 @@ PCM allows to use the same task in more than one fragment. To do so
 
 %
 %
-\subsubsection{Copy and Refer an existing
-Task}\label{copy-and-refer-an-existing-task}
+\subsubsection{Copy and Refer an existing Task}
+\label{copy-and-refer-an-existing-task}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -309,14 +335,16 @@ Task}\label{copy-and-refer-an-existing-task}
 
 %
 %
-\subsection{PCM Scenario}\label{pcm-scenario}
+\subsection{PCM Scenario}
+\label{pcm-scenario}
 A Scenario defines which PCM Fragments are part of one Process. All PCM
 Fragments have to be saved on the Server. You can alter the Scenario
 only by moving the nodes and adding/removing PCM Fragments.
 
 %
 %
-\subsubsection{Defining a PCM Scenario}\label{defining-a-pcm-scenario}
+\subsubsection{Defining a PCM Scenario}
+\label{defining-a-pcm-scenario}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -339,8 +367,8 @@ and for all their data objects (inside white node).
 
 %
 %
-\subsubsection{Removing a Fragment From an
-Scenario}\label{removing-a-fragment-from-an-scenario}
+\subsubsection{Removing a Fragment From an Scenario}
+\label{removing-a-fragment-from-an-scenario}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -357,8 +385,8 @@ Scenario}\label{removing-a-fragment-from-an-scenario}
 
 %
 %
-\subsubsection{Set a Termination
-Condition}\label{set-a-termination-condition}
+\subsubsection{Set a Termination Condition}
+\label{set-a-termination-condition}
 
 If a termination condition is full filled the process is terminated.
 Currently only one termination condition consisting of one Data Object
@@ -380,8 +408,8 @@ in one specific state is possible.
 
 %
 %
-\subsubsection{Copy and Alter a Complete
-Fragment}\label{copy-and-alter-a-complete-fragment}
+\subsubsection{Copy and Alter a Complete Fragment}
+\label{copy-and-alter-a-complete-fragment}
 
 You can create a variation of an existing PCM Fragment using the Plug-in
 \emph{Create Variant}.
@@ -407,16 +435,15 @@ You can create a variation of an existing PCM Fragment using the Plug-in
 %
 \subsection{Processeditor Client}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   FOOTER   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
 
-\backmatter
+\bibliographystyle{apalike}
 
-%
-%
-\bibliographystyle{abbrv}
-%\bibliographystyle{unsrt}
-\bibliography{JEngine-docu} 
+\bibliography{sample}
 
-%
-%
+%----------------------------------------------------------------------------------------
+
+
 \end{document}

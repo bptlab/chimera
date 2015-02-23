@@ -31,7 +31,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * The url of the process Editor.
      */
-    private final String processeditorServerUrl = "http://localhost:1205/";
+    private String processeditorServerUrl;
     /**
      * The databaseID of the scenario.
      */
@@ -45,7 +45,7 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     private org.w3c.dom.Node fragmentXML;
     /**
-     * The Model-XML-Id of the Fragment.
+     * The Model-XML-ID of the Fragment.
      */
     private long fragmentID;
     /**
@@ -75,6 +75,20 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     private int versionNumber;
 
+    /**
+     * Sets the processeditorServerUrl which is needed for connecting to the server
+     * in order to get the XML-files for the fragments.
+     */
+    public Fragment(String serverURL) {
+        processeditorServerUrl = serverURL;
+    }
+
+    /**
+     * This constructor is only used for testcases as a connection to the server is not needed therefore
+     */
+    public Fragment() {
+    }
+
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
 
@@ -84,7 +98,6 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateControlNodes();
         generateEdges();
         generateSets();
-        setVersionNumber();
     }
 
     /**
@@ -131,11 +144,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                     .newDocumentBuilder();
             Document doc = db.parse(is);
             return doc.getDocumentElement();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -166,17 +175,6 @@ public class Fragment implements IDeserialisable, IPersistable {
         inputSets = new LinkedList<InputSet>();
         outputSets = new LinkedList<OutputSet>();
         for (Node node : controlNodes.values()) {
-//            boolean isInput = false;
-//            boolean isOutput = false;
-//            for (Edge edge : edges) {
-//                if (edge.getSource() == node && edge.getTarget().isDataNode()) {
-//                    isOutput = true;
-//                } else if (edge.getTarget() == node && edge.getSource().isDataNode()) {
-//                    isInput = true;
-//                } else {
-//                    break;
-//                }
-//            }
             if (node.isTask()) {
                 InputSet iSet = InputSet.createInputSetForTaskAndEdges(node,
                         edges);
@@ -274,6 +272,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * Sets the scenario Id.
      * The scenario Id should be the primary key of the scenario
+     *
      * @param id the primary key of the scenario
      */
     public void setScenarioID(final int id) {
@@ -282,6 +281,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
+        setVersionNumber();
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(
                 this.fragmentName,
@@ -349,4 +349,24 @@ public class Fragment implements IDeserialisable, IPersistable {
     public List<OutputSet> getOutputSets() {
         return outputSets;
     }
+
+    /**
+     * Returns the name of the fragment.
+     *
+     * @return fragmentName
+     */
+    public String getFragmentName() {
+        return fragmentName;
+    }
+
+    /**
+     * Returns the Model-XML-ID of the Fragment.
+     *
+     * @return fragmentID
+     */
+    public long getFragmentID() {
+        return fragmentID;
+    }
+
+
 }

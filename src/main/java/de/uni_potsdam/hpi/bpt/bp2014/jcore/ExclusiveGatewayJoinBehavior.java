@@ -28,4 +28,10 @@ public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
     public ExclusiveGatewayJoinBehavior() {
         super();
     }
+
+
+    @Override
+    public void enableControlFlow() {
+
+    }
 }

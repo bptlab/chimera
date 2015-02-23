@@ -30,7 +30,7 @@ if($JCore_REST_Interface_Version === "v1"){
 		$get_response_as_array = json_decode($get_json,true);
 		
 		if(!$get_response_as_array){
-	                die("ERROR: decoding within ShowScenarios failed");
+	                //die("ERROR: decoding within ShowScenarios failed"); # makes no sense in case of there is no scenario in database
 	    } elseif(strpos($get_response_as_array, 'Error')){
 	    			echo "There is an REST Error..";
 	    }
@@ -53,7 +53,7 @@ if($JCore_REST_Interface_Version === "v1"){
 		$get_response_as_array = json_decode($get_json,true);
 		
 		if(!$get_response_as_array){
-	                die("ERROR: decoding within ShowScenarioInstances failed");
+	           //     die("ERROR: decoding within ShowScenarioInstances failed"); # doesnt make sense in case of there is no instance created initial
 	    } elseif(strpos($get_response_as_array, 'Error')){
 	    			echo "There is an REST Error..";
 	    }
@@ -126,6 +126,33 @@ if($JCore_REST_Interface_Version === "v1"){
 		}
 	}
 
+	function GetAllDataobject($PCM_ScenarioID, $PCM_ScenarioInstanceID) {
+		global $JEngine_Server_URL, $JCore_REST_Interface, $debug;
+		$URL = $JEngine_Server_URL."/".$JCore_REST_Interface."/scenario/".$PCM_ScenarioID."/instance/".$PCM_ScenarioInstanceID."/dataobject/0/";
+		
+		# fire HTTP GET to URL in order to recieve json
+		$get_json = file_get_contents($URL);
+		
+		if($get_json === "{empty}") {
+			return $get_json;
+		} else {
+			# parse json as array
+			$get_response_as_array = json_decode($get_json,true);
+			
+			if(empty($get_response_as_array)){
+		                die("ERROR: decoding within GetActivities failed");
+		    } elseif(strpos($get_response_as_array, 'Error')){
+		    			echo "There is an REST Error..";
+		    }
+			if($debug){
+				error_log("HTTP GET on ".$URL);
+				error_log("Returned ".$get_json);
+				error_log("Decoded json as ".print_r($get_response_as_array));
+			}
+			
+			return $get_response_as_array;
+		}
+	}
 	/******************************************************
 	*
 	* HTTP POST REQUESTS

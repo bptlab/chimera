@@ -30,26 +30,34 @@ import java.util.LinkedList;
  */
 
 
-
-/*
-represents the activity instance, it save the state of the activity in the statemachine, it has an outgoing behavior and
-an incoming behavior
-the constructor looks for an activity instance in the database or create a new one in the database
+/**
+ * Represents the activity instance.
+ * It save the state of the activity in the state machine. It has an outgoing behavior and an incoming behavior.
  */
 
 public class ActivityInstance extends ControlNodeInstance {
-    private TaskExecutionBehavior taskExecutionBehavior;
-    private ScenarioInstance scenarioInstance;
-    private String label;
+    private final TaskExecutionBehavior taskExecutionBehavior;
+    private final ScenarioInstance scenarioInstance;
+    private final String label;
     private LinkedList<Integer> references;
-    private boolean isMailTask;
-    //Database Connection objects
-    private DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-    private DbActivityInstance dbActivityInstance = new DbActivityInstance();
-    private DbControlNode dbControlNode = new DbControlNode();
-    private DbReference dbReference = new DbReference();
+    private final boolean isMailTask;
+    /**
+     * Database Connection objects.
+     */
+    private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
+    private final DbControlNode dbControlNode = new DbControlNode();
+    private final DbReference dbReference = new DbReference();
 
-
+    /**
+     * Creates and initializes a new activity instance.
+     * Reads the information for an existing activity instance from the database or creates a new one if no one
+     * exist in the database.
+     *
+     * @param controlNode_id      This is the database id from the control node.
+     * @param fragmentInstance_id This is the database id from the fragment instance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+     */
     public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
@@ -80,8 +88,10 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
+     * Starts the activity instance.
+     * Sets the state of the activity to enabled. Starts the referential activities. Perform the execution behavior.
      *
-     * @return
+     * @return true if the activity could started. false if the activity couldn't started.
      */
     public boolean begin() {
         if (((ActivityStateMachine) stateMachine).isEnabled()) {
@@ -98,32 +108,47 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
+     * Sets an activity to referential running.
      *
-     * @return
+     * @return true if the activity could set to referential running. false if the activity couldn't set.
      */
     public boolean referenceStarted() {
         return ((ActivityStateMachine) stateMachine).referenceStarted();
     }
 
-    public boolean referenceTerminated(){
+    /**
+     * Terminates a referential running activity.
+     * Enables the following control nodes.
+     *
+     * @return true if the activity could set to terminated. false if the activity couldn't set.
+     */
+    public boolean referenceTerminated() {
         boolean workFine = ((ActivityStateMachine) stateMachine).referenceTerminated();
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).enableFollowing();
         return workFine;
     }
 
+    /**
+     * Terminates a running activity.
+     * Enables the following control nodes and sets the data outputs.
+     *
+     * @return true if the activity could set to terminated. false if the activity couldn't set.
+     */
     public boolean terminate() {
         boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
-        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate();
+        outgoingBehavior.terminate();
         return workingFine;
     }
 
-    //checks if the Activity is now data enabled
+    /**
+     * Checks if the Activity is now data enabled.
+     */
     public void checkDataFlowEnabled() {
-        ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabled();
+        ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabledAndEnableDataFlow();
     }
 
-    /*
+    /**
      * Getter
      */
     public TaskExecutionBehavior getTaskExecutionBehavior() {

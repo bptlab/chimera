@@ -22,8 +22,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  * **********************************************************************************
  */
 
-
-public class ControlNodeInstance {
+/**
+ * Represents the abstract control node.
+ */
+public abstract class ControlNodeInstance {
     protected OutgoingBehavior outgoingBehavior;
     protected IncomingBehavior incomingBehavior;
     protected StateMachine stateMachine;
@@ -31,7 +33,7 @@ public class ControlNodeInstance {
     protected int controlNodeInstance_id;
     protected int controlNode_id;
 
-    /*
+    /**
      * Getter
      */
 

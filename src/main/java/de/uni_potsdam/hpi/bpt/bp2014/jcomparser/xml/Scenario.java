@@ -15,14 +15,9 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a Scenario-Model.
@@ -50,7 +45,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * The url of the process Editor.
      */
-    private final String processeditorServerUrl = "http://localhost:1205/";
+    private String processeditorServerUrl;
     /**
      * The database ID of the scenario.
      */
@@ -58,8 +53,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * A Map of the names of dataObjects and the objects themselves.
      */
-    private Map<String, DataObject> dataObjects =
-            new HashMap<String, DataObject>();
+    private Map<String, DataObject> dataObjects;
     /**
      * The DataNode which is part of the termination Condition.
      */
@@ -70,16 +64,28 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private DataObject terminatingDataObject;
     /**
-     * The version of the current Scenario
+     * The version of the current Scenario.
      */
     private int versionNumber;
+
+    /**
+     * Creates a new Scenario Object and saves the PE-ServerURL.
+     * The Scenario needs knowledge of the serverURL, if and
+     * only if it should be initialized from XML.
+     * Hence, it will load the fragments from the ProcessEditor.
+     *
+     * @param serverURL The URL of the ProcessEditor Server.
+     */
+    public Scenario(final String serverURL) {
+        processeditorServerUrl = serverURL;
+    }
 
     /**
      * This Method initializes the scanario from an XML.
      * Be Aware, that a scenario consists of fragments, which will
      * be loaded automatically;
      *
-     * @param element
+     * @param element The XML-representation for the scenario.
      */
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
@@ -102,15 +108,21 @@ public class Scenario implements IDeserialisable, IPersistable {
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery = "/versions/version";
             try {
-                NodeList versions = (NodeList) xPath.compile(xPathQuery).evaluate(versionXML, XPathConstants.NODESET);
+                NodeList versions = (NodeList) xPath
+                        .compile(xPathQuery)
+                        .evaluate(versionXML, XPathConstants.NODESET);
                 int maxID = 0;
-                // We assume that the version that needs to be saved is the newest one
-                //TODO: Do we want to save versions that are currently not in the Database?
+                // We assume that always the latest version should be saved
+                //TODO: Do we want to save all versions that are currently not in the Database?
                 for (int i = 0; i < versions.getLength(); i++) {
                     xPathQuery = "@id";
-                    int currentID = Integer.parseInt((String) xPath.compile(xPathQuery).evaluate(versions.item(i), XPathConstants.STRING));
-                    if (maxID < currentID)
+                    int currentID = Integer.parseInt((String) xPath
+                            .compile(xPathQuery)
+                            .evaluate(versions.item(i),
+                                    XPathConstants.STRING));
+                    if (maxID < currentID) {
                         maxID = currentID;
+                    }
                 }
                 versionNumber = maxID;
             } catch (XPathExpressionException e) {
@@ -120,27 +132,27 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Get the XML which contains all the versions of the current scenario from the processEditorServer
+     * Get the XML which contains all the versions.
+     * Connects to the ProcessEditor Server, in order
+     * to fetch all versions of the current scenario.
+     *
+     * @return A Dom-Element containing all the version information.
      */
     private Element fetchVersionXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
             String versionXML = jRetrieval.getHTMLwithAuth(
                     processeditorServerUrl,
-                    processeditorServerUrl + "models/" + scenarioID + "/versions");
+                    processeditorServerUrl + "models/" +
+                            scenarioID + "/versions");
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(versionXML));
-            DocumentBuilder db = null;
-            db = DocumentBuilderFactory
+            DocumentBuilder db = DocumentBuilderFactory
                     .newInstance()
                     .newDocumentBuilder();
             Document doc = db.parse(is);
             return doc.getDocumentElement();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -178,7 +190,8 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private String getTerminatingObjectState() {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        String xPathQuery = "/model/properties/property[@name = 'Termination State']/@value";
+        String xPathQuery = "/model/properties/property" +
+                "[@name='Termination State']/@value";
         try {
             return xPath.compile(xPathQuery).evaluate(this.scenarioXML);
         } catch (XPathExpressionException e) {
@@ -195,9 +208,12 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private String getTerminatingObjectName() {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        String xPathQuery = "/model/properties/property[@name = 'Termination Data Object']/@value";
+        String xPathQuery = "/model/properties/property" +
+                "[@name = 'Termination Data Object']/@value";
         try {
-            return xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+            return xPath
+                    .compile(xPathQuery)
+                    .evaluate(this.scenarioXML);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
@@ -222,7 +238,10 @@ public class Scenario implements IDeserialisable, IPersistable {
     @Override
     public int save() {
         Connector conn = new Connector();
-        this.databaseID = conn.insertScenarioIntoDatabase(this.scenarioName, scenarioID, versionNumber);
+        this.databaseID = conn.insertScenarioIntoDatabase(
+                this.scenarioName,
+                scenarioID,
+                versionNumber);
         saveFragments();
         saveDataObjects();
         saveConsistsOf();
@@ -234,43 +253,53 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Save the referenced activities of the Scenario to the database
+     * Save the referenced activities of the Scenario to the database.
+     * There fore search for all pairs of activities, that are referenced.
+     * And save these pairs inside the database. (Order is irrelevant,
+     * because the {@link de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector}
+     * does this for you.
      */
     private void saveReferences() {
-        HashMap<Integer, List<Integer>> activities = getActivityDatabaseIDsForEachActivityModelID();
+        /* Key is the ID used inside the model, value are a List of
+         * all IDs used inside the database. */
+        HashMap<Integer, List<Integer>> activities =
+                getActivityDatabaseIDsForEachActivityModelID();
         Connector conn = new Connector();
-        for (Map.Entry<Integer, List<Integer>> activity : activities.entrySet()) {
-            // if List has size 1, there is no reference to this activity as they are indicated by the same model-ID
-            if (activity.getValue().size() > 1) {
-                int firstIndex = 0;
-                int secondIndex = firstIndex + 1;
-                for (int i = 0; i < activity.getValue().size()-1; i++) {
-                    while (secondIndex <= activity.getValue().size()-1) {
-                        conn.insertReferenceIntoDatabase(activity.getValue().get(firstIndex), activity.getValue().get(secondIndex));
-                        secondIndex++;
+        for (List<Integer> databaseIDs : activities.values()) {
+            if (databaseIDs.size() > 1) {
+                // The next two loops find all pairs of referenced activities.
+                for (int i = 0; i < databaseIDs.size() - 1; i++) {
+                    for (int j = i + 1; j < databaseIDs.size(); j++) {
+                        conn.insertReferenceIntoDatabase(databaseIDs.get(i),
+                                databaseIDs.get(j));
                     }
-                    firstIndex++;
-                    secondIndex = firstIndex + 1;
                 }
             }
         }
     }
 
     /**
-     * for each model-ID of the activities collect database-Ids of activities that share the same model-ID
+     * Get all referenced activities with their model ID and databaseIDs.
+     * If two activities are referenced their model IDs are the same,
+     * but they have different IDs inside the database.
+     *
+     * @return A Map of all activity-model IDs to a List of their database IDs.
      */
-    private HashMap<Integer,List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+    private HashMap<Integer, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
         HashMap<Integer, List<Integer>> result = new HashMap<>();
         for (Fragment fragment : fragments) {
             Map<Integer, Node> fragmentNodes = fragment.getControlNodes();
             for (Map.Entry<Integer, Node> node : fragmentNodes.entrySet()) {
                 if (node.getValue().isTask()) {
                     if (result.get(node.getKey()) == null) {
-                        List<Integer> activityDatabaseIDs = new ArrayList<Integer>();
-                        activityDatabaseIDs.add(node.getValue().getDatabaseID());
+                        List<Integer> activityDatabaseIDs =
+                                new ArrayList<Integer>();
+                        activityDatabaseIDs.add(
+                                node.getValue().getDatabaseID());
                         result.put(node.getKey(), activityDatabaseIDs);
                     } else {
-                        result.get(node.getKey()).add(node.getValue().getDatabaseID());
+                        result.get(node.getKey())
+                                .add(node.getValue().getDatabaseID());
                     }
                 }
             }
@@ -283,7 +312,8 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void saveTerminationCondition() {
         Connector conn = new Connector();
-        // first parameter currently irrelevant due to the restriction of the terminationCondition
+        // first parameter currently irrelevant,
+        // due to the restriction of the terminationCondition
         conn.insertTerminationConditionIntoDatabase(1,
                 terminatingDataObject.getDatabaseId(),
                 terminatingDataObject.getStates().get(
@@ -366,6 +396,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Fragments (with Control Nodes) have to be created and saved first.
      */
     private void createDataObjects() {
+        dataObjects = new HashMap<String, DataObject>();
         for (Fragment fragment : fragments) {
             for (Node node : fragment.getControlNodes().values()) {
                 if (node.isDataNode()) {
@@ -383,54 +414,65 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void generateFragmentList() {
         try {
-            //look for all fragments in the scenarioXML and save their IDs
+            //look for all fragments in the scenarioXML and save their node
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery =
-                    "/model/nodes/node/property[@name = '#type' and " +
-                    "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']" +
-                    "/preceding-sibling::property[@name='fragment mid']/@value";
-            NodeList fragmentIDsList = (NodeList) xPath
+                    "/model/nodes/node[property[@name = '#type' and " +
+                            "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']]";
+            NodeList fragmentNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);
+            this.fragments = new LinkedList<Fragment>();
 
-            // create URI from fragmentID and retrieve xml for all fragments of the scenario
-            Retrieval jRetrieval = new Retrieval();
-            this.fragments = new ArrayList<Fragment>(fragmentIDsList.getLength());
-            String currentFragmentXML;
-            DocumentBuilderFactory dbFactory;
-            DocumentBuilder dBuilder;
-            Document doc;
-
-            for (int i = 0; i < fragmentIDsList.getLength(); i++) {
-                currentFragmentXML = jRetrieval.getHTMLwithAuth(
-                        this.processeditorServerUrl,
-                        this.processeditorServerUrl +
-                                "models/" +
-                                fragmentIDsList.item(i).getNodeValue() +
-                                ".pm");
-                dbFactory = DocumentBuilderFactory.newInstance();
-                dBuilder = dbFactory.newDocumentBuilder();
-                doc = dBuilder.parse(
-                        new InputSource(
-                                new ByteArrayInputStream(
-                                        currentFragmentXML.getBytes("utf-8"))));
-                doc.getDocumentElement().normalize();
-                Fragment fragment = new Fragment();
-                fragment.initializeInstanceFromXML(
-                        (org.w3c.dom.Node) doc.getDocumentElement());
-                this.fragments.add(fragment);
+            for (int i = 0; i < fragmentNodes.getLength(); i++) {
+                // get the ID of the current node
+                xPathQuery = "property[@name = 'fragment mid']/@value";
+                String currentNodeID = xPath
+                        .compile(xPathQuery)
+                        .evaluate(fragmentNodes.item(i));
+                this.fragments.add(createAndInitializeFragment(currentNodeID));
             }
         } catch (XPathExpressionException e) {
             e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }
+    }
+
+    /**
+     * Creates a Fragment based on a specific fragmentID.
+     * Therefore it fetches the XML from a Server.
+     *
+     * @param fragmentID The ID of the Fragment.
+     * @return The newly created Fragment Object.
+     */
+    private Fragment createAndInitializeFragment(String fragmentID) {
+        Retrieval retrieval = new Retrieval();
+        String fragmentXML = retrieval.getHTMLwithAuth(
+                this.processeditorServerUrl,
+                this.processeditorServerUrl +
+                        "models/" + fragmentID + ".pm");
+        Fragment fragment = new Fragment(processeditorServerUrl);
+        fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
+        return fragment;
+    }
+
+    /**
+     * Casts a XML from its String Representation to a w3c Document.
+     *
+     * @param xml The String representation of the XML.
+     * @return The from String created Document.
+     */
+    private Document stringToDocument(final String xml) {
+        try {
+            DocumentBuilder db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(xml)));
+            doc.getDocumentElement().normalize();
+            return doc;
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -439,7 +481,6 @@ public class Scenario implements IDeserialisable, IPersistable {
      * of the ScenarioXML Root-Element.
      */
     private void setScenarioName() {
-
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@name";
         try {
@@ -449,5 +490,101 @@ public class Scenario implements IDeserialisable, IPersistable {
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
+    }
+
+    // Getters - Currently used for Tests only
+
+    /**
+     * Returns the name of the Scenario.
+     *
+     * @return The Name of the Scenario
+     */
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    /**
+     * Returns the ID of the scenario used in the XML.
+     *
+     * @return The id from the XML.
+     */
+    public long getScenarioID() {
+        return scenarioID;
+    }
+
+    /**
+     * Returns the Node Object, which represents the XML.
+     *
+     * @return the XML of representing the Scenario.
+     */
+    public org.w3c.dom.Node getScenarioXML() {
+        return scenarioXML;
+    }
+
+    /**
+     * Returns a List of all Fragments.
+     * Be aware, that changes to this List
+     * will change the state of the scenario.
+     *
+     * @return the List of fragments.
+     */
+    public List<Fragment> getFragments() {
+        return fragments;
+    }
+
+    /**
+     * The URL of the ProcessEditor Server.
+     *
+     * @return The PE-Server URL.
+     */
+    public String getProcesseditorServerUrl() {
+        return processeditorServerUrl;
+    }
+
+    /**
+     * Returns the Database ID of the Scenario.
+     * Returns -1 if Scenario is not saved to the database.
+     *
+     * @return The ID used inside the database.
+     */
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    /**
+     * Returns a List of all DataObjects of the Scenario.
+     * Changes will affect the scenario directly.
+     *
+     * @return the DataObjects of the scenario.
+     */
+    public Map<String, DataObject> getDataObjects() {
+        return dataObjects;
+    }
+
+    /**
+     * Returns the DataNode, which is part of the TerminationCondition.
+     *
+     * @return the dataNode of the TerminationCondition.
+     */
+    public Node getTerminatingDataNode() {
+        return terminatingDataNode;
+    }
+
+    /**
+     * Returns the DataObject, which is represented by the TerminatingDataNode.
+     *
+     * @return the DataObject which is part of the TerminationCondition.
+     */
+    public DataObject getTerminatingDataObject() {
+        return terminatingDataObject;
+    }
+
+    /**
+     * Returns an integer Representing the version of the Scenario.
+     *
+     * @return the Version of the Scenario.
+     */
+    public int getVersionNumber() {
+        return versionNumber;
     }
 }

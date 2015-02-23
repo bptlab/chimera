@@ -7,26 +7,31 @@ import java.io.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
-
+/**
+ * This class is used to build a connection to the database.
+ * It initializes the JDBC Driver with the needed configuration to be able to connect ot the database.
+ */
 public class Connection {
     private static Connection instance = null;
     private static File file;
@@ -35,9 +40,18 @@ public class Connection {
     private static String url;
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
-    private Connection(){
+    /**
+     * constructor
+     */
+    private Connection() {
     }
 
+    /**
+     * This method is used to build a connection with a given path for the database.
+     *
+     * @param path This is the path for the database.
+     * @return the instance of a new Connection.
+     */
     public static Connection getInstance(String path) {
         if (instance == null) {
             instance = new Connection();
@@ -46,6 +60,11 @@ public class Connection {
         return instance;
     }
 
+    /**
+     * This method builds a connection for the database with a default path.
+     *
+     * @return the instance of a new Connection.
+     */
     public static Connection getInstance() {
         if (instance == null) {
             String path = "src/main/resources/database_connection";
@@ -55,7 +74,11 @@ public class Connection {
         return instance;
     }
 
-
+    /**
+     * This connection is used to connect to the database.
+     *
+     * @return the open connection.
+     */
     public java.sql.Connection connect() {
         java.sql.Connection conn = null;
         try {
@@ -63,9 +86,6 @@ public class Connection {
             Class.forName(JDBC_DRIVER);
             //Open a connection
             conn = DriverManager.getConnection(url, username, password);
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
         } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
@@ -73,6 +93,11 @@ public class Connection {
         return conn;
     }
 
+    /**
+     * This method loads all the configurations needed to connect to the database.
+     *
+     * @param path This is the path for the database.
+     */
     private void initializeDatabaseConfiguration(String path) {
         file = new File(path);
         try {
@@ -84,9 +109,9 @@ public class Connection {
         } catch (FileNotFoundException e) {
             try {
                 Context ctx = new InitialContext();
-                username = (String)ctx.lookup("java:comp/env/username");
-                password = (String)ctx.lookup("java:comp/env/password");
-                url = (String)ctx.lookup("java:comp/env/url");
+                username = (String) ctx.lookup("java:comp/env/username");
+                password = (String) ctx.lookup("java:comp/env/password");
+                url = (String) ctx.lookup("java:comp/env/url");
             } catch (NamingException e1) {
                 e1.printStackTrace();
             }

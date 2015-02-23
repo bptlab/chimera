@@ -249,6 +249,7 @@ public class Node implements IDeserialisable, IPersistable {
 
     /**
      * Sets the fragment id.
+     *
      * @param newFragmentId should be the database ID of a fragment.
      */
     public void setFragmentId(final int newFragmentId) {

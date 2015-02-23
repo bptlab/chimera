@@ -1,329 +1,128 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.util.LinkedList;
 
-/***********************************************************************************
-*   
-*   _________ _______  _        _______ _________ _        _______ 
-*   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
-*      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
-*      |  |  | (__    |   \ | || |         | |   |   \ | || (__    
-*      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)   
-*      |  |  | (      | | \   || | \_  )   | |   | | \   || (      
-*   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
-*   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
-*
-*******************************************************************
-*
-*   Copyright © All Rights Reserved 2014 - 2015
-*
-*   Please be aware of the License. You may found it in the root directory.
-*
-************************************************************************************/
 
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
-public class DbScenarioInstance {
+/**
+ * This class administrates the scenario instances in the databases and provides check methods to make sure the database is correct.
+ * Moreover it is possible to mark a scenario instance as terminated.
+ */
+public class DbScenarioInstance extends DbObject {
+    /**
+     * Checks if a scenario instance belongs to the right scenario.
+     *
+     * @param scenario_id         This is the database ID of a scenario.
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @return if the check was positive(true) or not(false).
+     */
     public Boolean existScenario(int scenario_id, int scenarioInstance_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return false;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " AND id = "+scenarioInstance_id;
-            rs = stmt.executeQuery(sql);
-            if(rs.next()) {
-                return true;
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return false;
+        String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " AND id = " + scenarioInstance_id;
+        return this.executeExistStatement(sql);
     }
+
+    /**
+     * Checks if a given scenario instance ID is present in the database.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @return if the check was positive(true) or not(false).
+     */
     public Boolean existScenario(int scenarioInstance_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return false;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM scenarioinstance WHERE id = "+scenarioInstance_id;
-            rs = stmt.executeQuery(sql);
-            if(rs.next()) {
-                return true;
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return false;
+        String sql = "SELECT id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+        return this.executeExistStatement(sql);
     }
+
+    /**
+     * Creates a new scenario instance from a scenario.
+     *
+     * @param id This is the database Id of a scenario.
+     * @return -1 if something went wrong else it returns the database ID of the newly created scenario instance.
+     */
     public int createNewScenarioInstance(int id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return -1;
-        int result = -1;
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "INSERT INTO scenarioinstance (scenario_id) VALUES (" + id + ")";
-            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            rs = stmt.getGeneratedKeys();
-            rs.next();
-            result = rs.getInt(1);
-
-            //Clean-up environment
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return result;
+        String sql = "INSERT INTO scenarioinstance (scenario_id) VALUES (" + id + ")";
+        return this.executeInsertStatement(sql);
     }
+
+    /**
+     * Returns the highest ID of all scenario instances of a scenario.
+     *
+     * @param scenario_id This is the database ID of a scenario.
+     * @return -1 if something went wrong else it returns the database ID of the latest scenario instance.
+     */
     public int getScenarioInstanceID(int scenario_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " ORDER BY id DESC";
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " ORDER BY id DESC";
+        return this.executeStatementReturnsInt(sql, "id");
     }
+
+    /**
+     * returns a list of all scenario instance ID's belonging to a scenario.
+     *
+     * @param scenario_id This is the database ID of a scenario.
+     * @return a list of database ID's of all scenario instances belonging to this scenario.
+     */
     public LinkedList<Integer> getScenarioInstances(int scenario_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id;
-            rs = stmt.executeQuery(sql);
-
-            while(rs.next()) {
-                results.add(rs.getInt("id"));
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id;
+        return this.executeStatementReturnsListInt(sql, "id");
     }
+
+    /**
+     * returns the corresponding scenario ID for a scenario instance.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @return the database ID of the corresponding scenario.
+     */
     public int getScenarioID(int scenarioInstance_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT scenario_id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("scenario_id");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT scenario_id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+        return this.executeStatementReturnsInt(sql, "scenario_id");
     }
+
+    /**
+     * returns if a scenario instance is terminated or not.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @return if the scenario instance is terminated(1) or not(0) as an Integer.
+     */
     public int getTerminated(int scenarioInstance_id) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) return results;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = " + scenarioInstance_id;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            results = rs.getInt("terminated");
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
+        String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+        return this.executeStatementReturnsInt(sql, "terminated");
     }
+
+    /**
+     * This sets the terminated status of a scenario instance.
+     *
+     * @param scenarioInstance_id This is the database ID of a scenario instance.
+     * @param terminated          This is the changed status of the scenario instance.
+     */
     public void setTerminated(int scenarioInstance_id, boolean terminated) {
         int terminatedAsInt;
-        if(terminated){
+        if (terminated) {
             terminatedAsInt = 1;
-        }else{
+        } else {
             terminatedAsInt = 0;
         }
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) return;
-
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            String sql = "UPDATE scenarioinstance SET scenarioinstance.terminated = " + terminatedAsInt + " WHERE id = " + scenarioInstance_id;
-            stmt.executeUpdate(sql);
-            //Clean-up environment
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
+        String sql = "UPDATE scenarioinstance SET scenarioinstance.terminated = " + terminatedAsInt + " WHERE id = " + scenarioInstance_id;
+        this.executeUpdateStatement(sql);
     }
 
 

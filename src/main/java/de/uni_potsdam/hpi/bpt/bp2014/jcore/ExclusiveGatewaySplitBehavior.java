@@ -28,4 +28,9 @@ public class ExclusiveGatewaySplitBehavior extends OutgoingBehavior {
     public ExclusiveGatewaySplitBehavior() {
         super();
     }
+
+    @Override
+    public void terminate() {
+
+    }
 }
