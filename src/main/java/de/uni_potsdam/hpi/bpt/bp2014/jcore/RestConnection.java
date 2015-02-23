@@ -8,6 +8,9 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperHashMap;
+import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
+
 
 /**
  * ********************************************************************************
@@ -306,52 +309,5 @@ public class RestConnection {
      * ##########################################################################
      */
 
-    /**
-     * @param content contains a LinkedList
-     * @return a wrapped json
-     */
-    // we are so cool, we dont need any libraries :/
-    private String JsonWrapperLinkedList(LinkedList<Integer> content) {
-        Gson gson = new Gson();
-        JsonIntegerList json = new JsonIntegerList(content);
-        return gson.toJson(json);
-    }
 
-    /**
-     * @param content contains a LinkedList
-     * @param labels  contains a String
-     * @return a wrapped json
-     */
-    // we are so cool, we dont need any libraries :/
-    private String JsonWrapperHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels) {
-        Gson gson = new Gson();
-        JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels);
-        return gson.toJson(json);
-    }
-
-    class JsonHashMapIntegerString {
-        private LinkedList<Integer> ids;
-        private HashMap<Integer, String> label;
-
-        public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels) {
-            this.ids = ids;
-            this.label = labels;
-        }
-    }
-
-    class JsonIntegerList {
-        private LinkedList<Integer> ids;
-
-        public JsonIntegerList(LinkedList<Integer> ids) {
-            this.ids = ids;
-        }
-    }
-
-    class JsonInteger {
-        private Integer id;
-
-        public JsonInteger(Integer id) {
-            this.id = id;
-        }
-    }
 }
