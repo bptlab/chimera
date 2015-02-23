@@ -225,11 +225,12 @@ public class RestConnection {
         }
         LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(scenarioInstanceID);
         HashMap<Integer, String> labels = executionService.getAllDataObjectStates(scenarioInstanceID);
+        HashMap<Integer, String> states = executionService.getAllDataObjectNames(scenarioInstanceID);
         //if no dataobject is available -> return {empty}
         if (dataObjects.size() == 0) {
             return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
         }
-        String jsonRepresentation = JsonWrapperHashMap(dataObjects, labels);
+        String jsonRepresentation = JsonWrapperMultipleHashMap(dataObjects, labels, states);
 
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
@@ -300,14 +301,4 @@ public class RestConnection {
         System.err.print("ERROR: no status defined " + status);
         return false;
     }
-
-
-    /* ##########################################################################
-     *
-     * HELPER CLASSES
-     *
-     * ##########################################################################
-     */
-
-
 }

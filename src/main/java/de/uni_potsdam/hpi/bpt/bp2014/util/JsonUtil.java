@@ -30,6 +30,18 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
+    /**
+     * @param content contains a LinkedList
+     * @param labels  contains a String
+     * @param states  contains a String
+     * @return a wrapped json
+     */
+    public static String JsonWrapperMultipleHashMap(LinkedList<Integer> content, HashMap<Integer, String> labels, HashMap<Integer, String> states) {
+        Gson gson = new Gson();
+        JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels, states);
+        return gson.toJson(json);
+    }
+
     public static class JsonHashMapIntegerString {
         private LinkedList<Integer> ids;
         private HashMap<Integer, String> label;
