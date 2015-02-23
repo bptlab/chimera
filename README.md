@@ -18,9 +18,8 @@ See the documentation inside the doc folder.
 In order to deploy the JEngine install [Maven](http://maven.apache.org/ Maven).
 Then execute the following commands in your command line:
 
-'''
-mvn install -Dmaven.test.skip=true
-'''
+    mvn install -Dmaven.test.skip=true
+
 
 A war file will be created which can be executed using tomcat.
 
