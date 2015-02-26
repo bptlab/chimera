@@ -1,5 +1,6 @@
 #!/bin/bash
 cd /home/jmang/JEngine
+git pull
 mvn clean
 mvn install -Dmaven.test.skip
 service tomcat7 stop
