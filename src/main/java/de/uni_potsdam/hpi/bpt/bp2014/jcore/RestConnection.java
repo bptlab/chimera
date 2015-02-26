@@ -66,7 +66,7 @@ public class RestConnection {
             LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
 
             if (scenarioIDs.size() == 0) {
-                return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();//no scenarios present
+                return Response.serverError().entity("Error: not correct Scenario ID").build();//no scenarios present
             }
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
@@ -78,7 +78,7 @@ public class RestConnection {
             if (label.equals(""))
                 return Response.serverError().entity("Error: not correct scenarioID").build();//no activity with this id present
 
-            return Response.ok("{\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
+            return Response.ok("{\"label\":\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -103,7 +103,7 @@ public class RestConnection {
             LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
 
             if (scenarioIDs.size() == 0) {
-                return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build(); //no instances present
+                return Response.serverError().entity("Error: not correct instance ID").build(); //no instances present
             }
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
@@ -117,7 +117,7 @@ public class RestConnection {
             if (label.equals("")) {
                 return Response.serverError().entity("Error: not correct instanceID").build();//no activity with this id present
             }
-            return Response.ok("{\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
+            return Response.ok("{\"label\":\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -154,7 +154,7 @@ public class RestConnection {
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 // iff no open activities present return {empty}
                 if (enabledActivitiesIDs.size() == 0) {
-                    return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
+                    return Response.serverError().entity("Error: not correct scenarioInstance ID").build();
                 }
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
@@ -169,7 +169,7 @@ public class RestConnection {
                 HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
                 //if no closed activities present -> return {empty}
                 if (terminatedActivities.size() == 0) {
-                    return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
+                    return Response.serverError().entity("Error: not correct activity ID").build();
                 }
                 String jsonRepresentation = JsonWrapperHashMap(terminatedActivities, labels);
 
@@ -184,7 +184,7 @@ public class RestConnection {
                 HashMap<Integer, String> labels = executionService.getRunningActivityLabelsForScenarioInstance(instanceID);
                 // if no running activities present -> return {empty}
                 if (enabledActivitiesIDs.size() == 0) {
-                    return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
+                    return Response.serverError().entity("Error: not correct Activity ID").build();
                 }
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
@@ -230,7 +230,7 @@ public class RestConnection {
             HashMap<Integer, String> labels = executionService.getAllDataObjectNames(scenarioInstanceID);
             //if no dataobject is available -> return {empty}
             if (dataObjects.size() == 0) {
-                return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
+                return Response.serverError().entity("Error: not correct dataobject ID").build();
             }
             String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
 
