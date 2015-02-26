@@ -13,11 +13,6 @@
         <jsp-file>/upload.jsp</jsp-file>
     </servlet>
 
- <!-- SERVLET: FrontEnd -->
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/www/*</url-pattern>
-    </servlet-mapping>
 
      <!-- SERVLET: Jengine -->
    <servlet>
@@ -33,7 +28,7 @@
     <!-- SERVLET: REST -->
    <servlet-mapping>
       <servlet-name>Jersey Web Application</servlet-name>
-      <url-pattern>/*</url-pattern>
+      <url-pattern>/api/*</url-pattern>
    </servlet-mapping>
 
 <!-- SERVLET: FileUpload -->
