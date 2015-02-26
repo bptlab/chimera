@@ -14,6 +14,7 @@ public class NodeTest {
     private Element dataNode;
     private Element activityGlobalNode;
     private Element activityLocalNode;
+    private Element activitySendNode;
     private Element startEventNode;
     private Element endEventNode;
     private Element xorNode;
@@ -47,6 +48,15 @@ public class NodeTest {
         activityLocalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
         activityLocalNode.appendChild(createProperty("#id", "368338489"));
         activityLocalNode.appendChild(createProperty("stereotype", ""));
+    }
+    @Before
+    public void setUpSendTask(){
+        activitySendNode = document.createElement("node");
+        activitySendNode.appendChild(createProperty("text", "Email senden"));
+        activitySendNode.appendChild(createProperty("global", "0"));
+        activitySendNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
+        activitySendNode.appendChild(createProperty("#id", "368338489"));
+        activitySendNode.appendChild(createProperty("stereotype", "SEND"));
     }
 
     @Before
@@ -117,6 +127,19 @@ public class NodeTest {
         Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
         Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
         Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+    }
+
+    @Test
+    public void testSendActivityDeserialization() {
+        Node activity = new Node();
+        activity.initializeInstanceFromXML(activitySendNode);
+        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Text has not been set correctly", "Email senden", activity.getText());
+        Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
+        Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
+        Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
+        Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+        Assert.assertEquals("The stereotype is not set or not equal 'SEND'", "SEND", activity.getStereotype());
     }
 
     @Test
