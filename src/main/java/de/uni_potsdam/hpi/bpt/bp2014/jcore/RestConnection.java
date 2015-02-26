@@ -148,13 +148,13 @@ public class RestConnection {
             if (status.equals("enabled")) { //open activities;
 
                 if (!executionService.openExistingScenarioInstance(scenarioID, instanceID)) {
-                    return Response.serverError().entity("Error: not a correct scenario instance").build();
+                    return Response.serverError().entity("Error: not a correct scenario instance: !executionService.openExistingScenarioInstance").build();
                 }
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 // iff no open activities present return {empty}
                 if (enabledActivitiesIDs.size() == 0) {
-                    return Response.serverError().entity("Error: not correct scenarioInstance ID").build();
+                    return Response.serverError().entity("Error: not correct scenarioInstance ID: enabledActivitiesIDs.size() == 0").build();
                 }
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
@@ -203,7 +203,7 @@ public class RestConnection {
             if (label.equals("")) {
                 return Response.serverError().entity("Error: not correct Activity ID").build();
             }
-            return Response.ok("{\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
+            return Response.ok("{\"label\":\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
         }
     }
 

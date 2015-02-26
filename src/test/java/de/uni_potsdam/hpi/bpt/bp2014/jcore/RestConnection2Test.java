@@ -79,6 +79,12 @@ public class RestConnection2Test extends AbstractTest {
     }
 
     @Test
+    public void testGetAllActivityDetailsForScenarioInstance(){
+        final Response test = target("/interface/v1/en/scenario/1/instance/47/activityinstance/16/").request().get();
+        assertEquals("{\"label\":\"ActivityFragment4\"}", test.readEntity(String.class));
+    }
+
+    @Test
     public void testGetAllDataobjectForScenarioInstance(){
         final Response test = target("/interface/v1/en/scenario/1/instance/328/dataobject/0/").request().get();
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
