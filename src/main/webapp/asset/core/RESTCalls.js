@@ -23,22 +23,45 @@ function GetAllScenarios($scope, $http) {
 }
 
 function GetScenarioDetails($scope, $http) {
-    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/").
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/").
         success(function(data) {
             $scope.scenarioDetails = data;
         });
 }
 
-function ShowScenarioInstances($scope, $http) {
-    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/instance/0/").
+function GetScenarioInstances($scope, $http) {
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/instance/0/").
         success(function(data) {
             $scope.scenarioInstances = data;
         });
 }
 
-function ShowScenarioInstanceDetails($scope, $http) {
-    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/instance/"+ $scope.instance+ "/").
+function GetScenarioInstanceDetails($scope, $http) {
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/instance/"+ $scope.instance+ "/").
         success(function(data) {
             $scope.scenarioInstances = data;
         });
 }
+
+function GetActivitiesForScenarioInstances($scope, $http) {
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/instance/"+ $scope.instance+ "/activityinstance/0/?status="+ $scope.state).
+        success(function(data) {
+            $scope.activities = data;
+        });
+}
+
+function GetActivitiesLabelByID($scope, $http) {
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/instance/"+ $scope.instance+ "/activityinstance/"+ $scope.activity+"/").
+        success(function(data) {
+            $scope.activityDetails = data;
+        });
+}
+
+function GetAllDataobject($scope, $http) {		
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/instance/"+ $scope.instance+ "/dataobject/0/").
+        success(function(data) {
+            $scope.dataobject = data;
+        });
+}
+
+//TODO: implement POSTs
