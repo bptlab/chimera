@@ -20,10 +20,6 @@ public class FragmentTest {
      * the created fragment that needs to be tested
      */
     private Fragment fragment;
-    /**
-     * this Document contains the xml-content for the fragment
-     */
-    private Document fragmentDoc;
 
     /**
      * setUp all necessary variables for the test
@@ -40,15 +36,12 @@ public class FragmentTest {
             File fragmentXML = new File("src/test/resources/TestFragment.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            fragmentDoc = dBuilder.parse(fragmentXML);
+            // this Document contains the xml-content for the fragment
+            Document fragmentDoc = dBuilder.parse(fragmentXML);
             fragmentDoc.getDocumentElement().normalize();
             fragment = new Fragment();
             fragment.initializeInstanceFromXML(fragmentDoc.getDocumentElement());
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
@@ -60,7 +53,7 @@ public class FragmentTest {
     }
     /**
      * rudimentary test for checking if the controlNodes are set "correctly" (simply check if there is a node with
-     * the ID from the fragmentDoc in the controlNodes-Map of the fragment)
+     * the ID from the fragmentXML in the controlNodes-Map of the fragment)
      */
     @Test
     public void testControlNodesSetCorrectly(){
@@ -71,7 +64,7 @@ public class FragmentTest {
     }
     /**
      * rudimentary test for checking if the edges are set "correctly" (simply check if there is an edge with
-     * the ID from the fragmentDoc in the edges-List of the fragment)
+     * the ID from the fragmentXML in the edges-List of the fragment)
      */
     @Test
     public void testEdgesSetCorrectly(){
