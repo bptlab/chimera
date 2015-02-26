@@ -98,6 +98,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateControlNodes();
         generateEdges();
         generateSets();
+        //TODO: add setVersionNumber(); --> testfail
     }
 
     /**
@@ -281,6 +282,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
+        //TODO: remove methodcall --> testfail
         setVersionNumber();
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(
@@ -366,6 +368,15 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     public long getFragmentID() {
         return fragmentID;
+    }
+
+    /**
+     * Returns the model-version of the Fragment.
+     *
+     * @return versionNumber
+     */
+    public int getVersion() {
+        return versionNumber;
     }
 
 

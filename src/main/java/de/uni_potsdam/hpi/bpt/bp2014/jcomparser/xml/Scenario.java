@@ -67,6 +67,12 @@ public class Scenario implements IDeserialisable, IPersistable {
      * The version of the current Scenario.
      */
     private int versionNumber;
+    /**
+     * Marks if the scenario needs to be saved.
+     * If none of the fragments is changed and none is added or removed, it does not need to be saved and
+     * the variable holds value false.
+     */
+    private boolean needsToBeSaved;
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -96,6 +102,40 @@ public class Scenario implements IDeserialisable, IPersistable {
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
+        //TODO: add methodcall checkIfVersionAlreadyInDatabase(); --> testfail
+        needsToBeSaved = true;
+    }
+
+    /**
+     * Checks if the versions of all fragments and of this scenario are already in the database.
+     * If so, the scenario does not need to be saved once again
+     */
+    private void checkIfVersionAlreadyInDatabase() {
+        int modelVersion;
+        long fragmentModelID;
+        int databaseVersion;
+        Connector connector = new Connector();
+        List<Fragment> newFragments = new LinkedList<>();
+        needsToBeSaved = false;
+        for (Fragment fragment : fragments) {
+            modelVersion = fragment.getVersion();
+            fragmentModelID = fragment.getFragmentID();
+            databaseVersion = connector.getFragmentVersion(fragmentModelID, scenarioID);
+            // case 1: we got a newer version of a fragment here
+            if (databaseVersion < modelVersion ) {
+                needsToBeSaved = true;
+            }
+            // case 2: we don't have a fragment with this modelid in the database
+            else if (databaseVersion < 0) {
+                newFragments.add(fragment);
+                needsToBeSaved = true;
+            }
+        }
+        // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
+        int scenarioVersion = connector.getScenarioVersion(scenarioID);
+        if (scenarioVersion < versionNumber) {
+            needsToBeSaved = true;
+        }
     }
 
     /**
@@ -112,8 +152,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                         .compile(xPathQuery)
                         .evaluate(versionXML, XPathConstants.NODESET);
                 int maxID = 0;
-                // We assume that always the latest version should be saved
-                //TODO: Do we want to save all versions that are currently not in the Database?
+                // the current version is the latest one
                 for (int i = 0; i < versions.getLength(); i++) {
                     xPathQuery = "@id";
                     int currentID = Integer.parseInt((String) xPath
@@ -237,19 +276,22 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
-        Connector conn = new Connector();
-        this.databaseID = conn.insertScenarioIntoDatabase(
-                this.scenarioName,
-                scenarioID,
-                versionNumber);
-        saveFragments();
-        saveDataObjects();
-        saveConsistsOf();
-        if (terminatingDataObject != null && terminatingDataNode != null) {
-            saveTerminationCondition();
+        if (needsToBeSaved) {
+            Connector conn = new Connector();
+            this.databaseID = conn.insertScenarioIntoDatabase(
+                    this.scenarioName,
+                    scenarioID,
+                    versionNumber);
+            saveFragments();
+            saveDataObjects();
+            saveConsistsOf();
+            if (terminatingDataObject != null && terminatingDataNode != null) {
+                saveTerminationCondition();
+            }
+            saveReferences();
+            return this.databaseID;
         }
-        saveReferences();
-        return this.databaseID;
+        return -1;
     }
 
     /**
