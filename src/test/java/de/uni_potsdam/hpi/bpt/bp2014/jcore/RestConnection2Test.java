@@ -19,7 +19,7 @@ public class RestConnection2Test extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     static {
-        String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+        TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
     }
 
     @AfterClass
