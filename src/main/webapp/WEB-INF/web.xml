@@ -13,10 +13,11 @@
         <jsp-file>/upload.jsp</jsp-file>
     </servlet>
 
-    <servlet>
-        <servlet-name>index</servlet-name>
-        <jsp-file>/index.html</jsp-file>
-    </servlet>
+ <!-- SERVLET: FrontEnd -->
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <jsp-file>/www/*</jsp-file>
+    </servlet-mapping>
 
      <!-- SERVLET: Jengine -->
    <servlet>
