@@ -303,18 +303,18 @@ public class Connector {
         return performSQLInsertStatementWithAutoId(sql);
     }
 
+    /**
+     *
+     *
+     * @param controlNodeId
+     * @return
+     */
     public int createEMailTemplate(int controlNodeId){
-        DbObject dbO = new DbObject();
-        String getStringSql = "SELECT * FROM emailconfiguration WHERE id = -1";
-        String receiveEmail = dbO.executeStatementReturnsString(getStringSql, "receivermailaddress");
-        String sendEmail = dbO.executeStatementReturnsString(getStringSql, "sendmailaddress");
-        String subject = dbO.executeStatementReturnsString(getStringSql, "subject");
-        String message = dbO.executeStatementReturnsString(getStringSql, "message");
         String sql = "INSERT INTO emailconfiguration " +
                 "(receivermailaddress, sendmailaddress, subject," +
-                " message, controlnode_id) VALUES ('" + receiveEmail + "', '" +
-                sendEmail + "', '" + subject + "', '" + message + "', " +
-                controlNodeId + ")";
+                " message, controlnode_id) SELECT " +
+                "receivermailaddress, sendmailaddress, subject, message, " + controlNodeId + " FROM " +
+                "emailconfiguration WHERE id = -1";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
