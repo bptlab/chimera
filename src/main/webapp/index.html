@@ -73,11 +73,16 @@
 <div ng-init="scenario='1';">
 	<div ng-controller="StartNewInstance">
 		<p>The content is {{instanceID}}</p>
+		<script type="text/javascript">
+		 $(document).ready(function () {
+			     $rootScope.jengine.newInstanceID = instanceID; 
+		  });    
+		</script>
 	</div>
 </div>
 
 <h4>PostActivities</h4>
-<div ng-init="scenario='1'; instance='47' ; activity='16'; state='running'">
+<div ng-init="scenario='1'; instance=$rootScope.jengine.newInstanceID ; activity='16'; state='begin'">
 	<div ng-controller="PostActivities">
 		<p>The content is {{activity}}</p>
 	</div>
@@ -89,10 +94,20 @@
 <h4>GetAvailableScenarios</h4>
 <div ng-controller="GetAvailableScenarios">
 	<p>The content is {{scenario.ids}}</p>
+
+	<script type="text/javascript">
+	 $(document).ready(function () {
+	        for(var i in scenario.ids){
+			     $rootScope.jcomparser.scenarioSampleID = i; 
+			    //scenario.ids[i]; 
+		    }
+	  });    
+	</script>
+	
 </div>
 
 <h4>GetScenarioImage</h4>
-<div ng-init="scenario= instanceID.ids[0];">
+<div ng-init="scenario= $rootScope.jcomparser.scenarioSampleID;">
 	<div ng-controller="GetScenarioImage">
 		<p>The content is {{scenarioResult}}</p>
 		<img ng-src="{{imageSource}}">
@@ -100,7 +115,7 @@
 </div>
 
 <h4>PostScenarios</h4>
-<div ng-init="scenario= instanceID.ids[0];">
+<div ng-init="scenario= $rootScope.jcomparser.scenarioSampleID;">
 	<div ng-controller="PostScenarios">
 		<p>The content is {{scenarioResult}}</p>
 	</div>
