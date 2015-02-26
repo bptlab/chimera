@@ -71,6 +71,10 @@ public class Node implements IDeserialisable, IPersistable {
      * It will only be set, if and only if the node is a data node.
      */
     private String state;
+    /**
+     * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
+     */
+    private String stereotype;
 
 
     /**
@@ -97,6 +101,8 @@ public class Node implements IDeserialisable, IPersistable {
                 "AND");
         peTypeToDbType.put("net.frapu.code.visualization.bpmn.ExclusiveGateway",
                 "XOR");
+        peTypeToDbType.put("SEND",
+                "EmailTask");
     }
 
 
@@ -144,6 +150,8 @@ public class Node implements IDeserialisable, IPersistable {
             case "state":
                 state = value;
                 break;
+            case "stereotype":
+                stereotype = value;
             default:
                 // Property will not be handled
                 break;
@@ -162,10 +170,20 @@ public class Node implements IDeserialisable, IPersistable {
         }
         Connector connector = new Connector();
         if (!type.contains("DataObject")) {
-            // DataNodes will be done in DataObject
-            databaseID = connector.insertControlNodeIntoDatabase(text,
-                    peTypeToDbType.get(type),
-                    fragmentId);
+            if (stereotype.equals("SEND")) {
+                // we identify mailtasks that need to be marked in the database by their stereotype
+                databaseID = connector.insertControlNodeIntoDatabase(text,
+                        peTypeToDbType.get(stereotype),
+                        fragmentId);
+                //TODO: connector.createEMailTemplate(databaseID);
+
+            }
+            else {
+                // DataNodes will be done in DataObject
+                databaseID = connector.insertControlNodeIntoDatabase(text,
+                        peTypeToDbType.get(type),
+                        fragmentId);
+            }
         }
         return databaseID;
     }

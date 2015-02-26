@@ -180,7 +180,7 @@ public class NodeTest {
     }
 
     /**
-     * Actually we are only testing that no exception occurs and that the databaeId will be valid afterwards.
+     * Actually we are only testing that no exception occurs and that the databaseId will be valid afterwards.
      */
     @Test
     public void testControlNode() {
