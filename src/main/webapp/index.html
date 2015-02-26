@@ -12,6 +12,7 @@
 
 	<!-- JEngine libs -->
 	<script src="asset/core/RESTCalls.js"></script>
+	<script src="asset/jcomparser.js"></script>
 
 
 </head>
@@ -94,20 +95,11 @@
 <h4>GetAvailableScenarios</h4>
 <div ng-controller="GetAvailableScenarios">
 	<p>The content is {{scenario.ids}}</p>
-
-	<script type="text/javascript">
-	 $(document).ready(function () {
-	        for(var i in scenario.ids){
-			     $rootScope.jcomparser.scenarioSampleID = i; 
-			    //scenario.ids[i]; 
-		    }
-	  });    
-	</script>
 	
 </div>
 
 <h4>GetScenarioImage</h4>
-<div ng-init="scenario= $rootScope.jcomparser.scenarioSampleID;">
+<div ng-init="scenario= $scope.scenario.ids[0];">
 	<div ng-controller="GetScenarioImage">
 		<p>The content is {{scenarioResult}}</p>
 		<img ng-src="{{imageSource}}">
@@ -115,7 +107,7 @@
 </div>
 
 <h4>PostScenarios</h4>
-<div ng-init="scenario= $rootScope.jcomparser.scenarioSampleID;">
+<div ng-init="scenario= $scope.scenario.ids[0];">
 	<div ng-controller="PostScenarios">
 		<p>The content is {{scenarioResult}}</p>
 	</div>
