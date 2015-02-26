@@ -3,10 +3,10 @@ var JEngine_Server_URL = "http://172.16.64.113:8080";
 
 // REST Interface of the JEngine
 var JCore_REST_Interface_Version = "v1";
-var JCore_REST_Interface = "JEngine/interface/" + JCore_REST_Interface_Version +"/en";
+var JCore_REST_Interface = "JEngine/api/interface/" + JCore_REST_Interface_Version +"/en";
 
 // REST Interface of the JComparsers
-var JComparser_REST_Interface = "JEngine/jcomparser";
+var JComparser_REST_Interface = "JEngine/api/jcomparser";
 
 
 /**************************************************
