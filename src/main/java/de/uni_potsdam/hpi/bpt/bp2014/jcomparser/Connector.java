@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -302,6 +303,21 @@ public class Connector {
         return performSQLInsertStatementWithAutoId(sql);
     }
 
+    public int createEMailTemplate(int controlNodeId){
+        DbObject dbO = new DbObject();
+        String getStringSql = "SELECT * FROM emailconfiguration WHERE id = -1";
+        String receiveEmail = dbO.executeStatementReturnsString(getStringSql, "receivermailaddress");
+        String sendEmail = dbO.executeStatementReturnsString(getStringSql, "sendmailaddress");
+        String subject = dbO.executeStatementReturnsString(getStringSql, "subject");
+        String message = dbO.executeStatementReturnsString(getStringSql, "message");
+        String sql = "INSERT INTO emailconfiguration " +
+                "(receivermailaddress, sendmailaddress, subject," +
+                " message, controlnode_id) VALUES ('" + receiveEmail + "', '" +
+                sendEmail + "', '" + subject + "', '" + message + "', " +
+                controlNodeId + ")";
+        return performSQLInsertStatementWithAutoId(sql);
+    }
+
     /**
      * Perform a insert statement for the database.
      * Nothing will be returned. Exceptions will be catched and handled.
@@ -374,4 +390,5 @@ public class Connector {
         }
         return result;
     }
+
 }
