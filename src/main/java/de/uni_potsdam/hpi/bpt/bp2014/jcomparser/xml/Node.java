@@ -266,6 +266,12 @@ public class Node implements IDeserialisable, IPersistable {
     }
 
     /**
+     * Returns the stereotype.
+     *
+     * @return the stereotype as a String.
+     */
+    public String getStereotype(){ return stereotype;}
+    /**
      * Sets the fragment id.
      *
      * @param newFragmentId should be the database ID of a fragment.
