@@ -175,7 +175,7 @@ public class Node implements IDeserialisable, IPersistable {
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(stereotype),
                         fragmentId);
-                //TODO: connector.createEMailTemplate(databaseID);
+                connector.createEMailTemplate(databaseID);
 
             }
             else {
