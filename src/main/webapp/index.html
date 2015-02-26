@@ -24,10 +24,9 @@
 </div>
 
 
-<h4>GetAllScenarios</h4>
+<h4>GetScenarioDetails</h4>
 <div ng-init="param='1';">
 	<div ng-controller="GetScenarioDetails">
-		<p>The ID is {{scenarioDetails.ids}}</p>
 		<p>The content is {{scenarioDetails.label}}</p>
 	</div>
 </div>
@@ -36,11 +35,16 @@
 <div ng-init="param='1';">
 	<div ng-controller="ShowScenarioInstances">
 		<p>The ID is {{scenarioInstances.ids}}</p>
-		<p>The content is {{scenarioInstances.label}}</p>
+		<p>The content is {{scenarioInstances.labels}}</p>
 	</div>
 </div>
 
-
+<h4>ShowScenarioInstanceDetails</h4>
+<div ng-init="param='1'; instance='47'">
+	<div ng-controller="ShowScenarioInstanceDetails">
+		<p>The content is {{scenarioInstances.label}}</p>
+	</div>
+</div>
 
 </body>
 </html>
