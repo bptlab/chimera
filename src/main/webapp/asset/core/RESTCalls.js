@@ -23,15 +23,15 @@ function GetAllScenarios($scope, $http) {
 }
 
 function GetScenarioDetails($scope, $http, scenarioID) {
-    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+scenarioID+"/").
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenarioID+"/").
         success(function(data) {
             $scope.scenarioDetails = data;
         });
 }
 
 function ShowScenarioInstances($scope, $http, scenarioID) {
-    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+scenarioID+"/instance/0/").
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenarioID+"/instance/0/").
         success(function(data) {
-            $scope.scenarios = data;
+            $scope.scenarioInstances = data;
         });
 }
