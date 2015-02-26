@@ -87,15 +87,17 @@ function StartNewInstance($scope, $http) {
 function GetAvailableScenarios($scope, $http) {
     $http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
         success(function(data) {
-            $scope.scenarios = data;
+            $scope.scenario = data;
         });
 }
 
+//TODO: Image transfer doesnt work yet
 function GetScenarioImage($scope, $http) {
-    $http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios/"+ $scope.scenario + "/image/").
-        success(function(data) {
-            $scope.scenarios = data;
-        });
+    //$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios/"+ $scope.scenario + "/image/").
+     //   success(function(data) {
+     //       $scope.scenarioImage = data;
+     //   });
+	$scope.imageSource = JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios/"+ $scope.scenario + "/image/";
 }
 
 function PostScenarios($scope, $http) {

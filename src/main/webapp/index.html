@@ -69,17 +69,17 @@
 	</div>
 </div>
 
-<h4>PostActivities</h4>
-<div ng-init="scenario='1'; instance='47' ; activity='16'; state='running'">
-	<div ng-controller="PostActivities">
-		<p>The content is {{activity}}</p>
-	</div>
-</div>
-
 <h4>StartNewInstance</h4>
 <div ng-init="scenario='1';">
 	<div ng-controller="StartNewInstance">
 		<p>The content is {{instanceID}}</p>
+	</div>
+</div>
+
+<h4>PostActivities</h4>
+<div ng-init="scenario='1'; instance='47' ; activity='16'; state='running'">
+	<div ng-controller="PostActivities">
+		<p>The content is {{activity}}</p>
 	</div>
 </div>
 
@@ -88,9 +88,16 @@
 
 <h4>GetAvailableScenarios</h4>
 <div ng-controller="GetAvailableScenarios">
-	<p>The content is {{instanceID.ids}}</p>
+	<p>The content is {{scenario.ids}}</p>
 </div>
 
+<h4>GetScenarioImage</h4>
+<div ng-init="scenario= instanceID.ids[0];">
+	<div ng-controller="GetScenarioImage">
+		<p>The content is {{scenarioResult}}</p>
+		<img ng-src="{{imageSource}}">
+	</div>
+</div>
 
 <h4>PostScenarios</h4>
 <div ng-init="scenario= instanceID.ids[0];">
