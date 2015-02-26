@@ -26,6 +26,7 @@ public class NodeTest {
         dataNode.appendChild(createProperty("state", "transportbereit"));
         dataNode.appendChild(createProperty("#id", "706118804"));
         dataNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.DataObject"));
+        dataNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -35,7 +36,7 @@ public class NodeTest {
         activityGlobalNode.appendChild(createProperty("global", "1"));
         activityGlobalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
         activityGlobalNode.appendChild(createProperty("#id", "368338489"));
-
+        activityGlobalNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -45,6 +46,7 @@ public class NodeTest {
         activityLocalNode.appendChild(createProperty("global", "0"));
         activityLocalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
         activityLocalNode.appendChild(createProperty("#id", "368338489"));
+        activityLocalNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -53,6 +55,7 @@ public class NodeTest {
         startEventNode.appendChild(createProperty("text", "Start"));
         startEventNode.appendChild(createProperty("#id", "368338489"));
         startEventNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.StartEvent"));
+        startEventNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -61,6 +64,7 @@ public class NodeTest {
         endEventNode.appendChild(createProperty("text", "End"));
         endEventNode.appendChild(createProperty("#id", "368338489"));
         endEventNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.EndEvent"));
+        endEventNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -69,6 +73,7 @@ public class NodeTest {
         xorNode.appendChild(createProperty("text", "XOR"));
         xorNode.appendChild(createProperty("#id", "368338489"));
         xorNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.ExclusiveGateway"));
+        xorNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -77,6 +82,7 @@ public class NodeTest {
         andNode.appendChild(createProperty("text", "AND"));
         andNode.appendChild(createProperty("#id", "368338489"));
         andNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.ParallelGateway"));
+        andNode.appendChild(createProperty("stereotype", ""));
     }
 
     private Element createProperty(String name, String value) {
