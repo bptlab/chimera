@@ -18,10 +18,26 @@
 
 <h3>Body</h3>
 
+<h4>GetAllScenarios</h4>
 <div ng-controller="GetAllScenarios">
 	<p>The ID is {{scenarios.ids}}</p>
-	<p>The content is {{scenarios.labels}}</p>
+	<p>The content is {{scenarios.label}}</p>
 </div>
+
+
+<h4>GetAllScenarios</h4>
+<div ng-controller="GetAllScenarios(1)">
+	<p>The ID is {{scenarioDetails.ids}}</p>
+	<p>The content is {{scenarioDetails.label}}</p>
+</div>
+
+<h4>ShowScenarioInstances</h4>
+<div ng-controller="ShowScenarioInstances(1)">
+	<p>The ID is {{scenarioInstances.ids}}</p>
+	<p>The content is {{scenarioInstances.label}}</p>
+</div>
+
+
 
 </body>
 </html>

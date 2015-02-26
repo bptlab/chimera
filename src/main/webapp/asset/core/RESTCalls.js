@@ -21,3 +21,17 @@ function GetAllScenarios($scope, $http) {
             $scope.scenarios = data;
         });
 }
+
+function GetScenarioDetails($scope, $http, scenarioID) {
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+scenarioID+"/").
+        success(function(data) {
+            $scope.scenarioDetails = data;
+        });
+}
+
+function ShowScenarioInstances($scope, $http, scenarioID) {
+    $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+scenarioID+"/instance/0/").
+        success(function(data) {
+            $scope.scenarios = data;
+        });
+}
