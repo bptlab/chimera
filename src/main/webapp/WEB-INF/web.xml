@@ -16,7 +16,7 @@
  <!-- SERVLET: FrontEnd -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
-        <jsp-file>/www/*</jsp-file>
+        <url-pattern>/www/*</url-pattern>
     </servlet-mapping>
 
      <!-- SERVLET: Jengine -->
