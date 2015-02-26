@@ -37,8 +37,6 @@ function ShowScenarioInstances($scope, $http) {
 }
 
 function ShowScenarioInstanceDetails($scope, $http) {
-	console.log($scope.param);
-	console.log($scope.instance);
     $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/instance/"+ $scope.instance+ "/").
         success(function(data) {
             $scope.scenarioInstances = data;
