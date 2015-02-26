@@ -23,7 +23,6 @@ function GetAllScenarios($scope, $http) {
 }
 
 function GetScenarioDetails($scope, $http) {
-	//console.log($scope.param);
     $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/").
         success(function(data) {
             $scope.scenarioDetails = data;
@@ -31,7 +30,6 @@ function GetScenarioDetails($scope, $http) {
 }
 
 function ShowScenarioInstances($scope, $http) {
-	//console.log($scope.param);
     $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/instance/0/").
         success(function(data) {
             $scope.scenarioInstances = data;
@@ -39,7 +37,8 @@ function ShowScenarioInstances($scope, $http) {
 }
 
 function ShowScenarioInstanceDetails($scope, $http) {
-	//console.log($scope.param);
+	console.log($scope.param);
+	console.log($scope.instance);
     $http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.param+"/instance/"+ $scope.instance+ "/").
         success(function(data) {
             $scope.scenarioInstances = data;
