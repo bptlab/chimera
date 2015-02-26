@@ -1,11 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -34,7 +39,7 @@ import java.sql.Statement;
  * The Connector has methods to create entries inside the database.
  * Therefore it uses the database.Connection class.
  */
-public class Connector {
+public class Connector extends DbDataObject{
 
     /**
      * A method to write a scenario to the database.
@@ -390,5 +395,49 @@ public class Connector {
         }
         return result;
     }
+    /**
+     * Get the latest version of a fragment which is in the database.
+     *
+     * @param fragmentModelID modelID of the fragment
+     * @param scenarioID modelID of the scenario the fragment belongs to
+     * @return latest version of the fragment with the fragmentModelID (return -1 if there is no fragment of this id)
+     */
+    public int getFragmentVersion(long fragmentModelID, long scenarioID) {
+
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT fragment.modelversion FROM scenario, fragment " +
+                "WHERE scenario.id = fragment.scenario_ID " +
+                "AND scenario.modelid = " + scenarioID +
+                " AND fragment.modelid = " + fragmentModelID;
+        LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
+        int maxVersion = -1;
+        for (int entry : versions) {
+            if (entry > maxVersion) {
+                maxVersion = entry;
+            }
+        }
+        return maxVersion;
+    }
+    /**
+     * Get the latest version of a scenario which is in the database.
+     *
+     * @param scenarioID modelID of the scenario
+     * @return latest version of the scenario with the scenarioID (return -1 if there is no scenario of this id)
+     */
+    public int getScenarioVersion(long scenarioID) {
+
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT modelversion FROM scenario " +
+                "WHERE modelid = " + scenarioID;
+        LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
+        int maxVersion = -1;
+        for (int entry : versions) {
+            if (entry > maxVersion) {
+                maxVersion = entry;
+            }
+        }
+        return maxVersion;
+    }
+
 
 }
