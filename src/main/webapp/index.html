@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<h3>Body</h3>
+<h3>Body - JEngine</h3>
 
 <h4>GetAllScenarios</h4>
 <div ng-controller="GetAllScenarios">
@@ -68,6 +68,38 @@
 		<p>The content is {{dataobject.label}}</p>
 	</div>
 </div>
+
+<h4>PostActivities</h4>
+<div ng-init="scenario='1'; instance='47' ; activity='16'; state='running'">
+	<div ng-controller="PostActivities">
+		<p>The content is {{activity}}</p>
+	</div>
+</div>
+
+<h4>StartNewInstance</h4>
+<div ng-init="scenario='1';">
+	<div ng-controller="StartNewInstance">
+		<p>The content is {{instanceID}}</p>
+	</div>
+</div>
+
+<hr>
+<h3>Body - JComparser</h3>
+
+<h4>GetAvailableScenarios</h4>
+<div ng-controller="GetAvailableScenarios">
+	<p>The content is {{instanceID.ids}}</p>
+</div>
+
+
+<h4>PostScenarios</h4>
+<div ng-init="scenario= instanceID.ids[0];">
+	<div ng-controller="PostScenarios">
+		<p>The content is {{scenarioResult}}</p>
+	</div>
+</div>
+
+
 
 </body>
 </html>

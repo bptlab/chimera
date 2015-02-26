@@ -64,4 +64,43 @@ function GetAllDataobject($scope, $http) {
         });
 }
 
-//TODO: implement POSTs
+function PostActivities($scope, $http) {		
+    $http.post(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/instance/"+ $scope.instance+ "/activityinstance/"+ $scope.activity+"/?status="+ $scope.state).
+        success(function(data) {
+            $scope.activity = data;
+        });
+}
+
+function StartNewInstance($scope, $http) {		
+    $http.post(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ $scope.scenario+"/").
+        success(function(data) {
+            $scope.instanceID = data;
+        });
+}
+
+/**************************************************
+*
+* Serving the API specification of REST interface v1
+* 
+*/
+
+function GetAvailableScenarios($scope, $http) {
+    $http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
+        success(function(data) {
+            $scope.scenarios = data;
+        });
+}
+
+function GetScenarioImage($scope, $http) {
+    $http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios/"+ $scope.scenario + "/image/").
+        success(function(data) {
+            $scope.scenarios = data;
+        });
+}
+
+function PostScenarios($scope, $http) {
+    $http.post(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/launch/"+ $scope.scenario).
+        success(function(data) {
+            $scope.scenarioResult = data;
+        });
+}
