@@ -175,7 +175,7 @@ public class Node implements IDeserialisable, IPersistable {
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(stereotype),
                         fragmentId);
-                //TODO: connector.createEMailTemplate(databaseID);
+                connector.createEMailTemplate(databaseID);
 
             }
             else {
@@ -265,6 +265,12 @@ public class Node implements IDeserialisable, IPersistable {
         return null != type && type.contains("Task");
     }
 
+    /**
+     * Returns the stereotype.
+     *
+     * @return the stereotype as a String.
+     */
+    public String getStereotype(){ return stereotype;}
     /**
      * Sets the fragment id.
      *
