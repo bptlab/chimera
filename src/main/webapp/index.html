@@ -74,16 +74,11 @@
 <div ng-init="scenario='1';">
 	<div ng-controller="StartNewInstance">
 		<p>The content is {{instanceID}}</p>
-		<script type="text/javascript">
-		 $(document).ready(function () {
-			     $rootScope.jengine.newInstanceID = instanceID; 
-		  });    
-		</script>
 	</div>
 </div>
 
 <h4>PostActivities</h4>
-<div ng-init="scenario='1'; instance=$rootScope.jengine.newInstanceID ; activity='16'; state='begin'">
+<div ng-init="scenario='1'; instance=$scope.instanceID[0] ; activity='16'; state='begin'">
 	<div ng-controller="PostActivities">
 		<p>The content is {{activity}}</p>
 	</div>
