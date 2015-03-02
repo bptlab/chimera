@@ -17,7 +17,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -200,9 +199,18 @@ public class ScenarioTest {
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
                     public Fragment answer() throws Throwable {
-                        Fragment fragment = new Fragment();
-                        fragment.initializeInstanceFromXML(
-                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                                FETCH_VERSION_METHOD);
+                        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                                .andAnswer(new IAnswer<org.w3c.dom.Element>() {
+                                    @Override
+                                    public org.w3c.dom.Element answer() throws Throwable {
+                                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                                    }
+                                });
+                        PowerMock.replay(fragment);
+                        fragment.initializeInstanceFromXML(getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        PowerMock.verify(fragment);
                         return fragment;
                     }
                 });
@@ -231,7 +239,16 @@ public class ScenarioTest {
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
                     public Fragment answer() throws Throwable {
-                        Fragment fragment = new Fragment();
+                        Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                                FETCH_VERSION_METHOD);
+                        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                                .andAnswer(new IAnswer<org.w3c.dom.Element>() {
+                                    @Override
+                                    public org.w3c.dom.Element answer() throws Throwable {
+                                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                                    }
+                                });
+                        PowerMock.replay(fragment);
                         fragment.initializeInstanceFromXML(
                                 getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
                         return fragment;
@@ -259,7 +276,7 @@ public class ScenarioTest {
     public void testSaveCompleteScenario() throws Exception {
         final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
                 FETCH_VERSION_METHOD);
-        PowerMock.expectPrivate(fragment, "fetchVersionXML")
+        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
                     public Node answer() throws Throwable {
@@ -268,6 +285,7 @@ public class ScenarioTest {
                                 .getDocumentElement();
                     }
                 });
+        PowerMock.replay(fragment);
         fragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/bikeFragment.xml")));
         Document bikeScenario = getDocumentFromXmlFile(

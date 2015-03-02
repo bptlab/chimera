@@ -98,7 +98,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateControlNodes();
         generateEdges();
         generateSets();
-        //TODO: add setVersionNumber(); --> testfail
+        setVersionNumber();
     }
 
     /**
@@ -282,8 +282,6 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
-        //TODO: remove methodcall --> testfail
-        setVersionNumber();
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(
                 this.fragmentName,
