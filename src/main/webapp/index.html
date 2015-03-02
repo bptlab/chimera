@@ -5,7 +5,9 @@
 	<title>JEngine FrontEnd</title>
 	<meta name="Description" content="a Framework for Production Case Management (PCM) containing Modeling and Execution">
 	<meta name="Keywords" content="JEngine, PCM">
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<!-- generell Libs -->
 	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>-->
 	<script src="asset/js/angular.js"></script>
@@ -14,9 +16,178 @@
 	<script src="asset/core/RESTCalls.js"></script>
 	<script src="asset/js/jcomparser.js"></script>
 
+   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
+
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="asset/vendor/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="asset/vendor/metisMenu/dist/metisMenu.css" />
+    <link rel="stylesheet" href="asset/vendor/animate.css/animate.css" />
+    <link rel="stylesheet" href="asset/vendor/bootstrap/dist/css/bootstrap.css" />
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="asset/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+    <link rel="stylesheet" href="asset/fonts/pe-icon-7-stroke/css/helper.css" />
+    <link rel="stylesheet" href="asset/styles/style.css">
 
 </head>
 <body>
+<!-- Simple splash screen-->
+<div class="splash"> <div class="color-line"></div><div class="splash-title"><h1>Homer - Responsive Admin Theme</h1><p>Special AngularJS Admin Theme for small and medium webapp with very clean and aesthetic style and feel. </p><img src="images/loading-bars.svg" width="64" height="64" /> </div> </div>
+<!--[if lt IE 7]>
+<p class="alert alert-danger">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- Header -->
+<div id="header">
+    <div class="color-line">
+    </div>
+    <div id="logo" class="light-version">
+        <span>
+            JEngine
+        </span>
+    </div>
+    <nav role="navigation">
+        <div class="header-link hide-menu"><i class="fa fa-bars"></i></div>
+        <div class="small-logo">
+            <span class="text-primary">HOMER APP</span>
+        </div>
+        <form role="search" class="navbar-form-custom" method="post" action="#">
+            <div class="form-group">
+                <input type="text" placeholder="Search something special" class="form-control" name="search">
+            </div>
+        </form>
+        <div class="navbar-right">
+            <ul class="nav navbar-nav no-borders">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="pe-7s-speaker"></i>
+                    </a>
+                    <ul class="dropdown-menu hdropdown notification animated flipInX">
+                        <li>
+                            <a>
+                                <span class="label label-success">NEW</span> It is a long established.
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <span class="label label-warning">WAR</span> There are many variations.
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <span class="label label-danger">ERR</span> Contrary to popular belief.
+                            </a>
+                        </li>
+                        <li class="summary"><a href="#">See all notifications</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
+                        <i class="pe-7s-mail"></i>
+                        <span class="label label-success">4</span>
+                    </a>
+                    <ul class="dropdown-menu hdropdown animated flipInX">
+                        <div class="title">
+                            You have 4 new messages
+                        </div>
+                        <li>
+                            <a>
+                                It is a long established.
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                There are many variations.
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                Lorem Ipsum is simply dummy.
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                Contrary to popular belief.
+                            </a>
+                        </li>
+                        <li class="summary"><a href="#">See All Messages</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="login.html">
+                        <i class="pe-7s-upload pe-rotate-90"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<!-- Navigation -->
+<aside id="menu">
+    <div id="navigation">
+        <div class="profile-picture">
+            <a href="index.html">
+                <img src="images/profile.jpg" class="img-circle m-b" alt="logo">
+            </a>
+
+            <div class="stats-label text-color">
+                <span class="font-extra-bold font-uppercase">Robert Razer</span>
+
+                <div class="dropdown">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                        <small class="text-muted">Founder of App <b class="caret"></b></small>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li><a href="contacts.html">Contacts</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                        <li><a href="analytics.html">Analytics</a></li>
+                        <li class="divider"></li>
+                        <li><a href="login.html">Logout</a></li>
+                    </ul>
+                </div>
+
+
+                <div id="sparkline1" class="small-chart m-t-sm"></div>
+                <div>
+                    <h4 class="font-extra-bold m-b-xs">
+                        $260 104,200
+                    </h4>
+                    <small class="text-muted">Your income from the last year in sales product X.</small>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav" id="side-menu">
+            <li class="active">
+                <a href="index.html"> <span class="nav-label">Dashboard</span> <span class="label label-success pull-right">v.1</span> </a>
+            </li>
+            <li>
+                <a href="#"><span class="nav-label">Scenarios</span><span class="fa arrow"></span> </a>
+                <ul class="nav nav-second-level">
+                	<div ng-controller="GetAllScenarios">
+              	           <li><a ng-href="index.html?scenario={{scenarios.ids[0]}}">{{scenarios.ids[0]}}</a></li>
+                    </div>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><span class="nav-label">Admin</span><span class="fa arrow"></span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="#">Mail Config</a></li>
+                    <li><a href="#">Session Config</a></li>
+                    <li><a href="#">JComparser</a></li>
+                    <li><a href="#">JCore COntroller</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+<!-- Main Wrapper -->
+<div id="wrapper">
+
+<div class="content animate-panel">
 
 <h3>Body - JEngine</h3>
 
@@ -108,7 +279,26 @@
 	</div>
 </div>
 
+</div>
 
+<!-- Vendor scripts -->
+<script src="asset/vendor/jquery/dist/jquery.min.js"></script>
+<script src="asset/vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="asset/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="asset/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="asset/vendor/jquery-flot/jquery.flot.js"></script>
+<script src="asset/vendor/jquery-flot/jquery.flot.resize.js"></script>
+<script src="asset/vendor/jquery-flot/jquery.flot.pie.js"></script>
+<script src="asset/vendor/flot.curvedlines/curvedLines.js"></script>
+<script src="asset/vendor/jquery.flot.spline/index.js"></script>
+<script src="asset/vendor/metisMenu/dist/metisMenu.min.js"></script>
+<script src="asset/vendor/iCheck/icheck.min.js"></script>
+<script src="asset/vendor/peity/jquery.peity.min.js"></script>
+<script src="asset/vendor/sparkline/index.js"></script>
+
+<!-- App scripts -->
+<script src="asset/scripts/homer.js"></script>
+<script src="asset/scripts/charts.js"></script>
 
 </body>
 </html>
