@@ -40,7 +40,8 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
 
     @Override
     public void terminate() {
-        scenarioInstance.checkDataFlowEnabled();
+        this.checkAfterTermination();
         this.enableFollowing();
+        this.runAfterTermination();
     }
 }

@@ -24,7 +24,7 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
      * @param controlNode_id This is the database id from the control node instance.
      * @return the created control node instance.
      */
-    private ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
+    protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
             if (controlNode_id == controlNodeInstance.controlNode_id) {
                 return controlNodeInstance;

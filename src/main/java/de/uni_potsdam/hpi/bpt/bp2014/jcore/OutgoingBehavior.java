@@ -37,4 +37,13 @@ public abstract class OutgoingBehavior {
      */
     public abstract void terminate();
 
+    public void checkAfterTermination() {
+        scenarioInstance.checkDataFlowEnabled();
+        scenarioInstance.checkExecutingGateways(controlNode_id);
+    }
+
+    public void runAfterTermination(){
+        scenarioInstance.startAutomaticControlNodes();
+    }
+
 }
