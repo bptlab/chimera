@@ -102,8 +102,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
-        //TODO: add methodcall checkIfVersionAlreadyInDatabase(); --> testfail
-        needsToBeSaved = true;
+        checkIfVersionAlreadyInDatabase();
     }
 
     /**
@@ -111,28 +110,28 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If so, the scenario does not need to be saved once again
      */
     private void checkIfVersionAlreadyInDatabase() {
-        int modelVersion;
+        int fragmentModelVersion;
         long fragmentModelID;
-        int databaseVersion;
+        int fragmentDatabaseVersion;
         Connector connector = new Connector();
         List<Fragment> newFragments = new LinkedList<>();
         needsToBeSaved = false;
         for (Fragment fragment : fragments) {
-            modelVersion = fragment.getVersion();
+            fragmentModelVersion = fragment.getVersion();
             fragmentModelID = fragment.getFragmentID();
-            databaseVersion = connector.getFragmentVersion(fragmentModelID, scenarioID);
+            fragmentDatabaseVersion = connector.getFragmentVersion(fragmentModelID, scenarioID);
             // case 1: we got a newer version of a fragment here
-            if (databaseVersion < modelVersion ) {
+            if (fragmentDatabaseVersion < fragmentModelVersion) {
                 needsToBeSaved = true;
-            }
-            // case 2: we don't have a fragment with this modelid in the database
-            else if (databaseVersion < 0) {
-                newFragments.add(fragment);
-                needsToBeSaved = true;
+                // case 2: we don't have a fragment with this modelid in the database
+                if (fragmentDatabaseVersion < 0) {
+                    newFragments.add(fragment);
+                }
             }
         }
-        // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
         int scenarioVersion = connector.getScenarioVersion(scenarioID);
+        // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
+        // or scenario does not exist in database (scenarioVersion = -1)
         if (scenarioVersion < versionNumber) {
             needsToBeSaved = true;
         }
