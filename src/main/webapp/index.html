@@ -166,18 +166,24 @@
             <li>
                 <a href="#"><span class="nav-label">Scenarios</span><span class="fa arrow"></span> </a>
                 <ul class="nav nav-second-level">
-                	<div ng-controller="MenuScenario">
-              	           <li><a ng-href="index.html?scenario={{scenarios.ids[0]}}">{{scenarios.ids[0]}}</a></li>
+                	<div ng-controller="GetAllScenarios">
+                        <li class="animate-repeat" ng-repeat="id in scenarios.ids">
+                            [{{$index + 1}}] 
+                            <li><a ng-href="index.html?scenario={{id}}">{{id}}</a></li>
+                        </li>
+                        <li class="animate-repeat" ng-if="results.length == 0">
+                            <li><a jref="#">No result</a></li>
+                        </li>     
                     </div>
                 </ul>
             </li>
             <li>
                 <a href="#"><span class="nav-label">Admin</span><span class="fa arrow"></span> </a>
                 <ul class="nav nav-second-level">
-                    <li><a href="#">Mail Config</a></li>
-                    <li><a href="#">Session Config</a></li>
-                    <li><a href="#">JComparser</a></li>
-                    <li><a href="#">JCore COntroller</a></li>
+                    <li><a href="index.html?category=admin&content=mail_config">Mail Config</a></li>
+                    <li><a href="index.html?category=admin&content=session_config">Session Config</a></li>
+                    <li><a href="index.html?category=admin&content=jcomparser">JComparser</a></li>
+                    <li><a href="index.html?category=admin&content=jcore_controller">JCore Controller</a></li>
                 </ul>
             </li>
         </ul>
@@ -188,97 +194,7 @@
 <div id="wrapper">
 
 <div class="content animate-panel">
-
-<h3>Body - JEngine</h3>
-
-<h4>GetAllScenarios</h4>
-<div ng-controller="GetAllScenarios">
-	<p>The ID is {{scenarios.ids}}</p>
-</div>
-
-
-<h4>GetScenarioDetails</h4>
-<div ng-init="scenario='1';">
-	<div ng-controller="GetScenarioDetails">
-		<p>The content is {{scenarioDetails.label}}</p>
-	</div>
-</div>
-
-<h4>ShowScenarioInstances</h4>
-<div ng-init="scenario='1';">
-	<div ng-controller="GetScenarioInstances">
-		<p>The ID is {{scenarioInstances.ids}}</p>
-	</div>
-</div>
-
-<h4>ShowScenarioInstanceDetails</h4>
-<div ng-init="scenario='1'; instance='47'">
-	<div ng-controller="GetScenarioInstanceDetails">
-		<p>The content is {{scenarioInstances.label}}</p>
-	</div>
-</div>
-
-<h4>GetActivitiesForScenarioInstances</h4>
-<div ng-init="scenario='1'; instance='47' ; state='enabled'">
-	<div ng-controller="GetActivitiesForScenarioInstances">
-		<p>The ID is {{activities.ids}}</p>
-		<p>The content is {{activities.label}}</p>
-	</div>
-</div>
-
-<h4>GetActivitiesLabelByID</h4>
-<div ng-init="scenario='1'; instance='47' ; activity='16'">
-	<div ng-controller="GetActivitiesLabelByID">
-		<p>The content is {{activityDetails.label}}</p>
-	</div>
-</div>
-
-<h4>GetAllDataobject</h4>
-<div ng-init="scenario='1'; instance='47'">
-	<div ng-controller="GetAllDataobject">
-		<p>The ID is {{dataobject.ids}}</p>
-		<p>The content is {{dataobject.label}}</p>
-	</div>
-</div>
-
-<h4>StartNewInstance</h4>
-<div ng-init="scenario='1';">
-	<div ng-controller="StartNewInstance">
-		<p>The content is {{instanceID}}</p>
-	</div>
-</div>
-
-<h4>PostActivities</h4>
-<div ng-init="scenario='1'; instance=$scope.instanceID[0] ; activity='16'; state='begin'">
-	<div ng-controller="PostActivities">
-		<p>The content is {{activity}}</p>
-	</div>
-</div>
-
-<hr>
-<h3>Body - JComparser</h3>
-
-<h4>GetAvailableScenarios</h4>
-<div ng-controller="GetAvailableScenarios">
-	<p>The content is {{scenario.ids}}</p>
-	
-</div>
-
-<h4>GetScenarioImage</h4>
-<div ng-init="scenario= $scope.scenario.ids[0];">
-	<div ng-controller="GetScenarioImage">
-		<p>The content is {{scenarioResult}}</p>
-		<img ng-src="{{imageSource}}">
-	</div>
-</div>
-
-<h4>PostScenarios</h4>
-<div ng-init="scenario= $scope.scenario.ids[0];">
-	<div ng-controller="PostScenarios">
-		<p>The content is {{scenarioResult}}</p>
-	</div>
-</div>
-
+    <div ng-include="'RESTCalls.html'"></div>
 </div>
 
 <!-- Vendor scripts -->
