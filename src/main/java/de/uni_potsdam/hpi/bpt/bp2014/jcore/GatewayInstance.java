@@ -62,14 +62,9 @@ public class GatewayInstance extends ControlNodeInstance {
         if (type.equals("AND")) {
             this.isAND = true;
             this.isXOR = false;
-            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
-            this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
         } else if(type.equals("XOR")) {
-            //TODO: XOR Here
             this.isAND = false;
             this.isXOR = true;
-            this.outgoingBehavior = new ExclusiveGatewaySplitBehavior();
-            this.incomingBehavior = new ExclusiveGatewayJoinBehavior();
         }
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
             //initializes all Gateway Instances in the database
@@ -88,6 +83,17 @@ public class GatewayInstance extends ControlNodeInstance {
             }
         }
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
+        if (isAND) {
+            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
+            this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
+        } else if(isXOR) {
+            this.outgoingBehavior = new ExclusiveGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
+            this.incomingBehavior = new ExclusiveGatewayJoinBehavior(this, scenarioInstance, stateMachine);
+        }
+    }
+
+    public boolean checkTermination(int controlNode_id){
+        return ((ExclusiveGatewaySplitBehavior)outgoingBehavior).checkTermination(controlNode_id);
     }
 
     /**
