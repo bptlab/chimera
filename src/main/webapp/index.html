@@ -13,7 +13,7 @@
 	<script src="asset/js/angular.js"></script>
 
 	<!-- JEngine libs -->
-	<script src="asset/core/RESTCalls.js"></script>
+	<script src="asset/js/RESTCalls.js"></script>
 	<script src="asset/js/jcomparser.js"></script>
 
    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -166,7 +166,7 @@
             <li>
                 <a href="#"><span class="nav-label">Scenarios</span><span class="fa arrow"></span> </a>
                 <ul class="nav nav-second-level">
-                	<div ng-controller="GetAllScenarios">
+                	<div ng-controller="MenuScenario">
               	           <li><a ng-href="index.html?scenario={{scenarios.ids[0]}}">{{scenarios.ids[0]}}</a></li>
                     </div>
                 </ul>
