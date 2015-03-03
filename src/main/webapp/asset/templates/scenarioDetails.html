@@ -1,0 +1,13 @@
+<h2>{{scenarioCtrl.getCurrentScenario()['label']}}</h2>
+<div class="row">
+	<div class="col-xs-4">
+		<img src="{{scenarioCtrl.getCurrentScenario()['imageUrl']}}" alt="{{scenarioCtrl.getCurrentScenario()['label']}}" class="img-thumbnail">
+		</img>
+	</div>
+	<div class="col-xs-1">
+		{{"# " + scenarioCtrl.getCurrentScenario()['id']}}
+	</div>
+	<div class="col-xs-5">
+		{{scenarioCtrl.getCurrentScenario()['label']}}
+	</div>
+</div>
