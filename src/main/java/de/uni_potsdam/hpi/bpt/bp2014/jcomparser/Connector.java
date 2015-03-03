@@ -446,14 +446,21 @@ public class Connector extends DbDataObject{
      *
      * @param oldScenarioID scenarioID that gets updated by newScenarioId
      * @param newScenarioID new scenarioID that overwrites oldScenarioId
+     * @return List of all IDs that running scenarioinstances of oldScenarioID hold
      */
-    public void migrateScenarioInstance(int oldScenarioID, int newScenarioID) {
+    public List<Integer> migrateScenarioInstance(int oldScenarioID, int newScenarioID) {
         DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT id " +
+                "FROM scenarioinstance " +
+                "WHERE scenarioinstance.terminated = 0 " +
+                "AND scenario_id = " + oldScenarioID;
+        List<Integer> runningInstances = dbDataObject.executeStatementReturnsListInt(select, "id");
         String update = "UPDATE scenarioinstance " +
                 "SET scenario_id = " + newScenarioID +
                 " WHERE scenarioinstance.terminated = 0 " +
                 "AND scenario_id = " + oldScenarioID;
         dbDataObject.executeUpdateStatement(update);
+        return runningInstances;
     }
 
     /**
@@ -483,5 +490,14 @@ public class Connector extends DbDataObject{
                 "SET fragment_id = " + newFragmentID +
                 " WHERE fragment_id = " + oldFragmentID;
         dbDataObject.executeUpdateStatement(update);
+    }
+
+    public void insertFragmentInstance(int fragmentID, int instanceID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String insert = "INSERT INTO fragmentinstance (fragmentinstance.terminated, fragment_id, scenarioinstance_id) " +
+                "VALUES (" + 0 + ", " + fragmentID + ", " + instanceID + ")";
+        dbDataObject.executeUpdateStatement(insert);
+
+
     }
 }

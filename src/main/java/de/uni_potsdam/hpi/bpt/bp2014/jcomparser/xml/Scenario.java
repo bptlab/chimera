@@ -337,14 +337,23 @@ public class Scenario implements IDeserialisable, IPersistable {
         Connector connector = new Connector();
         //migrate ScenarioInstances
         int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
-        connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
+        List<Integer> oldRunningScenarioInstancesIDs = connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
         //migrate FragmentInstances
-        for (Fragment fragment : fragments) {
+        for(Fragment fragment : fragments) {
+            // as there is no fragmentinstance for any new fragment in the database so far,
+            // we don't need to change references
+            if(newFragments.contains(fragment)) {
+                continue;
+            }
             int oldFragmentID = connector.getFragmentID(oldScenarioDbID, fragment.getFragmentID());
             connector.migrateFragmentInstance(oldFragmentID, fragment.getDatabaseID());
         }
         // create new fragmentinstances for the new fragments
-
+        for(Fragment newFragment : newFragments) {
+            for (int instanceID : oldRunningScenarioInstancesIDs) {
+                connector.insertFragmentInstance(newFragment.getDatabaseID(), instanceID);
+            }
+        }
     }
 
 
