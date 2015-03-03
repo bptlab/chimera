@@ -426,7 +426,7 @@ public class Connector extends DbDataObject{
      *
      * @param scenarioID modelID of the scenario
      * @param version the version for which the scenario is selected
-     * @return the database id of the scenario for the LATEST version
+     * @return the database ID of the scenario for the LATEST version
      *         (we assume that the scenario with the largest id is the one of the newest version)
      */
     public int getScenarioID(long scenarioID, int version) {
@@ -434,7 +434,7 @@ public class Connector extends DbDataObject{
         String select = "SELECT id FROM scenario " +
                 "WHERE modelid = " + scenarioID +
                 " AND modelversion = " + version;
-        LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "modelversion");
+        LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "id");
         if (ids.size() > 0) {
             return Collections.max(ids);
         }
@@ -442,7 +442,7 @@ public class Connector extends DbDataObject{
     }
 
     /**
-     * Change all oldScenarioIds to newScenarioIds of all running instances with oldScenarioId in table "scenarioinstance"
+     * Change all oldScenarioIDs to newScenarioIDs of all running instances with oldScenarioID in table "scenarioinstance"
      *
      * @param oldScenarioID scenarioID that gets updated by newScenarioId
      * @param newScenarioID new scenarioID that overwrites oldScenarioId
@@ -451,26 +451,37 @@ public class Connector extends DbDataObject{
         DbDataObject dbDataObject = new DbDataObject();
         String update = "UPDATE scenarioinstance " +
                 "SET scenario_id = " + newScenarioID +
-                " WHERE terminated = 0 " +
-                "AND = scenario_id = " + oldScenarioID;
+                " WHERE scenarioinstance.terminated = 0 " +
+                "AND scenario_id = " + oldScenarioID;
         dbDataObject.executeUpdateStatement(update);
     }
 
     /**
      * Get the databaseId for specified fragment in table "fragment".
      *
-     * @param scenarioId the scenarioID for which the fragment is selected
+     * @param scenarioID the scenarioID for which the fragment is selected
      * @param modelID the modelId of the fragment
      */
-    public int getFragmentID(int scenarioId, long modelID) {
+    public int getFragmentID(int scenarioID, long modelID) {
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT id " +
                 "FROM fragment " +
-                "WHERE scenario_id = " + scenarioId +
-                " AND = modelid = " + modelID;
+                "WHERE scenario_id = " + scenarioID +
+                " AND modelid = " + modelID;
         return dbDataObject.executeStatementReturnsInt(select, "id");
     }
 
+    /**
+     * Change all oldFragmentIDs to newFragmentIDs of all running instances with oldFragmentID in table "fragmentinstance"
+     *
+     * @param oldFragmentID fragmentID that gets updated by newFragmentId
+     * @param newFragmentID new fragmentID that overwrites oldFragmentId
+     */
     public void migrateFragmentInstance(int oldFragmentID, int newFragmentID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String update = "UPDATE fragmentinstance " +
+                "SET fragment_id = " + newFragmentID +
+                " WHERE fragment_id = " + oldFragmentID;
+        dbDataObject.executeUpdateStatement(update);
     }
 }

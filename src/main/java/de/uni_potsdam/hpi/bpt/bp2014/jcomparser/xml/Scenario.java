@@ -80,6 +80,14 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Variable holds value true if such a migration is necessary.
      */
     private boolean migrationNecessary;
+    /**
+     * If migration is necessary, we need the latest version of the scenario that should be migrated.
+     */
+    private int migratedScenarioVersion = -1;
+    /**
+     * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
+     */
+    private List<Fragment> newFragments = new LinkedList<>();
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -140,6 +148,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                 // 2) a new fragment has been added
                 else {
                     migrationNecessary = true;
+                    newFragments.add(fragment);
+                    migratedScenarioVersion = scenarioVersion;
                 }
             }
             // case 2: an existing fragment has been modified: we got a newer version of the fragment here
@@ -320,12 +330,23 @@ public class Scenario implements IDeserialisable, IPersistable {
         return -1;
     }
 
+    /**
+     * Migrate running Instances with the modelId of this scenario and the migratedVersion.
+     */
     private void migrateRunningInstances() {
         Connector connector = new Connector();
-        int newestScenarioDbVersion = connector.getScenarioVersion(scenarioID);
-
+        //migrate ScenarioInstances
+        int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
+        connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
+        //migrate FragmentInstances
+        for (Fragment fragment : fragments) {
+            int oldFragmentID = connector.getFragmentID(oldScenarioDbID, fragment.getFragmentID());
+            connector.migrateFragmentInstance(oldFragmentID, fragment.getDatabaseID());
+        }
+        // create new fragmentinstances for the new fragments
 
     }
+
 
     /**
      * Save the referenced activities of the Scenario to the database.

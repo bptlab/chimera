@@ -369,6 +369,15 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     /**
+     * Returns the Database-ID of the Fragment which is available after saving the fragment.
+     *
+     * @return DatabaseID
+     */
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    /**
      * Returns the model-version of the Fragment.
      *
      * @return versionNumber
