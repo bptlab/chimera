@@ -101,7 +101,7 @@ public class ActivityInstance extends ControlNodeInstance {
             scenarioInstance.checkDataFlowEnabled();
             scenarioInstance.checkExecutingGateways(controlNode_id);
             taskExecutionBehavior.execute();
-            System.out.println("Start Activity " + controlNode_id);
+            //System.out.println("Start Activity " + controlNode_id);
             return true;
         } else {
             return false;

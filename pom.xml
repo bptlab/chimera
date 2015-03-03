@@ -170,6 +170,12 @@
             <artifactId>ibatis2-common</artifactId>
             <version>2.1.7.597</version>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.mock-javamail</groupId>
+            <artifactId>mock-javamail</artifactId>
+            <version>1.9</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

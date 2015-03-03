@@ -391,6 +391,10 @@ public class ScenarioInstance {
         terminatedControlNodeInstances.clear();
     }
 
+    /**
+     * Starts automatic running control node instances.
+     * For example it starts the email tasks.
+     */
     public void startAutomaticControlNodes(){
         for (ControlNodeInstance controlNodeInstance : enabledControlNodeInstances){
             if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance)controlNodeInstance).getIsMailTask()){
@@ -400,6 +404,11 @@ public class ScenarioInstance {
         }
     }
 
+    /**
+     * Get the control node instance id for a given control node id.
+     * @param controlNode_id This is a id of a control node.
+     * @return the control instance id for the given control node id.
+     */
     public ControlNodeInstance getControlNodeInstanceForControlNodeId(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {
             if (controlNodeInstance.getControlNode_id() == controlNode_id) {
