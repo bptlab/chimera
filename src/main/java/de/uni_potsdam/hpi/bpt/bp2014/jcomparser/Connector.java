@@ -293,22 +293,6 @@ public class Connector extends DbDataObject{
     }
 
     /**
-     * Inserts a EmailTemplate into the database
-     * currently not used.
-     *
-     * @param controlNodeId the database id of the node which is the mail task.
-     * @return returns the newly created Ids.
-     */
-    public int insertStandardEmailTemplateIntoDatabase(final int controlNodeId) {
-        String sql = "INSERT INTO emailconfiguration " +
-                "(receivermailaddress, sendmailaddress, subject," +
-                " message, controlnode_id) VALUES ('test@test.com'," +
-                " 'test@test.com', 'test', 'test', " +
-                controlNodeId + ")";
-        return performSQLInsertStatementWithAutoId(sql);
-    }
-
-    /**
      *
      *
      * @param controlNodeId
