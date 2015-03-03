@@ -400,9 +400,9 @@ public class Connector extends DbDataObject{
      *
      * @param fragmentModelID modelID of the fragment
      * @param scenarioID modelID of the scenario the fragment belongs to
-     * @return latest version of the fragment with the fragmentModelID (return -1 if there is no fragment of this id)
+     * @return all versions of the fragment with the fragmentModelID (return list that only contains -1 if there is no fragment of this id)
      */
-    public int getFragmentVersion(long fragmentModelID, long scenarioID) {
+    public List<Integer> getFragmentVersions(long fragmentModelID, long scenarioID) {
 
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT fragment.modelversion FROM scenario, fragment " +
@@ -410,13 +410,10 @@ public class Connector extends DbDataObject{
                 "AND scenario.modelid = " + scenarioID +
                 " AND fragment.modelid = " + fragmentModelID;
         LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
-        int maxVersion = -1;
-        for (int entry : versions) {
-            if (entry > maxVersion) {
-                maxVersion = entry;
-            }
+        if (versions.size() == 0) {
+            versions.add(-1);
         }
-        return maxVersion;
+        return versions;
     }
     /**
      * Get the latest version of a scenario which is in the database.

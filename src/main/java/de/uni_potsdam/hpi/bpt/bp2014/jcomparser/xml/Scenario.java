@@ -69,10 +69,17 @@ public class Scenario implements IDeserialisable, IPersistable {
     private int versionNumber;
     /**
      * Marks if the scenario needs to be saved.
-     * If none of the fragments is changed and none is added or removed, it does not need to be saved and
+     * If none of the fragments is changed and none is added or removed, and there is no newer
+     * version of the scenario, it does not need to be saved and
      * the variable holds value false.
      */
     private boolean needsToBeSaved;
+    /**
+     * If the scenario contains new fragments that a older version in the database does not
+     * contain, all running instances are migrated to this scenario.
+     * Variable holds value true if such a migration is necessary.
+     */
+    private boolean migrationNecessary;
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -102,8 +109,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
-        //TODO: add methodcall checkIfVersionAlreadyInDatabase(); --> testfail
-        needsToBeSaved = true;
+        checkIfVersionAlreadyInDatabase();
     }
 
     /**
@@ -111,28 +117,45 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If so, the scenario does not need to be saved once again
      */
     private void checkIfVersionAlreadyInDatabase() {
-        int modelVersion;
-        long fragmentModelID;
-        int databaseVersion;
         Connector connector = new Connector();
-        List<Fragment> newFragments = new LinkedList<>();
-        needsToBeSaved = false;
+        int fragmentModelVersion;
+        long fragmentModelID;
+        int newestFragmentDatabaseVersion;
+        int scenarioVersion = connector.getScenarioVersion(scenarioID);
+        List<Integer> fragmentDatabaseVersions;
+        boolean changesMade = false;
         for (Fragment fragment : fragments) {
-            modelVersion = fragment.getVersion();
+            fragmentModelVersion = fragment.getVersion();
             fragmentModelID = fragment.getFragmentID();
-            databaseVersion = connector.getFragmentVersion(fragmentModelID, scenarioID);
-            // case 1: we got a newer version of a fragment here
-            if (databaseVersion < modelVersion ) {
+            fragmentDatabaseVersions = connector.getFragmentVersions(fragmentModelID, scenarioID);
+            newestFragmentDatabaseVersion = Collections.max(fragmentDatabaseVersions);
+            // case 1: We don't have a fragment with this modelid in the database
+            if (newestFragmentDatabaseVersion == -1) {
                 needsToBeSaved = true;
+                // ... this might have two reasons:
+                // 1) the scenario is not in the database yet
+                if (scenarioVersion == -1) {
+                    migrationNecessary = false;
+                }
+                // 2) a new fragment has been added
+                else {
+                    migrationNecessary = true;
+                }
             }
-            // case 2: we don't have a fragment with this modelid in the database
-            else if (databaseVersion < 0) {
-                newFragments.add(fragment);
+            // case 2: an existing fragment has been modified: we got a newer version of the fragment here
+            else if (newestFragmentDatabaseVersion < fragmentModelVersion) {
                 needsToBeSaved = true;
+                changesMade = true;
             }
         }
+        // this evaluation is necessary as otherwise the value of migrationNecessary is influenced by the
+        // ordering of the fragments (could be overwritten)
+        if (changesMade) {
+            migrationNecessary = false;
+        }
         // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
-        int scenarioVersion = connector.getScenarioVersion(scenarioID);
+        // or scenario does not exist in database (scenarioVersion = -1)
+        // (if scenarioVersion is -1 we get here only if this is a scenario without any fragments)
         if (scenarioVersion < versionNumber) {
             needsToBeSaved = true;
         }
@@ -289,9 +312,19 @@ public class Scenario implements IDeserialisable, IPersistable {
                 saveTerminationCondition();
             }
             saveReferences();
+            if (migrationNecessary){
+                migrateRunningInstances();
+            }
             return this.databaseID;
         }
         return -1;
+    }
+
+    private void migrateRunningInstances() {
+        Connector connector = new Connector();
+        int newestScenarioDbVersion = connector.getScenarioVersion(scenarioID);
+
+
     }
 
     /**

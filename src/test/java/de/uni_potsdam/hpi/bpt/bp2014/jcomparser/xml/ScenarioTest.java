@@ -1,6 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.easymock.IAnswer;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +19,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -61,6 +67,13 @@ public class ScenarioTest {
             = "createAndInitializeFragment";
 
     /**
+     * This checks if a version of fragment or scenario already exists in the database.
+     * Method can't be called without initialized fragments.
+     */
+    private static final String CHECK_VERSION_DATABASE
+            = "checkIfVersionAlreadyInDatabase";
+
+    /**
      * This scenario will be used to be tested.
      * It will be initialized without a Version.
      */
@@ -88,19 +101,24 @@ public class ScenarioTest {
      */
     Scenario scenarioComplete;
 
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    private static final String TEST_SQL_SEED_FILE = "src/test/resources/emptyDatabase.sql";
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
      */
     @Before
     public void setUp() throws Exception {
+        setUpDatabase();
         scenarioWOVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 SET_VERSION_METHOD,
-                CREATE_DO_METHOD);
+                CREATE_DO_METHOD,
+                CHECK_VERSION_DATABASE);
         scenarioWVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 CREATE_DO_METHOD,
-                FETCH_VERSION_METHOD);
+                FETCH_VERSION_METHOD,
+                CHECK_VERSION_DATABASE);
         scenarioWFragment = PowerMock.createPartialMock(Scenario.class,
                 SET_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD);
@@ -124,6 +142,7 @@ public class ScenarioTest {
         PowerMock.expectPrivate(scenarioWOVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         PowerMock.verify(scenarioWOVersion);
@@ -151,6 +170,7 @@ public class ScenarioTest {
         PowerMock.expectPrivate(scenarioWOVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         Assert.assertEquals("The name of the scenario has not been set correctly",
@@ -171,6 +191,7 @@ public class ScenarioTest {
     public void testVersion() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
         PowerMock.expectPrivate(scenarioWVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWVersion, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.expectPrivate(scenarioWVersion, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
@@ -334,5 +355,64 @@ public class ScenarioTest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Refill database from DEVELOPMENT_SQL_SEED_FILE after clearing it.
+     */
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
+
+    /**
+     * Sets up the database for ScenarioTests.
+     *
+     * @throws IOException  An Error while reading the SQL-File occurred.
+     * @throws SQLException An Error while executing the SQL-Script occurred.
+     */
+    @Before
+    public void setUpDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+    }
+
+    /**
+     * Drops and recreates the database.
+     */
+    protected static void clearDatabase() {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        if (conn == null) {
+            return;
+        }
+        try {
+            //Execute a querystmt = conn.createStatement();
+            stmt = conn.createStatement();
+            stmt.execute("DROP DATABASE JEngineV2");
+            stmt.execute("CREATE DATABASE JEngineV2");
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
     }
 }
