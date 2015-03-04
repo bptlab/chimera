@@ -109,7 +109,7 @@ public class NodeTest {
     public void testGlobalActivityDeserialization() {
         Node activity = new Node();
         activity.initializeInstanceFromXML(activityGlobalNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil transportieren", activity.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
         Assert.assertEquals("Global has not been set correctly", true, activity.isGlobal());
@@ -121,7 +121,7 @@ public class NodeTest {
     public void testLocalActivityDeserialization() {
         Node activity = new Node();
         activity.initializeInstanceFromXML(activityLocalNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil kleben", activity.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
         Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
@@ -133,7 +133,7 @@ public class NodeTest {
     public void testSendActivityDeserialization() {
         Node activity = new Node();
         activity.initializeInstanceFromXML(activitySendNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Email senden", activity.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
         Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
@@ -146,7 +146,7 @@ public class NodeTest {
     public void testStartEventyDeserialization() {
         Node startEvent = new Node();
         startEvent.initializeInstanceFromXML(startEventNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, startEvent.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, startEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "Start", startEvent.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.StartEvent", startEvent.getType());
         Assert.assertFalse("The Node is a StartEvent but isTask returns true", startEvent.isTask());
@@ -157,7 +157,7 @@ public class NodeTest {
     public void testEndEventDeserialization() {
         Node endEvent = new Node();
         endEvent.initializeInstanceFromXML(endEventNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, endEvent.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, endEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "End", endEvent.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.EndEvent", endEvent.getType());
         Assert.assertFalse("The Node is a endEvent but isTask returns true", endEvent.isTask());
@@ -168,7 +168,7 @@ public class NodeTest {
     public void testXorDeserialization() {
         Node xor = new Node();
         xor.initializeInstanceFromXML(xorNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, xor.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, xor.getId());
         Assert.assertEquals("Text has not been set correctly", "XOR", xor.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ExclusiveGateway", xor.getType());
         Assert.assertFalse("The Node is a xorGateway but isTask returns true", xor.isTask());
@@ -179,7 +179,7 @@ public class NodeTest {
     public void testAndDeserialization() {
         Node and = new Node();
         and.initializeInstanceFromXML(andNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, and.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, and.getId());
         Assert.assertEquals("Text has not been set correctly", "AND", and.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ParallelGateway", and.getType());
         Assert.assertFalse("The Node is a andGateway but isTask returns true", and.isTask());
@@ -190,7 +190,7 @@ public class NodeTest {
     public void testDataObject() {
         Node data = new Node();
         data.initializeInstanceFromXML(dataNode);
-        Assert.assertEquals("Id has not beens set correctly", 706118804, data.getId());
+        Assert.assertEquals("Id has not beens set correctly", 706118804L, data.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil", data.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.DataObject", data.getType());
         Assert.assertFalse("The Node is a dataObject, but isTask returns true", data.isTask());

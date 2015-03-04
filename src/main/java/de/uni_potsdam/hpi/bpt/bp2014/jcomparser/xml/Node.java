@@ -298,7 +298,7 @@ public class Node implements IDeserialisable, IPersistable {
      *
      * @param newId the new id of the data Node.
      */
-    protected void setId(final int newId) {
+    protected void setId(final long newId) {
         this.id = newId;
     }
     // END: Getter & Setter
