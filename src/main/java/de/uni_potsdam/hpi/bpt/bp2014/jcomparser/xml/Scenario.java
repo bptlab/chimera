@@ -331,7 +331,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Migrate running Instances with the modelId of this scenario and the migratedVersion.
+     * Migrate running instances with the modelId of this scenario and the migratedVersion.
      */
     private void migrateRunningInstances() {
         Connector connector = new Connector();
@@ -367,7 +367,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void saveReferences() {
         /* Key is the ID used inside the model, value are a List of
          * all IDs used inside the database. */
-        HashMap<Integer, List<Integer>> activities =
+        HashMap<Long, List<Integer>> activities =
                 getActivityDatabaseIDsForEachActivityModelID();
         Connector conn = new Connector();
         for (List<Integer> databaseIDs : activities.values()) {
@@ -388,13 +388,13 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If two activities are referenced their model IDs are the same,
      * but they have different IDs inside the database.
      *
-     * @return A Map of all activity-model IDs to a List of their database IDs.
+     * @return A map of all activity-model-IDs to a list of their database IDs.
      */
-    private HashMap<Integer, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
-        HashMap<Integer, List<Integer>> result = new HashMap<>();
+    private HashMap<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+        HashMap<Long, List<Integer>> result = new HashMap<>();
         for (Fragment fragment : fragments) {
-            Map<Integer, Node> fragmentNodes = fragment.getControlNodes();
-            for (Map.Entry<Integer, Node> node : fragmentNodes.entrySet()) {
+            Map<Long, Node> fragmentNodes = fragment.getControlNodes();
+            for (Map.Entry<Long, Node> node : fragmentNodes.entrySet()) {
                 if (node.getValue().isTask()) {
                     if (result.get(node.getKey()) == null) {
                         List<Integer> activityDatabaseIDs =

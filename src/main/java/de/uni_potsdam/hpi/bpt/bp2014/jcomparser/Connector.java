@@ -95,12 +95,13 @@ public class Connector extends DbDataObject{
      */
     public int insertControlNodeIntoDatabase(final String label,
                                              final String type,
-                                             final int fragmentID) {
+                                             final int fragmentID,
+                                             final long modelID) {
 
         String sql = "INSERT INTO controlnode " +
-                "(label, controlnode.type, fragment_id) " +
+                "(label, controlnode.type, fragment_id, modelid) " +
                 "VALUES ('" + label + "', '" +
-                type + "', " + fragmentID + ")";
+                type + "', " + fragmentID + ", " + modelID +")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 

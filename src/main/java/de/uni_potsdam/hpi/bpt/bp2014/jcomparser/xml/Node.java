@@ -42,7 +42,7 @@ public class Node implements IDeserialisable, IPersistable {
     /**
      * The ID of the node from the xml.
      */
-    private int id;
+    private long id;
     /**
      * The text (label) of the node.
      */
@@ -139,7 +139,7 @@ public class Node implements IDeserialisable, IPersistable {
                 type = value;
                 break;
             case "#id":
-                id = Integer.parseInt(value);
+                id = Long.parseLong(value);
                 break;
             case "text":
                 text = value;
@@ -174,7 +174,8 @@ public class Node implements IDeserialisable, IPersistable {
                 // we identify mailtasks that need to be marked in the database by their stereotype
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(stereotype),
-                        fragmentId);
+                        fragmentId,
+                        id);
                 connector.createEMailTemplate(databaseID);
 
             }
@@ -182,7 +183,8 @@ public class Node implements IDeserialisable, IPersistable {
                 // DataNodes will be done in DataObject
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(type),
-                        fragmentId);
+                        fragmentId,
+                        id);
             }
         }
         return databaseID;
@@ -206,7 +208,7 @@ public class Node implements IDeserialisable, IPersistable {
      *
      * @return the id extracted from the XML.
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
