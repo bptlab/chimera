@@ -211,11 +211,12 @@ public class Connector extends DbDataObject{
     public int insertDataNodeIntoDatabase(final int scenarioID,
                                           final int stateID,
                                           final int dataClassID,
-                                          final int dataObjectID) {
+                                          final int dataObjectID,
+                                          final long modelid) {
         String sql = "INSERT INTO datanode " +
-                "(scenario_id, state_id, dataclass_id, dataobject_id)" +
+                "(scenario_id, state_id, dataclass_id, dataobject_id, modelid)" +
                 " VALUES (" + scenarioID + ", " + stateID + ", " +
-                dataClassID + ", " + dataObjectID + ")";
+                dataClassID + ", " + dataObjectID + ", " + modelid + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -432,7 +433,7 @@ public class Connector extends DbDataObject{
      *
      * @param scenarioID modelID of the scenario
      * @param version the version for which the scenario is selected
-     * @return the database ID of the scenario for the LATEST version
+     * @return the databaseID of the scenario for the LATEST version
      *         (we assume that the scenario with the largest id is the one of the newest version)
      */
     public int getScenarioID(long scenarioID, int version) {
@@ -474,6 +475,7 @@ public class Connector extends DbDataObject{
      *
      * @param scenarioID the scenarioID for which the fragment is selected
      * @param modelID the modelId of the fragment
+     * @return the databaseID of the selected fragment
      */
     public int getFragmentID(int scenarioID, long modelID) {
         DbDataObject dbDataObject = new DbDataObject();
@@ -497,7 +499,12 @@ public class Connector extends DbDataObject{
                 " WHERE fragment_id = " + oldFragmentID;
         dbDataObject.executeUpdateStatement(update);
     }
-
+    /**
+     * Insert a running instance of a fragment in table "fragmentinstance"
+     *
+     * @param fragmentID specifies a fragment the instance is running on
+     * @param instanceID specifies a scenarioinstance the fragmentinstance belongs to
+     */
     public void insertFragmentInstance(int fragmentID, int instanceID) {
         DbDataObject dbDataObject = new DbDataObject();
         String insert = "INSERT INTO fragmentinstance (fragmentinstance.terminated, fragment_id, scenarioinstance_id) " +
@@ -505,5 +512,63 @@ public class Connector extends DbDataObject{
         dbDataObject.executeUpdateStatement(insert);
 
 
+    }
+    /**
+     * Get the databaseId for specified controlnode in table "controlnode".
+     *
+     * @param fragmentID the fragmentID for which the fragment is selected
+     * @param modelID the modelId of the controlnode
+     * @return the databaseID of the selected controlnode
+     */
+    public int getControlNodeID(int fragmentID, long modelID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT id " +
+                "FROM controlnode " +
+                "WHERE fragment_id = " + fragmentID +
+                " AND modelid = " + modelID;
+        return dbDataObject.executeStatementReturnsInt(select, "id");
+
+    }
+    /**
+     * Change all oldControlNodeIDs to newControlNodeIDs in table "controlnodeinstance"
+     *
+     * @param oldControlNodeID controlNodeID that gets updated by newControlNodeID
+     * @param newControlNodeID new controlNodeID that overwrites oldControlNodeID
+     */
+    public void migrateControlNodeInstance(int oldControlNodeID, int newControlNodeID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String update = "UPDATE controlnodeinstance " +
+                "SET controlnode_id = " + newControlNodeID +
+                " WHERE controlnode_id = " + oldControlNodeID;
+        dbDataObject.executeUpdateStatement(update);
+
+    }
+    /**
+     * Get the dataobjectId of the specified datanode in table "fragment".
+     *
+     * @param scenarioID the scenarioID for which the dataobjectId is selected
+     * @param modelID the modelId of the datanode
+     * @return the dataobjectId of the selected datanode
+     */
+    public int getDataObjectID(int scenarioID, long modelID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT dataobject_id " +
+                "FROM datanode " +
+                "WHERE scenario_id = " + scenarioID +
+                " AND modelid = " + modelID;
+        return dbDataObject.executeStatementReturnsInt(select, "dataobject_id");
+    }
+    /**
+     * Change all oldDataObjectIDs to newDataObjectIDs in table "dataobjectinstance"
+     *
+     * @param oldDataObjectID dataobject_id that gets updated by newDataObjectID
+     * @param newDataObjectID new dataobject_id that overwrites oldDataObjectID
+     */
+    public void migrateDataObjectInstance(int oldDataObjectID, int newDataObjectID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String update = "UPDATE dataobjectinstance " +
+                "SET dataobject_id = " + newDataObjectID +
+                " WHERE dataobject_id = " + oldDataObjectID;
+        dbDataObject.executeUpdateStatement(update);
     }
 }

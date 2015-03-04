@@ -343,15 +343,26 @@ public class Scenario implements IDeserialisable, IPersistable {
             // as there is no fragmentinstance for any new fragment in the database so far,
             // we don't need to change references
             if(newFragments.contains(fragment)) {
-                continue;
+                // create new fragmentinstances for the new fragment
+                for (int instanceID : oldRunningScenarioInstancesIDs) {
+                    connector.insertFragmentInstance(fragment.getDatabaseID(), instanceID);
+                }
+                // Do we need to add any controlnodeinstances from new fragment?
             }
-            int oldFragmentID = connector.getFragmentID(oldScenarioDbID, fragment.getFragmentID());
-            connector.migrateFragmentInstance(oldFragmentID, fragment.getDatabaseID());
-        }
-        // create new fragmentinstances for the new fragments
-        for(Fragment newFragment : newFragments) {
-            for (int instanceID : oldRunningScenarioInstancesIDs) {
-                connector.insertFragmentInstance(newFragment.getDatabaseID(), instanceID);
+            else {
+                int oldFragmentID = connector.getFragmentID(oldScenarioDbID, fragment.getFragmentID());
+                connector.migrateFragmentInstance(oldFragmentID, fragment.getDatabaseID());
+                // migrate controlNodes
+                for (Map.Entry<Long, Node> node : fragment.getControlNodes().entrySet()) {
+                    if (node.getValue().isDataNode()) {
+                        int oldDataObjectID = connector.getDataObjectID(oldScenarioDbID, node.getValue().getId());
+                        connector.migrateDataObjectInstance(oldDataObjectID, node.getValue().getDatabaseID());
+                    }
+                    else {
+                        int oldControlNodeID = connector.getControlNodeID(oldFragmentID, node.getValue().getId());
+                        connector.migrateControlNodeInstance(oldControlNodeID, node.getValue().getDatabaseID());
+                    }
+                }
             }
         }
     }
