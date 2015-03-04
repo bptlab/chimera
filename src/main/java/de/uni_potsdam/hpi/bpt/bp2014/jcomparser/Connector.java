@@ -180,7 +180,6 @@ public class Connector extends DbDataObject{
                 "VALUES ('" + name + "', " + dataClassId + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
-
     /**
      * Inserts a new Data Class into the database.
      *
@@ -193,6 +192,12 @@ public class Connector extends DbDataObject{
         return performSQLInsertStatementWithAutoId(sql);
     }
 
+    public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String value, final String type){
+        String sql = "INSERT INTO dataattribute (dataattribute.name, " +
+                "dataclass_id, dataattribute.value, dataattribute.type, dataattribute.default) " +
+                "VALUES ('" + name + "', " + dataClassID + ", '" + value + "', '" + type + "', '')";
+        return performSQLInsertStatementWithAutoId(sql);
+    }
     /**
      * This Methods inserts a new DataNode into the Database.
      * All necessary information are given as a parameter.
