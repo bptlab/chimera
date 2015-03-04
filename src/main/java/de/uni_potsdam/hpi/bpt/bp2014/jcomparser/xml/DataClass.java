@@ -90,6 +90,7 @@ public class DataClass implements IDeserialisable, IPersistable {
 
         return dataClassID;
     }
+
     private void generateDataAttributeList() {
         try {
             //look for all fragments in the scenarioXML and save their node
