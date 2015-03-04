@@ -25,6 +25,16 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 					controller: 'ScenarioController',
 					controllerAs: 'scenarioCtrl'
 				}).
+				when('/scenario/:id/instance', {
+					templateUrl: 'asset/templates/scenarioInstance.html',
+					controller: 'ScenarioInstanceController',
+					controllerAs: 'instanceCtrl'
+				}).
+				when('/scenario/:id/instance/:instanceId', {
+					templateUrl: 'asset/templates/scenarioInstanceDetails.html',
+					controller: 'ScenarioInstanceController',
+					controllerAs: 'instanceCtrl'
+				}).
 				otherwise({
 					redirectTo: '/scenario'
 				});

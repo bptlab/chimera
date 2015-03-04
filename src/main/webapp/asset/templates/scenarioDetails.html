@@ -7,7 +7,12 @@
 	<div class="col-xs-1">
 		{{"# " + scenarioCtrl.getCurrentScenario()['id']}}
 	</div>
-	<div class="col-xs-5">
+	<div class="col-xs-4">
 		{{scenarioCtrl.getCurrentScenario()['label']}}
+	</div>
+	<div class="col-xs-4">
+		<a ng-href="#/scenario/{{scenarioCtrl.getCurrentScenario()['id']}}/instance">
+			Number of Instances: {{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}
+		</a>
 	</div>
 </div>

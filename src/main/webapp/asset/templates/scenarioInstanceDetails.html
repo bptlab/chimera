@@ -1,0 +1,53 @@
+<h3>Scenario Instance {{instanceCtrl.scenario.instanceIds[0] + " - " + instanceCtrl.getScenarioName()}}</h3>
+<!-- Show enabled Activities -->
+<div id="form">
+	Insert the Form here
+</div>
+<div class="pull-right dropdown">
+	<button class="btn btn-default dropdown-toggle" type="button" id="enabledActivitiesMenu" data-toggle="dropdown">
+		Enabled Activities
+		<span class="badge"></span>
+		<span class="pull-right fa arrow"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="enabledActivitiesMenu">
+		<li ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" role="presentation">
+			<a role="menuitem" data-toggle="modal" data-target="{{'#modal' + id}}" tabindex="-1">{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}</a>
+		</li>
+	</ul>
+</div>
+<div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" id="{{'modal' + id}}" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Complete activity?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to terminate Activity "{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}"?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="instanceCtrl.terminateActivity(id);" data-dismiss="modal" class="btn btn-primary">Terminate</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<h4>Terminated Activities</h4>
+<div class="responsive-table">
+	<table class="table table-striped">
+		<caption>Activities successfully completed</caption>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids']">
+				<td>{{id}}</td>
+				<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
+			</tr>
+			</a>
+		</tbody>
+	</table>
+</div>
