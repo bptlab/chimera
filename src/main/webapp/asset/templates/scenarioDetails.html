@@ -1,23 +1,27 @@
 <h2>{{scenarioCtrl.getCurrentScenario()['label']}}</h2>
 <div class="row">
-	<div class="col-xs-4">
+	<!--<div class="col-xs-4">
 		<img src="{{scenarioCtrl.getCurrentScenario()['imageUrl']}}" alt="{{scenarioCtrl.getCurrentScenario()['label']}}" class="img-thumbnail">
 		</img>
-	</div>
-	<div class="col-xs-1">
-		{{"# " + scenarioCtrl.getCurrentScenario()['id']}}
-	</div>
-	<div class="col-xs-4">
-		{{scenarioCtrl.getCurrentScenario()['label']}}
-	</div>
-	<div class="col-xs-4">
-		<a ng-href="#/scenario/{{scenarioCtrl.getCurrentScenario()['id']}}/instance">
-			Number of Instances: {{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}
-		</a>
-	</div>
+	</div>-->
+	<table>
+		<tr>
+			<th>ID</th>
+			<th>{{"# " + scenarioCtrl.getCurrentScenario()['id']}}</th>
+		</tr><tr>
+			<th>Name</th>
+			<th>{{scenarioCtrl.getCurrentScenario()['label']}}</th>
+		</tr><tr>
+			<th>Amount of Instances</th>
+			<th>{{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}</th>
+		</tr>
+	</table>
 </div>
+<a ng-href="#/scenario/{{scenarioCtrl.getCurrentScenario()['id']}}/instance" class="btn btn-default">
+			Display all {{scenarioCtrl.getCurrentScenario()['instanceIds'].length}} Instances
+</a>
 <div>
-	<button data-toggle="modal" data-target="#createInstance" class="btn btn-default">Start Instance</button>
+	<button data-toggle="modal" data-target="#createInstance" >Start Instance</button>
 	<div id="createInstance" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
