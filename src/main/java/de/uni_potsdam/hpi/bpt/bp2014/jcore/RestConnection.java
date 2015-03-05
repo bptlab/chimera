@@ -101,10 +101,10 @@ public class RestConnection {
                 return Response.serverError().entity("Error: not a correct scenario").build();
             }
             LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
-
+            /*
             if (scenarioIDs.size() == 0) {
                 return Response.serverError().entity("Error: not correct instance ID").build(); //no instances present
-            }
+            }*/
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
