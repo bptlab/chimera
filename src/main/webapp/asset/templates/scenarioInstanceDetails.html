@@ -15,23 +15,46 @@
 		</li>
 	</ul>
 </div>
+<!-- modal for beginning an Activity-->
 <div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" id="{{'modal' + id}}" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Complete activity?</h4>
+        <h4 class="modal-title">Begin activity?</h4>
       </div>
       <div class="modal-body">
-        <p>Do you want to terminate Activity "{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}"?</p>
+        <p>Do you want to start Activity "{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}"?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="instanceCtrl.terminateActivity(id);" data-dismiss="modal" class="btn btn-primary">Terminate</button>
+        <button type="button" ng-click="instanceCtrl.beginActivity(id);" data-dismiss="modal" class="btn btn-primary">Begin</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-- A list of all running activities -->
+<h4>Running Activities</h4>
+<div class="responsive-table">
+	<table class="table table-striped">
+		<caption>Activities successfully completed</caption>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
+				<td>{{id}}</td>
+				<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
+				<td><button type="button" class="btn btn-default" ng-click="instanceCtrl.terminateActivity(id);">Terminate</button>
+			</tr>
+			</a>
+		</tbody>
+	</table>
+</div>
 <h4>Terminated Activities</h4>
 <div class="responsive-table">
 	<table class="table table-striped">
@@ -43,7 +66,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids']">
+			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids'] track by $index">
 				<td>{{id}}</td>
 				<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
 			</tr>

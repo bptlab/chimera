@@ -94,7 +94,7 @@
 			/* ____ BEGIN_INITIALIZATION ____ */
 			this.initializeActivityInstances = function(){
 				instanceCtrl.instances[$routeParams.instanceId].activities = {};
-				["enabled", "terminated"].forEach(function(state){
+				["enabled", "terminated", "running"].forEach(function(state){
 					var state2 = state;
 					$http.get(
 						JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" +
@@ -173,19 +173,25 @@
 				}
 			};
 			
-			// terminates an activity
-			this.terminateActivity = function(activityId) {
+			// begins an activity
+			this.beginActivity = function(activityId) {
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activityinstance/"+ activityId + "?status=begin").
 					success(function(data) {
-						$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-							"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-							"/activityinstance/"+ activityId + "?status=terminate").
-							success(function(data) {
-								instanceCtrl.instances.activities = {};
-								instanceCtrl.initializeActivityInstances();
-							});
+						instanceCtrl.instances.activities = {};
+						instanceCtrl.initializeActivityInstances();
+					});
+			};
+			
+			// terminates an activity
+			this.terminateActivity = function(activityId) {
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
+					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+					"/activityinstance/"+ activityId + "?status=terminate").
+					success(function(data) {
+						instanceCtrl.instances.activities = {};
+						instanceCtrl.initializeActivityInstances();
 					});
 			};
 				
