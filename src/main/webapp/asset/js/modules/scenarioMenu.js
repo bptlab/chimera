@@ -210,7 +210,6 @@
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
 				success(function(data){
 					controller.scenarioIds = data['ids'];
-					controller.getDetailedInformation();
 				});
 				
 			this.getImageForScenario = function(id){
