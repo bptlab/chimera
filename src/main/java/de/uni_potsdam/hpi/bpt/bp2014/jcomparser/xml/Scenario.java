@@ -331,42 +331,24 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Migrate running instances with the modelId of this scenario and the migratedVersion.
+     * Migrate running instances with the modelId of this scenario and with the migratedVersion.
      */
     private void migrateRunningInstances() {
         Connector connector = new Connector();
-        //migrate ScenarioInstances
+        // get the scenarioDatabaseID with the version to be migrated and the modelid
         int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
-        List<Integer> oldRunningScenarioInstancesIDs = connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
+        // get the scenarioinstanceids of all running instances that need to be migrated
+        // and migrate them (means changing their old reference to the scenario to this scenario)
+        connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
         //migrate FragmentInstances
         for(Fragment fragment : fragments) {
-            // as there is no fragmentinstance for any new fragment in the database so far,
+            // as there is no fragmentinstance for this new fragment in the database so far,
             // we don't need to change references
-            if(newFragments.contains(fragment)) {
-                // create new fragmentinstances for the new fragment
-                for (int instanceID : oldRunningScenarioInstancesIDs) {
-                    connector.insertFragmentInstance(fragment.getDatabaseID(), instanceID);
-                }
-                // Do we need to add any controlnodeinstances from new fragment?
-            }
-            else {
-                int oldFragmentID = connector.getFragmentID(oldScenarioDbID, fragment.getFragmentID());
-                connector.migrateFragmentInstance(oldFragmentID, fragment.getDatabaseID());
-                // migrate controlNodes
-                for (Map.Entry<Long, Node> node : fragment.getControlNodes().entrySet()) {
-                    if (node.getValue().isDataNode()) {
-                        int oldDataObjectID = connector.getDataObjectID(oldScenarioDbID, node.getValue().getId());
-                        connector.migrateDataObjectInstance(oldDataObjectID, node.getValue().getDatabaseID());
-                    }
-                    else {
-                        int oldControlNodeID = connector.getControlNodeID(oldFragmentID, node.getValue().getId());
-                        connector.migrateControlNodeInstance(oldControlNodeID, node.getValue().getDatabaseID());
-                    }
-                }
+            if (!newFragments.contains(fragment)) {
+                fragment.migrate(oldScenarioDbID);
             }
         }
     }
-
 
     /**
      * Save the referenced activities of the Scenario to the database.

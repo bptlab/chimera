@@ -536,7 +536,6 @@ public class Connector extends DbDataObject{
                 "SET controlnode_id = " + newControlNodeID +
                 " WHERE controlnode_id = " + oldControlNodeID;
         dbDataObject.executeUpdateStatement(update);
-
     }
     /**
      * Get the dataobjectId of the specified datanode in table "fragment".
