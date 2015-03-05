@@ -1,6 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.easymock.IAnswer;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +20,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -62,6 +68,13 @@ public class ScenarioTest {
             = "createAndInitializeFragment";
 
     /**
+     * This checks if a version of fragment or scenario already exists in the database.
+     * Method can't be called without initialized fragments.
+     */
+    private static final String CHECK_VERSION_DATABASE
+            = "checkIfVersionAlreadyInDatabase";
+
+    /**
      * This scenario will be used to be tested.
      * It will be initialized without a Version.
      */
@@ -89,6 +102,23 @@ public class ScenarioTest {
      */
     Scenario scenarioComplete;
 
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    private static final String TEST_SQL_SEED_FILE = "src/test/resources/jenginev2_empty.sql";
+    private static final String TRUNCATE_TABLES_FILE = "src/test/resources/truncate_all_tables.sql";
+
+    /**
+     * Sets up the database for ScenarioTests.
+     *
+     * @throws IOException  An Error while reading the SQL-File occurred.
+     * @throws SQLException An Error while executing the SQL-Script occurred.
+     */
+    @BeforeClass
+    public static void setUpDatabase() throws IOException, SQLException{
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+    }
+
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
      */
@@ -97,11 +127,13 @@ public class ScenarioTest {
         scenarioWOVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 SET_VERSION_METHOD,
-                CREATE_DO_METHOD);
+                CREATE_DO_METHOD,
+                CHECK_VERSION_DATABASE);
         scenarioWVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 CREATE_DO_METHOD,
-                FETCH_VERSION_METHOD);
+                FETCH_VERSION_METHOD,
+                CHECK_VERSION_DATABASE);
         scenarioWFragment = PowerMock.createPartialMock(Scenario.class,
                 SET_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD);
@@ -125,6 +157,7 @@ public class ScenarioTest {
         PowerMock.expectPrivate(scenarioWOVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         PowerMock.verify(scenarioWOVersion);
@@ -152,6 +185,7 @@ public class ScenarioTest {
         PowerMock.expectPrivate(scenarioWOVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         Assert.assertEquals("The name of the scenario has not been set correctly",
@@ -172,6 +206,7 @@ public class ScenarioTest {
     public void testVersion() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
         PowerMock.expectPrivate(scenarioWVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWVersion, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.expectPrivate(scenarioWVersion, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
@@ -200,9 +235,18 @@ public class ScenarioTest {
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
                     public Fragment answer() throws Throwable {
-                        Fragment fragment = new Fragment();
-                        fragment.initializeInstanceFromXML(
-                                getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                                FETCH_VERSION_METHOD);
+                        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                                .andAnswer(new IAnswer<org.w3c.dom.Element>() {
+                                    @Override
+                                    public org.w3c.dom.Element answer() throws Throwable {
+                                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                                    }
+                                });
+                        PowerMock.replay(fragment);
+                        fragment.initializeInstanceFromXML(getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
+                        PowerMock.verify(fragment);
                         return fragment;
                     }
                 });
@@ -231,7 +275,16 @@ public class ScenarioTest {
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
                     public Fragment answer() throws Throwable {
-                        Fragment fragment = new Fragment();
+                        Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                                FETCH_VERSION_METHOD);
+                        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                                .andAnswer(new IAnswer<org.w3c.dom.Element>() {
+                                    @Override
+                                    public org.w3c.dom.Element answer() throws Throwable {
+                                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                                    }
+                                });
+                        PowerMock.replay(fragment);
                         fragment.initializeInstanceFromXML(
                                 getDocumentFromXmlFile(new File("src/test/resources/bikeFragment.xml")));
                         return fragment;
@@ -257,9 +310,11 @@ public class ScenarioTest {
      */
     @Test
     public void testSaveCompleteScenario() throws Exception {
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
         final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
                 FETCH_VERSION_METHOD);
-        PowerMock.expectPrivate(fragment, "fetchVersionXML")
+        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
                     public Node answer() throws Throwable {
@@ -268,6 +323,7 @@ public class ScenarioTest {
                                 .getDocumentElement();
                     }
                 });
+        PowerMock.replay(fragment);
         fragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/bikeFragment.xml")));
         Document bikeScenario = getDocumentFromXmlFile(
@@ -296,6 +352,142 @@ public class ScenarioTest {
     }
 
     /**
+     * Assure that a unchanged scenario is not written to the database once again.
+     */
+    @Test
+    public void testSameScenarioNotSavedTwice() throws Exception {
+
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
+
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario1 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        scenario1.save();
+        PowerMock.verify(scenario1, fragment1);
+
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version.xml", fragment2);
+        scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        assertTrue("Eventhough the scenario is the same, it has been saved again", scenario2.save() == -1);
+        PowerMock.verify(scenario2, fragment2);
+    }
+
+    /**
+     * Assure that when a fragment of a scenario has been modified and the older version of the scenario
+     * is already in the database, it gets saved as a new scenario.
+     */
+    @Test
+    public void testModificationInFragmentScenarioNewlySaved() throws Exception {
+
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
+
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario1 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        scenario1.save();
+        PowerMock.verify(scenario1, fragment1);
+
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version_modified.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version.xml", fragment2);
+        scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        assertTrue("Scenario with modified fragment is not saved", scenario2.save() > 0);
+        PowerMock.verify(scenario2, fragment2);
+    }
+
+    /**
+     * Assure that when a scenario itself has been updated and the older version of the scenario
+     * is already in the database, it gets saved as a new scenario.
+     */
+    @Test
+    public void testSaveUpdatedScenario() throws Exception {
+
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
+
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario1 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        scenario1.save();
+        PowerMock.verify(scenario1, fragment1);
+
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version_modified.xml", fragment2);
+        scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        assertTrue("Updated scenario is not saved", scenario2.save() > 0);
+        PowerMock.verify(scenario2, fragment2);
+    }
+
+    /**
+     * Initialize a fragment by configuring the mock
+     * @param versionLocation Location of the XML-file that contains the versions of the fragment
+     */
+    private Fragment initializeFragment(final String versionLocation) throws Exception {
+        final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                FETCH_VERSION_METHOD);
+        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(
+                                new File(versionLocation))
+                                .getDocumentElement();
+                    }
+                });
+        PowerMock.replay(fragment);
+        return fragment;
+    }
+
+    /**
+     * Initialize a scenario by configuring the mock
+     * @param versionLocation Location of the XML-file that contains the versions of the fragment
+     * @param fragment The fragment that the scenario consists of
+     */
+    private Scenario initializeScenario(final String versionLocation, final Fragment fragment) throws Exception {
+        final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
+                FETCH_VERSION_METHOD,
+                CREATE_FRAGMENT_METHOD);
+
+        PowerMock.expectPrivate(scenario, FETCH_VERSION_METHOD)
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(
+                                new File(versionLocation))
+                                .getDocumentElement();
+                    }
+                });
+        PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentID()))
+                .andAnswer(new IAnswer<Fragment>() {
+                    @Override
+                    public Fragment answer() throws Throwable {
+                        return fragment;
+                    }
+                });
+        PowerMock.replay(scenario, fragment, Fragment.class);
+        return scenario;
+    }
+
+    /**
      * Casts a XML from its String Representation to a w3c Document.
      *
      * @param xml The String representation of the XML.
@@ -316,5 +508,51 @@ public class ScenarioTest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Refill database from DEVELOPMENT_SQL_SEED_FILE after clearing it.
+     */
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
+
+    /**
+     * Drops and recreates the database.
+     */
+    protected static void clearDatabase() {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        if (conn == null) {
+            return;
+        }
+        try {
+            //Execute a querystmt = conn.createStatement();
+            stmt = conn.createStatement();
+            stmt.execute("DROP DATABASE JEngineV2");
+            stmt.execute("CREATE DATABASE JEngineV2");
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
     }
 }

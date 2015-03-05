@@ -42,7 +42,7 @@ public class Node implements IDeserialisable, IPersistable {
     /**
      * The ID of the node from the xml.
      */
-    private int id;
+    private long id;
     /**
      * The text (label) of the node.
      */
@@ -71,6 +71,10 @@ public class Node implements IDeserialisable, IPersistable {
      * It will only be set, if and only if the node is a data node.
      */
     private String state;
+    /**
+     * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
+     */
+    private String stereotype;
 
 
     /**
@@ -97,6 +101,8 @@ public class Node implements IDeserialisable, IPersistable {
                 "AND");
         peTypeToDbType.put("net.frapu.code.visualization.bpmn.ExclusiveGateway",
                 "XOR");
+        peTypeToDbType.put("SEND",
+                "EmailTask");
     }
 
 
@@ -133,7 +139,7 @@ public class Node implements IDeserialisable, IPersistable {
                 type = value;
                 break;
             case "#id":
-                id = Integer.parseInt(value);
+                id = Long.parseLong(value);
                 break;
             case "text":
                 text = value;
@@ -144,6 +150,8 @@ public class Node implements IDeserialisable, IPersistable {
             case "state":
                 state = value;
                 break;
+            case "stereotype":
+                stereotype = value;
             default:
                 // Property will not be handled
                 break;
@@ -162,12 +170,41 @@ public class Node implements IDeserialisable, IPersistable {
         }
         Connector connector = new Connector();
         if (!type.contains("DataObject")) {
-            // DataNodes will be done in DataObject
-            databaseID = connector.insertControlNodeIntoDatabase(text,
-                    peTypeToDbType.get(type),
-                    fragmentId);
+            if (stereotype.equals("SEND")) {
+                // we identify mailtasks that need to be marked in the database by their stereotype
+                databaseID = connector.insertControlNodeIntoDatabase(text,
+                        peTypeToDbType.get(stereotype),
+                        fragmentId,
+                        id);
+                connector.createEMailTemplate(databaseID);
+
+            }
+            else {
+                // DataNodes will be done in DataObject
+                databaseID = connector.insertControlNodeIntoDatabase(text,
+                        peTypeToDbType.get(type),
+                        fragmentId,
+                        id);
+            }
         }
         return databaseID;
+    }
+    /**
+     * Migrate datanode- or controlnodeInstances.
+     *
+     * @param scenarioDbID databaseId of the old scenario whose instances get migrated
+     * @param oldFragmentID databaseId of the old fragment whose instances get migrated and this node belongs to
+     */
+    public void migrate(int scenarioDbID, int oldFragmentID) {
+        Connector connector = new Connector();
+        if (isDataNode()) {
+            int oldDataObjectID = connector.getDataObjectID(scenarioDbID, id);
+            connector.migrateDataObjectInstance(oldDataObjectID, databaseID);
+        }
+        else {
+            int oldControlNodeID = connector.getControlNodeID(oldFragmentID, id);
+            connector.migrateControlNodeInstance(oldControlNodeID, databaseID);
+        }
     }
 
     // BEGIN: Getter & Setter
@@ -188,7 +225,7 @@ public class Node implements IDeserialisable, IPersistable {
      *
      * @return the id extracted from the XML.
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -248,6 +285,12 @@ public class Node implements IDeserialisable, IPersistable {
     }
 
     /**
+     * Returns the stereotype.
+     *
+     * @return the stereotype as a String.
+     */
+    public String getStereotype(){ return stereotype;}
+    /**
      * Sets the fragment id.
      *
      * @param newFragmentId should be the database ID of a fragment.
@@ -272,7 +315,7 @@ public class Node implements IDeserialisable, IPersistable {
      *
      * @param newId the new id of the data Node.
      */
-    protected void setId(final int newId) {
+    protected void setId(final long newId) {
         this.id = newId;
     }
     // END: Getter & Setter

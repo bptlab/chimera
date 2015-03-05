@@ -14,6 +14,7 @@ public class NodeTest {
     private Element dataNode;
     private Element activityGlobalNode;
     private Element activityLocalNode;
+    private Element activitySendNode;
     private Element startEventNode;
     private Element endEventNode;
     private Element xorNode;
@@ -26,6 +27,7 @@ public class NodeTest {
         dataNode.appendChild(createProperty("state", "transportbereit"));
         dataNode.appendChild(createProperty("#id", "706118804"));
         dataNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.DataObject"));
+        dataNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -35,7 +37,7 @@ public class NodeTest {
         activityGlobalNode.appendChild(createProperty("global", "1"));
         activityGlobalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
         activityGlobalNode.appendChild(createProperty("#id", "368338489"));
-
+        activityGlobalNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -45,6 +47,16 @@ public class NodeTest {
         activityLocalNode.appendChild(createProperty("global", "0"));
         activityLocalNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
         activityLocalNode.appendChild(createProperty("#id", "368338489"));
+        activityLocalNode.appendChild(createProperty("stereotype", ""));
+    }
+    @Before
+    public void setUpSendTask(){
+        activitySendNode = document.createElement("node");
+        activitySendNode.appendChild(createProperty("text", "Email senden"));
+        activitySendNode.appendChild(createProperty("global", "0"));
+        activitySendNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
+        activitySendNode.appendChild(createProperty("#id", "368338489"));
+        activitySendNode.appendChild(createProperty("stereotype", "SEND"));
     }
 
     @Before
@@ -53,6 +65,7 @@ public class NodeTest {
         startEventNode.appendChild(createProperty("text", "Start"));
         startEventNode.appendChild(createProperty("#id", "368338489"));
         startEventNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.StartEvent"));
+        startEventNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -61,6 +74,7 @@ public class NodeTest {
         endEventNode.appendChild(createProperty("text", "End"));
         endEventNode.appendChild(createProperty("#id", "368338489"));
         endEventNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.EndEvent"));
+        endEventNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -69,6 +83,7 @@ public class NodeTest {
         xorNode.appendChild(createProperty("text", "XOR"));
         xorNode.appendChild(createProperty("#id", "368338489"));
         xorNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.ExclusiveGateway"));
+        xorNode.appendChild(createProperty("stereotype", ""));
     }
 
     @Before
@@ -77,6 +92,7 @@ public class NodeTest {
         andNode.appendChild(createProperty("text", "AND"));
         andNode.appendChild(createProperty("#id", "368338489"));
         andNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.ParallelGateway"));
+        andNode.appendChild(createProperty("stereotype", ""));
     }
 
     private Element createProperty(String name, String value) {
@@ -93,7 +109,7 @@ public class NodeTest {
     public void testGlobalActivityDeserialization() {
         Node activity = new Node();
         activity.initializeInstanceFromXML(activityGlobalNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil transportieren", activity.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
         Assert.assertEquals("Global has not been set correctly", true, activity.isGlobal());
@@ -105,7 +121,7 @@ public class NodeTest {
     public void testLocalActivityDeserialization() {
         Node activity = new Node();
         activity.initializeInstanceFromXML(activityLocalNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, activity.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil kleben", activity.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
         Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
@@ -114,10 +130,23 @@ public class NodeTest {
     }
 
     @Test
+    public void testSendActivityDeserialization() {
+        Node activity = new Node();
+        activity.initializeInstanceFromXML(activitySendNode);
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
+        Assert.assertEquals("Text has not been set correctly", "Email senden", activity.getText());
+        Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
+        Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
+        Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
+        Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+        Assert.assertEquals("The stereotype is not set or not equal 'SEND'", "SEND", activity.getStereotype());
+    }
+
+    @Test
     public void testStartEventyDeserialization() {
         Node startEvent = new Node();
         startEvent.initializeInstanceFromXML(startEventNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, startEvent.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, startEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "Start", startEvent.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.StartEvent", startEvent.getType());
         Assert.assertFalse("The Node is a StartEvent but isTask returns true", startEvent.isTask());
@@ -128,7 +157,7 @@ public class NodeTest {
     public void testEndEventDeserialization() {
         Node endEvent = new Node();
         endEvent.initializeInstanceFromXML(endEventNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, endEvent.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, endEvent.getId());
         Assert.assertEquals("Text has not been set correctly", "End", endEvent.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.EndEvent", endEvent.getType());
         Assert.assertFalse("The Node is a endEvent but isTask returns true", endEvent.isTask());
@@ -139,7 +168,7 @@ public class NodeTest {
     public void testXorDeserialization() {
         Node xor = new Node();
         xor.initializeInstanceFromXML(xorNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, xor.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, xor.getId());
         Assert.assertEquals("Text has not been set correctly", "XOR", xor.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ExclusiveGateway", xor.getType());
         Assert.assertFalse("The Node is a xorGateway but isTask returns true", xor.isTask());
@@ -150,7 +179,7 @@ public class NodeTest {
     public void testAndDeserialization() {
         Node and = new Node();
         and.initializeInstanceFromXML(andNode);
-        Assert.assertEquals("Id has not been set correctly", 368338489, and.getId());
+        Assert.assertEquals("Id has not been set correctly", 368338489L, and.getId());
         Assert.assertEquals("Text has not been set correctly", "AND", and.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ParallelGateway", and.getType());
         Assert.assertFalse("The Node is a andGateway but isTask returns true", and.isTask());
@@ -161,7 +190,7 @@ public class NodeTest {
     public void testDataObject() {
         Node data = new Node();
         data.initializeInstanceFromXML(dataNode);
-        Assert.assertEquals("Id has not beens set correctly", 706118804, data.getId());
+        Assert.assertEquals("Id has not beens set correctly", 706118804L, data.getId());
         Assert.assertEquals("Text has not been set correctly", "Teil", data.getText());
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.DataObject", data.getType());
         Assert.assertFalse("The Node is a dataObject, but isTask returns true", data.isTask());
@@ -180,7 +209,7 @@ public class NodeTest {
     }
 
     /**
-     * Actually we are only testing that no exception occurs and that the databaeId will be valid afterwards.
+     * Actually we are only testing that no exception occurs and that the databaseId will be valid afterwards.
      */
     @Test
     public void testControlNode() {

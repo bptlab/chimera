@@ -67,6 +67,27 @@ public class Scenario implements IDeserialisable, IPersistable {
      * The version of the current Scenario.
      */
     private int versionNumber;
+    /**
+     * Marks if the scenario needs to be saved.
+     * If none of the fragments is changed and none is added or removed, and there is no newer
+     * version of the scenario, it does not need to be saved and
+     * the variable holds value false.
+     */
+    private boolean needsToBeSaved;
+    /**
+     * If the scenario contains new fragments that a older version in the database does not
+     * contain, all running instances are migrated to this scenario.
+     * Variable holds value true if such a migration is necessary.
+     */
+    private boolean migrationNecessary;
+    /**
+     * If migration is necessary, we need the latest version of the scenario that should be migrated.
+     */
+    private int migratedScenarioVersion = -1;
+    /**
+     * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
+     */
+    private List<Fragment> newFragments = new LinkedList<>();
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -96,6 +117,58 @@ public class Scenario implements IDeserialisable, IPersistable {
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
+        checkIfVersionAlreadyInDatabase();
+    }
+
+    /**
+     * Checks if the versions of all fragments and of this scenario are already in the database.
+     * If so, the scenario does not need to be saved once again
+     */
+    private void checkIfVersionAlreadyInDatabase() {
+        Connector connector = new Connector();
+        int fragmentModelVersion;
+        long fragmentModelID;
+        int newestFragmentDatabaseVersion;
+        int scenarioVersion = connector.getScenarioVersion(scenarioID);
+        List<Integer> fragmentDatabaseVersions;
+        boolean changesMade = false;
+        for (Fragment fragment : fragments) {
+            fragmentModelVersion = fragment.getVersion();
+            fragmentModelID = fragment.getFragmentID();
+            fragmentDatabaseVersions = connector.getFragmentVersions(fragmentModelID, scenarioID);
+            newestFragmentDatabaseVersion = Collections.max(fragmentDatabaseVersions);
+            // case 1: We don't have a fragment with this modelid in the database
+            if (newestFragmentDatabaseVersion == -1) {
+                needsToBeSaved = true;
+                // ... this might have two reasons:
+                // 1) the scenario is not in the database yet
+                if (scenarioVersion == -1) {
+                    migrationNecessary = false;
+                }
+                // 2) a new fragment has been added
+                else {
+                    migrationNecessary = true;
+                    newFragments.add(fragment);
+                    migratedScenarioVersion = scenarioVersion;
+                }
+            }
+            // case 2: an existing fragment has been modified: we got a newer version of the fragment here
+            else if (newestFragmentDatabaseVersion < fragmentModelVersion) {
+                needsToBeSaved = true;
+                changesMade = true;
+            }
+        }
+        // this evaluation is necessary as otherwise the value of migrationNecessary is influenced by the
+        // ordering of the fragments (could be overwritten)
+        if (changesMade) {
+            migrationNecessary = false;
+        }
+        // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
+        // or scenario does not exist in database (scenarioVersion = -1)
+        // (if scenarioVersion is -1 we get here only if this is a scenario without any fragments)
+        if (scenarioVersion < versionNumber) {
+            needsToBeSaved = true;
+        }
     }
 
     /**
@@ -112,8 +185,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                         .compile(xPathQuery)
                         .evaluate(versionXML, XPathConstants.NODESET);
                 int maxID = 0;
-                // We assume that always the latest version should be saved
-                //TODO: Do we want to save all versions that are currently not in the Database?
+                // the current version is the latest one
                 for (int i = 0; i < versions.getLength(); i++) {
                     xPathQuery = "@id";
                     int currentID = Integer.parseInt((String) xPath
@@ -237,19 +309,45 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
-        Connector conn = new Connector();
-        this.databaseID = conn.insertScenarioIntoDatabase(
-                this.scenarioName,
-                scenarioID,
-                versionNumber);
-        saveFragments();
-        saveDataObjects();
-        saveConsistsOf();
-        if (terminatingDataObject != null && terminatingDataNode != null) {
-            saveTerminationCondition();
+        if (needsToBeSaved) {
+            Connector conn = new Connector();
+            this.databaseID = conn.insertScenarioIntoDatabase(
+                    this.scenarioName,
+                    scenarioID,
+                    versionNumber);
+            saveFragments();
+            saveDataObjects();
+            saveConsistsOf();
+            if (terminatingDataObject != null && terminatingDataNode != null) {
+                saveTerminationCondition();
+            }
+            saveReferences();
+            if (migrationNecessary){
+                migrateRunningInstances();
+            }
+            return this.databaseID;
         }
-        saveReferences();
-        return this.databaseID;
+        return -1;
+    }
+
+    /**
+     * Migrate running instances with the modelId of this scenario and with the migratedVersion.
+     */
+    private void migrateRunningInstances() {
+        Connector connector = new Connector();
+        // get the scenarioDatabaseID with the version to be migrated and the modelid
+        int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
+        // get the scenarioinstanceids of all running instances that need to be migrated
+        // and migrate them (means changing their old reference to the scenario to this scenario)
+        connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
+        //migrate FragmentInstances
+        for(Fragment fragment : fragments) {
+            // as there is no fragmentinstance for this new fragment in the database so far,
+            // we don't need to change references
+            if (!newFragments.contains(fragment)) {
+                fragment.migrate(oldScenarioDbID);
+            }
+        }
     }
 
     /**
@@ -262,7 +360,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void saveReferences() {
         /* Key is the ID used inside the model, value are a List of
          * all IDs used inside the database. */
-        HashMap<Integer, List<Integer>> activities =
+        HashMap<Long, List<Integer>> activities =
                 getActivityDatabaseIDsForEachActivityModelID();
         Connector conn = new Connector();
         for (List<Integer> databaseIDs : activities.values()) {
@@ -283,13 +381,13 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If two activities are referenced their model IDs are the same,
      * but they have different IDs inside the database.
      *
-     * @return A Map of all activity-model IDs to a List of their database IDs.
+     * @return A map of all activity-model-IDs to a list of their database IDs.
      */
-    private HashMap<Integer, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
-        HashMap<Integer, List<Integer>> result = new HashMap<>();
+    private HashMap<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+        HashMap<Long, List<Integer>> result = new HashMap<>();
         for (Fragment fragment : fragments) {
-            Map<Integer, Node> fragmentNodes = fragment.getControlNodes();
-            for (Map.Entry<Integer, Node> node : fragmentNodes.entrySet()) {
+            Map<Long, Node> fragmentNodes = fragment.getControlNodes();
+            for (Map.Entry<Long, Node> node : fragmentNodes.entrySet()) {
                 if (node.getValue().isTask()) {
                     if (result.get(node.getKey()) == null) {
                         List<Integer> activityDatabaseIDs =

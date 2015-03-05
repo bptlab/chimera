@@ -228,6 +228,9 @@ public class ActivityStateMachine extends StateMachine {
     public boolean skip() {
         //String state = this.getState();
         if (state.equals("init") || this.isReady(state)) {
+            scenarioInstance.getControlFlowEnabledControlNodeInstances().remove(controlNodeInstance);
+            scenarioInstance.getDataEnabledControlNodeInstances().remove(controlNodeInstance);
+            scenarioInstance.getEnabledControlNodeInstances().remove(controlNodeInstance);
             this.setState("skipped");
             return true;
         }

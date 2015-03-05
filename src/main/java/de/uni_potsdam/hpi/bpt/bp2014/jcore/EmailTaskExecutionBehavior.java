@@ -19,6 +19,12 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
     private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 
 
+    /**
+     * Initializes and creates an EmailTaskExecutionBehavior.
+     * @param activityInstance_id This is an id for an activity instance.
+     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+     */
     public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
         controlNode_id = controlNodeInstance.controlNode_id;
@@ -30,28 +36,27 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         this.sendMail();
     }
 
+    /**
+     * Sets the attributes for the e mail reading the information from database.
+     */
     private void setValues() {
-        port = 1024;
-        serverAddress = "localhost";
+        port = 587;
+        serverAddress = "exchange.framsteg.org";
         receiverMail = emailConfiguration.getReceiverEmailAddress(controlNode_id);
         sendMail = emailConfiguration.getSendEmailAddress(controlNode_id);
         subject = emailConfiguration.getSubject(controlNode_id);
         message = emailConfiguration.getMessage(controlNode_id);
     }
 
-    private void setFakeValues() {
-        port = 1024;
-        serverAddress = "localhost";
-        sendMail = "sender@server.de";
-        receiverMail = "receiver@server.de";
-        subject = "this is an eMail";
-        message = "Hello, i'm writing you.";
-    }
 
+    /**
+     * Sends an e mail.
+     */
     private void sendMail() {
         Email email = new SimpleEmail();
         email.setHostName(serverAddress);
         email.setSmtpPort(port);
+        email.setAuthentication("bp2014w01@framsteg.org", "UjB9T8kAS8H9g4YC1f8U");
         try {
             email.setFrom(sendMail);
             email.setSubject(subject);

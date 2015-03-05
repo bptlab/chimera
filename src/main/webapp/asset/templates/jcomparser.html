@@ -1,0 +1,23 @@
+<h2>jcomparser</h2>
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+		<caption>jcomparser currently available</caption>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr style="cursor: pointer" ng-repeat="id in jcomparser.scenarioIds">
+				<td>{{id}}</td>
+				<td>{{jcomparser.scenarios['' + id]['label']}}</td>
+				<th><img ng-href="jcomparser.getImageForScenario(id)"></img></th>
+			</tr>
+			</a>
+		</tbody>
+	</table>
+</div>
+<div class="row" ng-repeat="id in jcomparser.scenarioIds">
+	<div ></div>
+</div>

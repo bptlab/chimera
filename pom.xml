@@ -38,21 +38,8 @@
                             <exclude>**/Seed.class</exclude>
                             <exclude>**/FileUpload.class</exclude>
                             <exclude>**/debugClass.class</exclude>
-                            <exclude>**/sample/**/*</exclude>
-                            <exclude>**/*.md</exclude>
-                            <exclude>**/*.sql</exclude>
-                            <exclude>**/*.sh</exclude>
-                            <exclude>**/*.yml</exclude>
-                            <exclude>**/*.json</exclude>
-                            <exclude>**/*.xml</exclude>
-                            <exclude>**/*.html</exclude>
-                            <exclude>**/*.pdf</exclude>
-                            <exclude>**/*.tex</exclude>
-                            <exclude>**/*.pages</exclude>
-                            <exclude>**/*.cls</exclude>
-                            <exclude>**/*.log</exclude>
-                            <exclude>**/docu/**/*</exclude>
-                            <exclude>**/config/**/*.sh</exclude>
+                            <exclude>**/REST.class</exclude>
+                            <exclude>**/REST.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -182,6 +169,12 @@
             <groupId>com.ibatis</groupId>
             <artifactId>ibatis2-common</artifactId>
             <version>2.1.7.597</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.mock-javamail</groupId>
+            <artifactId>mock-javamail</artifactId>
+            <version>1.9</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

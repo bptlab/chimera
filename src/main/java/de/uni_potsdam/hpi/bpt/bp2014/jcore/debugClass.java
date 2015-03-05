@@ -79,6 +79,7 @@ public class debugClass {
                 System.out.println("Scenario Instance existiert nicht");
             }
         }
+
         while (true) {
             LinkedList<Integer> activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);

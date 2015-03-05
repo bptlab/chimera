@@ -13,6 +13,7 @@
         <jsp-file>/upload.jsp</jsp-file>
     </servlet>
 
+
      <!-- SERVLET: Jengine -->
    <servlet>
         <servlet-name>Jersey Web Application</servlet-name>
@@ -27,7 +28,7 @@
     <!-- SERVLET: REST -->
    <servlet-mapping>
       <servlet-name>Jersey Web Application</servlet-name>
-      <url-pattern>/*</url-pattern>
+      <url-pattern>/api/*</url-pattern>
    </servlet-mapping>
 
 <!-- SERVLET: FileUpload -->
@@ -39,12 +40,6 @@
     <servlet-mapping>
         <servlet-name>FileUpload</servlet-name>
         <url-pattern>/done</url-pattern>
-    </servlet-mapping>
-
-<!-- SERVLET: JEngine -->
-    <servlet-mapping>
-        <servlet-name>Jersey Web Application</servlet-name>
-        <url-pattern>/webapi/*</url-pattern>
     </servlet-mapping>
 
 <!-- DATABASE: Config -->

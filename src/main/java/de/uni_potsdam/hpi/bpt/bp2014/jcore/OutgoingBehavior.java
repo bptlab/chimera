@@ -37,4 +37,19 @@ public abstract class OutgoingBehavior {
      */
     public abstract void terminate();
 
+    /**
+     * Checks conditions after terminate a control node instance
+     */
+    public void checkAfterTermination() {
+        scenarioInstance.checkDataFlowEnabled();
+        scenarioInstance.checkExecutingGateways(controlNode_id);
+    }
+
+    /**
+     * Runs other methods after terminate a control node instance
+     */
+    public void runAfterTermination(){
+        scenarioInstance.startAutomaticControlNodes();
+    }
+
 }

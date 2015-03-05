@@ -1,0 +1,19 @@
+<h3>Instances of {{instanceCtrl.getScenarioName()}}</h3>
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+		<caption>Instances of {{instanceCtrl.getScenarioName()}} currently running</caption>
+		<thead>
+			<tr>
+				<th>Instance #</th>
+				<th>Process name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr style="cursor: pointer" ng-repeat="id in instanceCtrl.scenario['instanceIds'] track by $index" ng-click="instanceCtrl.goToDetailsFrom(id);">
+				<td>{{id}}</td>
+				<td>{{instanceCtrl.instances['' + id]['label']}}</td>
+			</tr>
+			</a>
+		</tbody>
+	</table>
+</div>

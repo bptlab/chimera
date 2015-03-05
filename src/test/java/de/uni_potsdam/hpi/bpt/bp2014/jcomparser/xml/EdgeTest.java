@@ -51,13 +51,13 @@ public class EdgeTest {
     }
 
     public void setUpTargetAndSource() {
-        HashMap<Integer, Node> nodes = new HashMap<Integer, Node>();
+        HashMap<Long, Node> nodes = new HashMap<Long, Node>();
         target = new Node();
-        target.setId(1628237226);
-        nodes.put(1628237226, target);
+        target.setId(1628237226L);
+        nodes.put(1628237226L, target);
         source = new Node();
-        source.setId(88478777);
-        nodes.put(88478777, source);
+        source.setId(88478777L);
+        nodes.put(88478777L, source);
         dataFlowEdge.setControlNodes(nodes);
         controlFlowEdge.setControlNodes(nodes);
     }
@@ -71,14 +71,14 @@ public class EdgeTest {
         Assert.assertEquals("The type has not been set correctly",
                 "net.frapu.code.visualization.bpmn.DataFlow",
                 dataFlowEdge.getType());
-        Assert.assertEquals("The SourceNodeId has not been set correctly", 88478777, dataFlowEdge.getSourceNodeId());
-        Assert.assertEquals("The TargetNodeId has not been set correctly", 1628237226, dataFlowEdge.getTargetNodeId());
+        Assert.assertEquals("The SourceNodeId has not been set correctly", 88478777L, dataFlowEdge.getSourceNodeId());
+        Assert.assertEquals("The TargetNodeId has not been set correctly", 1628237226L, dataFlowEdge.getTargetNodeId());
     }
 
     @Test
     public void testGetTarget() {
         Assert.assertEquals("The target id is not the same as the id of the target node",
-                1628237226,
+                1628237226L,
                 dataFlowEdge.getTarget().getId());
         Assert.assertTrue("The target is not the node added as a target", dataFlowEdge.getTarget() == target);
     }
@@ -86,7 +86,7 @@ public class EdgeTest {
     @Test
     public void testGetSource() {
         Assert.assertEquals("The source id is not the same as the id of the source node",
-                88478777,
+                88478777L,
                 dataFlowEdge.getSource().getId());
         Assert.assertTrue("The target is not the node added as a source", dataFlowEdge.getSource() == source);
     }
@@ -98,8 +98,8 @@ public class EdgeTest {
         Assert.assertEquals("The type has not been set correctly",
                 "net.frapu.code.visualization.bpmn.SequenceFlow",
                 controlFlowEdge.getType());
-        Assert.assertEquals("The SourceNodeId has not been set correctly", 88478777, controlFlowEdge.getSourceNodeId());
-        Assert.assertEquals("The TargetNodeId has not been set correctly", 1628237226, controlFlowEdge.getTargetNodeId());
+        Assert.assertEquals("The SourceNodeId has not been set correctly", 88478777L, controlFlowEdge.getSourceNodeId());
+        Assert.assertEquals("The TargetNodeId has not been set correctly", 1628237226L, controlFlowEdge.getTargetNodeId());
     }
 
     @Test
