@@ -1,20 +1,29 @@
-![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)
+[![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)](https://travis-ci.org/BP2014W1/JEngine)
+[![Coverage Status](https://coveralls.io/repos/BP2014W1/JEngine/badge.svg?branch=dev)](https://coveralls.io/r/BP2014W1/JEngine?branch=dev)
+
 
 # JEngine
 
-The JEngine is a Framework for Production Case Management (PCM) containing Modeling and Execution.
+The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## RESTful
 
-We support RESTful interfaces on all possible sides around the JEngine. The frontend is connected via REST to the jcore; the jcomparser as compiler between modeling and execution supports REST as well as the major functionality of the processeditor repository. 
+See [the documentation](https://github.com/BP2014W1/JEngine/tree/dev/docu/REST) inside the doc folder.
 
-## Components
+## Deployment
 
-* JFrontEnd
-* JCore
-* JDatabase
-* JComparser
+In order to deploy the JEngine install [Maven](http://maven.apache.org/ Maven).
+Then execute the following commands in your command line:
 
+    mvn install -Dmaven.test.skip=true
+
+
+A war file will be created which can be executed using tomcat.
+
+## Database Setup
+
+You can use the src/main/resources/JEngineV2.sql file for your Database setup.
+Please set your database settings inside the web.xml.
 
 ## Features
 
@@ -25,4 +34,4 @@ This JEngine does execute
 * AND gateways
 * termination condition for scenarios
 
-:-)
+Additionally, we use an AngularJS frontend to control the JComparser and the JEngine..
