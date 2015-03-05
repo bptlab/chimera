@@ -42,12 +42,6 @@
         <url-pattern>/done</url-pattern>
     </servlet-mapping>
 
-<!-- SERVLET: JEngine -->
-    <servlet-mapping>
-        <servlet-name>Jersey Web Application</servlet-name>
-        <url-pattern>/webapi/*</url-pattern>
-    </servlet-mapping>
-
 <!-- DATABASE: Config -->
 
     <env-entry>
