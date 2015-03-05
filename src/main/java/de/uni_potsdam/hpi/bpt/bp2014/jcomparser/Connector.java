@@ -219,6 +219,20 @@ public class Connector extends DbDataObject{
                 "SET scenario.modelid = " + modelID +", scenario.modelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
         dbObject.executeUpdateStatement(sql);
     }
+
+    /**
+     *
+     * @param sourceID
+     * @param targetID
+     * @param multiplicity
+     * @return
+     */
+    public int insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
+        String sql = "INSERT INTO aggregation (aggregation.sourceid, " +
+                "aggregation.targetid, aggregation.multiplicity) " +
+                "VALUES (" + sourceID + ", " + targetID + ", " + multiplicity + ")";
+        return performSQLInsertStatementWithAutoId(sql);
+    }
     /**
      * This Methods inserts a new DataNode into the Database.
      * All necessary information are given as a parameter.

@@ -47,6 +47,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
         this.domainModelXML = element;
+
         setDomainModelModelID();
         generateDataClasses();
         generateAggregations();
@@ -165,5 +166,24 @@ public class DomainModel implements IDeserialisable, IPersistable {
             aggregation.save();
         }
         return 1;
+    }
+    public List<Aggregation> getAggregations() {
+        return aggregations;
+    }
+
+    public Map<Long, DataClass> getDataClasses() {
+        return dataClasses;
+    }
+
+    public int getScenarioID() {
+        return scenarioID;
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public long getDomainModelModelID() {
+        return domainModelModelID;
     }
 }
