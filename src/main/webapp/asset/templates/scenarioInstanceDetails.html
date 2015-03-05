@@ -33,11 +33,29 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-- A model as a Dialog for terminating an Activity -->
+<div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index" id="{{'modalTerminate' + id}}" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Terminate activity?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Do you really want to termiante Activity "{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}"?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" ng-click="instanceCtrl.terminateActivity(id);" data-dismiss="modal" class="btn btn-primary">Terminate</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <!-- A list of all running activities -->
 <h4>Running Activities</h4>
 <div class="responsive-table">
 	<table class="table table-striped">
-		<caption>Activities successfully completed</caption>
+		<caption>Activities successfully started</caption>
 		<thead>
 			<tr>
 				<th>#</th>
@@ -48,8 +66,8 @@
 		<tbody>
 			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
 				<td>{{id}}</td>
-				<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
-				<td><button type="button" class="btn btn-default" ng-click="instanceCtrl.terminateActivity(id);">Terminate</button>
+				<td>{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}</td>
+				<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalTerminate' + id}}">Terminate</a>
 			</tr>
 			</a>
 		</tbody>
