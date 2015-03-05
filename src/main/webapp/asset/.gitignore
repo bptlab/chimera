@@ -1,0 +1,10 @@
+Thumbs.db
+*.gz
+*.log
+*.aux
+fonts/*
+icons/*
+images/*
+scripts/*
+styles/*
+vendor/*
