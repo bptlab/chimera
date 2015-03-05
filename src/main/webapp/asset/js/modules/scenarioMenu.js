@@ -210,10 +210,8 @@
 			
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
 				success(function(data){
-					transformResponse: function(data) {
 			            var array = angular.fromJson(data);
 			            controller.scenarioDetails = array.ids;
-			            }
         		});
 
 
