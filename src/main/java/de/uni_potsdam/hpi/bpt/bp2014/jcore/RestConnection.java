@@ -168,6 +168,7 @@ public class RestConnection {
                 LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitiesForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
                 //if no closed activities present -> return {empty}
+                // TODO: Don't throw an error if there are no terminated instances
                 if (terminatedActivities.size() == 0) {
                     return Response.serverError().entity("Error: not correct activity ID").build();
                 }
