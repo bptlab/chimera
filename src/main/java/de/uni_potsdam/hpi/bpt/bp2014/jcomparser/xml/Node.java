@@ -189,6 +189,23 @@ public class Node implements IDeserialisable, IPersistable {
         }
         return databaseID;
     }
+    /**
+     * Migrate datanode- or controlnodeInstances.
+     *
+     * @param scenarioDbID databaseId of the old scenario whose instances get migrated
+     * @param oldFragmentID databaseId of the old fragment whose instances get migrated and this node belongs to
+     */
+    public void migrate(int scenarioDbID, int oldFragmentID) {
+        Connector connector = new Connector();
+        if (isDataNode()) {
+            int oldDataObjectID = connector.getDataObjectID(scenarioDbID, id);
+            connector.migrateDataObjectInstance(oldDataObjectID, databaseID);
+        }
+        else {
+            int oldControlNodeID = connector.getControlNodeID(oldFragmentID, id);
+            connector.migrateControlNodeInstance(oldControlNodeID, databaseID);
+        }
+    }
 
     // BEGIN: Getter & Setter
 
