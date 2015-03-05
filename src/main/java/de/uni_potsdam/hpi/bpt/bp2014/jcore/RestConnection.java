@@ -64,10 +64,10 @@ public class RestConnection {
         //if 0 as scenarioID is provided, list all available scenarioIDs
         if (scenarioID == 0) {
             LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
-
+            /*
             if (scenarioIDs.size() == 0) {
                 return Response.serverError().entity("Error: not correct Scenario ID").build();//no scenarios present
-            }
+            }*/
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -101,10 +101,10 @@ public class RestConnection {
                 return Response.serverError().entity("Error: not a correct scenario").build();
             }
             LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
-
+            /*
             if (scenarioIDs.size() == 0) {
                 return Response.serverError().entity("Error: not correct instance ID").build(); //no instances present
-            }
+            }*/
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -153,9 +153,9 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 // iff no open activities present return {empty}
-                if (enabledActivitiesIDs.size() == 0) {
+               /* if (enabledActivitiesIDs.size() == 0) {
                     return Response.serverError().entity("Error: not correct scenarioInstance ID: enabledActivitiesIDs.size() == 0").build();
-                }
+                }*/
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -169,9 +169,9 @@ public class RestConnection {
                 HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
                 //if no closed activities present -> return {empty}
                 // TODO: Don't throw an error if there are no terminated instances
-                if (terminatedActivities.size() == 0) {
+                /*if (terminatedActivities.size() == 0) {
                     return Response.serverError().entity("Error: not correct activity ID").build();
-                }
+                }*/
                 String jsonRepresentation = JsonWrapperHashMap(terminatedActivities, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -184,9 +184,9 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getRunningActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getRunningActivityLabelsForScenarioInstance(instanceID);
                 // if no running activities present -> return {empty}
-                if (enabledActivitiesIDs.size() == 0) {
+                /*if (enabledActivitiesIDs.size() == 0) {
                     return Response.serverError().entity("Error: not correct Activity ID").build();
-                }
+                }*/
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -202,7 +202,7 @@ public class RestConnection {
             String label = executionService.getLabelForControlNodeID(activityinstanceID);
             //if no activity with this id present
             if (label.equals("")) {
-                return Response.serverError().entity("Error: not correct Activity ID").build();
+                return Response.serverError().entity("Error: not correct Activity ID or empty Label").build();
             }
             return Response.ok("{\"label\":\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
         }
@@ -230,9 +230,9 @@ public class RestConnection {
             HashMap<Integer, String> states = executionService.getAllDataObjectStates(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getAllDataObjectNames(scenarioInstanceID);
             //if no dataobject is available -> return {empty}
-            if (dataObjects.size() == 0) {
+            /*if (dataObjects.size() == 0) {
                 return Response.serverError().entity("Error: not correct dataobject ID").build();
-            }
+            }*/
             String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
