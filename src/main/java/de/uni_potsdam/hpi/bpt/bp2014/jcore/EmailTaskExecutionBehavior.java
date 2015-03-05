@@ -40,8 +40,8 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
      * Sets the attributes for the e mail reading the information from database.
      */
     private void setValues() {
-        port = 1024;
-        serverAddress = "localhost";
+        port = 587;
+        serverAddress = "exchange.framsteg.org";
         receiverMail = emailConfiguration.getReceiverEmailAddress(controlNode_id);
         sendMail = emailConfiguration.getSendEmailAddress(controlNode_id);
         subject = emailConfiguration.getSubject(controlNode_id);
@@ -56,6 +56,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         Email email = new SimpleEmail();
         email.setHostName(serverAddress);
         email.setSmtpPort(port);
+        email.setAuthentication("bp2014w01@framsteg.org", "UjB9T8kAS8H9g4YC1f8U");
         try {
             email.setFrom(sendMail);
             email.setSubject(subject);
