@@ -76,6 +76,8 @@ public class ActivityInstance extends ControlNodeInstance {
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine) stateMachine).enableControlFlow();
         }
+        this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
+        this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
         if (dbControlNode.getType(controlNode_id).equals("EmailTask")) {
             this.taskExecutionBehavior = new EmailTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
             this.isMailTask = true;
@@ -83,8 +85,6 @@ public class ActivityInstance extends ControlNodeInstance {
             this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
             this.isMailTask = false;
         }
-        this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
-        this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
     }
 
     /**
@@ -99,8 +99,9 @@ public class ActivityInstance extends ControlNodeInstance {
             ((TaskIncomingControlFlowBehavior) incomingBehavior).startReferences();
             ((TaskIncomingControlFlowBehavior) incomingBehavior).setDataObjectInstancesOnChange();
             scenarioInstance.checkDataFlowEnabled();
+            scenarioInstance.checkExecutingGateways(controlNode_id);
             taskExecutionBehavior.execute();
-            System.out.println("Start Activity " + controlNode_id);
+            //System.out.println("Start Activity " + controlNode_id);
             return true;
         } else {
             return false;
@@ -148,6 +149,9 @@ public class ActivityInstance extends ControlNodeInstance {
         ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabledAndEnableDataFlow();
     }
 
+    public boolean skip(){
+        return ((ActivityStateMachine) stateMachine).skip();
+    }
     /**
      * Getter
      */

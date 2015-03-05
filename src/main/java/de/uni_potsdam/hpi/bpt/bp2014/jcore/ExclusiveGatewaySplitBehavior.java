@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import java.util.LinkedList;
+
 /**
  * ********************************************************************************
  * <p/>
@@ -23,14 +25,38 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  */
 
 
-public class ExclusiveGatewaySplitBehavior extends OutgoingBehavior {
+public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
+    private  LinkedList<Integer> followingControlNode_ids;
 
-    public ExclusiveGatewaySplitBehavior() {
-        super();
+    public ExclusiveGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id) {
+        this.controlNode_id = gateway_id;
+        this.scenarioInstance = scenarioInstance;
+        this.fragmentInstance_id = fragmentInstance_id;
+        followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
     }
 
     @Override
     public void terminate() {
-
+        this.checkAfterTermination();
+        this.runAfterTermination();
     }
+
+    public void execute() {
+        enableFollowing();
+    }
+
+    public boolean checkTermination(int controlNode_id){
+        if(followingControlNode_ids.contains(new Integer(controlNode_id))){
+            followingControlNode_ids.remove(new Integer(controlNode_id));
+            for (int id : followingControlNode_ids) {
+                ControlNodeInstance controlNodeInstance = scenarioInstance.getControlNodeInstanceForControlNodeId(id);
+                if(controlNodeInstance.getClass() == ActivityInstance.class) {
+                    ((ActivityInstance)controlNodeInstance).skip();
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

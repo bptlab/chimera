@@ -11,7 +11,7 @@ The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## RESTful
 
-See the documentation inside the doc folder.
+See [the documentation](https://github.com/BP2014W1/JEngine/tree/dev/docu/REST) inside the doc folder.
 
 ## Deployment
 
@@ -36,3 +36,5 @@ This JEngine does execute
 * data objects
 * AND gateways
 * termination condition for scenarios
+
+Additionally, we use an AngularJS frontend to control the JComparser and the JEngine..

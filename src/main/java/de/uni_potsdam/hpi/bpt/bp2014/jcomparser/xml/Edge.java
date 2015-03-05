@@ -32,7 +32,7 @@ public class Edge implements IDeserialisable, IPersistable {
     /**
      * Maps the Model-Node-ID (from the XML) to the ControlNode Object.
      */
-    private Map<Integer, Node> controlNodes;
+    private Map<Long, Node> controlNodes;
     /**
      * The Model-XML-ID of the Edge.
      */
@@ -40,11 +40,11 @@ public class Edge implements IDeserialisable, IPersistable {
     /**
      * The Model-Node-ID (from the XML) of the source Node of the edge.
      */
-    private int sourceNodeId;
+    private long sourceNodeId;
     /**
      * The Model-Node-ID (from the XML) of the target Node of the edge.
      */
-    private int targetNodeId;
+    private long targetNodeId;
     /**
      * The type of the edge.
      * Could be either "*Association" (DataFlow) or "*SequenceFlow".
@@ -119,10 +119,10 @@ public class Edge implements IDeserialisable, IPersistable {
                 label = value;
                 break;
             case "#sourceNode":
-                sourceNodeId = Integer.parseInt(value);
+                sourceNodeId = Long.parseLong(value);
                 break;
             case "#targetNode":
-                targetNodeId = Integer.parseInt(value);
+                targetNodeId = Long.parseLong(value);
                 break;
             default:
                 // This type is not supported by the JComparser
@@ -138,7 +138,7 @@ public class Edge implements IDeserialisable, IPersistable {
      *
      * @param newControlNodes the map of new ControlNodes
      */
-    public void setControlNodes(final Map<Integer, Node> newControlNodes) {
+    public void setControlNodes(final Map<Long, Node> newControlNodes) {
         this.controlNodes = newControlNodes;
     }
 
@@ -149,7 +149,7 @@ public class Edge implements IDeserialisable, IPersistable {
      *
      * @return the new controlNode
      */
-    public Map<Integer, Node> getControlNodes() {
+    public Map<Long, Node> getControlNodes() {
         return controlNodes;
     }
 
@@ -159,7 +159,7 @@ public class Edge implements IDeserialisable, IPersistable {
      *
      * @return the sourceNodeid
      */
-    public int getSourceNodeId() {
+    public long getSourceNodeId() {
         return sourceNodeId;
     }
 
@@ -169,7 +169,7 @@ public class Edge implements IDeserialisable, IPersistable {
      *
      * @return the targetNodeId
      */
-    public int getTargetNodeId() {
+    public long getTargetNodeId() {
         return targetNodeId;
     }
 

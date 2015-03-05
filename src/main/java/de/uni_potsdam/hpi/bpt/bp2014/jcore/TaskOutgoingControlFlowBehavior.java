@@ -57,8 +57,9 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
     @Override
     public void terminate() {
         setDataStates();
-        scenarioInstance.checkDataFlowEnabled();
+        this.checkAfterTermination();
         this.enableFollowing();
+
     }
 
     /**

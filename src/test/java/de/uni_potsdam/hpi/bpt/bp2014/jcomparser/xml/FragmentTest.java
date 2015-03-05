@@ -1,9 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.w3c.dom.*;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,41 +21,53 @@ import java.io.IOException;
 /**
  * This class tests the functionality of the xml-Fragment-class.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Fragment.class})
 public class FragmentTest {
+
+    // We need the name of all methods which communicate to the server.
+    /**
+     * This Method fetches the version from the PE-Server.
+     */
+    private static final String FETCH_VERSION_METHOD
+            = "fetchVersionXML";
     /**
      * the created fragment that needs to be tested
      */
     private Fragment fragment;
 
     /**
-     * setUp all necessary variables for the test
+     * initialize the fragment from file "TestFragment.xml" in the resources-folder
      */
     @Before
-    public void setup() {
-        setupFragment();
-    }
-    /**
-     * initialize the fragment from file "TestFragment1.xml" in the resources-folder
-     */
     public void setupFragment() {
         try {
-            File fragmentXML = new File("src/test/resources/TestFragment.xml");
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            // this Document contains the xml-content for the fragment
-            Document fragmentDoc = dBuilder.parse(fragmentXML);
-            fragmentDoc.getDocumentElement().normalize();
-            fragment = new Fragment();
-            fragment.initializeInstanceFromXML(fragmentDoc.getDocumentElement());
-        } catch (SAXException | IOException | ParserConfigurationException e) {
+            fragment = PowerMock.createPartialMock(Fragment.class,
+                    FETCH_VERSION_METHOD);
+            Node fragmentNode = getDocumentFromXmlFile(new File("src/test/resources/TestFragment.xml"));
+            PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                    .andAnswer(new IAnswer<org.w3c.dom.Element>() {
+                        @Override
+                        public org.w3c.dom.Element answer() throws Throwable {
+                            return getDocumentFromXmlFile(new File("src/test/resources/TestFragmentVersion.xml")).getDocumentElement();
+                        }
+                    });
+            PowerMock.replay(fragment);
+            fragment.initializeInstanceFromXML(fragmentNode);
+            PowerMock.verify(fragment);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * rudimentary test for checking if basic attributes like name and ID
+     * have been set correctly.
+     */
     @Test
     public void testSimpleFragmentDeserialization(){
         Assert.assertEquals("The fragmentName has not been set correctly", "TestFragment2", fragment.getFragmentName());
-        Assert.assertEquals("The fragmentID has not been set correctly", 1763775575, fragment.getFragmentID());
+        Assert.assertEquals("The fragmentID has not been set correctly", 1763775575L, fragment.getFragmentID());
     }
     /**
      * rudimentary test for checking if the controlNodes are set "correctly" (simply check if there is a node with
@@ -57,10 +75,10 @@ public class FragmentTest {
      */
     @Test
     public void testControlNodesSetCorrectly(){
-        Assert.assertNotNull("The startEvent has not been set correctly", fragment.getControlNodes().get(1453251009));
-        Assert.assertNotNull("The activity has not been set correctly", fragment.getControlNodes().get(1080362683));
-        Assert.assertNotNull("The dataNode has not been set correctly", fragment.getControlNodes().get(1397906076));
-        Assert.assertNotNull("The endEvent has not been set correctly", fragment.getControlNodes().get(735424916));
+        Assert.assertNotNull("The startEvent has not been set correctly", fragment.getControlNodes().get(1453251009L));
+        Assert.assertNotNull("The activity has not been set correctly", fragment.getControlNodes().get(1080362683L));
+        Assert.assertNotNull("The dataNode has not been set correctly", fragment.getControlNodes().get(1397906076L));
+        Assert.assertNotNull("The endEvent has not been set correctly", fragment.getControlNodes().get(735424916L));
     }
     /**
      * rudimentary test for checking if the edges are set "correctly" (simply check if there is an edge with
@@ -79,6 +97,37 @@ public class FragmentTest {
     public void testSetsSetCorrectly(){
         Assert.assertEquals("The inputSet has not been set correctly", 0, fragment.getInputSets().size());
         Assert.assertEquals("The outputSet has not been set correctly", 1, fragment.getOutputSets().size());
-        Assert.assertEquals("The producerNode of the outputSet has not been set correctly", 1080362683, fragment.getOutputSets().get(0).getProducer().getId());
+        Assert.assertEquals("The producerNode of the outputSet has not been set correctly", 1080362683L, fragment.getOutputSets().get(0).getProducer().getId());
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testVersionSetCorrectly(){
+        Assert.assertEquals("The version has not been set correctly", 1, fragment.getVersion());
+    }
+
+    /**
+     * Casts a XML from its String representation to a w3c Document.
+     *
+     * @param xml The String representation of the XML.
+     * @return The document created from String.
+     */
+    private Document getDocumentFromXmlFile(final File xml) {
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(xml);
+            doc.getDocumentElement().normalize();
+            return doc;
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

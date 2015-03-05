@@ -25,13 +25,21 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
 
-    public ExclusiveGatewayJoinBehavior() {
-        super();
+    public ExclusiveGatewayJoinBehavior(GatewayInstance gatewayInstance, ScenarioInstance scenarioInstance, StateMachine stateMachine) {
+        this.scenarioInstance = scenarioInstance;
+        this.controlNodeInstance = gatewayInstance;
+        this.stateMachine = stateMachine;
     }
 
 
     @Override
     public void enableControlFlow() {
+        //TODO: check for conditions, if true -> terminate
+        boolean conditions = true;
+        if (conditions) {
+            ((GatewayStateMachine) stateMachine).execute();
+            ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).execute();
+        }
 
     }
 }

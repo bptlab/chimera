@@ -51,7 +51,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * A Map which maps Model-XML-Element-IDs to ControlNodes.
      */
-    private Map<Integer, Node> controlNodes;
+    private Map<Long, Node> controlNodes;
     /**
      * The List of Edges created from the FragmentXML.
      */
@@ -98,7 +98,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateControlNodes();
         generateEdges();
         generateSets();
-        //TODO: add setVersionNumber(); --> testfail
+        setVersionNumber();
     }
 
     /**
@@ -241,7 +241,7 @@ public class Fragment implements IDeserialisable, IPersistable {
             NodeList nodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.fragmentXML, XPathConstants.NODESET);
-            this.controlNodes = new HashMap<Integer, Node>(nodes.getLength());
+            this.controlNodes = new HashMap<Long, Node>(nodes.getLength());
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node currentNode = new Node();
@@ -282,8 +282,6 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
-        //TODO: remove methodcall --> testfail
-        setVersionNumber();
         Connector conn = new Connector();
         this.databaseID = conn.insertFragmentIntoDatabase(
                 this.fragmentName,
@@ -312,7 +310,20 @@ public class Fragment implements IDeserialisable, IPersistable {
             set.save();
         }
     }
-
+    /**
+     * Migrate fragmentinstances.
+     *
+     * @param scenarioDbID databaseId of the old scenario whose instances get migrated
+     */
+    public void migrate(int scenarioDbID) {
+        Connector connector = new Connector();
+        int oldFragmentID = connector.getFragmentID(scenarioDbID, getFragmentID());
+        connector.migrateFragmentInstance(oldFragmentID, databaseID);
+        // migrate controlNodes
+        for (Map.Entry<Long, Node> node : controlNodes.entrySet()) {
+            node.getValue().migrate(scenarioDbID, oldFragmentID);
+        }
+    }
     /**
      * Returns the list of edges.
      * This is a Composition, if you change the list
@@ -330,7 +341,7 @@ public class Fragment implements IDeserialisable, IPersistable {
      *
      * @return Map<XML_ID, ControlNode>
      */
-    public Map<Integer, Node> getControlNodes() {
+    public Map<Long, Node> getControlNodes() {
         return controlNodes;
     }
 
@@ -371,6 +382,15 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     /**
+     * Returns the Database-ID of the Fragment which is available after saving the fragment.
+     *
+     * @return DatabaseID
+     */
+    public int getDatabaseID() {
+        return databaseID;
+    }
+
+    /**
      * Returns the model-version of the Fragment.
      *
      * @return versionNumber
@@ -378,6 +398,4 @@ public class Fragment implements IDeserialisable, IPersistable {
     public int getVersion() {
         return versionNumber;
     }
-
-
 }

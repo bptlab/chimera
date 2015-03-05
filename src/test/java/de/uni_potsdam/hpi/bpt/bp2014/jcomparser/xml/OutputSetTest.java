@@ -57,23 +57,23 @@ public class OutputSetTest {
     }
 
     public void setUpNodes() {
-        HashMap<Integer, Node> nodes = new HashMap<Integer, Node>();
+        HashMap<Long, Node> nodes = new HashMap<Long, Node>();
         dataNodes = new ArrayList<>();
 
         // activity/ConsumerNode
         activity = new Node();
-        activity.setId(1);
-        nodes.put(1, activity);
+        activity.setId(1L);
+        nodes.put(1L, activity);
 
         // dataNodes
         Node datanode = new Node();
-        datanode.setId(2);
-        nodes.put(2, datanode);
+        datanode.setId(2L);
+        nodes.put(2L, datanode);
         dataNodes.add(datanode);
 
         datanode = new Node();
-        datanode.setId(3);
-        nodes.put(3, datanode);
+        datanode.setId(3L);
+        nodes.put(3L, datanode);
         dataNodes.add(datanode);
 
         for (Edge edge : dataFlowEdges) {

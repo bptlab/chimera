@@ -56,6 +56,7 @@ public class ScenarioInstance {
     private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<GatewayInstance> executingGateways = new LinkedList<GatewayInstance>();
     private final int scenarioInstance_id;
     private final int scenario_id;
     private final String name;
@@ -90,6 +91,7 @@ public class ScenarioInstance {
         if (dbScenarioInstance.getTerminated(this.scenarioInstance_id) == 0) {
             this.initializeFragments();
         }
+        this.startAutomaticControlNodes();
     }
 
     /**
@@ -104,6 +106,7 @@ public class ScenarioInstance {
         this.scenarioInstance_id = dbScenarioInstance.createNewScenarioInstance(scenario_id);
         this.initializeDataObjects();
         this.initializeFragments();
+        this.startAutomaticControlNodes();
     }
 
     /**
@@ -156,6 +159,7 @@ public class ScenarioInstance {
             }
         }
         initializeFragment(fragmentInstance.getFragment_id());
+        this.startAutomaticControlNodes();
     }
 
     /**
@@ -256,12 +260,24 @@ public class ScenarioInstance {
     }
 
     /**
-     * Checks if then control flow enabled control nodes can set to data flow enabled.
+     * Checks if the control flow enabled control nodes can set to data flow enabled.
      */
     public void checkDataFlowEnabled() {
         for (ControlNodeInstance activityInstance : controlFlowEnabledControlNodeInstances) {
             if (activityInstance.getClass() == ActivityInstance.class) {
                 ((ActivityInstance) activityInstance).checkDataFlowEnabled();
+            }
+        }
+    }
+
+    /**
+     * Checks if a executing gateway can terminate.
+     */
+    public void checkExecutingGateways(int controlNode_id) {
+        for (GatewayInstance gatewayInstance : executingGateways) {
+            if(gatewayInstance.checkTermination(controlNode_id)) {
+                gatewayInstance.terminate();
+                return;
             }
         }
     }
@@ -376,6 +392,32 @@ public class ScenarioInstance {
     }
 
     /**
+     * Starts automatic running control node instances.
+     * For example it starts the email tasks.
+     */
+    public void startAutomaticControlNodes(){
+        for (ControlNodeInstance controlNodeInstance : enabledControlNodeInstances){
+            if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance)controlNodeInstance).getIsMailTask()){
+                ((ActivityInstance) controlNodeInstance).begin();
+                ((ActivityInstance) controlNodeInstance).terminate();
+            }
+        }
+    }
+
+    /**
+     * Get the control node instance id for a given control node id.
+     * @param controlNode_id This is a id of a control node.
+     * @return the control instance id for the given control node id.
+     */
+    public ControlNodeInstance getControlNodeInstanceForControlNodeId(int controlNode_id) {
+        for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {
+            if (controlNodeInstance.getControlNode_id() == controlNode_id) {
+                return controlNodeInstance;
+            }
+        }
+        return null;
+    }
+    /**
      * Getter
      */
 
@@ -427,5 +469,7 @@ public class ScenarioInstance {
         return referentialRunningControlNodeInstances;
     }
 
-
+    public LinkedList<GatewayInstance> getExecutingGateways() {
+        return executingGateways;
+    }
 }
