@@ -9,7 +9,7 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 	// Vars defining the URIs of the REST-APIs
     var jcomparser = angular.module('jcomparser', [
 		'ngRoute',
-		'Scenario']);
+		'cenario']);
 		
 	// Create Routes for the App
 	jcomparser.config(['$routeProvider',
