@@ -372,10 +372,68 @@ public class ScenarioTest {
         final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
         fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/bikeFragment.xml")));
-        final Scenario scenario2 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version.xml", fragment2);
         scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/BikeScenario.xml")));
-        assertTrue(scenario2.save() == -1);
+        assertTrue("Eventhough the scenario is the same, it has been saved again", scenario2.save() == -1);
+        PowerMock.verify(scenario2, fragment2);
+    }
+
+    /**
+     * Assure that when a fragment of a scenario has been modified and the older version of the scenario
+     * is already in the database, it gets saved as a new scenario.
+     */
+    @Test
+    public void testModificationInFragmentScenarioNewlySaved() throws Exception {
+
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
+
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario1 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        scenario1.save();
+        PowerMock.verify(scenario1, fragment1);
+
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version_modified.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version.xml", fragment2);
+        scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        assertTrue("Scenario with modified fragment is not saved", scenario2.save() > 0);
+        PowerMock.verify(scenario2, fragment2);
+    }
+
+    /**
+     * Assure that when a scenario itself has been updated and the older version of the scenario
+     * is already in the database, it gets saved as a new scenario.
+     */
+    @Test
+    public void testSaveUpdatedScenario() throws Exception {
+
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
+
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario1 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        scenario1.save();
+        PowerMock.verify(scenario1, fragment1);
+
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version_modified.xml", fragment2);
+        scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        assertTrue("Updated scenario is not saved", scenario2.save() > 0);
         PowerMock.verify(scenario2, fragment2);
     }
 
@@ -418,7 +476,7 @@ public class ScenarioTest {
                                 .getDocumentElement();
                     }
                 });
-        PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, "1386518929")
+        PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentID()))
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
                     public Fragment answer() throws Throwable {
