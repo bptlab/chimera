@@ -7,14 +7,15 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 
 (function(){
 	// Vars defining the URIs of the REST-APIs
-    var jcomparser = angular.module('jcomparser', [
+    var jcomparser = angular.module('jfrontend', [
 		'ngRoute',
-		'cenario']);
+		'Scenario']);
 		
 	// Create Routes for the App
 	jcomparser.config(['$routeProvider',
 		function($routeProvider){
 			$routeProvider.
+			// Routes for jCore
 				when('/scenario', {
 					templateUrl: 'asset/templates/scenario.html',
 					controller: 'ScenarioController',
@@ -35,6 +36,13 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 					controller: 'ScenarioInstanceController',
 					controllerAs: 'instanceCtrl'
 				}).
+			// Routes for jComparser
+				when('/admin/jcomparser/', {
+					templateUrl: 'asset/templates/jcomparser.html',
+					controller: 'jcomparserMainView',
+					controllerAs: 'jcomparserMV'
+				}).
+			// default Route
 				otherwise({
 					redirectTo: '/scenario'
 				});
