@@ -4,6 +4,7 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.easymock.IAnswer;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -102,13 +103,27 @@ public class ScenarioTest {
     Scenario scenarioComplete;
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
-    private static final String TEST_SQL_SEED_FILE = "src/test/resources/emptyDatabase.sql";
+    private static final String TEST_SQL_SEED_FILE = "src/test/resources/jenginev2_empty.sql";
+    private static final String TRUNCATE_TABLES_FILE = "src/test/resources/truncate_all_tables.sql";
+
+    /**
+     * Sets up the database for ScenarioTests.
+     *
+     * @throws IOException  An Error while reading the SQL-File occurred.
+     * @throws SQLException An Error while executing the SQL-Script occurred.
+     */
+    @BeforeClass
+    public static void setUpDatabase() throws IOException, SQLException{
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+    }
+
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
      */
     @Before
     public void setUp() throws Exception {
-        setUpDatabase();
         scenarioWOVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 SET_VERSION_METHOD,
@@ -295,6 +310,8 @@ public class ScenarioTest {
      */
     @Test
     public void testSaveCompleteScenario() throws Exception {
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
         final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
                 FETCH_VERSION_METHOD);
         PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
@@ -335,6 +352,84 @@ public class ScenarioTest {
     }
 
     /**
+     * Assure that a unchanged scenario is not written to the database once again.
+     */
+    @Test
+    public void testSameScenarioNotSavedTwice() throws Exception {
+
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
+
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario1 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        scenario1.save();
+        PowerMock.verify(scenario1, fragment1);
+
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/bikeFragment.xml")));
+        final Scenario scenario2 = initializeScenario("src/test/resources/Version.xml", fragment1);
+        scenario2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/BikeScenario.xml")));
+        assertTrue(scenario2.save() == -1);
+        PowerMock.verify(scenario2, fragment2);
+    }
+
+    /**
+     * Initialize a fragment by configuring the mock
+     * @param versionLocation Location of the XML-file that contains the versions of the fragment
+     */
+    private Fragment initializeFragment(final String versionLocation) throws Exception {
+        final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                FETCH_VERSION_METHOD);
+        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(
+                                new File(versionLocation))
+                                .getDocumentElement();
+                    }
+                });
+        PowerMock.replay(fragment);
+        return fragment;
+    }
+
+    /**
+     * Initialize a scenario by configuring the mock
+     * @param versionLocation Location of the XML-file that contains the versions of the fragment
+     * @param fragment The fragment that the scenario consists of
+     */
+    private Scenario initializeScenario(final String versionLocation, final Fragment fragment) throws Exception {
+        final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
+                FETCH_VERSION_METHOD,
+                CREATE_FRAGMENT_METHOD);
+
+        PowerMock.expectPrivate(scenario, FETCH_VERSION_METHOD)
+                .andAnswer(new IAnswer<Node>() {
+                    @Override
+                    public Node answer() throws Throwable {
+                        return getDocumentFromXmlFile(
+                                new File(versionLocation))
+                                .getDocumentElement();
+                    }
+                });
+        PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, "1386518929")
+                .andAnswer(new IAnswer<Fragment>() {
+                    @Override
+                    public Fragment answer() throws Throwable {
+                        return fragment;
+                    }
+                });
+        PowerMock.replay(scenario, fragment, Fragment.class);
+        return scenario;
+    }
+
+    /**
      * Casts a XML from its String Representation to a w3c Document.
      *
      * @param xml The String representation of the XML.
@@ -365,19 +460,6 @@ public class ScenarioTest {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
-
-    /**
-     * Sets up the database for ScenarioTests.
-     *
-     * @throws IOException  An Error while reading the SQL-File occurred.
-     * @throws SQLException An Error while executing the SQL-Script occurred.
-     */
-    @Before
-    public void setUpDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
 
     /**
