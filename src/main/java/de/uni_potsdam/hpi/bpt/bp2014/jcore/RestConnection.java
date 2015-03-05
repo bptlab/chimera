@@ -201,7 +201,7 @@ public class RestConnection {
             String label = executionService.getLabelForControlNodeID(activityinstanceID);
             //if no activity with this id present
             if (label.equals("")) {
-                return Response.serverError().entity("Error: not correct Activity ID").build();
+                return Response.serverError().entity("Error: not correct Activity ID or empty Label").build();
             }
             return Response.ok("{\"label\":\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
         }
