@@ -231,15 +231,4 @@
 		}]
 	);
 
-		// Create a Controller for jCore Controller admin dashboard
-	scenario.controller('jcoreControllerMainView', ['$routeParams', '$location', '$http',
-		function($routeParams, $location, $http){
-			var controller = this;
-			
-			// initialize an empty list of scenario Ids
-			this.scenarioIds = [];
-			this.scenarios = {};
-			
-		}]
-	);
 })();

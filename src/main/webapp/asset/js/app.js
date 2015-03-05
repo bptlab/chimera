@@ -42,11 +42,6 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 					controller: 'jcomparserMainView',
 					controllerAs: 'jcomparserMV'
 				}).
-				when('/admin/jcoreController/', {
-					templateUrl: 'asset/templates/jcoreController.html',
-					controller: 'jcoreControllerMainView',
-					controllerAs: 'jcoreControllerMV'
-				}).
 				when('/admin/mail/', {
 					templateUrl: 'asset/templates/mailConfig.html',
 					controller: 'mailConfig',
