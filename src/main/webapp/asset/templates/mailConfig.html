@@ -9,15 +9,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr style="cursor: pointer" ng-repeat="id in jcomparser.scenarioIds">
-				<td>{{id}}</td>
-				<td>{{mailConfig.scenarios['' + id]['label']}}</td>
-				<th><img ng-href="mailConfig.getImageForScenario(id)"></img></th>
+			<tr style="cursor: pointer" ng-repeat="(key, value) in mailConfig.Details">
+				<td>{{key}}</td>
+				<td>{{value}}</td>
 			</tr>
 			</a>
 		</tbody>
 	</table>
-</div>
-<div class="row" ng-repeat="id in mailConfig.scenarioIds">
-	<div ></div>
 </div>

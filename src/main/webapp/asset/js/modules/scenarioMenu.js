@@ -209,7 +209,7 @@
 			
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
 				success(function(data){
-					controller.scenarioIds = data['ids'];
+					controller.scenarioDetails = data['ids'];
 				});
 				
 			this.getImageForScenario = function(id){
@@ -230,4 +230,20 @@
 		}]
 	);
 
+	// Create a Controller for mail config
+	scenario.controller('mailConfig', ['$routeParams', '$location', '$http',
+		function($routeParams, $location, $http){
+			var controller = this;
+			
+			// initialize an empty list of scenario Ids
+			this.scenarioIds = [];
+			this.scenarios = {};
+			
+			//TODO: adapt to new REST interface
+			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios"). 
+				success(function(data){
+					controller.Details = data['ids'];
+				});
+		}]
+	);
 })();
