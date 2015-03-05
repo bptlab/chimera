@@ -192,11 +192,32 @@ public class Connector extends DbDataObject{
         return performSQLInsertStatementWithAutoId(sql);
     }
 
+    /**
+     *
+     * @param name
+     * @param dataClassID
+     * @param value
+     * @param type
+     * @return
+     */
     public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String value, final String type){
         String sql = "INSERT INTO dataattribute (dataattribute.name, " +
                 "dataclass_id, dataattribute.value, dataattribute.type, dataattribute.default) " +
                 "VALUES ('" + name + "', " + dataClassID + ", '" + value + "', '" + type + "', '')";
         return performSQLInsertStatementWithAutoId(sql);
+    }
+
+    /**
+     *
+     * @param modelID
+     * @param versionNumber
+     * @param scenarioID
+     */
+    public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber, final int scenarioID){
+        DbObject dbObject = new DbObject();
+        String sql = "UPDATE scenario " +
+                "SET scenario.modelid = " + modelID +", scenario.modelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
+        dbObject.executeUpdateStatement(sql);
     }
     /**
      * This Methods inserts a new DataNode into the Database.

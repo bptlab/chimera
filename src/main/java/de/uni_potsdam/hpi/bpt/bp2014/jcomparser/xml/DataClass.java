@@ -26,15 +26,15 @@ public class DataClass implements IDeserialisable, IPersistable {
     /**
      *
      */
+    private long dataClassModelID;
+    /**
+     *
+     */
     private int dataClassID;
     /**
      *
      */
     private String dataClassName;
-    /**
-     *
-     */
-    private String processeditorServerUrl;
     /**
      *
      */
@@ -52,7 +52,7 @@ public class DataClass implements IDeserialisable, IPersistable {
      * in order to get the XML-files for the fragments.
      */
     public DataClass(String serverURL) {
-        processeditorServerUrl = serverURL;
+
     }
 
     /**
@@ -63,21 +63,34 @@ public class DataClass implements IDeserialisable, IPersistable {
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
         this.dataClassXML = element;
-        setDataClassName();
-        generateDataAttributeList();
+        NodeList properties = element.getChildNodes();
+        for(int i = 0; i < properties.getLength(); i++){
+            if(properties.item(i).getNodeName().equals("property")){
+                org.w3c.dom.Node property = properties.item(i);
+                initializeField(property);
+            }
+        }
     }
 
+    private void initializeField(final org.w3c.dom.Node property) {
 
-    private void setDataClassName() {
+        NamedNodeMap attributes = property.getAttributes();
+        String name = attributes.getNamedItem("name").getTextContent();
+        String value = attributes.getNamedItem("value").getTextContent();
 
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        String xPathQuery = "/model/@name";
-        try {
-            this.dataClassName = xPath
-                    .compile(xPathQuery)
-                    .evaluate(this.dataClassXML);
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
+        switch (name) {
+            case "text":
+                dataClassName = value;
+                break;
+            case "attributes":
+                generateDataAttributeList(value);
+                break;
+            case "#id":
+                dataClassModelID = Long.parseLong(value);
+                break;
+            default:
+                // Property will not be handled
+                break;
         }
     }
 
@@ -91,56 +104,13 @@ public class DataClass implements IDeserialisable, IPersistable {
         return dataClassID;
     }
 
-    private void generateDataAttributeList() {
-        try {
-            //look for all fragments in the scenarioXML and save their node
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            //TODO fix it for dataAttributes
-            String xPathQuery =
-                    "/model/nodes/node[property[@name = '#type' and " +
-                            "@value = 'net.frapu.code.visualization.pcm.PCMFragmentNode']]";
-            NodeList dataAttributesNodes = (NodeList) xPath
-                    .compile(xPathQuery)
-                    .evaluate(this.dataClassXML, XPathConstants.NODESET);
-            this.dataAttributes = new LinkedList<DataAttribute>();
-
-            for (int i = 0; i < dataAttributesNodes.getLength(); i++) {
-                // get the ID of the current node
-                //TODO fix it for dataAttributes
-                xPathQuery = "property[@name = 'fragment mid']/@value";
-                String currentNodeID = xPath
-                        .compile(xPathQuery)
-                        .evaluate(dataAttributesNodes.item(i));
-                this.dataAttributes.add(createAndInitializeDataAttribute(currentNodeID));
+    private void generateDataAttributeList(String value) {
+        String[] attributes = value.split(" ;");
+        for(String attribute : attributes){
+            if(!attribute.isEmpty()){
+                dataAttributes.add(new DataAttribute(attribute.replaceAll("\\{\\d\\}\\+", "")));
             }
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
         }
-    }
-
-    private DataAttribute createAndInitializeDataAttribute(String dataAttributeID) {
-        Retrieval retrieval = new Retrieval();
-        String dataAttributeXML = retrieval.getHTMLwithAuth(
-                this.processeditorServerUrl,
-                this.processeditorServerUrl +
-                        "models/" + dataAttributeID + ".pm");
-        DataAttribute dataAttribute = new DataAttribute(processeditorServerUrl);
-        dataAttribute.initializeInstanceFromXML(stringToDocument(dataAttributeXML));
-        return dataAttribute;
-    }
-
-    private Document stringToDocument(final String xml) {
-        try {
-            DocumentBuilder db = DocumentBuilderFactory
-                    .newInstance()
-                    .newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(xml)));
-            doc.getDocumentElement().normalize();
-            return doc;
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private void saveDataAttributes() {
@@ -164,6 +134,10 @@ public class DataClass implements IDeserialisable, IPersistable {
 
     public Node getDataClassXML() {
         return dataClassXML;
+    }
+
+    public long getDataClassModelID() {
+        return dataClassModelID;
     }
 
 }
