@@ -197,4 +197,37 @@
 				
 		}
 	]);
+
+	// Create a Controller for jcomparser admin dashboard
+	scenario.controller('jcomparserMainView', ['$routeParams', '$location', '$http',
+		function($routeParams, $location, $http){
+			var controller = this;
+			
+			// initialize an empty list of scenario Ids
+			this.scenarioIds = [];
+			this.scenarios = {};
+			
+			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
+				success(function(data){
+					controller.scenarioIds = data['ids'];
+					controller.getDetailedInformation();
+				});
+				
+			this.getImageForScenario = function(id){
+				//this.scenarios["" + id]['imageUrl'] =
+				return	JEngine_Server_URL + "/" + JComparser_REST_Interface + 
+					"/scenarios/" + id + "/image/";
+			};
+					
+			// Creates a new instance of the scenario with the given Id
+			this.loadInstance = function(id){
+				$http.post(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/launch/"+ id).
+					success(function(data) {
+						if (data) {
+							return data;
+						}
+					});
+			};
+		}]
+	);
 })();
