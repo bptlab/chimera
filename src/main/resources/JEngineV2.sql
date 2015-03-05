@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 03. Mrz 2015 um 11:58
+-- Erstellungszeit: 05. Mrz 2015 um 09:45
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -19091,7 +19091,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `name` varchar(256) NOT NULL,
   `modelid` bigint(11) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
-  `datamodelid` int(11) DEFAULT NULL,
+  `datamodelid` bigint(11) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=144 ;
 

@@ -9,7 +9,7 @@ import org.w3c.dom.Node;
 public class Aggregation implements IDeserialisable, IPersistable {
     @Override
     public void initializeInstanceFromXML(Node element) {
-        
+
     }
 
     @Override
