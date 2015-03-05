@@ -13,7 +13,7 @@
 			<th>ScenarioName</th>
 			<th>{{scenarioCtrl.getCurrentScenario()['label']}}</th>
 		</tr><tr>
-			<th>Amount of Instances</th>
+			<th>Amount of Instances&nbsp;&nbsp;</th>
 			<th>{{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}</th>
 		</tr>
 	</table>
@@ -22,12 +22,10 @@
 <a ng-href="#/scenario/{{scenarioCtrl.getCurrentScenario()['id']}}/instance" class="btn btn-default">
 			Display all {{scenarioCtrl.getCurrentScenario()['instanceIds'].length}} Instances
 </a>
-
-<a href="#" data-toggle="modal" data-target="#createInstance" >
+&nbsp; &nbsp;
+<a href="#" data-toggle="modal" data-target="#createInstance" class="btn btn-default">
 			Start Instance
 </a>
-
-
 
 <!-- modals -->
 <div id="createInstance" class="modal fade">

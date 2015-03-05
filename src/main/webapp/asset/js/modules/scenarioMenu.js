@@ -206,6 +206,7 @@
 			// initialize an empty list of scenario Ids
 			this.scenarioIds = [];
 			this.scenarios = {};
+			this.scenarioDetails = {};
 			
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
 				success(function(data){
@@ -236,9 +237,8 @@
 			var controller = this;
 			
 			// initialize an empty list of scenario Ids
-			this.scenarioIds = [];
-			this.scenarios = {};
-			
+			this.Details = [];
+
 			//TODO: adapt to new REST interface
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios"). 
 				success(function(data){
