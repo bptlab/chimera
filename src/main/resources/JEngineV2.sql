@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 05. Mrz 2015 um 13:08
+-- Erstellungszeit: 05. Mrz 2015 um 13:22
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -18999,7 +18999,9 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `activityinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `oldstate` varchar(512) NOT NULL,
+  `oldstate_id` int(11) NOT NULL,
   `newstate` varchar(512) NOT NULL,
+  `newstate_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -19016,6 +19018,23 @@ CREATE TABLE IF NOT EXISTS `historycontrolflow` (
 `id` int(11) NOT NULL,
   `controlnodeinstance_id1` int(11) NOT NULL,
   `controlnodeinstance_id2` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `historydataobjectinstance`
+--
+
+CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
+`id` int(11) NOT NULL,
+  `scenarioinstance_id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dataobjectinstance_id` int(11) NOT NULL,
+  `old_state_id` int(11) NOT NULL,
+  `old_state_name` varchar(200) NOT NULL,
+  `new_state_id` int(11) NOT NULL,
+  `new_state_name` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -20356,6 +20375,12 @@ ALTER TABLE `historycontrolflow`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `historydataobjectinstance`
+--
+ALTER TABLE `historydataobjectinstance`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `reference`
 --
 ALTER TABLE `reference`
@@ -20531,6 +20556,11 @@ MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `historycontrolflow`
 --
 ALTER TABLE `historycontrolflow`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `historydataobjectinstance`
+--
+ALTER TABLE `historydataobjectinstance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `right`
