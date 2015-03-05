@@ -1,11 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.google.gson.Gson;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -240,6 +242,25 @@ public class RestConnection {
         }
     }
 
+    @GET
+    @Path("scenario/{scenarioID}/{activityID}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityID") int activityID) {
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.serverError().entity("Error: there is no existing open scenario instance").build();
+        }
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        String receiver = dbEmailConfiguration.getReceiverEmailAddress(activityID);
+        if (receiver.equals("")){
+            return Response.serverError().entity("Error: there is no email configuration").build();
+        }
+        String message = dbEmailConfiguration.getMessage(activityID);
+        String subject = dbEmailConfiguration.getSubject(activityID);
+        String jsonRepresentation ="{" + receiver + ", " + subject + ", " + message + "}";
+
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
 
     /* #############################################################################
      *
@@ -306,4 +327,13 @@ public class RestConnection {
         System.err.print("ERROR: no status defined " + status);
         return false;
     }
+
+    @POST
+    @Path("a") //Path anpassen und Params setzen
+    public Boolean updateEmailConfiguration(@PathParam("") int activityID, @PathParam("") String receiver, @PathParam("") String message, @PathParam("") String subject) {
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        dbEmailConfiguration.setEmailConfiguration(activityID, receiver, subject, message);
+        return true;
+    }
+
 }
