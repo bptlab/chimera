@@ -80,6 +80,14 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Variable holds value true if such a migration is necessary.
      */
     private boolean migrationNecessary;
+    /**
+     * If migration is necessary, we need the latest version of the scenario that should be migrated.
+     */
+    private int migratedScenarioVersion = -1;
+    /**
+     * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
+     */
+    private List<Fragment> newFragments = new LinkedList<>();
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -140,6 +148,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                 // 2) a new fragment has been added
                 else {
                     migrationNecessary = true;
+                    newFragments.add(fragment);
+                    migratedScenarioVersion = scenarioVersion;
                 }
             }
             // case 2: an existing fragment has been modified: we got a newer version of the fragment here
@@ -320,12 +330,43 @@ public class Scenario implements IDeserialisable, IPersistable {
         return -1;
     }
 
+    /**
+     * Migrate running instances with the modelId of this scenario and the migratedVersion.
+     */
     private void migrateRunningInstances() {
         Connector connector = new Connector();
-        int newestScenarioDbVersion = connector.getScenarioVersion(scenarioID);
-
-
+        //migrate ScenarioInstances
+        int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
+        List<Integer> oldRunningScenarioInstancesIDs = connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
+        //migrate FragmentInstances
+        for(Fragment fragment : fragments) {
+            // as there is no fragmentinstance for any new fragment in the database so far,
+            // we don't need to change references
+            if(newFragments.contains(fragment)) {
+                // create new fragmentinstances for the new fragment
+                for (int instanceID : oldRunningScenarioInstancesIDs) {
+                    connector.insertFragmentInstance(fragment.getDatabaseID(), instanceID);
+                }
+                // Do we need to add any controlnodeinstances from new fragment?
+            }
+            else {
+                int oldFragmentID = connector.getFragmentID(oldScenarioDbID, fragment.getFragmentID());
+                connector.migrateFragmentInstance(oldFragmentID, fragment.getDatabaseID());
+                // migrate controlNodes
+                for (Map.Entry<Long, Node> node : fragment.getControlNodes().entrySet()) {
+                    if (node.getValue().isDataNode()) {
+                        int oldDataObjectID = connector.getDataObjectID(oldScenarioDbID, node.getValue().getId());
+                        connector.migrateDataObjectInstance(oldDataObjectID, node.getValue().getDatabaseID());
+                    }
+                    else {
+                        int oldControlNodeID = connector.getControlNodeID(oldFragmentID, node.getValue().getId());
+                        connector.migrateControlNodeInstance(oldControlNodeID, node.getValue().getDatabaseID());
+                    }
+                }
+            }
+        }
     }
+
 
     /**
      * Save the referenced activities of the Scenario to the database.
@@ -337,7 +378,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void saveReferences() {
         /* Key is the ID used inside the model, value are a List of
          * all IDs used inside the database. */
-        HashMap<Integer, List<Integer>> activities =
+        HashMap<Long, List<Integer>> activities =
                 getActivityDatabaseIDsForEachActivityModelID();
         Connector conn = new Connector();
         for (List<Integer> databaseIDs : activities.values()) {
@@ -358,13 +399,13 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If two activities are referenced their model IDs are the same,
      * but they have different IDs inside the database.
      *
-     * @return A Map of all activity-model IDs to a List of their database IDs.
+     * @return A map of all activity-model-IDs to a list of their database IDs.
      */
-    private HashMap<Integer, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
-        HashMap<Integer, List<Integer>> result = new HashMap<>();
+    private HashMap<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+        HashMap<Long, List<Integer>> result = new HashMap<>();
         for (Fragment fragment : fragments) {
-            Map<Integer, Node> fragmentNodes = fragment.getControlNodes();
-            for (Map.Entry<Integer, Node> node : fragmentNodes.entrySet()) {
+            Map<Long, Node> fragmentNodes = fragment.getControlNodes();
+            for (Map.Entry<Long, Node> node : fragmentNodes.entrySet()) {
                 if (node.getValue().isTask()) {
                     if (result.get(node.getKey()) == null) {
                         List<Integer> activityDatabaseIDs =

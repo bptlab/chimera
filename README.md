@@ -37,4 +37,4 @@ This JEngine does execute
 * AND gateways
 * termination condition for scenarios
 
-Additionally, we provide an AngularJS frontend to control the JComparser and the JEngine..
+Additionally, we use an AngularJS frontend to control the JComparser and the JEngine..

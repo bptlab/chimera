@@ -67,7 +67,7 @@ public class FragmentTest {
     @Test
     public void testSimpleFragmentDeserialization(){
         Assert.assertEquals("The fragmentName has not been set correctly", "TestFragment2", fragment.getFragmentName());
-        Assert.assertEquals("The fragmentID has not been set correctly", 1763775575, fragment.getFragmentID());
+        Assert.assertEquals("The fragmentID has not been set correctly", 1763775575L, fragment.getFragmentID());
     }
     /**
      * rudimentary test for checking if the controlNodes are set "correctly" (simply check if there is a node with
@@ -75,10 +75,10 @@ public class FragmentTest {
      */
     @Test
     public void testControlNodesSetCorrectly(){
-        Assert.assertNotNull("The startEvent has not been set correctly", fragment.getControlNodes().get(1453251009));
-        Assert.assertNotNull("The activity has not been set correctly", fragment.getControlNodes().get(1080362683));
-        Assert.assertNotNull("The dataNode has not been set correctly", fragment.getControlNodes().get(1397906076));
-        Assert.assertNotNull("The endEvent has not been set correctly", fragment.getControlNodes().get(735424916));
+        Assert.assertNotNull("The startEvent has not been set correctly", fragment.getControlNodes().get(1453251009L));
+        Assert.assertNotNull("The activity has not been set correctly", fragment.getControlNodes().get(1080362683L));
+        Assert.assertNotNull("The dataNode has not been set correctly", fragment.getControlNodes().get(1397906076L));
+        Assert.assertNotNull("The endEvent has not been set correctly", fragment.getControlNodes().get(735424916L));
     }
     /**
      * rudimentary test for checking if the edges are set "correctly" (simply check if there is an edge with
@@ -97,7 +97,7 @@ public class FragmentTest {
     public void testSetsSetCorrectly(){
         Assert.assertEquals("The inputSet has not been set correctly", 0, fragment.getInputSets().size());
         Assert.assertEquals("The outputSet has not been set correctly", 1, fragment.getOutputSets().size());
-        Assert.assertEquals("The producerNode of the outputSet has not been set correctly", 1080362683, fragment.getOutputSets().get(0).getProducer().getId());
+        Assert.assertEquals("The producerNode of the outputSet has not been set correctly", 1080362683L, fragment.getOutputSets().get(0).getProducer().getId());
     }
 
     /**
