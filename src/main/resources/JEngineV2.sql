@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 05. Mrz 2015 um 13:22
+-- Erstellungszeit: 05. Mrz 2015 um 14:47
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -20592,17 +20592,6 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=105;
 --
 ALTER TABLE `user`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- Constraints der exportierten Tabellen
---
-
---
--- Constraints der Tabelle `terminationcondition`
---
-ALTER TABLE `terminationcondition`
-ADD CONSTRAINT `terminationcondition_ibfk_1` FOREIGN KEY (`dataobject_id`) REFERENCES `dataobject` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `terminationcondition_ibfk_2` FOREIGN KEY (`state_id`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
