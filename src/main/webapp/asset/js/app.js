@@ -43,7 +43,7 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 					controllerAs: 'jcomparserMV'
 				}).
 				when('/admin/mail/', {
-					templateUrl: 'asset/templates/mailConfig.html',
+					templateUrl: 'asset/templates/mailConfigDetails.html',
 					controller: 'mailConfig',
 					controllerAs: 'mailC'
 				}).
