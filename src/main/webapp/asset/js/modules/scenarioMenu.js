@@ -259,18 +259,18 @@
 			};
 
 			// Got to the instance with the given Id
-			this.getDetailsFrom = function(id){
+			this.getDetailsForMailtaskID = function(id){
 				//TODO: adapt URL
-				$location.path(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-					"/emailtask/"+ id + "?");
+					"/emailtask/"+ id + "?").
+					success(function(data) {
+						if (data) {
+							return data;
+						}
+					});
 			};
 			
-			// Got to the instance with the given Id
-			this.getLabelFrom = function(id){
-				//TODO: adapt URL
-				$location.path("/scenario/" + $routeParams.id + "/instance/" + id);
-			};
 		}]
 	);
 })();
