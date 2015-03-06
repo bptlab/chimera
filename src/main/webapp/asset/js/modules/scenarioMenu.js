@@ -261,7 +261,9 @@
 			// Got to the instance with the given Id
 			this.getDetailsFrom = function(id){
 				//TODO: adapt URL
-				$location.path("/scenario/" + $routeParams.id + "/instance/" + id);
+				$location.path(JEngine_Server_URL + "/" + JCore_REST_Interface +
+					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+					"/emailtask/"+ id + "?");
 			};
 			
 			// Got to the instance with the given Id
