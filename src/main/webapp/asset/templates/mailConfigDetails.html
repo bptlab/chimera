@@ -13,7 +13,7 @@
 			<tr style="cursor: pointer" ng-repeat="(key, value) in mailConfig.Details">
 				<td>{{key}}</td>
 				<td>{{value}}</td>
-				<td><a href="#" data-toggle="modal" data-target="#editMailConfig" class="btn btn-default">
+				<td><a href="#" data-toggle="modal" ng-click="mailTask = {{key}}" data-target="#editMailConfig" class="btn btn-default">
 					Start Instance
 				    </a>
 				</td>
@@ -29,10 +29,10 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Edit Mail Config of {{value}}</h4>
+				<h4 class="modal-title">Edit Mail Config of {{mailConfig.getLabelFrom(mailTask)}}</h4>
 			</div>
 			<div class="modal-body">
-				<p>Do you really want to start a new instance of scenario "{{scenarioCtrl.getCurrentScenario()['label']}}"?</p>
+				<p>{{mailConfig.getDetailsFrom(mailTask)}}</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

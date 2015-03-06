@@ -256,6 +256,18 @@
 						}
 					});
 			};
+
+			// Got to the instance with the given Id
+			this.goToDetailsFrom = function(id){
+				//TODO: adapt URL
+				$location.path("/scenario/" + $routeParams.id + "/instance/" + id);
+			};
+			
+			// Got to the instance with the given Id
+			this.goLabelFrom = function(id){
+				//TODO: adapt URL
+				$location.path("/scenario/" + $routeParams.id + "/instance/" + id);
+			};
 		}]
 	);
 })();
