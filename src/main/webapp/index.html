@@ -51,7 +51,7 @@
 		<link rel="stylesheet" href="asset/styles/style.css">
 	</head>
 	<body>
-		<!-- Header -->
+		<!-- Content: Headline Area -->
 		<div id="header">
 			<div class="color-line"></div>
 			<div id="logo" class="light-version">
@@ -64,7 +64,7 @@
 				<div class="header-link hide-menu"><i class="fa fa-bars"></i></div>
 			</nav>
 		</div>
-		<!-- Menu -->
+		<!-- Content: Side Menu -->
 		<aside id="menu">
 			<div id="navigation" aria-multiselectable="false">
 			<!-- Navbar on the left side -->
@@ -72,6 +72,7 @@
 					<li class="active">
 						<a href="index.html"> <span class="nav-label">Dashboard</span> <span class="label label-success pull-right">v.1</span> </a>
 					</li>
+					<!-- TODO: sollten wir überdenken, der schießt so jedes mal 250 requests los :D -->
 					<li scenario-menu-entry>
 					</li>
 					<li>
@@ -90,7 +91,7 @@
 		
 		<!-- Main Wrapper -->
 		<div id="wrapper">
-		<!-- Begin of the Content -->
+		<!-- Begin of the Main Content -->
 			<div class="content animate-panel ng-view">
 			</div>
 		</div>

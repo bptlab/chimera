@@ -246,6 +246,16 @@
 				success(function(data){
 					controller.Details = data['ids'];
 				});
+
+			this.update = function(id){
+				//TODO: adapt URL
+				$http.post(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/launch/"+ id).
+					success(function(data) {
+						if (data) {
+							return data;
+						}
+					});
+			};
 		}]
 	);
 })();
