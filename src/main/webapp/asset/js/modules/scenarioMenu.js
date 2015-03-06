@@ -248,8 +248,9 @@
 				});
 
 			this.update = function(id){
-				//TODO: adapt URL
-				$http.post(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/launch/"+ id).
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
+					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+					"/emailtask/"+ id + "?").
 					success(function(data) {
 						if (data) {
 							return data;
