@@ -258,13 +258,13 @@
 			};
 
 			// Got to the instance with the given Id
-			this.goToDetailsFrom = function(id){
+			this.getDetailsFrom = function(id){
 				//TODO: adapt URL
 				$location.path("/scenario/" + $routeParams.id + "/instance/" + id);
 			};
 			
 			// Got to the instance with the given Id
-			this.goLabelFrom = function(id){
+			this.getLabelFrom = function(id){
 				//TODO: adapt URL
 				$location.path("/scenario/" + $routeParams.id + "/instance/" + id);
 			};
