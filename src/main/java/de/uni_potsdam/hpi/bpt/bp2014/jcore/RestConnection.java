@@ -332,7 +332,7 @@ public class RestConnection {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
-    public Response updateEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("emailtaskID") int emailtaskID, JsonObject json) {
+    public boolean updateEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("emailtaskID") int emailtaskID, String json) {
 
         //TODO: parse "json" and hand it over
         String receiver ="";
@@ -340,7 +340,7 @@ public class RestConnection {
         String subject ="";
 
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        dbEmailConfiguration.setEmailConfiguration(activityID, receiver, subject, message);
+        dbEmailConfiguration.setEmailConfiguration(emailtaskID, receiver, subject, message);
         return true;
     }
 
