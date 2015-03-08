@@ -1,9 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-/**
- * Created by jaspar.mang on 03.03.15.
- */
-
 import org.apache.commons.mail.EmailException;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +25,7 @@ public class EmailAcceptanceTest {
     }
 
     //Email Test Scenario 142
-    @Test
+    //@Test
     public void testScenario142() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(142);
@@ -63,7 +59,7 @@ public class EmailAcceptanceTest {
     }
 
     //Email Test Scenario 141
-    @Test
+    //@Test
     public void testScenario141() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(141);

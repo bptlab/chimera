@@ -8,9 +8,6 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by jaspar.mang on 02.02.15.
- */
 public class ExecutionAcceptanceTest {
 
     /**
