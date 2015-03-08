@@ -52,4 +52,9 @@ public class DbEmailConfiguration extends DbObject {
         String sql = "SELECT sendmailaddress FROM emailconfiguration WHERE controlnode_id = " + controlNode_id;
         return this.executeStatementReturnsString(sql, "sendmailaddress");
     }
+
+    public void setEmailConfiguration(int id, String receiver, String subject, String message) {
+        String sql = "UPDATE emailconfiguration SET message = '" + message + "', subject  = '" + subject + "', receivermailaddress = '" + receiver + "'WHERE controlnode_id = " + id;
+        this.executeUpdateStatement(sql);
+    }
 }
