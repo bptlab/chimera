@@ -1,9 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.util;
 
 import com.google.gson.Gson;
+import com.google.gson.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -118,5 +120,25 @@ public class JsonUtil {
         public JsonStringHashMap(HashMap<String, String> ids) {
             this.ids = ids;
         }
+    }
+
+    /**
+     *
+     * @param jsonLine
+     * @return parsed json string
+     */
+    public static Map parse(String jsonLine) {
+        Map jsonJavaRootObject = new Gson().fromJson(jsonLine, Map.class);
+        return jsonJavaRootObject;
+
+        /*
+        JsonElement jelement = new JsonParser().parse(jsonLine);
+        JsonObject  jobject = jelement.getAsJsonObject();
+        jobject = jobject.getAsJsonObject("data");
+        JsonArray jarray = jobject.getAsJsonArray("translations");
+        jobject = jarray.get(0).getAsJsonObject();
+        String result = jobject.get("translatedText").toString();
+        return result;
+        */
     }
 }

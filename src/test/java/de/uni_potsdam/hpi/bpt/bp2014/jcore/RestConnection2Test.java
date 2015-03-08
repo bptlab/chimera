@@ -90,6 +90,14 @@ public class RestConnection2Test extends AbstractTest {
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
     }
 
+    //@Test
+    //TODO:
+    public void testUpdateEmailConfiguration(){
+        //final Response test = target("/interface/v1/en/scenario/1/instance/328/emailtask/1337/").request().post();
+        //assertEquals("true", test.readEntity(String.class));
+    }
+
+
     /* #############################################################################
      *
      * HTTP POST REQUEST

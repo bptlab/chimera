@@ -10,6 +10,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+
+import com.google.gson.JsonArray;
 
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperHashMap;
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
@@ -334,7 +337,10 @@ public class RestConnection {
     @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
     public boolean updateEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("emailtaskID") int emailtaskID, String json) {
 
-        //TODO: parse "json" and hand it over
+        Map emailtaskData = JsonUtil.parse(json);
+
+        //TODO: map emailtaskData content
+
         String receiver ="";
         String message ="";
         String subject ="";
