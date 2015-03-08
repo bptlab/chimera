@@ -1,9 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-/**
- * Created by jaspar.mang on 03.03.15.
- */
-
 import org.apache.commons.mail.EmailException;
 import org.junit.Before;
 import org.junit.Test;

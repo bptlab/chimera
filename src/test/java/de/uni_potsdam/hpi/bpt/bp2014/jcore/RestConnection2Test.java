@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -93,11 +95,19 @@ public class RestConnection2Test extends AbstractTest {
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
     }
 
-    @Test
-    //TODO:
+    //@Test
     public void testUpdateEmailConfiguration(){
-        //final Response test = target("/interface/v1/en/scenario/1/instance/328/emailtask/1337/").request().post(emailUpdate);
-       // assertEquals("true", test.readEntity(String.class));
+
+
+        Map object = new HashMap();
+        object.put("receiver", "test@test.de");
+        object.put("subject", "TestSubject");
+        object.put("Content", "Sehr geehrte Damen und Herren,");
+
+        Entity userEntity = Entity.entity(object, MediaType.APPLICATION_JSON);
+
+        final Response test = target("/interface/v1/en/scenario/1/instance/328/emailtask/1337/").request().post(userEntity);
+        assertEquals("true", test.readEntity(String.class));
     }
 
 
@@ -116,7 +126,7 @@ public class RestConnection2Test extends AbstractTest {
 
     @Test
     public void testPostNewInstanceForScenario(){
-        //final Response test = target("/interface/v1/en/scenario/1/").request().post();
+      //  final Response test = target("/interface/v1/en/scenario/1/").request().post();
         //assertEquals("123", test.readEntity(String.class));
     }
 }
