@@ -1,13 +1,18 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.google.gson.Gson;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+
+import com.google.gson.JsonArray;
 
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperHashMap;
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
@@ -241,6 +246,25 @@ public class RestConnection {
         }
     }
 
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("emailtaskID") int emailtaskID) {
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.serverError().entity("Error: there is no existing open scenario instance").build();
+        }
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
+        if (receiver.equals("")){
+            return Response.serverError().entity("Error: there is no email configuration").build();
+        }
+        String message = dbEmailConfiguration.getMessage(emailtaskID);
+        String subject = dbEmailConfiguration.getSubject(emailtaskID);
+        String jsonRepresentation ="{" + receiver + ", " + subject + ", " + message + "}";
+
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
 
     /* #############################################################################
      *
@@ -307,4 +331,23 @@ public class RestConnection {
         System.err.print("ERROR: no status defined " + status);
         return false;
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
+    public boolean updateEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("emailtaskID") int emailtaskID, String json) {
+
+        Map emailtaskData = JsonUtil.parse(json);
+
+        //TODO: map emailtaskData content
+
+        String receiver ="";
+        String message ="";
+        String subject ="";
+
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        dbEmailConfiguration.setEmailConfiguration(emailtaskID, receiver, subject, message);
+        return true;
+    }
+
 }
