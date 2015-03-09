@@ -127,9 +127,10 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     private void setDomainModel() {
         domainModelXML = fetchDomainModelXML();
-        domainModel = new DomainModel(processeditorServerUrl);
-        domainModel.initializeInstanceFromXML(domainModelXML);
-
+        if(domainModelXML != null) {
+            domainModel = new DomainModel(processeditorServerUrl);
+            domainModel.initializeInstanceFromXML(domainModelXML);
+        }
     }
 
     private Element fetchDomainModelXML() {
