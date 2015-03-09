@@ -7,13 +7,19 @@
 				<th>#</th>
 				<th>Name</th>
 				<th>Preview</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMainView.scenarioDetails">
 				<td>{{key}}</td>
 				<td>{{value}}</td>
-				<th><img ng-href="jcomparserMainView.getImageForScenario(id)"></img></th>
+				<td><img ng-href="jcomparserMainView.getImageForScenario(key)"></img></td>
+				<td>
+					<form ng-submit="jcomparserMainView.loadInstance(key)">
+						<input type="submit" value="Launch Scenario">
+					</form>
+				</td>
 			</tr>
 			</a>
 		</tbody>

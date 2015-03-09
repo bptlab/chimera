@@ -210,8 +210,9 @@
 			
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
 				success(function(data){
-			            var array = angular.fromJson(data);
-			            controller.scenarioDetails = array.ids;
+			            //var array = angular.fromJson(data);
+			            //controller.scenarioDetails = array.ids;
+				    controller.scenarioDetails = data['ids'];
         		});
 
 
@@ -240,30 +241,35 @@
 			
 			// initialize an empty list of scenario Ids
 			this.Details = [];
+			this.emailtaskIDs = [];
 
-			//TODO: adapt to new REST interface
-			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios"). 
+			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
 				success(function(data){
-					controller.Details = data['ids'];
+					controller.scenarioIds = data['ids'];
 				});
 
-			this.update = function(id){
+			this.submitMyForm = function(id){
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-					"/emailtask/"+ id + "?").
+					"/config/emailtask/"+ id + "/?", $this.fields).
 					success(function(data) {
 						if (data) {
 							return data;
 						}
+					});     
+		        }
+
+
+			// Got all emailtasks with the given Id
+			this.getAllMailtaskForScenarioID = function(id){
+				$http.get(JEngine_Server_URL+"/" + JCore_REST_Interface + "/scenario/" + id + "/emailtasks/0/").
+					success(function(data) {
+						controller.emailtaskIDs = data['ids'];
 					});
 			};
-
 			// Got to the instance with the given Id
 			this.getDetailsForMailtaskID = function(id){
-				//TODO: adapt URL
 				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-					"/emailtask/"+ id + "?").
+					"/config/emailtask/" + id + "/?").
 					success(function(data) {
 						if (data) {
 							return data;
