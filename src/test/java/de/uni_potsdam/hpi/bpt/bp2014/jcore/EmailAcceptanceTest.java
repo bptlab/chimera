@@ -23,9 +23,8 @@ public class EmailAcceptanceTest {
         Mailbox.clearAll();
 
     }
-
     //Email Test Scenario 142
-    //@Test
+    @Test
     public void testScenario142() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(142);
@@ -59,7 +58,7 @@ public class EmailAcceptanceTest {
     }
 
     //Email Test Scenario 141
-    //@Test
+    @Test
     public void testScenario141() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(141);
