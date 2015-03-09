@@ -24,7 +24,7 @@ public class RestConnection2Test extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     static {
-        TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+        TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest_new.sql";
     }
 
     @AfterClass
@@ -91,7 +91,7 @@ public class RestConnection2Test extends AbstractTest {
 
     @Test
     public void testGetAllDataobjectForScenarioInstance(){
-        final Response test = target("/interface/v1/en/scenario/1/instance/328/dataobject/0/").request().get();
+        final Response test = target("/interface/v1/en/scenario/141/instance/877/dataobject/0/").request().get();
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
     }
 

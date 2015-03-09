@@ -246,23 +246,27 @@ public class RestConnection {
         }
     }
 
-    @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("emailtaskID") int emailtaskID) {
-        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.serverError().entity("Error: there is no existing open scenario instance").build();
-        }
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
-        if (receiver.equals("")){
-            return Response.serverError().entity("Error: there is no email configuration").build();
-        }
-        String message = dbEmailConfiguration.getMessage(emailtaskID);
-        String subject = dbEmailConfiguration.getSubject(emailtaskID);
-        String jsonRepresentation ="{" + receiver + ", " + subject + ", " + message + "}";
 
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    @GET
+    @Path("scenario/{scenarioID}/emailtask/{emailtaskID}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID,  @PathParam("emailtaskID") int emailtaskID) {
+        if (emailtaskID == 0) {
+            //TODO: give me all email tasks
+            return Response.serverError().entity("blub").build();
+        } else {
+            
+            DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+            String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
+            if (receiver.equals("")){
+                return Response.serverError().entity("Error: there is no email configuration").build();
+            }
+            String message = dbEmailConfiguration.getMessage(emailtaskID);
+            String subject = dbEmailConfiguration.getSubject(emailtaskID);
+            String jsonRepresentation ="{" + receiver + ", " + subject + ", " + message + "}";
+
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        }
     }
 
 
@@ -334,8 +338,8 @@ public class RestConnection {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
-    public boolean updateEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("emailtaskID") int emailtaskID, String json) {
+    @Path("config/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
+    public boolean updateEmailConfiguration( @PathParam("emailtaskID") int emailtaskID, String json) {
 
         Map emailtaskData = JsonUtil.parse(json);
 
