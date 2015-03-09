@@ -255,7 +255,7 @@ public class RestConnection {
             //TODO: give me all email tasks
             return Response.serverError().entity("blub").build();
         } else {
-            
+
             DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
             String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
             if (receiver.equals("")){
