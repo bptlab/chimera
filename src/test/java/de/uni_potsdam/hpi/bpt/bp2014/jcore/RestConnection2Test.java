@@ -1,10 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.JsonObject;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -95,7 +98,7 @@ public class RestConnection2Test extends AbstractTest {
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
     }
 
-    //@Test
+    @Test
     public void testUpdateEmailConfiguration(){
 
 
@@ -104,7 +107,7 @@ public class RestConnection2Test extends AbstractTest {
         object.put("subject", "TestSubject");
         object.put("Content", "Sehr geehrte Damen und Herren,");
 
-        Entity userEntity = Entity.entity(object, MediaType.APPLICATION_JSON);
+        Entity userEntity = Entity.entity(new JSONObject(object), MediaType.APPLICATION_JSON);
 
         final Response test = target("/interface/v1/en/scenario/1/instance/328/emailtask/1337/").request().post(userEntity);
         assertEquals("true", test.readEntity(String.class));
