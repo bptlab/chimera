@@ -251,11 +251,12 @@ public class RestConnection {
     @Path("scenario/{scenarioID}/emailtask/{emailtaskID}/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID,  @PathParam("emailtaskID") int emailtaskID) {
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         if (emailtaskID == 0) {
-            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(dbEmailConfiguration.getAllEmailTasksForScenario(scenarioID));
-            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+            //TODO: give me all email tasks
+            return Response.serverError().entity("blub").build();
         } else {
+
+            DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
             String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
             if (receiver.equals("")){
                 return Response.serverError().entity("Error: there is no email configuration").build();
@@ -338,15 +339,11 @@ public class RestConnection {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("config/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
-    public boolean updateEmailConfiguration( @PathParam("emailtaskID") int emailtaskID, String json) {
+    public boolean updateEmailConfiguration( @PathParam("emailtaskID") int emailtaskID, @FormParam("receiver") String receiver,
+                                                                                         @FormParam("subject") String subject,
+                                                                                         @FormParam("message") String message) {
 
-        Map emailtaskData = JsonUtil.parse(json);
-
-        //TODO: map emailtaskData content
-
-        String receiver ="";
-        String message ="";
-        String subject ="";
+        //Map emailtaskData = JsonUtil.parse(json);
 
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         dbEmailConfiguration.setEmailConfiguration(emailtaskID, receiver, subject, message);
