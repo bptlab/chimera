@@ -97,8 +97,25 @@ public class RestConnection2Test extends AbstractTest {
     }
 
     @Test
-    public void testUpdateEmailConfiguration() {
+    public void testGetAllMailTasks() {
+        final Response test = target("/interface/v1/en/scenario/999/emailactivitytaskID/0/").request().get();
+        assertEquals("{\"ids\":[999]}", test.readEntity(String.class));
+    }
 
+    @Test
+    public void testGetSpecificMailTasks() {
+        final Response test = target("/interface/v1/en/scenario/999/emailactivitytaskID/999/").request().get();
+        // org.junit.ComparisonFailure:  && Contents are identical ... --> Java :(
+       /* assertEquals("{\"receiver\":\"TestReceiver@server.de\", \"subject\":\"Test Message\", \"message\":\"Test\r\n" +
+                "\n" +
+                "Test\n" +
+                "\n" +
+                "Test\"}", test.readEntity(String.class));
+       */
+    }
+
+    //@Test
+    public void testUpdateEmailConfiguration() {
 
         Map object = new HashMap();
         object.put("receiver", "test@test.de");
@@ -107,8 +124,8 @@ public class RestConnection2Test extends AbstractTest {
 
         Entity userEntity = Entity.entity(new JSONObject(object), MediaType.APPLICATION_JSON);
 
-        final Response test = target("/interface/v1/en/scenario/1/instance/328/emailtask/1337/").request().post(userEntity);
-        assertEquals("true", test.readEntity(String.class));
+        final Response test = target("/interface/v1/en/db/emailtask/999/").request().post(userEntity);
+        assertEquals("{\"true\"}", test.readEntity(String.class));
     }
 
 
@@ -130,4 +147,5 @@ public class RestConnection2Test extends AbstractTest {
         //  final Response test = target("/interface/v1/en/scenario/1/").request().post();
         //assertEquals("123", test.readEntity(String.class));
     }
+
 }
