@@ -72,6 +72,10 @@ public class Node implements IDeserialisable, IPersistable {
      */
     private String state;
     /**
+     * A String which holds the URI for the dataClasses.
+     */
+    private String dataClassURI;
+    /**
      * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
      */
     private String stereotype;
@@ -152,6 +156,9 @@ public class Node implements IDeserialisable, IPersistable {
                 break;
             case "stereotype":
                 stereotype = value;
+                break;
+            case "Data class":
+                dataClassURI = value;
             default:
                 // Property will not be handled
                 break;

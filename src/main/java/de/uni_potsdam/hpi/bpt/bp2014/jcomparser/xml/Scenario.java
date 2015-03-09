@@ -84,6 +84,9 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If migration is necessary, we need the latest version of the scenario that should be migrated.
      */
     private int migratedScenarioVersion = -1;
+    private String domainModelURI;
+    private Element domainModelXML;
+    private DomainModel domainModel;
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
      */
@@ -114,10 +117,49 @@ public class Scenario implements IDeserialisable, IPersistable {
         setScenarioName();
         setScenarioID();
         generateFragmentList();
+        setDomainModelURL();
+        setDomainModel();
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
         checkIfVersionAlreadyInDatabase();
+    }
+
+    private void setDomainModel() {
+        domainModelXML = fetchDomainModelXML();
+        domainModel = new DomainModel(processeditorServerUrl);
+        domainModel.initializeInstanceFromXML(domainModelXML);
+
+    }
+
+    private Element fetchDomainModelXML() {
+        try {
+            Retrieval jRetrieval = new Retrieval();
+            String versionXML = jRetrieval.getHTMLwithAuth(
+                    processeditorServerUrl,
+                    processeditorServerUrl + domainModelURI);
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(versionXML));
+            DocumentBuilder db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(is);
+            return doc.getDocumentElement();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void setDomainModelURL() {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/properties/property" +
+                "[@name='domainModelURI']/@value";
+        try {
+            domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -316,6 +358,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     scenarioID,
                     versionNumber);
             saveFragments();
+            domainModel.save();
             saveDataObjects();
             saveConsistsOf();
             if (terminatingDataObject != null && terminatingDataNode != null) {
