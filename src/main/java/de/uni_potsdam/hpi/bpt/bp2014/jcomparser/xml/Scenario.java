@@ -87,7 +87,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
      */
-    private List<Fragment> newFragments = new LinkedList<>();
+    private List<Fragment> newFragments;
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -132,6 +132,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         int scenarioVersion = connector.getScenarioVersion(scenarioID);
         List<Integer> fragmentDatabaseVersions;
         boolean changesMade = false;
+        newFragments = new LinkedList<>();
         for (Fragment fragment : fragments) {
             fragmentModelVersion = fragment.getVersion();
             fragmentModelID = fragment.getFragmentID();
@@ -684,5 +685,15 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     public int getVersionNumber() {
         return versionNumber;
+    }
+
+    /**
+     * Returns a boolean which marks if migration is necessary.
+     * Used for testCases only so far.
+     *
+     * @return 1 if migration is necessary (0 otherwise)
+     */
+    public boolean isMigrationNecessary() {
+        return migrationNecessary;
     }
 }
