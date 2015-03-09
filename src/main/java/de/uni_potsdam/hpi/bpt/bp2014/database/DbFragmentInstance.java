@@ -73,4 +73,15 @@ public class DbFragmentInstance extends DbObject {
         String sql = "UPDATE fragmentinstance SET fragmentinstance.terminated = 1 WHERE id = " + fragmentInstance_id;
         this.executeUpdateStatement(sql);
     }
+
+    /**
+     * This method returns the ID of the fragment the fragmentinstance belons to.
+     *
+     * @param fragmentinstance_id ID of the fragmentinstance
+     * @return FragmentID.
+     */
+    public int getFragmentID(int fragmentinstance_id) {
+        String sql = "SELECT fragment_id FROM fragmentinstance WHERE id = " + fragmentinstance_id;
+        return this.executeStatementReturnsInt(sql, "fragment_id");
+    }
 }
