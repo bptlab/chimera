@@ -135,6 +135,7 @@ public class ActivityInstance extends ControlNodeInstance {
      *
      * @return true if the activity could set to terminated. false if the activity couldn't set.
      */
+    @Override
     public boolean terminate() {
         boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
         ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
@@ -149,6 +150,7 @@ public class ActivityInstance extends ControlNodeInstance {
         ((TaskIncomingControlFlowBehavior) incomingBehavior).checkDataFlowEnabledAndEnableDataFlow();
     }
 
+    @Override
     public boolean skip(){
         return ((ActivityStateMachine) stateMachine).skip();
     }

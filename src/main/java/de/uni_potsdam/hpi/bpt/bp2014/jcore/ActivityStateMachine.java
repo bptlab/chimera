@@ -208,6 +208,7 @@ public class ActivityStateMachine extends StateMachine {
      *
      * @return true if the state could been set to terminated. false if the state couldn't been set.
      */
+    @Override
     public boolean terminate() {
         //String state = this.getState();
         if (state.equals("running")) {
@@ -225,6 +226,7 @@ public class ActivityStateMachine extends StateMachine {
      *
      * @return true if the state could been set. false if the state couldn't been set.
      */
+    @Override
     public boolean skip() {
         //String state = this.getState();
         if (state.equals("init") || this.isReady(state)) {
