@@ -386,21 +386,21 @@ public class Connector extends DbDataObject{
      * Get the latest version of a fragment which is in the database.
      *
      * @param fragmentModelID modelID of the fragment
-     * @param scenarioID modelID of the scenario the fragment belongs to
-     * @return all versions of the fragment with the fragmentModelID (return list that only contains -1 if there is no fragment of this id)
+     * @param scenarioModelID modelID of the scenario the fragment belongs to
+     * @return latest version of the specified fragment (return -1 if there is no fragment of this id)
      */
-    public List<Integer> getFragmentVersions(long fragmentModelID, long scenarioID) {
+    public int getNewestFragmentVersion(long fragmentModelID, long scenarioModelID) {
 
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT fragment.modelversion FROM scenario, fragment " +
                 "WHERE scenario.id = fragment.scenario_ID " +
-                "AND scenario.modelid = " + scenarioID +
+                "AND scenario.modelid = " + scenarioModelID +
                 " AND fragment.modelid = " + fragmentModelID;
         LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
         if (versions.size() == 0) {
-            versions.add(-1);
+            return -1;
         }
-        return versions;
+        return Collections.max(versions);
     }
     /**
      * Get the latest version of a scenario which is in the database.
@@ -408,19 +408,16 @@ public class Connector extends DbDataObject{
      * @param scenarioID modelID of the scenario
      * @return latest version of the scenario with the scenarioID (return -1 if there is no scenario of this id)
      */
-    public int getScenarioVersion(long scenarioID) {
+    public int getNewestScenarioVersion(long scenarioID) {
 
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT modelversion FROM scenario " +
                 "WHERE modelid = " + scenarioID;
         LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
-        int maxVersion = -1;
-        for (int entry : versions) {
-            if (entry > maxVersion) {
-                maxVersion = entry;
-            }
+        if (versions.size() == 0) {
+            return -1;
         }
-        return maxVersion;
+        return Collections.max(versions);
     }
 
     /**
@@ -466,9 +463,9 @@ public class Connector extends DbDataObject{
     }
 
     /**
-     * Get the databaseId for specified fragment in table "fragment".
+     * Get the databaseId for the specified fragment in table "fragment".
      *
-     * @param scenarioID the scenarioID for which the fragment is selected
+     * @param scenarioID the scenarioDatabaseID for which the fragment is selected
      * @param modelID the modelId of the fragment
      * @return the databaseID of the selected fragment
      */
@@ -511,7 +508,7 @@ public class Connector extends DbDataObject{
     /**
      * Get the databaseId for specified controlnode in table "controlnode".
      *
-     * @param fragmentID the fragmentID for which the fragment is selected
+     * @param fragmentID the databaseID of the fragment the controlNode belongs to
      * @param modelID the modelId of the controlnode
      * @return the databaseID of the selected controlnode
      */
@@ -538,19 +535,19 @@ public class Connector extends DbDataObject{
         dbDataObject.executeUpdateStatement(update);
     }
     /**
-     * Get the dataobjectId of the specified datanode in table "fragment".
+     * Get the dataobjectID of the specified dataObject in table "dataobject".
      *
-     * @param scenarioID the scenarioID for which the dataobjectId is selected
-     * @param modelID the modelId of the datanode
-     * @return the dataobjectId of the selected datanode
+     * @param scenarioID the scenarioDatabaseID for which the dataobjectID is selected
+     * @param dataObjectName the name of the dataObject (we assume that a scenario can't hold dataObjects with the same name)
+     * @return the dataobject_id of the selected dataObject
      */
-    public int getDataObjectID(int scenarioID, long modelID) {
+    public int getDataObjectID(int scenarioID, String dataObjectName) {
         DbDataObject dbDataObject = new DbDataObject();
-        String select = "SELECT dataobject_id " +
-                "FROM datanode " +
+        String select = "SELECT id " +
+                "FROM dataobject " +
                 "WHERE scenario_id = " + scenarioID +
-                " AND modelid = " + modelID;
-        return dbDataObject.executeStatementReturnsInt(select, "dataobject_id");
+                " AND name = '" + dataObjectName + "'";
+        return dbDataObject.executeStatementReturnsInt(select, "id");
     }
     /**
      * Change all oldDataObjectIDs to newDataObjectIDs in table "dataobjectinstance"
