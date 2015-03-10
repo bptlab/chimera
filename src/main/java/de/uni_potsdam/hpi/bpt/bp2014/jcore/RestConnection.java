@@ -1,18 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-
-import com.google.gson.JsonArray;
 
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperHashMap;
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
@@ -250,7 +248,7 @@ public class RestConnection {
     @GET
     @Path("scenario/{scenarioID}/emailtask/{emailtaskID}/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID,  @PathParam("emailtaskID") int emailtaskID) {
+    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("emailtaskID") int emailtaskID) {
         if (emailtaskID == 0) {
             //TODO: give me all email tasks
             return Response.serverError().entity("blub").build();
@@ -258,12 +256,12 @@ public class RestConnection {
 
             DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
             String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
-            if (receiver.equals("")){
+            if (receiver.equals("")) {
                 return Response.serverError().entity("Error: there is no email configuration").build();
             }
             String message = dbEmailConfiguration.getMessage(emailtaskID);
             String subject = dbEmailConfiguration.getSubject(emailtaskID);
-            String jsonRepresentation ="{" + receiver + ", " + subject + ", " + message + "}";
+            String jsonRepresentation = "{" + receiver + ", " + subject + ", " + message + "}";
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
         }
@@ -339,15 +337,38 @@ public class RestConnection {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("config/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
-    public boolean updateEmailConfiguration( @PathParam("emailtaskID") int emailtaskID, @FormParam("receiver") String receiver,
-                                                                                         @FormParam("subject") String subject,
-                                                                                         @FormParam("message") String message) {
-
-        //Map emailtaskData = JsonUtil.parse(json);
-
+    public boolean updateEmailConfiguration(@PathParam("emailtaskID") int emailtaskID, final EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        dbEmailConfiguration.setEmailConfiguration(emailtaskID, receiver, subject, message);
+        dbEmailConfiguration.setEmailConfiguration(emailtaskID,
+                input.receiver, input.subject, input.content);
         return true;
     }
 
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link #updateEmailConfiguration(int,
+     * de.uni_potsdam.hpi.bpt.bp2014.jcore.RestConnection.EmailConfigJaxBean)
+     * updateEmailConfiguration} method for more information.
+     */
+    @XmlRootElement
+    public static class EmailConfigJaxBean {
+        /**
+         * The receiver of the email.
+         * coded as an valid email address (as String)
+         */
+        public String receiver;
+        /**
+         * The subject of the email.
+         * Could be any String but null.
+         */
+        public String subject;
+        /**
+         * The content of the email.
+         * Could be any String but null.
+         */
+        public String content;
+    }
 }

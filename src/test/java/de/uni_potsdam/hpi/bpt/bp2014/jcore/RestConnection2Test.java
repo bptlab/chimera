@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileReader;
 import java.io.IOException;
@@ -98,16 +97,15 @@ public class RestConnection2Test extends AbstractTest {
 
     @Test
     public void testUpdateEmailConfiguration() {
+        RestConnection.EmailConfigJaxBean input = new RestConnection.EmailConfigJaxBean();
+        input.subject = "test@test.de";
+        input.receiver = "TestSubject";
+        input.content = "Sehr geehrte Damen und Herren,";
 
-        Map object = new HashMap();
-        object.put("receiver", "test@test.de");
-        object.put("subject", "TestSubject");
-        object.put("Content", "Sehr geehrte Damen und Herren,");
+        Entity userEntity = Entity.json(input);
 
-        Entity userEntity = Entity.entity(new JSONObject(object), MediaType.APPLICATION_JSON);
-
-        final Response test = target("/interface/v1/en/scenario/1/instance/328/emailtask/1337/").request().post(userEntity);
-        //assertEquals("true", test.readEntity(String.class));
+        final Response test = target("/interface/v1/en/config/emailtask/999/").request().post(userEntity);
+        assertEquals("true", test.readEntity(String.class));
     }
 
 
