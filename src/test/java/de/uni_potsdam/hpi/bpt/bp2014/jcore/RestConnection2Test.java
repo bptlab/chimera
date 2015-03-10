@@ -3,8 +3,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -14,8 +14,6 @@ import javax.ws.rs.core.Response;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -94,9 +92,19 @@ public class RestConnection2Test extends AbstractTest {
         final Response test = target("/interface/v1/en/scenario/1/instance/328/dataobject/0/").request().get();
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
     }
+    /* #############################################################################
+     *
+     * HTTP POST REQUEST
+     *
+     * #############################################################################
+     */
 
+    /**
+     * Checks if the update runs without exceptions.
+     * And that the result is as expected (true).
+     */
     @Test
-    public void testUpdateEmailConfiguration() {
+    public void testUpdateEmailConfigurationWithOutException() {
         RestConnection.EmailConfigJaxBean input = new RestConnection.EmailConfigJaxBean();
         input.subject = "test@test.de";
         input.receiver = "TestSubject";
@@ -108,13 +116,31 @@ public class RestConnection2Test extends AbstractTest {
         assertEquals("true", test.readEntity(String.class));
     }
 
-
-    /* #############################################################################
-     *
-     * HTTP POST REQUEST
-     *
-     * #############################################################################
+    /**
+     * Checks weather or not the contents of the email configuration are correct.
+     * Therefore an new configuration is added to the databases.
+     * Afterwards the elements will be queried and checked.
      */
+    @Test
+    public void testUpdateEmailConfigurationIsCorrect() {
+        RestConnection.EmailConfigJaxBean input = new RestConnection.EmailConfigJaxBean();
+        input.subject = "test@example.com";
+        input.receiver = "Test";
+        input.content = "This is a Test";
+
+        Entity userEntity = Entity.json(input);
+        final Response test = target("/interface/v1/en/config/emailtask/20/").request().post(userEntity);
+
+        assertEquals("true", test.readEntity(String.class));
+
+        DbEmailConfiguration emailConfig = new DbEmailConfiguration();
+        assertEquals("The subject of the email configuration has not been set correctly",
+                 input.subject, emailConfig.getSubject(20));
+        assertEquals("The receiver of the email configuration has not been set correctly",
+                 input.receiver, emailConfig.getReceiverEmailAddress(20));
+        assertEquals("The content of the email configuration has not been set correctly",
+                 input.content, emailConfig.getMessage(20));
+    }
 
     @Test
     public void testPostActivityStatusUpdate() {

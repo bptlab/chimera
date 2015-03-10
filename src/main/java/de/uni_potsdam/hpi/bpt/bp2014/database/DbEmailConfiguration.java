@@ -56,7 +56,10 @@ public class DbEmailConfiguration extends DbObject {
     }
 
     public void setEmailConfiguration(int id, String receiver, String subject, String message) {
-        String sql = "UPDATE emailconfiguration SET message = '" + message + "', subject  = '" + subject + "', receivermailaddress = '" + receiver + "'WHERE controlnode_id = " + id;
+        String sql = "UPDATE emailconfiguration SET message = '" +
+                     message + "', subject  = '" + subject +
+                     "', receivermailaddress = '" + receiver +
+                     "'WHERE controlnode_id = " + id;
         this.executeUpdateStatement(sql);
     }
 

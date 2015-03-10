@@ -304,10 +304,12 @@ public class RestConnection {
      * @param status             the new status of the activity which is supposed to be updated
      * @return true or false
      */
-
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
-    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
+    public Boolean doActivity(@PathParam("scenarioID") String scenarioID,
+                              @PathParam("instanceID") int scenarioInstanceID,
+                              @PathParam("activityinstanceID") int activityInstanceID,
+                              @QueryParam("status") String status) {
         Boolean result;
         executionService.openExistingScenarioInstance(new Integer(scenarioID), scenarioInstanceID);
         // check on status, if begin -> start the activity
@@ -329,15 +331,17 @@ public class RestConnection {
                 return false;
             }
         }
-        //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
         System.err.print("ERROR: no status defined " + status);
         return false;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("config/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
-    public boolean updateEmailConfiguration(@PathParam("emailtaskID") int emailtaskID, final EmailConfigJaxBean input) {
+    @Path("config/emailtask/{emailtaskID}/")
+    public boolean updateEmailConfiguration(
+            @PathParam("emailtaskID") int emailtaskID,
+            final EmailConfigJaxBean input) {
+
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         dbEmailConfiguration.setEmailConfiguration(emailtaskID,
                 input.receiver, input.subject, input.content);
