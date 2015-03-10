@@ -213,8 +213,8 @@
 			            //var array = angular.fromJson(data);
 			            //controller.scenarioDetails = array.ids;
 				    controller.scenarioDetails = data['ids'];
+				    
         		});
-
 
 			this.getImageForScenario = function(id){
 				//this.scenarios["" + id]['imageUrl'] =
@@ -242,12 +242,20 @@
 			// initialize an empty list of scenario Ids
 			this.Details = [];
 			this.emailtaskIDs = [];
+			this.scenarioIDs = [];
 
 			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
 				success(function(data){
-					controller.scenarioIds = data['ids'];
-				});
+				    //console.log('data is ' + data);
+				    controller.scenarioIDs = data['ids'];
+				    //console.log('controller.scenarioIDs is ' + controller.scenarioIDs);
+				    
+        		});
 
+			//this.scenarioIDs = [141, 142];
+			//console.log('controller.scenarioIDs is ' + this.scenarioIDs);
+			
+			//update email template via POST
 			this.submitMyForm = function(id){
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/config/emailtask/"+ id + "/?", $this.fields).
@@ -261,7 +269,7 @@
 
 			// Got all emailtasks with the given Id
 			this.getAllMailtaskForScenarioID = function(id){
-				$http.get(JEngine_Server_URL+"/" + JCore_REST_Interface + "/scenario/" + id + "/emailtasks/0/").
+				$http.get(JEngine_Server_URL+"/" + JCore_REST_Interface + "/scenario/" + id + "/emailtask/0/").
 					success(function(data) {
 						controller.emailtaskIDs = data['ids'];
 					});

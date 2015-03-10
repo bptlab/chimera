@@ -249,12 +249,11 @@ public class RestConnection {
     @Path("scenario/{scenarioID}/emailtask/{emailtaskID}/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("emailtaskID") int emailtaskID) {
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         if (emailtaskID == 0) {
-            //TODO: give me all email tasks
-            return Response.serverError().entity("blub").build();
+            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(dbEmailConfiguration.getAllEmailTasksForScenario(scenarioID));
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
         } else {
-
-            DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
             String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
             if (receiver.equals("")) {
                 return Response.serverError().entity("Error: there is no email configuration").build();
@@ -335,6 +334,12 @@ public class RestConnection {
         return false;
     }
 
+    /**
+     * 
+     * @param emailtaskID id of related emailtask
+     * @param input HTTP body as json which is retrieved by the REST interface
+     * @return boolean
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("config/emailtask/{emailtaskID}/")
@@ -347,6 +352,14 @@ public class RestConnection {
                 input.receiver, input.subject, input.content);
         return true;
     }
+
+
+    /* #############################################################################
+     *
+     * Helper
+     *
+     * #############################################################################
+     */
 
     /**
      * This is a data class for the email configuration.
