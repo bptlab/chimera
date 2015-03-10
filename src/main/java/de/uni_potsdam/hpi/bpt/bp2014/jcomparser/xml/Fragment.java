@@ -317,7 +317,7 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     public void migrate(int scenarioDbID) {
         Connector connector = new Connector();
-        int oldFragmentID = connector.getFragmentID(scenarioDbID, getFragmentID());
+        int oldFragmentID = connector.getFragmentID(scenarioDbID, fragmentID);
         connector.migrateFragmentInstance(oldFragmentID, databaseID);
         // migrate controlNodes
         for (Map.Entry<Long, Node> node : controlNodes.entrySet()) {

@@ -83,7 +83,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     /**
      * If migration is necessary, we need the latest version of the scenario that should be migrated.
      */
-    private int migratedScenarioVersion = -1;
+    private int migratingScenarioVersion = -1;
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
      */
@@ -126,18 +126,14 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void checkIfVersionAlreadyInDatabase() {
         Connector connector = new Connector();
-        int fragmentModelVersion;
         long fragmentModelID;
         int newestFragmentDatabaseVersion;
-        int scenarioVersion = connector.getScenarioVersion(scenarioID);
-        List<Integer> fragmentDatabaseVersions;
+        int scenarioVersion = connector.getNewestScenarioVersion(scenarioID);
         boolean changesMade = false;
         newFragments = new LinkedList<>();
         for (Fragment fragment : fragments) {
-            fragmentModelVersion = fragment.getVersion();
             fragmentModelID = fragment.getFragmentID();
-            fragmentDatabaseVersions = connector.getFragmentVersions(fragmentModelID, scenarioID);
-            newestFragmentDatabaseVersion = Collections.max(fragmentDatabaseVersions);
+            newestFragmentDatabaseVersion = connector.getNewestFragmentVersion(fragmentModelID, scenarioID);
             // case 1: We don't have a fragment with this modelid in the database
             if (newestFragmentDatabaseVersion == -1) {
                 needsToBeSaved = true;
@@ -150,17 +146,17 @@ public class Scenario implements IDeserialisable, IPersistable {
                 else {
                     migrationNecessary = true;
                     newFragments.add(fragment);
-                    migratedScenarioVersion = scenarioVersion;
+                    migratingScenarioVersion = scenarioVersion;
                 }
             }
             // case 2: an existing fragment has been modified: we got a newer version of the fragment here
-            else if (newestFragmentDatabaseVersion < fragmentModelVersion) {
+            else if (newestFragmentDatabaseVersion < fragment.getVersion()) {
                 needsToBeSaved = true;
                 changesMade = true;
             }
         }
         // this evaluation is necessary as otherwise the value of migrationNecessary is influenced by the
-        // ordering of the fragments (could be overwritten)
+        // ordering of the fragments
         if (changesMade) {
             migrationNecessary = false;
         }
@@ -332,13 +328,12 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Migrate running instances with the modelId of this scenario and with the migratedVersion.
+     * Migrate running instances with the modelId of this scenario and with the migratingScenarioVersion.
      */
     private void migrateRunningInstances() {
         Connector connector = new Connector();
-        // get the scenarioDatabaseID with the version to be migrated and the modelid
-        int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
-        // get the scenarioinstanceids of all running instances that need to be migrated
+        int oldScenarioDbID = connector.getScenarioID(scenarioID, migratingScenarioVersion);
+        // get the scenarioInstanceIDs of all running instances that need to be migrated
         // and migrate them (means changing their old reference to the scenario to this scenario)
         connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
         //migrate FragmentInstances
