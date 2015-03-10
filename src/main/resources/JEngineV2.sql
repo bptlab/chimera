@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 05. Mrz 2015 um 15:37
+-- Erstellungszeit: 10. Mrz 2015 um 21:06
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6560 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -5819,7 +5819,103 @@ INSERT INTO `activityinstance` (`id`, `type`, `role_id`, `activity_state`, `work
 (6556, 'HumanTask', 1, 'terminated', 'init'),
 (6557, 'HumanTask', 1, 'terminated', 'init'),
 (6558, 'HumanTask', 1, 'terminated', 'init'),
-(6559, 'HumanTask', 1, 'ready', 'init');
+(6559, 'HumanTask', 1, 'ready', 'init'),
+(6560, 'HumanTask', 1, 'ready', 'init'),
+(6561, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6562, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6563, 'HumanTask', 1, 'ready', 'init'),
+(6564, 'HumanTask', 1, 'terminated', 'init'),
+(6565, 'HumanTask', 1, 'terminated', 'init'),
+(6566, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6567, 'HumanTask', 1, 'ready', 'init'),
+(6568, 'HumanTask', 1, 'terminated', 'init'),
+(6569, 'HumanTask', 1, 'terminated', 'init'),
+(6570, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6571, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6573, 'HumanTask', 1, 'terminated', 'init'),
+(6574, 'HumanTask', 1, 'terminated', 'init'),
+(6577, 'HumanTask', 1, 'terminated', 'init'),
+(6578, 'HumanTask', 1, 'terminated', 'init'),
+(6581, 'HumanTask', 1, 'ready', 'init'),
+(6582, 'HumanTask', 1, 'ready', 'init'),
+(6583, 'HumanTask', 1, 'terminated', 'init'),
+(6584, 'HumanTask', 1, 'terminated', 'init'),
+(6585, 'HumanTask', 1, 'terminated', 'init'),
+(6586, 'HumanTask', 1, 'terminated', 'init'),
+(6587, 'HumanTask', 1, 'terminated', 'init'),
+(6588, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6589, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6590, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6591, 'HumanTask', 1, 'terminated', 'init'),
+(6592, 'HumanTask', 1, 'terminated', 'init'),
+(6593, 'HumanTask', 1, 'ready', 'init'),
+(6594, 'HumanTask', 1, 'terminated', 'init'),
+(6595, 'HumanTask', 1, 'ready', 'init'),
+(6596, 'HumanTask', 1, 'ready', 'init'),
+(6597, 'HumanTask', 1, 'terminated', 'init'),
+(6598, 'HumanTask', 1, 'terminated', 'init'),
+(6599, 'HumanTask', 1, 'ready', 'init'),
+(6600, 'HumanTask', 1, 'ready', 'init'),
+(6601, 'HumanTask', 1, 'terminated', 'init'),
+(6602, 'HumanTask', 1, 'terminated', 'init'),
+(6603, 'HumanTask', 1, 'terminated', 'init'),
+(6604, 'HumanTask', 1, 'terminated', 'init'),
+(6605, 'HumanTask', 1, 'terminated', 'init'),
+(6606, 'HumanTask', 1, 'terminated', 'init'),
+(6607, 'HumanTask', 1, 'terminated', 'init'),
+(6608, 'HumanTask', 1, 'terminated', 'init'),
+(6609, 'HumanTask', 1, 'terminated', 'init'),
+(6610, 'HumanTask', 1, 'terminated', 'init'),
+(6611, 'HumanTask', 1, 'ready', 'init'),
+(6612, 'HumanTask', 1, 'ready(ControlFlow)', 'init'),
+(6613, 'HumanTask', 1, 'ready', 'init'),
+(6615, 'HumanTask', 1, 'ready', 'init'),
+(6617, 'HumanTask', 1, 'ready', 'init'),
+(6618, 'HumanTask', 1, 'ready', 'init'),
+(6620, 'HumanTask', 1, 'terminated', 'init'),
+(6621, 'HumanTask', 1, 'skipped', 'init'),
+(6622, 'HumanTask', 1, 'ready', 'init'),
+(6624, 'HumanTask', 1, 'terminated', 'init'),
+(6626, 'HumanTask', 1, 'ready', 'init'),
+(6627, 'HumanTask', 1, 'ready', 'init'),
+(6629, 'HumanTask', 1, 'terminated', 'init'),
+(6630, 'HumanTask', 1, 'skipped', 'init'),
+(6631, 'HumanTask', 1, 'terminated', 'init'),
+(6633, 'HumanTask', 1, 'terminated', 'init'),
+(6635, 'HumanTask', 1, 'skipped', 'init'),
+(6636, 'HumanTask', 1, 'terminated', 'init'),
+(6638, 'HumanTask', 1, 'terminated', 'init'),
+(6640, 'HumanTask', 1, 'ready', 'init'),
+(6641, 'HumanTask', 1, 'ready', 'init'),
+(6643, 'HumanTask', 1, 'terminated', 'init'),
+(6644, 'HumanTask', 1, 'ready', 'init'),
+(6645, 'HumanTask', 1, 'terminated', 'init'),
+(6646, 'HumanTask', 1, 'ready', 'init'),
+(6649, 'HumanTask', 1, 'running', 'init'),
+(6650, 'HumanTask', 1, 'ready', 'init'),
+(6651, 'HumanTask', 1, 'terminated', 'init'),
+(6652, 'HumanTask', 1, 'ready', 'init'),
+(6655, 'HumanTask', 1, 'ready', 'init'),
+(6656, 'HumanTask', 1, 'ready', 'init'),
+(6657, 'HumanTask', 1, 'terminated', 'init'),
+(6658, 'HumanTask', 1, 'ready', 'init'),
+(6661, 'HumanTask', 1, 'terminated', 'init'),
+(6662, 'HumanTask', 1, 'ready', 'init'),
+(6665, 'HumanTask', 1, 'ready', 'init'),
+(6666, 'HumanTask', 1, 'ready', 'init'),
+(6667, 'HumanTask', 1, 'terminated', 'init'),
+(6668, 'HumanTask', 1, 'ready', 'init'),
+(6671, 'HumanTask', 1, 'skipped', 'init'),
+(6672, 'HumanTask', 1, 'skipped', 'init'),
+(6673, 'HumanTask', 1, 'terminated', 'init'),
+(6674, 'HumanTask', 1, 'skipped', 'init'),
+(6675, 'HumanTask', 1, 'terminated', 'init'),
+(6677, 'HumanTask', 1, 'terminated', 'init'),
+(6680, 'HumanTask', 1, 'terminated', 'init'),
+(6681, 'HumanTask', 1, 'ready', 'init'),
+(6682, 'HumanTask', 1, 'skipped', 'init'),
+(6683, 'HumanTask', 1, 'skipped', 'init'),
+(6684, 'HumanTask', 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -6121,7 +6217,26 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (365, 362, ''),
 (366, 367, ''),
 (367, 368, ''),
-(369, 366, '');
+(369, 366, ''),
+(371, 380, ''),
+(372, 373, ''),
+(372, 376, ''),
+(372, 384, ''),
+(373, 377, ''),
+(373, 378, ''),
+(374, 382, ''),
+(375, 372, ''),
+(376, 383, ''),
+(377, 379, ''),
+(378, 374, ''),
+(379, 382, ''),
+(380, 370, ''),
+(381, 375, ''),
+(382, 380, ''),
+(383, 380, ''),
+(384, 371, ''),
+(386, 387, ''),
+(387, 385, '');
 
 -- --------------------------------------------------------
 
@@ -6135,7 +6250,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL,
   `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=370 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=388 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -6432,7 +6547,25 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 (366, 'send Mail', 'EmailTask', 162, 0),
 (367, 'test Act1', 'Activity', 162, 0),
 (368, '', 'Endevent', 162, 0),
-(369, '', 'Startevent', 162, 0);
+(369, '', 'Startevent', 162, 0),
+(370, '', 'Endevent', 163, 1656035829),
+(371, '(act2) XOR Pfad 2', 'Activity', 163, 1825597619),
+(372, '', 'XOR', 163, 1942420226),
+(373, '', 'AND', 163, 254883637),
+(374, '(act2.1) AND Pfad', 'Activity', 163, 63770505),
+(375, 'Activity vor XOR', 'Activity', 163, 985344766),
+(376, '(act1) XOR Pfad 1', 'Activity', 163, 145253839),
+(377, '(act1.2) AND Pfad', 'Activity', 163, 2101563332),
+(378, '(act1.1) AND Pfad', 'Activity', 163, 200970481),
+(379, '(act2.2) AND Pfad', 'Activity', 163, 1254038515),
+(380, '', 'XOR', 163, 1106006145),
+(381, '', 'Startevent', 163, 955294750),
+(382, '', 'AND', 163, 397952438),
+(383, '(act2) XOR Pfad1', 'Activity', 163, 2035041782),
+(384, '(act1) XOR Pfad 2', 'Activity', 163, 592676136),
+(385, '', 'Endevent', 164, 1776570985),
+(386, '', 'Startevent', 164, 2011166525),
+(387, 'an Activity', 'Activity', 164, 1463696901);
 
 -- --------------------------------------------------------
 
@@ -6445,7 +6578,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6560 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -12938,7 +13071,132 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (6556, 'Activity', 362, 4366),
 (6557, 'Activity', 363, 4366),
 (6558, 'Activity', 362, 4367),
-(6559, 'Activity', 363, 4367);
+(6559, 'Activity', 363, 4367),
+(6560, 'Activity', 2, 4368),
+(6561, 'Activity', 4, 4369),
+(6562, 'Activity', 10, 4370),
+(6563, 'Activity', 16, 4371),
+(6564, 'Activity', 2, 4372),
+(6565, 'Activity', 4, 4373),
+(6566, 'Activity', 10, 4374),
+(6567, 'Activity', 16, 4375),
+(6568, 'Activity', 5, 4372),
+(6569, 'Activity', 6, 4372),
+(6570, 'Activity', 4, 4376),
+(6571, 'Activity', 2, 4377),
+(6572, 'AND', 102, 4378),
+(6573, 'Activity', 103, 4378),
+(6574, 'Activity', 104, 4378),
+(6575, 'AND', 105, 4378),
+(6576, 'AND', 102, 4379),
+(6577, 'Activity', 103, 4379),
+(6578, 'Activity', 104, 4379),
+(6579, 'AND', 105, 4379),
+(6580, 'AND', 102, 4380),
+(6581, 'Activity', 103, 4380),
+(6582, 'Activity', 104, 4380),
+(6583, 'Activity', 125, 4381),
+(6584, 'Activity', 128, 4382),
+(6585, 'Activity', 130, 4383),
+(6586, 'Activity', 126, 4381),
+(6587, 'Activity', 125, 4384),
+(6588, 'Activity', 128, 4385),
+(6589, 'Activity', 126, 4384),
+(6590, 'Activity', 130, 4386),
+(6591, 'Activity', 183, 4387),
+(6592, 'Activity', 191, 4388),
+(6593, 'Activity', 193, 4389),
+(6594, 'Activity', 184, 4387),
+(6595, 'Activity', 189, 4388),
+(6596, 'Activity', 187, 4387),
+(6597, 'Activity', 202, 4390),
+(6598, 'Activity', 207, 4391),
+(6599, 'Activity', 203, 4390),
+(6600, 'Activity', 208, 4391),
+(6601, 'Activity', 210, 4392),
+(6602, 'Activity', 216, 4393),
+(6603, 'Activity', 218, 4394),
+(6604, 'Activity', 211, 4392),
+(6605, 'Activity', 214, 4393),
+(6606, 'Activity', 220, 4394),
+(6607, 'Activity', 218, 4395),
+(6608, 'Activity', 216, 4396),
+(6609, 'Activity', 220, 4395),
+(6610, 'Activity', 210, 4397),
+(6611, 'Activity', 211, 4397),
+(6612, 'Activity', 214, 4396),
+(6613, 'Activity', 218, 4398),
+(6614, 'AND', 250, 4399),
+(6615, 'Activity', 246, 4399),
+(6616, 'AND', 251, 4399),
+(6617, 'Activity', 243, 4399),
+(6618, 'Activity', 245, 4399),
+(6619, 'XOR', 333, 4400),
+(6620, 'Activity', 332, 4400),
+(6621, 'Activity', 335, 4400),
+(6622, 'Activity', 342, 4401),
+(6623, 'XOR', 334, 4400),
+(6624, 'Activity', 337, 4400),
+(6625, 'XOR', 333, 4402),
+(6626, 'Activity', 332, 4402),
+(6627, 'Activity', 335, 4402),
+(6628, 'XOR', 333, 4403),
+(6629, 'Activity', 332, 4403),
+(6630, 'Activity', 335, 4403),
+(6631, 'Activity', 342, 4404),
+(6632, 'XOR', 334, 4403),
+(6633, 'Activity', 337, 4403),
+(6634, 'XOR', 333, 4405),
+(6635, 'Activity', 332, 4405),
+(6636, 'Activity', 335, 4405),
+(6637, 'XOR', 334, 4405),
+(6638, 'Activity', 337, 4405),
+(6639, 'XOR', 333, 4406),
+(6640, 'Activity', 332, 4406),
+(6641, 'Activity', 335, 4406),
+(6642, 'XOR', 338, 4404),
+(6643, 'Activity', 341, 4404),
+(6644, 'Activity', 342, 4407),
+(6645, 'Activity', 375, 4408),
+(6646, 'Activity', 387, 4409),
+(6647, 'XOR', 372, 4408),
+(6648, 'AND', 373, 4408),
+(6649, 'Activity', 376, 4408),
+(6650, 'Activity', 384, 4408),
+(6651, 'Activity', 375, 4410),
+(6652, 'Activity', 387, 4411),
+(6653, 'XOR', 372, 4410),
+(6654, 'AND', 373, 4410),
+(6655, 'Activity', 376, 4410),
+(6656, 'Activity', 384, 4410),
+(6657, 'Activity', 375, 4412),
+(6658, 'Activity', 387, 4413),
+(6659, 'XOR', 372, 4412),
+(6660, 'AND', 373, 4412),
+(6661, 'Activity', 375, 4414),
+(6662, 'Activity', 387, 4415),
+(6663, 'XOR', 372, 4414),
+(6664, 'AND', 373, 4414),
+(6665, 'Activity', 377, 4414),
+(6666, 'Activity', 378, 4414),
+(6667, 'Activity', 375, 4416),
+(6668, 'Activity', 387, 4417),
+(6669, 'XOR', 372, 4416),
+(6670, 'AND', 373, 4416),
+(6671, 'Activity', 377, 4416),
+(6672, 'Activity', 378, 4416),
+(6673, 'Activity', 376, 4416),
+(6674, 'Activity', 384, 4416),
+(6675, 'Activity', 383, 4416),
+(6676, 'XOR', 380, 4416),
+(6677, 'Activity', 375, 4418),
+(6678, 'XOR', 372, 4418),
+(6679, 'AND', 373, 4418),
+(6680, 'Activity', 377, 4418),
+(6681, 'Activity', 378, 4418),
+(6682, 'Activity', 376, 4418),
+(6683, 'Activity', 384, 4418),
+(6684, 'Activity', 379, 4418);
 
 -- --------------------------------------------------------
 
@@ -13369,7 +13627,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=736 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=744 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -14104,7 +14362,15 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (732, 917, 15, 7, 0),
 (733, 918, 37, 13, 0),
 (734, 919, 47, 15, 0),
-(735, 920, 48, 16, 0);
+(735, 920, 48, 16, 0),
+(736, 951, 1, 1, 0),
+(737, 951, 5, 2, 0),
+(738, 952, 4, 1, 0),
+(739, 952, 6, 2, 0),
+(740, 954, 15, 7, 0),
+(741, 955, 37, 13, 0),
+(742, 956, 47, 15, 0),
+(743, 957, 48, 16, 0);
 
 -- --------------------------------------------------------
 
@@ -14489,7 +14755,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
   `scenario_id` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=163 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=165 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -14563,7 +14829,9 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) 
 (159, 'TestEmailF1', 140, 1989849456, 1),
 (160, 'TestEmail2F1', 141, 108787087166798180, 0),
 (161, 'TestEmail3F1', 142, 733657195, 0),
-(162, 'TestEmail3F1', 143, 733657195, 0);
+(162, 'TestEmail3F1', 143, 733657195, 0),
+(163, 'XORTest2Fragment1', 144, 701819841, 0),
+(164, 'XORTest2Fragment2', 144, 1371733190, 0);
 
 -- --------------------------------------------------------
 
@@ -14576,7 +14844,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4368 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4419 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -18873,7 +19141,58 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (4364, 1, 160, 949),
 (4365, 0, 160, 949),
 (4366, 1, 161, 950),
-(4367, 0, 161, 950);
+(4367, 0, 161, 950),
+(4368, 0, 1, 951),
+(4369, 0, 2, 951),
+(4370, 0, 3, 951),
+(4371, 0, 4, 951),
+(4372, 1, 1, 952),
+(4373, 1, 2, 952),
+(4374, 0, 3, 952),
+(4375, 0, 4, 952),
+(4376, 0, 2, 952),
+(4377, 0, 1, 952),
+(4378, 1, 101, 953),
+(4379, 1, 101, 953),
+(4380, 0, 101, 953),
+(4381, 1, 107, 954),
+(4382, 1, 108, 954),
+(4383, 1, 109, 954),
+(4384, 0, 107, 954),
+(4385, 0, 108, 954),
+(4386, 0, 109, 954),
+(4387, 0, 125, 955),
+(4388, 0, 126, 955),
+(4389, 0, 127, 955),
+(4390, 0, 130, 956),
+(4391, 0, 131, 956),
+(4392, 1, 132, 957),
+(4393, 1, 133, 957),
+(4394, 1, 134, 957),
+(4395, 1, 134, 957),
+(4396, 0, 133, 957),
+(4397, 0, 132, 957),
+(4398, 0, 134, 957),
+(4399, 0, 140, 958),
+(4400, 1, 154, 959),
+(4401, 0, 155, 959),
+(4402, 0, 154, 959),
+(4403, 1, 154, 960),
+(4404, 1, 155, 960),
+(4405, 1, 154, 960),
+(4406, 0, 154, 960),
+(4407, 0, 155, 960),
+(4408, 0, 163, 961),
+(4409, 0, 164, 961),
+(4410, 0, 163, 962),
+(4411, 0, 164, 962),
+(4412, 0, 163, 963),
+(4413, 0, 164, 963),
+(4414, 0, 163, 964),
+(4415, 0, 164, 964),
+(4416, 1, 163, 965),
+(4417, 0, 164, 965),
+(4418, 0, 163, 965);
 
 -- --------------------------------------------------------
 
@@ -19600,7 +19919,36 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 (6546, 'AND', 'terminated'),
 (6549, 'AND', 'terminated'),
 (6551, 'AND', 'terminated'),
-(6554, 'AND', 'terminated');
+(6554, 'AND', 'terminated'),
+(6572, 'AND', 'terminated'),
+(6575, 'AND', 'terminated'),
+(6576, 'AND', 'terminated'),
+(6579, 'AND', 'terminated'),
+(6580, 'AND', 'terminated'),
+(6614, 'AND', 'terminated'),
+(6616, 'AND', 'terminated'),
+(6619, 'XOR', 'terminated'),
+(6623, 'XOR', 'terminated'),
+(6625, 'XOR', 'executing'),
+(6628, 'XOR', 'terminated'),
+(6632, 'XOR', 'terminated'),
+(6634, 'XOR', 'terminated'),
+(6637, 'XOR', 'terminated'),
+(6639, 'XOR', 'executing'),
+(6642, 'XOR', 'terminated'),
+(6647, 'XOR', 'executing'),
+(6648, 'AND', 'skipped'),
+(6653, 'XOR', 'executing'),
+(6654, 'AND', 'init'),
+(6659, 'XOR', 'executing'),
+(6660, 'AND', 'terminated'),
+(6663, 'XOR', 'executing'),
+(6664, 'AND', 'terminated'),
+(6669, 'XOR', 'terminated'),
+(6670, 'AND', 'skipped'),
+(6676, 'XOR', 'executing'),
+(6678, 'XOR', 'terminated'),
+(6679, 'AND', 'terminated');
 
 -- --------------------------------------------------------
 
@@ -19726,7 +20074,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   `datamodelid` bigint(11) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=144 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=145 ;
 
 --
 -- Daten für Tabelle `scenario`
@@ -19755,7 +20103,8 @@ INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, 
 (140, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
 (141, 'TestEmail2Scenario', 339737652, 0, NULL, NULL),
 (142, 'TestEmail3Scenario', 93160132, 0, NULL, NULL),
-(143, 'TestEmail3Scenario', 93160132, 1, NULL, NULL);
+(143, 'TestEmail3Scenario', 93160132, 1, NULL, NULL),
+(144, 'XORTest2Scenario', 2081570932, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -19767,7 +20116,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 `id` int(11) NOT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=951 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=966 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -20676,7 +21025,22 @@ INSERT INTO `scenarioinstance` (`id`, `terminated`, `scenario_id`) VALUES
 (947, 0, 141),
 (948, 0, 141),
 (949, 0, 141),
-(950, 0, 142);
+(950, 0, 142),
+(951, 0, 1),
+(952, 0, 1),
+(953, 0, 2),
+(954, 1, 105),
+(955, 0, 111),
+(956, 0, 113),
+(957, 0, 114),
+(958, 0, 118),
+(959, 0, 136),
+(960, 0, 136),
+(961, 0, 144),
+(962, 0, 144),
+(963, 0, 144),
+(964, 0, 144),
+(965, 0, 144);
 
 -- --------------------------------------------------------
 
@@ -21129,7 +21493,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6560;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6685;
 --
 -- AUTO_INCREMENT for table `attributeinstance`
 --
@@ -21144,12 +21508,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=370;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=388;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6560;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6685;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -21179,7 +21543,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=736;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=744;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
@@ -21204,12 +21568,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=163;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=165;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4368;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4419;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
@@ -21239,12 +21603,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `scenario`
 --
 ALTER TABLE `scenario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=144;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=145;
 --
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=951;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=966;
 --
 -- AUTO_INCREMENT for table `state`
 --
