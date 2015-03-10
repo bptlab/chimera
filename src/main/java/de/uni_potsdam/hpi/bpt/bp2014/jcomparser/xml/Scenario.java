@@ -344,6 +344,18 @@ public class Scenario implements IDeserialisable, IPersistable {
                 fragment.migrate(oldScenarioDbID);
             }
         }
+        migrateDataObjects(oldScenarioDbID);
+    }
+
+    private void migrateDataObjects(int oldScenarioDbID) {
+        Connector connector = new Connector();
+        int oldDataObjectDbID;
+        for (Map.Entry<String, DataObject> dataObject : dataObjects.entrySet()) {
+            oldDataObjectDbID = connector.getDataObjectID(oldScenarioDbID, dataObject.getKey());
+            if (oldDataObjectDbID > 0 ) {
+                connector.migrateDataObjectInstance(oldDataObjectDbID, dataObject.getValue().getDatabaseId());
+            }
+        }
     }
 
     /**

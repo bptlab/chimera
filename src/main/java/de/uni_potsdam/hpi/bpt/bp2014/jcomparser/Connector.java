@@ -535,19 +535,19 @@ public class Connector extends DbDataObject{
         dbDataObject.executeUpdateStatement(update);
     }
     /**
-     * Get the dataobjectID of the specified datanode in table "datanode".
+     * Get the dataobjectID of the specified dataObject in table "dataobject".
      *
      * @param scenarioID the scenarioDatabaseID for which the dataobjectID is selected
-     * @param modelID the modelID of the datanode
-     * @return the dataobject_id of the selected datanode
+     * @param dataObjectName the name of the dataObject (we assume that a scenario can't hold dataObjects with the same name)
+     * @return the dataobject_id of the selected dataObject
      */
-    public int getDataObjectID(int scenarioID, long modelID) {
+    public int getDataObjectID(int scenarioID, String dataObjectName) {
         DbDataObject dbDataObject = new DbDataObject();
-        String select = "SELECT dataobject_id " +
-                "FROM datanode " +
+        String select = "SELECT id " +
+                "FROM dataobject " +
                 "WHERE scenario_id = " + scenarioID +
-                " AND modelid = " + modelID;
-        return dbDataObject.executeStatementReturnsInt(select, "dataobject_id");
+                " AND name = '" + dataObjectName + "'";
+        return dbDataObject.executeStatementReturnsInt(select, "id");
     }
     /**
      * Change all oldDataObjectIDs to newDataObjectIDs in table "dataobjectinstance"
