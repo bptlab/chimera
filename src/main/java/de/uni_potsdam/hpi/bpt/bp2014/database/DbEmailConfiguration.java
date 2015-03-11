@@ -64,7 +64,7 @@ public class DbEmailConfiguration extends DbObject {
     }
 
     public LinkedList<Integer> getAllEmailTasksForScenario(int scenario_id){
-        String sql = "SELECT id FROM `controlnode` WHERE type = 'EmailTask' AND fragment_id IN (Select id FROM Fragment WHERE scenario_id = " + scenario_id + ")";
+        String sql = "SELECT id FROM `controlnode` WHERE type = 'EmailTask' AND fragment_id IN (Select id FROM fragment WHERE scenario_id = " + scenario_id + ")";
         return this.executeStatementReturnsListInt(sql, "id");
     }
 }
