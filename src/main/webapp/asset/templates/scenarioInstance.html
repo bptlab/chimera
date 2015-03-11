@@ -10,9 +10,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr style="cursor: pointer" ng-repeat="id in instanceCtrl.scenario['instanceIds'] track by $index | filter:searchText" ng-click="instanceCtrl.goToDetailsFrom(id);">
-				<td>{{id}}</td>
-				<td>{{instanceCtrl.instances['' + id]['label']}}</td>
+			<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.instances track by $index | filter: {value['label']: searchText}" ng-click="instanceCtrl.goToDetailsFrom(key);">
+				<td>{{key}}</td>
+				<td>{{value['label']}}</td>
 			</tr>
 			</a>
 		</tbody>
