@@ -103,7 +103,7 @@ public class RestConnection2Test extends AbstractTest {
     @Test
     public void testGetSpecificEmailConfiguration() {
         final Response test = target("/interface/v1/en/scenario/142/emailtask/362/").request().get();
-        assertEquals("{\"receiver\":\"bp2014w1@byom.de\", \"subject\":\"Test\",\"message\":\" Test Message\"}", test.readEntity(String.class));
+        assertEquals("{\"receiver\":\"bp2014w1@byom.de\", \"subject\":\"Test\",\"message\":\"Test Message\"}", test.readEntity(String.class));
     }
 
     /* #############################################################################

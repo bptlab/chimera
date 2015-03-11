@@ -282,7 +282,7 @@
 			// Got to the instance with the given Id
 			this.getDetailsForMailtaskID = function(id){
 				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/config/emailtask/" + id + "/?").
+					"/scenario/0/emailtask/" + id + "/?").
 					success(function(data) {
 						controller.detailsForID = data;
 					});
