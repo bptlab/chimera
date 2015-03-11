@@ -456,45 +456,62 @@ public class  ScenarioTest {
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
 
-        Fragment oldFragment = initializeFragment("src/test/resources/Version.xml");
-        oldFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
+        //initialize the scenario and its fragments
+        Fragment oldFragment1 = initializeFragment("src/test/resources/Version.xml");
+        oldFragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/MigrationFragment.xml")));
-        final Scenario oldScenario = initializeScenario("src/test/resources/Version.xml", Arrays.asList(oldFragment));
+        Fragment oldFragment2 = initializeFragment("src/test/resources/Version.xml");
+        oldFragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/MigrationFragment2.xml")));
+        final Scenario oldScenario = initializeScenario("src/test/resources/Version.xml", Arrays.asList(oldFragment1, oldFragment2));
         oldScenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/OldMigrationScenario.xml")));
         oldScenario.save();
-        PowerMock.verify(oldScenario, oldFragment);
 
+        // create an instance of this scenario
         ScenarioInstance scenarioInstance = new ScenarioInstance(oldScenario.getDatabaseID());
+
+        DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
+        // ID of the fragmentInstance that is supposed to be migrated
+        int scenarioInstanceID = scenarioInstance.getScenarioInstance_id();
 
         DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
         // ID of the fragmentInstance that is supposed to be migrated
-        int fragmentInstanceID = dbFragmentInstance.getFragmentInstanceID(oldFragment.getDatabaseID(), scenarioInstance.getScenarioInstance_id());
+        int fragment1InstanceID = dbFragmentInstance.getFragmentInstanceID(oldFragment1.getDatabaseID(), scenarioInstance.getScenarioInstance_id());
+        int fragment2InstanceID = dbFragmentInstance.getFragmentInstanceID(oldFragment2.getDatabaseID(), scenarioInstance.getScenarioInstance_id());
 
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         // ID of the controlNodeInstance that is supposed to be migrated
-        int controlNodeInstanceID = dbControlNodeInstance.getControlNodeInstanceID(oldFragment.getControlNodes().get(713870498L).getDatabaseID(), fragmentInstanceID);
+        int controlNode1InstanceID = dbControlNodeInstance.getControlNodeInstanceID(oldFragment1.getControlNodes().get(713870498L).getDatabaseID(), fragment1InstanceID);
+        int controlNode2InstanceID = dbControlNodeInstance.getControlNodeInstanceID(oldFragment2.getControlNodes().get(1903755242L).getDatabaseID(), fragment2InstanceID);
 
         DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
         // ID of the dataObjectInstance that is supposed to be migrated
-        int dataObjectInstanceID = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance.getScenarioInstance_id(), oldScenario.getDataObjects().get("DO1").getDatabaseId());
+        int dataObject1InstanceID = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance.getScenarioInstance_id(), oldScenario.getDataObjects().get("DO1").getDatabaseId());
+        int dataObject2InstanceID = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance.getScenarioInstance_id(), oldScenario.getDataObjects().get("DO").getDatabaseId());
 
-        oldFragment = initializeFragment("src/test/resources/Version.xml");
-        oldFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
+        // initialize the new scenario consisting of the old fragments and one new fragment
+        oldFragment1 = initializeFragment("src/test/resources/Version.xml");
+        oldFragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/MigrationFragment.xml")));
+        oldFragment2 = initializeFragment("src/test/resources/Version.xml");
+        oldFragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/MigrationFragment2.xml")));
         final Fragment newFragment = initializeFragment("src/test/resources/Version.xml");
         newFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/NewMigrationFragment.xml")));
-        final Scenario newScenario = initializeScenario("src/test/resources/Version_modified.xml", Arrays.asList(oldFragment, newFragment));
+        final Scenario newScenario = initializeScenario("src/test/resources/Version_modified.xml", Arrays.asList(oldFragment1, oldFragment2, newFragment));
         newScenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/NewMigrationScenario.xml")));
         newScenario.save();
 
-        DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        Assert.assertEquals("Scenario not migrated properly", newScenario.getDatabaseID(), dbScenarioInstance.getScenarioID(scenarioInstance.getScenarioInstance_id()));
-        Assert.assertEquals("Fragment not migrated properly", oldFragment.getDatabaseID(), dbFragmentInstance.getFragmentID(fragmentInstanceID));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", oldFragment.getControlNodes().get(713870498L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(controlNodeInstanceID));
-        Assert.assertEquals("DataObjectInstance not migrated properly", newScenario.getDataObjects().get("DO1").getDatabaseId(), dbDataObjectInstance.getDataObjectID(dataObjectInstanceID));
+        Assert.assertEquals("Scenario not migrated properly", newScenario.getDatabaseID(), dbScenarioInstance.getScenarioID(scenarioInstanceID));
+        Assert.assertEquals("Fragment not migrated properly", oldFragment1.getDatabaseID(), dbFragmentInstance.getFragmentID(fragment1InstanceID));
+        Assert.assertEquals("Fragment not migrated properly", oldFragment2.getDatabaseID(), dbFragmentInstance.getFragmentID(fragment2InstanceID));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", oldFragment1.getControlNodes().get(713870498L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(controlNode1InstanceID));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", oldFragment2.getControlNodes().get(1903755242L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(controlNode2InstanceID));
+        Assert.assertEquals("DataObjectInstance not migrated properly", newScenario.getDataObjects().get("DO1").getDatabaseId(), dbDataObjectInstance.getDataObjectID(dataObject1InstanceID));
+        Assert.assertEquals("DataObjectInstance not migrated properly", newScenario.getDataObjects().get("DO").getDatabaseId(), dbDataObjectInstance.getDataObjectID(dataObject2InstanceID));
     }
 
     /**
@@ -612,9 +629,9 @@ public class  ScenarioTest {
      */
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+        //clearDatabase();
+        //ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        //runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
     /**
