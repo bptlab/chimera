@@ -243,6 +243,7 @@
 			this.Details = [];
 			this.emailtaskIDs = [];
 			this.scenarioIDs = [];
+			this.detailsForID = [];
 
 			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
 				success(function(data){
@@ -265,7 +266,11 @@
 						}
 					});     
 		        }
-
+			//get all infos for popup
+			this.getDetails = function(id){
+				controller.getDetailsForMailtaskID(id);
+				controller.workingID = id;
+			};
 
 			// Got all emailtasks with the given Id
 			this.getAllMailtaskForScenarioID = function(id){
@@ -279,9 +284,7 @@
 				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/config/emailtask/" + id + "/?").
 					success(function(data) {
-						if (data) {
-							return data;
-						}
+						controller.detailsForID = data;
 					});
 			};
 			
