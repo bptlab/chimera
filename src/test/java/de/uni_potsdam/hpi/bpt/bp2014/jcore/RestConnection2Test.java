@@ -92,6 +92,19 @@ public class RestConnection2Test extends AbstractTest {
         final Response test = target("/interface/v1/en/scenario/1/instance/328/dataobject/0/").request().get();
         assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
     }
+
+    //@Test
+    public void testGetAllEmailConfiguration() {
+        final Response test = target("/interface/v1/en/scenario/141/emailtask/0/").request().get();
+        assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
+    }
+
+    //@Test
+    public void testGetSpecificEmailConfiguration() {
+        final Response test = target("/interface/v1/en/scenario/141/emailtask/1337/").request().get();
+        assertEquals("{\"states\":{\"1\":\"bearbeitet\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}", test.readEntity(String.class));
+    }
+
     /* #############################################################################
      *
      * HTTP POST REQUEST
