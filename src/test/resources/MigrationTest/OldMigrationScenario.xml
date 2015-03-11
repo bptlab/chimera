@@ -54,6 +54,32 @@
          <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
          <property name="height" value="20" />
       </node>
+      <node>
+         <property name="fragment mid" value="879752202" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="700" />
+         <property name="width" value="100" />
+         <property name="y" value="270" />
+         <property name="text" value="MigrationFragment2" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="88069192" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="Data class" value="" />
+         <property name="x" value="290" />
+         <property name="width" value="100" />
+         <property name="y" value="130" />
+         <property name="text" value="DO" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="859766059" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="height" value="20" />
+      </node>
    </nodes>
    <edges />
    <properties>
