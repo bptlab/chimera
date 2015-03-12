@@ -77,5 +77,4 @@ public class RestTest extends AbstractTest {
         //assertEquals("{true}", test.readEntity(String.class));
    
     }
-
 }

@@ -47,4 +47,13 @@ public class EventInstance extends ControlNodeInstance {
         this.type = type;
         this.incomingBehavior = new EventIncomingControlFlowBehavior(this, scenarioInstance, type);
     }
+
+    @Override
+    public boolean skip(){
+        return false;
+    }
+    @Override
+    public boolean terminate(){
+        return false;
+    }
 }

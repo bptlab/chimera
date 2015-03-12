@@ -1,9 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-/**
- * Created by jaspar.mang on 03.03.15.
- */
-
 import org.apache.commons.mail.EmailException;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +16,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 
 public class EmailAcceptanceTest {
-
+    String receiver = "bp2014w1@byom.de";
     @Before
     public void setUp() {
         //clear Mock JavaMail box
@@ -37,7 +33,7 @@ public class EmailAcceptanceTest {
         System.out.println("Start Scenario 142");
 
         //check for new Email
-        List<Message> inbox = Mailbox.get("TestReceiver@server.de");
+        List<Message> inbox = Mailbox.get(receiver);
         assertTrue(inbox.size() == 1);
         assertEquals("Test", inbox.get(0).getSubject());
         assertEquals("Test Message", inbox.get(0).getContent());
@@ -54,7 +50,7 @@ public class EmailAcceptanceTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
-        inbox = Mailbox.get("TestReceiver@server.de");
+        inbox = Mailbox.get(receiver);
         assertTrue(inbox.size() == 2);
         assertEquals("Test", inbox.get(0).getSubject());
         assertEquals("Test Message", inbox.get(0).getContent());
@@ -71,7 +67,7 @@ public class EmailAcceptanceTest {
         System.out.println("Start Scenario 142");
 
         //check for new Email
-        List<Message> inbox = Mailbox.get("TestReceiver@server.de");
+        List<Message> inbox = Mailbox.get(receiver);
         assertTrue(inbox.size() == 2);
         assertEquals("Test", inbox.get(0).getSubject());
         assertEquals("Test Message", inbox.get(0).getContent());
@@ -89,7 +85,7 @@ public class EmailAcceptanceTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
-        inbox = Mailbox.get("TestReceiver@server.de");
+        inbox = Mailbox.get(receiver);
         assertTrue(inbox.size() == 4);
         assertEquals("Test", inbox.get(0).getSubject());
         assertEquals("Test Message", inbox.get(0).getContent());

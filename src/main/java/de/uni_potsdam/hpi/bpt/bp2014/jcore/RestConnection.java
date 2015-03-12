@@ -1,11 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -64,10 +67,10 @@ public class RestConnection {
         //if 0 as scenarioID is provided, list all available scenarioIDs
         if (scenarioID == 0) {
             LinkedList<Integer> scenarioIDs = executionService.getAllScenarioIDs();
-
+            /*
             if (scenarioIDs.size() == 0) {
                 return Response.serverError().entity("Error: not correct Scenario ID").build();//no scenarios present
-            }
+            }*/
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -101,10 +104,10 @@ public class RestConnection {
                 return Response.serverError().entity("Error: not a correct scenario").build();
             }
             LinkedList<Integer> scenarioIDs = executionService.listAllScenarioInstancesForScenario(scenarioID);
-
+            /*
             if (scenarioIDs.size() == 0) {
                 return Response.serverError().entity("Error: not correct instance ID").build(); //no instances present
-            }
+            }*/
             String jsonRepresentation = JsonWrapperLinkedList(scenarioIDs);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -153,9 +156,9 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(instanceID);
                 // iff no open activities present return {empty}
-                if (enabledActivitiesIDs.size() == 0) {
+               /* if (enabledActivitiesIDs.size() == 0) {
                     return Response.serverError().entity("Error: not correct scenarioInstance ID: enabledActivitiesIDs.size() == 0").build();
-                }
+                }*/
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -168,9 +171,10 @@ public class RestConnection {
                 LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitiesForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = historyService.getTerminatedActivityLabelsForScenarioInstance(instanceID);
                 //if no closed activities present -> return {empty}
-                if (terminatedActivities.size() == 0) {
+                // TODO: Don't throw an error if there are no terminated instances
+                /*if (terminatedActivities.size() == 0) {
                     return Response.serverError().entity("Error: not correct activity ID").build();
-                }
+                }*/
                 String jsonRepresentation = JsonWrapperHashMap(terminatedActivities, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -183,9 +187,9 @@ public class RestConnection {
                 LinkedList<Integer> enabledActivitiesIDs = executionService.getRunningActivitiesIDsForScenarioInstance(instanceID);
                 HashMap<Integer, String> labels = executionService.getRunningActivityLabelsForScenarioInstance(instanceID);
                 // if no running activities present -> return {empty}
-                if (enabledActivitiesIDs.size() == 0) {
+                /*if (enabledActivitiesIDs.size() == 0) {
                     return Response.serverError().entity("Error: not correct Activity ID").build();
-                }
+                }*/
                 String jsonRepresentation = JsonWrapperHashMap(enabledActivitiesIDs, labels);
 
                 return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -201,7 +205,7 @@ public class RestConnection {
             String label = executionService.getLabelForControlNodeID(activityinstanceID);
             //if no activity with this id present
             if (label.equals("")) {
-                return Response.serverError().entity("Error: not correct Activity ID").build();
+                return Response.serverError().entity("Error: not correct Activity ID or empty Label").build();
             }
             return Response.ok("{\"label\":\"" + label + "\"}", MediaType.APPLICATION_JSON).build();
         }
@@ -229,14 +233,36 @@ public class RestConnection {
             HashMap<Integer, String> states = executionService.getAllDataObjectStates(scenarioInstanceID);
             HashMap<Integer, String> labels = executionService.getAllDataObjectNames(scenarioInstanceID);
             //if no dataobject is available -> return {empty}
-            if (dataObjects.size() == 0) {
+            /*if (dataObjects.size() == 0) {
                 return Response.serverError().entity("Error: not correct dataobject ID").build();
-            }
+            }*/
             String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
         } else {
             return Response.serverError().entity("Error: not correct dataobject ID").build();
+        }
+    }
+
+
+    @GET
+    @Path("scenario/{scenarioID}/emailtask/{emailtaskID}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("emailtaskID") int emailtaskID) {
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        if (emailtaskID == 0) {
+            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(dbEmailConfiguration.getAllEmailTasksForScenario(scenarioID));
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        } else {
+            String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
+            if (receiver.equals("")) {
+                return Response.serverError().entity("Error: there is no email configuration").build();
+            }
+            String message = dbEmailConfiguration.getMessage(emailtaskID);
+            String subject = dbEmailConfiguration.getSubject(emailtaskID);
+            String jsonRepresentation = "{\"receiver\":\"" + receiver + "\", \"subject\":\"" + subject + "\",\"message\":\"" + message + "\"}";
+
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -277,10 +303,12 @@ public class RestConnection {
      * @param status             the new status of the activity which is supposed to be updated
      * @return true or false
      */
-
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
-    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
+    public Boolean doActivity(@PathParam("scenarioID") String scenarioID,
+                              @PathParam("instanceID") int scenarioInstanceID,
+                              @PathParam("activityinstanceID") int activityInstanceID,
+                              @QueryParam("status") String status) {
         Boolean result;
         executionService.openExistingScenarioInstance(new Integer(scenarioID), scenarioInstanceID);
         // check on status, if begin -> start the activity
@@ -302,8 +330,62 @@ public class RestConnection {
                 return false;
             }
         }
-        //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
         System.err.print("ERROR: no status defined " + status);
         return false;
+    }
+
+    /**
+     * 
+     * @param emailtaskID id of related emailtask
+     * @param input HTTP body as json which is retrieved by the REST interface
+     * @return boolean
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("config/emailtask/{emailtaskID}/")
+    public boolean updateEmailConfiguration(
+            @PathParam("emailtaskID") int emailtaskID,
+            final EmailConfigJaxBean input) {
+
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        dbEmailConfiguration.setEmailConfiguration(emailtaskID,
+                input.receiver, input.subject, input.content);
+        return true;
+    }
+
+
+    /* #############################################################################
+     *
+     * Helper
+     *
+     * #############################################################################
+     */
+
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link #updateEmailConfiguration(int,
+     * de.uni_potsdam.hpi.bpt.bp2014.jcore.RestConnection.EmailConfigJaxBean)
+     * updateEmailConfiguration} method for more information.
+     */
+    @XmlRootElement
+    public static class EmailConfigJaxBean {
+        /**
+         * The receiver of the email.
+         * coded as an valid email address (as String)
+         */
+        public String receiver;
+        /**
+         * The subject of the email.
+         * Could be any String but null.
+         */
+        public String subject;
+        /**
+         * The content of the email.
+         * Could be any String but null.
+         */
+        public String content;
     }
 }

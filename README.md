@@ -35,6 +35,8 @@ This JEngine does execute
 * usertasks
 * data objects
 * AND gateways
+* XOR gateways
+* email services tasks
 * termination condition for scenarios
 
 Additionally, we use an AngularJS frontend to control the JComparser and the JEngine..
