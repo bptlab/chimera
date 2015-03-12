@@ -421,18 +421,16 @@ public class Connector extends DbDataObject{
     }
 
     /**
-     * Get the newest scenarioID for modelId and version.
+     * Get the newest scenarioID for its modelId.
      *
      * @param scenarioID modelID of the scenario
-     * @param version the version for which the scenario is selected
      * @return the databaseID of the scenario for the LATEST version
      *         (we assume that the scenario with the largest id is the one of the newest version)
      */
-    public int getScenarioID(long scenarioID, int version) {
+    public int getScenarioID(long scenarioID) {
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT id FROM scenario " +
-                "WHERE modelid = " + scenarioID +
-                " AND modelversion = " + version;
+                "WHERE modelid = " + scenarioID;
         LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "id");
         if (ids.size() > 0) {
             return Collections.max(ids);
@@ -561,5 +559,18 @@ public class Connector extends DbDataObject{
                 "SET dataobject_id = " + newDataObjectID +
                 " WHERE dataobject_id = " + oldDataObjectID;
         dbDataObject.executeUpdateStatement(update);
+    }
+    /**
+     * Get all modelIDs of the fragments for one scenario
+     *
+     * @param scenarioID databaseID of the scenario
+     * @return List of all modelIDs of all fragments that belong to the scenario
+     */
+    public List<Long> getFragmentModelIDs(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT modelid " +
+                "FROM fragment " +
+                "WHERE scenario_id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsListLong(select, "modelid");
     }
 }
