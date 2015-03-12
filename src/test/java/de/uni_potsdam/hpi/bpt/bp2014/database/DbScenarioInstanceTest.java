@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.LinkedList;
@@ -14,7 +13,7 @@ public class DbScenarioInstanceTest {
     public void testExistScenario(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertTrue(dbScenarioInstance.existScenario(50));
-        assertFalse(dbScenarioInstance.existScenario(999));
+        assertFalse(dbScenarioInstance.existScenario(999999));
         assertTrue(dbScenarioInstance.existScenario(1, 50));
         assertFalse(dbScenarioInstance.existScenario(1, 999));
     }

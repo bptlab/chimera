@@ -26,9 +26,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
  */
 
 public class GatewayInstance extends ControlNodeInstance {
-    private Boolean isXOR;
-    private Boolean isAND;
+    private boolean isXOR;
+    private boolean isAND;
     private ScenarioInstance scenarioInstance;
+    private boolean automaticExecution;
     /**
      * Database Connection objects.
      */
@@ -54,6 +55,7 @@ public class GatewayInstance extends ControlNodeInstance {
                 return;
             }
         }
+        this.automaticExecution = true;
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
@@ -84,7 +86,7 @@ public class GatewayInstance extends ControlNodeInstance {
         }
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
         if (isAND) {
-            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
+            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
             this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
         } else if(isXOR) {
             this.outgoingBehavior = new ExclusiveGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
@@ -113,7 +115,7 @@ public class GatewayInstance extends ControlNodeInstance {
     }
 
     /**
-     * Getter
+     * Getter & Setter
      */
 
     public Boolean getIsXOR() {
@@ -126,5 +128,13 @@ public class GatewayInstance extends ControlNodeInstance {
 
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
+    }
+
+    public boolean isAutomaticExecution() {
+        return automaticExecution;
+    }
+
+    public void setAutomaticExecution(boolean automaticExecution) {
+        this.automaticExecution = automaticExecution;
     }
 }
