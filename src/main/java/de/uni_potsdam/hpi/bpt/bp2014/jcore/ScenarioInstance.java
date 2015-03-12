@@ -288,8 +288,23 @@ public class ScenarioInstance {
      * @param controlNode_id This is the database id from the control node.
      * @return true if the terminated control node instances contains the control node. false if not.
      */
-    public Boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id) {
+    public boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : terminatedControlNodeInstances) {
+            if (controlNodeInstance.controlNode_id == controlNode_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the list executingGateways contains the control node.
+     *
+     * @param controlNode_id This is the database id from the control node.
+     * @return true if the executingGateways contains the control node. false if not.
+     */
+    public boolean executingGatewaysContainControlNodeID(int controlNode_id) {
+        for (ControlNodeInstance controlNodeInstance : executingGateways) {
             if (controlNodeInstance.controlNode_id == controlNode_id) {
                 return true;
             }

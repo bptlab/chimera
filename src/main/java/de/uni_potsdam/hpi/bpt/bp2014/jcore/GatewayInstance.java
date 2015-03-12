@@ -100,9 +100,16 @@ public class GatewayInstance extends ControlNodeInstance {
      * Terminates the gateway instance.
      * Set the state in database.
      */
-    public void terminate() {
-        ((GatewayStateMachine) stateMachine).terminate();
+    @Override
+    public boolean terminate() {
+        stateMachine.terminate();
         outgoingBehavior.terminate();
+        return true;
+    }
+
+    @Override
+    public boolean skip() {
+        return stateMachine .skip();
     }
 
     /**

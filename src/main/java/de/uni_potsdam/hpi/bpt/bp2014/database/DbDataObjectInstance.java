@@ -115,4 +115,14 @@ public class DbDataObjectInstance extends DbObject {
         this.executeUpdateStatement(sql);
     }
 
+    /**
+     * This method returns the dataobject_id of a dataObjectInstance.
+     *
+     * @param dataObjectInstanceID Id of the dataIbjectInstance.
+     * @return Dataobject_id.
+     */
+    public int getDataObjectID(int dataObjectInstanceID) {
+        String sql = "SELECT dataobject_id FROM dataobjectinstance WHERE id = " + dataObjectInstanceID;
+        return this.executeStatementReturnsInt(sql, "dataobject_id");
+    }
 }

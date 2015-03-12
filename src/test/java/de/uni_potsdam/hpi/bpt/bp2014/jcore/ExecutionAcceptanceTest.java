@@ -8,9 +8,6 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by jaspar.mang on 02.02.15.
- */
 public class ExecutionAcceptanceTest {
 
     /**
@@ -406,8 +403,5 @@ public class ExecutionAcceptanceTest {
         executionService.terminateActivity(scenarioInstance, activity220);
         assertArrayEquals(new Integer[]{activity211, activity218}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-
-
     }
-
 }

@@ -1,0 +1,110 @@
+<model id="1105277579" name="MigrationScenario" type="net.frapu.code.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+   <nodes>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="#nodes" value="" />
+         <property name="collapsed" value="0" />
+         <property name="x" value="700" />
+         <property name="width" value="200" />
+         <property name="y" value="500" />
+         <property name="text" value="" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1544161340" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentCollection" />
+         <property name="height" value="500" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="#nodes" value="" />
+         <property name="collapsed" value="0" />
+         <property name="x" value="500" />
+         <property name="width" value="200" />
+         <property name="y" value="500" />
+         <property name="text" value="" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1172626807" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectCollection" />
+         <property name="height" value="500" />
+      </node>
+      <node>
+         <property name="fragment mid" value="1813917812" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="700" />
+         <property name="width" value="100" />
+         <property name="y" value="270" />
+         <property name="text" value="NewMigrationFragment" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="233879701" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="fragment mid" value="1278982085" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="700" />
+         <property name="width" value="100" />
+         <property name="y" value="290" />
+         <property name="text" value="MigrationFragment" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1685387516" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="Data class" value="" />
+         <property name="x" value="290" />
+         <property name="width" value="100" />
+         <property name="y" value="130" />
+         <property name="text" value="DO" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="859766059" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="fragment mid" value="879752202" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="700" />
+         <property name="width" value="100" />
+         <property name="y" value="270" />
+         <property name="text" value="MigrationFragment2" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="88069192" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="Data class" value="" />
+         <property name="x" value="500" />
+         <property name="width" value="100" />
+         <property name="y" value="270" />
+         <property name="text" value="DO1" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1355625977" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="height" value="20" />
+      </node>
+   </nodes>
+   <edges />
+   <properties>
+      <property name="author" value="" />
+      <property name="Termination State" value="[]" />
+      <property name="#folder" value="/home" />
+      <property name="#editor" value="root" />
+      <property name="#LAST_CHECKIN_TIME" value="March 9, 2015 10:36:39 AM CET" />
+      <property name="name" value="MigrationScenario" />
+      <property name="#uri" value="/models/1105277579/versions/1" />
+      <property name="comment" value="" />
+      <property name="#creationDate" value="March 9, 2015 10:29:04 AM CET" />
+      <property name="Termination Data Object" value="" />
+   </properties>
+</model>

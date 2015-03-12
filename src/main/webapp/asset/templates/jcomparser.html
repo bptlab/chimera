@@ -1,0 +1,27 @@
+<h2>jcomparser</h2>
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+		<caption>jcomparser currently available</caption>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+				<th>Preview</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMV.scenarioDetails">
+				<td>{{key}}</td>
+				<td>{{value}}</td>
+				<td><img ng-href="jcomparserMV.getImageForScenario(key)"></img></td>
+				<td>
+					<form ng-submit="jcomparserMV.loadInstance(key)">
+						<input type="submit" value="Launch Scenario">
+					</form>
+				</td>
+			</tr>
+			</a>
+		</tbody>
+	</table>
+</div>

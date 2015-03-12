@@ -87,4 +87,15 @@ public class DbControlNodeInstance extends DbObject {
         String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE (controlnodeinstance.Type = 'AND' OR controlnodeinstance.Type = 'XOR') AND fragmentinstance_id = " + fragmentInstance_id;
         return this.executeStatementReturnsListInt(sql, "controlnode_id");
     }
+
+    /**
+     * This method returns the controlNodeID of a controlNodeInstance.
+     *
+     * @param controlNodeInstanceID ID of the controlNodeInstance.
+     * @return controlNodeID.
+     */
+    public int getControlNodeID(int controlNodeInstanceID) {
+        String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE id = " + controlNodeInstanceID;
+        return this.executeStatementReturnsInt(sql, "controlnode_id");
+    }
 }

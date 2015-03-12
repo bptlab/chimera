@@ -4,6 +4,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
  * Created by jaspar.mang on 28.01.15.
  */
 
+import java.util.LinkedList;
+
 /**
  * This class is the representation of a E-mail configuration in the database.
  * It provides get methods to get the sender, receiver, subject and message of an e-mail.
@@ -51,5 +53,18 @@ public class DbEmailConfiguration extends DbObject {
     public String getSendEmailAddress(int controlNode_id) {
         String sql = "SELECT sendmailaddress FROM emailconfiguration WHERE controlnode_id = " + controlNode_id;
         return this.executeStatementReturnsString(sql, "sendmailaddress");
+    }
+
+    public void setEmailConfiguration(int id, String receiver, String subject, String message) {
+        String sql = "UPDATE emailconfiguration SET message = '" +
+                     message + "', subject  = '" + subject +
+                     "', receivermailaddress = '" + receiver +
+                     "'WHERE controlnode_id = " + id;
+        this.executeUpdateStatement(sql);
+    }
+
+    public LinkedList<Integer> getAllEmailTasksForScenario(int scenario_id){
+        String sql = "SELECT id FROM `controlnode` WHERE type = 'EmailTask' AND fragment_id IN (Select id FROM fragment WHERE scenario_id = " + scenario_id + ")";
+        return this.executeStatementReturnsListInt(sql, "id");
     }
 }
