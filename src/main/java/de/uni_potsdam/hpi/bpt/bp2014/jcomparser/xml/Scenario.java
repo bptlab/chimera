@@ -105,7 +105,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * This Method initializes the scanario from an XML.
+     * This Method initializes the scenario from an XML.
      * Be Aware, that a scenario consists of fragments, which will
      * be loaded automatically;
      *
