@@ -274,10 +274,10 @@ public class ScenarioInstance {
      * Checks if a executing gateway can terminate.
      */
     public void checkExecutingGateways(int controlNode_id) {
-        for (GatewayInstance gatewayInstance : executingGateways) {
+        for (GatewayInstance gatewayInstance : ((LinkedList<GatewayInstance>)executingGateways.clone())) {
             if(gatewayInstance.checkTermination(controlNode_id)) {
                 gatewayInstance.terminate();
-                return;
+                //return;
             }
         }
     }
