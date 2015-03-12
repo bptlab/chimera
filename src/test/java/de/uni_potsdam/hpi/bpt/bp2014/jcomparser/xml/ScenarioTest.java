@@ -110,7 +110,7 @@ public class  ScenarioTest {
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     private static final String TEST_SQL_SEED_FILE = "src/test/resources/jenginev2_empty.sql";
     private static final String TRUNCATE_TABLES_FILE = "src/test/resources/truncate_all_tables.sql";
-    private static final String INSERT_TESTDATA_FILE = "src/test/resources/MigrationTest/jengineV2_Migration.sql";
+    private static final String INSERT_TESTDATA_FILE = "src/test/resources/MigrationTest/jenginev2_Migration.sql";
 
     /**
      * Sets up the database for ScenarioTests.
