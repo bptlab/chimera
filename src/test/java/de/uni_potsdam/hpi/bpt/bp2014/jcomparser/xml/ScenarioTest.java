@@ -629,9 +629,9 @@ public class  ScenarioTest {
      */
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
-        //clearDatabase();
-        //ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        //runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
     /**
