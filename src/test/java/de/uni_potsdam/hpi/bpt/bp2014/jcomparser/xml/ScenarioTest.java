@@ -78,7 +78,12 @@ public class  ScenarioTest {
      */
     private static final String CHECK_VERSION_DATABASE
             = "checkIfVersionAlreadyInDatabase";
-
+    /**
+     * This checks the XML for the URI of the domainModel and sets it.
+     * It is found in the ScenarioXML.
+     */
+    private static final String SET_DOMAIN_MODEL_METHOD =
+            "setDomainModel";
     /**
      * This scenario will be used to be tested.
      * It will be initialized without a Version.
@@ -106,6 +111,11 @@ public class  ScenarioTest {
      * to write them to the database.
      */
     Scenario scenarioComplete;
+    /**
+     * This scenario is used for testing.
+     * it is initialised with a DomainModel.
+     */
+    Scenario scenarioWDomainModel;
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     private static final String TEST_SQL_SEED_FILE = "src/test/resources/jenginev2_empty.sql";
@@ -133,22 +143,27 @@ public class  ScenarioTest {
                 GENERATE_FRAGMENTS_METHOD,
                 SET_VERSION_METHOD,
                 CREATE_DO_METHOD,
-                CHECK_VERSION_DATABASE);
+                CHECK_VERSION_DATABASE,
+                SET_DOMAIN_MODEL_METHOD);
         scenarioWVersion = PowerMock.createPartialMock(Scenario.class,
                 GENERATE_FRAGMENTS_METHOD,
                 CREATE_DO_METHOD,
                 FETCH_VERSION_METHOD,
-                CHECK_VERSION_DATABASE);
+                CHECK_VERSION_DATABASE,
+                SET_DOMAIN_MODEL_METHOD);
         scenarioWFragment = PowerMock.createPartialMock(Scenario.class,
                 SET_VERSION_METHOD,
-                CREATE_FRAGMENT_METHOD);
+                CREATE_FRAGMENT_METHOD,
+                SET_DOMAIN_MODEL_METHOD);
         scenarioComplete = PowerMock.createPartialMock(Scenario.class,
                 FETCH_VERSION_METHOD,
-                CREATE_FRAGMENT_METHOD);
+                CREATE_FRAGMENT_METHOD,
+                SET_DOMAIN_MODEL_METHOD);
         scenarioWTermination = PowerMock.createPartialMock(Scenario.class,
                 FETCH_VERSION_METHOD,
                 SET_VERSION_METHOD,
-                CREATE_FRAGMENT_METHOD);
+                CREATE_FRAGMENT_METHOD,
+                SET_DOMAIN_MODEL_METHOD);
     }
 
     /**
@@ -163,11 +178,26 @@ public class  ScenarioTest {
         PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, SET_DOMAIN_MODEL_METHOD).andVoid();
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         PowerMock.verify(scenarioWOVersion);
     }
 
+    @Test
+    public void testSetDomainURL() throws Exception {
+        Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
+        PowerMock.expectPrivate(scenarioWOVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, SET_DOMAIN_MODEL_METHOD).andVoid();
+        PowerMock.replay(scenarioWOVersion);
+        scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
+        Assert.assertEquals("The URI has not been set correctly",
+                "http://bp2014w1-dev:1205/models/2049535559", scenarioWOVersion.getDomainModelURI());
+        PowerMock.verify(scenarioWOVersion);
+    }
     /**
      * Tests if the url is set correctly inside the constructor.
      */
@@ -191,6 +221,7 @@ public class  ScenarioTest {
         PowerMock.expectPrivate(scenarioWOVersion, SET_VERSION_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CREATE_DO_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWOVersion, CHECK_VERSION_DATABASE).andVoid();
+        PowerMock.expectPrivate(scenarioWOVersion, SET_DOMAIN_MODEL_METHOD).andVoid();
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         Assert.assertEquals("The name of the scenario has not been set correctly",
@@ -212,6 +243,7 @@ public class  ScenarioTest {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
         PowerMock.expectPrivate(scenarioWVersion, GENERATE_FRAGMENTS_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWVersion, CHECK_VERSION_DATABASE).andVoid();
+        PowerMock.expectPrivate(scenarioWVersion, SET_DOMAIN_MODEL_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWVersion, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
@@ -236,6 +268,7 @@ public class  ScenarioTest {
     public void testDataObjectCreation() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));
         PowerMock.expectPrivate(scenarioWFragment, SET_VERSION_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWFragment, SET_DOMAIN_MODEL_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWFragment, CREATE_FRAGMENT_METHOD, "1386518929")
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
@@ -276,6 +309,7 @@ public class  ScenarioTest {
     public void testTerminationCondition() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenarioWTermination.xml"));
         PowerMock.expectPrivate(scenarioWTermination, SET_VERSION_METHOD).andVoid();
+        PowerMock.expectPrivate(scenarioWTermination, SET_DOMAIN_MODEL_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioWTermination, CREATE_FRAGMENT_METHOD, "1386518929")
                 .andAnswer(new IAnswer<Fragment>() {
                     @Override
@@ -549,6 +583,7 @@ public class  ScenarioTest {
         PowerMock.verify(scenario2, fragment2);
     }
 
+
     /**
      * Initialize a fragment by configuring the mock
      * @param versionLocation Location of the XML-file that contains the versions of the fragment
@@ -577,7 +612,8 @@ public class  ScenarioTest {
     private Scenario initializeScenario(final String versionLocation, final List<Fragment> fragments) throws Exception {
         final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
                 FETCH_VERSION_METHOD,
-                CREATE_FRAGMENT_METHOD);
+                CREATE_FRAGMENT_METHOD,
+                SET_DOMAIN_MODEL_METHOD);
 
         PowerMock.expectPrivate(scenario, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
@@ -588,6 +624,7 @@ public class  ScenarioTest {
                                 .getDocumentElement();
                     }
                 });
+        PowerMock.expectPrivate(scenario, SET_DOMAIN_MODEL_METHOD).andVoid();
         for (final Fragment fragment : fragments) {
             PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentID()))
                     .andAnswer(new IAnswer<Fragment>() {

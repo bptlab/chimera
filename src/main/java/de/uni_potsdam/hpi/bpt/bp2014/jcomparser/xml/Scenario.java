@@ -104,6 +104,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         processeditorServerUrl = serverURL;
     }
 
+
     /**
      * This Method initializes the scenario from an XML.
      * Be Aware, that a scenario consists of fragments, which will
@@ -123,6 +124,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         setTerminationCondition();
         setVersionNumber();
         checkIfVersionAlreadyInDatabase();
+
     }
 
     private void setDomainModel() {
@@ -138,7 +140,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Retrieval jRetrieval = new Retrieval();
             String versionXML = jRetrieval.getHTMLwithAuth(
                     processeditorServerUrl,
-                    processeditorServerUrl + domainModelURI);
+                    domainModelURI);
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(versionXML));
             DocumentBuilder db = DocumentBuilderFactory
@@ -747,4 +749,17 @@ public class Scenario implements IDeserialisable, IPersistable {
     public boolean isMigrationNecessary() {
         return migrationNecessary;
     }
+
+    public String getDomainModelURI() {
+        return domainModelURI;
+    }
+
+    public Element getDomainModelXML() {
+        return domainModelXML;
+    }
+
+    public DomainModel getDomainModel() {
+        return domainModel;
+    }
+
 }
