@@ -14,7 +14,7 @@ public class DbScenarioInstanceTest {
     public void testExistScenario(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertTrue(dbScenarioInstance.existScenario(50));
-        assertFalse(dbScenarioInstance.existScenario(999));
+        assertFalse(dbScenarioInstance.existScenario(999999));
         assertTrue(dbScenarioInstance.existScenario(1, 50));
         assertFalse(dbScenarioInstance.existScenario(1, 999));
     }
