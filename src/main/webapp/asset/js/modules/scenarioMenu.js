@@ -18,6 +18,22 @@
 		};
 	});
 	
+	
+	scenario.controller('FormCtrl', function ($scope, $http) {
+	    
+	    $scope.data = {
+		receiver: "default",
+		subject: "default",
+		message: "default",
+	    };
+
+	    $scope.submitForm = function() {
+		console.log("posting data....");
+		$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", JSON.stringify(data)).success(function(){/*success callback*/});
+	    };
+	});
+
+
 	// Create a Controller for the Scenario Information
 	scenario.controller('ScenarioController', ['$routeParams', '$location', '$http',
 		function($routeParams, $location, $http){
@@ -259,7 +275,7 @@
 			//update email template via POST
 			this.submitMyForm = function(id){
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/config/emailtask/"+ id + "/?", $this.fields).
+					"/config/emailtask/"+ id + "/?", this.fields).
 					success(function(data) {
 						if (data) {
 							return data;
