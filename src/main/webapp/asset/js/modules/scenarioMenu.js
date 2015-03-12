@@ -18,6 +18,22 @@
 		};
 	});
 	
+	
+	scenario.controller('FormCtrl', function ($scope, $http) {
+	    
+	    $scope.data = {
+		receiver: "default",
+		subject: "default",
+		message: "default",
+	    };
+
+	    $scope.submitForm = function() {
+		console.log("posting data....");
+		$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", JSON.stringify(data)).success(function(){/*success callback*/});
+	    };
+	});
+
+
 	// Create a Controller for the Scenario Information
 	scenario.controller('ScenarioController', ['$routeParams', '$location', '$http',
 		function($routeParams, $location, $http){
@@ -243,6 +259,7 @@
 			this.Details = [];
 			this.emailtaskIDs = [];
 			this.scenarioIDs = [];
+			this.detailsForID = [];
 
 			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
 				success(function(data){
@@ -258,14 +275,18 @@
 			//update email template via POST
 			this.submitMyForm = function(id){
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/config/emailtask/"+ id + "/?", $this.fields).
+					"/config/emailtask/"+ id + "/?", this.fields).
 					success(function(data) {
 						if (data) {
 							return data;
 						}
 					});     
 		        }
-
+			//get all infos for popup
+			this.getDetails = function(id){
+				controller.getDetailsForMailtaskID(id);
+				controller.workingID = id;
+			};
 
 			// Got all emailtasks with the given Id
 			this.getAllMailtaskForScenarioID = function(id){
@@ -277,11 +298,9 @@
 			// Got to the instance with the given Id
 			this.getDetailsForMailtaskID = function(id){
 				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/config/emailtask/" + id + "/?").
+					"/scenario/0/emailtask/" + id + "/?").
 					success(function(data) {
-						if (data) {
-							return data;
-						}
+						controller.detailsForID = data;
 					});
 			};
 			

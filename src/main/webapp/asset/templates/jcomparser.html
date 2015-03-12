@@ -11,12 +11,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMainView.scenarioDetails">
+			<tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMV.scenarioDetails">
 				<td>{{key}}</td>
 				<td>{{value}}</td>
-				<td><img ng-href="jcomparserMainView.getImageForScenario(key)"></img></td>
+				<td><a ng-href="{{jcomparserMV.getImageForScenario(key)}}"><img ng-src="{{jcomparserMV.getImageForScenario(key)}}" width="40%"></img></a></td>
 				<td>
-					<form ng-submit="jcomparserMainView.loadInstance(key)">
+					<form ng-submit="jcomparserMV.loadInstance(key)">
 						<input type="submit" value="Launch Scenario">
 					</form>
 				</td>

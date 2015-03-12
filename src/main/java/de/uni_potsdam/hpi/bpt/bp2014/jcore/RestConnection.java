@@ -260,7 +260,7 @@ public class RestConnection {
             }
             String message = dbEmailConfiguration.getMessage(emailtaskID);
             String subject = dbEmailConfiguration.getSubject(emailtaskID);
-            String jsonRepresentation = "{" + receiver + ", " + subject + ", " + message + "}";
+            String jsonRepresentation = "{\"receiver\":\"" + receiver + "\", \"subject\":\"" + subject + "\",\"message\":\"" + message + "\"}";
 
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
         }
