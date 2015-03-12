@@ -427,7 +427,10 @@ public class  ScenarioTest {
         final Fragment fragment = initializeFragment("src/test/resources/Version.xml");
         fragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/MigrationFragment.xml")));
-        final Scenario oldScenario = initializeScenario("src/test/resources/Version.xml", Arrays.asList(fragment));
+        Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/MigrationFragment2.xml")));
+        final Scenario oldScenario = initializeScenario("src/test/resources/Version.xml", Arrays.asList(fragment, fragment2));
         oldScenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/OldMigrationScenario.xml")));
         oldScenario.save();
@@ -439,7 +442,10 @@ public class  ScenarioTest {
         final Fragment newFragment = initializeFragment("src/test/resources/Version.xml");
         newFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/NewMigrationFragment.xml")));
-        final Scenario newScenario = initializeScenario("src/test/resources/Version_modified.xml", Arrays.asList(modifiedFragment, newFragment));
+        fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/MigrationFragment2.xml")));
+        final Scenario newScenario = initializeScenario("src/test/resources/Version_modified.xml", Arrays.asList(modifiedFragment, newFragment, fragment2));
         newScenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/NewMigrationScenario.xml")));
         assertTrue("Scenario with modified fragment is not saved", newScenario.save() > 0);
