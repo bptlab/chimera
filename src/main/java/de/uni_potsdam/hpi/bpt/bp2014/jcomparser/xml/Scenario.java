@@ -102,7 +102,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * This Method initializes the scanario from an XML.
+     * This Method initializes the scenario from an XML.
      * Be Aware, that a scenario consists of fragments, which will
      * be loaded automatically;
      *
@@ -162,15 +162,9 @@ public class Scenario implements IDeserialisable, IPersistable {
         if (changesMade) {
             migrationNecessary = false;
         }
-
+        // case 3: We have a newer version of the scenario (e.g. terminationCondition changed)
         if (scenarioDbVersion < versionNumber) {
             needsToBeSaved = true;
-        }
-        // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
-        // or scenario does not exist in database (scenarioVersion = -1)
-        // (if scenarioVersion is -1 we get here only if this is a scenario without any fragments)
-        if (fragments.size() == 0) {
-            needsToBeSaved = false;
         }
         if (migrationNecessary) {
             boolean fragmentFound = false;
@@ -183,13 +177,13 @@ public class Scenario implements IDeserialisable, IPersistable {
                         break;
                     }
                 }
-            }
-            if (!fragmentFound) {
-                needsToBeSaved = true;
-                migrationNecessary = false;
+                if (!fragmentFound) {
+                    needsToBeSaved = true;
+                    migrationNecessary = false;
+                    break;
+                }
             }
         }
-
     }
 
     /**
@@ -343,7 +337,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                 saveTerminationCondition();
             }
             saveReferences();
-            if (migrationNecessary){
+            if (migrationNecessary) {
                 migrateRunningInstances();
             }
             return this.databaseID;
@@ -360,22 +354,24 @@ public class Scenario implements IDeserialisable, IPersistable {
         // and migrate them (means changing their old reference to the scenario to this scenario)
         connector.migrateScenarioInstance(migratingScenarioDbID, databaseID);
         //migrate FragmentInstances
-        for(Fragment fragment : fragments) {
+        for (Fragment fragment : fragments) {
             // as there is no fragmentinstance for this new fragment in the database so far,
             // we don't need to change references
             if (!newFragments.contains(fragment)) {
                 fragment.migrate(migratingScenarioDbID);
             }
         }
-        migrateDataObjects(migratingScenarioDbID);
+        migrateDataObjects();
     }
-
-    private void migrateDataObjects(int oldScenarioDbID) {
+    /**
+     * Migrate all dataObjectInstances of all scenarioInstances that are migrated.
+     */
+    private void migrateDataObjects() {
         Connector connector = new Connector();
         int oldDataObjectDbID;
         for (Map.Entry<String, DataObject> dataObject : dataObjects.entrySet()) {
-            oldDataObjectDbID = connector.getDataObjectID(oldScenarioDbID, dataObject.getKey());
-            if (oldDataObjectDbID > 0 ) {
+            oldDataObjectDbID = connector.getDataObjectID(migratingScenarioDbID, dataObject.getKey());
+            if (oldDataObjectDbID > 0) {
                 connector.migrateDataObjectInstance(oldDataObjectDbID, dataObject.getValue().getDatabaseId());
             }
         }
