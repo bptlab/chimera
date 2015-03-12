@@ -259,7 +259,7 @@
 			//update email template via POST
 			this.submitMyForm = function(id){
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/config/emailtask/"+ id + "/?", $this.fields).
+					"/config/emailtask/"+ id + "/?", this.fields).
 					success(function(data) {
 						if (data) {
 							return data;

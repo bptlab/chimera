@@ -14,7 +14,7 @@
 			<tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMV.scenarioDetails">
 				<td>{{key}}</td>
 				<td>{{value}}</td>
-				<td><img ng-src="jcomparserMV.getImageForScenario(key)"></img></td>
+				<td><img ng-src="{{jcomparserMV.getImageForScenario(key)}}"></img></td>
 				<td>
 					<form ng-submit="jcomparserMV.loadInstance(key)">
 						<input type="submit" value="Launch Scenario">
