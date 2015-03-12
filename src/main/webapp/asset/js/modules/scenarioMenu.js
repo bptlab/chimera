@@ -266,6 +266,10 @@
 						}
 					});     
 		        }
+		        this.submitForm = function() {
+				console.log("posting data....");
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", JSON.stringify(data)).success(function(){/*success callback*/});
+		        };
 			//get all infos for popup
 			this.getDetails = function(id){
 				controller.getDetailsForMailtaskID(id);
