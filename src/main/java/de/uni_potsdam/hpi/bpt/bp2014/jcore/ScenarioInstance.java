@@ -411,8 +411,8 @@ public class ScenarioInstance {
      * For example it starts the email tasks.
      */
     public void startAutomaticControlNodes(){
-        for (ControlNodeInstance controlNodeInstance : enabledControlNodeInstances){
-            if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance)controlNodeInstance).getIsMailTask()){
+        for (ControlNodeInstance controlNodeInstance : ((LinkedList<ControlNodeInstance>)enabledControlNodeInstances.clone())){
+            if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance)controlNodeInstance).isAutomaticExecution()){
                 ((ActivityInstance) controlNodeInstance).begin();
                 ((ActivityInstance) controlNodeInstance).terminate();
             }

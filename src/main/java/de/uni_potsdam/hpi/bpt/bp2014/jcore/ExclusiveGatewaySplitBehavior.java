@@ -2,10 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
 
-import sun.awt.image.ImageWatched;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -31,7 +28,6 @@ import java.util.LinkedList;
 
 
 public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
-    //private  LinkedList<Integer> followingControlNode_ids;
     private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<LinkedList<Integer>>();
 
     public ExclusiveGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id) {
@@ -70,22 +66,39 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         enableFollowing();
     }
 
-   /* public boolean oldcheckTermination(int controlNode_id){
-        if(followingControlNode_ids.contains(new Integer(controlNode_id))){
-            followingControlNode_ids.remove(new Integer(controlNode_id));
-            for (int id : followingControlNode_ids) {
-                ControlNodeInstance controlNodeInstance = scenarioInstance.getControlNodeInstanceForControlNodeId(id);
-                if(controlNodeInstance.getClass() == ActivityInstance.class) {
-                    ((ActivityInstance)controlNodeInstance).skip();
-                }
+    @Override
+    protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
+        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
+            if (controlNode_id == controlNodeInstance.controlNode_id) {
+                return controlNodeInstance;
             }
-            return true;
         }
-        return false;
-    }*/
+        String type = dbControlNode.getType(controlNode_id);
+        ControlNodeInstance controlNodeInstance = null;
+        //TODO type
+        switch (type) {
+            case "Activity":
+            case "EmailTask":
+                controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                ((ActivityInstance)controlNodeInstance).setAutomaticExecution(false);
+                break;
+            case "Endevent":
+                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
+                break;
+            case "XOR":
+                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                break;
+            case "AND":
+                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                ((GatewayInstance)controlNodeInstance).setAutomaticExecution(false);
+                break;
+        }
+        return controlNodeInstance;
+    }
+
     public boolean checkTermination(int controlNode_id){
         if((dbControlNode.getType(controlNode_id).equals("AND")) || (dbControlNode.getType(controlNode_id).equals("XOR"))){
-            return false;  //TODO: do it better
+            return false;
         }
         for(int i = 0; i < followingControlNodes.size(); i++){
             if(followingControlNodes.get(i).contains(new Integer(controlNode_id))){
