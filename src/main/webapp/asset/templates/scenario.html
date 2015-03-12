@@ -2,7 +2,7 @@
 <div class="table-responsive">
 	<table class="table table-striped table-hover">
 		<caption>Scenarios currently available</caption>
-		Filter <input ng-model="searchText">
+		Filter <input ng-model="searchText"/>
 		<thead>
 			<tr>
 				<th>#</th>
@@ -11,7 +11,7 @@
 		</thead>
 		<tbody>
 			<!--<tr style="cursor: pointer" ng-repeat="id in scenarioCtrl.scenarioIds | filter:searchText" ng-click="scenarioCtrl.goToDetailsFrom(id);">-->
-			<tr style="cursor: pointer" ng-repeat="(key, value) in scenarioCtrl.scenarios | filter: searchText" ng-click="scenarioCtrl.goToDetailsFrom(key);">
+			<tr style="cursor: pointer" ng-repeat="(key, value) in scenarioCtrl.scenarios" ng-show="!searchText || value['label'].indexOf(searchText) > -1" ng-click="scenarioCtrl.goToDetailsFrom(key);">
 				<!--<li ng-if="scenarioCtrl.scenarios['' + id]['label'].match(searchText)">-->
 					<td>{{key}}</td>
 					<td>{{value['label']}}</td>
