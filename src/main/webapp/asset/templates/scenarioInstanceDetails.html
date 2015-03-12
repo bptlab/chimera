@@ -1,8 +1,6 @@
 <h3>Scenario Instance {{instanceCtrl.scenario.instanceIds[0] + " - " + instanceCtrl.getScenarioName()}}</h3>
+
 <!-- Show enabled Activities -->
-<div id="form">
-	Insert the Form here
-</div>
 <div class="pull-right dropdown">
 	<button class="btn btn-default dropdown-toggle" type="button" id="enabledActivitiesMenu" data-toggle="dropdown">
 		Enabled Activities
@@ -58,6 +56,27 @@
 	</table>
 </div>
 
+<h4>Dataobjects</h4>
+<div class="responsive-table">
+	<table class="table table-striped">
+		<caption>States</caption>
+		{{instanceCtrl.getCurrentInstance().dataobjects['states']}}<br>
+		<caption>Objects</caption>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
+				<td>{{key}}</td>
+				<td>{{value}}</td>
+			</tr>
+			</a>
+		</tbody>
+	</table>
+</div>
 <!--------------------------------- MODALS -------------------------------------------->
 <!-- modal for beginning an Activity-->
 <div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" id="{{'modal' + id}}" class="modal fade">

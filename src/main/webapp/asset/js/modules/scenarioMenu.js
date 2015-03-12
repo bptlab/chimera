@@ -120,7 +120,17 @@
 					});
 				});
 			}
-			
+
+			this.initializeDataobjectInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
+						  "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/dataobject/0/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].dataobjects = data;
+					});
+			}
+
 			this.initialize = function(){
 				if ($routeParams.instanceId) {
 					// initialize if necessary the specified instance
@@ -158,6 +168,7 @@
 					instanceCtrl.instances['' + id] = data;
 					if ($routeParams.instanceId) {
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
 					}
 				});
 			}
@@ -209,8 +220,7 @@
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
 					});
-			};
-				
+			};			
 		}
 	]);
 
