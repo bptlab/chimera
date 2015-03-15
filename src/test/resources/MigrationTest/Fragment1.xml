@@ -1,15 +1,15 @@
-<model id="1278982085" name="MigrationFragment" type="net.frapu.code.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model id="1946280459" name="Fragment1" type="net.frapu.code.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0" />
          <property name="color_background" value="-1" />
-         <property name="x" value="180" />
+         <property name="x" value="123" />
          <property name="width" value="30" />
-         <property name="y" value="160" />
+         <property name="y" value="172" />
          <property name="text" value="" />
          <property name="stereotype" value="" />
          <property name="non_interupting" value="0" />
-         <property name="#id" value="506182181" />
+         <property name="#id" value="990905013" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.StartEvent" />
          <property name="height" value="30" />
       </node>
@@ -19,25 +19,25 @@
          <property name="global" value="0" />
          <property name="loop_type" value="NONE" />
          <property name="color_background" value="-1" />
-         <property name="x" value="293" />
+         <property name="x" value="268" />
          <property name="width" value="100" />
-         <property name="y" value="160" />
+         <property name="y" value="172" />
          <property name="compensation" value="0" />
-         <property name="text" value="Aktivitaet1" />
+         <property name="text" value="TestAktivitaet1" />
          <property name="stereotype" value="" />
-         <property name="#id" value="713870498" />
+         <property name="#id" value="214334952" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.Task" />
          <property name="height" value="60" />
       </node>
       <node>
          <property name="shadow" value="0" />
          <property name="color_background" value="-1" />
-         <property name="x" value="418" />
+         <property name="x" value="391" />
          <property name="width" value="30" />
-         <property name="y" value="160" />
+         <property name="y" value="172" />
          <property name="text" value="" />
          <property name="stereotype" value="" />
-         <property name="#id" value="1359655095" />
+         <property name="#id" value="30057439" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.EndEvent" />
          <property name="height" value="30" />
       </node>
@@ -46,13 +46,13 @@
          <property name="data" value="" />
          <property name="collection" value="0" />
          <property name="color_background" value="-1" />
-         <property name="x" value="241" />
+         <property name="x" value="182" />
          <property name="width" value="40" />
-         <property name="y" value="55" />
+         <property name="y" value="53" />
          <property name="text" value="DO1" />
          <property name="stereotype" value="" />
          <property name="state" value="init" />
-         <property name="#id" value="1339654606" />
+         <property name="#id" value="377219354" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.DataObject" />
          <property name="height" value="60" />
       </node>
@@ -61,12 +61,12 @@
       <edge>
          <property name="color_arc" value="-16777216" />
          <property name="sequence_type" value="TYPE_STANDARD" />
-         <property name="#sourceNode" value="506182181" />
-         <property name="#targetNode" value="713870498" />
+         <property name="#sourceNode" value="990905013" />
+         <property name="#targetNode" value="214334952" />
          <property name="#target_dockpoint" value="" />
          <property name="#label_offset" value="0.5" />
          <property name="label" value="" />
-         <property name="#id" value="1385748015" />
+         <property name="#id" value="1386086391" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow" />
          <property name="#source_dockpoint" value="" />
          <property name="points" value="" />
@@ -74,36 +74,36 @@
       <edge>
          <property name="color_arc" value="-16777216" />
          <property name="sequence_type" value="TYPE_STANDARD" />
-         <property name="#sourceNode" value="713870498" />
-         <property name="#targetNode" value="1359655095" />
+         <property name="#sourceNode" value="214334952" />
+         <property name="#targetNode" value="30057439" />
          <property name="#target_dockpoint" value="" />
          <property name="#label_offset" value="0.5" />
          <property name="label" value="" />
-         <property name="#id" value="783586944" />
+         <property name="#id" value="1844550577" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow" />
          <property name="#source_dockpoint" value="" />
          <property name="points" value="" />
       </edge>
       <edge>
          <property name="color_arc" value="-16777216" />
-         <property name="#sourceNode" value="1339654606" />
-         <property name="#targetNode" value="713870498" />
+         <property name="#sourceNode" value="377219354" />
+         <property name="#targetNode" value="214334952" />
          <property name="#target_dockpoint" value="" />
          <property name="#label_offset" value="0.5" />
          <property name="label" value="" />
-         <property name="#id" value="109665373" />
+         <property name="#id" value="2140839261" />
          <property name="#type" value="net.frapu.code.visualization.bpmn.Association" />
          <property name="#source_dockpoint" value="" />
-         <property name="points" value="241,107+273,107" />
+         <property name="points" value="182,112+248,112" />
          <property name="direction" value="TARGET" />
       </edge>
    </edges>
    <properties>
       <property name="author" value="" />
       <property name="#folder" value="/" />
-      <property name="name" value="MigrationFragment" />
-      <property name="#uri" value="/models/1278982085/versions/0" />
+      <property name="name" value="Fragment1" />
+      <property name="#uri" value="/models/1946280459/versions/0" />
       <property name="comment" value="" />
-      <property name="#creationDate" value="March 9, 2015 10:26:09 AM CET" />
+      <property name="#creationDate" value="March 12, 2015 10:24:55 AM CET" />
    </properties>
 </model>

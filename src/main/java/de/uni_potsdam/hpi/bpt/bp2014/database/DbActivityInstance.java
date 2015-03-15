@@ -85,4 +85,20 @@ public class DbActivityInstance extends DbObject {
         return this.executeStatementReturnsListInt(sql, "controlnode_id");
     }
 
+    public boolean getAutomaticExecution(int id){
+        String sql = "SELECT automaticexecution FROM activityinstance WHERE id = " + id;
+        return this.executeStatementReturnsBoolean(sql, "automaticexecution");
+    }
+
+    public void setAutomaticExecution(int id, boolean automaticExecution) {
+        int automaticExecutionAsInt;
+        if (automaticExecution) {
+            automaticExecutionAsInt = 1;
+        } else {
+            automaticExecutionAsInt = 0;
+        }
+        String sql = "UPDATE activityinstance SET automaticexecution = " + automaticExecutionAsInt + " WHERE id = " + id;
+        this.executeUpdateStatement(sql);
+    }
+
 }

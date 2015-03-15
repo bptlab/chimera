@@ -29,30 +29,29 @@ Select Scenario: <select data-ng-options="id as id for id in mailC.scenarioIDs" 
 	</div>
 </li>
 
-<!--<li ng-if="mailC.workingID > 0">-->
-	<!-- ___________________________ modals ___________________________ -->
-	<div id="{{'editMailConfig' + id}}" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Edit Mail Config of {{mailC.workingID}}</h4>
-				</div>
-				<div class="modal-body">
-					<!--<form name="myForm" ng-submit="mailC.submitMyForm(mailC.workingID)">-->
-					<form name="saveTemplateData" ng-controller="mailC">
-		   			    Receiver: <input type="text" name="receiver" ng-model="form.receiver" data-ng-value="{{mailC.detailsForID['receiver']}}"  /><br>
-					    Subject: <input type="text" name ="subject" ng-model="form.subject" data-ng-value="{{mailC.detailsForID['subject']}}" /><br>
-					    Message: <input type="text" name="message" ng-model="form.message" data-ng-value="{{mailC.detailsForID['message']}}" /><br><br>
-					    <button type="submit" ngClick="Submit" class="btn btn-primary">Update!</button>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<!--<button type="button" ng-click="mailC.update(mailC.workingID);" data-dismiss="modal" class="btn btn-primary">Update!</button>-->
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-<!--</li>-->
+<!-- ___________________________ modals ___________________________ -->
+<div id="{{'editMailConfig' + id}}" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Edit Mail Config of {{mailC.workingID}}</h4>
+			</div>
+			<div class="modal-body">
+				<!--<form name="myForm" ng-submit="mailC.submitMyForm(mailC.workingID)">-->
+				<form name="saveTemplateData" ng-controller="FormCtrl">
+	   			    Receiver: <input type="text" name="receiver" ng-model="form.receiver" data-ng-value="{{mailC.detailsForID['receiver']}}"  /><br>
+				    Subject: <input type="text" name ="subject" ng-model="form.subject" data-ng-value="{{mailC.detailsForID['subject']}}" /><br>
+				    Message: <textarea rows="3" cols="25" name="message" ng-model="form.message" />{{mailC.detailsForID['message']}}</textarea> 	<br><br>
+						<button type="submit" ngClick="Submit" class="btn btn-primary">Update!</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<!--<button type="button" ng-click="mailC.update(mailC.workingID);" data-dismiss="modal" class="btn btn-primary">Update!</button>-->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 

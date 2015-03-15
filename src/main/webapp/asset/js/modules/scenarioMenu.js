@@ -18,6 +18,22 @@
 		};
 	});
 	
+	
+	scenario.controller('FormCtrl', function ($scope, $http) {
+	    
+	    $scope.data = {
+		receiver: "default",
+		subject: "default",
+		message: "default",
+	    };
+
+	    $scope.submitForm = function() {
+		console.log("posting data....");
+		$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", JSON.stringify(data)).success(function(){/*success callback*/});
+	    };
+	});
+
+
 	// Create a Controller for the Scenario Information
 	scenario.controller('ScenarioController', ['$routeParams', '$location', '$http',
 		function($routeParams, $location, $http){
@@ -104,7 +120,17 @@
 					});
 				});
 			}
-			
+
+			this.initializeDataobjectInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
+						  "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/dataobject/0/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].dataobjects = data;
+					});
+			}
+
 			this.initialize = function(){
 				if ($routeParams.instanceId) {
 					// initialize if necessary the specified instance
@@ -142,6 +168,7 @@
 					instanceCtrl.instances['' + id] = data;
 					if ($routeParams.instanceId) {
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
 					}
 				});
 			}
@@ -193,8 +220,7 @@
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
 					});
-			};
-				
+			};			
 		}
 	]);
 
@@ -266,10 +292,6 @@
 						}
 					});     
 		        }
-		        this.submitForm = function() {
-				console.log("posting data....");
-				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", JSON.stringify(data)).success(function(){/*success callback*/});
-		        };
 			//get all infos for popup
 			this.getDetails = function(id){
 				controller.getDetailsForMailtaskID(id);
