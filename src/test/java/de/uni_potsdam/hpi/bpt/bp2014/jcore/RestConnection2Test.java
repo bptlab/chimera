@@ -27,7 +27,6 @@ public class RestConnection2Test extends AbstractTest {
 
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
-        //TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2.sql";
     }
 
     @Before
@@ -173,7 +172,7 @@ public class RestConnection2Test extends AbstractTest {
     @Test
     public void testPostActivityStatusUpdateReadyToRunning() {
         final Response test = base.path("/scenario/1/instance/95/activityinstance/10/")
-                .queryParam("status", "begin").request().post(Entity.xml(null));
+                .queryParam("status", "begin").request().post(null);
         assertEquals("true", test.readEntity(String.class));
     }
 
@@ -185,7 +184,7 @@ public class RestConnection2Test extends AbstractTest {
     @Test
     public void testPostActivityStatusUpdateRunningToTerminated() {
         final Response test = base.path("/scenario/106/instance/532/activityinstance/140/")
-                .queryParam("status", "terminate").request().post(Entity.xml(null));
+                .queryParam("status", "terminate").request().post(null);
         assertEquals("true", test.readEntity(String.class));
     }
 
@@ -197,7 +196,7 @@ public class RestConnection2Test extends AbstractTest {
     @Test
     public void testPostActivityInvalidStatus() {
         final Response test = base.path("/scenario/106/instance/532/activityinstance/140/")
-                .queryParam("status", "invalid").request().post(Entity.xml(null));
+                .queryParam("status", "invalid").request().post(null);
         assertEquals("false", test.readEntity(String.class));
     }
 
@@ -210,7 +209,7 @@ public class RestConnection2Test extends AbstractTest {
     @Test
     public void testPostActivityIllegalStatusUpdate() {
         final Response test = base.path("/scenario/1/instance/120/activityinstance/10/")
-                .queryParam("status", "?status=terminate").request().buildPost(Entity.json("")).invoke();
+                .queryParam("status", "?status=terminate").request().buildPost(null).invoke();
         assertEquals("false", test.readEntity(String.class));
     }
 
@@ -222,13 +221,29 @@ public class RestConnection2Test extends AbstractTest {
     @Test
     public void testInvalidActivityStatusUpdate() {
         final Response test = base.path("/scenario/1/instance/120/activityinstance/99999/")
-                .queryParam("status", "?status=terminate").request().buildPost(Entity.json("")).invoke();
+                .queryParam("status", "?status=terminate").request().buildPost(null).invoke();
         assertEquals("false", test.readEntity(String.class));
     }
 
+    /**
+     * When a new instance of an scenario is started
+     * the newly created id is returned.
+     * We expect the ID 123.
+     */
     @Test
     public void testPostNewInstanceForScenario() {
-        //  final Response test = base.path("/scenario/1/").request().post();
-        //assertEquals("123", test.readEntity(String.class));
+        final Response test = base.path("/scenario/1/").request().post(null);
+        assertEquals("966", test.readEntity(String.class));
+    }
+
+    /**
+     * When the user tries to start a non existing scenario
+     * the return value should imply the fail.
+     * -1 Implies that the scenario does not exist.
+     */
+    @Test
+    public void testPostNewInstanceForInvalidScenario() {
+        final Response test = base.path("/scenario/99999/").request().post(null);
+        assertEquals("-1", test.readEntity(String.class));
     }
 }
