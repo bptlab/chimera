@@ -304,6 +304,7 @@ public class RestConnection {
      * @return true or false
      */
     @POST
+    // TODO: Fix path names
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     public Boolean doActivity(@PathParam("scenarioID") String scenarioID,
                               @PathParam("instanceID") int scenarioInstanceID,
