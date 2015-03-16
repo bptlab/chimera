@@ -1,7 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * ********************************************************************************
@@ -59,5 +61,24 @@ public class DbScenario extends DbObject {
     public String getScenarioName(int id) {
         String sql = "SELECT name FROM scenario WHERE id = " + id;
         return this.executeStatementReturnsString(sql, "name");
+    }
+
+    /**
+     * This method provides access to the default information of a scenario.
+     * @return It returns a HashMap of the Database ids and their label.
+     */
+    public Map<Integer, String> getScenarios() {
+        String sql = "SELECT id, name FROM scenario";
+        return this.executeStatementReturnsHashMap(sql, "id", "name");
+    }
+
+    /**
+     * This method provides access to the default information of a scenario.
+     * The name of the scenario must contain the filterString.
+     * @return It returns a HashMap of the Database ids and their label.
+     */
+    public Map<Integer, String> getScenariosLike(String filterString) {
+        String sql = "SELECT id, name FROM scenario WHERE name LIKE '%" + filterString + "%'";
+        return this.executeStatementReturnsHashMap(sql, "id", "name");
     }
 }
