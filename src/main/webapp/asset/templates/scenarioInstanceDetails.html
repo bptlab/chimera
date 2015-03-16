@@ -13,7 +13,7 @@
 		</li>
 	</ul>
 </div>
-
+<br>
 <!-- A list of all running activities -->
 <h4>Running Activities</h4>
 <div class="responsive-table">
@@ -59,19 +59,18 @@
 <h4>Dataobjects</h4>
 <div class="responsive-table">
 	<table class="table table-striped">
-		<caption>States</caption>
-		{{instanceCtrl.getCurrentInstance().dataobjects['states']}}<br>
-		<caption>Objects</caption>
 		<thead>
 			<tr>
 				<th>#</th>
 				<th>Name</th>
+				<th>State</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
 				<td>{{key}}</td>
 				<td>{{value}}</td>
+				<td>{{instanceCtrl.getCurrentInstance().dataobjects['states'][key]}}</td>
 			</tr>
 			</a>
 		</tbody>
