@@ -43,19 +43,24 @@ public class GatewayStateMachine extends StateMachine {
         this.controlNodeInstance = controlNodeInstance;
         this.state = dbGatewayInstance.getState(controlNodeInstance.controlNodeInstance_id);
         if (state.equals("executing")) {
-            scenarioInstance.getExecutingGateways().add((GatewayInstance)controlNodeInstance);
+            scenarioInstance.getExecutingGateways().add((GatewayInstance) controlNodeInstance);
         } else if (state.equals("terminated") || state.equals("skipped")) {
             scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
         }
         scenarioInstance.getControlNodeInstances().add(controlNodeInstance);
     }
 
+    /**
+     * Executes the gateway instance.
+     * Sets the state for the gateway instance in the database to executing.
+     */
 
     public void execute() {
         state = "executing";
         dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);
-        scenarioInstance.getExecutingGateways().add((GatewayInstance)controlNodeInstance);
+        scenarioInstance.getExecutingGateways().add((GatewayInstance) controlNodeInstance);
     }
+
     /**
      * Terminates the gateway instance.
      * Sets the state for the gateway instance in the database to terminated.
@@ -68,6 +73,7 @@ public class GatewayStateMachine extends StateMachine {
         scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
         return true;
     }
+
     /**
      * Skips the gateway instance.
      * Sets the state for the gateway instance in the database to skipped.

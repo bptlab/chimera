@@ -64,7 +64,7 @@ public class GatewayInstance extends ControlNodeInstance {
         if (type.equals("AND")) {
             this.isAND = true;
             this.isXOR = false;
-        } else if(type.equals("XOR")) {
+        } else if (type.equals("XOR")) {
             this.isAND = false;
             this.isXOR = true;
         }
@@ -88,20 +88,16 @@ public class GatewayInstance extends ControlNodeInstance {
         if (isAND) {
             this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
             this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
-        } else if(isXOR) {
+        } else if (isXOR) {
             this.outgoingBehavior = new ExclusiveGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
             this.incomingBehavior = new ExclusiveGatewayJoinBehavior(this, scenarioInstance, stateMachine);
         }
     }
 
-    public boolean checkTermination(int controlNode_id){
-        return ((ExclusiveGatewaySplitBehavior)outgoingBehavior).checkTermination(controlNode_id);
+    public boolean checkTermination(int controlNode_id) {
+        return ((ExclusiveGatewaySplitBehavior) outgoingBehavior).checkTermination(controlNode_id);
     }
 
-    /**
-     * Terminates the gateway instance.
-     * Set the state in database.
-     */
     @Override
     public boolean terminate() {
         stateMachine.terminate();
@@ -111,10 +107,10 @@ public class GatewayInstance extends ControlNodeInstance {
 
     @Override
     public boolean skip() {
-        return stateMachine .skip();
+        return stateMachine.skip();
     }
 
-    /**
+    /*
      * Getter & Setter
      */
 

@@ -32,7 +32,7 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
      * @param gateway_id          This is the database id from the gateway.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      * @param fragmentInstance_id This is the database id from the fragment instance.
-     * @param gatewayInstance    This is an instance from the class GatewayInstance.
+     * @param gatewayInstance     This is an instance from the class GatewayInstance.
      */
     ParallelGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id, GatewayInstance gatewayInstance) {
         this.controlNode_id = gateway_id;
@@ -62,8 +62,8 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
             case "Activity":
             case "EmailTask":
                 controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-                if (!gatewayInstance.isAutomaticExecution()){
-                    ((ActivityInstance)controlNodeInstance).setAutomaticExecution(false);
+                if (!gatewayInstance.isAutomaticExecution()) {
+                    ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 }
                 break;
             case "Endevent":
@@ -74,8 +74,8 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
                 break;
             case "AND":
                 controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-                if (!gatewayInstance.isAutomaticExecution()){
-                    ((GatewayInstance)controlNodeInstance).setAutomaticExecution(false);
+                if (!gatewayInstance.isAutomaticExecution()) {
+                    ((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
                 }
                 break;
         }
