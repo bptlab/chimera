@@ -17,8 +17,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.*;
 
 /**
  * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotEquals;
  * There are test methods for every possible REST Call.
  * In order to stay independent from existing tests, the
  * database will be set up before and after the execution.
- * Define the database Properties inside the databse_connection file.
+ * Define the database Properties inside the database_connection file.
  */
 public class RestInterfaceTest extends AbstractTest {
 
@@ -95,8 +95,9 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetScenarioContent() {
         Response response = base.path("scenario").request().get();
-        assertEquals("Get Scenarios did not contain the expected information",
-                new JSONObject("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\",\"3\":\"EmailTest\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}").toString(),                new JSONObject(response.readEntity(String.class)).toString());
+        assertThat("Get Scenarios did not contain the expected information",
+                "{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"labels\":{\"1\":\"HELLOWORLD\",\"3\":\"EmailTest\",\"2\":\"helloWorld2\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}",
+                jsonEquals(response.readEntity(String.class)));
     }
 
     /**
@@ -108,9 +109,9 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetScenarioContentWithFilter() {
         Response response = base.path("scenario").queryParam("filter", "HELLO").request().get();
-        assertEquals("Get Scenarios did not contain the expected information",
-                new JSONObject("{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}").toString(),
-                new JSONObject(response.readEntity(String.class)).toString());
+        assertThat("Get Scenarios did not contain the expected information",
+                "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}",
+                jsonEquals(response.readEntity(String.class)));
     }
 
     /**
@@ -143,9 +144,9 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertNotEquals("Get scenarios did not respond with a valid JSON Array",
                 null, new JSONObject(responseEntity));
-        assertEquals("The content of the valid request is not as expected",
-                new JSONObject("{\"id\":1,\"name\":\"HELLOWORLD\",\"modelversion\":0}").toString(),
-                new JSONObject(responseEntity).toString());
+        assertThat("The content of the valid request is not as expected",
+                "{\"id\":1,\"name\":\"HELLOWORLD\",\"modelversion\":0}",
+                jsonEquals(responseEntity.toString()));
 
     }
 }
