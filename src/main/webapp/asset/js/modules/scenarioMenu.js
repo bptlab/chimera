@@ -17,25 +17,9 @@
 			templateUrl: 'asset/templates/scenarioMenuEntry.html',
 		};
 	});
-	
-	
-	scenario.controller('FormCtrl', function ($scope, $http) {
-	    
-	    $scope.data = {
-		receiver: "default",
-		subject: "default",
-		message: "default",
-	    };
-
-	    $scope.submitForm = function() {
-		console.log("posting data....");
-		$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", JSON.stringify(data)).success(function(){/*success callback*/});
-	    };
-	});
-
 
 	// Create a Controller for the Scenario Information
-	scenario.controller('ScenarioController', ['$routeParams', '$location', '$http',
+	scenario.controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http){
 			var controller = this;
 			
@@ -98,7 +82,7 @@
 		}]
 	);
 	
-	scenario.controller('ScenarioInstanceController', ['$routeParams', '$location', '$http',
+	scenario.controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http){
 			// For accessing data from inside the $http context
 			var instanceCtrl = this;
@@ -225,7 +209,7 @@
 	]);
 
 	// Create a Controller for jcomparser admin dashboard
-	scenario.controller('jcomparserMainView', ['$routeParams', '$location', '$http',
+	scenario.controller('jcomparserMainView', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http){
 			var controller = this;
 			
@@ -236,14 +220,11 @@
 			
 			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
 				success(function(data){
-			            //var array = angular.fromJson(data);
-			            //controller.scenarioDetails = array.ids;
 				    controller.scenarioDetails = data['ids'];
 				    
         		});
 
 			this.getImageForScenario = function(id){
-				//this.scenarios["" + id]['imageUrl'] =
 				return	JEngine_Server_URL + "/" + JComparser_REST_Interface + 
 					"/scenarios/" + id + "/image/";
 			};
@@ -261,8 +242,8 @@
 	);
 
 	// Create a Controller for mail config
-	scenario.controller('mailConfig', ['$routeParams', '$location', '$http',
-		function($routeParams, $location, $http){
+	scenario.controller('mailConfig', ['$routeParams', '$location', '$http', '$scope',
+		function($routeParams, $location, $http, $scope){
 			var controller = this;
 			
 			// initialize an empty list of scenario Ids
@@ -273,25 +254,17 @@
 
 			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
 				success(function(data){
-				    //console.log('data is ' + data);
 				    controller.scenarioIDs = data['ids'];
-				    //console.log('controller.scenarioIDs is ' + controller.scenarioIDs);
 				    
         		});
 
-			//this.scenarioIDs = [141, 142];
-			//console.log('controller.scenarioIDs is ' + this.scenarioIDs);
-			
-			//update email template via POST
-			this.submitMyForm = function(id){
-				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/config/emailtask/"+ id + "/?", this.fields).
-					success(function(data) {
-						if (data) {
-							return data;
-						}
-					});     
-		        }
+			//post update for email tasks
+			this.submitMyForm=function(){
+
+				var data=$scope.form;  
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", data);        
+		   	 }
+
 			//get all infos for popup
 			this.getDetails = function(id){
 				controller.getDetailsForMailtaskID(id);
