@@ -1,7 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
-import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -65,6 +67,7 @@ public class DbScenario extends DbObject {
 
     /**
      * This method provides access to the default information of a scenario.
+     *
      * @return It returns a HashMap of the Database ids and their label.
      */
     public Map<Integer, String> getScenarios() {
@@ -75,10 +78,57 @@ public class DbScenario extends DbObject {
     /**
      * This method provides access to the default information of a scenario.
      * The name of the scenario must contain the filterString.
+     *
      * @return It returns a HashMap of the Database ids and their label.
      */
     public Map<Integer, String> getScenariosLike(String filterString) {
         String sql = "SELECT id, name FROM scenario WHERE name LIKE '%" + filterString + "%'";
         return this.executeStatementReturnsHashMap(sql, "id", "name");
+    }
+
+    /**
+     * Provides information abut one Scenario.
+     * The Information consists of the id, name and version.
+     */
+    public Map<String, Object> getScenarioDetails(int id) {
+        String sql = "SELECT id, name, modelversion FROM scenario WHERE id = " + id;
+        return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion");
+    }
+
+    /**
+     * Creates a Map for the SQL-Result.
+     * Each Column will be added as a key and the first result as
+     * the result.
+     *
+     * @param sql  The SQl query to be executed.
+     * @param keys The column names.
+     * @return A Map of the results.
+     */
+    private Map<String, Object> executeStatementReturnsMapWithKeys(String sql, String... keys) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        Map<String, Object> keysValues = new LinkedHashMap<>();
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+            if (results.next()) {
+                for (String key : keys) {
+                    keysValues.put(key, results.getObject(key));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return keysValues;
     }
 }

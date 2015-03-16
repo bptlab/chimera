@@ -96,8 +96,7 @@ public class RestInterfaceTest extends AbstractTest {
     public void testGetScenarioContent() {
         Response response = base.path("scenario").request().get();
         assertEquals("Get Scenarios did not contain the expected information",
-                "{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\",\"3\":\"EmailTest\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}",
-                response.readEntity(String.class));
+                new JSONObject("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\",\"3\":\"EmailTest\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}").toString(),                new JSONObject(response.readEntity(String.class)).toString());
     }
 
     /**
@@ -110,7 +109,43 @@ public class RestInterfaceTest extends AbstractTest {
     public void testGetScenarioContentWithFilter() {
         Response response = base.path("scenario").queryParam("filter", "HELLO").request().get();
         assertEquals("Get Scenarios did not contain the expected information",
-                "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}",
+                new JSONObject("{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}").toString(),
+                new JSONObject(response.readEntity(String.class)).toString());
+    }
+
+    /**
+     * When you send a GET to {@link RestInterface#getScenario(int) with an invalid id
+     * a empty JSON with a 404 will be returned.
+     */
+    @Test
+    public void testGetScenarioInvalidId() {
+        Response response = base.path("scenario/99999").request().get();
+        assertEquals("Get Scenario returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertEquals("Get scenario returns a not empty JSON, but the id was invalid",
+                404, response.getStatus());
+        assertEquals("The content of the invalid request is not an empty JSONObject",
+                "{}",
                 response.readEntity(String.class));
+    }
+
+    /**
+     * If you send a GET to {@link RestInterface#getScenario(int)} with an valid id
+     * a JSON containing the id, name and modelversion will be returned.
+     */
+    @Test
+    public void testGetScenario() {
+        Response response = base.path("scenario/1").request().get();
+        String responseEntity = response.readEntity(String.class);
+        assertEquals("The Response code of get Scenario was not 200",
+                200, response.getStatus());
+        assertEquals("Get Scenarios returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertNotEquals("Get scenarios did not respond with a valid JSON Array",
+                null, new JSONObject(responseEntity));
+        assertEquals("The content of the valid request is not as expected",
+                new JSONObject("{\"id\":1,\"name\":\"HELLOWORLD\",\"modelversion\":0}").toString(),
+                new JSONObject(responseEntity).toString());
+
     }
 }
