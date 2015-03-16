@@ -1,9 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
-import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
