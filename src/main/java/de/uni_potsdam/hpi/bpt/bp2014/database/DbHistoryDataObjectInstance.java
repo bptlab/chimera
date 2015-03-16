@@ -22,4 +22,6 @@ public class DbHistoryDataObjectInstance extends DbObject {
         return this.executeStatementReturnsMapWithMapWithKeys(sql, "scenarioinstance_id", "timestamp","dataobjectinstance_id", "old_state_id", "old_state_name", "new_state_id", "new_state_name");
     }
 
+
+
 }
