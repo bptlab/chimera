@@ -336,9 +336,8 @@ public class RestConnection {
     }
 
     /**
-     * 
      * @param emailtaskID id of related emailtask
-     * @param input HTTP body as json which is retrieved by the REST interface
+     * @param input       HTTP body as json which is retrieved by the REST interface
      * @return boolean
      */
     @POST

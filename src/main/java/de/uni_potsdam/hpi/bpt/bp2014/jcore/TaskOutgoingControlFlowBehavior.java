@@ -71,7 +71,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
         //TODO: Output Set
         for (int outputSet : outputSets) {
             LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
-            for(DataObject dataObject : dataObjects){
+            for (DataObject dataObject : dataObjects) {
                 //resets DataObjectInstance from OnChange back to not OnChange
                 scenarioInstance.setDataObjectInstanceToNotOnChange(dataObject.getId());
                 scenarioInstance.changeDataObjectInstanceState(dataObject.getId(), dataObject.getStateID());
