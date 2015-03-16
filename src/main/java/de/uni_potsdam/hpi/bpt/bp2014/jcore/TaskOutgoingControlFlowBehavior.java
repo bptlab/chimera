@@ -59,7 +59,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
         setDataStates();
         this.checkAfterTermination();
         this.enableFollowing();
-
+        this.runAfterTermination();
     }
 
     /**
