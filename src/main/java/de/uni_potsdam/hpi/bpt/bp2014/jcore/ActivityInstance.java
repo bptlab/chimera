@@ -107,6 +107,9 @@ public class ActivityInstance extends ControlNodeInstance {
             scenarioInstance.checkExecutingGateways(controlNode_id);
             taskExecutionBehavior.execute();
             //System.out.println("Start Activity " + controlNode_id);
+            if(isMailTask){
+                this.terminate();
+            }
             return true;
         } else {
             return false;
