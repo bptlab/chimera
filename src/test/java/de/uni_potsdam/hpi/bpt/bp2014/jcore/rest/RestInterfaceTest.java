@@ -4,7 +4,6 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
