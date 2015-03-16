@@ -1,20 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-<<<<<<< HEAD
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-=======
->>>>>>> aaee3ae7a5124eb54526269e8ec39fae597ef5b0
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-<<<<<<< HEAD
 import java.util.Map;
-=======
->>>>>>> aaee3ae7a5124eb54526269e8ec39fae597ef5b0
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -58,12 +51,6 @@ public class RestInterface {
      * @param filterString Specifies a search. Only scenarios which
      *                     name contain the specified string will be
      *                     returned.
-<<<<<<< HEAD
-=======
-     * @param orderBy Specifies the order of the result, per default
-     *                they will be sorted by id, it could also be the
-     *                name.
->>>>>>> aaee3ae7a5124eb54526269e8ec39fae597ef5b0
      * @return Returns a JSON-Object with an Array with entries for
      * every Scenario.
      * Each Entry is a JSON-Object with a label and id of a scenario.
@@ -71,7 +58,6 @@ public class RestInterface {
     @GET
     @Path("scenario")
     @Produces(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
     public Response getScenarios(@QueryParam("filter") String filterString) {
         DbScenario scenario = new DbScenario();
         Map<Integer, String> scenarios;
@@ -85,11 +71,6 @@ public class RestInterface {
                 .type(MediaType.APPLICATION_JSON)
                 .entity(mapToKeysAndResults(scenarios, "ids", "labels").toString())
                 .build();
-=======
-    public Response getScenarios(@QueryParam("filter") @DefaultValue("") String filterString,
-                                 @QueryParam("order") @DefaultValue("id") String orderBy) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
->>>>>>> aaee3ae7a5124eb54526269e8ec39fae597ef5b0
     }
 
     /**
@@ -365,7 +346,6 @@ public class RestInterface {
      */
 
     /**
-<<<<<<< HEAD
      * Creates a JSON object from an HashMap.
      * The keys will be listed seperatly.
      *
@@ -381,8 +361,6 @@ public class RestInterface {
         return result;
     }
     /**
-=======
->>>>>>> aaee3ae7a5124eb54526269e8ec39fae597ef5b0
      * A JAX bean which is used for a naming an entity.
      * Therefor a name can be transmitted.
      */

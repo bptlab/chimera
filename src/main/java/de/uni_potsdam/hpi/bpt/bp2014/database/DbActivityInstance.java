@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
+
 import java.util.LinkedList;
 
 /***********************************************************************************
@@ -47,6 +49,8 @@ public class DbActivityInstance extends DbObject {
      */
     public void setState(int id, String state) {
         //TODO: history log
+        Log log = new Log();
+        log.newActivityInstanceState(id, state);
         String sql = "UPDATE activityinstance SET activity_state = '" + state + "' WHERE id = " + id;
         this.executeUpdateStatement(sql);
     }
@@ -62,7 +66,10 @@ public class DbActivityInstance extends DbObject {
     public int createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
         //TODO: history log
         String sql = "INSERT INTO activityinstance (id, type, role_id, activity_state, workitem_state) VALUES (" + controlNodeInstance_id + ", '" + ActivityType + "', 1,'" + ActivityState + "', 'init')";
-        return this.executeInsertStatement(sql);
+        int id = this.executeInsertStatement(sql);
+        Log log = new Log();
+        log.newActivityInstance(controlNodeInstance_id);
+        return id;
     }
 
     /**
