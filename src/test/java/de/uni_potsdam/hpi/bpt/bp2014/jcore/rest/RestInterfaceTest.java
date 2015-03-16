@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
 import org.junit.AfterClass;
@@ -65,7 +66,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@Link RestInterface#getScenarios()}
+     * When you sent a GET to {@link RestInterface#getScenarios(String)}
      * the media type of the response will be JSON.
      */
     @Test
@@ -78,7 +79,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a get to {@Link RestInterface#getScenarios()}
+     * When you sent a get to {@link RestInterface#getScenarios(String)}
      * the entity of the response will be a valid JSON array.
      */
     @Test
@@ -89,7 +90,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@Link RestInterface#getScenarios()}
+     * When you sent a GET to {@link RestInterface#getScenarios(String)}
      * the returned JSON will contain the latest version of all Scenarios.
      */
     @Test
@@ -97,11 +98,11 @@ public class RestInterfaceTest extends AbstractTest {
         Response response = base.path("scenario").request().get();
         assertThat("Get Scenarios did not contain the expected information",
                 "{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"labels\":{\"1\":\"HELLOWORLD\",\"3\":\"EmailTest\",\"2\":\"helloWorld2\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}",
-                jsonEquals(response.readEntity(String.class)));
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you sent a GET to {@Link RestInterface#getScenarios()} and
+     * When you sent a GET to {@link RestInterface#getScenarios(String)} and
      * you use a Filter
      * then the returned JSON will contain the latest version of all Scenarios with
      * a name containing the filterString.
@@ -111,7 +112,7 @@ public class RestInterfaceTest extends AbstractTest {
         Response response = base.path("scenario").queryParam("filter", "HELLO").request().get();
         assertThat("Get Scenarios did not contain the expected information",
                 "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}",
-                jsonEquals(response.readEntity(String.class)));
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
@@ -146,7 +147,7 @@ public class RestInterfaceTest extends AbstractTest {
                 null, new JSONObject(responseEntity));
         assertThat("The content of the valid request is not as expected",
                 "{\"id\":1,\"name\":\"HELLOWORLD\",\"modelversion\":0}",
-                jsonEquals(responseEntity.toString()));
+                jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
 
     }
 }
