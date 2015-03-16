@@ -367,6 +367,7 @@ public class  ScenarioTest {
                 new File("src/test/resources/bikeFragment.xml")));
         Document bikeScenario = getDocumentFromXmlFile(
                 new File("src/test/resources/BikeScenario.xml"));
+        PowerMock.expectPrivate(scenarioComplete, SET_DOMAIN_MODEL_METHOD).andVoid();
         PowerMock.expectPrivate(scenarioComplete, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<Node>() {
                     @Override
