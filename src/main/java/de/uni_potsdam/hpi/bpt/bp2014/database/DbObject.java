@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -381,34 +382,43 @@ public class DbObject {
         }
     }
 
-    protected Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        ResultSet results = null;
-        Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
-        try {
-            results = conn.prepareStatement(sql).executeQuery();
-            if (results.next()) {
-                keysValues.put(results.getInt("id"), new HashMap<String, Object>());
-                for (String key : keys) {
-                    (keysValues.get(results.getInt("id"))).put(key, results.getObject(key));
-                }
-            }
-        } catch (SQLException e) {
+    public Map<Integer, String> executeStatementReturnsHashMap(String sql, String key, String value) {
+        Map<Integer, String> result = new LinkedHashMap<>();
 
-            e.printStackTrace();
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) {
+            return result;
+        }
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                result.put(rs.getInt(key), rs.getString(value));
+            }
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
         } finally {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             try {
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            try {
-                results.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-        return keysValues;
+        return result;
     }
-
 }
