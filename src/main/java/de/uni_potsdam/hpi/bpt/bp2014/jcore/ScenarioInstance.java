@@ -413,7 +413,7 @@ public class ScenarioInstance {
         for (ControlNodeInstance controlNodeInstance : ((LinkedList<ControlNodeInstance>) enabledControlNodeInstances.clone())) {
             if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
                 ((ActivityInstance) controlNodeInstance).begin();
-                ((ActivityInstance) controlNodeInstance).terminate();
+                //((ActivityInstance) controlNodeInstance).terminate();
             }
         }
     }
