@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
 import javax.ws.rs.*;
