@@ -38,7 +38,7 @@ public class DataClass implements IDeserialisable, IPersistable {
     /**
      *
      */
-    private List<DataAttribute> dataAttributes;
+    private List<DataAttribute> dataAttributes = new LinkedList<>();
     /**
      *
      */
@@ -82,7 +82,7 @@ public class DataClass implements IDeserialisable, IPersistable {
             case "text":
                 dataClassName = value;
                 break;
-            case "attributes":
+            case "#attributes":
                 generateDataAttributeList(value);
                 break;
             case "#id":
@@ -108,7 +108,8 @@ public class DataClass implements IDeserialisable, IPersistable {
         String[] attributes = value.split(" ;");
         for(String attribute : attributes){
             if(!attribute.isEmpty()){
-                dataAttributes.add(new DataAttribute(attribute.replaceAll("\\{\\d\\}\\+", "")));
+                DataAttribute newDataAttribute = new DataAttribute(attribute.replaceAll("[^a-zA-Z]", ""));
+                dataAttributes.add(newDataAttribute);
             }
         }
     }

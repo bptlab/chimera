@@ -69,8 +69,8 @@ public class DomainModel implements IDeserialisable, IPersistable {
             this.aggregations = new ArrayList<Aggregation>(aggregates.getLength());
             for (int i = 0; i < aggregates.getLength(); i++) {
                 Aggregation currentAggregation = new Aggregation();
-                currentAggregation.initializeInstanceFromXML(aggregates.item(i));
                 currentAggregation.setDataClasses(dataClasses);
+                currentAggregation.initializeInstanceFromXML(aggregates.item(i));
                 this.aggregations.add(currentAggregation);
             }
         } catch (XPathExpressionException e) {
