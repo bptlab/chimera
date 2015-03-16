@@ -22,8 +22,6 @@ public class AggregationTest {
 
     @Before
     public void setupAggregation(){
-        setupSourceDataClass();
-        setupTargetDataClass();
         aggregation = document.createElement("edge");
         aggregation.appendChild(createProperty("sourceMultiplicity","1..*"));
         aggregation.appendChild(createProperty("#id","470092328"));
@@ -33,6 +31,7 @@ public class AggregationTest {
 
     }
 
+    @Before
     public void setupSourceDataClass(){
         sourceDataClass = document.createElement("node");
         sourceDataClass.appendChild(createProperty("text", "Reise"));
@@ -43,6 +42,7 @@ public class AggregationTest {
         addToDataClasses(sourceDataClass);
     }
 
+    @Before
     public void setupTargetDataClass(){
         targetDataClass = document.createElement("node");
         targetDataClass.appendChild(createProperty("text", "Flug"));

@@ -38,6 +38,10 @@ public class DataClass implements IDeserialisable, IPersistable {
     /**
      *
      */
+    private boolean rootNode = false;
+    /**
+     *
+     */
     private List<DataAttribute> dataAttributes = new LinkedList<>();
     /**
      *
@@ -88,6 +92,9 @@ public class DataClass implements IDeserialisable, IPersistable {
             case "#id":
                 dataClassModelID = Long.parseLong(value);
                 break;
+            case "stereotype":
+                rootNode = value.equals("root_instance");
+                break;
             default:
                 // Property will not be handled
                 break;
@@ -132,6 +139,8 @@ public class DataClass implements IDeserialisable, IPersistable {
     public List<DataAttribute> getDataAttributes() {
         return dataAttributes;
     }
+
+    public boolean isRootNode(){ return rootNode;}
 
     public Node getDataClassXML() {
         return dataClassXML;
