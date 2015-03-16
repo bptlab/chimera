@@ -46,6 +46,7 @@ public class DbActivityInstance extends DbObject {
      * @param state This is the state in which an activity should be after executing setState.
      */
     public void setState(int id, String state) {
+        //TODO: history log
         String sql = "UPDATE activityinstance SET activity_state = '" + state + "' WHERE id = " + id;
         this.executeUpdateStatement(sql);
     }
@@ -59,6 +60,7 @@ public class DbActivityInstance extends DbObject {
      * @return an Integer which is -1 if something went wrong else it is the database ID of the newly created activity instance.
      */
     public int createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
+        //TODO: history log
         String sql = "INSERT INTO activityinstance (id, type, role_id, activity_state, workitem_state) VALUES (" + controlNodeInstance_id + ", '" + ActivityType + "', 1,'" + ActivityState + "', 'init')";
         return this.executeInsertStatement(sql);
     }
