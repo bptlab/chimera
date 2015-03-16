@@ -304,6 +304,7 @@ public class RestConnection {
      * @return true or false
      */
     @POST
+    // TODO: Fix path names
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     public Boolean doActivity(@PathParam("scenarioID") String scenarioID,
                               @PathParam("instanceID") int scenarioInstanceID,
@@ -335,9 +336,8 @@ public class RestConnection {
     }
 
     /**
-     * 
      * @param emailtaskID id of related emailtask
-     * @param input HTTP body as json which is retrieved by the REST interface
+     * @param input       HTTP body as json which is retrieved by the REST interface
      * @return boolean
      */
     @POST

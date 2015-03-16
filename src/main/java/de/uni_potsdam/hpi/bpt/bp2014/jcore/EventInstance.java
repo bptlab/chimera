@@ -49,11 +49,12 @@ public class EventInstance extends ControlNodeInstance {
     }
 
     @Override
-    public boolean skip(){
+    public boolean skip() {
         return false;
     }
+
     @Override
-    public boolean terminate(){
+    public boolean terminate() {
         return false;
     }
 }
