@@ -1,81 +1,211 @@
 <h3>Scenario Instance {{instanceCtrl.scenario.instanceIds[0] + " - " + instanceCtrl.getScenarioName()}}</h3>
 
-<!-- Show enabled Activities -->
-<div class="pull-right dropdown">
-	<button class="btn btn-default dropdown-toggle" type="button" id="enabledActivitiesMenu" data-toggle="dropdown">
-		Enabled Activities
-		<span class="badge"></span>
-		<span class="pull-right fa arrow"></span>
-	</button>
-	<ul class="dropdown-menu" role="menu" aria-labelledby="enabledActivitiesMenu">
-		<li ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" role="presentation">
-			<a role="menuitem" data-toggle="modal" data-target="{{'#modal' + id}}" tabindex="-1">{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}</a>
-		</li>
-	</ul>
-</div>
-<br>
-<!-- A list of all running activities -->
-<h4>Running Activities</h4>
-<div class="responsive-table">
-	<table class="table table-striped">
-		<caption>Activities successfully started</caption>
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Name</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
-				<td>{{id}}</td>
-				<td>{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}</td>
-				<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalTerminate' + id}}">Terminate</a>
-			</tr>
-			</a>
-		</tbody>
-	</table>
-</div>
-<h4>Terminated Activities</h4>
-<div class="responsive-table">
-	<table class="table table-striped">
-		<caption>Activities successfully completed</caption>
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Name</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids'] track by $index">
-				<td>{{id}}</td>
-				<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
-			</tr>
-			</a>
-		</tbody>
-	</table>
+<div class="row">
+	<div class="pull-right">
+		Choose Layout: <select ng-model="layoutSelection" ng-options="item for item in ['UserView','AdminView']"></select>
+	</div>
 </div>
 
-<h4>Dataobjects</h4>
-<div class="responsive-table">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Name</th>
-				<th>State</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
-				<td>{{key}}</td>
-				<td>{{value}}</td>
-				<td>{{instanceCtrl.getCurrentInstance().dataobjects['states'][key]}}</td>
-			</tr>
-			</a>
-		</tbody>
-	</table>
+<div class="animate-switch-container" ng-switch on="layoutSelection">
+      <div class="animate-switch" ng-switch-when="AdminView">
+
+		<!-- Show enabled Activities -->
+		<div class="pull-right dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="enabledActivitiesMenu" data-toggle="dropdown">
+				Enabled Activities
+				<span class="badge"></span>
+				<span class="pull-right fa arrow"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="enabledActivitiesMenu">
+				<li ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" role="presentation">
+					<a role="menuitem" data-toggle="modal" data-target="{{'#modal' + id}}" tabindex="-1">{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}</a>
+				</li>
+			</ul>
+		</div>
+		<br>
+		<!-- A list of all running activities -->
+		<h4>Running Activities</h4>
+		<div class="responsive-table">
+			<table class="table table-striped">
+				<caption>Activities successfully started</caption>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
+						<td>{{id}}</td>
+						<td>{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}</td>
+						<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalTerminate' + id}}">Terminate</a>
+					</tr>
+					</a>
+				</tbody>
+			</table>
+		</div>
+		<h4>Terminated Activities</h4>
+		<div class="responsive-table">
+			<table class="table table-striped">
+				<caption>Activities successfully completed</caption>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids'] track by $index">
+						<td>{{id}}</td>
+						<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
+					</tr>
+					</a>
+				</tbody>
+			</table>
+		</div>
+		<br>
+		<h4>Dataobjects</h4>
+		<div class="responsive-table">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+						<th>State</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
+						<td>{{key}}</td>
+						<td>{{value}}</td>
+						<td>{{instanceCtrl.getCurrentInstance().dataobjects['states'][key]}}</td>
+					</tr>
+					</a>
+				</tbody>
+			</table>
+		</div>
+      </div>
+      <div class="animate-switch" ng-switch-default>
+	  <div class="row" ng-init="todoSelection = done">
+		<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
+			<div class="hpanel stats">
+				<div class="panel-heading">
+					<div class="panel-tools">
+					    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+					    <a class="closebox"><i class="fa fa-times"></i></a>
+            			        </div>	
+					Dataobjects
+				</div>
+				<div class="panel-body list">
+					<div class="responsive-table pull-left">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>State</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
+									<td>{{value}}</td>
+									<td>{{instanceCtrl.getCurrentInstance().dataobjects['states'][key]}}</td>
+								</tr>
+								</a>
+							</tbody>
+						</table>
+					</div>				
+				</div>
+				<div class="panel-footer"></div>
+		   	</div>
+		</div>
+
+		<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
+			<div class="hpanel stats">
+				<div class="panel-heading">
+					<div class="panel-tools">
+					    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+					    <a class="closebox"><i class="fa fa-times"></i></a>
+            			        </div>	
+					ToDos
+				</div>
+				<div class="panel-body list">
+					<div ng-if="todoSelection == done;" class="animate-if">
+					<!--<select ng-model="todoSelection" ng-options="item for item in ['open','done']"></select>-->
+					<!--<div class="animate-switch-container" ng-switch on="todoSelection">
+			     			 <div class="animate-switch" ng-switch-default>-->
+							<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">				
+								<div class="responsive-table project-list">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
+												<td>{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}</td>
+												<td><a type="button" data-toggle="modal" data-target="{{'#modalTerminate' + id}}"><i class="fa fa-check text-navy"></i></a></td>
+                        
+											</tr>
+											</a>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--<div class="animate-switch" ng-switch-when="completed">-->
+						<div ng-if="todoSelection != done ;" class="animate-if">
+							<div class="responsive-table project-list">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Name</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids'] track by $index">
+											<td>{{id}}</td>
+											<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
+										</tr>
+										</a>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>				
+	   			</div>
+     				<div class="panel-footer">
+					<a href="" type="button" class="btn btn-default" ng-click="todoSelection = open" ng-model="todoSelection">Open Tasks</a>
+					<a href="" type="button" class="btn btn-default" ng-click="todoSelection = completed" ng-model="todoSelection">Completed Tasks</a>
+				</div>
+		   	</div>
+	
+			<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
+				<div class="hpanel stats">
+					<div class="panel-heading">
+						<div class="panel-tools">
+						    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+						    <a class="closebox"><i class="fa fa-times"></i></a>
+		    			        </div>	
+						Unassigned Tasks
+					</div>
+					<div class="panel-body list">
+						<ul aria-labelledby="enabledActivitiesMenu">
+							<li ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" role="presentation">
+								<a data-toggle="modal" data-target="{{'#modal' + id}}" tabindex="-1">{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}</a>
+							</li>
+						</ul>
+					</div>
+					<div class="panel-footer"></div>
+			   	</div>
+			</div>
+		</div>
+	</div>
 </div>
+
 <!--------------------------------- MODALS -------------------------------------------->
 <!-- modal for beginning an Activity-->
 <div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" id="{{'modal' + id}}" class="modal fade">
