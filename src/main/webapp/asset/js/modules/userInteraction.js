@@ -37,7 +37,6 @@
 				this.scenarioIds.forEach(function(id){
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 						success(function(data) {
-							//controller.scenarios["" + id]['id'] = id;
 							controller.scenarios["" + id] = data;
 							controller.getImageForScenario(id);
 							controller.getInstancesOfScenario(id);
