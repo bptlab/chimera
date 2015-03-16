@@ -79,7 +79,8 @@ public class Aggregation implements IDeserialisable, IPersistable {
     @Override
     public int save() {
         Connector conn = new Connector();
-        this.aggregationID = conn.insertAggregationIntoDatabase(
+        this.aggregationID = 0;
+        conn.insertAggregationIntoDatabase(
                 this.source.getDataClassID(),
                 this.target.getDataClassID(),
                 this.multiplicity);

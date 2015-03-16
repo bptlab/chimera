@@ -52,6 +52,5 @@ public class DataAttributeTest {
         DataAttribute dataAttribute = new DataAttribute("state");
         Assert.assertEquals("AttributeName has been set correctly", "state", dataAttribute.getDataAttributeName());
         Assert.assertEquals("AttributeType has not been set correctly", "", dataAttribute.getDataAttributeType());
-        Assert.assertEquals("AttributeValue has not been set correctly", "", dataAttribute.getDataAttributeValue());
     }
 }

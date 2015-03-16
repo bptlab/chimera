@@ -13,14 +13,12 @@ import javax.xml.xpath.XPathFactory;
  */
 public class DataAttribute implements IPersistable {
     private int dataClassID = -1;
-    private String dataAttributeValue;
     private String dataAttributeName;
     private String dataAttributeType;
     private int dataAttributeID;
 
     public DataAttribute(String attribute) {
         dataAttributeName = attribute;
-        dataAttributeValue = "";
         dataAttributeType = "";
     }
 
@@ -40,16 +38,11 @@ public class DataAttribute implements IPersistable {
         this.dataAttributeID = conn.insertDataAttributeIntoDatabase(
                 this.dataAttributeName,
                 this.dataClassID,
-                this.dataAttributeValue,
                 this.dataAttributeType);
         return dataAttributeID;
     }
     public int getDataClassID() {
         return dataClassID;
-    }
-
-    public String getDataAttributeValue() {
-        return dataAttributeValue;
     }
 
     public int getDataAttributeID() {

@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -194,14 +195,13 @@ public class Connector extends DbDataObject {
      *
      * @param name
      * @param dataClassID
-     * @param value
      * @param type
      * @return
      */
-    public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String value, final String type){
+    public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String type){
         String sql = "INSERT INTO dataattribute (dataattribute.name, " +
-                "dataclass_id, dataattribute.value, dataattribute.type, dataattribute.default) " +
-                "VALUES ('" + name + "', " + dataClassID + ", '" + value + "', '" + type + "', '')";
+                "dataclass_id, dataattribute.type, dataattribute.default) " +
+                "VALUES ('" + name + "', " + dataClassID + ", '" + type + "', '')";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -225,11 +225,11 @@ public class Connector extends DbDataObject {
      * @param multiplicity
      * @return
      */
-    public int insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
-        String sql = "INSERT INTO aggregation (aggregation.sourceid, " +
-                "aggregation.targetid, aggregation.multiplicity) " +
+    public void insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
+        String sql = "INSERT INTO aggregation (dataclass_id1, " +
+                "dataclass_id2, aggregation.multiplicity) " +
                 "VALUES (" + sourceID + ", " + targetID + ", " + multiplicity + ")";
-        return performSQLInsertStatementWithAutoId(sql);
+        performDefaultSQLInsertStatement(sql);
     }
     /**
      * This Methods inserts a new DataNode into the Database.
