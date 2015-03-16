@@ -3,7 +3,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -377,6 +379,36 @@ public class DbObject {
                 se.printStackTrace();
             }
         }
+    }
+
+    protected Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+            if (results.next()) {
+                keysValues.put(results.getInt("id"), new HashMap<String, Object>());
+                for (String key : keys) {
+                    (keysValues.get(results.getInt("id"))).put(key, results.getObject(key));
+                }
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return keysValues;
     }
 
 }
