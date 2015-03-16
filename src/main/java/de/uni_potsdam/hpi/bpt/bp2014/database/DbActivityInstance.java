@@ -46,6 +46,7 @@ public class DbActivityInstance extends DbObject {
      * @param state This is the state in which an activity should be after executing setState.
      */
     public void setState(int id, String state) {
+        //TODO: history log
         String sql = "UPDATE activityinstance SET activity_state = '" + state + "' WHERE id = " + id;
         this.executeUpdateStatement(sql);
     }
@@ -59,6 +60,7 @@ public class DbActivityInstance extends DbObject {
      * @return an Integer which is -1 if something went wrong else it is the database ID of the newly created activity instance.
      */
     public int createNewActivityInstance(int controlNodeInstance_id, String ActivityType, String ActivityState) {
+        //TODO: history log
         String sql = "INSERT INTO activityinstance (id, type, role_id, activity_state, workitem_state) VALUES (" + controlNodeInstance_id + ", '" + ActivityType + "', 1,'" + ActivityState + "', 'init')";
         return this.executeInsertStatement(sql);
     }
@@ -83,6 +85,22 @@ public class DbActivityInstance extends DbObject {
     public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstance_id) {
         String sql = "SELECT controlnode_id FROM activityinstance, controlnodeinstance WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' AND activity_state = 'terminated' AND fragmentinstance_id IN (Select id FROM fragmentinstance WHERE scenarioinstance_id =" + scenarioInstance_id + ")";
         return this.executeStatementReturnsListInt(sql, "controlnode_id");
+    }
+
+    public boolean getAutomaticExecution(int id){
+        String sql = "SELECT automaticexecution FROM activityinstance WHERE id = " + id;
+        return this.executeStatementReturnsBoolean(sql, "automaticexecution");
+    }
+
+    public void setAutomaticExecution(int id, boolean automaticExecution) {
+        int automaticExecutionAsInt;
+        if (automaticExecution) {
+            automaticExecutionAsInt = 1;
+        } else {
+            automaticExecutionAsInt = 0;
+        }
+        String sql = "UPDATE activityinstance SET automaticexecution = " + automaticExecutionAsInt + " WHERE id = " + id;
+        this.executeUpdateStatement(sql);
     }
 
 }

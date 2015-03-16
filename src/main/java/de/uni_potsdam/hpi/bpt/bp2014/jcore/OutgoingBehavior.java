@@ -48,7 +48,7 @@ public abstract class OutgoingBehavior {
     /**
      * Runs other methods after terminate a control node instance
      */
-    public void runAfterTermination(){
+    public void runAfterTermination() {
         scenarioInstance.startAutomaticControlNodes();
     }
 

@@ -1,11 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
-
-import sun.awt.image.ImageWatched;
-
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -31,30 +26,49 @@ import java.util.LinkedList;
 
 
 public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
-    //private  LinkedList<Integer> followingControlNode_ids;
+    /**
+     * List of IDs of following control nodes.
+     */
     private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<LinkedList<Integer>>();
 
+    /**
+     * Initializes and creates an ExclusiveGatewaySplitBehavior
+     *
+     * @param gateway_id          The id of the gateway.
+     * @param scenarioInstance    An instance from the class ScenarioInstance.
+     * @param fragmentInstance_id The id of the fragment instance.
+     */
     public ExclusiveGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance, int fragmentInstance_id) {
         this.controlNode_id = gateway_id;
         this.scenarioInstance = scenarioInstance;
         this.fragmentInstance_id = fragmentInstance_id;
-        //followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
         initializeFollowingControlNodeIds();
     }
 
-    private void initializeFollowingControlNodeIds(){
+    /**
+     * Adds the ids of the following control nodes to the list.
+     * Creates for every control node a bucket.
+     */
+    private void initializeFollowingControlNodeIds() {
         LinkedList<Integer> ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
-        for (int i = 0; i < ids.size(); i++){
+        for (int i = 0; i < ids.size(); i++) {
             followingControlNodes.add(new LinkedList<Integer>());
             this.addFollowingControlNode(i, ids.get(i));
         }
     }
-    private void addFollowingControlNode(int bucket_id, int id){
+
+    /**
+     * Adds the control node id to the bucket. Looks for XOR and AND to add the following control nodes.
+     *
+     * @param bucket_id The bucket id.
+     * @param id        The id of the control node getting added.
+     */
+    private void addFollowingControlNode(int bucket_id, int id) {
         LinkedList<Integer> ids = followingControlNodes.get(bucket_id);
         ids.add(id);
         followingControlNodes.set(bucket_id, ids);
-        if(dbControlNode.getType(id).equals("XOR") || dbControlNode.getType(id).equals("AND")){
-            for(int controlNode_id: dbControlFlow.getFollowingControlNodes(id)){
+        if (dbControlNode.getType(id).equals("XOR") || dbControlNode.getType(id).equals("AND")) {
+            for (int controlNode_id : dbControlFlow.getFollowingControlNodes(id)) {
                 this.addFollowingControlNode(bucket_id, controlNode_id);
             }
         }
@@ -66,31 +80,57 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         this.runAfterTermination();
     }
 
+    /**
+     * Executes the XOR gateway and enable the following control nodes.
+     */
     public void execute() {
         enableFollowing();
     }
 
-   /* public boolean oldcheckTermination(int controlNode_id){
-        if(followingControlNode_ids.contains(new Integer(controlNode_id))){
-            followingControlNode_ids.remove(new Integer(controlNode_id));
-            for (int id : followingControlNode_ids) {
-                ControlNodeInstance controlNodeInstance = scenarioInstance.getControlNodeInstanceForControlNodeId(id);
-                if(controlNodeInstance.getClass() == ActivityInstance.class) {
-                    ((ActivityInstance)controlNodeInstance).skip();
-                }
+    @Override
+    protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
+        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
+            if (controlNode_id == controlNodeInstance.controlNode_id) {
+                return controlNodeInstance;
             }
-            return true;
         }
-        return false;
-    }*/
-    public boolean checkTermination(int controlNode_id){
-        if((dbControlNode.getType(controlNode_id).equals("AND")) || (dbControlNode.getType(controlNode_id).equals("XOR"))){
-            return false;  //TODO: do it better
+        String type = dbControlNode.getType(controlNode_id);
+        ControlNodeInstance controlNodeInstance = null;
+        //TODO type
+        switch (type) {
+            case "Activity":
+            case "EmailTask":
+                controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
+                break;
+            case "Endevent":
+                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
+                break;
+            case "XOR":
+                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                break;
+            case "AND":
+                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+                ((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
+                break;
         }
-        for(int i = 0; i < followingControlNodes.size(); i++){
-            if(followingControlNodes.get(i).contains(new Integer(controlNode_id))){
+        return controlNodeInstance;
+    }
+
+    /**
+     * Checks if the gateway can terminate, because the given control node has changed his state.
+     *
+     * @param controlNode_id The id of the control node.
+     * @return True if the gateway can terminate. false if not.
+     */
+    public boolean checkTermination(int controlNode_id) {
+        if ((dbControlNode.getType(controlNode_id).equals("AND")) || (dbControlNode.getType(controlNode_id).equals("XOR"))) {
+            return false;
+        }
+        for (int i = 0; i < followingControlNodes.size(); i++) {
+            if (followingControlNodes.get(i).contains(new Integer(controlNode_id))) {
                 followingControlNodes.remove(i);
-                for(LinkedList<Integer> followingControlNode_ids: followingControlNodes){
+                for (LinkedList<Integer> followingControlNode_ids : followingControlNodes) {
                     for (int id : followingControlNode_ids) {
                         ControlNodeInstance controlNodeInstance = scenarioInstance.getControlNodeInstanceForControlNodeId(id);
                         controlNodeInstance.skip();

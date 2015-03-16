@@ -26,9 +26,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
  */
 
 public class GatewayInstance extends ControlNodeInstance {
-    private Boolean isXOR;
-    private Boolean isAND;
+    private boolean isXOR;
+    private boolean isAND;
     private ScenarioInstance scenarioInstance;
+    private boolean automaticExecution;
     /**
      * Database Connection objects.
      */
@@ -54,6 +55,7 @@ public class GatewayInstance extends ControlNodeInstance {
                 return;
             }
         }
+        this.automaticExecution = true;
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
@@ -62,7 +64,7 @@ public class GatewayInstance extends ControlNodeInstance {
         if (type.equals("AND")) {
             this.isAND = true;
             this.isXOR = false;
-        } else if(type.equals("XOR")) {
+        } else if (type.equals("XOR")) {
             this.isAND = false;
             this.isXOR = true;
         }
@@ -84,22 +86,18 @@ public class GatewayInstance extends ControlNodeInstance {
         }
         this.stateMachine = new GatewayStateMachine(controlNode_id, scenarioInstance, this);
         if (isAND) {
-            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
+            this.outgoingBehavior = new ParallelGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
             this.incomingBehavior = new ParallelGatewayJoinBehavior(this, scenarioInstance);
-        } else if(isXOR) {
+        } else if (isXOR) {
             this.outgoingBehavior = new ExclusiveGatewaySplitBehavior(controlNode_id, scenarioInstance, fragmentInstance_id);
             this.incomingBehavior = new ExclusiveGatewayJoinBehavior(this, scenarioInstance, stateMachine);
         }
     }
 
-    public boolean checkTermination(int controlNode_id){
-        return ((ExclusiveGatewaySplitBehavior)outgoingBehavior).checkTermination(controlNode_id);
+    public boolean checkTermination(int controlNode_id) {
+        return ((ExclusiveGatewaySplitBehavior) outgoingBehavior).checkTermination(controlNode_id);
     }
 
-    /**
-     * Terminates the gateway instance.
-     * Set the state in database.
-     */
     @Override
     public boolean terminate() {
         stateMachine.terminate();
@@ -109,11 +107,11 @@ public class GatewayInstance extends ControlNodeInstance {
 
     @Override
     public boolean skip() {
-        return stateMachine .skip();
+        return stateMachine.skip();
     }
 
-    /**
-     * Getter
+    /*
+     * Getter & Setter
      */
 
     public Boolean getIsXOR() {
@@ -126,5 +124,13 @@ public class GatewayInstance extends ControlNodeInstance {
 
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
+    }
+
+    public boolean isAutomaticExecution() {
+        return automaticExecution;
+    }
+
+    public void setAutomaticExecution(boolean automaticExecution) {
+        this.automaticExecution = automaticExecution;
     }
 }

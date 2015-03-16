@@ -185,8 +185,7 @@ public class Node implements IDeserialisable, IPersistable {
                         id);
                 connector.createEMailTemplate(databaseID);
 
-            }
-            else {
+            } else {
                 // DataNodes will be done in DataObject
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(type),
@@ -289,7 +288,9 @@ public class Node implements IDeserialisable, IPersistable {
      *
      * @return the stereotype as a String.
      */
-    public String getStereotype(){ return stereotype;}
+    public String getStereotype() {
+        return stereotype;
+    }
     /**
      * Sets the fragment id.
      *
