@@ -1,9 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
-import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -304,6 +303,7 @@ public class RestConnection {
      * @return true or false
      */
     @POST
+    // TODO: Fix path names
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
     public Boolean doActivity(@PathParam("scenarioID") String scenarioID,
                               @PathParam("instanceID") int scenarioInstanceID,
@@ -335,9 +335,8 @@ public class RestConnection {
     }
 
     /**
-     * 
      * @param emailtaskID id of related emailtask
-     * @param input HTTP body as json which is retrieved by the REST interface
+     * @param input       HTTP body as json which is retrieved by the REST interface
      * @return boolean
      */
     @POST

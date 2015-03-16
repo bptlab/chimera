@@ -41,6 +41,7 @@ public class ActivityInstance extends ControlNodeInstance {
     private final String label;
     private LinkedList<Integer> references;
     private final boolean isMailTask;
+    private boolean automaticExecution;
     /**
      * Database Connection objects.
      */
@@ -73,9 +74,13 @@ public class ActivityInstance extends ControlNodeInstance {
             //creates a new Activity Instance also in database
             this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
             dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
+            if (dbControlNode.getType(controlNode_id).equals("EmailTask")) {
+                dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
+            }
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine) stateMachine).enableControlFlow();
         }
+        this.automaticExecution = dbActivityInstance.getAutomaticExecution(controlNodeInstance_id);
         this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
         this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
         if (dbControlNode.getType(controlNode_id).equals("EmailTask")) {
@@ -151,11 +156,12 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     @Override
-    public boolean skip(){
+    public boolean skip() {
         return ((ActivityStateMachine) stateMachine).skip();
     }
+
     /**
-     * Getter
+     * Getter & Setter
      */
     public TaskExecutionBehavior getTaskExecutionBehavior() {
         return taskExecutionBehavior;
@@ -177,4 +183,13 @@ public class ActivityInstance extends ControlNodeInstance {
         return isMailTask;
     }
 
+    public void setAutomaticExecution(boolean automaticExecution) {
+        this.automaticExecution = automaticExecution;
+        this.dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, automaticExecution);
+    }
+
+    public boolean isAutomaticExecution() {
+
+        return automaticExecution;
+    }
 }

@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;

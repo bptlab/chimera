@@ -113,7 +113,7 @@ public class FragmentInstance {
         dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
     }
 
-    /**
+    /*
      * Getter
      */
 

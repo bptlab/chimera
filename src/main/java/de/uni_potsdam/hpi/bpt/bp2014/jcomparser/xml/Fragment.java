@@ -71,20 +71,21 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     private List<OutputSet> outputSets;
     /**
-     * The version of the current Scenario
+     * The version of the current Scenario.
      */
     private int versionNumber;
 
     /**
      * Sets the processeditorServerUrl which is needed for connecting to the server
      * in order to get the XML-files for the fragments.
+     * @param serverURL URL of the processEditorServer
      */
     public Fragment(String serverURL) {
         processeditorServerUrl = serverURL;
     }
 
     /**
-     * This constructor is only used for testcases as a connection to the server is not needed therefore
+     * This constructor is only used for testcases as a connection to the server is not needed therefore.
      */
     public Fragment() {
     }
@@ -114,12 +115,12 @@ public class Fragment implements IDeserialisable, IPersistable {
                 NodeList versions = (NodeList) xPath.compile(xPathQuery).evaluate(versionXML, XPathConstants.NODESET);
                 int maxID = 0;
                 // We assume that the version that needs to be saved is the newest one
-                //TODO: Do we want to save versions that are currently not in the Database?
                 for (int i = 0; i < versions.getLength(); i++) {
                     xPathQuery = "@id";
                     int currentID = Integer.parseInt((String) xPath.compile(xPathQuery).evaluate(versions.item(i), XPathConstants.STRING));
-                    if (maxID < currentID)
+                    if (maxID < currentID) {
                         maxID = currentID;
+                    }
                 }
                 versionNumber = maxID;
             } catch (XPathExpressionException e) {
@@ -129,7 +130,8 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Get the XML which contains all the versions of the current scenario from the processEditorServer
+     * Get the XML which contains all the versions of the current scenario from the processEditorServer.
+     * @return XML containing versions
      */
     private Element fetchVersionXML() {
         try {
