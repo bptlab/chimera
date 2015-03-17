@@ -116,7 +116,7 @@
 			// activitylogs
 			this.initializeActivitylogInstances = function(){
 				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
-					$http.get(JEngine_Server_URL + JCore_REST_new_Interface + "/history" +
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_new_Interface + "/history" +
 						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/activities/").
 					success(function(data){

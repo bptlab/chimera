@@ -225,7 +225,7 @@
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().activitylogs track by $index">
 									<div class="list-item">
-										<h3 class="no-margins font-extra-bold text-success">{{value['old_state_name']}} -> {{value['new_state_name']}}</h3>
+										<h3 class="no-margins text-success">{{value['oldstate']}} -> {{value['newstate']}}</h3>
 										<small>{{key}} - {{value['label']}}</small>
 										<div class="pull-right font-bold">98% <i class="fa fa-level-up text-success"></i></div>
 									</div>
@@ -236,7 +236,7 @@
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjectlogs track by $index">
 									<div class="list-item">
-										<h3 class="no-margins font-extra-bold text-success">{{value}}</h3>
+										<h3 class="no-margins text-success">{{value['old_state_name']}} -> {{value['new_state_name']}}</h3>
 										<small>{{key}} - {{value['name']}}</small>
 										<div class="pull-right font-bold">98% <i class="fa fa-level-up text-success"></i></div>
 									</div>
