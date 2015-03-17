@@ -84,6 +84,9 @@ public class  ScenarioTest {
      */
     private static final String FETCH_DOMAIN_MODEL_METHOD =
             "fetchDomainModelXML";
+    /**
+     * This method creates the the domainModel from the given domainModelXML.
+     */
     private static final String SET_DOMAIN_MODEL_METHOD =
             "createAndInitializeDomainModel";
     /**
@@ -193,6 +196,11 @@ public class  ScenarioTest {
         PowerMock.verify(scenarioWOVersion);
     }
 
+    /**
+     * This method tests if the given URL of an XML is correctly set.
+     *
+     * @throws Exception
+     */
     @Test
     public void testSetDomainURL() throws Exception {
         Document bikeScenario = getDocumentFromXmlFile(new File("src/test/resources/BikeScenario.xml"));

@@ -12,11 +12,28 @@ import javax.xml.xpath.XPathFactory;
  * Created by Ihdefix on 04.03.2015.
  */
 public class DataAttribute implements IPersistable {
+    /**
+     * This is the databaseID of the dataClass belonging to this attribute.
+     */
     private int dataClassID = -1;
+    /**
+     * This is the name of the attribute.
+     */
     private String dataAttributeName;
+    /**
+     * This is the type of the attribute.
+     */
     private String dataAttributeType;
+    /**
+     * This is the databaseID of the attribute.
+     */
     private int dataAttributeID;
 
+    /**
+     *
+     *
+     * @param attribute
+     */
     public DataAttribute(String attribute) {
         dataAttributeName = attribute;
         dataAttributeType = "";

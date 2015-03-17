@@ -192,11 +192,12 @@ public class Connector extends DbDataObject {
     }
 
     /**
+     * Inserts a new DataAttribute into the database.
      *
-     * @param name
-     * @param dataClassID
-     * @param type
-     * @return
+     * @param name is the name of the dataAttribute as a String.
+     * @param dataClassID is the databaseID of the corresponding dataClass.
+     * @param type is the type of the dataAttribute.
+     * @return the auto-incremented databaseID of the newly added dataAttribute.
      */
     public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String type){
         String sql = "INSERT INTO dataattribute (dataattribute.name, " +
@@ -206,24 +207,25 @@ public class Connector extends DbDataObject {
     }
 
     /**
+     * Updates the scenario entry with the corresponding domainModel.
      *
-     * @param modelID
-     * @param versionNumber
-     * @param scenarioID
+     * @param modelID is the modelID of the domainModel which should be saved as a Long.
+     * @param versionNumber is the versionNumber of the domainModel as an Integer.
+     * @param scenarioID is the databaseID of the corresponding scenario.
      */
     public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber, final int scenarioID){
         DbObject dbObject = new DbObject();
         String sql = "UPDATE scenario " +
-                "SET scenario.modelid = " + modelID +", scenario.modelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
+                "SET scenario.datamodelid = " + modelID +", scenario.datamodelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
         dbObject.executeUpdateStatement(sql);
     }
 
     /**
+     *  This method inserts an aggregation into the database.
      *
-     * @param sourceID
-     * @param targetID
-     * @param multiplicity
-     * @return
+     * @param sourceID is the databaseID of a dataClass which is the source of the aggregation.
+     * @param targetID is the databaseID of a dataClass which is the target of the aggregation.
+     * @param multiplicity is the multiplicity of the aggregation as an Integer.
      */
     public void insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
         String sql = "INSERT INTO aggregation (dataclass_id1, " +

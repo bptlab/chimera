@@ -29,21 +29,52 @@ public class DomainModel implements IDeserialisable, IPersistable {
      * The url of the process Editor.
      */
     private String processeditorServerUrl;
+    /**
+     * The modelID found in the XML.
+     */
     private long domainModelModelID;
+    /**
+     * The version number of the domainModel
+     */
     private int versionNumber;
+    /**
+     * The databaseID of the corresponding scenario.
+     */
     private int scenarioID;
+    /**
+     * A Mao of modelID's and corresponding dataClasses belonging to this domainModel.
+     */
     private Map<Long,DataClass> dataClasses;
+    /**
+     * A List of all aggregation between the dataClasses belonging to this domainModel.
+     */
     private List<Aggregation> aggregations;
+    /**
+     * The XML representation of a domainModel
+     */
     private org.w3c.dom.Node domainModelXML;
 
+    /**
+     * The constructor.
+     *
+     * @param serverURL the severURL wher the XML are to be found.
+     */
     public DomainModel(String serverURL) {
         processeditorServerUrl = serverURL;
     }
 
+    /**
+     * The constructor.
+     */
     public DomainModel(){
 
     }
 
+    /**
+     * This method calls all needed methods to set up the domainModel.
+     *
+     * @param element The XML Node which will be used for deserialisation
+     */
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
         this.domainModelXML = element;
@@ -54,10 +85,18 @@ public class DomainModel implements IDeserialisable, IPersistable {
         setVersionNumber();
     }
 
+    /**
+     * This sets the scenario ID needed for the update.
+     *
+     * @param id databaseID of the corresponding scenario.
+     */
     public void setScenarioID(final int id) {
         this.scenarioID = id;
     }
 
+    /**
+     * This method generates a List of aggregates from the XML.
+     */
     private void generateAggregations() {
         try {
             //get all edges from fragmentXML
@@ -78,6 +117,9 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method generates a Map of dataClasses with their modelID as keys.
+     */
     private void generateDataClasses() {
         try {
             //get all nodes from fragmentXML
@@ -98,6 +140,9 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method gets and sets the modelId of the domainModel from the XML.
+     */
     private void setDomainModelModelID() {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
@@ -110,6 +155,9 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method sets the versionNumber of the domainModel.
+     */
     private void setVersionNumber() {
         Element versionXML = fetchVersionXML();
         if (versionXML != null) {
@@ -132,6 +180,12 @@ public class DomainModel implements IDeserialisable, IPersistable {
             }
         }
     }
+
+    /**
+     * This method gets the versionNumber from the given XML.
+     *
+     * @return The XML Element for the version.
+     */
     private Element fetchVersionXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
@@ -151,6 +205,12 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
         return null;
     }
+
+    /**
+     * This method saves the domainModel to the database as well as for the dataClasses and aggregations.
+     *
+     * @return
+     */
     @Override
     public int save() {
         Connector conn = new Connector();

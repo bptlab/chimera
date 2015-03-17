@@ -127,11 +127,19 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     }
 
+    /**
+     * This method calls 2 more methods which get and set the domainModel.
+     */
     private void setDomainModel() {
         domainModelXML = fetchDomainModelXML();
         domainModel = createAndInitializeDomainModel();
     }
 
+    /**
+     * This method takes the XML and initializes the domainModel.
+     *
+     * @return the domainModel or null if there was no XML given.
+     */
     private DomainModel createAndInitializeDomainModel() {
         if(domainModelXML != null){
             domainModel = new DomainModel(processeditorServerUrl);
@@ -141,6 +149,11 @@ public class Scenario implements IDeserialisable, IPersistable {
         return null;
     }
 
+    /**
+     * This method takes the URL given in the scenarioXML and gets the domainModelXML.
+     *
+     * @return the domainModelXML as an Element.
+     */
     private Element fetchDomainModelXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
@@ -160,6 +173,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         return null;
     }
 
+    /**
+     * This method gets the URL for the corresponding domainModel.
+     * It is found in the scenarioXML.
+     */
     private void setDomainModelURL() {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/properties/property" +
@@ -382,6 +399,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     scenarioID,
                     versionNumber);
             saveFragments();
+            domainModel.setScenarioID(this.databaseID);
             domainModel.save();
             saveDataObjects();
             saveConsistsOf();
