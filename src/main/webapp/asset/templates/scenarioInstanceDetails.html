@@ -87,7 +87,7 @@
 		</div>
       </div>
       <div class="animate-switch" ng-switch-default>
-	  <div class="row" ng-init="todoSelection = done">
+	  <div class="row">
 		<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
 			<div class="hpanel stats">
 				<div class="panel-heading">
@@ -130,11 +130,9 @@
 					ToDos
 				</div>
 				<div class="panel-body list">
-					<div ng-if="todoSelection == done;" class="animate-if">
-					<!--<select ng-model="todoSelection" ng-options="item for item in ['open','done']"></select>-->
-					<!--<div class="animate-switch-container" ng-switch on="todoSelection">
-			     			 <div class="animate-switch" ng-switch-default>-->
-							<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">				
+					<div class="animate-switch-container" ng-switch on="todoSelection">
+			     			 <div class="animate-switch" ng-switch-default>
+							<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 0.5s;">				
 								<div class="responsive-table project-list">
 									<table class="table table-striped">
 										<thead>
@@ -155,8 +153,7 @@
 								</div>
 							</div>
 						</div>
-						<!--<div class="animate-switch" ng-switch-when="completed">-->
-						<div ng-if="todoSelection != done ;" class="animate-if">
+						<div class="animate-switch" ng-switch-when="completed">
 							<div class="responsive-table project-list">
 								<table class="table table-striped">
 									<thead>
@@ -178,11 +175,12 @@
 					</div>				
 	   			</div>
      				<div class="panel-footer">
-					<a href="" type="button" class="btn btn-default" ng-click="todoSelection = open" ng-model="todoSelection">Open Tasks</a>
-					<a href="" type="button" class="btn btn-default" ng-click="todoSelection = completed" ng-model="todoSelection">Completed Tasks</a>
+					<select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
+					<!--<button type="button" class="btn btn-default" value="open" ng-model="todoSelection">Open Tasks</a>
+					<button type="button" class="btn btn-default" value="completed" ng-model="todoSelection">Completed Tasks</a>-->
 				</div>
-		   	</div>
-	
+		   	   </div>
+			</div>
 			<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
 				<div class="hpanel stats">
 					<div class="panel-heading">
@@ -202,11 +200,60 @@
 					<div class="panel-footer"></div>
 			   	</div>
 			</div>
+		
 		</div>
+		<div class="row">
+			<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
+				<div class="hpanel stats">
+					<div class="panel-heading">
+						<div class="panel-tools">
+						    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+						    <a class="closebox"><i class="fa fa-times"></i></a>
+		    			        </div>	
+						Document Activity
+					</div>
+					<div class="panel-body list">
+						<div class="pull-right">
+						    <select ng-model="logSelection" ng-options="item for item in ['activity','dataobject']"></select>
+						    <!--<a href="#" class="btn btn-xs btn-default">Today</a>
+						    <a href="#" class="btn btn-xs btn-default">Month</a>-->
+						</div>
+						<div class="panel-title">Last Activity</div>
+						<small class="fo">This is simple example</small>
+						<div class="animate-switch-container" ng-switch on="logSelection">
+	 						<div class="animate-switch" ng-switch-default>						
+								<div class="list-item-container">
+								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().activitylogs track by $index">
+									<div class="list-item">
+										<h3 class="no-margins text-success">{{value['label']}}</h3>
+										<small>{{value['oldstate']}} -> {{value['newstate']}}</small>
+										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+									</div>
+								    </div>
+								</div>
+							</div>
+	 						<div class="animate-switch" ng-switch-when="dataobject">						
+								<div class="list-item-container">
+								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjectlogs track by $index">
+									<div class="list-item">
+										<h3 class="no-margins text-success">{{value['name']}}</h3>
+										<small>{{value['old_state_name']}} -> {{value['new_state_name']}}</small>
+										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+									</div>
+								    </div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer"></div>
+			   	</div>
+			</div>
+		</div>
+	   </div>
 	</div>
 </div>
 
-<!--------------------------------- MODALS -------------------------------------------->
+<!--___________________________________ MODALS ___________________________________-->
 <!-- modal for beginning an Activity-->
 <div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" id="{{'modal' + id}}" class="modal fade">
   <div class="modal-dialog">

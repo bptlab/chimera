@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -618,5 +619,70 @@ public class Connector extends DbDataObject {
                 "FROM fragment " +
                 "WHERE scenario_id = " + scenarioID;
         return dbDataObject.executeStatementReturnsListLong(select, "modelid");
+    }
+
+    /**
+     * Get the databaseIDs of all dataClasses that belong to one scenario.
+     *
+     * @param scenarioID databaseID of the scenario
+     * @return List of all databaseIDs that belong to the scenario specified by scenarioID
+     */
+    public List<Integer> getDataClassIDs(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT dataclass_id " +
+                "FROM dataobject " +
+                "WHERE scenario_id = " + scenarioID;
+        // temporaryDataClassIDs might contain duplicate entries
+        List<Integer> temporaryDataClassIDs = dbDataObject.executeStatementReturnsListInt(select, "dataclass_id");
+        List<Integer> resultDataClassIDs = new LinkedList<>();
+        for (int entry : temporaryDataClassIDs) {
+            if (!resultDataClassIDs.contains(entry)) {
+                resultDataClassIDs.add(entry);
+            }
+        }
+        return resultDataClassIDs;
+    }
+
+    /**
+     * Get the name of the dataClass specified by its ID.
+     *
+     * @param dataClassID DatabaseID of the dataClass
+     * @return Name of the dataClass as String
+     */
+    public String getDataClassName(int dataClassID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT name " +
+                "FROM dataclass " +
+                "WHERE id = " + dataClassID;
+        return dbDataObject.executeStatementReturnsString(select, "name");
+    }
+
+    /**
+     * Get a map of all dataAttribute-database-IDs to their name.
+     *
+     * @param dataClassID DatabaseID of the dataClass to which the dataAttributes belong
+     * @return A map of all dataAttribute-database-IDs to their name
+     */
+    public Map<Integer, String> getDataAttributes(int dataClassID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT id, name " +
+                "FROM dataattribute " +
+                "WHERE dataclass_id = " + dataClassID;
+        return dbDataObject.executeStatementReturnsHashMap(select, "id", "name");
+
+    }
+
+    /**
+     * Change all oldDataAttributeIDs to newDataAttributeID of all specified dataattributeinstances.
+     *
+     * @param oldDataAttributeID DataAttributeID that gets updated by newDataAttributeID
+     * @param newDataAttributeID new dataAttributeID that overwrites oldDataAttributeID
+     */
+    public void migrateDataAttributeInstance(Integer oldDataAttributeID, Integer newDataAttributeID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String update = "UPDATE dataattributeinstance " +
+                "SET dataattribute_id = " + newDataAttributeID +
+                " WHERE dataattribute_id = " + oldDataAttributeID;
+        dbDataObject.executeUpdateStatement(update);
     }
 }

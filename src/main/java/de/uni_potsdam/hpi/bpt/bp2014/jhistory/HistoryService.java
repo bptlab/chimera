@@ -67,13 +67,13 @@ public class HistoryService {
         return labels;
     }
 
-    public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(int scenario_id){
+    public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(int scenarioInstance_id){
         DbHistoryDataObjectInstance dbHistoryDataObjectInstance = new DbHistoryDataObjectInstance();
-        return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(scenario_id);
+        return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 
-    public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(int scenario_id){
+    public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
         DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
-        return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(scenario_id);
+        return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 }

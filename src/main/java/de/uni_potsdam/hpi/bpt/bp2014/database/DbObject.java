@@ -350,17 +350,18 @@ public class DbObject {
      *
      * @param sql This is a given SQL Statement.
      */
-    public void executeUpdateStatement(String sql) {
+    public int executeUpdateStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
+        int rowId = 0;
         ResultSet rs = null;
         if (conn == null) {
-            return;
+            return rowId;
         }
         try {
             //Execute a querystmt = conn.createStatement();
             stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
+            rowId = stmt.executeUpdate(sql);
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
@@ -381,6 +382,7 @@ public class DbObject {
                 se.printStackTrace();
             }
         }
+        return rowId;
     }
 
     public Map<Integer, String> executeStatementReturnsHashMap(String sql, String key, String value) {
@@ -429,7 +431,7 @@ public class DbObject {
         Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
         try {
             results = conn.prepareStatement(sql).executeQuery();
-            if (results.next()) {
+            while (results.next()) {
                 keysValues.put(results.getInt("id"), new HashMap<String, Object>());
                 for (String key : keys) {
                     (keysValues.get(results.getInt("id"))).put(key, results.getObject(key));
