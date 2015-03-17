@@ -55,12 +55,12 @@ public class DbEmailConfiguration extends DbObject {
         return this.executeStatementReturnsString(sql, "sendmailaddress");
     }
 
-    public void setEmailConfiguration(int id, String receiver, String subject, String message) {
+    public int setEmailConfiguration(int id, String receiver, String subject, String message) {
         String sql = "UPDATE emailconfiguration SET message = '" +
                      message + "', subject  = '" + subject +
                      "', receivermailaddress = '" + receiver +
                      "'WHERE controlnode_id = " + id;
-        this.executeUpdateStatement(sql);
+        return this.executeUpdateStatement(sql);
     }
 
     public LinkedList<Integer> getAllEmailTasksForScenario(int scenario_id){

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 17. Mrz 2015 um 10:46
+-- Erstellungszeit: 17. Mrz 2015 um 11:38
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7799 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7867 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -6749,7 +6749,59 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `role_id`, `
 (7794, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
 (7795, 'HumanTask', 0, 1, 'ready', 'init'),
 (7797, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
-(7798, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init');
+(7798, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7799, 'HumanTask', 0, 1, 'ready', 'init'),
+(7801, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7802, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7803, 'HumanTask', 0, 1, 'ready', 'init'),
+(7805, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7806, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7807, 'HumanTask', 0, 1, 'ready', 'init'),
+(7809, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7810, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7811, 'HumanTask', 0, 1, 'ready', 'init'),
+(7813, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7814, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7815, 'HumanTask', 0, 1, 'ready', 'init'),
+(7817, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7818, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7819, 'HumanTask', 0, 1, 'ready', 'init'),
+(7821, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7822, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7823, 'HumanTask', 0, 1, 'ready', 'init'),
+(7825, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7826, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7827, 'HumanTask', 0, 1, 'ready', 'init'),
+(7829, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7830, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7831, 'HumanTask', 0, 1, 'terminated', 'init'),
+(7833, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7834, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7835, 'HumanTask', 0, 1, 'terminated', 'init'),
+(7837, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7838, 'HumanTask', 0, 1, 'ready', 'init'),
+(7839, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7840, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7841, 'HumanTask', 0, 1, 'terminated', 'init'),
+(7843, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7844, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7845, 'HumanTask', 0, 1, 'terminated', 'init'),
+(7847, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7848, 'HumanTask', 0, 1, 'ready', 'init'),
+(7849, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7850, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7851, 'HumanTask', 0, 1, 'ready', 'init'),
+(7853, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7854, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7855, 'HumanTask', 0, 1, 'ready', 'init'),
+(7857, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7858, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7859, 'HumanTask', 0, 1, 'ready', 'init'),
+(7861, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7862, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7863, 'HumanTask', 0, 1, 'ready', 'init'),
+(7865, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(7866, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init');
 
 -- --------------------------------------------------------
 
@@ -7531,7 +7583,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7799 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7867 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -15264,7 +15316,75 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (7795, 'Activity', 441, 4857),
 (7796, 'XOR', 444, 4858),
 (7797, 'Activity', 445, 4858),
-(7798, 'Activity', 446, 4858);
+(7798, 'Activity', 446, 4858),
+(7799, 'Activity', 432, 4859),
+(7800, 'XOR', 433, 4860),
+(7801, 'Activity', 434, 4860),
+(7802, 'Activity', 437, 4860),
+(7803, 'Activity', 441, 4861),
+(7804, 'XOR', 444, 4862),
+(7805, 'Activity', 445, 4862),
+(7806, 'Activity', 446, 4862),
+(7807, 'Activity', 432, 4863),
+(7808, 'XOR', 433, 4864),
+(7809, 'Activity', 434, 4864),
+(7810, 'Activity', 437, 4864),
+(7811, 'Activity', 441, 4865),
+(7812, 'XOR', 444, 4866),
+(7813, 'Activity', 445, 4866),
+(7814, 'Activity', 446, 4866),
+(7815, 'Activity', 432, 4867),
+(7816, 'XOR', 433, 4868),
+(7817, 'Activity', 434, 4868),
+(7818, 'Activity', 437, 4868),
+(7819, 'Activity', 441, 4869),
+(7820, 'XOR', 444, 4870),
+(7821, 'Activity', 445, 4870),
+(7822, 'Activity', 446, 4870),
+(7823, 'Activity', 432, 4871),
+(7824, 'XOR', 433, 4872),
+(7825, 'Activity', 434, 4872),
+(7826, 'Activity', 437, 4872),
+(7827, 'Activity', 441, 4873),
+(7828, 'XOR', 444, 4874),
+(7829, 'Activity', 445, 4874),
+(7830, 'Activity', 446, 4874),
+(7831, 'Activity', 432, 4875),
+(7832, 'XOR', 433, 4876),
+(7833, 'Activity', 434, 4876),
+(7834, 'Activity', 437, 4876),
+(7835, 'Activity', 441, 4877),
+(7836, 'XOR', 444, 4878),
+(7837, 'Activity', 445, 4878),
+(7838, 'Activity', 446, 4878),
+(7839, 'Activity', 441, 4879),
+(7840, 'Activity', 432, 4880),
+(7841, 'Activity', 432, 4881),
+(7842, 'XOR', 433, 4882),
+(7843, 'Activity', 434, 4882),
+(7844, 'Activity', 437, 4882),
+(7845, 'Activity', 441, 4883),
+(7846, 'XOR', 444, 4884),
+(7847, 'Activity', 445, 4884),
+(7848, 'Activity', 446, 4884),
+(7849, 'Activity', 441, 4885),
+(7850, 'Activity', 432, 4886),
+(7851, 'Activity', 432, 4887),
+(7852, 'XOR', 433, 4888),
+(7853, 'Activity', 434, 4888),
+(7854, 'Activity', 437, 4888),
+(7855, 'Activity', 441, 4889),
+(7856, 'XOR', 444, 4890),
+(7857, 'Activity', 445, 4890),
+(7858, 'Activity', 446, 4890),
+(7859, 'Activity', 432, 4891),
+(7860, 'XOR', 433, 4892),
+(7861, 'Activity', 434, 4892),
+(7862, 'Activity', 437, 4892),
+(7863, 'Activity', 441, 4893),
+(7864, 'XOR', 444, 4894),
+(7865, 'Activity', 445, 4894),
+(7866, 'Activity', 446, 4894);
 
 -- --------------------------------------------------------
 
@@ -15751,7 +15871,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=863 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=879 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -16613,7 +16733,23 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (859, 1076, 116, 26, 0),
 (860, 1076, 111, 27, 0),
 (861, -1, 116, 26, 0),
-(862, -1, 111, 27, 0);
+(862, -1, 111, 27, 0),
+(863, 1077, 116, 26, 0),
+(864, 1077, 111, 27, 0),
+(865, 1078, 116, 26, 0),
+(866, 1078, 111, 27, 0),
+(867, 1079, 116, 26, 0),
+(868, 1079, 111, 27, 0),
+(869, 1080, 116, 26, 0),
+(870, 1080, 111, 27, 0),
+(871, 1081, 116, 26, 0),
+(872, 1081, 112, 27, 0),
+(873, 1082, 116, 26, 0),
+(874, 1082, 112, 27, 0),
+(875, 1083, 116, 26, 0),
+(876, 1083, 111, 27, 0),
+(877, 1084, 116, 26, 0),
+(878, 1084, 111, 27, 0);
 
 -- --------------------------------------------------------
 
@@ -17149,7 +17285,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4859 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4895 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -21937,7 +22073,43 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (4855, 0, 172, -1),
 (4856, 0, 173, -1),
 (4857, 0, 174, -1),
-(4858, 0, 175, -1);
+(4858, 0, 175, -1),
+(4859, 0, 172, 1077),
+(4860, 0, 173, 1077),
+(4861, 0, 174, 1077),
+(4862, 0, 175, 1077),
+(4863, 0, 172, 1078),
+(4864, 0, 173, 1078),
+(4865, 0, 174, 1078),
+(4866, 0, 175, 1078),
+(4867, 0, 172, 1079),
+(4868, 0, 173, 1079),
+(4869, 0, 174, 1079),
+(4870, 0, 175, 1079),
+(4871, 0, 172, 1080),
+(4872, 0, 173, 1080),
+(4873, 0, 174, 1080),
+(4874, 0, 175, 1080),
+(4875, 1, 172, 1081),
+(4876, 0, 173, 1081),
+(4877, 1, 174, 1081),
+(4878, 0, 175, 1081),
+(4879, 0, 174, 1081),
+(4880, 0, 172, 1081),
+(4881, 1, 172, 1082),
+(4882, 0, 173, 1082),
+(4883, 1, 174, 1082),
+(4884, 0, 175, 1082),
+(4885, 0, 174, 1082),
+(4886, 0, 172, 1082),
+(4887, 0, 172, 1083),
+(4888, 0, 173, 1083),
+(4889, 0, 174, 1083),
+(4890, 0, 175, 1083),
+(4891, 0, 172, 1084),
+(4892, 0, 173, 1084),
+(4893, 0, 174, 1084),
+(4894, 0, 175, 1084);
 
 -- --------------------------------------------------------
 
@@ -22975,7 +23147,23 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 (7784, 'XOR', 'executing'),
 (7788, 'XOR', 'executing'),
 (7792, 'XOR', 'executing'),
-(7796, 'XOR', 'executing');
+(7796, 'XOR', 'executing'),
+(7800, 'XOR', 'executing'),
+(7804, 'XOR', 'executing'),
+(7808, 'XOR', 'executing'),
+(7812, 'XOR', 'executing'),
+(7816, 'XOR', 'executing'),
+(7820, 'XOR', 'executing'),
+(7824, 'XOR', 'executing'),
+(7828, 'XOR', 'executing'),
+(7832, 'XOR', 'executing'),
+(7836, 'XOR', 'executing'),
+(7842, 'XOR', 'executing'),
+(7846, 'XOR', 'executing'),
+(7852, 'XOR', 'executing'),
+(7856, 'XOR', 'executing'),
+(7860, 'XOR', 'executing'),
+(7864, 'XOR', 'executing');
 
 -- --------------------------------------------------------
 
@@ -22994,7 +23182,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `role_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `comment` text
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=776 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=874 ;
 
 --
 -- Daten für Tabelle `historyactivityinstance`
@@ -23024,7 +23212,105 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `ti
 (772, 7795, 'label', '2015-03-17 09:44:06', 'init', 'ready(ControlFlow)', -1, NULL, NULL, NULL),
 (773, 7795, 'label', '2015-03-17 09:44:06', 'ready(ControlFlow)', 'ready', -1, NULL, NULL, NULL),
 (774, 7797, 'label', '2015-03-17 09:44:06', 'init', 'ready(ControlFlow)', -1, NULL, NULL, NULL),
-(775, 7798, 'label', '2015-03-17 09:44:06', 'init', 'ready(ControlFlow)', -1, NULL, NULL, NULL);
+(775, 7798, 'label', '2015-03-17 09:44:06', 'init', 'ready(ControlFlow)', -1, NULL, NULL, NULL),
+(776, 7799, 'label', '2015-03-17 09:46:39', 'init', 'ready(ControlFlow)', 1077, NULL, NULL, NULL),
+(777, 7799, 'label', '2015-03-17 09:46:39', 'ready(ControlFlow)', 'ready', 1077, NULL, NULL, NULL),
+(778, 7801, 'label', '2015-03-17 09:46:39', 'init', 'ready(ControlFlow)', 1077, NULL, NULL, NULL),
+(779, 7802, 'label', '2015-03-17 09:46:39', 'init', 'ready(ControlFlow)', 1077, NULL, NULL, NULL),
+(780, 7803, 'label', '2015-03-17 09:46:39', 'init', 'ready(ControlFlow)', 1077, NULL, NULL, NULL),
+(781, 7803, 'label', '2015-03-17 09:46:39', 'ready(ControlFlow)', 'ready', 1077, NULL, NULL, NULL),
+(782, 7805, 'label', '2015-03-17 09:46:39', 'init', 'ready(ControlFlow)', 1077, NULL, NULL, NULL),
+(783, 7806, 'label', '2015-03-17 09:46:40', 'init', 'ready(ControlFlow)', 1077, NULL, NULL, NULL),
+(784, 7807, 'label', '2015-03-17 09:48:09', 'init', 'ready(ControlFlow)', 1078, NULL, NULL, NULL),
+(785, 7807, 'label', '2015-03-17 09:48:09', 'ready(ControlFlow)', 'ready', 1078, NULL, NULL, NULL),
+(786, 7809, 'label', '2015-03-17 09:48:09', 'init', 'ready(ControlFlow)', 1078, NULL, NULL, NULL),
+(787, 7810, 'label', '2015-03-17 09:48:09', 'init', 'ready(ControlFlow)', 1078, NULL, NULL, NULL),
+(788, 7811, 'label', '2015-03-17 09:48:09', 'init', 'ready(ControlFlow)', 1078, NULL, NULL, NULL),
+(789, 7811, 'label', '2015-03-17 09:48:09', 'ready(ControlFlow)', 'ready', 1078, NULL, NULL, NULL),
+(790, 7813, 'label', '2015-03-17 09:48:09', 'init', 'ready(ControlFlow)', 1078, NULL, NULL, NULL),
+(791, 7814, 'label', '2015-03-17 09:48:09', 'init', 'ready(ControlFlow)', 1078, NULL, NULL, NULL),
+(792, 7815, 'label', '2015-03-17 09:50:32', 'init', 'ready(ControlFlow)', 1079, NULL, NULL, NULL),
+(793, 7815, 'label', '2015-03-17 09:50:32', 'ready(ControlFlow)', 'ready', 1079, NULL, NULL, NULL),
+(794, 7817, 'label', '2015-03-17 09:50:32', 'init', 'ready(ControlFlow)', 1079, NULL, NULL, NULL),
+(795, 7818, 'label', '2015-03-17 09:50:32', 'init', 'ready(ControlFlow)', 1079, NULL, NULL, NULL),
+(796, 7819, 'label', '2015-03-17 09:50:32', 'init', 'ready(ControlFlow)', 1079, NULL, NULL, NULL),
+(797, 7819, 'label', '2015-03-17 09:50:32', 'ready(ControlFlow)', 'ready', 1079, NULL, NULL, NULL),
+(798, 7821, 'label', '2015-03-17 09:50:32', 'init', 'ready(ControlFlow)', 1079, NULL, NULL, NULL),
+(799, 7822, 'label', '2015-03-17 09:50:32', 'init', 'ready(ControlFlow)', 1079, NULL, NULL, NULL),
+(800, 7823, 'label', '2015-03-17 09:51:53', 'init', 'ready(ControlFlow)', 1080, NULL, NULL, NULL),
+(801, 7823, 'label', '2015-03-17 09:51:53', 'ready(ControlFlow)', 'ready', 1080, NULL, NULL, NULL),
+(802, 7825, 'label', '2015-03-17 09:51:53', 'init', 'ready(ControlFlow)', 1080, NULL, NULL, NULL),
+(803, 7826, 'label', '2015-03-17 09:51:53', 'init', 'ready(ControlFlow)', 1080, NULL, NULL, NULL),
+(804, 7827, 'label', '2015-03-17 09:51:53', 'init', 'ready(ControlFlow)', 1080, NULL, NULL, NULL),
+(805, 7827, 'label', '2015-03-17 09:51:53', 'ready(ControlFlow)', 'ready', 1080, NULL, NULL, NULL),
+(806, 7829, 'label', '2015-03-17 09:51:54', 'init', 'ready(ControlFlow)', 1080, NULL, NULL, NULL),
+(807, 7830, 'label', '2015-03-17 09:51:54', 'init', 'ready(ControlFlow)', 1080, NULL, NULL, NULL),
+(808, 7831, 'label', '2015-03-17 09:55:26', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(809, 7831, 'label', '2015-03-17 09:55:26', 'ready(ControlFlow)', 'ready', 1081, NULL, NULL, NULL),
+(810, 7833, 'label', '2015-03-17 09:55:26', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(811, 7834, 'label', '2015-03-17 09:55:26', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(812, 7835, 'label', '2015-03-17 09:55:26', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(813, 7835, 'label', '2015-03-17 09:55:26', 'ready(ControlFlow)', 'ready', 1081, NULL, NULL, NULL),
+(814, 7837, 'label', '2015-03-17 09:55:26', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(815, 7838, 'label', '2015-03-17 09:55:26', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(816, 7831, 'label', '2015-03-17 09:56:23', 'ready', 'running', 1081, NULL, NULL, NULL),
+(817, 7835, 'label', '2015-03-17 09:56:23', 'ready', 'referentialRunning', 1081, NULL, NULL, NULL),
+(818, 7831, 'label', '2015-03-17 09:56:27', 'running', 'terminated', 1081, NULL, NULL, NULL),
+(819, 7835, 'label', '2015-03-17 09:56:27', 'referentialRunning', 'terminated', 1081, NULL, NULL, NULL),
+(820, 7839, 'label', '2015-03-17 09:56:27', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(821, 7838, 'label', '2015-03-17 09:56:27', 'ready(ControlFlow)', 'ready', 1081, NULL, NULL, NULL),
+(822, 7840, 'label', '2015-03-17 09:56:27', 'init', 'ready(ControlFlow)', 1081, NULL, NULL, NULL),
+(823, 7841, 'Kaffeestand pruefen', '2015-03-17 10:02:23', NULL, 'init', 1082, NULL, NULL, NULL),
+(824, 7841, 'Kaffeestand pruefen', '2015-03-17 10:02:23', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(825, 7841, 'Kaffeestand pruefen', '2015-03-17 10:02:23', 'ready(ControlFlow)', 'ready', 1082, NULL, NULL, NULL),
+(826, 7843, 'Kaffee schwarz trinken', '2015-03-17 10:02:24', NULL, 'init', 1082, NULL, NULL, NULL),
+(827, 7843, 'Kaffee schwarz trinken', '2015-03-17 10:02:24', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(828, 7844, 'Kaffee verfeinern', '2015-03-17 10:02:24', NULL, 'init', 1082, NULL, NULL, NULL),
+(829, 7844, 'Kaffee verfeinern', '2015-03-17 10:02:24', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(830, 7845, 'Kaffeestand pruefen', '2015-03-17 10:02:24', NULL, 'init', 1082, NULL, NULL, NULL),
+(831, 7845, 'Kaffeestand pruefen', '2015-03-17 10:02:24', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(832, 7845, 'Kaffeestand pruefen', '2015-03-17 10:02:24', 'ready(ControlFlow)', 'ready', 1082, NULL, NULL, NULL),
+(833, 7847, 'Kaffee kochen', '2015-03-17 10:02:24', NULL, 'init', 1082, NULL, NULL, NULL),
+(834, 7847, 'Kaffee kochen', '2015-03-17 10:02:24', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(835, 7848, 'Kaffeebestellung vorbereiten', '2015-03-17 10:02:24', NULL, 'init', 1082, NULL, NULL, NULL),
+(836, 7848, 'Kaffeebestellung vorbereiten', '2015-03-17 10:02:24', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(837, 7841, 'Kaffeestand pruefen', '2015-03-17 10:02:27', 'ready', 'running', 1082, NULL, NULL, NULL),
+(838, 7845, 'Kaffeestand pruefen', '2015-03-17 10:02:27', 'ready', 'referentialRunning', 1082, NULL, NULL, NULL),
+(839, 7841, 'Kaffeestand pruefen', '2015-03-17 10:02:30', 'running', 'terminated', 1082, NULL, NULL, NULL),
+(840, 7845, 'Kaffeestand pruefen', '2015-03-17 10:02:30', 'referentialRunning', 'terminated', 1082, NULL, NULL, NULL),
+(841, 7849, 'Kaffeestand pruefen', '2015-03-17 10:02:30', NULL, 'init', 1082, NULL, NULL, NULL),
+(842, 7849, 'Kaffeestand pruefen', '2015-03-17 10:02:30', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(843, 7848, 'Kaffeebestellung vorbereiten', '2015-03-17 10:02:30', 'ready(ControlFlow)', 'ready', 1082, NULL, NULL, NULL),
+(844, 7850, 'Kaffeestand pruefen', '2015-03-17 10:02:30', NULL, 'init', 1082, NULL, NULL, NULL),
+(845, 7850, 'Kaffeestand pruefen', '2015-03-17 10:02:30', 'init', 'ready(ControlFlow)', 1082, NULL, NULL, NULL),
+(846, 7851, 'Kaffeestand pruefen', '2015-03-17 10:11:09', NULL, 'init', 1083, NULL, NULL, NULL),
+(847, 7851, 'Kaffeestand pruefen', '2015-03-17 10:11:09', 'init', 'ready(ControlFlow)', 1083, NULL, NULL, NULL),
+(848, 7851, 'Kaffeestand pruefen', '2015-03-17 10:11:09', 'ready(ControlFlow)', 'ready', 1083, NULL, NULL, NULL),
+(849, 7853, 'Kaffee schwarz trinken', '2015-03-17 10:11:09', NULL, 'init', 1083, NULL, NULL, NULL),
+(850, 7853, 'Kaffee schwarz trinken', '2015-03-17 10:11:09', 'init', 'ready(ControlFlow)', 1083, NULL, NULL, NULL),
+(851, 7854, 'Kaffee verfeinern', '2015-03-17 10:11:09', NULL, 'init', 1083, NULL, NULL, NULL),
+(852, 7854, 'Kaffee verfeinern', '2015-03-17 10:11:09', 'init', 'ready(ControlFlow)', 1083, NULL, NULL, NULL),
+(853, 7855, 'Kaffeestand pruefen', '2015-03-17 10:11:09', NULL, 'init', 1083, NULL, NULL, NULL),
+(854, 7855, 'Kaffeestand pruefen', '2015-03-17 10:11:09', 'init', 'ready(ControlFlow)', 1083, NULL, NULL, NULL),
+(855, 7855, 'Kaffeestand pruefen', '2015-03-17 10:11:09', 'ready(ControlFlow)', 'ready', 1083, NULL, NULL, NULL),
+(856, 7857, 'Kaffee kochen', '2015-03-17 10:11:09', NULL, 'init', 1083, NULL, NULL, NULL),
+(857, 7857, 'Kaffee kochen', '2015-03-17 10:11:09', 'init', 'ready(ControlFlow)', 1083, NULL, NULL, NULL),
+(858, 7858, 'Kaffeebestellung vorbereiten', '2015-03-17 10:11:09', NULL, 'init', 1083, NULL, NULL, NULL),
+(859, 7858, 'Kaffeebestellung vorbereiten', '2015-03-17 10:11:09', 'init', 'ready(ControlFlow)', 1083, NULL, NULL, NULL),
+(860, 7859, 'Kaffeestand pruefen', '2015-03-17 10:38:06', NULL, 'init', 1084, NULL, NULL, NULL),
+(861, 7859, 'Kaffeestand pruefen', '2015-03-17 10:38:06', 'init', 'ready(ControlFlow)', 1084, NULL, NULL, NULL),
+(862, 7859, 'Kaffeestand pruefen', '2015-03-17 10:38:06', 'ready(ControlFlow)', 'ready', 1084, NULL, NULL, NULL),
+(863, 7861, 'Kaffee schwarz trinken', '2015-03-17 10:38:06', NULL, 'init', 1084, NULL, NULL, NULL),
+(864, 7861, 'Kaffee schwarz trinken', '2015-03-17 10:38:06', 'init', 'ready(ControlFlow)', 1084, NULL, NULL, NULL),
+(865, 7862, 'Kaffee verfeinern', '2015-03-17 10:38:06', NULL, 'init', 1084, NULL, NULL, NULL),
+(866, 7862, 'Kaffee verfeinern', '2015-03-17 10:38:06', 'init', 'ready(ControlFlow)', 1084, NULL, NULL, NULL),
+(867, 7863, 'Kaffeestand pruefen', '2015-03-17 10:38:06', NULL, 'init', 1084, NULL, NULL, NULL),
+(868, 7863, 'Kaffeestand pruefen', '2015-03-17 10:38:06', 'init', 'ready(ControlFlow)', 1084, NULL, NULL, NULL),
+(869, 7863, 'Kaffeestand pruefen', '2015-03-17 10:38:06', 'ready(ControlFlow)', 'ready', 1084, NULL, NULL, NULL),
+(870, 7865, 'Kaffee kochen', '2015-03-17 10:38:06', NULL, 'init', 1084, NULL, NULL, NULL),
+(871, 7865, 'Kaffee kochen', '2015-03-17 10:38:06', 'init', 'ready(ControlFlow)', 1084, NULL, NULL, NULL),
+(872, 7866, 'Kaffeebestellung vorbereiten', '2015-03-17 10:38:06', NULL, 'init', 1084, NULL, NULL, NULL),
+(873, 7866, 'Kaffeebestellung vorbereiten', '2015-03-17 10:38:06', 'init', 'ready(ControlFlow)', 1084, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -23051,10 +23337,18 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dataobjectinstance_id` int(11) NOT NULL,
   `old_state_id` int(11) DEFAULT NULL,
-  `old_state_name` varchar(200) DEFAULT NULL,
+  `old_state_name` varchar(200) DEFAULT '',
   `new_state_id` int(11) NOT NULL,
   `new_state_name` varchar(200) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=54 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=64 ;
+
+--
+-- Daten für Tabelle `historydataobjectinstance`
+--
+
+INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `name`, `timestamp`, `dataobjectinstance_id`, `old_state_id`, `old_state_name`, `new_state_id`, `new_state_name`) VALUES
+(62, 1084, 'Kaffee', '2015-03-17 10:38:06', 877, NULL, '', 116, 'init'),
+(63, 1084, 'Kaffeestand', '2015-03-17 10:38:06', 878, NULL, '', 111, 'init');
 
 -- --------------------------------------------------------
 
@@ -23180,7 +23474,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1077 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1085 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -24215,7 +24509,15 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 (1073, 'TestSpecialCaseXORScenario', 0, 146),
 (1074, 'Kaffeeprozess', 0, 148),
 (1075, 'Kaffeeprozess', 0, 148),
-(1076, 'Kaffeeprozess', 0, 148);
+(1076, 'Kaffeeprozess', 0, 148),
+(1077, NULL, 0, 148),
+(1078, NULL, 0, 148),
+(1079, NULL, 0, 148),
+(1080, NULL, 0, 148),
+(1081, NULL, 0, 148),
+(1082, NULL, 0, 148),
+(1083, 'Kaffeeprozess', 0, 148),
+(1084, 'Kaffeeprozess', 0, 148);
 
 -- --------------------------------------------------------
 
@@ -24680,7 +24982,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7799;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7867;
 --
 -- AUTO_INCREMENT for table `attributeinstance`
 --
@@ -24700,7 +25002,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=449;
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7799;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7867;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -24730,7 +25032,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=863;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=879;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
@@ -24760,12 +25062,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=176;
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4859;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4895;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
 ALTER TABLE `historyactivityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=776;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=874;
 --
 -- AUTO_INCREMENT for table `historycontrolflow`
 --
@@ -24775,7 +25077,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `historydataobjectinstance`
 --
 ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=64;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -24795,7 +25097,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=149;
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1077;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1085;
 --
 -- AUTO_INCREMENT for table `state`
 --
