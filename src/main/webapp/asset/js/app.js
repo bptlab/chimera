@@ -2,6 +2,7 @@
 var JEngine_Server_URL = window.location.origin;
 var JCore_REST_Interface_Version = "v1";
 var JCore_REST_Interface = "JEngine/api/interface/" + JCore_REST_Interface_Version +"/en";
+var JCore_REST_new_Interface = "JEngine/api/v2";
 var JComparser_REST_Interface = "JEngine/api/jcomparser";
 
 

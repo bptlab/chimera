@@ -113,6 +113,26 @@
 						instanceCtrl.instances[$routeParams.instanceId].dataobjects = data;
 					});
 			}
+			// activitylogs
+			this.initializeActivitylogInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + JCore_REST_new_Interface + "/history" +
+						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/activities/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].activitylogs = data;
+					});
+			}
+			// dataobjectlogs
+			this.initializeDataobjectlogInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_new_Interface + "/history" +
+						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/dataobjects/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].dataobjectlogs = data;
+					});
+			}
 
 			this.initialize = function(){
 				if ($routeParams.instanceId) {
@@ -152,6 +172,8 @@
 					if ($routeParams.instanceId) {
 						instanceCtrl.initializeActivityInstances();
 						instanceCtrl.initializeDataobjectInstances();
+						instanceCtrl.initializeActivitylogInstances();
+						instanceCtrl.initializeDataobjectlogInstances();
 					}
 				});
 			}
@@ -203,7 +225,7 @@
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
 					});
-			};			
+			};				
 		}
 	]);
 })();
