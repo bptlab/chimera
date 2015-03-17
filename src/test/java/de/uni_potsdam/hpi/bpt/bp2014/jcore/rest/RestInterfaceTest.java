@@ -150,4 +150,56 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
 
     }
+
+    /**
+     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
+     * the response should be of type json.
+     */
+    @Test
+    public void testGetMailTasksReturnsJson() {
+        Response response = base.path("scenario/1/emailtask").request().get();
+        assertEquals("The Response code of get all mail tasks was not 200",
+                200, response.getStatus());
+        assertEquals("Get all mail tasks returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    }
+
+    /**
+     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)} and
+     * the scenario does not contain any mail task an object with no ids will be returned.
+     */
+    @Test
+    public void testGetAllMailTasksIfAbsent() {
+        Response response = base.path("scenario/1/emailtask").request().get();
+        assertThat("Get all mail Tasks returns not an empty JSON Object when the scenario has no mail tasks",
+                "{\"ids\":[]}", jsonEquals(response.readEntity(String.class)));
+    }
+
+    /**
+     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
+     * the returned JSON Object should be a specified.
+     * {"ids":[1,2,...],"labels":{1:"abcd"...}}}
+     */
+    @Test
+    public void testGetAllMailTasksJSONResponse() {
+        Response response = base.path("scenario/142/emailtask").request().get();
+        assertThat("Get all mail Tasks returns not an empty JSON Object when the scenario has no mail tasks",
+                "{\"ids\":[362]}", jsonEquals(response.readEntity(String.class)));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getAllEmailTasks(int, String)}
+     * and the ScenarioID is invalid a 404 will be returned but the media type is still
+     * JSON.
+     */
+    @Test
+    public void testGetAllMailTasksMissingScenario() {
+        Response response = base.path("scenario/99999/emailtask").request().get();
+        assertEquals("The Response code of get all mail tasks was not 404",
+                404, response.getStatus());
+        assertEquals("Get all mail tasks returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    }
+
+
 }

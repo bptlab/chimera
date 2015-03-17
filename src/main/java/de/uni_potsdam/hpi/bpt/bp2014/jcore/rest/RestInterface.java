@@ -1,6 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,7 +44,12 @@ public class RestInterface {
     public Response updateEmailConfiguration(
             @PathParam("emailtaskID") int emailTaskID,
             final EmailConfigJaxBean input) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
+                input.receiver, input.subject, input.content);
+        return Response.status(
+                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
+                .build();
     }
 
     /**
@@ -108,6 +116,38 @@ public class RestInterface {
                 .entity(new JSONObject(data).toString())
                 .build();
     }
+    //TODO: Write a POST to change the name of an scenario
+
+    /**
+     * This method provides information about all email Tasks inside
+     * a given scenario.
+     * The information consists of the id and the label.
+     * A Json Object will be returned with an array of ids and a Map
+     * from ids to labels.
+     *
+     * @param scenarioID The ID of the scenario, its mail tasks will be returned.
+     * @param filterString A Filter String, only mail tasks with a label containing
+     *                     this filter String will be returned.
+     * @return The JSON Object with ids and labels.
+     */
+    @GET
+    @Path("scenario/{scenarioID}/emailtask")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllEmailTasks(
+            @PathParam("scenarioID") int scenarioID,
+            @QueryParam("filter") String filterString) {
+        DbScenario scenario = new DbScenario();
+        DbEmailConfiguration mail = new DbEmailConfiguration();
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
 
     /**
      * This method provides information about an email Task.
@@ -127,7 +167,17 @@ public class RestInterface {
     public Response getEmailTaskConfiguration(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("emailTaskID") int mailTaskID) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        DbScenario scenario = new DbScenario();
+        DbEmailConfiguration mail = new DbEmailConfiguration();
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
     /**
