@@ -4,12 +4,14 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import net.javacrumbs.jsonunit.core.Option;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -307,6 +309,136 @@ public class RestInterfaceTest extends AbstractTest {
         Response response = base.path("scenario/1/instance").queryParam("filter", "noInstanceLikeThis").request().get();
         assertThat("The returned JSON does not contain the expected content",
                 "{\"ids\":[],\"labels\":{}}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * then the Response will be a 201 and a json object wit the new id will be returned.
+     */
+    @Test
+    public void testStartNewInstanceWOName() {
+        Response response = base.path("scenario/1/instance").request().post(null);
+        assertEquals("The Response code of start new instances was not 201",
+                201, response.getStatus());
+        assertEquals("Start new isntance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"id\":966}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * then the Response will be a 201 and a json object wit the new id will be returned.
+     */
+    @Test
+    public void testStartInvalidInstanceWOName() {
+        Response response = base.path("scenario/9999/instance").request().post(null);
+        assertEquals("The Response code of start new instances was not 400",
+                400, response.getStatus());
+        assertEquals("Start new isntance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The Scenario could not be found!\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * then the Response will be a 201 and a json object wit the new id will be returned.
+     */
+    @Test
+    public void testStartNewInstanceWName() {
+        RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
+        newName.name = "Dies ist ein Test";
+        Response response = base.path("scenario/1/instance")
+                .request().post(Entity.json(newName));
+        assertEquals("The Response code of start new instances was not 201",
+                201, response.getStatus());
+        assertEquals("Start new isntance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"id\":966}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * then the Response will be a 201 and a json object wit the new id will be returned.
+     */
+    @Test
+    public void testStartInvalidInstanceWName() {
+        RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
+        newName.name = "Dies ist ein Test";
+        Response response = base.path("scenario/9999/instance").request()
+                .post(Entity.json(newName));
+        assertEquals("The Response code of start new instances was not 400",
+                400, response.getStatus());
+        assertEquals("Start new isntance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The Scenario could not be found!\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#getScenarioInstance(int, int)}
+     * with a correct scenario id and a correct instance id
+     * the respond will be a 200 with a JSONObject
+     */
+    @Test
+    public void testGetScenarioInstanceReturnsJSON() {
+        Response response = base.path("scenario/1/instance/72").request().get();
+        assertEquals("The Response code of getScenarioInstance was not 200",
+                200, response.getStatus());
+        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#getScenarioInstance(int, int)}
+     * with a wrong scenario id and a correct instance id
+     * the respond will be a 200 with a redirected URI.
+     */
+    @Test
+    public void testGetScenarioInstanceWithWrongScenarioRedirects() {
+        Response response = base.path("scenario/9999/instance/72").request().get();
+        assertEquals("The Response code of getScenarioInstance was not 200",
+                200, response.getStatus());
+        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+
+
+    /**
+     * When you send a Post to {@link RestInterface#getScenarioInstance(int, int)}
+     * with a wrong scenario id and a correct instance id
+     * the respond will be a 404 with a redirected URI.
+     */
+    @Test
+    public void testGetScenarioInstanceWithWrongInstanceThrowsError() {
+        Response response = base.path("scenario/9999/instance/9999").request().get();
+        assertEquals("The Response code of getScenarioInstance was not 404",
+                404, response.getStatus());
+        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"There is no instance with the id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }

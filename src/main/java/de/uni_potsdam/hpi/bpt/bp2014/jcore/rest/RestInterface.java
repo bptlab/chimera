@@ -12,6 +12,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -202,6 +204,7 @@ public class RestInterface {
      * @return A JSON-Object with an array of information about all instances of
      * one specified scenario. The information contains the id and name.
      */
+    // TODO: Return the instance
     @GET
     @Path("scenario/{scenarioID}/instance")
     @Produces(MediaType.APPLICATION_JSON)
@@ -240,11 +243,19 @@ public class RestInterface {
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
-    @POST
-    @Path("sceanrio/{scenarioID}/instance")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response startNewInstance(@PathParam("scenarioID") int scenarioID) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        ExecutionService executionService = new ExecutionService();
+        if (executionService.existScenario(scenarioID)) {
+            return Response.status(Response.Status.CREATED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"id\":" + executionService.startNewScenarioInstance(scenarioID) + "}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The Scenario could not be found!\"}")
+                    .build();
+        }
     }
 
     /**
@@ -265,13 +276,29 @@ public class RestInterface {
      * about the new instance.
      */
     @POST
-    @Path("sceanrio/{scenarioID}/instance")
+    @Path("scenario/{scenarioID}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response startNewNamedInstance(@PathParam("scenarioID") int scenarioID, NamedJaxBean name) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        if (name == null) {
+            return startNewInstance(scenarioID);
+        }
+        ExecutionService executionService = new ExecutionService();
+        if (executionService.existScenario(scenarioID)) {
+            DbScenarioInstance instance = new DbScenarioInstance();
+            return Response.status(Response.Status.CREATED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"id\":" + instance.createNewScenarioInstance(scenarioID, name.name) + "}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The Scenario could not be found!\"}")
+                    .build();
+        }
     }
 
+    // TODO: Change the state of an instance via POST
     /**
      * This method provides detailed information about a scenario instance.
      * The information will contain the id, name, parent scenario and the
@@ -295,7 +322,27 @@ public class RestInterface {
     public Response getScenarioInstance(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        ExecutionService executionService = new ExecutionService();
+        DbScenarioInstance instance = new DbScenarioInstance();
+        if (!executionService.existScenarioInstance(instanceID)) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"message\":\"There is no instance with the id " + instanceID + "\"}")
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+        } else if (!executionService.existScenario(scenarioID)) {
+            scenarioID = instance.getScenarioID(instanceID);
+            try {
+                return Response
+                        .seeOther(new URI("v2/scenario/" + scenarioID + "/instance/" + instanceID))
+                        .build();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return Response
+                .ok((new JSONObject(instance.getInstanceMap(instanceID))).toString(),
+                    MediaType.APPLICATION_JSON)
+                .build();
     }
 
     /**
@@ -489,7 +536,7 @@ public class RestInterface {
      * Therefor a name can be transmitted.
      */
     @XmlRootElement
-    private class NamedJaxBean {
+    public static class NamedJaxBean {
         /**
          * The name which should be assigned to the entity.
          */

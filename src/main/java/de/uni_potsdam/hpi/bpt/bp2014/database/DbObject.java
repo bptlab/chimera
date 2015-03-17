@@ -385,7 +385,16 @@ public class DbObject {
         return rowId;
     }
 
-    public Map<Integer, String> executeStatementReturnsHashMap(String sql, String key, String value) {
+    /**
+     * This method makes a sql Query and returns the keys and values in a Map.
+     * We assume that every key is an integer.
+     *
+     * @param sql The query string to be executed
+     * @param key The column name which will be key of the map
+     * @param value The column name which will be the value of the map
+     * @return A Map from the key Column to the Value Column
+     */
+    public Map<Integer, String> executeStatementReturnsMap(String sql, String key, String value) {
         Map<Integer, String> result = new LinkedHashMap<>();
 
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -435,6 +444,45 @@ public class DbObject {
                 keysValues.put(results.getInt("id"), new HashMap<String, Object>());
                 for (String key : keys) {
                     (keysValues.get(results.getInt("id"))).put(key, results.getObject(key));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return keysValues;
+    }
+
+
+
+    /**
+     * Creates a Map for the SQL-Result.
+     * Each Column will be added as a key and the first result as
+     * the result.
+     *
+     * @param sql  The SQl query to be executed.
+     * @param keys The column names.
+     * @return A Map of the results.
+     */
+    protected Map<String, Object> executeStatementReturnsMapWithKeys(String sql, String... keys) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        Map<String, Object> keysValues = new LinkedHashMap<>();
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+            if (results.next()) {
+                for (String key : keys) {
+                    keysValues.put(key, results.getObject(key));
                 }
             }
         } catch (SQLException e) {
