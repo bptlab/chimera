@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import org.json.JSONObject;
 
@@ -19,11 +18,16 @@ import java.util.Map;
 public class RestInterface {
     private HistoryService historyService = new HistoryService();
 
+    /**
+     * This method gives the log entries for all activities for a specific scenario instance.
+     *
+     * @param scenarioInstanceID The id of the scenario instance.
+     * @return a JSON-Object with the log entries.
+     */
     @GET
     @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/activities")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getActivityLog(@PathParam("scenarioInstanceID") int scenarioInstanceID) {
-        DbScenario scenario = new DbScenario();
         Map<Integer, Map<String, Object>> activityLog;
         activityLog = historyService.getActivityInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response
@@ -33,11 +37,16 @@ public class RestInterface {
                 .build();
     }
 
+    /**
+     * This method gives the log entries for all dataObjects for a specific scenario instance.
+     *
+     * @param scenarioInstanceID The id of the scenario instance.
+     * @return a JSON-Object with the log entries.
+     */
     @GET
     @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/dataobjects")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataObjectLog(@PathParam("scenarioInstanceID") int scenarioInstanceID) {
-        DbScenario scenario = new DbScenario();
         Map<Integer, Map<String, Object>> dataObjectLog;
         dataObjectLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response
