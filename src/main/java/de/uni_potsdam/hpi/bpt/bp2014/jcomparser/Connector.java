@@ -610,7 +610,8 @@ public class Connector extends DbDataObject {
         String state_id = dbDataObject.executeStatementReturnsString(sql, "state_id");
         update = "UPDATE dataobjectinstance SET state_id = " +
                 "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
-                "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+"))";
+                "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
+                "WHERE dataobject_id = " + newDataObjectID;
         dbDataObject.executeUpdateStatement(update);
     }
     /**
