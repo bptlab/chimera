@@ -1,7 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -127,4 +129,11 @@ public class DbScenarioInstance extends DbObject {
     }
 
 
+    public Map<Integer, String> getScenarioInstancesLike(int scenarioID, String filterString) {
+        String sql = "SELECT id, name FROM scenarioinstance WHERE scenario_id = " + scenarioID;
+        if (null != filterString && !filterString.equals("")) {
+            sql = sql + " AND name LIKE '%" + filterString + "%'";
+        }
+        return this.executeStatementReturnsHashMap(sql, "id", "name");
+    }
 }
