@@ -62,7 +62,7 @@ public class DbScenarioInstance extends DbObject {
      * @return -1 if something went wrong else it returns the database ID of the newly created scenario instance.
      */
     public int createNewScenarioInstance(int id) {
-        String sql = "INSERT INTO scenarioinstance (scenario_id) VALUES (" + id + ")";
+        String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + id + ", (SELECT name FROM scenario WHERE id = " + id + "))";
         return this.executeInsertStatement(sql);
     }
 
