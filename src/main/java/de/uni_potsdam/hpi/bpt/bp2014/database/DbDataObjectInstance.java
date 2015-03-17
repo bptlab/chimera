@@ -43,7 +43,7 @@ public class DbDataObjectInstance extends DbObject {
     }
 
     /**
-     * This method sets the state of a dataObject instance to a desirable one.
+     * This method sets the state of a dataObject instance to a desirable one and saves a log entry into the database.
      *
      * @param id This is the database ID of a dataObject instance.
      * @param state This is the desirable state of a dataObject instance.
@@ -57,7 +57,7 @@ public class DbDataObjectInstance extends DbObject {
     }
 
     /**
-     * This method creates and saves a dataObject instance to the database.
+     * This method creates and saves a dataObject instance to the database and saves a log entry into the database.
      *
      * @param scenarioInstance_id This is the database ID of a scenario instance.
      * @param state_id This is the initial state of a dataObject instance.

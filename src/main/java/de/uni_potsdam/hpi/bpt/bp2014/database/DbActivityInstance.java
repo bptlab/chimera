@@ -42,7 +42,7 @@ public class DbActivityInstance extends DbObject {
     }
 
     /**
-     * This method sets the activity to a desirable state.
+     * This method sets the activity to a desirable state and saves a log entry into the database.
      *
      * @param id    This is the database ID of an activity instance which is found in the database.
      * @param state This is the state in which an activity should be after executing setState.
@@ -56,7 +56,7 @@ public class DbActivityInstance extends DbObject {
     }
 
     /**
-     * This method creates and saves a new activity instance to the database int hte context of a controlNode instance.
+     * This method creates and saves a new activity instance to the database into the context of a controlNode instance and saves a log entry into the database.
      *
      * @param controlNodeInstance_id This is the ID of a controlNode instance which is found in the database.
      * @param ActivityType           This is the type of an activity.
