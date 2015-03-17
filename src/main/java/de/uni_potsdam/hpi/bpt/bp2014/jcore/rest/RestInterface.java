@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +12,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.LinkedList;
 import java.util.Map;
+
+import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -194,9 +199,6 @@ public class RestInterface {
      * @param filterString Specifies a search. Only scenarios which
      *                     name contain the specified string will be
      *                     returned.
-     * @param orderBy      Specifies the order of the result, per default
-     *                     they will be sorted by id, it could also be the
-     *                     name.
      * @return A JSON-Object with an array of information about all instances of
      * one specified scenario. The information contains the id and name.
      */
@@ -205,9 +207,23 @@ public class RestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenarioInstances(
             @PathParam("scenarioID") int scenarioID,
-            @QueryParam("filter") @DefaultValue("") String filterString,
-            @QueryParam("order") @DefaultValue("id") String orderBy) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+            @QueryParam("filter") String filterString) {
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"Scenario not found!\"}")
+                    .build();
+        }
+        DbScenarioInstance instance = new DbScenarioInstance();
+        JSONObject result = new JSONObject();
+        Map<Integer, String> data = instance.getScenarioInstancesLike(scenarioID, filterString);
+        result.put("ids", new JSONArray(data.keySet()));
+        result.put("labels", new JSONObject(data));
+        return Response
+                .ok(result.toString(), MediaType.APPLICATION_JSON)
+                .build();
     }
 
     /**
