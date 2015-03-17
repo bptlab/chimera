@@ -62,6 +62,7 @@
       <property name="#folder" value="/"/>
       <property name="name" value="bikeScenario"/>
       <property name="#uri" value="/models/514683112/versions/0"/>
+      <property name="domainModelURI" value="http://bp2014w1-dev:1205/models/2049535559"/>
       <property name="comment" value=""/>
       <property name="#creationDate" value="18. Februar 2015 10:53:43 MEZ"/>
       <property name="Termination Data Object" value=""/>

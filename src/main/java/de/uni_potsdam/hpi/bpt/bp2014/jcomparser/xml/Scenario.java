@@ -84,6 +84,9 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If migration is necessary, we need the databaseID of the scenario that is supposed to be migrated.
      */
     private int migratingScenarioDbID = -1;
+    private String domainModelURI;
+    private Element domainModelXML;
+    private DomainModel domainModel;
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
      */
@@ -101,6 +104,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         processeditorServerUrl = serverURL;
     }
 
+
     /**
      * This Method initializes the scenario from an XML.
      * Be Aware, that a scenario consists of fragments, which will
@@ -114,10 +118,57 @@ public class Scenario implements IDeserialisable, IPersistable {
         setScenarioName();
         setScenarioID();
         generateFragmentList();
+        setDomainModelURL();
+        setDomainModel();
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
         checkIfVersionAlreadyInDatabase();
+
+    }
+
+    private void setDomainModel() {
+        domainModelXML = fetchDomainModelXML();
+        domainModel = createAndInitializeDomainModel();
+    }
+
+    private DomainModel createAndInitializeDomainModel() {
+        if(domainModelXML != null){
+            domainModel = new DomainModel(processeditorServerUrl);
+            domainModel.initializeInstanceFromXML(domainModelXML);
+            return domainModel;
+        }
+        return null;
+    }
+
+    private Element fetchDomainModelXML() {
+        try {
+            Retrieval jRetrieval = new Retrieval();
+            String versionXML = jRetrieval.getHTMLwithAuth(
+                    processeditorServerUrl,
+                    domainModelURI);
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(versionXML));
+            DocumentBuilder db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(is);
+            return doc.getDocumentElement();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void setDomainModelURL() {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/properties/property" +
+                "[@name='domainModelURI']/@value";
+        try {
+            domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -331,6 +382,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     scenarioID,
                     versionNumber);
             saveFragments();
+            domainModel.save();
             saveDataObjects();
             saveConsistsOf();
             if (terminatingDataObject != null && terminatingDataNode != null) {
@@ -722,4 +774,17 @@ public class Scenario implements IDeserialisable, IPersistable {
     public boolean isMigrationNecessary() {
         return migrationNecessary;
     }
+
+    public String getDomainModelURI() {
+        return domainModelURI;
+    }
+
+    public Element getDomainModelXML() {
+        return domainModelXML;
+    }
+
+    public DomainModel getDomainModel() {
+        return domainModel;
+    }
+
 }

@@ -431,7 +431,7 @@ public class DbObject {
         Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
         try {
             results = conn.prepareStatement(sql).executeQuery();
-            if (results.next()) {
+            while (results.next()) {
                 keysValues.put(results.getInt("id"), new HashMap<String, Object>());
                 for (String key : keys) {
                     (keysValues.get(results.getInt("id"))).put(key, results.getObject(key));

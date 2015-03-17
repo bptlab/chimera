@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -178,7 +179,6 @@ public class Connector extends DbDataObject {
                 "VALUES ('" + name + "', " + dataClassId + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
-
     /**
      * Inserts a new Data Class into the database.
      *
@@ -191,6 +191,46 @@ public class Connector extends DbDataObject {
         return performSQLInsertStatementWithAutoId(sql);
     }
 
+    /**
+     *
+     * @param name
+     * @param dataClassID
+     * @param type
+     * @return
+     */
+    public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String type){
+        String sql = "INSERT INTO dataattribute (dataattribute.name, " +
+                "dataclass_id, dataattribute.type, dataattribute.default) " +
+                "VALUES ('" + name + "', " + dataClassID + ", '" + type + "', '')";
+        return performSQLInsertStatementWithAutoId(sql);
+    }
+
+    /**
+     *
+     * @param modelID
+     * @param versionNumber
+     * @param scenarioID
+     */
+    public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber, final int scenarioID){
+        DbObject dbObject = new DbObject();
+        String sql = "UPDATE scenario " +
+                "SET scenario.modelid = " + modelID +", scenario.modelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
+        dbObject.executeUpdateStatement(sql);
+    }
+
+    /**
+     *
+     * @param sourceID
+     * @param targetID
+     * @param multiplicity
+     * @return
+     */
+    public void insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
+        String sql = "INSERT INTO aggregation (dataclass_id1, " +
+                "dataclass_id2, aggregation.multiplicity) " +
+                "VALUES (" + sourceID + ", " + targetID + ", " + multiplicity + ")";
+        performDefaultSQLInsertStatement(sql);
+    }
     /**
      * This Methods inserts a new DataNode into the Database.
      * All necessary information are given as a parameter.
