@@ -213,6 +213,9 @@
 					success(function(data) {
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
+						instanceCtrl.initializeActivitylogInstances();
+						instanceCtrl.initializeDataobjectlogInstances();
 					});
 			};
 			
@@ -224,6 +227,9 @@
 					success(function(data) {
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
+						instanceCtrl.initializeActivitylogInstances();
+						instanceCtrl.initializeDataobjectlogInstances();
 					});
 			};				
 		}
