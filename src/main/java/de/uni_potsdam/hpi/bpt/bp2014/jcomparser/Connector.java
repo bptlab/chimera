@@ -606,13 +606,16 @@ public class Connector extends DbDataObject {
                 "SET dataobject_id = " + newDataObjectID +
                 " WHERE dataobject_id = " + oldDataObjectID;
         dbDataObject.executeUpdateStatement(update);
-        String sql = "SELECT state_id FROM dataobjectinstance WHERE dataobject_id = "+newDataObjectID;
-        String state_id = dbDataObject.executeStatementReturnsString(sql, "state_id");
-        update = "UPDATE dataobjectinstance SET state_id = " +
-                "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
-                "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
-                "WHERE dataobject_id = " + newDataObjectID;
-        dbDataObject.executeUpdateStatement(update);
+        String sql = "SELECT state_id FROM dataobjectinstance WHERE dataobject_id = " + newDataObjectID;
+        List<Integer> state_ids = dbDataObject.executeStatementReturnsListInt(sql, "state_id");
+        for (int state_id : state_ids) {
+            update = "UPDATE dataobjectinstance SET state_id = " +
+                    "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
+                    "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
+                    "WHERE dataobject_id = " + newDataObjectID +
+                    " AND state_id = " + state_id;
+            dbDataObject.executeUpdateStatement(update);
+        }
     }
     /**
      * Get all modelIDs of the fragments for one scenario.
