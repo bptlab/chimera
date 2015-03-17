@@ -87,7 +87,7 @@
 		</div>
       </div>
       <div class="animate-switch" ng-switch-default>
-	  <div class="row" ng-init="todoSelection = done">
+	  <div class="row">
 		<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
 			<div class="hpanel stats">
 				<div class="panel-heading">
@@ -130,10 +130,10 @@
 					ToDos
 				</div>
 				<div class="panel-body list">
-					<div ng-if="todoSelection == done;" class="animate-if">
-					<!--<select ng-model="todoSelection" ng-options="item for item in ['open','done']"></select>-->
-					<!--<div class="animate-switch-container" ng-switch on="todoSelection">
-			     			 <div class="animate-switch" ng-switch-default>-->
+					<!--<div ng-if="todoSelection == done;" class="animate-if">-->
+					<select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
+					<div class="animate-switch-container" ng-switch on="todoSelection">
+			     			 <div class="animate-switch" ng-switch-default>
 							<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">				
 								<div class="responsive-table project-list">
 									<table class="table table-striped">
@@ -155,8 +155,8 @@
 								</div>
 							</div>
 						</div>
-						<!--<div class="animate-switch" ng-switch-when="completed">-->
-						<div ng-if="todoSelection != done ;" class="animate-if">
+						<div class="animate-switch" ng-switch-when="completed">
+						<!--<div ng-if="todoSelection != done ;" class="animate-if">-->
 							<div class="responsive-table project-list">
 								<table class="table table-striped">
 									<thead>
@@ -178,8 +178,9 @@
 					</div>				
 	   			</div>
      				<div class="panel-footer">
-					<a href="" type="button" class="btn btn-default" ng-click="todoSelection = open" ng-model="todoSelection">Open Tasks</a>
-					<a href="" type="button" class="btn btn-default" ng-click="todoSelection = completed" ng-model="todoSelection">Completed Tasks</a>
+					<select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
+					<a type="button" class="btn btn-default" value="open" ng-model="todoSelection">Open Tasks</a>
+					<a type="button" class="btn btn-default" value="completed" ng-model="todoSelection">Completed Tasks</a>
 				</div>
 		   	</div>
 	
