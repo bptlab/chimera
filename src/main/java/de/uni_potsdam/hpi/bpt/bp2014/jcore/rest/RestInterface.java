@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -125,7 +124,7 @@ public class RestInterface {
      * A Json Object will be returned with an array of ids and a Map
      * from ids to labels.
      *
-     * @param scenarioID The ID of the scenario, its mail tasks will be returned.
+     * @param scenarioID   The ID of the scenario, its mail tasks will be returned.
      * @param filterString A Filter String, only mail tasks with a label containing
      *                     this filter String will be returned.
      * @return The JSON Object with ids and labels.
@@ -169,15 +168,18 @@ public class RestInterface {
             @PathParam("emailTaskID") int mailTaskID) {
         DbScenario scenario = new DbScenario();
         DbEmailConfiguration mail = new DbEmailConfiguration();
-        if (!scenario.existScenario(scenarioID)) {
+        EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
+        mailConfig.receiver = mail.getReceiverEmailAddress(mailTaskID);
+        if (!scenario.existScenario(scenarioID) || mailConfig.receiver.equals("")) {
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{}")
                     .build();
         }
-        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        mailConfig.content = mail.getMessage(mailTaskID);
+        mailConfig.subject = mail.getSubject(mailTaskID);
+        return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
 
     /**
