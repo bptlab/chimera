@@ -176,8 +176,8 @@
 	   			</div>
      				<div class="panel-footer">
 					<select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
-					<button type="button" class="btn btn-default" value="open" ng-model="todoSelection">Open Tasks</a>
-					<button type="button" class="btn btn-default" value="completed" ng-model="todoSelection">Completed Tasks</a>
+					<!--<button type="button" class="btn btn-default" value="open" ng-model="todoSelection">Open Tasks</a>
+					<button type="button" class="btn btn-default" value="completed" ng-model="todoSelection">Completed Tasks</a>-->
 				</div>
 		   	   </div>
 			</div>
@@ -225,9 +225,9 @@
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().activitylogs track by $index">
 									<div class="list-item">
-										<h3 class="no-margins text-success">{{value['oldstate']}} -> {{value['newstate']}}</h3>
-										<small>{{key}} - {{value['label']}}</small>
-										<div class="pull-right font-bold">98% <i class="fa fa-level-up text-success"></i></div>
+										<h3 class="no-margins text-success">{{value['label']}}</h3>
+										<small>{{value['oldstate']}} -> {{value['newstate']}}</small>
+										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
 									</div>
 								    </div>
 								</div>
@@ -236,9 +236,9 @@
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjectlogs track by $index">
 									<div class="list-item">
-										<h3 class="no-margins text-success">{{value['old_state_name']}} -> {{value['new_state_name']}}</h3>
-										<small>{{key}} - {{value['name']}}</small>
-										<div class="pull-right font-bold">98% <i class="fa fa-level-up text-success"></i></div>
+										<h3 class="no-margins text-success">{{value['name']}}</h3>
+										<small>{{value['old_state_name']}} -> {{value['new_state_name']}}</small>
+										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
 									</div>
 								    </div>
 								</div>
