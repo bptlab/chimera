@@ -432,7 +432,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             }
         }
         migrateDataObjects();
-        domainModel.migrate(migratingScenarioDbID);
+        //domainModel.migrate(migratingScenarioDbID);
     }
     /**
      * Migrate all dataObjectInstances of all scenarioInstances that are migrated.
