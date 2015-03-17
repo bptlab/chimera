@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 17. Mrz 2015 um 10:46
+-- Erstellungszeit: 17. Mrz 2015 um 11:09
 -- Server Version: 5.6.21
 -- PHP-Version: 5.6.3
 
@@ -20115,7 +20115,7 @@ INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, 
 
 CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 `id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
+  `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=966 DEFAULT CHARSET=latin1;
