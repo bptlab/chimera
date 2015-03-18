@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 18. Mrz 2015 um 11:00
+-- Erstellungszeit: 18. Mrz 2015 um 11:05
 -- Server Version: 5.6.14
 -- PHP-Version: 5.5.6
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6694 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -5917,7 +5917,16 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `role_id`, `
 (6681, 'HumanTask', 0, 1, 'ready', 'init'),
 (6682, 'HumanTask', 0, 1, 'skipped', 'init'),
 (6683, 'HumanTask', 0, 1, 'skipped', 'init'),
-(6684, 'HumanTask', 0, 1, 'ready', 'init');
+(6684, 'HumanTask', 0, 1, 'ready', 'init'),
+(6685, 'HumanTask', 0, 1, 'terminated', 'init'),
+(6686, 'HumanTask', 0, 1, 'terminated', 'init'),
+(6687, 'HumanTask', 0, 1, 'terminated', 'init'),
+(6688, 'HumanTask', 0, 1, 'terminated', 'init'),
+(6689, 'HumanTask', 0, 1, 'terminated', 'init'),
+(6690, 'HumanTask', 0, 1, 'ready', 'init'),
+(6691, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(6692, 'HumanTask', 0, 1, 'ready(ControlFlow)', 'init'),
+(6693, 'HumanTask', 0, 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -6587,7 +6596,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6694 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -13205,7 +13214,16 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (6681, 'Activity', 378, 4418),
 (6682, 'Activity', 376, 4418),
 (6683, 'Activity', 384, 4418),
-(6684, 'Activity', 379, 4418);
+(6684, 'Activity', 379, 4418),
+(6685, 'Activity', 2, 4419),
+(6686, 'Activity', 4, 4420),
+(6687, 'Activity', 10, 4421),
+(6688, 'Activity', 16, 4422),
+(6689, 'Activity', 5, 4419),
+(6690, 'Activity', 6, 4419),
+(6691, 'Activity', 10, 4423),
+(6692, 'Activity', 4, 4424),
+(6693, 'Activity', 16, 4425);
 
 -- --------------------------------------------------------
 
@@ -13643,7 +13661,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=744 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=746 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -14386,7 +14404,9 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (740, 954, 15, 7, 0),
 (741, 955, 37, 13, 0),
 (742, 956, 47, 15, 0),
-(743, 957, 48, 16, 0);
+(743, 957, 48, 16, 0),
+(744, 966, 3, 1, 0),
+(745, 966, 6, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -14867,7 +14887,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4419 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4426 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -19215,7 +19235,14 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (4415, 0, 164, 964),
 (4416, 1, 163, 965),
 (4417, 0, 164, 965),
-(4418, 0, 163, 965);
+(4418, 0, 163, 965),
+(4419, 0, 1, 966),
+(4420, 1, 2, 966),
+(4421, 1, 3, 966),
+(4422, 1, 4, 966),
+(4423, 0, 3, 966),
+(4424, 0, 2, 966),
+(4425, 0, 4, 966);
 
 -- --------------------------------------------------------
 
@@ -19993,7 +20020,50 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `user_id` int(11) DEFAULT NULL,
   `comment` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=128 ;
+
+--
+-- Daten für Tabelle `historyactivityinstance`
+--
+
+INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `timestamp`, `oldstate`, `newstate`, `scenarioinstance_id`, `role_id`, `user_id`, `comment`) VALUES
+(91, 6685, 'Activity1Fragment1', '2015-03-18 11:04:57', NULL, 'init', 966, NULL, NULL, NULL),
+(92, 6685, 'Activity1Fragment1', '2015-03-18 11:04:57', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(93, 6685, 'Activity1Fragment1', '2015-03-18 11:04:57', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(94, 6686, 'Activity1Fragment2', '2015-03-18 11:04:57', NULL, 'init', 966, NULL, NULL, NULL),
+(95, 6686, 'Activity1Fragment2', '2015-03-18 11:04:57', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(96, 6687, 'ActivityFragment3', '2015-03-18 11:04:57', NULL, 'init', 966, NULL, NULL, NULL),
+(97, 6687, 'ActivityFragment3', '2015-03-18 11:04:57', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(98, 6688, 'ActivityFragment4', '2015-03-18 11:04:58', NULL, 'init', 966, NULL, NULL, NULL),
+(99, 6688, 'ActivityFragment4', '2015-03-18 11:04:58', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(100, 6688, 'ActivityFragment4', '2015-03-18 11:04:58', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(101, 6685, 'Activity1Fragment1', '2015-03-18 11:05:09', 'ready', 'running', 966, NULL, NULL, NULL),
+(102, 6685, 'Activity1Fragment1', '2015-03-18 11:05:09', 'running', 'terminated', 966, NULL, NULL, NULL),
+(103, 6686, 'Activity1Fragment2', '2015-03-18 11:05:09', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(104, 6689, 'Activity2Fragment1', '2015-03-18 11:05:09', NULL, 'init', 966, NULL, NULL, NULL),
+(105, 6689, 'Activity2Fragment1', '2015-03-18 11:05:09', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(106, 6689, 'Activity2Fragment1', '2015-03-18 11:05:09', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(107, 6689, 'Activity2Fragment1', '2015-03-18 11:05:13', 'ready', 'running', 966, NULL, NULL, NULL),
+(108, 6689, 'Activity2Fragment1', '2015-03-18 11:05:14', 'running', 'terminated', 966, NULL, NULL, NULL),
+(109, 6687, 'ActivityFragment3', '2015-03-18 11:05:14', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(110, 6690, 'Activity2Fragment1', '2015-03-18 11:05:14', NULL, 'init', 966, NULL, NULL, NULL),
+(111, 6690, 'Activity2Fragment1', '2015-03-18 11:05:14', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(112, 6687, 'ActivityFragment3', '2015-03-18 11:05:16', 'ready', 'running', 966, NULL, NULL, NULL),
+(113, 6687, 'ActivityFragment3', '2015-03-18 11:05:16', 'running', 'terminated', 966, NULL, NULL, NULL),
+(114, 6691, 'ActivityFragment3', '2015-03-18 11:05:16', NULL, 'init', 966, NULL, NULL, NULL),
+(115, 6691, 'ActivityFragment3', '2015-03-18 11:05:16', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(116, 6691, 'ActivityFragment3', '2015-03-18 11:05:16', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(117, 6686, 'Activity1Fragment2', '2015-03-18 11:05:18', 'ready', 'running', 966, NULL, NULL, NULL),
+(118, 6691, 'ActivityFragment3', '2015-03-18 11:05:18', 'ready', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(119, 6686, 'Activity1Fragment2', '2015-03-18 11:05:18', 'running', 'terminated', 966, NULL, NULL, NULL),
+(120, 6690, 'Activity2Fragment1', '2015-03-18 11:05:18', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL),
+(121, 6692, 'Activity1Fragment2', '2015-03-18 11:05:18', NULL, 'init', 966, NULL, NULL, NULL),
+(122, 6692, 'Activity1Fragment2', '2015-03-18 11:05:18', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(123, 6688, 'ActivityFragment4', '2015-03-18 11:05:20', 'ready', 'running', 966, NULL, NULL, NULL),
+(124, 6688, 'ActivityFragment4', '2015-03-18 11:05:20', 'running', 'terminated', 966, NULL, NULL, NULL),
+(125, 6693, 'ActivityFragment4', '2015-03-18 11:05:20', NULL, 'init', 966, NULL, NULL, NULL),
+(126, 6693, 'ActivityFragment4', '2015-03-18 11:05:20', 'init', 'ready(ControlFlow)', 966, NULL, NULL, NULL),
+(127, 6693, 'ActivityFragment4', '2015-03-18 11:05:20', 'ready(ControlFlow)', 'ready', 966, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -20025,7 +20095,18 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `new_state_id` int(11) NOT NULL,
   `new_state_name` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=69 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=74 ;
+
+--
+-- Daten für Tabelle `historydataobjectinstance`
+--
+
+INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `name`, `timestamp`, `dataobjectinstance_id`, `old_state_id`, `old_state_name`, `new_state_id`, `new_state_name`) VALUES
+(69, 966, 'object1', '2015-03-18 11:04:57', 744, NULL, '', 1, 'init'),
+(70, 966, 'object2', '2015-03-18 11:04:57', 745, NULL, '', 5, 'init'),
+(71, 966, 'object1', '2015-03-18 11:05:09', 744, 1, 'init', 2, 'bearbeitet'),
+(72, 966, 'object2', '2015-03-18 11:05:14', 745, 5, 'init', 6, 'fertig'),
+(73, 966, 'object1', '2015-03-18 11:05:18', 744, 2, 'bearbeitet', 3, 'gepr?ft');
 
 -- --------------------------------------------------------
 
@@ -20151,7 +20232,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=966 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=967 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -21075,7 +21156,8 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 (962, 'XORTest2Scenario', 0, 144),
 (963, 'XORTest2Scenario', 0, 144),
 (964, 'XORTest2Scenario', 0, 144),
-(965, 'XORTest2Scenario', 0, 144);
+(965, 'XORTest2Scenario', 0, 144),
+(966, 'HELLOWORLD', 0, 1);
 
 -- --------------------------------------------------------
 
