@@ -39,6 +39,7 @@ Please be aware of the database settings inside the web.xml . For the tests you 
 
     JEngine/blob/dev/src/main/resources/database_connection
 
+After changing server ips you may want to update the Config.java in the config package.
 
 ## Deployment
 
