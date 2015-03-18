@@ -72,6 +72,10 @@ public class Node implements IDeserialisable, IPersistable {
      */
     private String state;
     /**
+     * A String which holds the URI for the dataClasses.
+     */
+    private String dataClassURI;
+    /**
      * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
      */
     private String stereotype;
@@ -152,6 +156,9 @@ public class Node implements IDeserialisable, IPersistable {
                 break;
             case "stereotype":
                 stereotype = value;
+                break;
+            case "Data class":
+                dataClassURI = value;
             default:
                 // Property will not be handled
                 break;
@@ -178,8 +185,7 @@ public class Node implements IDeserialisable, IPersistable {
                         id);
                 connector.createEMailTemplate(databaseID);
 
-            }
-            else {
+            } else {
                 // DataNodes will be done in DataObject
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(type),
@@ -192,19 +198,12 @@ public class Node implements IDeserialisable, IPersistable {
     /**
      * Migrate datanode- or controlnodeInstances.
      *
-     * @param scenarioDbID databaseId of the old scenario whose instances get migrated
      * @param oldFragmentID databaseId of the old fragment whose instances get migrated and this node belongs to
      */
-    public void migrate(int scenarioDbID, int oldFragmentID) {
+    public void migrate(int oldFragmentID) {
         Connector connector = new Connector();
-        if (isDataNode()) {
-            int oldDataObjectID = connector.getDataObjectID(scenarioDbID, id);
-            connector.migrateDataObjectInstance(oldDataObjectID, databaseID);
-        }
-        else {
-            int oldControlNodeID = connector.getControlNodeID(oldFragmentID, id);
-            connector.migrateControlNodeInstance(oldControlNodeID, databaseID);
-        }
+        int oldControlNodeID = connector.getControlNodeID(oldFragmentID, id);
+        connector.migrateControlNodeInstance(oldControlNodeID, databaseID);
     }
 
     // BEGIN: Getter & Setter
@@ -289,7 +288,9 @@ public class Node implements IDeserialisable, IPersistable {
      *
      * @return the stereotype as a String.
      */
-    public String getStereotype(){ return stereotype;}
+    public String getStereotype() {
+        return stereotype;
+    }
     /**
      * Sets the fragment id.
      *

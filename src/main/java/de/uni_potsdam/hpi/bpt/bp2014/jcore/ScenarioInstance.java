@@ -274,10 +274,9 @@ public class ScenarioInstance {
      * Checks if a executing gateway can terminate.
      */
     public void checkExecutingGateways(int controlNode_id) {
-        for (GatewayInstance gatewayInstance : executingGateways) {
-            if(gatewayInstance.checkTermination(controlNode_id)) {
+        for (GatewayInstance gatewayInstance : ((LinkedList<GatewayInstance>) executingGateways.clone())) {
+            if (gatewayInstance.checkTermination(controlNode_id)) {
                 gatewayInstance.terminate();
-                return;
             }
         }
     }
@@ -288,8 +287,23 @@ public class ScenarioInstance {
      * @param controlNode_id This is the database id from the control node.
      * @return true if the terminated control node instances contains the control node. false if not.
      */
-    public Boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id) {
+    public boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : terminatedControlNodeInstances) {
+            if (controlNodeInstance.controlNode_id == controlNode_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the list executingGateways contains the control node.
+     *
+     * @param controlNode_id This is the database id from the control node.
+     * @return true if the executingGateways contains the control node. false if not.
+     */
+    public boolean executingGatewaysContainControlNodeID(int controlNode_id) {
+        for (ControlNodeInstance controlNodeInstance : executingGateways) {
             if (controlNodeInstance.controlNode_id == controlNode_id) {
                 return true;
             }
@@ -395,17 +409,18 @@ public class ScenarioInstance {
      * Starts automatic running control node instances.
      * For example it starts the email tasks.
      */
-    public void startAutomaticControlNodes(){
-        for (ControlNodeInstance controlNodeInstance : enabledControlNodeInstances){
-            if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance)controlNodeInstance).getIsMailTask()){
+    public void startAutomaticControlNodes() {
+        for (ControlNodeInstance controlNodeInstance : ((LinkedList<ControlNodeInstance>) enabledControlNodeInstances.clone())) {
+            if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
                 ((ActivityInstance) controlNodeInstance).begin();
-                ((ActivityInstance) controlNodeInstance).terminate();
+                //((ActivityInstance) controlNodeInstance).terminate();
             }
         }
     }
 
     /**
      * Get the control node instance id for a given control node id.
+     *
      * @param controlNode_id This is a id of a control node.
      * @return the control instance id for the given control node id.
      */
@@ -417,7 +432,7 @@ public class ScenarioInstance {
         }
         return null;
     }
-    /**
+    /*
      * Getter
      */
 

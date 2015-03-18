@@ -1,7 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -60,7 +62,7 @@ public class DbScenarioInstance extends DbObject {
      * @return -1 if something went wrong else it returns the database ID of the newly created scenario instance.
      */
     public int createNewScenarioInstance(int id) {
-        String sql = "INSERT INTO scenarioinstance (scenario_id) VALUES (" + id + ")";
+        String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + id + ", (SELECT name FROM scenario WHERE id = " + id + "))";
         return this.executeInsertStatement(sql);
     }
 
@@ -115,6 +117,7 @@ public class DbScenarioInstance extends DbObject {
      * @param terminated          This is the changed status of the scenario instance.
      */
     public void setTerminated(int scenarioInstance_id, boolean terminated) {
+        //TODO: history log
         int terminatedAsInt;
         if (terminated) {
             terminatedAsInt = 1;
@@ -126,4 +129,11 @@ public class DbScenarioInstance extends DbObject {
     }
 
 
+    public Map<Integer, String> getScenarioInstancesLike(int scenarioID, String filterString) {
+        String sql = "SELECT id, name FROM scenarioinstance WHERE scenario_id = " + scenarioID;
+        if (null != filterString && !filterString.equals("")) {
+            sql = sql + " AND name LIKE '%" + filterString + "%'";
+        }
+        return this.executeStatementReturnsHashMap(sql, "id", "name");
+    }
 }

@@ -1,38 +1,65 @@
 <h2>{{scenarioCtrl.getCurrentScenario()['label']}}</h2>
+<br>
 <div class="row">
-	<div class="col-xs-4">
+	<!--<div class="col-xs-4">
 		<img src="{{scenarioCtrl.getCurrentScenario()['imageUrl']}}" alt="{{scenarioCtrl.getCurrentScenario()['label']}}" class="img-thumbnail">
 		</img>
-	</div>
-	<div class="col-xs-1">
-		{{"# " + scenarioCtrl.getCurrentScenario()['id']}}
-	</div>
-	<div class="col-xs-4">
-		{{scenarioCtrl.getCurrentScenario()['label']}}
-	</div>
-	<div class="col-xs-4">
-		<a ng-href="#/scenario/{{scenarioCtrl.getCurrentScenario()['id']}}/instance">
-			Number of Instances: {{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}
+	</div>-->
+	<table>
+		<tr>
+			<th>ScenarioID</th>
+			<th>{{"# " + scenarioCtrl.getCurrentScenario()['id']}}</th>
+		</tr><tr>
+			<th>ScenarioName</th>
+			<th>{{scenarioCtrl.getCurrentScenario()['label']}}</th>
+		</tr><tr>
+			<th>Amount of Instances&nbsp;&nbsp;</th>
+			<th>{{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}</th>
+		</tr>
+	</table>
+	<div class="pull-right">
+		<input ng-model="searchText" placeholder="SearchTerm">
+		<a type="button" data-toggle="modal" data-target="#createInstance" class="btn btn-default">
+					Start Instance
 		</a>
 	</div>
 </div>
-<div>
-	<button data-toggle="modal" data-target="#createInstance" class="btn btn-default">Start Instance</button>
-	<div id="createInstance" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Start instance?</h4>
-				</div>
-				<div class="modal-body">
-					<p>Do you really want to start a new instance of scenario "{{scenarioCtrl.getCurrentScenario()['label']}}"?</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" ng-click="scenarioCtrl.createInstance(scenarioCtrl.getCurrentScenario()['id']);" data-dismiss="modal" class="btn btn-primary">Start Instance</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+<hr><br>
+<div class="row">
+	<div class="table-responsive" ng-controller="ScenarioInstanceController as instanceCtrl">
+		<table class="table table-striped table-hover">		
+			<thead>
+				<tr>
+					<th>Instance #</th>
+					<th>Process name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.instances track by $index"  ng-show="!searchText || value['label'].indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);" >
+					<td>{{key}}</td>
+					<td>{{value['label']}}</td>
+				</tr>
+				</a>
+			</tbody>
+		</table>
+	</div>
 </div>
+
+<!-- modals -->
+<div id="createInstance" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Start instance?</h4>
+			</div>
+			<div class="modal-body">
+				<p>Do you really want to start a new instance of scenario "{{scenarioCtrl.getCurrentScenario()['label']}}"?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" ng-click="scenarioCtrl.createInstance(scenarioCtrl.getCurrentScenario()['id']);" data-dismiss="modal" class="btn btn-primary">Start Instance</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

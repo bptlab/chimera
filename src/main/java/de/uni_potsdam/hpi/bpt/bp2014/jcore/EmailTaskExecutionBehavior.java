@@ -21,8 +21,9 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 
     /**
      * Initializes and creates an EmailTaskExecutionBehavior.
+     *
      * @param activityInstance_id This is an id for an activity instance.
-     * @param scenarioInstance This is an instance from the class ScenarioInstance.
+     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
      */
     public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {

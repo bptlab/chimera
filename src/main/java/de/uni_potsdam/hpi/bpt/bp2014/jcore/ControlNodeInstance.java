@@ -34,6 +34,19 @@ public abstract class ControlNodeInstance {
     protected int controlNode_id;
 
     /**
+     * Skips the control node.
+     *
+     * @return true if the skip success. false if not.
+     */
+    public abstract boolean skip();
+
+    /**
+     * Terminates the control node.
+     *
+     * @return true if the skip success. false if not.
+     */
+    public abstract boolean terminate();
+    /*
      * Getter
      */
 

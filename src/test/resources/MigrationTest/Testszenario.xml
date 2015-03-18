@@ -1,0 +1,95 @@
+<model id="1442712096" name="Testszenario" type="net.frapu.code.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+   <nodes>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="#nodes" value="" />
+         <property name="collapsed" value="0" />
+         <property name="x" value="700" />
+         <property name="width" value="200" />
+         <property name="y" value="500" />
+         <property name="text" value="" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="2146217198" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentCollection" />
+         <property name="height" value="500" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="#nodes" value="" />
+         <property name="collapsed" value="0" />
+         <property name="x" value="500" />
+         <property name="width" value="200" />
+         <property name="y" value="500" />
+         <property name="text" value="" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="862286289" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectCollection" />
+         <property name="height" value="500" />
+      </node>
+      <node>
+         <property name="fragment mid" value="1946280459" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="560" />
+         <property name="width" value="100" />
+         <property name="y" value="96" />
+         <property name="text" value="Fragment1" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1526055446" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="fragment mid" value="870945042" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="560" />
+         <property name="width" value="100" />
+         <property name="y" value="76" />
+         <property name="text" value="Fragment2" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1808753871" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="Data class" value="" />
+         <property name="x" value="286" />
+         <property name="width" value="100" />
+         <property name="y" value="116" />
+         <property name="text" value="DO1" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="268009267" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="Data class" value="" />
+         <property name="x" value="286" />
+         <property name="width" value="100" />
+         <property name="y" value="96" />
+         <property name="text" value="DO2" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="1049033296" />
+         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="height" value="20" />
+      </node>
+   </nodes>
+   <edges />
+   <properties>
+      <property name="author" value="" />
+      <property name="Termination State" value="[]" />
+      <property name="#folder" value="/" />
+      <property name="name" value="Testszenario" />
+      <property name="#uri" value="/models/1442712096/versions/0" />
+      <property name="comment" value="" />
+      <property name="#creationDate" value="March 12, 2015 10:28:55 AM CET" />
+      <property name="Termination Data Object" value="" />
+   </properties>
+</model>

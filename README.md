@@ -32,4 +32,6 @@ This JEngine does execute
 * usertasks
 * data objects
 * AND gateways
+* XOR gateways
+* email services tasks
 * termination condition for scenarios

@@ -81,13 +81,16 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private boolean migrationNecessary;
     /**
-     * If migration is necessary, we need the latest version of the scenario that should be migrated.
+     * If migration is necessary, we need the databaseID of the scenario that is supposed to be migrated.
      */
-    private int migratedScenarioVersion = -1;
+    private int migratingScenarioDbID = -1;
+    private String domainModelURI;
+    private Element domainModelXML;
+    private DomainModel domainModel;
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
      */
-    private List<Fragment> newFragments = new LinkedList<>();
+    private List<Fragment> newFragments;
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -101,8 +104,9 @@ public class Scenario implements IDeserialisable, IPersistable {
         processeditorServerUrl = serverURL;
     }
 
+
     /**
-     * This Method initializes the scanario from an XML.
+     * This Method initializes the scenario from an XML.
      * Be Aware, that a scenario consists of fragments, which will
      * be loaded automatically;
      *
@@ -114,10 +118,74 @@ public class Scenario implements IDeserialisable, IPersistable {
         setScenarioName();
         setScenarioID();
         generateFragmentList();
+        setDomainModelURL();
+        setDomainModel();
         createDataObjects();
         setTerminationCondition();
         setVersionNumber();
         checkIfVersionAlreadyInDatabase();
+
+    }
+
+    /**
+     * This method calls 2 more methods which get and set the domainModel.
+     */
+    private void setDomainModel() {
+        domainModelXML = fetchDomainModelXML();
+        domainModel = createAndInitializeDomainModel();
+    }
+
+    /**
+     * This method takes the XML and initializes the domainModel.
+     *
+     * @return the domainModel or null if there was no XML given.
+     */
+    private DomainModel createAndInitializeDomainModel() {
+        if(domainModelXML != null){
+            domainModel = new DomainModel(processeditorServerUrl);
+            domainModel.initializeInstanceFromXML(domainModelXML);
+            return domainModel;
+        }
+        return null;
+    }
+
+    /**
+     * This method takes the URL given in the scenarioXML and gets the domainModelXML.
+     *
+     * @return the domainModelXML as an Element.
+     */
+    private Element fetchDomainModelXML() {
+        try {
+            Retrieval jRetrieval = new Retrieval();
+            String versionXML = jRetrieval.getHTMLwithAuth(
+                    processeditorServerUrl,
+                    domainModelURI);
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(versionXML));
+            DocumentBuilder db = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder();
+            Document doc = db.parse(is);
+            return doc.getDocumentElement();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * This method gets the URL for the corresponding domainModel.
+     * It is found in the scenarioXML.
+     */
+    private void setDomainModelURL() {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/properties/property" +
+                "[@name='domainModelURI']/@value";
+        try {
+            domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -126,47 +194,73 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void checkIfVersionAlreadyInDatabase() {
         Connector connector = new Connector();
-        int fragmentModelVersion;
         long fragmentModelID;
         int newestFragmentDatabaseVersion;
-        int scenarioVersion = connector.getScenarioVersion(scenarioID);
-        List<Integer> fragmentDatabaseVersions;
+        int oldScenarioDbID = connector.getScenarioID(scenarioID);
+        int scenarioDbVersion = connector.getNewestScenarioVersion(scenarioID);
         boolean changesMade = false;
+        needsToBeSaved = false;
+        newFragments = new LinkedList<>();
         for (Fragment fragment : fragments) {
-            fragmentModelVersion = fragment.getVersion();
             fragmentModelID = fragment.getFragmentID();
-            fragmentDatabaseVersions = connector.getFragmentVersions(fragmentModelID, scenarioID);
-            newestFragmentDatabaseVersion = Collections.max(fragmentDatabaseVersions);
+            newestFragmentDatabaseVersion = connector.getNewestFragmentVersion(fragmentModelID, scenarioID);
             // case 1: We don't have a fragment with this modelid in the database
             if (newestFragmentDatabaseVersion == -1) {
                 needsToBeSaved = true;
                 // ... this might have two reasons:
                 // 1) the scenario is not in the database yet
-                if (scenarioVersion == -1) {
+                if (oldScenarioDbID == -1) {
                     migrationNecessary = false;
                 }
                 // 2) a new fragment has been added
                 else {
                     migrationNecessary = true;
                     newFragments.add(fragment);
-                    migratedScenarioVersion = scenarioVersion;
+                    migratingScenarioDbID = oldScenarioDbID;
                 }
             }
             // case 2: an existing fragment has been modified: we got a newer version of the fragment here
-            else if (newestFragmentDatabaseVersion < fragmentModelVersion) {
+            else if (newestFragmentDatabaseVersion < fragment.getVersion()) {
                 needsToBeSaved = true;
                 changesMade = true;
             }
         }
         // this evaluation is necessary as otherwise the value of migrationNecessary is influenced by the
-        // ordering of the fragments (could be overwritten)
+        // ordering of the fragments
         if (changesMade) {
             migrationNecessary = false;
         }
-        // case 3: we have a newer version of the scenario (e.g. fragment has been removed)
-        // or scenario does not exist in database (scenarioVersion = -1)
-        // (if scenarioVersion is -1 we get here only if this is a scenario without any fragments)
-        if (scenarioVersion < versionNumber) {
+        // case 3: We have a newer version of the scenario (e.g. terminationCondition changed)
+        if (scenarioDbVersion < versionNumber) {
+            needsToBeSaved = true;
+        }
+        if (migrationNecessary) {
+            boolean fragmentFound = false;
+            List<Long> fragmentDbIDs = connector.getFragmentModelIDs(migratingScenarioDbID);
+            for (long fragmentModelDbID : fragmentDbIDs) {
+                fragmentFound = false;
+                for (Fragment fragment : fragments) {
+                    if (fragment.getFragmentID() == fragmentModelDbID) {
+                        fragmentFound = true;
+                        break;
+                    }
+                }
+                if (!fragmentFound) {
+                    needsToBeSaved = true;
+                    migrationNecessary = false;
+                    break;
+                }
+            }
+        }
+        //checkDomainModelVersion(oldScenarioDbID);
+
+    }
+
+    private void checkDomainModelVersion(int oldScenarioDbID) {
+        Connector connector = new Connector();
+        int oldDataModelversion = connector.getDataModelVersion(oldScenarioDbID);
+        if (domainModel.getVersionNumber() > oldDataModelversion) {
+            migrationNecessary = false;
             needsToBeSaved = true;
         }
     }
@@ -316,13 +410,15 @@ public class Scenario implements IDeserialisable, IPersistable {
                     scenarioID,
                     versionNumber);
             saveFragments();
+            domainModel.setScenarioID(this.databaseID);
+            domainModel.save();
             saveDataObjects();
             saveConsistsOf();
             if (terminatingDataObject != null && terminatingDataNode != null) {
                 saveTerminationCondition();
             }
             saveReferences();
-            if (migrationNecessary){
+            if (migrationNecessary) {
                 migrateRunningInstances();
             }
             return this.databaseID;
@@ -331,21 +427,34 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Migrate running instances with the modelId of this scenario and with the migratedVersion.
+     * Migrate running instances with the modelId of this scenario and with the migratingScenarioVersion.
      */
     private void migrateRunningInstances() {
         Connector connector = new Connector();
-        // get the scenarioDatabaseID with the version to be migrated and the modelid
-        int oldScenarioDbID = connector.getScenarioID(scenarioID, migratedScenarioVersion);
-        // get the scenarioinstanceids of all running instances that need to be migrated
+        // get the scenarioInstanceIDs of all running instances that need to be migrated
         // and migrate them (means changing their old reference to the scenario to this scenario)
-        connector.migrateScenarioInstance(oldScenarioDbID, databaseID);
+        connector.migrateScenarioInstance(migratingScenarioDbID, databaseID);
         //migrate FragmentInstances
-        for(Fragment fragment : fragments) {
+        for (Fragment fragment : fragments) {
             // as there is no fragmentinstance for this new fragment in the database so far,
             // we don't need to change references
             if (!newFragments.contains(fragment)) {
-                fragment.migrate(oldScenarioDbID);
+                fragment.migrate(migratingScenarioDbID);
+            }
+        }
+        migrateDataObjects();
+        //domainModel.migrate(migratingScenarioDbID);
+    }
+    /**
+     * Migrate all dataObjectInstances of all scenarioInstances that are migrated.
+     */
+    private void migrateDataObjects() {
+        Connector connector = new Connector();
+        int oldDataObjectDbID;
+        for (Map.Entry<String, DataObject> dataObject : dataObjects.entrySet()) {
+            oldDataObjectDbID = connector.getDataObjectID(migratingScenarioDbID, dataObject.getKey());
+            if (oldDataObjectDbID > 0) {
+                connector.migrateDataObjectInstance(oldDataObjectDbID, dataObject.getValue().getDatabaseId());
             }
         }
     }
@@ -685,4 +794,27 @@ public class Scenario implements IDeserialisable, IPersistable {
     public int getVersionNumber() {
         return versionNumber;
     }
+
+    /**
+     * Returns a boolean which marks if migration is necessary.
+     * Used for testCases only so far.
+     *
+     * @return 1 if migration is necessary (0 otherwise)
+     */
+    public boolean isMigrationNecessary() {
+        return migrationNecessary;
+    }
+
+    public String getDomainModelURI() {
+        return domainModelURI;
+    }
+
+    public Element getDomainModelXML() {
+        return domainModelXML;
+    }
+
+    public DomainModel getDomainModel() {
+        return domainModel;
+    }
+
 }

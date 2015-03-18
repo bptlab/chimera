@@ -65,7 +65,7 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
         }
         //looks that all predecessors are terminated
         for (int controlNode : predecessors) {
-            if (!scenarioInstance.terminatedControlNodeInstancesContainControlNodeID(controlNode)) {
+            if (!scenarioInstance.terminatedControlNodeInstancesContainControlNodeID(controlNode) && !scenarioInstance.executingGatewaysContainControlNodeID(controlNode)) {
                 return false;
             }
         }

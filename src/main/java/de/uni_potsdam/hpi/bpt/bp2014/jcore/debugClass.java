@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -77,6 +79,7 @@ public class debugClass {
                 System.out.println("Scenario Instance geöffnet vom Scenario " + scenarioName);
             } else {
                 System.out.println("Scenario Instance existiert nicht");
+                return;
             }
         }
 
@@ -103,6 +106,9 @@ public class debugClass {
             executionService.terminateActivity(scenarioInstanceID, read);
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
                 System.out.println("Scenario ist terminiert");
+            /*executionService = null;
+            executionService = new ExecutionService();
+            executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);*/
         }
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));

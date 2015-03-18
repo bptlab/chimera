@@ -4,14 +4,13 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -40,7 +39,7 @@ import java.util.List;
  * The Connector has methods to create entries inside the database.
  * Therefore it uses the database.Connection class.
  */
-public class Connector extends DbDataObject{
+public class Connector extends DbDataObject {
 
     /**
      * A method to write a scenario to the database.
@@ -91,6 +90,7 @@ public class Connector extends DbDataObject{
      * @param label      The label of the node.
      * @param type       The type of the node (StartEvent/EndEvent/Task).
      * @param fragmentID The database ID of the Fragment.
+     * @param modelID    The modelID of the controlNode from the XML.
      * @return The newly created database entry.
      */
     public int insertControlNodeIntoDatabase(final String label,
@@ -180,7 +180,6 @@ public class Connector extends DbDataObject{
                 "VALUES ('" + name + "', " + dataClassId + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
-
     /**
      * Inserts a new Data Class into the database.
      *
@@ -194,6 +193,48 @@ public class Connector extends DbDataObject{
     }
 
     /**
+     * Inserts a new DataAttribute into the database.
+     *
+     * @param name is the name of the dataAttribute as a String.
+     * @param dataClassID is the databaseID of the corresponding dataClass.
+     * @param type is the type of the dataAttribute.
+     * @return the auto-incremented databaseID of the newly added dataAttribute.
+     */
+    public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String type){
+        String sql = "INSERT INTO dataattribute (dataattribute.name, " +
+                "dataclass_id, dataattribute.type, dataattribute.default) " +
+                "VALUES ('" + name + "', " + dataClassID + ", '" + type + "', '')";
+        return performSQLInsertStatementWithAutoId(sql);
+    }
+
+    /**
+     * Updates the scenario entry with the corresponding domainModel.
+     *
+     * @param modelID is the modelID of the domainModel which should be saved as a Long.
+     * @param versionNumber is the versionNumber of the domainModel as an Integer.
+     * @param scenarioID is the databaseID of the corresponding scenario.
+     */
+    public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber, final int scenarioID){
+        DbObject dbObject = new DbObject();
+        String sql = "UPDATE scenario " +
+                "SET scenario.datamodelid = " + modelID +", scenario.datamodelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
+        dbObject.executeUpdateStatement(sql);
+    }
+
+    /**
+     *  This method inserts an aggregation into the database.
+     *
+     * @param sourceID is the databaseID of a dataClass which is the source of the aggregation.
+     * @param targetID is the databaseID of a dataClass which is the target of the aggregation.
+     * @param multiplicity is the multiplicity of the aggregation as an Integer.
+     */
+    public void insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
+        String sql = "INSERT INTO aggregation (dataclass_id1, " +
+                "dataclass_id2, aggregation.multiplicity) " +
+                "VALUES (" + sourceID + ", " + targetID + ", " + multiplicity + ")";
+        performDefaultSQLInsertStatement(sql);
+    }
+    /**
      * This Methods inserts a new DataNode into the Database.
      * All necessary information are given as a parameter.
      *
@@ -201,17 +242,18 @@ public class Connector extends DbDataObject{
      * @param stateID      The database Id of the state of the Node.
      * @param dataClassID  The data class which describes the data object.
      * @param dataObjectID The data Object which is represented by the node.
+     * @param modelID      The modelID of the dataNode in the XML.
      * @return the autoincrement id of the newly created entry.
      */
     public int insertDataNodeIntoDatabase(final int scenarioID,
                                           final int stateID,
                                           final int dataClassID,
                                           final int dataObjectID,
-                                          final long modelid) {
+                                          final long modelID) {
         String sql = "INSERT INTO datanode " +
                 "(scenario_id, state_id, dataclass_id, dataobject_id, modelid)" +
                 " VALUES (" + scenarioID + ", " + stateID + ", " +
-                dataClassID + ", " + dataObjectID + ", " + modelid + ")";
+                dataClassID + ", " + dataObjectID + ", " + modelID + ")";
         return performSQLInsertStatementWithAutoId(sql);
     }
 
@@ -301,7 +343,7 @@ public class Connector extends DbDataObject{
      * @param controlNodeId
      * @return
      */
-    public int createEMailTemplate(int controlNodeId){
+    public int createEMailTemplate(int controlNodeId) {
         String sql = "INSERT INTO emailconfiguration " +
                 "(receivermailaddress, sendmailaddress, subject," +
                 " message, controlnode_id) SELECT " +
@@ -386,21 +428,21 @@ public class Connector extends DbDataObject{
      * Get the latest version of a fragment which is in the database.
      *
      * @param fragmentModelID modelID of the fragment
-     * @param scenarioID modelID of the scenario the fragment belongs to
-     * @return all versions of the fragment with the fragmentModelID (return list that only contains -1 if there is no fragment of this id)
+     * @param scenarioModelID modelID of the scenario the fragment belongs to
+     * @return latest version of the specified fragment (return -1 if there is no fragment of this id)
      */
-    public List<Integer> getFragmentVersions(long fragmentModelID, long scenarioID) {
+    public int getNewestFragmentVersion(long fragmentModelID, long scenarioModelID) {
 
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT fragment.modelversion FROM scenario, fragment " +
                 "WHERE scenario.id = fragment.scenario_ID " +
-                "AND scenario.modelid = " + scenarioID +
+                "AND scenario.modelid = " + scenarioModelID +
                 " AND fragment.modelid = " + fragmentModelID;
-        LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
+        LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select, "modelversion");
         if (versions.size() == 0) {
-            versions.add(-1);
+            return -1;
         }
-        return versions;
+        return Collections.max(versions);
     }
     /**
      * Get the latest version of a scenario which is in the database.
@@ -408,43 +450,40 @@ public class Connector extends DbDataObject{
      * @param scenarioID modelID of the scenario
      * @return latest version of the scenario with the scenarioID (return -1 if there is no scenario of this id)
      */
-    public int getScenarioVersion(long scenarioID) {
+    public int getNewestScenarioVersion(long scenarioID) {
 
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT modelversion FROM scenario " +
                 "WHERE modelid = " + scenarioID;
-        LinkedList<Integer> versions= dbDataObject.executeStatementReturnsListInt(select, "modelversion");
-        int maxVersion = -1;
-        for (int entry : versions) {
-            if (entry > maxVersion) {
-                maxVersion = entry;
-            }
+        LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select, "modelversion");
+        if (versions.size() == 0) {
+            return -1;
         }
-        return maxVersion;
+        return Collections.max(versions);
     }
 
     /**
-     * Get the newest scenarioID for modelId and version.
+     * Get the newest scenarioID for its modelId.
      *
      * @param scenarioID modelID of the scenario
-     * @param version the version for which the scenario is selected
      * @return the databaseID of the scenario for the LATEST version
      *         (we assume that the scenario with the largest id is the one of the newest version)
      */
-    public int getScenarioID(long scenarioID, int version) {
+    public int getScenarioID(long scenarioID) {
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT id FROM scenario " +
-                "WHERE modelid = " + scenarioID +
-                " AND modelversion = " + version;
+                "WHERE modelid = " + scenarioID;
         LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "id");
         if (ids.size() > 0) {
             return Collections.max(ids);
+        } else {
+            return -1;
         }
-        else return -1;
     }
 
     /**
-     * Change all oldScenarioIDs to newScenarioIDs of all running instances with oldScenarioID in table "scenarioinstance"
+     * Change all oldScenarioIDs to newScenarioIDs of all running instances
+     * with oldScenarioID in table "scenarioinstance".
      *
      * @param oldScenarioID scenarioID that gets updated by newScenarioId
      * @param newScenarioID new scenarioID that overwrites oldScenarioId
@@ -466,9 +505,9 @@ public class Connector extends DbDataObject{
     }
 
     /**
-     * Get the databaseId for specified fragment in table "fragment".
+     * Get the databaseId for the specified fragment in table "fragment".
      *
-     * @param scenarioID the scenarioID for which the fragment is selected
+     * @param scenarioID the scenarioDatabaseID for which the fragment is selected
      * @param modelID the modelId of the fragment
      * @return the databaseID of the selected fragment
      */
@@ -482,7 +521,8 @@ public class Connector extends DbDataObject{
     }
 
     /**
-     * Change all oldFragmentIDs to newFragmentIDs of all running instances with oldFragmentID in table "fragmentinstance"
+     * Change all oldFragmentIDs to newFragmentIDs of all running instances
+     * with oldFragmentID in table "fragmentinstance".
      *
      * @param oldFragmentID fragmentID that gets updated by newFragmentId
      * @param newFragmentID new fragmentID that overwrites oldFragmentId
@@ -495,14 +535,15 @@ public class Connector extends DbDataObject{
         dbDataObject.executeUpdateStatement(update);
     }
     /**
-     * Insert a running instance of a fragment in table "fragmentinstance"
+     * Insert a running instance of a fragment in table "fragmentinstance".
      *
      * @param fragmentID specifies a fragment the instance is running on
      * @param instanceID specifies a scenarioinstance the fragmentinstance belongs to
      */
     public void insertFragmentInstance(int fragmentID, int instanceID) {
         DbDataObject dbDataObject = new DbDataObject();
-        String insert = "INSERT INTO fragmentinstance (fragmentinstance.terminated, fragment_id, scenarioinstance_id) " +
+        String insert = "INSERT INTO fragmentinstance " +
+                "(fragmentinstance.terminated, fragment_id, scenarioinstance_id) " +
                 "VALUES (" + 0 + ", " + fragmentID + ", " + instanceID + ")";
         dbDataObject.executeUpdateStatement(insert);
 
@@ -511,7 +552,7 @@ public class Connector extends DbDataObject{
     /**
      * Get the databaseId for specified controlnode in table "controlnode".
      *
-     * @param fragmentID the fragmentID for which the fragment is selected
+     * @param fragmentID the databaseID of the fragment the controlNode belongs to
      * @param modelID the modelId of the controlnode
      * @return the databaseID of the selected controlnode
      */
@@ -525,7 +566,7 @@ public class Connector extends DbDataObject{
 
     }
     /**
-     * Change all oldControlNodeIDs to newControlNodeIDs in table "controlnodeinstance"
+     * Change all oldControlNodeIDs to newControlNodeIDs in table "controlnodeinstance".
      *
      * @param oldControlNodeID controlNodeID that gets updated by newControlNodeID
      * @param newControlNodeID new controlNodeID that overwrites oldControlNodeID
@@ -538,22 +579,23 @@ public class Connector extends DbDataObject{
         dbDataObject.executeUpdateStatement(update);
     }
     /**
-     * Get the dataobjectId of the specified datanode in table "fragment".
+     * Get the dataobjectID of the specified dataObject in table "dataobject".
      *
-     * @param scenarioID the scenarioID for which the dataobjectId is selected
-     * @param modelID the modelId of the datanode
-     * @return the dataobjectId of the selected datanode
+     * @param scenarioID the scenarioDatabaseID for which the dataobjectID is selected
+     * @param dataObjectName the name of the dataObject
+     *                       (we assume that a scenario can't hold dataObjects with the same name)
+     * @return the dataobject_id of the selected dataObject
      */
-    public int getDataObjectID(int scenarioID, long modelID) {
+    public int getDataObjectID(int scenarioID, String dataObjectName) {
         DbDataObject dbDataObject = new DbDataObject();
-        String select = "SELECT dataobject_id " +
-                "FROM datanode " +
+        String select = "SELECT id " +
+                "FROM dataobject " +
                 "WHERE scenario_id = " + scenarioID +
-                " AND modelid = " + modelID;
-        return dbDataObject.executeStatementReturnsInt(select, "dataobject_id");
+                " AND name = '" + dataObjectName + "'";
+        return dbDataObject.executeStatementReturnsInt(select, "id");
     }
     /**
-     * Change all oldDataObjectIDs to newDataObjectIDs in table "dataobjectinstance"
+     * Change all oldDataObjectIDs to newDataObjectIDs in table "dataobjectinstance".
      *
      * @param oldDataObjectID dataobject_id that gets updated by newDataObjectID
      * @param newDataObjectID new dataobject_id that overwrites oldDataObjectID
@@ -564,5 +606,101 @@ public class Connector extends DbDataObject{
                 "SET dataobject_id = " + newDataObjectID +
                 " WHERE dataobject_id = " + oldDataObjectID;
         dbDataObject.executeUpdateStatement(update);
+        String sql = "SELECT state_id FROM dataobjectinstance WHERE dataobject_id = " + newDataObjectID;
+        List<Integer> state_ids = dbDataObject.executeStatementReturnsListInt(sql, "state_id");
+        for (int state_id : state_ids) {
+            update = "UPDATE dataobjectinstance SET state_id = " +
+                    "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
+                    "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
+                    "WHERE dataobject_id = " + newDataObjectID +
+                    " AND state_id = " + state_id;
+            dbDataObject.executeUpdateStatement(update);
+        }
+    }
+    /**
+     * Get all modelIDs of the fragments for one scenario.
+     *
+     * @param scenarioID databaseID of the scenario
+     * @return List of all modelIDs of all fragments that belong to the scenario
+     */
+    public List<Long> getFragmentModelIDs(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT modelid " +
+                "FROM fragment " +
+                "WHERE scenario_id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsListLong(select, "modelid");
+    }
+
+    /**
+     * Get the databaseIDs of all dataClasses that belong to one scenario.
+     *
+     * @param scenarioID databaseID of the scenario
+     * @return List of all databaseIDs that belong to the scenario specified by scenarioID
+     */
+    public List<Integer> getDataClassIDs(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT dataclass_id " +
+                "FROM dataobject " +
+                "WHERE scenario_id = " + scenarioID;
+        // temporaryDataClassIDs might contain duplicate entries
+        List<Integer> temporaryDataClassIDs = dbDataObject.executeStatementReturnsListInt(select, "dataclass_id");
+        List<Integer> resultDataClassIDs = new LinkedList<>();
+        for (int entry : temporaryDataClassIDs) {
+            if (!resultDataClassIDs.contains(entry)) {
+                resultDataClassIDs.add(entry);
+            }
+        }
+        return resultDataClassIDs;
+    }
+
+    /**
+     * Get the name of the dataClass specified by its ID.
+     *
+     * @param dataClassID DatabaseID of the dataClass
+     * @return Name of the dataClass as String
+     */
+    public String getDataClassName(int dataClassID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT name " +
+                "FROM dataclass " +
+                "WHERE id = " + dataClassID;
+        return dbDataObject.executeStatementReturnsString(select, "name");
+    }
+
+    /**
+     * Get a map of all dataAttribute-database-IDs to their name.
+     *
+     * @param dataClassID DatabaseID of the dataClass to which the dataAttributes belong
+     * @return A map of all dataAttribute-database-IDs to their name
+     */
+    public Map<Integer, String> getDataAttributes(int dataClassID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT id, name " +
+                "FROM dataattribute " +
+                "WHERE dataclass_id = " + dataClassID;
+        return dbDataObject.executeStatementReturnsHashMap(select, "id", "name");
+
+    }
+
+    /**
+     * Change all oldDataAttributeIDs to newDataAttributeID of all specified dataattributeinstances.
+     *
+     * @param oldDataAttributeID DataAttributeID that gets updated by newDataAttributeID
+     * @param newDataAttributeID new dataAttributeID that overwrites oldDataAttributeID
+     */
+    public void migrateDataAttributeInstance(Integer oldDataAttributeID, Integer newDataAttributeID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String update = "UPDATE dataattributeinstance " +
+                "SET dataattribute_id = " + newDataAttributeID +
+                " WHERE dataattribute_id = " + oldDataAttributeID;
+        dbDataObject.executeUpdateStatement(update);
+    }
+
+    public int getDataModelVersion(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelversion " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
     }
 }

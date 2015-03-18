@@ -1,5 +1,5 @@
 (function(){
-	var scenario = angular.module('Scenario', []);
+	var userIn = angular.module('userInteraction', []);
 	
 	// TODO: At a future state we maybe should use a service to share data between the controllers
 	// Create an Object which holds the scenario Data globally
@@ -11,15 +11,15 @@
 	});*/
 	
 	// Create a directive for Scenarios Menu Entry
-	scenario.directive('scenarioMenuEntry', function(){
+	userIn.directive('scenarioMenuEntry', function(){
 		return {
 			restrict: 'A',
 			templateUrl: 'asset/templates/scenarioMenuEntry.html',
 		};
 	});
-	
+
 	// Create a Controller for the Scenario Information
-	scenario.controller('ScenarioController', ['$routeParams', '$location', '$http',
+	userIn.controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http){
 			var controller = this;
 			
@@ -37,7 +37,6 @@
 				this.scenarioIds.forEach(function(id){
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 						success(function(data) {
-							controller.scenarios["" + id] = data;
 							controller.scenarios["" + id] = data;
 							controller.getImageForScenario(id);
 							controller.getInstancesOfScenario(id);
@@ -82,7 +81,7 @@
 		}]
 	);
 	
-	scenario.controller('ScenarioInstanceController', ['$routeParams', '$location', '$http',
+	userIn.controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http){
 			// For accessing data from inside the $http context
 			var instanceCtrl = this;
@@ -104,7 +103,37 @@
 					});
 				});
 			}
-			
+
+			this.initializeDataobjectInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
+						  "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/dataobject/0/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].dataobjects = data;
+					});
+			}
+			// activitylogs
+			this.initializeActivitylogInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_new_Interface + "/history" +
+						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/activities/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].activitylogs = data;
+					});
+			}
+			// dataobjectlogs
+			this.initializeDataobjectlogInstances = function(){
+				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_new_Interface + "/history" +
+						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+						"/dataobjects/").
+					success(function(data){
+						instanceCtrl.instances[$routeParams.instanceId].dataobjectlogs = data;
+					});
+			}
+
 			this.initialize = function(){
 				if ($routeParams.instanceId) {
 					// initialize if necessary the specified instance
@@ -142,6 +171,9 @@
 					instanceCtrl.instances['' + id] = data;
 					if ($routeParams.instanceId) {
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
+						instanceCtrl.initializeActivitylogInstances();
+						instanceCtrl.initializeDataobjectlogInstances();
 					}
 				});
 			}
@@ -181,6 +213,9 @@
 					success(function(data) {
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
+						instanceCtrl.initializeActivitylogInstances();
+						instanceCtrl.initializeDataobjectlogInstances();
 					});
 			};
 			
@@ -192,42 +227,11 @@
 					success(function(data) {
 						instanceCtrl.instances.activities = {};
 						instanceCtrl.initializeActivityInstances();
+						instanceCtrl.initializeDataobjectInstances();
+						instanceCtrl.initializeActivitylogInstances();
+						instanceCtrl.initializeDataobjectlogInstances();
 					});
-			};
-				
+			};				
 		}
 	]);
-
-	// Create a Controller for jcomparser admin dashboard
-	scenario.controller('jcomparserMainView', ['$routeParams', '$location', '$http',
-		function($routeParams, $location, $http){
-			var controller = this;
-			
-			// initialize an empty list of scenario Ids
-			this.scenarioIds = [];
-			this.scenarios = {};
-			
-			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
-				success(function(data){
-					controller.scenarioIds = data['ids'];
-					controller.getDetailedInformation();
-				});
-				
-			this.getImageForScenario = function(id){
-				//this.scenarios["" + id]['imageUrl'] =
-				return	JEngine_Server_URL + "/" + JComparser_REST_Interface + 
-					"/scenarios/" + id + "/image/";
-			};
-					
-			// Creates a new instance of the scenario with the given Id
-			this.loadInstance = function(id){
-				$http.post(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/launch/"+ id).
-					success(function(data) {
-						if (data) {
-							return data;
-						}
-					});
-			};
-		}]
-	);
 })();

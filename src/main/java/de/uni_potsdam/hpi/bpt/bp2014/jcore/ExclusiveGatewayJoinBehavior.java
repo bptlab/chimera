@@ -25,6 +25,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
 
+    /**
+     * Initializes and creates an ExclusiveGatewayJoinBehavior
+     *
+     * @param gatewayInstance  An instance from the class GatewayInstance.
+     * @param scenarioInstance An instance from the class ScenarioInstance.
+     * @param stateMachine     An instance from the class StateMachine.
+     */
     public ExclusiveGatewayJoinBehavior(GatewayInstance gatewayInstance, ScenarioInstance scenarioInstance, StateMachine stateMachine) {
         this.scenarioInstance = scenarioInstance;
         this.controlNodeInstance = gatewayInstance;

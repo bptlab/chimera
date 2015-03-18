@@ -6,18 +6,22 @@
 			<tr>
 				<th>#</th>
 				<th>Name</th>
+				<th>Preview</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr style="cursor: pointer" ng-repeat="id in jcomparser.scenarioIds">
-				<td>{{id}}</td>
-				<td>{{jcomparser.scenarios['' + id]['label']}}</td>
-				<th><img ng-href="jcomparser.getImageForScenario(id)"></img></th>
+			<tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMV.scenarioDetails">
+				<td>{{key}}</td>
+				<td>{{value}}</td>
+				<td><a ng-href="{{jcomparserMV.getImageForScenario(key)}}"><img ng-src="{{jcomparserMV.getImageForScenario(key)}}" width="40%"></img></a></td>
+				<td>
+					<form ng-submit="jcomparserMV.loadInstance(key)">
+						<input type="submit" value="Launch Scenario">
+					</form>
+				</td>
 			</tr>
 			</a>
 		</tbody>
 	</table>
-</div>
-<div class="row" ng-repeat="id in jcomparser.scenarioIds">
-	<div ></div>
 </div>

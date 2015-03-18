@@ -1,0 +1,60 @@
+<h2>mailConfig</h2>
+
+<!-- filtering scenarios  -->
+Select Scenario: <select data-ng-options="id as id for id in mailC.scenarioIDs" ng-model="selectedScenario" data-ng-change="mailC.getAllMailtaskForScenarioID(selectedScenario)"></select>
+
+<li ng-if="selectedScenario > 0">
+	<div class="table-responsive">
+		<table class="table table-striped table-hover">
+
+			<caption>mailConfig currently available</caption>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Activity Name</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr style="cursor: pointer" ng-repeat="(key, value) in mailC.emailtaskIDs">
+					<td>{{value}}</td>
+					<td>{{value}}</td>
+					<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#editMailConfig' + id}}" data-ng-click="mailC.getDetails(value)">Show Details</a>
+
+					</td>
+				</tr>
+				</a>
+			</tbody>
+		</table>
+	</div>
+</li>
+
+<!-- ___________________________ modals ___________________________ -->
+<div id="{{'editMailConfig' + id}}" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Edit Mail Config of {{mailC.workingID}}</h4>
+			</div>
+			<div class="modal-body">
+				<form name="myForm" ng-submit="mailC.submitMyForm()">
+				<!--<form name="saveTemplateData" ng-controller="FormCtrl">-->
+	   			    Receiver: {{mailC.detailsForID['receiver']}}<br>
+				    <input type="text" name="receiver" ng-model="form.receiver" ng-bind="mailC.detailsForID['receiver']" data-ng-value="{{mailC.detailsForID['receiver']}}" /><br>
+				    Subject: {{mailC.detailsForID['subject']}}<br>
+				    <input type="text" name ="subject" ng-model="form.subject" data-ng-value="{{mailC.detailsForID['subject']}}" /><br>
+				    Message: <br>{{mailC.detailsForID['message']}}<br>
+					<textarea rows="3" cols="25" name="content" ng-model="form.content" />{{mailC.detailsForID['content']}}</textarea> <br>
+				    <button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" ng-click="mailC.loadData();" class="btn btn-primary">Refresh!</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+

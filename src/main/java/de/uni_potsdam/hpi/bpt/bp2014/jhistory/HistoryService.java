@@ -1,10 +1,13 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -36,6 +39,9 @@ public class HistoryService {
     private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
     private final DbControlNode dbControlNode = new DbControlNode();
 
+
+
+
     /**
      * Gives all ids of terminated activities for a scenario instance id.
      *
@@ -59,5 +65,15 @@ public class HistoryService {
             labels.put(id, dbControlNode.getLabel(id));
         }
         return labels;
+    }
+
+    public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(int scenarioInstance_id){
+        DbHistoryDataObjectInstance dbHistoryDataObjectInstance = new DbHistoryDataObjectInstance();
+        return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
+    }
+
+    public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
+        DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
+        return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 }

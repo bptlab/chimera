@@ -30,4 +30,9 @@ public abstract class StateMachine {
     protected int controlNodeInstance_id;
     protected ControlNodeInstance controlNodeInstance;
     protected String state;
+
+    public abstract boolean skip();
+
+    public abstract boolean terminate();
+
 }

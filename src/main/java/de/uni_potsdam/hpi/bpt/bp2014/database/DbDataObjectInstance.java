@@ -22,6 +22,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
  * **********************************************************************************
  */
 
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
+
 /**
  * This class is the representation of a dataObject instance in the database.
  * It provides the functionality to check for existing instances or create new ones.
@@ -41,18 +43,21 @@ public class DbDataObjectInstance extends DbObject {
     }
 
     /**
-     * This method sets the state of a dataObject instance to a desirable one.
+     * This method sets the state of a dataObject instance to a desirable one and saves a log entry into the database.
      *
      * @param id This is the database ID of a dataObject instance.
      * @param state This is the desirable state of a dataObject instance.
      */
     public void setState(int id, int state) {
+        //TODO: history log
+        Log log = new Log();
+        log.newDataObjectInstanceState(id, state);
         String sql = "UPDATE dataobjectinstance SET state_id = " + state + " WHERE id = " + id;
         this.executeUpdateStatement(sql);
     }
 
     /**
-     * This method creates and saves a dataObject instance to the database.
+     * This method creates and saves a dataObject instance to the database and saves a log entry into the database.
      *
      * @param scenarioInstance_id This is the database ID of a scenario instance.
      * @param state_id This is the initial state of a dataObject instance.
@@ -60,8 +65,12 @@ public class DbDataObjectInstance extends DbObject {
      * @return -1 if something went wrong else return the database ID of the newly created dataObject instance.
      */
     public int createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
+        //TODO: history log
         String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", " + state_id + ", " + dataObject_id + ")";
-        return this.executeInsertStatement(sql);
+        int id = this.executeInsertStatement(sql);
+        Log log = new Log();
+        log.newDataObjectInstance(id);
+        return id;
     }
 
     /**
@@ -105,6 +114,7 @@ public class DbDataObjectInstance extends DbObject {
      * @param onChange This is the flag set to indicate if the dataObject instance is being modified or not.
      */
     public void setOnChange(int id, Boolean onChange) {
+        //TODO: history log
         int onChangeAsInt;
         if (onChange) {
             onChangeAsInt = 1;
@@ -115,4 +125,14 @@ public class DbDataObjectInstance extends DbObject {
         this.executeUpdateStatement(sql);
     }
 
+    /**
+     * This method returns the dataobject_id of a dataObjectInstance.
+     *
+     * @param dataObjectInstanceID Id of the dataIbjectInstance.
+     * @return Dataobject_id.
+     */
+    public int getDataObjectID(int dataObjectInstanceID) {
+        String sql = "SELECT dataobject_id FROM dataobjectinstance WHERE id = " + dataObjectInstanceID;
+        return this.executeStatementReturnsInt(sql, "dataobject_id");
+    }
 }

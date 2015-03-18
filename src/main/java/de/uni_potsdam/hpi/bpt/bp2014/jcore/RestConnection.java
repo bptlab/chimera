@@ -1,18 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.google.gson.Gson;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-
-import com.google.gson.JsonArray;
 
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperHashMap;
 import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
@@ -246,23 +243,26 @@ public class RestConnection {
         }
     }
 
-    @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("emailtaskID") int emailtaskID) {
-        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.serverError().entity("Error: there is no existing open scenario instance").build();
-        }
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
-        if (receiver.equals("")){
-            return Response.serverError().entity("Error: there is no email configuration").build();
-        }
-        String message = dbEmailConfiguration.getMessage(emailtaskID);
-        String subject = dbEmailConfiguration.getSubject(emailtaskID);
-        String jsonRepresentation ="{" + receiver + ", " + subject + ", " + message + "}";
 
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    @GET
+    @Path("scenario/{scenarioID}/emailtask/{emailtaskID}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("emailtaskID") int emailtaskID) {
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        if (emailtaskID == 0) {
+            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(dbEmailConfiguration.getAllEmailTasksForScenario(scenarioID));
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        } else {
+            String receiver = dbEmailConfiguration.getReceiverEmailAddress(emailtaskID);
+            if (receiver.equals("")) {
+                return Response.serverError().entity("Error: there is no email configuration").build();
+            }
+            String message = dbEmailConfiguration.getMessage(emailtaskID);
+            String subject = dbEmailConfiguration.getSubject(emailtaskID);
+            String jsonRepresentation = "{\"receiver\":\"" + receiver + "\", \"subject\":\"" + subject + "\",\"message\":\"" + message + "\"}";
+
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        }
     }
 
 
@@ -302,10 +302,13 @@ public class RestConnection {
      * @param status             the new status of the activity which is supposed to be updated
      * @return true or false
      */
-
     @POST
+    // TODO: Fix path names
     @Path("scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityinstanceID}/")
-    public Boolean doActivity(@PathParam("scenarioID") String scenarioID, @PathParam("instanceID") int scenarioInstanceID, @PathParam("activityinstanceID") int activityInstanceID, @QueryParam("status") String status) {
+    public Boolean doActivity(@PathParam("scenarioID") String scenarioID,
+                              @PathParam("instanceID") int scenarioInstanceID,
+                              @PathParam("activityinstanceID") int activityInstanceID,
+                              @QueryParam("status") String status) {
         Boolean result;
         executionService.openExistingScenarioInstance(new Integer(scenarioID), scenarioInstanceID);
         // check on status, if begin -> start the activity
@@ -327,27 +330,61 @@ public class RestConnection {
                 return false;
             }
         }
-        //return Response.serverError().entity("Error: status not clear").build();//status != {begin,begin}
         System.err.print("ERROR: no status defined " + status);
         return false;
     }
 
+    /**
+     * @param emailtaskID id of related emailtask
+     * @param input       HTTP body as json which is retrieved by the REST interface
+     * @return boolean
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioID}/instance/{instanceID}/emailtask/{emailtaskID}/") //Path anpassen und Params setzen
-    public boolean updateEmailConfiguration(@PathParam("scenarioID") int scenarioID, @PathParam("instanceID") int instanceID, @PathParam("emailtaskID") int emailtaskID, String json) {
-
-        Map emailtaskData = JsonUtil.parse(json);
-
-        //TODO: map emailtaskData content
-
-        String receiver ="";
-        String message ="";
-        String subject ="";
+    @Path("config/emailtask/{emailtaskID}/")
+    public boolean updateEmailConfiguration(
+            @PathParam("emailtaskID") int emailtaskID,
+            final EmailConfigJaxBean input) {
 
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        dbEmailConfiguration.setEmailConfiguration(emailtaskID, receiver, subject, message);
+        dbEmailConfiguration.setEmailConfiguration(emailtaskID,
+                input.receiver, input.subject, input.content);
         return true;
     }
 
+
+    /* #############################################################################
+     *
+     * Helper
+     *
+     * #############################################################################
+     */
+
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link #updateEmailConfiguration(int,
+     * de.uni_potsdam.hpi.bpt.bp2014.jcore.RestConnection.EmailConfigJaxBean)
+     * updateEmailConfiguration} method for more information.
+     */
+    @XmlRootElement
+    public static class EmailConfigJaxBean {
+        /**
+         * The receiver of the email.
+         * coded as an valid email address (as String)
+         */
+        public String receiver;
+        /**
+         * The subject of the email.
+         * Could be any String but null.
+         */
+        public String subject;
+        /**
+         * The content of the email.
+         * Could be any String but null.
+         */
+        public String content;
+    }
 }
