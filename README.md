@@ -27,8 +27,9 @@ Cloning of this repo
 
     git clone https://github.com/BP2014W1/JEngine
 
-Further an MySQL Database should be created named as "JEngineV2" & import SQL file from JEngine\src\main\resources\JEngineV2.sql
+Further an MySQL Database should be created named as "JEngineV2" & import SQL file from 
 
+    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2.sql
 
 
 ## Deployment
