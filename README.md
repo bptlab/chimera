@@ -35,7 +35,9 @@ Further an MySQL Database should be created named as "JEngineV2" & import SQL fi
 
     mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2.sql
 
-Please be aware of the database settings inside the web.xml.
+Please be aware of the database settings inside the web.xml and also the database_connection in
+
+    JEngine/blob/dev/src/main/resources/database_connection
 
 
 ## Deployment
