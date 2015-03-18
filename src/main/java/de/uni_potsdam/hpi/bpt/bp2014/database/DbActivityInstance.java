@@ -4,6 +4,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /***********************************************************************************
  *
@@ -110,4 +111,14 @@ public class DbActivityInstance extends DbObject {
         this.executeUpdateStatement(sql);
     }
 
+    public Map<Integer, Map<String, Object>> getMapForAllActivityInstances(int instanceId) {
+        String sql = "SELECT activityinstance.id AS id, activityinstance.type AS type, activity_state, " +
+                "controlnode.label AS label " +
+                "FROM activityinstance, controlnodeinstance, controlnode " +
+                "WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' " +
+                "AND controlnodeinstance.controlnode_id = controlnode.id " +
+                "AND fragmentinstance_id IN " +
+                "(Select id FROM fragmentinstance WHERE scenarioinstance_id =" + instanceId + ")";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "id", "type", "activity_state", "label");
+    }
 }

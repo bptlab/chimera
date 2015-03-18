@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
@@ -357,8 +358,6 @@ public class RestInterface {
      * @param filterString Defines a search strings. Only activities
      *                     with a label containing this String will be
      *                     shown.
-     * @param orderBy      Defines an attribute which will be used to order
-     *                     the results, the default will be the id
      * @return A Response with the status and content of the request.
      * A 200 (OK) implies that the instance was found and the
      * result contains the JSON-Object.
@@ -373,9 +372,35 @@ public class RestInterface {
     public Response getActivitiesOfInstance(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
-            @QueryParam("filter") @DefaultValue("") String filterString,
-            @QueryParam("order") @DefaultValue("id") String orderBy) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+            @QueryParam("filter") String filterString,
+            @QueryParam("state") String state) {
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.existScenarioInstance(instanceID)) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"There is no instance with id" + instanceID + "\"}")
+                    .build();
+        } else if (!executionService.existScenario(scenarioID)) {
+            try {
+                return Response.seeOther(new URI("v2/scenario/" +
+                        executionService.getScenarioIDForScenarioInstance(instanceID) +
+                        "/instance/" + instanceID + "/activity")).build();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        DbActivityInstance activityInstance = new DbActivityInstance();
+        Map <Integer, Map<String, Object>> instances = activityInstance.getMapForAllActivityInstances(instanceID);
+        JSONObject result = new JSONObject();
+        result.put("ids", instances.keySet());
+        JSONArray activities = new JSONArray();
+        for (Map<String, Object> value : instances.values()) {
+            activities.put(new JSONObject(value));
+        }
+        result.put("activities", activities);
+        return Response
+                .ok(result.toString(), MediaType.APPLICATION_JSON)
+                .build();
     }
 
     /**

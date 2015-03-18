@@ -442,4 +442,57 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * with an wrong scenario ID the request should be redirected to the correct one.
+     */
+    @Test
+    public void testGetActivitiesRedirects() {
+        Response response = base.path("scenario/9999/instance/72/activity").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 200",
+                200, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * with correct instance and scenario
+     * a 200 with json content will be returned.
+     */
+    @Test
+    public void testGetActivitiesCorrect() {
+        Response response = base.path("scenario/1/instance/72/activity").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 200",
+                200, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * with a filter String
+     * then only activities with a label like the filter String will be returned.
+     */
+    @Test
+    public void testGetActivitiesWithFilter() {
+        Response response = base.path("scenario/1/instance/72/activity").queryParam("filter", "2").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 200",
+                200, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
 }
