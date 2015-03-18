@@ -252,6 +252,17 @@ public class Scenario implements IDeserialisable, IPersistable {
                 }
             }
         }
+        //checkDomainModelVersion(oldScenarioDbID);
+
+    }
+
+    private void checkDomainModelVersion(int oldScenarioDbID) {
+        Connector connector = new Connector();
+        int oldDataModelversion = connector.getDataModelVersion(oldScenarioDbID);
+        if (domainModel.getVersionNumber() > oldDataModelversion) {
+            migrationNecessary = false;
+            needsToBeSaved = true;
+        }
     }
 
     /**

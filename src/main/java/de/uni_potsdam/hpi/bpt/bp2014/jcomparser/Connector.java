@@ -695,4 +695,12 @@ public class Connector extends DbDataObject {
                 " WHERE dataattribute_id = " + oldDataAttributeID;
         dbDataObject.executeUpdateStatement(update);
     }
+
+    public int getDataModelVersion(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelversion " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
+    }
 }
