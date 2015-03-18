@@ -35,6 +35,8 @@ Further an MySQL Database should be created named as "JEngineV2" & import SQL fi
 
     mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2.sql
 
+Please be aware of the database settings inside the web.xml.
+
 
 ## Deployment
 
@@ -63,11 +65,6 @@ Now, you may access the jFrontend via
 
    http://localhost:8080/JEngine
 
-
-## Database Setup
-
-You can use the src/main/resources/JEngineV2.sql file for your Database setup.
-Please set your database settings inside the web.xml.
 
 ## Features
 
