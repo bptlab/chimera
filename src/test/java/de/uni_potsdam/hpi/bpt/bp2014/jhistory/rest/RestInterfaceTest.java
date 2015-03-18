@@ -66,7 +66,7 @@ public class RestInterfaceTest extends AbstractTest {
 
 
 
-    @Test
+    //@Test
     public void testGetActivitiesLog() {
         Response response = base.path("scenario/1/instance/966/activities").request().get();
         assertThat("Get Scenarios did not contain the expected information",
@@ -74,7 +74,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    @Test
+    //@Test
     public void testGetDataObjectsLog() {
         Response response = base.path("scenario/1/instance/966/dataobjects").request().get();
         assertThat("Get Scenarios did not contain the expected information",
