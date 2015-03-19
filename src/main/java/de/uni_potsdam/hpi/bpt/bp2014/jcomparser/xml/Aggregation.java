@@ -13,9 +13,9 @@ public class Aggregation implements IDeserialisable, IPersistable {
     private DataClass source;
     private DataClass target;
     private int multiplicity;
-    private int aggregationID;
     private Map<Long, DataClass> dataClasses;
     private org.w3c.dom.Node aggregationXML;
+
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
         this.aggregationXML = element;
@@ -79,12 +79,11 @@ public class Aggregation implements IDeserialisable, IPersistable {
     @Override
     public int save() {
         Connector conn = new Connector();
-        this.aggregationID = 0;
         conn.insertAggregationIntoDatabase(
                 this.source.getDataClassID(),
                 this.target.getDataClassID(),
                 this.multiplicity);
-        return aggregationID;
+        return 1;
     }
 
     public void setDataClasses(Map<Long, DataClass> dataClasses) {
@@ -105,10 +104,6 @@ public class Aggregation implements IDeserialisable, IPersistable {
 
     public int getMultiplicity() {
         return multiplicity;
-    }
-
-    public int getAggregationID() {
-        return aggregationID;
     }
 
 }

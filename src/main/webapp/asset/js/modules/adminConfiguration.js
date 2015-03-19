@@ -76,6 +76,11 @@
 					"/scenario/0/emailtask/" + id + "/?").
 					success(function(data) {
 						controller.detailsForID = data;
+						$scope.form = { 
+								receiver: data['receiver'],
+								subject: data['subject'],
+								content: data['message']
+								};
 					});
 			};
 			

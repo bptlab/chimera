@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -192,11 +193,12 @@ public class Connector extends DbDataObject {
     }
 
     /**
+     * Inserts a new DataAttribute into the database.
      *
-     * @param name
-     * @param dataClassID
-     * @param type
-     * @return
+     * @param name is the name of the dataAttribute as a String.
+     * @param dataClassID is the databaseID of the corresponding dataClass.
+     * @param type is the type of the dataAttribute.
+     * @return the auto-incremented databaseID of the newly added dataAttribute.
      */
     public int insertDataAttributeIntoDatabase(final String name, final int dataClassID, final String type){
         String sql = "INSERT INTO dataattribute (dataattribute.name, " +
@@ -206,24 +208,25 @@ public class Connector extends DbDataObject {
     }
 
     /**
+     * Updates the scenario entry with the corresponding domainModel.
      *
-     * @param modelID
-     * @param versionNumber
-     * @param scenarioID
+     * @param modelID is the modelID of the domainModel which should be saved as a Long.
+     * @param versionNumber is the versionNumber of the domainModel as an Integer.
+     * @param scenarioID is the databaseID of the corresponding scenario.
      */
     public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber, final int scenarioID){
         DbObject dbObject = new DbObject();
         String sql = "UPDATE scenario " +
-                "SET scenario.modelid = " + modelID +", scenario.modelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
+                "SET scenario.datamodelid = " + modelID +", scenario.datamodelversion = " + versionNumber + " WHERE id = " + scenarioID + "";
         dbObject.executeUpdateStatement(sql);
     }
 
     /**
+     *  This method inserts an aggregation into the database.
      *
-     * @param sourceID
-     * @param targetID
-     * @param multiplicity
-     * @return
+     * @param sourceID is the databaseID of a dataClass which is the source of the aggregation.
+     * @param targetID is the databaseID of a dataClass which is the target of the aggregation.
+     * @param multiplicity is the multiplicity of the aggregation as an Integer.
      */
     public void insertAggregationIntoDatabase(final int sourceID, final int targetID, final int multiplicity){
         String sql = "INSERT INTO aggregation (dataclass_id1, " +
@@ -603,6 +606,16 @@ public class Connector extends DbDataObject {
                 "SET dataobject_id = " + newDataObjectID +
                 " WHERE dataobject_id = " + oldDataObjectID;
         dbDataObject.executeUpdateStatement(update);
+        String sql = "SELECT state_id FROM dataobjectinstance WHERE dataobject_id = " + newDataObjectID;
+        List<Integer> state_ids = dbDataObject.executeStatementReturnsListInt(sql, "state_id");
+        for (int state_id : state_ids) {
+            update = "UPDATE dataobjectinstance SET state_id = " +
+                    "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
+                    "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
+                    "WHERE dataobject_id = " + newDataObjectID +
+                    " AND state_id = " + state_id;
+            dbDataObject.executeUpdateStatement(update);
+        }
     }
     /**
      * Get all modelIDs of the fragments for one scenario.
@@ -616,5 +629,98 @@ public class Connector extends DbDataObject {
                 "FROM fragment " +
                 "WHERE scenario_id = " + scenarioID;
         return dbDataObject.executeStatementReturnsListLong(select, "modelid");
+    }
+
+    /**
+     * Get the databaseIDs of all dataClasses that belong to one scenario.
+     *
+     * @param scenarioID databaseID of the scenario
+     * @return List of all databaseIDs that belong to the scenario specified by scenarioID
+     */
+    public List<Integer> getDataClassIDs(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT dataclass_id " +
+                "FROM dataobject " +
+                "WHERE scenario_id = " + scenarioID;
+        // temporaryDataClassIDs might contain duplicate entries
+        List<Integer> temporaryDataClassIDs = dbDataObject.executeStatementReturnsListInt(select, "dataclass_id");
+        List<Integer> resultDataClassIDs = new LinkedList<>();
+        for (int entry : temporaryDataClassIDs) {
+            if (!resultDataClassIDs.contains(entry)) {
+                resultDataClassIDs.add(entry);
+            }
+        }
+        return resultDataClassIDs;
+    }
+
+    /**
+     * Get the name of the dataClass specified by its ID.
+     *
+     * @param dataClassID DatabaseID of the dataClass
+     * @return Name of the dataClass as String
+     */
+    public String getDataClassName(int dataClassID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT name " +
+                "FROM dataclass " +
+                "WHERE id = " + dataClassID;
+        return dbDataObject.executeStatementReturnsString(select, "name");
+    }
+
+    /**
+     * Get a map of all dataAttribute-database-IDs to their name.
+     *
+     * @param dataClassID DatabaseID of the dataClass to which the dataAttributes belong
+     * @return A map of all dataAttribute-database-IDs to their name
+     */
+    public Map<Integer, String> getDataAttributes(int dataClassID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT id, name " +
+                "FROM dataattribute " +
+                "WHERE dataclass_id = " + dataClassID;
+        return dbDataObject.executeStatementReturnsHashMap(select, "id", "name");
+
+    }
+
+    /**
+     * Change all oldDataAttributeIDs to newDataAttributeID of all specified dataattributeinstances.
+     *
+     * @param oldDataAttributeID DataAttributeID that gets updated by newDataAttributeID
+     * @param newDataAttributeID new dataAttributeID that overwrites oldDataAttributeID
+     */
+    public void migrateDataAttributeInstance(Integer oldDataAttributeID, Integer newDataAttributeID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String update = "UPDATE dataattributeinstance " +
+                "SET dataattribute_id = " + newDataAttributeID +
+                " WHERE dataattribute_id = " + oldDataAttributeID;
+        dbDataObject.executeUpdateStatement(update);
+    }
+
+    /**
+     * Get the version of the domainModel that belongs to the specified scenario.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The version of the domainModel
+     */
+    public int getDataModelVersion(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelversion " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
+    }
+
+    /**
+     * Get the modelID of the domainModel (from the XML) that belongs to the specified scenario.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The modelID of the domainModel
+     */
+    public long getDataModelID(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelid " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsListLong(select, "datamodelid").get(0);
     }
 }

@@ -127,11 +127,19 @@ public class Scenario implements IDeserialisable, IPersistable {
 
     }
 
+    /**
+     * This method calls 2 more methods which get and set the domainModel.
+     */
     private void setDomainModel() {
         domainModelXML = fetchDomainModelXML();
         domainModel = createAndInitializeDomainModel();
     }
 
+    /**
+     * This method takes the XML and initializes the domainModel.
+     *
+     * @return the domainModel or null if there was no XML given.
+     */
     private DomainModel createAndInitializeDomainModel() {
         if(domainModelXML != null){
             domainModel = new DomainModel(processeditorServerUrl);
@@ -141,6 +149,11 @@ public class Scenario implements IDeserialisable, IPersistable {
         return null;
     }
 
+    /**
+     * This method takes the URL given in the scenarioXML and gets the domainModelXML.
+     *
+     * @return the domainModelXML as an Element.
+     */
     private Element fetchDomainModelXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
@@ -160,6 +173,10 @@ public class Scenario implements IDeserialisable, IPersistable {
         return null;
     }
 
+    /**
+     * This method gets the URL for the corresponding domainModel.
+     * It is found in the scenarioXML.
+     */
     private void setDomainModelURL() {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/properties/property" +
@@ -233,6 +250,31 @@ public class Scenario implements IDeserialisable, IPersistable {
                     migrationNecessary = false;
                     break;
                 }
+            }
+        }
+        checkDomainModelVersion(oldScenarioDbID);
+
+    }
+    /**
+     * Checks the version of the domainModel in the database and compares it with the version of this scenario.
+     * If the version in the database older as this one, migration won't be initiated.
+     *
+     * @param oldScenarioDbID The databaseID of the newest scenario in the database
+     */
+    private void checkDomainModelVersion(int oldScenarioDbID) {
+        Connector connector = new Connector();
+        int oldDataModelVersion = connector.getDataModelVersion(oldScenarioDbID);
+        // case 1: We have a newer version of the domainModel now
+        if (domainModel.getVersionNumber() > oldDataModelVersion) {
+            migrationNecessary = false;
+            needsToBeSaved = true;
+        }
+        else {
+            // case 2: There is another domainModel now
+            long oldDataModelID = connector.getDataModelID(oldScenarioDbID);
+            if (oldDataModelID != domainModel.getDomainModelModelID()) {
+                migrationNecessary = false;
+                needsToBeSaved = true;
             }
         }
     }
@@ -382,6 +424,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     scenarioID,
                     versionNumber);
             saveFragments();
+            domainModel.setScenarioID(this.databaseID);
             domainModel.save();
             saveDataObjects();
             saveConsistsOf();
@@ -414,6 +457,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             }
         }
         migrateDataObjects();
+        //domainModel.migrate(migratingScenarioDbID);
     }
     /**
      * Migrate all dataObjectInstances of all scenarioInstances that are migrated.

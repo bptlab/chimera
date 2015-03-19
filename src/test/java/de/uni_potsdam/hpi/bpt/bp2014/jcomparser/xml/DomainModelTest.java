@@ -29,10 +29,13 @@ public class DomainModelTest {
     private static final String FETCH_VERSION_METHOD
             = "fetchVersionXML";
     /**
-     *
+     * This is the domainModel used for testing.
      */
     private DomainModel domainModel;
 
+    /**
+     * This mocks the domainModel needed for the tests.
+     */
     @Before
     public void setupDomainModel(){
         try {
@@ -43,7 +46,7 @@ public class DomainModelTest {
                     andAnswer(new IAnswer<org.w3c.dom.Element>() {
                         @Override
                         public org.w3c.dom.Element answer() throws Throwable {
-                            return getDocumentFromXmlFile(new File("src/test/resources/Domain_ReiseVersion.xml")).getDocumentElement();
+                            return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
                         }
                     });
             PowerMock.replay(domainModel);
@@ -54,11 +57,17 @@ public class DomainModelTest {
         }
     }
 
+    /**
+     * This method checks if the deserialization sets the correct domainModelID.
+     */
     @Test
     public void testSimpleDomainModelDeserialization(){
         Assert.assertEquals("The DomainModelID has not been set or is wrong", 269479299, domainModel.getDomainModelModelID());
     }
 
+    /**
+     * This checks if the dataClasses have been set.
+     */
     @Test
     public void testDataClassesSetCorrectly(){
         Assert.assertNotNull("The first DataClass has not been set correctly", domainModel.getDataClasses().get(801101005L));
@@ -68,6 +77,9 @@ public class DomainModelTest {
 
     }
 
+    /**
+     * This method checks if the aggregations have been set.
+     */
     @Test
     public void testAggregationSetCorrectly() {
         Assert.assertEquals("The aggregation has not been set correctly", 3, domainModel.getAggregations().size());
@@ -77,6 +89,9 @@ public class DomainModelTest {
         }
     }
 
+    /**
+     * This method checks if the mocking of a domainModel was correct.
+     */
     @Test
     public void testSetupDomainModel(){
         try {
@@ -87,7 +102,7 @@ public class DomainModelTest {
                     andAnswer(new IAnswer<org.w3c.dom.Element>() {
                         @Override
                         public org.w3c.dom.Element answer() throws Throwable {
-                            return getDocumentFromXmlFile(new File("src/test/resources/Domain_ReiseVersion.xml")).getDocumentElement();
+                            return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
                         }
                     });
             PowerMock.replay(testDomainModel);
@@ -98,7 +113,7 @@ public class DomainModelTest {
         }
     }
     /**
-     *
+     * This method checks if the version has been set correctly.
      */
     @Test
     public void testVersionSetCorrectly(){

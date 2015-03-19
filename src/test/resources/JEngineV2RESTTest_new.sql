@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.0.9
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 17. Mrz 2015 um 11:09
--- Server Version: 5.6.21
--- PHP-Version: 5.6.3
+-- Erstellungszeit: 18. Mrz 2015 um 11:00
+-- Server Version: 5.6.14
+-- PHP-Version: 5.5.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -27,13 +27,14 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `activityinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(512) NOT NULL,
   `automaticexecution` tinyint(1) NOT NULL DEFAULT '0',
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
-  `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6685 DEFAULT CHARSET=latin1;
+  `workitem_state` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -5925,7 +5926,8 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `role_id`, `
 --
 
 CREATE TABLE IF NOT EXISTS `activitystate` (
-  `state` varchar(512) NOT NULL
+  `state` varchar(512) NOT NULL,
+  PRIMARY KEY (`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -5950,7 +5952,8 @@ INSERT INTO `activitystate` (`state`) VALUES
 CREATE TABLE IF NOT EXISTS `aggregation` (
   `dataclass_id1` int(11) NOT NULL,
   `dataclass_id2` int(11) NOT NULL,
-  `multiplicity` int(11) NOT NULL
+  `multiplicity` int(11) NOT NULL,
+  PRIMARY KEY (`dataclass_id1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -5960,11 +5963,12 @@ CREATE TABLE IF NOT EXISTS `aggregation` (
 --
 
 CREATE TABLE IF NOT EXISTS `attributeinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` varchar(1024) NOT NULL,
   `dataobjectinstance_id` int(11) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `dataattribute_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5973,11 +5977,12 @@ CREATE TABLE IF NOT EXISTS `attributeinstance` (
 --
 
 CREATE TABLE IF NOT EXISTS `configuration` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `behaviourdata` varchar(1024) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `role_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5988,7 +5993,8 @@ CREATE TABLE IF NOT EXISTS `configuration` (
 CREATE TABLE IF NOT EXISTS `controlflow` (
   `controlnode_id1` int(11) NOT NULL,
   `controlnode_id2` int(11) NOT NULL,
-  `condition` varchar(512) NOT NULL
+  `condition` varchar(512) NOT NULL,
+  PRIMARY KEY (`controlnode_id1`,`controlnode_id2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -6246,12 +6252,13 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 --
 
 CREATE TABLE IF NOT EXISTS `controlnode` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=388 DEFAULT CHARSET=latin1;
+  `modelid` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=388 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -6575,11 +6582,12 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 --
 
 CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
-  `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6685 DEFAULT CHARSET=latin1;
+  `fragmentinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -13206,12 +13214,13 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 --
 
 CREATE TABLE IF NOT EXISTS `dataattribute` (
-`ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `type` varchar(256) NOT NULL,
   `default` varchar(1024) NOT NULL,
-  `dataclass_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `dataclass_id` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -13220,11 +13229,12 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
 --
 
 CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `dataobjectinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -13233,9 +13243,10 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 --
 
 CREATE TABLE IF NOT EXISTS `dataclass` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
 
 --
 -- Daten für Tabelle `dataclass`
@@ -13287,7 +13298,8 @@ INSERT INTO `dataclass` (`id`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `dataflow` (
   `controlnode_id` int(11) NOT NULL,
   `dataset_id` int(11) NOT NULL,
-  `input` tinyint(1) NOT NULL
+  `input` tinyint(1) NOT NULL,
+  PRIMARY KEY (`controlnode_id`,`dataset_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -13445,13 +13457,14 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `datanode` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scenario_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=latin1;
+  `modelid` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=116 ;
 
 --
 -- Daten für Tabelle `datanode`
@@ -13581,12 +13594,13 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 --
 
 CREATE TABLE IF NOT EXISTS `dataobject` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `start_state_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+  `start_state_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
 -- Daten für Tabelle `dataobject`
@@ -13623,12 +13637,13 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 --
 
 CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scenarioinstance_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
-  `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=744 DEFAULT CHARSET=latin1;
+  `onchange` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=744 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -14380,9 +14395,10 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 --
 
 CREATE TABLE IF NOT EXISTS `dataset` (
-`id` int(11) NOT NULL,
-  `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `input` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=143 ;
 
 --
 -- Daten für Tabelle `dataset`
@@ -14540,7 +14556,8 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 
 CREATE TABLE IF NOT EXISTS `datasetconsistsofdatanode` (
   `dataset_id` int(11) NOT NULL,
-  `datanode_id` int(11) NOT NULL
+  `datanode_id` int(11) NOT NULL,
+  PRIMARY KEY (`dataset_id`,`datanode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -14698,13 +14715,14 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `emailconfiguration` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `receivermailaddress` varchar(1024) NOT NULL,
   `sendmailaddress` varchar(1024) NOT NULL,
   `subject` varchar(2048) NOT NULL,
   `message` text NOT NULL,
-  `controlnode_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  `controlnode_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Daten für Tabelle `emailconfiguration`
@@ -14727,10 +14745,11 @@ INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`
 --
 
 CREATE TABLE IF NOT EXISTS `eventinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(512) NOT NULL,
-  `event_state` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `event_state` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -14739,10 +14758,11 @@ CREATE TABLE IF NOT EXISTS `eventinstance` (
 --
 
 CREATE TABLE IF NOT EXISTS `eventlog` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `controlnodeinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `controlnodeinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -14751,12 +14771,13 @@ CREATE TABLE IF NOT EXISTS `eventlog` (
 --
 
 CREATE TABLE IF NOT EXISTS `fragment` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
-  `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=latin1;
+  `modelversion` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=165 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -14841,11 +14862,12 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) 
 --
 
 CREATE TABLE IF NOT EXISTS `fragmentinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4419 DEFAULT CHARSET=latin1;
+  `scenarioinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4419 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -19202,7 +19224,8 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 --
 
 CREATE TABLE IF NOT EXISTS `gatewayandeventstate` (
-  `state` varchar(512) NOT NULL
+  `state` varchar(512) NOT NULL,
+  PRIMARY KEY (`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -19214,7 +19237,8 @@ CREATE TABLE IF NOT EXISTS `gatewayandeventstate` (
 CREATE TABLE IF NOT EXISTS `gatewayinstance` (
   `id` int(11) NOT NULL,
   `type` varchar(512) NOT NULL,
-  `gateway_state` varchar(512) NOT NULL
+  `gateway_state` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -19958,18 +19982,18 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
-`ID` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `activityinstance_id` int(11) NOT NULL,
+  `label` varchar(512) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `oldstate` varchar(512) NOT NULL,
-  `oldstate_id` int(11) NOT NULL,
+  `oldstate` varchar(512) DEFAULT NULL,
   `newstate` varchar(512) NOT NULL,
-  `newstate_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `comment` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `role_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `comment` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
 
 -- --------------------------------------------------------
 
@@ -19978,10 +20002,11 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
 --
 
 CREATE TABLE IF NOT EXISTS `historycontrolflow` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `controlnodeinstance_id1` int(11) NOT NULL,
-  `controlnodeinstance_id2` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `controlnodeinstance_id2` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -19990,15 +20015,17 @@ CREATE TABLE IF NOT EXISTS `historycontrolflow` (
 --
 
 CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scenarioinstance_id` int(11) NOT NULL,
+  `name` varchar(256) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dataobjectinstance_id` int(11) NOT NULL,
-  `old_state_id` int(11) NOT NULL,
-  `old_state_name` varchar(200) NOT NULL,
+  `old_state_id` int(11) DEFAULT NULL,
+  `old_state_name` varchar(200) DEFAULT '',
   `new_state_id` int(11) NOT NULL,
-  `new_state_name` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `new_state_name` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=69 ;
 
 -- --------------------------------------------------------
 
@@ -20008,7 +20035,8 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
 
 CREATE TABLE IF NOT EXISTS `reference` (
   `controlnode_id1` int(11) NOT NULL,
-  `controlnode_id2` int(11) NOT NULL
+  `controlnode_id2` int(11) NOT NULL,
+  PRIMARY KEY (`controlnode_id1`,`controlnode_id2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -20036,9 +20064,10 @@ INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `right` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -20047,9 +20076,10 @@ CREATE TABLE IF NOT EXISTS `right` (
 --
 
 CREATE TABLE IF NOT EXISTS `role` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -20059,7 +20089,8 @@ CREATE TABLE IF NOT EXISTS `role` (
 
 CREATE TABLE IF NOT EXISTS `rolehasright` (
   `role_id` int(11) NOT NULL,
-  `right_id` int(11) NOT NULL
+  `right_id` int(11) NOT NULL,
+  PRIMARY KEY (`role_id`,`right_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -20069,13 +20100,14 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 --
 
 CREATE TABLE IF NOT EXISTS `scenario` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `modelid` bigint(11) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   `datamodelid` bigint(11) DEFAULT NULL,
-  `datamodelversion` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=latin1;
+  `datamodelversion` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=145 ;
 
 --
 -- Daten für Tabelle `scenario`
@@ -20114,11 +20146,12 @@ INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, 
 --
 
 CREATE TABLE IF NOT EXISTS `scenarioinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
-  `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=966 DEFAULT CHARSET=latin1;
+  `scenario_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=966 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -21051,10 +21084,11 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 --
 
 CREATE TABLE IF NOT EXISTS `state` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) NOT NULL,
-  `olc_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=latin1;
+  `olc_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=105 ;
 
 --
 -- Daten für Tabelle `state`
@@ -21173,7 +21207,8 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 
 CREATE TABLE IF NOT EXISTS `statetransition` (
   `state_id1` int(11) NOT NULL,
-  `state_id2` int(11) NOT NULL
+  `state_id2` int(11) NOT NULL,
+  PRIMARY KEY (`state_id1`,`state_id2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -21184,7 +21219,8 @@ CREATE TABLE IF NOT EXISTS `statetransition` (
 
 CREATE TABLE IF NOT EXISTS `successor` (
   `controlnodeinstance_id1` int(11) NOT NULL,
-  `controlnodeinstance_id2` int(11) NOT NULL
+  `controlnodeinstance_id2` int(11) NOT NULL,
+  PRIMARY KEY (`controlnodeinstance_id1`,`controlnodeinstance_id2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -21197,7 +21233,10 @@ CREATE TABLE IF NOT EXISTS `terminationcondition` (
   `conditionset_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL
+  `scenario_id` int(11) NOT NULL,
+  PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`),
+  KEY `dataobject_id` (`dataobject_id`),
+  KEY `state_id` (`state_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -21217,10 +21256,11 @@ INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_i
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) NOT NULL,
-  `email` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `email` varchar(512) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -21230,7 +21270,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 CREATE TABLE IF NOT EXISTS `userismemberofrole` (
   `user_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL
+  `role_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -21240,387 +21281,10 @@ CREATE TABLE IF NOT EXISTS `userismemberofrole` (
 --
 
 CREATE TABLE IF NOT EXISTS `workitemstate` (
-  `state` varchar(512) NOT NULL
+  `state` varchar(512) NOT NULL,
+  PRIMARY KEY (`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Indizes der exportierten Tabellen
---
-
---
--- Indizes für die Tabelle `activityinstance`
---
-ALTER TABLE `activityinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `activitystate`
---
-ALTER TABLE `activitystate`
- ADD PRIMARY KEY (`state`);
-
---
--- Indizes für die Tabelle `aggregation`
---
-ALTER TABLE `aggregation`
- ADD PRIMARY KEY (`dataclass_id1`);
-
---
--- Indizes für die Tabelle `attributeinstance`
---
-ALTER TABLE `attributeinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `configuration`
---
-ALTER TABLE `configuration`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `controlflow`
---
-ALTER TABLE `controlflow`
- ADD PRIMARY KEY (`controlnode_id1`,`controlnode_id2`);
-
---
--- Indizes für die Tabelle `controlnode`
---
-ALTER TABLE `controlnode`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `controlnodeinstance`
---
-ALTER TABLE `controlnodeinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `dataattribute`
---
-ALTER TABLE `dataattribute`
- ADD PRIMARY KEY (`ID`);
-
---
--- Indizes für die Tabelle `dataattributeinstance`
---
-ALTER TABLE `dataattributeinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `dataclass`
---
-ALTER TABLE `dataclass`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `dataflow`
---
-ALTER TABLE `dataflow`
- ADD PRIMARY KEY (`controlnode_id`,`dataset_id`);
-
---
--- Indizes für die Tabelle `datanode`
---
-ALTER TABLE `datanode`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `dataobject`
---
-ALTER TABLE `dataobject`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `dataobjectinstance`
---
-ALTER TABLE `dataobjectinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `dataset`
---
-ALTER TABLE `dataset`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `datasetconsistsofdatanode`
---
-ALTER TABLE `datasetconsistsofdatanode`
- ADD PRIMARY KEY (`dataset_id`,`datanode_id`);
-
---
--- Indizes für die Tabelle `emailconfiguration`
---
-ALTER TABLE `emailconfiguration`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `eventinstance`
---
-ALTER TABLE `eventinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `eventlog`
---
-ALTER TABLE `eventlog`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `fragment`
---
-ALTER TABLE `fragment`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `fragmentinstance`
---
-ALTER TABLE `fragmentinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `gatewayandeventstate`
---
-ALTER TABLE `gatewayandeventstate`
- ADD PRIMARY KEY (`state`);
-
---
--- Indizes für die Tabelle `gatewayinstance`
---
-ALTER TABLE `gatewayinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `historyactivityinstance`
---
-ALTER TABLE `historyactivityinstance`
- ADD PRIMARY KEY (`ID`);
-
---
--- Indizes für die Tabelle `historycontrolflow`
---
-ALTER TABLE `historycontrolflow`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `historydataobjectinstance`
---
-ALTER TABLE `historydataobjectinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `reference`
---
-ALTER TABLE `reference`
- ADD PRIMARY KEY (`controlnode_id1`,`controlnode_id2`);
-
---
--- Indizes für die Tabelle `right`
---
-ALTER TABLE `right`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `role`
---
-ALTER TABLE `role`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `rolehasright`
---
-ALTER TABLE `rolehasright`
- ADD PRIMARY KEY (`role_id`,`right_id`);
-
---
--- Indizes für die Tabelle `scenario`
---
-ALTER TABLE `scenario`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `scenarioinstance`
---
-ALTER TABLE `scenarioinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `state`
---
-ALTER TABLE `state`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `statetransition`
---
-ALTER TABLE `statetransition`
- ADD PRIMARY KEY (`state_id1`,`state_id2`);
-
---
--- Indizes für die Tabelle `successor`
---
-ALTER TABLE `successor`
- ADD PRIMARY KEY (`controlnodeinstance_id1`,`controlnodeinstance_id2`);
-
---
--- Indizes für die Tabelle `terminationcondition`
---
-ALTER TABLE `terminationcondition`
- ADD PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`), ADD KEY `dataobject_id` (`dataobject_id`), ADD KEY `state_id` (`state_id`);
-
---
--- Indizes für die Tabelle `user`
---
-ALTER TABLE `user`
- ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `userismemberofrole`
---
-ALTER TABLE `userismemberofrole`
- ADD PRIMARY KEY (`user_id`,`role_id`);
-
---
--- Indizes für die Tabelle `workitemstate`
---
-ALTER TABLE `workitemstate`
- ADD PRIMARY KEY (`state`);
-
---
--- AUTO_INCREMENT für exportierte Tabellen
---
-
---
--- AUTO_INCREMENT für Tabelle `activityinstance`
---
-ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6685;
---
--- AUTO_INCREMENT für Tabelle `attributeinstance`
---
-ALTER TABLE `attributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `configuration`
---
-ALTER TABLE `configuration`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `controlnode`
---
-ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=388;
---
--- AUTO_INCREMENT für Tabelle `controlnodeinstance`
---
-ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6685;
---
--- AUTO_INCREMENT für Tabelle `dataattribute`
---
-ALTER TABLE `dataattribute`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `dataattributeinstance`
---
-ALTER TABLE `dataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `dataclass`
---
-ALTER TABLE `dataclass`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
---
--- AUTO_INCREMENT für Tabelle `datanode`
---
-ALTER TABLE `datanode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=116;
---
--- AUTO_INCREMENT für Tabelle `dataobject`
---
-ALTER TABLE `dataobject`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
---
--- AUTO_INCREMENT für Tabelle `dataobjectinstance`
---
-ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=744;
---
--- AUTO_INCREMENT für Tabelle `dataset`
---
-ALTER TABLE `dataset`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=143;
---
--- AUTO_INCREMENT für Tabelle `emailconfiguration`
---
-ALTER TABLE `emailconfiguration`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT für Tabelle `eventinstance`
---
-ALTER TABLE `eventinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `eventlog`
---
-ALTER TABLE `eventlog`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `fragment`
---
-ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=165;
---
--- AUTO_INCREMENT für Tabelle `fragmentinstance`
---
-ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4419;
---
--- AUTO_INCREMENT für Tabelle `historyactivityinstance`
---
-ALTER TABLE `historyactivityinstance`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `historycontrolflow`
---
-ALTER TABLE `historycontrolflow`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `historydataobjectinstance`
---
-ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `right`
---
-ALTER TABLE `right`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `role`
---
-ALTER TABLE `role`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `scenario`
---
-ALTER TABLE `scenario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=145;
---
--- AUTO_INCREMENT für Tabelle `scenarioinstance`
---
-ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=966;
---
--- AUTO_INCREMENT für Tabelle `state`
---
-ALTER TABLE `state`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=105;
---
--- AUTO_INCREMENT für Tabelle `user`
---
-ALTER TABLE `user`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

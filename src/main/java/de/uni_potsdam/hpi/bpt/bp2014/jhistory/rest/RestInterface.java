@@ -27,7 +27,9 @@ public class RestInterface {
     @GET
     @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/activities")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getActivityLog(@PathParam("scenarioInstanceID") int scenarioInstanceID) {
+    public Response getActivityLog(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("scenarioInstanceID") int scenarioInstanceID) {
         Map<Integer, Map<String, Object>> activityLog;
         activityLog = historyService.getActivityInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response
@@ -46,7 +48,9 @@ public class RestInterface {
     @GET
     @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/dataobjects")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDataObjectLog(@PathParam("scenarioInstanceID") int scenarioInstanceID) {
+    public Response getDataObjectLog(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("scenarioInstanceID") int scenarioInstanceID) {
         Map<Integer, Map<String, Object>> dataObjectLog;
         dataObjectLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response

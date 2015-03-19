@@ -9,9 +9,37 @@
 
 The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
+## Architecture
+
+![alt Architecture](https://github.com/BP2014W1/JEngine/blob/dev/docu/img/fmc-architecture-v2_2.png)
+
 ## RESTful
 
 See [the documentation](https://github.com/BP2014W1/JEngine/tree/dev/docu/REST) inside the doc folder.
+
+## Setup
+
+Update APT 
+
+    sudo apt-get update
+
+Installing Tomcat, MySQL Server, Maven (>3,2), Java (>1,7), git
+
+    sudo apt-get install  tomcat7 mysql-server maven git default-jdk 
+
+Cloning of this repo
+
+    git clone https://github.com/BP2014W1/JEngine
+
+Further an MySQL Database should be created named as "JEngineV2" & import SQL file from 
+
+    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2.sql
+
+Please be aware of the database settings inside the web.xml . For the tests you may want to adapt also the database_connection in
+
+    JEngine/blob/dev/src/main/resources/database_connection
+
+After changing server ips you may want to update the Config.java in the config package.
 
 ## Deployment
 
@@ -20,13 +48,26 @@ Then execute the following commands in your command line:
 
     mvn install -Dmaven.test.skip=true
 
+A war file will be created which can be executed using tomcat. Stop tomcat
 
-A war file will be created which can be executed using tomcat.
+    service tomcat7 stop
 
-## Database Setup
+copy the JEngine.war in the tomcat webapp dir
 
-You can use the src/main/resources/JEngineV2.sql file for your Database setup.
-Please set your database settings inside the web.xml.
+    cp target/JEngine.war /var/lib/tomcat7/webapps/
+
+remove old JEngine folder in case of an update
+
+    rm -r /var/lib/tomcat7/webapps/JEngine
+
+and start tomcat again
+
+    service tomcat7 start
+
+Now, you may access the jFrontend via
+
+   http://localhost:8080/JEngine
+
 
 ## Features
 

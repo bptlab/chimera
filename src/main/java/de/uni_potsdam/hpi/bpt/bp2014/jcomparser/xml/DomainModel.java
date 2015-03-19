@@ -29,21 +29,52 @@ public class DomainModel implements IDeserialisable, IPersistable {
      * The url of the process Editor.
      */
     private String processeditorServerUrl;
+    /**
+     * The modelID found in the XML.
+     */
     private long domainModelModelID;
+    /**
+     * The version number of the domainModel
+     */
     private int versionNumber;
+    /**
+     * The databaseID of the corresponding scenario.
+     */
     private int scenarioID;
+    /**
+     * A Mao of modelID's and corresponding dataClasses belonging to this domainModel.
+     */
     private Map<Long,DataClass> dataClasses;
+    /**
+     * A List of all aggregation between the dataClasses belonging to this domainModel.
+     */
     private List<Aggregation> aggregations;
+    /**
+     * The XML representation of a domainModel
+     */
     private org.w3c.dom.Node domainModelXML;
 
+    /**
+     * The constructor.
+     *
+     * @param serverURL the severURL wher the XML are to be found.
+     */
     public DomainModel(String serverURL) {
         processeditorServerUrl = serverURL;
     }
 
+    /**
+     * The constructor.
+     */
     public DomainModel(){
 
     }
 
+    /**
+     * This method calls all needed methods to set up the domainModel.
+     *
+     * @param element The XML Node which will be used for deserialisation
+     */
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
         this.domainModelXML = element;
@@ -54,10 +85,18 @@ public class DomainModel implements IDeserialisable, IPersistable {
         setVersionNumber();
     }
 
+    /**
+     * This sets the scenario ID needed for the update.
+     *
+     * @param id databaseID of the corresponding scenario.
+     */
     public void setScenarioID(final int id) {
         this.scenarioID = id;
     }
 
+    /**
+     * This method generates a List of aggregates from the XML.
+     */
     private void generateAggregations() {
         try {
             //get all edges from fragmentXML
@@ -78,6 +117,9 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method generates a Map of dataClasses with their modelID as keys.
+     */
     private void generateDataClasses() {
         try {
             //get all nodes from fragmentXML
@@ -98,6 +140,9 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method gets and sets the modelId of the domainModel from the XML.
+     */
     private void setDomainModelModelID() {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery = "/model/@id";
@@ -110,6 +155,9 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method sets the versionNumber of the domainModel.
+     */
     private void setVersionNumber() {
         Element versionXML = fetchVersionXML();
         if (versionXML != null) {
@@ -132,6 +180,12 @@ public class DomainModel implements IDeserialisable, IPersistable {
             }
         }
     }
+
+    /**
+     * This method gets the versionNumber from the given XML.
+     *
+     * @return The XML Element for the version.
+     */
     private Element fetchVersionXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
@@ -151,6 +205,12 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
         return null;
     }
+
+    /**
+     * This method saves the domainModel to the database as well as for the dataClasses and aggregations.
+     *
+     * @return
+     */
     @Override
     public int save() {
         Connector conn = new Connector();
@@ -167,6 +227,59 @@ public class DomainModel implements IDeserialisable, IPersistable {
         }
         return 1;
     }
+
+    /**
+     * Migrate all dataAttributeInstances that are instances of all dataAttributes
+     * belonging to the instances of the old scenario.
+     *
+     * @param oldScenarioDbID DatabaseID of the old scenario whose dataAttributeInstances get migrated.
+     */
+    public void migrate(int oldScenarioDbID) {
+        Map<Integer, Integer> mappedDataClassIDs = mapDataClassIDs(oldScenarioDbID);
+        Map<Integer, Integer> mappedDataAttributeIDs = new HashMap<>();
+        Connector connector = new Connector();
+        for (Map.Entry<Integer, Integer> dataClassIDs : mappedDataClassIDs.entrySet()) {
+            Map<Integer, String> oldDataAttributes = connector.getDataAttributes(dataClassIDs.getKey());
+            Map<Integer, String> newDataAttributes = connector.getDataAttributes(dataClassIDs.getValue());
+            for (Map.Entry<Integer, String> oldDataAttribute : oldDataAttributes.entrySet()) {
+                for (Map.Entry<Integer, String> newDataAttribute : newDataAttributes.entrySet()) {
+                    if (oldDataAttribute.getValue().equals(newDataAttribute.getValue())) {
+                        mappedDataAttributeIDs.put(oldDataAttribute.getKey(), newDataAttribute.getKey());
+                        newDataAttributes.remove(newDataAttribute.getKey());
+                        break;
+                    }
+                }
+            }
+        }
+        for (Map.Entry<Integer, Integer> dataAttribute : mappedDataAttributeIDs.entrySet()) {
+            connector.migrateDataAttributeInstance(dataAttribute.getKey(), dataAttribute.getValue());
+        }
+    }
+
+    /**
+     * Map all dataClassIDs of the old scenario to its counterpart
+     * in the new scenario (= the scenario this domainModel belongs to);
+     *
+     * @param oldScenarioDbID DatabaseID of the old scenario.
+     */
+    private Map<Integer, Integer> mapDataClassIDs(int oldScenarioDbID) {
+        Connector connector = new Connector();
+        List<Integer> oldDataClassIDs = connector.getDataClassIDs(oldScenarioDbID);
+        List<Integer> newDataClassIDs = connector.getDataClassIDs(scenarioID);
+        Map<Integer, Integer> mappedIDs = new HashMap<>();
+        for (int oldID : oldDataClassIDs) {
+            for (int newID : newDataClassIDs) {
+                String oldName = connector.getDataClassName(oldID);
+                String newName = connector.getDataClassName(newID);
+                if (oldName.equals(newName)) {
+                    mappedIDs.put(oldID, newID);
+                    break;
+                }
+            }
+        }
+        return mappedIDs;
+    }
+
     public List<Aggregation> getAggregations() {
         return aggregations;
     }
