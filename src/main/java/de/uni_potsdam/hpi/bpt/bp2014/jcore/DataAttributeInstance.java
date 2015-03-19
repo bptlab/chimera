@@ -7,26 +7,33 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
  */
 public class DataAttributeInstance {
     final int dataAttributeInstance_id;
-    final int attribute_id;
+    final int dataAttribute_id;
     final int dataObjectInstance_id;
     final DataObjectInstance dataObjectInstance;
     Object value;
+    final String type;
 
     DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
-    public DataAttributeInstance(int attribute_id, int dataObjectInstance_id, DataObjectInstance dataObjectInstance){
-        this.attribute_id = attribute_id;
+    public DataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id, DataObjectInstance dataObjectInstance){
+        this.dataAttribute_id = dataAttribute_id;
         this.dataObjectInstance_id = dataObjectInstance_id;
         this.dataObjectInstance = dataObjectInstance;
-
-        if (dbDataAttributeInstance.existDataAttributeInstance(attribute_id, dataObjectInstance_id)) {
+        this.type = dbDataAttributeInstance.getType(dataAttribute_id);
+        if (dbDataAttributeInstance.existDataAttributeInstance(dataAttribute_id, dataObjectInstance_id)) {
             //creates an existing Attribute Instance using the database information
-            this.dataAttributeInstance_id = dbDataAttributeInstance.getDataAttributeInstanceID(attribute_id, dataObjectInstance_id);
+            this.dataAttributeInstance_id = dbDataAttributeInstance.getDataAttributeInstanceID(dataAttribute_id, dataObjectInstance_id);
         } else {
             //creates a new Attribute Instance also in database
-            this.dataAttributeInstance_id = dbDataAttributeInstance.createNewDataAttributeInstance(attribute_id, "", dataObjectInstance_id);
+            this.dataAttributeInstance_id = dbDataAttributeInstance.createNewDataAttributeInstance(dataAttribute_id, "", dataObjectInstance_id);
         }
+        this.value = dbDataAttributeInstance.getValue(dataObjectInstance_id);
     }
+
+    //TODO: dataAttributes
+    //methode zum schreiben eines Attributes
+    //d.h. hier wird nur die value gesetzt und dbDataAttributeInstance aufgerufen,
+    //um die Änderung in die Datenbank zu speichern
 
 
 }

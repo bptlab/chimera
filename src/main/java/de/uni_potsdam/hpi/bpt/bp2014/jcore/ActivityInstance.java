@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -154,6 +155,13 @@ public class ActivityInstance extends ControlNodeInstance {
             return workingFine;
         }
         return false;
+    }
+
+    /**
+     * sets the dataAttributes for an activity
+     */
+    public void setDataAttributeValues(Map<Integer, String> values){
+
     }
 
     /**

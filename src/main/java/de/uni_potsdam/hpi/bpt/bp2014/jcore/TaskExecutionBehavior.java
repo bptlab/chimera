@@ -22,6 +22,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  * **********************************************************************************
  */
 
+import java.util.Map;
+
 /**
  * Performs the execution for one activity.
  */
@@ -51,6 +53,9 @@ public class TaskExecutionBehavior {
 
     protected void setCanTerminate(boolean canTerminate){
         ((ActivityInstance)controlNodeInstance).setCanTerminate(canTerminate);
+    }
+
+    public void setDataAttributeValues(Map<Integer, String>values){
     }
 
 
