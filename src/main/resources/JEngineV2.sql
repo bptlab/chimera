@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 19. Mrz 2015 um 22:32
+-- Erstellungszeit: 19. Mrz 2015 um 23:02
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8018 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8182 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -6917,7 +6917,139 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 (8011, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
 (8013, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
 (8014, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
-(8017, 'HumanTask', 0, 0, 1, 'ready', 'init');
+(8017, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8018, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8019, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8020, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8021, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8023, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8024, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8025, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8026, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8027, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8028, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8029, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8030, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8031, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8032, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8033, 'HumanTask', 0, 0, 1, 'referentialRunning', 'init'),
+(8034, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8035, 'HumanTask', 0, 0, 1, 'referentialRunning', 'init'),
+(8036, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8037, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8039, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8041, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8042, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8043, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8044, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8045, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8046, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8047, 'HumanTask', 0, 0, 1, 'running', 'init'),
+(8048, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8049, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8050, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8051, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8052, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8053, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8054, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8055, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8056, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8058, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8059, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8062, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8063, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8066, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8067, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8068, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8069, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8072, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8073, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8074, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8075, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8076, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8077, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8078, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8079, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8080, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8081, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8082, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8083, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8084, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8085, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8086, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
+(8087, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8088, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8089, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8090, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8091, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
+(8092, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8093, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8094, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8095, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
+(8096, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8097, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8098, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8099, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8100, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8101, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8102, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
+(8103, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8104, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
+(8105, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8106, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8107, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8109, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8111, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8112, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8113, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8114, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8117, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8118, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8119, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8120, 'HumanTask', 0, 0, 1, 'skipped', 'init');
+INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminate`, `role_id`, `activity_state`, `workitem_state`) VALUES
+(8121, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8122, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8123, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8124, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8125, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8127, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8128, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8129, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8131, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8134, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8135, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8136, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8138, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8139, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8141, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8144, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8145, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8146, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8148, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8150, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
+(8151, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
+(8153, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8155, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
+(8156, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
+(8158, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8159, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
+(8160, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8161, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
+(8162, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8163, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8164, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8165, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8166, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8168, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8169, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8170, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8172, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8173, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8175, 'HumanTask', 0, 0, 1, 'skipped', 'init'),
+(8177, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8178, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(8181, 'HumanTask', 0, 0, 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -6945,34 +7077,21 @@ INSERT INTO `activitystate` (`state`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Aggregation`
+-- Tabellenstruktur für Tabelle `aggregation`
 --
 
-CREATE TABLE IF NOT EXISTS `Aggregation` (
+CREATE TABLE IF NOT EXISTS `aggregation` (
   `dataclass_id1` int(11) NOT NULL,
   `dataclass_id2` int(11) NOT NULL,
   `multiplicity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten für Tabelle `Aggregation`
+-- Daten für Tabelle `aggregation`
 --
 
-INSERT INTO `Aggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VALUES
+INSERT INTO `aggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VALUES
 (43, 44, 2147483647);
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `attributeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `attributeinstance` (
-`id` int(11) NOT NULL,
-  `value` varchar(1024) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7783,7 +7902,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8018 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8182 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -15735,7 +15854,171 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (8014, 'Activity', 419, 4953),
 (8015, 'AND', 417, 4953),
 (8016, 'XOR', 420, 4953),
-(8017, 'Activity', 415, 4954);
+(8017, 'Activity', 415, 4954),
+(8018, 'Activity', 2, 4955),
+(8019, 'Activity', 4, 4956),
+(8020, 'Activity', 10, 4957),
+(8021, 'Activity', 16, 4958),
+(8022, 'AND', 102, 4959),
+(8023, 'Activity', 103, 4959),
+(8024, 'Activity', 104, 4959),
+(8025, 'Activity', 375, 4960),
+(8026, 'Activity', 387, 4961),
+(8027, 'Activity', 125, 4962),
+(8028, 'Activity', 128, 4963),
+(8029, 'Activity', 130, 4964),
+(8030, 'Activity', 183, 4965),
+(8031, 'Activity', 191, 4966),
+(8032, 'Activity', 193, 4967),
+(8033, 'Activity', 202, 4968),
+(8034, 'Activity', 207, 4969),
+(8035, 'Activity', 210, 4970),
+(8036, 'Activity', 216, 4971),
+(8037, 'Activity', 218, 4972),
+(8038, 'AND', 250, 4973),
+(8039, 'Activity', 246, 4973),
+(8040, 'AND', 251, 4973),
+(8041, 'Activity', 243, 4973),
+(8042, 'Activity', 245, 4973),
+(8043, 'Activity', 375, 4974),
+(8044, 'Activity', 387, 4975),
+(8045, 'Activity', 389, 4976),
+(8046, 'Activity', 396, 4977),
+(8047, 'Activity', 399, 4978),
+(8048, 'Activity', 407, 4979),
+(8049, 'Activity', 2, 4980),
+(8050, 'Activity', 4, 4981),
+(8051, 'Activity', 10, 4982),
+(8052, 'Activity', 16, 4983),
+(8053, 'Activity', 5, 4980),
+(8054, 'Activity', 6, 4980),
+(8055, 'Activity', 4, 4984),
+(8056, 'Activity', 2, 4985),
+(8057, 'AND', 102, 4986),
+(8058, 'Activity', 103, 4986),
+(8059, 'Activity', 104, 4986),
+(8060, 'AND', 105, 4986),
+(8061, 'AND', 102, 4987),
+(8062, 'Activity', 103, 4987),
+(8063, 'Activity', 104, 4987),
+(8064, 'AND', 105, 4987),
+(8065, 'AND', 102, 4988),
+(8066, 'Activity', 103, 4988),
+(8067, 'Activity', 104, 4988),
+(8068, 'Activity', 375, 4989),
+(8069, 'Activity', 387, 4990),
+(8070, 'XOR', 372, 4989),
+(8071, 'AND', 373, 4989),
+(8072, 'Activity', 377, 4989),
+(8073, 'Activity', 378, 4989),
+(8074, 'Activity', 376, 4989),
+(8075, 'Activity', 384, 4989),
+(8076, 'Activity', 383, 4989),
+(8077, 'Activity', 125, 4991),
+(8078, 'Activity', 128, 4992),
+(8079, 'Activity', 130, 4993),
+(8080, 'Activity', 126, 4991),
+(8081, 'Activity', 125, 4994),
+(8082, 'Activity', 128, 4995),
+(8083, 'Activity', 126, 4994),
+(8084, 'Activity', 130, 4996),
+(8085, 'Activity', 183, 4997),
+(8086, 'Activity', 191, 4998),
+(8087, 'Activity', 193, 4999),
+(8088, 'Activity', 184, 4997),
+(8089, 'Activity', 189, 4998),
+(8090, 'Activity', 187, 4997),
+(8091, 'Activity', 202, 5000),
+(8092, 'Activity', 207, 5001),
+(8093, 'Activity', 203, 5000),
+(8094, 'Activity', 208, 5001),
+(8095, 'Activity', 210, 5002),
+(8096, 'Activity', 216, 5003),
+(8097, 'Activity', 218, 5004),
+(8098, 'Activity', 211, 5002),
+(8099, 'Activity', 214, 5003),
+(8100, 'Activity', 220, 5004),
+(8101, 'Activity', 218, 5005),
+(8102, 'Activity', 216, 5006),
+(8103, 'Activity', 220, 5005),
+(8104, 'Activity', 210, 5007),
+(8105, 'Activity', 211, 5007),
+(8106, 'Activity', 214, 5006),
+(8107, 'Activity', 218, 5008),
+(8108, 'AND', 250, 5009),
+(8109, 'Activity', 246, 5009),
+(8110, 'AND', 251, 5009),
+(8111, 'Activity', 243, 5009),
+(8112, 'Activity', 245, 5009),
+(8113, 'Activity', 375, 5010),
+(8114, 'Activity', 387, 5011),
+(8115, 'XOR', 372, 5010),
+(8116, 'AND', 373, 5010),
+(8117, 'Activity', 377, 5010),
+(8118, 'Activity', 378, 5010),
+(8119, 'Activity', 376, 5010),
+(8120, 'Activity', 384, 5010),
+(8121, 'Activity', 379, 5010),
+(8122, 'Activity', 389, 5012),
+(8123, 'Activity', 396, 5013),
+(8124, 'Activity', 399, 5014),
+(8125, 'Activity', 407, 5015),
+(8126, 'XOR', 398, 5014),
+(8127, 'Activity', 401, 5014),
+(8128, 'Activity', 404, 5014),
+(8129, 'Activity', 389, 5016),
+(8130, 'XOR', 402, 5014),
+(8131, 'Activity', 399, 5017),
+(8132, 'XOR', 410, 5015),
+(8133, 'XOR', 405, 5015),
+(8134, 'Activity', 408, 5015),
+(8135, 'Activity', 411, 5015),
+(8136, 'Activity', 412, 5015),
+(8137, 'XOR', 394, 5013),
+(8138, 'Activity', 393, 5013),
+(8139, 'Activity', 397, 5013),
+(8140, 'XOR', 413, 5015),
+(8141, 'Activity', 407, 5018),
+(8142, 'XOR', 410, 5018),
+(8143, 'XOR', 405, 5018),
+(8144, 'Activity', 408, 5018),
+(8145, 'Activity', 411, 5018),
+(8146, 'Activity', 412, 5018),
+(8147, 'XOR', 413, 5018),
+(8148, 'Activity', 407, 5019),
+(8149, 'AND', 360, 5020),
+(8150, 'Activity', 356, 5020),
+(8151, 'Activity', 357, 5020),
+(8152, 'AND', 361, 5020),
+(8153, 'Activity', 358, 5020),
+(8154, 'AND', 360, 5021),
+(8155, 'Activity', 356, 5021),
+(8156, 'Activity', 357, 5021),
+(8157, 'AND', 361, 5021),
+(8158, 'Activity', 358, 5021),
+(8159, 'Activity', 362, 5022),
+(8160, 'Activity', 363, 5022),
+(8161, 'Activity', 362, 5023),
+(8162, 'Activity', 363, 5023),
+(8163, 'Activity', 389, 5024),
+(8164, 'Activity', 396, 5025),
+(8165, 'Activity', 399, 5026),
+(8166, 'Activity', 407, 5027),
+(8167, 'XOR', 394, 5025),
+(8168, 'Activity', 393, 5025),
+(8169, 'Activity', 397, 5025),
+(8170, 'Activity', 389, 5028),
+(8171, 'XOR', 392, 5025),
+(8172, 'Activity', 396, 5029),
+(8173, 'Activity', 415, 5030),
+(8174, 'XOR', 418, 5030),
+(8175, 'Activity', 421, 5030),
+(8176, 'AND', 422, 5030),
+(8177, 'Activity', 416, 5030),
+(8178, 'Activity', 419, 5030),
+(8179, 'AND', 417, 5030),
+(8180, 'XOR', 420, 5030),
+(8181, 'Activity', 415, 5031);
 
 -- --------------------------------------------------------
 
@@ -16278,7 +16561,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=891 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=909 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -17168,7 +17451,25 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (887, 1095, 108, 23, 0),
 (888, 1095, 106, 24, 0),
 (889, 1098, 107, 23, 0),
-(890, 1098, 105, 24, 0);
+(890, 1098, 105, 24, 0),
+(891, 1100, 1, 1, 1),
+(892, 1100, 5, 2, 0),
+(893, 1103, 12, 7, 1),
+(894, 1104, 38, 13, 1),
+(895, 1105, 46, 15, 1),
+(896, 1106, 48, 16, 1),
+(897, 1109, 107, 23, 1),
+(898, 1109, 106, 24, 0),
+(899, 1110, 4, 1, 0),
+(900, 1110, 6, 2, 0),
+(901, 1113, 15, 7, 0),
+(902, 1114, 37, 13, 0),
+(903, 1115, 47, 15, 0),
+(904, 1116, 48, 16, 0),
+(905, 1119, 108, 23, 0),
+(906, 1119, 106, 24, 0),
+(907, 1122, 107, 23, 0),
+(908, 1122, 105, 24, 0);
 
 -- --------------------------------------------------------
 
@@ -17752,7 +18053,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4955 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5032 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -22636,7 +22937,84 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (4951, 0, 165, 1098),
 (4952, 0, 166, 1098),
 (4953, 1, 169, 1099),
-(4954, 0, 169, 1099);
+(4954, 0, 169, 1099),
+(4955, 0, 1, 1100),
+(4956, 0, 2, 1100),
+(4957, 0, 3, 1100),
+(4958, 0, 4, 1100),
+(4959, 0, 101, 1101),
+(4960, 0, 163, 1102),
+(4961, 0, 164, 1102),
+(4962, 0, 107, 1103),
+(4963, 0, 108, 1103),
+(4964, 0, 109, 1103),
+(4965, 0, 125, 1104),
+(4966, 0, 126, 1104),
+(4967, 0, 127, 1104),
+(4968, 0, 130, 1105),
+(4969, 0, 131, 1105),
+(4970, 0, 132, 1106),
+(4971, 0, 133, 1106),
+(4972, 0, 134, 1106),
+(4973, 0, 140, 1107),
+(4974, 0, 163, 1108),
+(4975, 0, 164, 1108),
+(4976, 0, 165, 1109),
+(4977, 0, 166, 1109),
+(4978, 0, 167, 1109),
+(4979, 0, 168, 1109),
+(4980, 1, 1, 1110),
+(4981, 1, 2, 1110),
+(4982, 0, 3, 1110),
+(4983, 0, 4, 1110),
+(4984, 0, 2, 1110),
+(4985, 0, 1, 1110),
+(4986, 1, 101, 1111),
+(4987, 1, 101, 1111),
+(4988, 0, 101, 1111),
+(4989, 0, 163, 1112),
+(4990, 0, 164, 1112),
+(4991, 1, 107, 1113),
+(4992, 1, 108, 1113),
+(4993, 1, 109, 1113),
+(4994, 0, 107, 1113),
+(4995, 0, 108, 1113),
+(4996, 0, 109, 1113),
+(4997, 0, 125, 1114),
+(4998, 0, 126, 1114),
+(4999, 0, 127, 1114),
+(5000, 0, 130, 1115),
+(5001, 0, 131, 1115),
+(5002, 1, 132, 1116),
+(5003, 1, 133, 1116),
+(5004, 1, 134, 1116),
+(5005, 1, 134, 1116),
+(5006, 0, 133, 1116),
+(5007, 0, 132, 1116),
+(5008, 0, 134, 1116),
+(5009, 0, 140, 1117),
+(5010, 0, 163, 1118),
+(5011, 0, 164, 1118),
+(5012, 1, 165, 1119),
+(5013, 0, 166, 1119),
+(5014, 1, 167, 1119),
+(5015, 1, 168, 1119),
+(5016, 0, 165, 1119),
+(5017, 0, 167, 1119),
+(5018, 1, 168, 1119),
+(5019, 0, 168, 1119),
+(5020, 1, 160, 1120),
+(5021, 0, 160, 1120),
+(5022, 1, 161, 1121),
+(5023, 0, 161, 1121),
+(5024, 1, 165, 1122),
+(5025, 1, 166, 1122),
+(5026, 0, 167, 1122),
+(5027, 0, 168, 1122),
+(5028, 0, 165, 1122),
+(5029, 0, 166, 1122),
+(5030, 1, 169, 1123),
+(5031, 0, 169, 1123);
 
 -- --------------------------------------------------------
 
@@ -23726,7 +24104,40 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 (8010, 'XOR', 'terminated'),
 (8012, 'AND', 'terminated'),
 (8015, 'AND', 'terminated'),
-(8016, 'XOR', 'executing');
+(8016, 'XOR', 'executing'),
+(8022, 'AND', 'terminated'),
+(8038, 'AND', 'terminated'),
+(8040, 'AND', 'terminated'),
+(8057, 'AND', 'terminated'),
+(8060, 'AND', 'terminated'),
+(8061, 'AND', 'terminated'),
+(8064, 'AND', 'terminated'),
+(8065, 'AND', 'terminated'),
+(8070, 'XOR', 'terminated'),
+(8071, 'AND', 'skipped'),
+(8108, 'AND', 'terminated'),
+(8110, 'AND', 'terminated'),
+(8115, 'XOR', 'terminated'),
+(8116, 'AND', 'terminated'),
+(8126, 'XOR', 'terminated'),
+(8130, 'XOR', 'executing'),
+(8132, 'XOR', 'terminated'),
+(8133, 'XOR', 'terminated'),
+(8137, 'XOR', 'executing'),
+(8140, 'XOR', 'executing'),
+(8142, 'XOR', 'terminated'),
+(8143, 'XOR', 'skipped'),
+(8147, 'XOR', 'executing'),
+(8149, 'AND', 'terminated'),
+(8152, 'AND', 'terminated'),
+(8154, 'AND', 'terminated'),
+(8157, 'AND', 'terminated'),
+(8167, 'XOR', 'terminated'),
+(8171, 'XOR', 'executing'),
+(8174, 'XOR', 'terminated'),
+(8176, 'AND', 'terminated'),
+(8179, 'AND', 'terminated'),
+(8180, 'XOR', 'executing');
 
 -- --------------------------------------------------------
 
@@ -23745,7 +24156,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `role_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `comment` text
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1339 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1853 ;
 
 --
 -- Daten für Tabelle `historyactivityinstance`
@@ -24339,7 +24750,522 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `ti
 (1335, 8014, 'testact1', '2015-03-18 13:04:36', 'running', 'terminated', 1099, NULL, NULL, NULL),
 (1336, 8017, 'start', '2015-03-18 13:04:36', NULL, 'init', 1099, NULL, NULL, NULL),
 (1337, 8017, 'start', '2015-03-18 13:04:36', 'init', 'ready(ControlFlow)', 1099, NULL, NULL, NULL),
-(1338, 8017, 'start', '2015-03-18 13:04:36', 'ready(ControlFlow)', 'ready', 1099, NULL, NULL, NULL);
+(1338, 8017, 'start', '2015-03-18 13:04:36', 'ready(ControlFlow)', 'ready', 1099, NULL, NULL, NULL),
+(1339, 8018, 'Activity1Fragment1', '2015-03-19 21:47:20', NULL, 'init', 1100, NULL, NULL, NULL),
+(1340, 8018, 'Activity1Fragment1', '2015-03-19 21:47:20', 'init', 'ready(ControlFlow)', 1100, NULL, NULL, NULL),
+(1341, 8018, 'Activity1Fragment1', '2015-03-19 21:47:20', 'ready(ControlFlow)', 'ready', 1100, NULL, NULL, NULL),
+(1342, 8019, 'Activity1Fragment2', '2015-03-19 21:47:20', NULL, 'init', 1100, NULL, NULL, NULL),
+(1343, 8019, 'Activity1Fragment2', '2015-03-19 21:47:20', 'init', 'ready(ControlFlow)', 1100, NULL, NULL, NULL),
+(1344, 8020, 'ActivityFragment3', '2015-03-19 21:47:20', NULL, 'init', 1100, NULL, NULL, NULL),
+(1345, 8020, 'ActivityFragment3', '2015-03-19 21:47:20', 'init', 'ready(ControlFlow)', 1100, NULL, NULL, NULL),
+(1346, 8021, 'ActivityFragment4', '2015-03-19 21:47:20', NULL, 'init', 1100, NULL, NULL, NULL),
+(1347, 8021, 'ActivityFragment4', '2015-03-19 21:47:20', 'init', 'ready(ControlFlow)', 1100, NULL, NULL, NULL),
+(1348, 8021, 'ActivityFragment4', '2015-03-19 21:47:20', 'ready(ControlFlow)', 'ready', 1100, NULL, NULL, NULL),
+(1349, 8018, 'Activity1Fragment1', '2015-03-19 21:47:20', 'ready', 'running', 1100, NULL, NULL, NULL),
+(1350, 8023, 'Activity1', '2015-03-19 21:47:21', NULL, 'init', 1101, NULL, NULL, NULL),
+(1351, 8023, 'Activity1', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1101, NULL, NULL, NULL),
+(1352, 8023, 'Activity1', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1101, NULL, NULL, NULL),
+(1353, 8024, 'Activity2', '2015-03-19 21:47:21', NULL, 'init', 1101, NULL, NULL, NULL),
+(1354, 8024, 'Activity2', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1101, NULL, NULL, NULL),
+(1355, 8024, 'Activity2', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1101, NULL, NULL, NULL),
+(1356, 8023, 'Activity1', '2015-03-19 21:47:21', 'ready', 'running', 1101, NULL, NULL, NULL),
+(1357, 8024, 'Activity2', '2015-03-19 21:47:21', 'ready', 'running', 1101, NULL, NULL, NULL),
+(1358, 8025, 'Activity vor XOR', '2015-03-19 21:47:21', NULL, 'init', 1102, NULL, NULL, NULL),
+(1359, 8025, 'Activity vor XOR', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1102, NULL, NULL, NULL),
+(1360, 8025, 'Activity vor XOR', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1102, NULL, NULL, NULL),
+(1361, 8026, 'an Activity', '2015-03-19 21:47:21', NULL, 'init', 1102, NULL, NULL, NULL),
+(1362, 8026, 'an Activity', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1102, NULL, NULL, NULL),
+(1363, 8026, 'an Activity', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1102, NULL, NULL, NULL),
+(1364, 8025, 'Activity vor XOR', '2015-03-19 21:47:21', 'ready', 'running', 1102, NULL, NULL, NULL),
+(1365, 8027, 'A1', '2015-03-19 21:47:21', NULL, 'init', 1103, NULL, NULL, NULL),
+(1366, 8027, 'A1', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1103, NULL, NULL, NULL),
+(1367, 8027, 'A1', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1103, NULL, NULL, NULL),
+(1368, 8028, 'B1', '2015-03-19 21:47:21', NULL, 'init', 1103, NULL, NULL, NULL),
+(1369, 8028, 'B1', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1103, NULL, NULL, NULL),
+(1370, 8029, 'C2', '2015-03-19 21:47:21', NULL, 'init', 1103, NULL, NULL, NULL),
+(1371, 8029, 'C2', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1103, NULL, NULL, NULL),
+(1372, 8027, 'A1', '2015-03-19 21:47:21', 'ready', 'running', 1103, NULL, NULL, NULL),
+(1373, 8030, 'TestAct1', '2015-03-19 21:47:21', NULL, 'init', 1104, NULL, NULL, NULL),
+(1374, 8030, 'TestAct1', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1104, NULL, NULL, NULL),
+(1375, 8030, 'TestAct1', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1104, NULL, NULL, NULL),
+(1376, 8031, 'TestAct2', '2015-03-19 21:47:21', NULL, 'init', 1104, NULL, NULL, NULL),
+(1377, 8031, 'TestAct2', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1104, NULL, NULL, NULL),
+(1378, 8032, 'RESET', '2015-03-19 21:47:21', NULL, 'init', 1104, NULL, NULL, NULL),
+(1379, 8032, 'RESET', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1104, NULL, NULL, NULL),
+(1380, 8030, 'TestAct1', '2015-03-19 21:47:21', 'ready', 'running', 1104, NULL, NULL, NULL),
+(1381, 8033, 'act1', '2015-03-19 21:47:21', NULL, 'init', 1105, NULL, NULL, NULL),
+(1382, 8033, 'act1', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1105, NULL, NULL, NULL),
+(1383, 8034, 'act1', '2015-03-19 21:47:21', NULL, 'init', 1105, NULL, NULL, NULL),
+(1384, 8034, 'act1', '2015-03-19 21:47:21', 'init', 'ready(ControlFlow)', 1105, NULL, NULL, NULL),
+(1385, 8034, 'act1', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'ready', 1105, NULL, NULL, NULL),
+(1386, 8034, 'act1', '2015-03-19 21:47:21', 'ready', 'running', 1105, NULL, NULL, NULL),
+(1387, 8033, 'act1', '2015-03-19 21:47:21', 'ready(ControlFlow)', 'referentialRunning', 1105, NULL, NULL, NULL),
+(1388, 8035, 'A1', '2015-03-19 21:47:22', NULL, 'init', 1106, NULL, NULL, NULL),
+(1389, 8035, 'A1', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1106, NULL, NULL, NULL),
+(1390, 8035, 'A1', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1106, NULL, NULL, NULL),
+(1391, 8036, 'A1', '2015-03-19 21:47:22', NULL, 'init', 1106, NULL, NULL, NULL),
+(1392, 8036, 'A1', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1106, NULL, NULL, NULL),
+(1393, 8036, 'A1', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1106, NULL, NULL, NULL),
+(1394, 8037, 'A4', '2015-03-19 21:47:22', NULL, 'init', 1106, NULL, NULL, NULL),
+(1395, 8037, 'A4', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1106, NULL, NULL, NULL),
+(1396, 8037, 'A4', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1106, NULL, NULL, NULL),
+(1397, 8036, 'A1', '2015-03-19 21:47:22', 'ready', 'running', 1106, NULL, NULL, NULL),
+(1398, 8035, 'A1', '2015-03-19 21:47:22', 'ready', 'referentialRunning', 1106, NULL, NULL, NULL),
+(1399, 8039, 'a1', '2015-03-19 21:47:22', NULL, 'init', 1107, NULL, NULL, NULL),
+(1400, 8039, 'a1', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1107, NULL, NULL, NULL),
+(1401, 8039, 'a1', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1107, NULL, NULL, NULL),
+(1402, 8041, 'a2.1', '2015-03-19 21:47:22', NULL, 'init', 1107, NULL, NULL, NULL),
+(1403, 8041, 'a2.1', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1107, NULL, NULL, NULL),
+(1404, 8041, 'a2.1', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1107, NULL, NULL, NULL),
+(1405, 8042, 'a2.2', '2015-03-19 21:47:22', NULL, 'init', 1107, NULL, NULL, NULL),
+(1406, 8042, 'a2.2', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1107, NULL, NULL, NULL),
+(1407, 8042, 'a2.2', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1107, NULL, NULL, NULL),
+(1408, 8043, 'Activity vor XOR', '2015-03-19 21:47:22', NULL, 'init', 1108, NULL, NULL, NULL),
+(1409, 8043, 'Activity vor XOR', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1108, NULL, NULL, NULL),
+(1410, 8043, 'Activity vor XOR', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1108, NULL, NULL, NULL),
+(1411, 8044, 'an Activity', '2015-03-19 21:47:22', NULL, 'init', 1108, NULL, NULL, NULL),
+(1412, 8044, 'an Activity', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1108, NULL, NULL, NULL),
+(1413, 8044, 'an Activity', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1108, NULL, NULL, NULL),
+(1414, 8043, 'Activity vor XOR', '2015-03-19 21:47:22', 'ready', 'running', 1108, NULL, NULL, NULL),
+(1415, 8045, 'toggle b', '2015-03-19 21:47:22', NULL, 'init', 1109, NULL, NULL, NULL),
+(1416, 8045, 'toggle b', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1109, NULL, NULL, NULL),
+(1417, 8045, 'toggle b', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1109, NULL, NULL, NULL),
+(1418, 8046, 'start Email', '2015-03-19 21:47:22', NULL, 'init', 1109, NULL, NULL, NULL),
+(1419, 8046, 'start Email', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1109, NULL, NULL, NULL),
+(1420, 8046, 'start Email', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1109, NULL, NULL, NULL),
+(1421, 8047, 'startAct2', '2015-03-19 21:47:22', NULL, 'init', 1109, NULL, NULL, NULL),
+(1422, 8047, 'startAct2', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1109, NULL, NULL, NULL),
+(1423, 8047, 'startAct2', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1109, NULL, NULL, NULL),
+(1424, 8048, 'startAct', '2015-03-19 21:47:22', NULL, 'init', 1109, NULL, NULL, NULL),
+(1425, 8048, 'startAct', '2015-03-19 21:47:22', 'init', 'ready(ControlFlow)', 1109, NULL, NULL, NULL),
+(1426, 8048, 'startAct', '2015-03-19 21:47:22', 'ready(ControlFlow)', 'ready', 1109, NULL, NULL, NULL),
+(1427, 8047, 'startAct2', '2015-03-19 21:47:22', 'ready', 'running', 1109, NULL, NULL, NULL),
+(1428, 8049, 'Activity1Fragment1', '2015-03-19 21:49:04', NULL, 'init', 1110, NULL, NULL, NULL),
+(1429, 8049, 'Activity1Fragment1', '2015-03-19 21:49:04', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1430, 8049, 'Activity1Fragment1', '2015-03-19 21:49:04', 'ready(ControlFlow)', 'ready', 1110, NULL, NULL, NULL),
+(1431, 8050, 'Activity1Fragment2', '2015-03-19 21:49:04', NULL, 'init', 1110, NULL, NULL, NULL),
+(1432, 8050, 'Activity1Fragment2', '2015-03-19 21:49:04', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1433, 8051, 'ActivityFragment3', '2015-03-19 21:49:04', NULL, 'init', 1110, NULL, NULL, NULL),
+(1434, 8051, 'ActivityFragment3', '2015-03-19 21:49:04', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1435, 8052, 'ActivityFragment4', '2015-03-19 21:49:04', NULL, 'init', 1110, NULL, NULL, NULL),
+(1436, 8052, 'ActivityFragment4', '2015-03-19 21:49:04', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1437, 8052, 'ActivityFragment4', '2015-03-19 21:49:04', 'ready(ControlFlow)', 'ready', 1110, NULL, NULL, NULL),
+(1438, 8049, 'Activity1Fragment1', '2015-03-19 21:49:04', 'ready', 'running', 1110, NULL, NULL, NULL),
+(1439, 8049, 'Activity1Fragment1', '2015-03-19 21:49:04', 'running', 'terminated', 1110, NULL, NULL, NULL),
+(1440, 8050, 'Activity1Fragment2', '2015-03-19 21:49:04', 'ready(ControlFlow)', 'ready', 1110, NULL, NULL, NULL),
+(1441, 8053, 'Activity2Fragment1', '2015-03-19 21:49:04', NULL, 'init', 1110, NULL, NULL, NULL),
+(1442, 8053, 'Activity2Fragment1', '2015-03-19 21:49:04', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1443, 8053, 'Activity2Fragment1', '2015-03-19 21:49:04', 'ready(ControlFlow)', 'ready', 1110, NULL, NULL, NULL),
+(1444, 8053, 'Activity2Fragment1', '2015-03-19 21:49:04', 'ready', 'running', 1110, NULL, NULL, NULL),
+(1445, 8053, 'Activity2Fragment1', '2015-03-19 21:49:04', 'running', 'terminated', 1110, NULL, NULL, NULL),
+(1446, 8051, 'ActivityFragment3', '2015-03-19 21:49:04', 'ready(ControlFlow)', 'ready', 1110, NULL, NULL, NULL),
+(1447, 8054, 'Activity2Fragment1', '2015-03-19 21:49:04', NULL, 'init', 1110, NULL, NULL, NULL),
+(1448, 8054, 'Activity2Fragment1', '2015-03-19 21:49:04', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1449, 8050, 'Activity1Fragment2', '2015-03-19 21:49:05', 'ready', 'running', 1110, NULL, NULL, NULL),
+(1450, 8051, 'ActivityFragment3', '2015-03-19 21:49:05', 'ready', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1451, 8050, 'Activity1Fragment2', '2015-03-19 21:49:05', 'running', 'terminated', 1110, NULL, NULL, NULL),
+(1452, 8054, 'Activity2Fragment1', '2015-03-19 21:49:05', 'ready(ControlFlow)', 'ready', 1110, NULL, NULL, NULL),
+(1453, 8055, 'Activity1Fragment2', '2015-03-19 21:49:05', NULL, 'init', 1110, NULL, NULL, NULL),
+(1454, 8055, 'Activity1Fragment2', '2015-03-19 21:49:05', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1455, 8054, 'Activity2Fragment1', '2015-03-19 21:49:05', 'ready', 'running', 1110, NULL, NULL, NULL),
+(1456, 8054, 'Activity2Fragment1', '2015-03-19 21:49:05', 'running', 'terminated', 1110, NULL, NULL, NULL),
+(1457, 8056, 'Activity1Fragment1', '2015-03-19 21:49:05', NULL, 'init', 1110, NULL, NULL, NULL),
+(1458, 8056, 'Activity1Fragment1', '2015-03-19 21:49:05', 'init', 'ready(ControlFlow)', 1110, NULL, NULL, NULL),
+(1459, 8058, 'Activity1', '2015-03-19 21:49:05', NULL, 'init', 1111, NULL, NULL, NULL),
+(1460, 8058, 'Activity1', '2015-03-19 21:49:05', 'init', 'ready(ControlFlow)', 1111, NULL, NULL, NULL),
+(1461, 8058, 'Activity1', '2015-03-19 21:49:05', 'ready(ControlFlow)', 'ready', 1111, NULL, NULL, NULL),
+(1462, 8059, 'Activity2', '2015-03-19 21:49:06', NULL, 'init', 1111, NULL, NULL, NULL),
+(1463, 8059, 'Activity2', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1111, NULL, NULL, NULL),
+(1464, 8059, 'Activity2', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1111, NULL, NULL, NULL),
+(1465, 8058, 'Activity1', '2015-03-19 21:49:06', 'ready', 'running', 1111, NULL, NULL, NULL),
+(1466, 8058, 'Activity1', '2015-03-19 21:49:06', 'running', 'terminated', 1111, NULL, NULL, NULL),
+(1467, 8059, 'Activity2', '2015-03-19 21:49:06', 'ready', 'running', 1111, NULL, NULL, NULL),
+(1468, 8059, 'Activity2', '2015-03-19 21:49:06', 'running', 'terminated', 1111, NULL, NULL, NULL),
+(1469, 8062, 'Activity1', '2015-03-19 21:49:06', NULL, 'init', 1111, NULL, NULL, NULL),
+(1470, 8062, 'Activity1', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1111, NULL, NULL, NULL),
+(1471, 8062, 'Activity1', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1111, NULL, NULL, NULL),
+(1472, 8063, 'Activity2', '2015-03-19 21:49:06', NULL, 'init', 1111, NULL, NULL, NULL),
+(1473, 8063, 'Activity2', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1111, NULL, NULL, NULL),
+(1474, 8063, 'Activity2', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1111, NULL, NULL, NULL),
+(1475, 8063, 'Activity2', '2015-03-19 21:49:06', 'ready', 'running', 1111, NULL, NULL, NULL),
+(1476, 8063, 'Activity2', '2015-03-19 21:49:06', 'running', 'terminated', 1111, NULL, NULL, NULL),
+(1477, 8062, 'Activity1', '2015-03-19 21:49:06', 'ready', 'running', 1111, NULL, NULL, NULL),
+(1478, 8062, 'Activity1', '2015-03-19 21:49:06', 'running', 'terminated', 1111, NULL, NULL, NULL),
+(1479, 8066, 'Activity1', '2015-03-19 21:49:06', NULL, 'init', 1111, NULL, NULL, NULL),
+(1480, 8066, 'Activity1', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1111, NULL, NULL, NULL),
+(1481, 8066, 'Activity1', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1111, NULL, NULL, NULL),
+(1482, 8067, 'Activity2', '2015-03-19 21:49:06', NULL, 'init', 1111, NULL, NULL, NULL),
+(1483, 8067, 'Activity2', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1111, NULL, NULL, NULL),
+(1484, 8067, 'Activity2', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1111, NULL, NULL, NULL),
+(1485, 8068, 'Activity vor XOR', '2015-03-19 21:49:06', NULL, 'init', 1112, NULL, NULL, NULL),
+(1486, 8068, 'Activity vor XOR', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1487, 8068, 'Activity vor XOR', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1488, 8069, 'an Activity', '2015-03-19 21:49:06', NULL, 'init', 1112, NULL, NULL, NULL),
+(1489, 8069, 'an Activity', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1490, 8069, 'an Activity', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1491, 8068, 'Activity vor XOR', '2015-03-19 21:49:06', 'ready', 'running', 1112, NULL, NULL, NULL),
+(1492, 8068, 'Activity vor XOR', '2015-03-19 21:49:06', 'running', 'terminated', 1112, NULL, NULL, NULL),
+(1493, 8072, '(act1.2) AND Pfad', '2015-03-19 21:49:06', NULL, 'init', 1112, NULL, NULL, NULL),
+(1494, 8072, '(act1.2) AND Pfad', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1495, 8072, '(act1.2) AND Pfad', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1496, 8073, '(act1.1) AND Pfad', '2015-03-19 21:49:06', NULL, 'init', 1112, NULL, NULL, NULL),
+(1497, 8073, '(act1.1) AND Pfad', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1498, 8073, '(act1.1) AND Pfad', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1499, 8074, '(act1) XOR Pfad 1', '2015-03-19 21:49:06', NULL, 'init', 1112, NULL, NULL, NULL),
+(1500, 8074, '(act1) XOR Pfad 1', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1501, 8074, '(act1) XOR Pfad 1', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1502, 8075, '(act1) XOR Pfad 2', '2015-03-19 21:49:06', NULL, 'init', 1112, NULL, NULL, NULL),
+(1503, 8075, '(act1) XOR Pfad 2', '2015-03-19 21:49:06', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1504, 8075, '(act1) XOR Pfad 2', '2015-03-19 21:49:06', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1505, 8074, '(act1) XOR Pfad 1', '2015-03-19 21:49:07', 'ready', 'running', 1112, NULL, NULL, NULL),
+(1506, 8072, '(act1.2) AND Pfad', '2015-03-19 21:49:07', 'ready', 'skipped', 1112, NULL, NULL, NULL),
+(1507, 8073, '(act1.1) AND Pfad', '2015-03-19 21:49:07', 'ready', 'skipped', 1112, NULL, NULL, NULL),
+(1508, 8075, '(act1) XOR Pfad 2', '2015-03-19 21:49:07', 'ready', 'skipped', 1112, NULL, NULL, NULL),
+(1509, 8074, '(act1) XOR Pfad 1', '2015-03-19 21:49:07', 'running', 'terminated', 1112, NULL, NULL, NULL),
+(1510, 8076, '(act2) XOR Pfad1', '2015-03-19 21:49:07', NULL, 'init', 1112, NULL, NULL, NULL),
+(1511, 8076, '(act2) XOR Pfad1', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1112, NULL, NULL, NULL),
+(1512, 8076, '(act2) XOR Pfad1', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1112, NULL, NULL, NULL),
+(1513, 8077, 'A1', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1514, 8077, 'A1', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1515, 8077, 'A1', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1516, 8078, 'B1', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1517, 8078, 'B1', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1518, 8079, 'C2', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1519, 8079, 'C2', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1520, 8077, 'A1', '2015-03-19 21:49:07', 'ready', 'running', 1113, NULL, NULL, NULL),
+(1521, 8077, 'A1', '2015-03-19 21:49:07', 'running', 'terminated', 1113, NULL, NULL, NULL),
+(1522, 8079, 'C2', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1523, 8080, 'A2', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1524, 8080, 'A2', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1525, 8080, 'A2', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1526, 8080, 'A2', '2015-03-19 21:49:07', 'ready', 'running', 1113, NULL, NULL, NULL),
+(1527, 8079, 'C2', '2015-03-19 21:49:07', 'ready', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1528, 8080, 'A2', '2015-03-19 21:49:07', 'running', 'terminated', 1113, NULL, NULL, NULL),
+(1529, 8078, 'B1', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1530, 8081, 'A1', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1531, 8081, 'A1', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1532, 8078, 'B1', '2015-03-19 21:49:07', 'ready', 'running', 1113, NULL, NULL, NULL),
+(1533, 8078, 'B1', '2015-03-19 21:49:07', 'running', 'terminated', 1113, NULL, NULL, NULL),
+(1534, 8081, 'A1', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1535, 8082, 'B1', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1536, 8082, 'B1', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1537, 8081, 'A1', '2015-03-19 21:49:07', 'ready', 'running', 1113, NULL, NULL, NULL),
+(1538, 8081, 'A1', '2015-03-19 21:49:07', 'running', 'terminated', 1113, NULL, NULL, NULL),
+(1539, 8079, 'C2', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1540, 8083, 'A2', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1541, 8083, 'A2', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1542, 8083, 'A2', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1113, NULL, NULL, NULL),
+(1543, 8079, 'C2', '2015-03-19 21:49:07', 'ready', 'running', 1113, NULL, NULL, NULL),
+(1544, 8083, 'A2', '2015-03-19 21:49:07', 'ready', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1545, 8079, 'C2', '2015-03-19 21:49:07', 'running', 'terminated', 1113, NULL, NULL, NULL),
+(1546, 8084, 'C2', '2015-03-19 21:49:07', NULL, 'init', 1113, NULL, NULL, NULL),
+(1547, 8084, 'C2', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1113, NULL, NULL, NULL),
+(1548, 8085, 'TestAct1', '2015-03-19 21:49:07', NULL, 'init', 1114, NULL, NULL, NULL),
+(1549, 8085, 'TestAct1', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1114, NULL, NULL, NULL),
+(1550, 8085, 'TestAct1', '2015-03-19 21:49:07', 'ready(ControlFlow)', 'ready', 1114, NULL, NULL, NULL),
+(1551, 8086, 'TestAct2', '2015-03-19 21:49:07', NULL, 'init', 1114, NULL, NULL, NULL),
+(1552, 8086, 'TestAct2', '2015-03-19 21:49:07', 'init', 'ready(ControlFlow)', 1114, NULL, NULL, NULL),
+(1553, 8087, 'RESET', '2015-03-19 21:49:08', NULL, 'init', 1114, NULL, NULL, NULL),
+(1554, 8087, 'RESET', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1114, NULL, NULL, NULL),
+(1555, 8085, 'TestAct1', '2015-03-19 21:49:08', 'ready', 'running', 1114, NULL, NULL, NULL),
+(1556, 8085, 'TestAct1', '2015-03-19 21:49:08', 'running', 'terminated', 1114, NULL, NULL, NULL),
+(1557, 8086, 'TestAct2', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1114, NULL, NULL, NULL),
+(1558, 8088, 'TestAct2', '2015-03-19 21:49:08', NULL, 'init', 1114, NULL, NULL, NULL),
+(1559, 8088, 'TestAct2', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1114, NULL, NULL, NULL),
+(1560, 8088, 'TestAct2', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1114, NULL, NULL, NULL),
+(1561, 8088, 'TestAct2', '2015-03-19 21:49:08', 'ready', 'running', 1114, NULL, NULL, NULL),
+(1562, 8086, 'TestAct2', '2015-03-19 21:49:08', 'ready', 'referentialRunning', 1114, NULL, NULL, NULL),
+(1563, 8088, 'TestAct2', '2015-03-19 21:49:08', 'running', 'terminated', 1114, NULL, NULL, NULL),
+(1564, 8086, 'TestAct2', '2015-03-19 21:49:08', 'referentialRunning', 'terminated', 1114, NULL, NULL, NULL),
+(1565, 8089, 'TestAct3', '2015-03-19 21:49:08', NULL, 'init', 1114, NULL, NULL, NULL),
+(1566, 8089, 'TestAct3', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1114, NULL, NULL, NULL),
+(1567, 8089, 'TestAct3', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1114, NULL, NULL, NULL),
+(1568, 8087, 'RESET', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1114, NULL, NULL, NULL),
+(1569, 8090, 'TestAct4', '2015-03-19 21:49:08', NULL, 'init', 1114, NULL, NULL, NULL),
+(1570, 8090, 'TestAct4', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1114, NULL, NULL, NULL),
+(1571, 8090, 'TestAct4', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1114, NULL, NULL, NULL),
+(1572, 8091, 'act1', '2015-03-19 21:49:08', NULL, 'init', 1115, NULL, NULL, NULL),
+(1573, 8091, 'act1', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1115, NULL, NULL, NULL),
+(1574, 8092, 'act1', '2015-03-19 21:49:08', NULL, 'init', 1115, NULL, NULL, NULL),
+(1575, 8092, 'act1', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1115, NULL, NULL, NULL),
+(1576, 8092, 'act1', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1115, NULL, NULL, NULL),
+(1577, 8092, 'act1', '2015-03-19 21:49:08', 'ready', 'running', 1115, NULL, NULL, NULL),
+(1578, 8091, 'act1', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'referentialRunning', 1115, NULL, NULL, NULL),
+(1579, 8092, 'act1', '2015-03-19 21:49:08', 'running', 'terminated', 1115, NULL, NULL, NULL),
+(1580, 8091, 'act1', '2015-03-19 21:49:08', 'referentialRunning', 'terminated', 1115, NULL, NULL, NULL),
+(1581, 8093, 'act3', '2015-03-19 21:49:08', NULL, 'init', 1115, NULL, NULL, NULL),
+(1582, 8093, 'act3', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1115, NULL, NULL, NULL),
+(1583, 8093, 'act3', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1115, NULL, NULL, NULL),
+(1584, 8094, 'act2', '2015-03-19 21:49:08', NULL, 'init', 1115, NULL, NULL, NULL),
+(1585, 8094, 'act2', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1115, NULL, NULL, NULL),
+(1586, 8094, 'act2', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1115, NULL, NULL, NULL),
+(1587, 8095, 'A1', '2015-03-19 21:49:08', NULL, 'init', 1116, NULL, NULL, NULL),
+(1588, 8095, 'A1', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1589, 8095, 'A1', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1590, 8096, 'A1', '2015-03-19 21:49:08', NULL, 'init', 1116, NULL, NULL, NULL),
+(1591, 8096, 'A1', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1592, 8096, 'A1', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1593, 8097, 'A4', '2015-03-19 21:49:08', NULL, 'init', 1116, NULL, NULL, NULL),
+(1594, 8097, 'A4', '2015-03-19 21:49:08', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1595, 8097, 'A4', '2015-03-19 21:49:08', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1596, 8096, 'A1', '2015-03-19 21:49:08', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1597, 8095, 'A1', '2015-03-19 21:49:08', 'ready', 'referentialRunning', 1116, NULL, NULL, NULL),
+(1598, 8096, 'A1', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1599, 8095, 'A1', '2015-03-19 21:49:09', 'referentialRunning', 'terminated', 1116, NULL, NULL, NULL),
+(1600, 8098, 'A2', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1601, 8098, 'A2', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1602, 8098, 'A2', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1603, 8099, 'A3', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1604, 8099, 'A3', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1605, 8099, 'A3', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1606, 8097, 'A4', '2015-03-19 21:49:09', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1607, 8097, 'A4', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1608, 8100, 'A1', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1609, 8100, 'A1', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1610, 8100, 'A1', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1611, 8100, 'A1', '2015-03-19 21:49:09', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1612, 8100, 'A1', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1613, 8101, 'A4', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1614, 8101, 'A4', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1615, 8101, 'A4', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1616, 8099, 'A3', '2015-03-19 21:49:09', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1617, 8099, 'A3', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1618, 8102, 'A1', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1619, 8102, 'A1', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1620, 8102, 'A1', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1621, 8101, 'A4', '2015-03-19 21:49:09', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1622, 8101, 'A4', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1623, 8103, 'A1', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1624, 8103, 'A1', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1625, 8103, 'A1', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1626, 8098, 'A2', '2015-03-19 21:49:09', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1627, 8098, 'A2', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1628, 8104, 'A1', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1629, 8104, 'A1', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1630, 8104, 'A1', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1631, 8103, 'A1', '2015-03-19 21:49:09', 'ready', 'running', 1116, NULL, NULL, NULL),
+(1632, 8104, 'A1', '2015-03-19 21:49:09', 'ready', 'referentialRunning', 1116, NULL, NULL, NULL),
+(1633, 8102, 'A1', '2015-03-19 21:49:09', 'ready', 'referentialRunning', 1116, NULL, NULL, NULL),
+(1634, 8103, 'A1', '2015-03-19 21:49:09', 'running', 'terminated', 1116, NULL, NULL, NULL),
+(1635, 8104, 'A1', '2015-03-19 21:49:09', 'referentialRunning', 'terminated', 1116, NULL, NULL, NULL),
+(1636, 8105, 'A2', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1637, 8105, 'A2', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1638, 8105, 'A2', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1639, 8102, 'A1', '2015-03-19 21:49:09', 'referentialRunning', 'terminated', 1116, NULL, NULL, NULL),
+(1640, 8106, 'A3', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1641, 8106, 'A3', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1642, 8107, 'A4', '2015-03-19 21:49:09', NULL, 'init', 1116, NULL, NULL, NULL),
+(1643, 8107, 'A4', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1116, NULL, NULL, NULL),
+(1644, 8107, 'A4', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1116, NULL, NULL, NULL),
+(1645, 8109, 'a1', '2015-03-19 21:49:09', NULL, 'init', 1117, NULL, NULL, NULL),
+(1646, 8109, 'a1', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1117, NULL, NULL, NULL),
+(1647, 8109, 'a1', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1117, NULL, NULL, NULL),
+(1648, 8111, 'a2.1', '2015-03-19 21:49:09', NULL, 'init', 1117, NULL, NULL, NULL),
+(1649, 8111, 'a2.1', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1117, NULL, NULL, NULL),
+(1650, 8111, 'a2.1', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1117, NULL, NULL, NULL),
+(1651, 8112, 'a2.2', '2015-03-19 21:49:09', NULL, 'init', 1117, NULL, NULL, NULL),
+(1652, 8112, 'a2.2', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1117, NULL, NULL, NULL),
+(1653, 8112, 'a2.2', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1117, NULL, NULL, NULL),
+(1654, 8113, 'Activity vor XOR', '2015-03-19 21:49:09', NULL, 'init', 1118, NULL, NULL, NULL),
+(1655, 8113, 'Activity vor XOR', '2015-03-19 21:49:09', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1656, 8113, 'Activity vor XOR', '2015-03-19 21:49:09', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1657, 8114, 'an Activity', '2015-03-19 21:49:10', NULL, 'init', 1118, NULL, NULL, NULL),
+(1658, 8114, 'an Activity', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1659, 8114, 'an Activity', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1660, 8113, 'Activity vor XOR', '2015-03-19 21:49:10', 'ready', 'running', 1118, NULL, NULL, NULL),
+(1661, 8113, 'Activity vor XOR', '2015-03-19 21:49:10', 'running', 'terminated', 1118, NULL, NULL, NULL),
+(1662, 8117, '(act1.2) AND Pfad', '2015-03-19 21:49:10', NULL, 'init', 1118, NULL, NULL, NULL),
+(1663, 8117, '(act1.2) AND Pfad', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1664, 8117, '(act1.2) AND Pfad', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1665, 8118, '(act1.1) AND Pfad', '2015-03-19 21:49:10', NULL, 'init', 1118, NULL, NULL, NULL),
+(1666, 8118, '(act1.1) AND Pfad', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1667, 8118, '(act1.1) AND Pfad', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1668, 8119, '(act1) XOR Pfad 1', '2015-03-19 21:49:10', NULL, 'init', 1118, NULL, NULL, NULL),
+(1669, 8119, '(act1) XOR Pfad 1', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1670, 8119, '(act1) XOR Pfad 1', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1671, 8120, '(act1) XOR Pfad 2', '2015-03-19 21:49:10', NULL, 'init', 1118, NULL, NULL, NULL),
+(1672, 8120, '(act1) XOR Pfad 2', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1673, 8120, '(act1) XOR Pfad 2', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1674, 8117, '(act1.2) AND Pfad', '2015-03-19 21:49:10', 'ready', 'running', 1118, NULL, NULL, NULL),
+(1675, 8119, '(act1) XOR Pfad 1', '2015-03-19 21:49:10', 'ready', 'skipped', 1118, NULL, NULL, NULL),
+(1676, 8120, '(act1) XOR Pfad 2', '2015-03-19 21:49:10', 'ready', 'skipped', 1118, NULL, NULL, NULL),
+(1677, 8117, '(act1.2) AND Pfad', '2015-03-19 21:49:10', 'running', 'terminated', 1118, NULL, NULL, NULL),
+(1678, 8121, '(act2.2) AND Pfad', '2015-03-19 21:49:10', NULL, 'init', 1118, NULL, NULL, NULL),
+(1679, 8121, '(act2.2) AND Pfad', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1118, NULL, NULL, NULL),
+(1680, 8121, '(act2.2) AND Pfad', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1118, NULL, NULL, NULL),
+(1681, 8122, 'toggle b', '2015-03-19 21:49:10', NULL, 'init', 1119, NULL, NULL, NULL),
+(1682, 8122, 'toggle b', '2015-03-19 21:49:10', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1683, 8122, 'toggle b', '2015-03-19 21:49:10', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1684, 8123, 'start Email', '2015-03-19 21:49:11', NULL, 'init', 1119, NULL, NULL, NULL),
+(1685, 8123, 'start Email', '2015-03-19 21:49:11', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1686, 8123, 'start Email', '2015-03-19 21:49:11', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1687, 8124, 'startAct2', '2015-03-19 21:49:11', NULL, 'init', 1119, NULL, NULL, NULL),
+(1688, 8124, 'startAct2', '2015-03-19 21:49:11', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1689, 8124, 'startAct2', '2015-03-19 21:49:11', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1690, 8125, 'startAct', '2015-03-19 21:49:11', NULL, 'init', 1119, NULL, NULL, NULL),
+(1691, 8125, 'startAct', '2015-03-19 21:49:11', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1692, 8125, 'startAct', '2015-03-19 21:49:11', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1693, 8124, 'startAct2', '2015-03-19 21:49:11', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1694, 8124, 'startAct2', '2015-03-19 21:49:11', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1695, 8127, 'act1.1', '2015-03-19 21:49:11', NULL, 'init', 1119, NULL, NULL, NULL),
+(1696, 8127, 'act1.1', '2015-03-19 21:49:11', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1697, 8127, 'act1.1', '2015-03-19 21:49:11', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1698, 8128, 'act1.2', '2015-03-19 21:49:11', NULL, 'init', 1119, NULL, NULL, NULL),
+(1699, 8128, 'act1.2', '2015-03-19 21:49:11', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1700, 8122, 'toggle b', '2015-03-19 21:49:11', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1701, 8122, 'toggle b', '2015-03-19 21:49:11', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1702, 8128, 'act1.2', '2015-03-19 21:49:11', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1703, 8129, 'toggle b', '2015-03-19 21:49:11', NULL, 'init', 1119, NULL, NULL, NULL),
+(1704, 8129, 'toggle b', '2015-03-19 21:49:11', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1705, 8128, 'act1.2', '2015-03-19 21:49:12', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1706, 8127, 'act1.1', '2015-03-19 21:49:12', 'ready', 'skipped', 1119, NULL, NULL, NULL),
+(1707, 8128, 'act1.2', '2015-03-19 21:49:12', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1708, 8129, 'toggle b', '2015-03-19 21:49:12', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1709, 8131, 'startAct2', '2015-03-19 21:49:12', NULL, 'init', 1119, NULL, NULL, NULL),
+(1710, 8131, 'startAct2', '2015-03-19 21:49:12', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1711, 8125, 'startAct', '2015-03-19 21:49:12', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1712, 8125, 'startAct', '2015-03-19 21:49:12', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1713, 8134, 'Act1.1 XOR', '2015-03-19 21:49:12', NULL, 'init', 1119, NULL, NULL, NULL),
+(1714, 8134, 'Act1.1 XOR', '2015-03-19 21:49:12', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1715, 8134, 'Act1.1 XOR', '2015-03-19 21:49:12', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1716, 8135, 'Act1.2 XOR', '2015-03-19 21:49:12', NULL, 'init', 1119, NULL, NULL, NULL),
+(1717, 8135, 'Act1.2 XOR', '2015-03-19 21:49:12', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1718, 8135, 'Act1.2 XOR', '2015-03-19 21:49:12', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1719, 8136, 'Act1', '2015-03-19 21:49:12', NULL, 'init', 1119, NULL, NULL, NULL),
+(1720, 8136, 'Act1', '2015-03-19 21:49:12', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1721, 8136, 'Act1', '2015-03-19 21:49:12', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1722, 8123, 'start Email', '2015-03-19 21:49:12', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1723, 8123, 'start Email', '2015-03-19 21:49:12', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1724, 8138, 'andere', '2015-03-19 21:49:13', NULL, 'init', 1119, NULL, NULL, NULL),
+(1725, 8138, 'andere', '2015-03-19 21:49:13', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1726, 8138, 'andere', '2015-03-19 21:49:13', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1727, 8139, 'email', '2015-03-19 21:49:13', NULL, 'init', 1119, NULL, NULL, NULL),
+(1728, 8139, 'email', '2015-03-19 21:49:13', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1729, 8139, 'email', '2015-03-19 21:49:13', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1730, 8134, 'Act1.1 XOR', '2015-03-19 21:49:13', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1731, 8136, 'Act1', '2015-03-19 21:49:13', 'ready', 'skipped', 1119, NULL, NULL, NULL),
+(1732, 8135, 'Act1.2 XOR', '2015-03-19 21:49:13', 'ready', 'skipped', 1119, NULL, NULL, NULL),
+(1733, 8134, 'Act1.1 XOR', '2015-03-19 21:49:13', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1734, 8141, 'startAct', '2015-03-19 21:49:13', NULL, 'init', 1119, NULL, NULL, NULL),
+(1735, 8141, 'startAct', '2015-03-19 21:49:13', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1736, 8141, 'startAct', '2015-03-19 21:49:13', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1737, 8141, 'startAct', '2015-03-19 21:49:14', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1738, 8141, 'startAct', '2015-03-19 21:49:14', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1739, 8144, 'Act1.1 XOR', '2015-03-19 21:49:14', NULL, 'init', 1119, NULL, NULL, NULL),
+(1740, 8144, 'Act1.1 XOR', '2015-03-19 21:49:14', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1741, 8144, 'Act1.1 XOR', '2015-03-19 21:49:14', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1742, 8145, 'Act1.2 XOR', '2015-03-19 21:49:14', NULL, 'init', 1119, NULL, NULL, NULL),
+(1743, 8145, 'Act1.2 XOR', '2015-03-19 21:49:14', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1744, 8145, 'Act1.2 XOR', '2015-03-19 21:49:14', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1745, 8146, 'Act1', '2015-03-19 21:49:14', NULL, 'init', 1119, NULL, NULL, NULL),
+(1746, 8146, 'Act1', '2015-03-19 21:49:14', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1747, 8146, 'Act1', '2015-03-19 21:49:14', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1748, 8146, 'Act1', '2015-03-19 21:49:14', 'ready', 'running', 1119, NULL, NULL, NULL),
+(1749, 8144, 'Act1.1 XOR', '2015-03-19 21:49:14', 'ready', 'skipped', 1119, NULL, NULL, NULL),
+(1750, 8145, 'Act1.2 XOR', '2015-03-19 21:49:14', 'ready', 'skipped', 1119, NULL, NULL, NULL),
+(1751, 8146, 'Act1', '2015-03-19 21:49:14', 'running', 'terminated', 1119, NULL, NULL, NULL),
+(1752, 8148, 'startAct', '2015-03-19 21:49:14', NULL, 'init', 1119, NULL, NULL, NULL),
+(1753, 8148, 'startAct', '2015-03-19 21:49:14', 'init', 'ready(ControlFlow)', 1119, NULL, NULL, NULL),
+(1754, 8148, 'startAct', '2015-03-19 21:49:14', 'ready(ControlFlow)', 'ready', 1119, NULL, NULL, NULL),
+(1755, 8150, 'senMail2', '2015-03-19 21:49:20', NULL, 'init', 1120, NULL, NULL, NULL),
+(1756, 8150, 'senMail2', '2015-03-19 21:49:20', 'init', 'ready(ControlFlow)', 1120, NULL, NULL, NULL),
+(1757, 8150, 'senMail2', '2015-03-19 21:49:20', 'ready(ControlFlow)', 'ready', 1120, NULL, NULL, NULL),
+(1758, 8151, 'send Mail', '2015-03-19 21:49:20', NULL, 'init', 1120, NULL, NULL, NULL),
+(1759, 8151, 'send Mail', '2015-03-19 21:49:20', 'init', 'ready(ControlFlow)', 1120, NULL, NULL, NULL),
+(1760, 8151, 'send Mail', '2015-03-19 21:49:20', 'ready(ControlFlow)', 'ready', 1120, NULL, NULL, NULL),
+(1761, 8150, 'senMail2', '2015-03-19 21:49:20', 'ready', 'running', 1120, NULL, NULL, NULL),
+(1762, 8150, 'senMail2', '2015-03-19 21:49:20', 'running', 'terminated', 1120, NULL, NULL, NULL),
+(1763, 8151, 'send Mail', '2015-03-19 21:49:20', 'ready', 'running', 1120, NULL, NULL, NULL),
+(1764, 8151, 'send Mail', '2015-03-19 21:49:20', 'running', 'terminated', 1120, NULL, NULL, NULL),
+(1765, 8153, 'testact', '2015-03-19 21:49:20', NULL, 'init', 1120, NULL, NULL, NULL),
+(1766, 8153, 'testact', '2015-03-19 21:49:20', 'init', 'ready(ControlFlow)', 1120, NULL, NULL, NULL),
+(1767, 8153, 'testact', '2015-03-19 21:49:20', 'ready(ControlFlow)', 'ready', 1120, NULL, NULL, NULL),
+(1768, 8153, 'testact', '2015-03-19 21:49:20', 'ready', 'running', 1120, NULL, NULL, NULL),
+(1769, 8153, 'testact', '2015-03-19 21:49:20', 'running', 'terminated', 1120, NULL, NULL, NULL),
+(1770, 8155, 'senMail2', '2015-03-19 21:49:20', NULL, 'init', 1120, NULL, NULL, NULL),
+(1771, 8155, 'senMail2', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1120, NULL, NULL, NULL),
+(1772, 8155, 'senMail2', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1120, NULL, NULL, NULL),
+(1773, 8156, 'send Mail', '2015-03-19 21:49:21', NULL, 'init', 1120, NULL, NULL, NULL),
+(1774, 8156, 'send Mail', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1120, NULL, NULL, NULL),
+(1775, 8156, 'send Mail', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1120, NULL, NULL, NULL),
+(1776, 8155, 'senMail2', '2015-03-19 21:49:21', 'ready', 'running', 1120, NULL, NULL, NULL),
+(1777, 8155, 'senMail2', '2015-03-19 21:49:21', 'running', 'terminated', 1120, NULL, NULL, NULL),
+(1778, 8156, 'send Mail', '2015-03-19 21:49:21', 'ready', 'running', 1120, NULL, NULL, NULL),
+(1779, 8156, 'send Mail', '2015-03-19 21:49:21', 'running', 'terminated', 1120, NULL, NULL, NULL),
+(1780, 8158, 'testact', '2015-03-19 21:49:21', NULL, 'init', 1120, NULL, NULL, NULL),
+(1781, 8158, 'testact', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1120, NULL, NULL, NULL),
+(1782, 8158, 'testact', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1120, NULL, NULL, NULL);
+INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `timestamp`, `oldstate`, `newstate`, `scenarioinstance_id`, `role_id`, `user_id`, `comment`) VALUES
+(1783, 8159, 'send Mail', '2015-03-19 21:49:21', NULL, 'init', 1121, NULL, NULL, NULL),
+(1784, 8159, 'send Mail', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1121, NULL, NULL, NULL),
+(1785, 8159, 'send Mail', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1121, NULL, NULL, NULL),
+(1786, 8159, 'send Mail', '2015-03-19 21:49:21', 'ready', 'running', 1121, NULL, NULL, NULL),
+(1787, 8159, 'send Mail', '2015-03-19 21:49:21', 'running', 'terminated', 1121, NULL, NULL, NULL),
+(1788, 8160, 'test Act1', '2015-03-19 21:49:21', NULL, 'init', 1121, NULL, NULL, NULL),
+(1789, 8160, 'test Act1', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1121, NULL, NULL, NULL),
+(1790, 8160, 'test Act1', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1121, NULL, NULL, NULL),
+(1791, 8160, 'test Act1', '2015-03-19 21:49:21', 'ready', 'running', 1121, NULL, NULL, NULL),
+(1792, 8160, 'test Act1', '2015-03-19 21:49:21', 'running', 'terminated', 1121, NULL, NULL, NULL),
+(1793, 8161, 'send Mail', '2015-03-19 21:49:21', NULL, 'init', 1121, NULL, NULL, NULL),
+(1794, 8161, 'send Mail', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1121, NULL, NULL, NULL),
+(1795, 8161, 'send Mail', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1121, NULL, NULL, NULL),
+(1796, 8161, 'send Mail', '2015-03-19 21:49:21', 'ready', 'running', 1121, NULL, NULL, NULL),
+(1797, 8161, 'send Mail', '2015-03-19 21:49:21', 'running', 'terminated', 1121, NULL, NULL, NULL),
+(1798, 8162, 'test Act1', '2015-03-19 21:49:21', NULL, 'init', 1121, NULL, NULL, NULL),
+(1799, 8162, 'test Act1', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1121, NULL, NULL, NULL),
+(1800, 8162, 'test Act1', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1121, NULL, NULL, NULL),
+(1801, 8163, 'toggle b', '2015-03-19 21:49:21', NULL, 'init', 1122, NULL, NULL, NULL),
+(1802, 8163, 'toggle b', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1803, 8163, 'toggle b', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1804, 8164, 'start Email', '2015-03-19 21:49:21', NULL, 'init', 1122, NULL, NULL, NULL),
+(1805, 8164, 'start Email', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1806, 8164, 'start Email', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1807, 8165, 'startAct2', '2015-03-19 21:49:21', NULL, 'init', 1122, NULL, NULL, NULL),
+(1808, 8165, 'startAct2', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1809, 8165, 'startAct2', '2015-03-19 21:49:21', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1810, 8166, 'startAct', '2015-03-19 21:49:21', NULL, 'init', 1122, NULL, NULL, NULL),
+(1811, 8166, 'startAct', '2015-03-19 21:49:21', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1812, 8166, 'startAct', '2015-03-19 21:49:22', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1813, 8164, 'start Email', '2015-03-19 21:49:22', 'ready', 'running', 1122, NULL, NULL, NULL),
+(1814, 8164, 'start Email', '2015-03-19 21:49:22', 'running', 'terminated', 1122, NULL, NULL, NULL),
+(1815, 8168, 'andere', '2015-03-19 21:49:22', NULL, 'init', 1122, NULL, NULL, NULL),
+(1816, 8168, 'andere', '2015-03-19 21:49:22', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1817, 8168, 'andere', '2015-03-19 21:49:22', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1818, 8169, 'email', '2015-03-19 21:49:22', NULL, 'init', 1122, NULL, NULL, NULL),
+(1819, 8169, 'email', '2015-03-19 21:49:22', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1820, 8169, 'email', '2015-03-19 21:49:22', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1821, 8163, 'toggle b', '2015-03-19 21:49:22', 'ready', 'running', 1122, NULL, NULL, NULL),
+(1822, 8163, 'toggle b', '2015-03-19 21:49:22', 'running', 'terminated', 1122, NULL, NULL, NULL),
+(1823, 8170, 'toggle b', '2015-03-19 21:49:22', NULL, 'init', 1122, NULL, NULL, NULL),
+(1824, 8170, 'toggle b', '2015-03-19 21:49:22', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1825, 8169, 'email', '2015-03-19 21:49:22', 'ready', 'running', 1122, NULL, NULL, NULL),
+(1826, 8168, 'andere', '2015-03-19 21:49:22', 'ready', 'skipped', 1122, NULL, NULL, NULL),
+(1827, 8169, 'email', '2015-03-19 21:49:22', 'running', 'terminated', 1122, NULL, NULL, NULL),
+(1828, 8172, 'start Email', '2015-03-19 21:49:22', NULL, 'init', 1122, NULL, NULL, NULL),
+(1829, 8172, 'start Email', '2015-03-19 21:49:22', 'init', 'ready(ControlFlow)', 1122, NULL, NULL, NULL),
+(1830, 8172, 'start Email', '2015-03-19 21:49:22', 'ready(ControlFlow)', 'ready', 1122, NULL, NULL, NULL),
+(1831, 8173, 'start', '2015-03-19 21:49:23', NULL, 'init', 1123, NULL, NULL, NULL),
+(1832, 8173, 'start', '2015-03-19 21:49:23', 'init', 'ready(ControlFlow)', 1123, NULL, NULL, NULL),
+(1833, 8173, 'start', '2015-03-19 21:49:23', 'ready(ControlFlow)', 'ready', 1123, NULL, NULL, NULL),
+(1834, 8173, 'start', '2015-03-19 21:49:23', 'ready', 'running', 1123, NULL, NULL, NULL),
+(1835, 8173, 'start', '2015-03-19 21:49:23', 'running', 'terminated', 1123, NULL, NULL, NULL),
+(1836, 8175, 'blub', '2015-03-19 21:49:23', NULL, 'init', 1123, NULL, NULL, NULL),
+(1837, 8175, 'blub', '2015-03-19 21:49:23', 'init', 'ready(ControlFlow)', 1123, NULL, NULL, NULL),
+(1838, 8175, 'blub', '2015-03-19 21:49:23', 'ready(ControlFlow)', 'ready', 1123, NULL, NULL, NULL),
+(1839, 8177, 'send Mail', '2015-03-19 21:49:23', NULL, 'init', 1123, NULL, NULL, NULL),
+(1840, 8177, 'send Mail', '2015-03-19 21:49:23', 'init', 'ready(ControlFlow)', 1123, NULL, NULL, NULL),
+(1841, 8177, 'send Mail', '2015-03-19 21:49:23', 'ready(ControlFlow)', 'ready', 1123, NULL, NULL, NULL),
+(1842, 8178, 'testact1', '2015-03-19 21:49:23', NULL, 'init', 1123, NULL, NULL, NULL),
+(1843, 8178, 'testact1', '2015-03-19 21:49:23', 'init', 'ready(ControlFlow)', 1123, NULL, NULL, NULL),
+(1844, 8178, 'testact1', '2015-03-19 21:49:23', 'ready(ControlFlow)', 'ready', 1123, NULL, NULL, NULL),
+(1845, 8177, 'send Mail', '2015-03-19 21:49:23', 'ready', 'running', 1123, NULL, NULL, NULL),
+(1846, 8175, 'blub', '2015-03-19 21:49:23', 'ready', 'skipped', 1123, NULL, NULL, NULL),
+(1847, 8177, 'send Mail', '2015-03-19 21:49:23', 'running', 'terminated', 1123, NULL, NULL, NULL),
+(1848, 8178, 'testact1', '2015-03-19 21:49:23', 'ready', 'running', 1123, NULL, NULL, NULL),
+(1849, 8178, 'testact1', '2015-03-19 21:49:23', 'running', 'terminated', 1123, NULL, NULL, NULL),
+(1850, 8181, 'start', '2015-03-19 21:49:23', NULL, 'init', 1123, NULL, NULL, NULL),
+(1851, 8181, 'start', '2015-03-19 21:49:23', 'init', 'ready(ControlFlow)', 1123, NULL, NULL, NULL),
+(1852, 8181, 'start', '2015-03-19 21:49:23', 'ready(ControlFlow)', 'ready', 1123, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -24369,7 +25295,7 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `old_state_name` varchar(200) DEFAULT '',
   `new_state_id` int(11) NOT NULL,
   `new_state_name` varchar(200) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=97 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=133 ;
 
 --
 -- Daten für Tabelle `historydataobjectinstance`
@@ -24410,7 +25336,43 @@ INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `name`, `t
 (93, 1095, 'b', '2015-03-18 13:04:05', 888, 105, '1', 106, 'init'),
 (94, 1098, 'a', '2015-03-18 13:04:34', 889, NULL, '', 107, 'init'),
 (95, 1098, 'b', '2015-03-18 13:04:34', 890, NULL, '', 106, 'init'),
-(96, 1098, 'b', '2015-03-18 13:04:35', 890, 106, 'init', 105, '1');
+(96, 1098, 'b', '2015-03-18 13:04:35', 890, 106, 'init', 105, '1'),
+(97, 1100, 'object1', '2015-03-19 21:47:20', 891, NULL, '', 1, 'init'),
+(98, 1100, 'object2', '2015-03-19 21:47:20', 892, NULL, '', 5, 'init'),
+(99, 1103, 'A', '2015-03-19 21:47:21', 893, NULL, '', 12, 'init'),
+(100, 1104, 'a', '2015-03-19 21:47:21', 894, NULL, '', 38, 'init'),
+(101, 1105, 'b', '2015-03-19 21:47:21', 895, NULL, '', 46, 'init'),
+(102, 1106, 'a', '2015-03-19 21:47:21', 896, NULL, '', 48, 'init'),
+(103, 1109, 'a', '2015-03-19 21:47:22', 897, NULL, '', 107, 'init'),
+(104, 1109, 'b', '2015-03-19 21:47:22', 898, NULL, '', 106, 'init'),
+(105, 1110, 'object1', '2015-03-19 21:49:04', 899, NULL, '', 1, 'init'),
+(106, 1110, 'object2', '2015-03-19 21:49:04', 900, NULL, '', 5, 'init'),
+(107, 1110, 'object1', '2015-03-19 21:49:04', 899, 1, 'init', 2, 'bearbeitet'),
+(108, 1110, 'object2', '2015-03-19 21:49:04', 900, 5, 'init', 6, 'fertig'),
+(109, 1110, 'object1', '2015-03-19 21:49:05', 899, 2, 'bearbeitet', 3, 'gepr?ft'),
+(110, 1110, 'object1', '2015-03-19 21:49:05', 899, 3, 'gepr?ft', 4, 'abgeschlossen'),
+(111, 1113, 'A', '2015-03-19 21:49:07', 901, NULL, '', 12, 'init'),
+(112, 1113, 'A', '2015-03-19 21:49:07', 901, 12, 'init', 13, 'a'),
+(113, 1113, 'A', '2015-03-19 21:49:07', 901, 13, 'a', 14, 'b'),
+(114, 1113, 'A', '2015-03-19 21:49:07', 901, 14, 'b', 12, 'init'),
+(115, 1113, 'A', '2015-03-19 21:49:07', 901, 12, 'init', 13, 'a'),
+(116, 1113, 'A', '2015-03-19 21:49:07', 901, 13, 'a', 15, 'c'),
+(117, 1114, 'a', '2015-03-19 21:49:07', 902, NULL, '', 38, 'init'),
+(118, 1114, 'a', '2015-03-19 21:49:08', 902, 38, 'init', 39, 'bereit'),
+(119, 1114, 'a', '2015-03-19 21:49:08', 902, 39, 'bereit', 37, 'fertig'),
+(120, 1115, 'b', '2015-03-19 21:49:08', 903, NULL, '', 46, 'init'),
+(121, 1115, 'b', '2015-03-19 21:49:08', 903, 46, 'init', 47, 'b'),
+(122, 1116, 'a', '2015-03-19 21:49:08', 904, NULL, '', 48, 'init'),
+(123, 1116, 'a', '2015-03-19 21:49:09', 904, 48, 'init', 49, 'a'),
+(124, 1116, 'a', '2015-03-19 21:49:09', 904, 49, 'a', 48, 'init'),
+(125, 1119, 'a', '2015-03-19 21:49:10', 905, NULL, '', 107, 'init'),
+(126, 1119, 'b', '2015-03-19 21:49:10', 906, NULL, '', 106, 'init'),
+(127, 1119, 'a', '2015-03-19 21:49:11', 905, 107, 'init', 108, '1'),
+(128, 1119, 'b', '2015-03-19 21:49:11', 906, 106, 'init', 105, '1'),
+(129, 1119, 'b', '2015-03-19 21:49:12', 906, 105, '1', 106, 'init'),
+(130, 1122, 'a', '2015-03-19 21:49:21', 907, NULL, '', 107, 'init'),
+(131, 1122, 'b', '2015-03-19 21:49:21', 908, NULL, '', 106, 'init'),
+(132, 1122, 'b', '2015-03-19 21:49:22', 908, 106, 'init', 105, '1');
 
 -- --------------------------------------------------------
 
@@ -24481,6 +25443,25 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `saggregation`
+--
+
+CREATE TABLE IF NOT EXISTS `saggregation` (
+  `dataclass_id1` int(11) NOT NULL,
+  `dataclass_id2` int(11) NOT NULL,
+  `multiplicity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `saggregation`
+--
+
+INSERT INTO `saggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VALUES
+(43, 44, 2147483647);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `scenario`
 --
 
@@ -24540,7 +25521,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1100 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1124 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -25598,7 +26579,31 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 (1096, 'TestEmail2Scenario', 0, 141),
 (1097, 'TestEmail3Scenario', 0, 142),
 (1098, 'TestXOR3Scenario', 0, 145),
-(1099, 'TestSpecialCaseXORScenario', 0, 146);
+(1099, 'TestSpecialCaseXORScenario', 0, 146),
+(1100, 'HELLOWORLD', 0, 1),
+(1101, 'helloWorld2', 0, 2),
+(1102, 'XORTest2Scenario', 0, 144),
+(1103, 'TestScenarioTerminationCondition', 0, 105),
+(1104, 'Test2_2ReferenceTest', 0, 111),
+(1105, 'referencetest3_2', 0, 113),
+(1106, 'RT4Scenario', 0, 114),
+(1107, 'AT3Scenario', 0, 118),
+(1108, 'XORTest2Scenario', 0, 144),
+(1109, 'TestXOR3Scenario', 0, 145),
+(1110, 'HELLOWORLD', 0, 1),
+(1111, 'helloWorld2', 0, 2),
+(1112, 'XORTest2Scenario', 0, 144),
+(1113, 'TestScenarioTerminationCondition', 1, 105),
+(1114, 'Test2_2ReferenceTest', 0, 111),
+(1115, 'referencetest3_2', 0, 113),
+(1116, 'RT4Scenario', 0, 114),
+(1117, 'AT3Scenario', 0, 118),
+(1118, 'XORTest2Scenario', 0, 144),
+(1119, 'TestXOR3Scenario', 0, 145),
+(1120, 'TestEmail2Scenario', 0, 141),
+(1121, 'TestEmail3Scenario', 0, 142),
+(1122, 'TestXOR3Scenario', 0, 145),
+(1123, 'TestSpecialCaseXORScenario', 0, 146);
 
 -- --------------------------------------------------------
 
@@ -25846,16 +26851,10 @@ ALTER TABLE `activitystate`
  ADD PRIMARY KEY (`state`);
 
 --
--- Indexes for table `Aggregation`
+-- Indexes for table `aggregation`
 --
-ALTER TABLE `Aggregation`
+ALTER TABLE `aggregation`
  ADD PRIMARY KEY (`dataclass_id1`,`dataclass_id2`);
-
---
--- Indexes for table `attributeinstance`
---
-ALTER TABLE `attributeinstance`
- ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `configuration`
@@ -26020,6 +27019,12 @@ ALTER TABLE `rolehasright`
  ADD PRIMARY KEY (`role_id`,`right_id`);
 
 --
+-- Indexes for table `saggregation`
+--
+ALTER TABLE `saggregation`
+ ADD PRIMARY KEY (`dataclass_id1`,`dataclass_id2`);
+
+--
 -- Indexes for table `scenario`
 --
 ALTER TABLE `scenario`
@@ -26081,12 +27086,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8018;
---
--- AUTO_INCREMENT for table `attributeinstance`
---
-ALTER TABLE `attributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8182;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -26101,7 +27101,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=490;
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8018;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8182;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -26131,7 +27131,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=891;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=909;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
@@ -26161,12 +27161,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=185;
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4955;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5032;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
 ALTER TABLE `historyactivityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1339;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1853;
 --
 -- AUTO_INCREMENT for table `historycontrolflow`
 --
@@ -26176,7 +27176,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `historydataobjectinstance`
 --
 ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=97;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=133;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -26196,7 +27196,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=151;
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1100;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1124;
 --
 -- AUTO_INCREMENT for table `state`
 --
