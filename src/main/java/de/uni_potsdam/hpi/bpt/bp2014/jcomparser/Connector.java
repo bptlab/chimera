@@ -696,11 +696,31 @@ public class Connector extends DbDataObject {
         dbDataObject.executeUpdateStatement(update);
     }
 
+    /**
+     * Get the version of the domainModel that belongs to the specified scenario.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The version of the domainModel
+     */
     public int getDataModelVersion(int scenarioID) {
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT datamodelversion " +
                 "FROM scenario " +
                 "WHERE id = " + scenarioID;
         return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
+    }
+
+    /**
+     * Get the modelID of the domainModel (from the XML) that belongs to the specified scenario.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The modelID of the domainModel
+     */
+    public long getDataModelID(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelid " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsListLong(select, "datamodelid").get(0);
     }
 }
