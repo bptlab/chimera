@@ -121,4 +121,42 @@ public class DbActivityInstance extends DbObject {
                 "(Select id FROM fragmentinstance WHERE scenarioinstance_id =" + instanceId + ")";
         return this.executeStatementReturnsMapWithMapWithKeys(sql, "id", "type", "activity_state", "label");
     }
+
+    public Map<Integer, Map<String, Object>> getMapForActivityInstancesWithFilterAndState(int instanceID, String filterString, String state) {
+        String sql = "SELECT activityinstance.id AS id, activityinstance.type AS type, activity_state, " +
+                "controlnode.label AS label " +
+                "FROM activityinstance, controlnodeinstance, controlnode " +
+                "WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' " +
+                "AND controlnodeinstance.controlnode_id = controlnode.id " +
+                "AND controlnode.label LIKE '%" + filterString + "%' " +
+                "AND activity_state = '" + state + "'" +
+                "AND fragmentinstance_id IN " +
+                "(Select id FROM fragmentinstance WHERE scenarioinstance_id =" + instanceID + ")";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "id", "type", "activity_state", "label");
+    }
+
+
+    public Map<Integer, Map<String, Object>> getMapForActivityInstancesWithState(int instanceID, String state) {
+        String sql = "SELECT activityinstance.id AS id, activityinstance.type AS type, activity_state, " +
+                "controlnode.label AS label " +
+                "FROM activityinstance, controlnodeinstance, controlnode " +
+                "WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' " +
+                "AND controlnodeinstance.controlnode_id = controlnode.id " +
+                "AND activity_state = '" + state + "'" +
+                "AND fragmentinstance_id IN " +
+                "(Select id FROM fragmentinstance WHERE scenarioinstance_id =" + instanceID + ")";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "id", "type", "activity_state", "label");
+    }
+
+    public Map<Integer, Map<String, Object>> getMapForActivityInstancesWithFilter(int instanceID, String filterString) {
+        String sql = "SELECT activityinstance.id AS id, activityinstance.type AS type, activity_state, " +
+                "controlnode.label AS label " +
+                "FROM activityinstance, controlnodeinstance, controlnode " +
+                "WHERE activityinstance.id = controlnodeinstance.id AND controlnodeinstance.Type = 'Activity' " +
+                "AND controlnodeinstance.controlnode_id = controlnode.id " +
+                "AND controlnode.label LIKE '%" + filterString + "%' " +
+                "AND fragmentinstance_id IN " +
+                "(Select id FROM fragmentinstance WHERE scenarioinstance_id =" + instanceID + ")";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "id", "type", "activity_state", "label");
+    }
 }
