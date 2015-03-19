@@ -48,4 +48,10 @@ public class TaskExecutionBehavior {
      */
     public void execute() {
     }
+
+    protected void setCanTerminate(boolean canTerminate){
+        ((ActivityInstance)controlNodeInstance).setCanTerminate(canTerminate);
+    }
+
+
 }

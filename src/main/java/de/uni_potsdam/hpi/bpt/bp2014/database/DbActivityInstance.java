@@ -110,4 +110,20 @@ public class DbActivityInstance extends DbObject {
         this.executeUpdateStatement(sql);
     }
 
+    public boolean getCanTerminate(int id){
+        String sql = "SELECT canTerminate FROM activityinstance WHERE id = " + id;
+        return this.executeStatementReturnsBoolean(sql, "canTerminate");
+    }
+
+    public void setCanTerminate(int id, boolean canTerminate) {
+        int canTerminateAsInt;
+        if (canTerminate) {
+            canTerminateAsInt = 1;
+        } else {
+            canTerminateAsInt = 0;
+        }
+        String sql = "UPDATE activityinstance SET canTerminate = " + canTerminateAsInt + " WHERE id = " + id;
+        this.executeUpdateStatement(sql);
+    }
+
 }

@@ -30,4 +30,12 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
 
+    @Override
+    public void execute() {
+        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+    }
+
+    //TODO: dataAttributes
+
+
 }
