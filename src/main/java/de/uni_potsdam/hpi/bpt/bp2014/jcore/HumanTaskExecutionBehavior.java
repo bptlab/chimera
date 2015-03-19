@@ -50,7 +50,8 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 
     @Override
     public void setDataAttributeValues(Map<Integer, String> values){
-
+        //diese Methode wird von der REST aufgerufen. Man bekommt eine Map
+        //Key ist die ID der daten attribute instance und die value ist die value des daten attributes
     }
     public void setValue(int dataAttribute_id, Object value){
         DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(dataAttribute_id);

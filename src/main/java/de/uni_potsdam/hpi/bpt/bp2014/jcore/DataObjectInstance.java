@@ -65,6 +65,12 @@ public class DataObjectInstance {
             state_id = dbDataObject.getStartStateID(dataObject_id);
             this.dataObjectInstance_id = dbDataObjectInstance.createNewDataObjectInstance(scenarioInstance_id, state_id, dataObject_id);
         }
+        this.initializeAttributes();
+    }
+
+    private void initializeAttributes(){
+        //TODO: init attributes
+        // hinzufügen zu Map des Scenarios
     }
 
     /**

@@ -36,4 +36,18 @@ public class DataAttributeInstance {
     //um die Änderung in die Datenbank zu speichern
 
 
+    //Getter
+
+
+    public String getType() {
+        return type;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public int getDataAttributeInstance_id() {
+        return dataAttributeInstance_id;
+    }
 }
