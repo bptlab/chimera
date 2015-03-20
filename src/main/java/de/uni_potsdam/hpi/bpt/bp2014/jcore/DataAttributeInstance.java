@@ -25,9 +25,9 @@ public class DataAttributeInstance {
             this.dataAttributeInstance_id = dbDataAttributeInstance.getDataAttributeInstanceID(dataAttribute_id, dataObjectInstance_id);
         } else {
             //creates a new Attribute Instance also in database
-            this.dataAttributeInstance_id = dbDataAttributeInstance.createNewDataAttributeInstance(dataAttribute_id, "", dataObjectInstance_id);
+            this.dataAttributeInstance_id = dbDataAttributeInstance.createNewDataAttributeInstance(dataAttribute_id, dataObjectInstance_id);
         }
-        this.value = dbDataAttributeInstance.getValue(dataObjectInstance_id);
+        this.value = dbDataAttributeInstance.getValue(dataAttributeInstance_id);
     }
 
     //TODO: dataAttributes

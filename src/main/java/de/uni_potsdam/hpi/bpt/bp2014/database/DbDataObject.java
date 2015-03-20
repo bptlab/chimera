@@ -60,4 +60,9 @@ public class DbDataObject extends DbObject {
         String sql = "SELECT name FROM dataobject WHERE id = " + dataObject_id;
         return this.executeStatementReturnsString(sql, "name");
     }
+
+    public LinkedList<Integer> getAllDataAttributesForDataObject(int dataObject_id){
+        String sql = "SELECT dataattribute.id AS id FROM `dataobject`, `dataclass`, `dataattribute` WHERE dataobject.dataclass_id = dataclass.id AND dataclass.id = dataattribute.dataclass_id AND dataobject.id = " + dataObject_id;
+        return this.executeStatementReturnsListInt(sql, "id");
+    }
 }
