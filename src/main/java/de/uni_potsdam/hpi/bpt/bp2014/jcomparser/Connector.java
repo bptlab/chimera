@@ -678,7 +678,7 @@ public class Connector extends DbDataObject {
         String select = "SELECT id, name " +
                 "FROM dataattribute " +
                 "WHERE dataclass_id = " + dataClassID;
-        return dbDataObject.executeStatementReturnsHashMap(select, "id", "name");
+        return dbDataObject.executeStatementReturnsMap(select, "id", "name");
 
     }
 
