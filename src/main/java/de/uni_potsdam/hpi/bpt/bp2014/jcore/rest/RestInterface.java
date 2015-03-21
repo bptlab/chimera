@@ -595,7 +595,7 @@ public class RestInterface {
         LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(instanceID);
         HashMap<Integer, String> states = executionService.getAllDataObjectStates(instanceID);
         HashMap<Integer, String> labels = executionService.getAllDataObjectNames(instanceID);
-        if (filterString != null || !filterString.isEmpty()) {
+        if (filterString != null && !filterString.isEmpty()) {
             for (Map.Entry<Integer, String> labelEntry : labels.entrySet()) {
                 if (!labelEntry.getValue().contains(filterString)) {
                     dataObjects.remove(labelEntry.getKey());
