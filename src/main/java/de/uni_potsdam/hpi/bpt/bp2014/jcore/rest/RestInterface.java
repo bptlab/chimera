@@ -13,12 +13,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import static de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil.JsonWrapperLinkedList;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -300,6 +302,7 @@ public class RestInterface {
     }
 
     // TODO: Change the state of an instance via POST
+
     /**
      * This method provides detailed information about a scenario instance.
      * The information will contain the id, name, parent scenario and the
@@ -326,10 +329,10 @@ public class RestInterface {
         ExecutionService executionService = new ExecutionService();
         DbScenarioInstance instance = new DbScenarioInstance();
         if (!executionService.existScenarioInstance(instanceID)) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"message\":\"There is no instance with the id " + instanceID + "\"}")
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"message\":\"There is no instance with the id " + instanceID + "\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
         } else if (!executionService.existScenario(scenarioID)) {
             scenarioID = instance.getScenarioID(instanceID);
             try {
@@ -342,7 +345,7 @@ public class RestInterface {
         }
         return Response
                 .ok((new JSONObject(instance.getInstanceMap(instanceID))).toString(),
-                    MediaType.APPLICATION_JSON)
+                        MediaType.APPLICATION_JSON)
                 .build();
     }
 
@@ -373,7 +376,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString,
-            @QueryParam("state") String state) {
+            @QueryParam("status") String state) {
         ExecutionService executionService = new ExecutionService();
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -389,8 +392,113 @@ public class RestInterface {
                 e.printStackTrace();
             }
         }
+        if ((filterString == null || filterString.isEmpty()) && (state == null || state.isEmpty())) {
+            return getAllActivitiesOfInstance(instanceID);
+        } else if ((filterString == null || filterString.isEmpty())) {
+            return getAllActivitiesOfInstanceWithState(instanceID, state);
+        } else if ((state == null || state.isEmpty())) {
+            return getAllActivitiesOfInstanceWithFilter(instanceID, filterString);
+        } else {
+            return getAllActivitiesWithFilterAndState(instanceID, filterString, state);
+        }
+    }
+
+    /**
+     * Returns a Response object.
+     * The Object will be either a 200 with the activities in an JSON-Object
+     * or an 400 with an error message if the state is invalid
+     *
+     * @param instanceID   The id of the scenario instance
+     * @param filterString the filter string to be applied
+     * @param state        the state of the activity
+     * @return The Response object as described above.
+     */
+    private Response getAllActivitiesWithFilterAndState(int instanceID, String filterString, String state) {
+        String states[] = {"enabled", "terminated"};
+        if ((new LinkedList<>(Arrays.asList(states))).contains(state)) {
+            DbActivityInstance activityInstance = new DbActivityInstance();
+            Map<Integer, Map<String, Object>> instances =
+                    activityInstance.getMapForActivityInstancesWithFilterAndState(instanceID, filterString, state);
+            JSONObject result = buildJSONObjectForActivities(instances);
+            return Response
+                    .ok(result.toString(), MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"error\":\"The state is not allowed " + state + " \"}")
+                .build();
+    }
+
+    /**
+     * Returns a Response Object.
+     * The Response Object will be a 200 with JSON content.
+     * The Content will be a JSON Object, containing information about activities.
+     * The Label of the activities mus correspond to the filter String and be
+     * part of the scenario instance specified by the instanceID.
+     * @param instanceID The id of the scenario instance.
+     * @param filterString The string which will be the filter condition for the activity ids.
+     * @return The created Response object with a 200 and a JSON.
+     */
+    private Response getAllActivitiesOfInstanceWithFilter(int instanceID, String filterString) {
         DbActivityInstance activityInstance = new DbActivityInstance();
-        Map <Integer, Map<String, Object>> instances = activityInstance.getMapForAllActivityInstances(instanceID);
+        Map<Integer, Map<String, Object>> instances;
+        instances = activityInstance.getMapForActivityInstancesWithFilter(instanceID, filterString);
+        JSONObject result = buildJSONObjectForActivities(instances);
+        return Response
+                .ok(result.toString(), MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    private Response getAllActivitiesOfInstanceWithState(int instanceID, String state) {
+        String states[] = {"enabled", "terminated"};
+        if ((new LinkedList<>(Arrays.asList(states))).contains(state)) {
+            DbActivityInstance activityInstance = new DbActivityInstance();
+            Map<Integer, Map<String, Object>> instances;
+            instances = activityInstance.getMapForActivityInstancesWithState(instanceID, state);
+            JSONObject result = buildJSONObjectForActivities(instances);
+            return Response
+                    .ok(result.toString(), MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"error\":\"The state is not allowed " + state + " \"}")
+                .build();
+    }
+
+    /**
+     * Builds a JSON Object for a Map with data
+     * corresponding to a set of activities.
+     *
+     * @param instances The Map containing information about the activity instances.
+     *                  We Assume that the key is a the id and the value is a Map
+     *                  from String to Object with the properties of the instance.
+     * @return The newly created JSON Object with the activity data.
+     */
+    private JSONObject buildJSONObjectForActivities(Map<Integer, Map<String, Object>> instances) {
+        JSONObject result = new JSONObject();
+        result.put("ids", instances.keySet());
+        JSONArray activities = new JSONArray();
+        for (Map<String, Object> value : instances.values()) {
+            activities.put(new JSONObject(value));
+        }
+        result.put("activities", activities);
+        return result;
+    }
+
+    /**
+     * Returns a Response Object for all activities with the instance Id.
+     * We assume that the instanceId is correct.
+     * The Response will be a 200 with json content.
+     * The Content will be a json object with information about each activity.
+     *
+     * @param instanceID the instance id of the scenario instance.
+     * @return The Response Object, with 200 and JSON Content.
+     */
+    private Response getAllActivitiesOfInstance(int instanceID) {
+        DbActivityInstance activityInstance = new DbActivityInstance();
+        Map<Integer, Map<String, Object>> instances = activityInstance.getMapForAllActivityInstances(instanceID);
         JSONObject result = new JSONObject();
         result.put("ids", instances.keySet());
         JSONArray activities = new JSONArray();
@@ -404,30 +512,6 @@ public class RestInterface {
     }
 
     /**
-     * This method provides detailed information about one activity Instance.
-     * The Response will contain a JSON-Object with all necessary Information.
-     * This Information include the instance id, the label, type and state.
-     * An Activity instance is defined by:
-     *
-     * @param scenarioID The ID of a scenario model.
-     * @param instanceID The ID of a scenario instance.
-     * @param activityID The ID of the control node, which represents the activity.
-     * @return A Response Object, if the defined activity does exist a 200 (OK) with
-     * JSON-Object as content will be returned.
-     * Else a 404 (NOT_FOUND) will be returned, with a more detailed Error-
-     * Message.
-     */
-    @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getActivityInstance(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int instanceID,
-            @PathParam("activityID") int activityID) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
-
-    /**
      * Updates the state of an activity instance.
      * The state will be changed to the specified one.
      * The activity Instance is specified by:
@@ -435,7 +519,7 @@ public class RestInterface {
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @param status             the new status of the activity.
+     * @param state             the new status of the activity.
      * @return Returns a Response, the response code implies the
      * outcome of the POST-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
@@ -446,8 +530,25 @@ public class RestInterface {
     public Response updateActivityStatus(@PathParam("scenarioID") String scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID,
-                                         @QueryParam("status") String status) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+                                         @QueryParam("status") String state) {
+//        String states[] = {"enabled", "terminated"};
+//        ExecutionService executionService = new ExecutionService();
+//        executionService.
+//        Map<Integer, Map<String, Object>> activityInstanceMaps;
+//        DbActivityInstance activityInstance = new DbActivityInstance();
+//        activityInstance.
+//        if (state == null) {
+//            activityInstanceMaps = activityInstance.getActivitiesForId(scenarioInstanceID, activityID);
+//        }
+//        if (!(new LinkedList<>(Arrays.asList(states))).contains(state)) {
+//            return Response.status(Response.Status.NOT_FOUND)
+//                    .type(MediaType.APPLICATION_JSON)
+//                    .entity("{\"error\":\"The state is not allowed " + state + " \"}")
+//                    .build();
+//        }
+//        activityInstance.getActivitiesForIdAndState(scenarioInstanceID, activityID, state);
+        return Response.status(Response.Status.NOT_IMPLEMENTED)
+                .build();
     }
 
     /**
@@ -460,8 +561,6 @@ public class RestInterface {
      * @param filterString A String which specifies a filter. Only Data
      *                     Objects with a label containing this string
      *                     will be returned.
-     * @param orderBy      The results will be ordered, the default is the id,
-     *                     you may change it to label.
      * @return A Response with the outcome of the GET-Request. The Response
      * will be a 200 (OK) if the specified instance was found. Hence
      * the JSON-Object will be returned.
@@ -474,9 +573,39 @@ public class RestInterface {
     public Response getDataObjects(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
-            @QueryParam("filter") @DefaultValue("") String filterString,
-            @QueryParam("order") @DefaultValue("id") String orderBy) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+            @QueryParam("filter") String filterString) {
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.existScenarioInstance(instanceID)) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no instance with the id " + instanceID + "\"}")
+                    .build();
+        } else if (!executionService.existScenario(scenarioID)) {
+            try {
+                return Response.seeOther(new URI("v2/scenario/" +
+                        executionService.getScenarioIDForScenarioInstance(instanceID) +
+                        "/instance/" + instanceID + "/dataobject")).build();
+            } catch (URISyntaxException e) {
+                return Response.serverError().build();
+            }
+        }
+
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
+        // TODO: Change in order to get real objects
+        LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(instanceID);
+        HashMap<Integer, String> states = executionService.getAllDataObjectStates(instanceID);
+        HashMap<Integer, String> labels = executionService.getAllDataObjectNames(instanceID);
+        if (filterString != null || !filterString.isEmpty()) {
+            for (Map.Entry<Integer, String> labelEntry : labels.entrySet()) {
+                if (!labelEntry.getValue().contains(filterString)) {
+                    dataObjects.remove(labelEntry.getKey());
+                    states.remove(labelEntry.getKey());
+                    labels.remove(labelEntry.getKey());
+                }
+            }
+        }
+        String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
 

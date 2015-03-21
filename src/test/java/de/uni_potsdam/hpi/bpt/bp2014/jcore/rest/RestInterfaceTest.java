@@ -4,7 +4,6 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import net.javacrumbs.jsonunit.core.Option;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
 import org.junit.AfterClass;
@@ -495,4 +494,79 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+    /**
+     * WHen you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * with a correct instance id and a wrong scenario ID
+     * you will be redirected automatically.
+     */
+    @Test
+    public void testGetDataObjectsRedirects() {
+        Response response = base.path("scenario/9999/instance/72/dataobject").request().get();
+        assertEquals("The Response code of getDataObjects was not 200",
+                200, response.getStatus());
+        assertEquals("getDataObjects returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"states\":{\"1\":\"init\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * WHen you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * with an invalid instance
+     * an 404 with error message will be returned
+     */
+    @Test
+    public void testGetDataObjectsInvalid() {
+        Response response = base.path("scenario/9999/instance/9999/dataobject").request().get();
+        assertEquals("The Response code of getDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getDataObjects returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"There is no instance with the id 9999\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * with an valid instance and scenario and no filter String
+     * you will get a list of all DataObjects for this scenario.
+     */
+    @Test
+    public void testGetDataObjectsWOFilter() {
+        Response response = base.path("scenario/1/instance/62/dataobject").request().get();
+        assertEquals("The Response code of getDataObjects was not 200",
+                200, response.getStatus());
+        assertEquals("getDataObjects returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"states\":{\"1\":\"init\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * with an valid instance and scenario and an filter String
+     * you will get a list of all DataObjects with labels like the filter String for this scenario.
+     */
+    @Test
+    public void testGetDataObjectsWithFilter() {
+        Response response = base.path("scenario/1/instance/62/dataobject")
+                .queryParam("filter", "1").request().get();
+        assertEquals("The Response code of getDataObjects was not 200",
+                200, response.getStatus());
+        assertEquals("getDataObjects returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"states\":{\"1\":\"init\"},\"ids\":[1],\"label\":{\"1\":\"object1\"}}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
 }
