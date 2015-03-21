@@ -207,6 +207,56 @@ public class DbObject {
     }
 
     /**
+     * Executes the given select SQL statement and returns the result as Obejct.
+     *
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return Object.
+     */
+    public Object executeStatementReturnsObject(String sql, String columnLabel) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Object results = -1;
+        if (conn == null) {
+            return results;
+        }
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                results = rs.getObject(columnLabel);
+            }
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+
+    /**
      * Executes the given select SQL statement and returns the result as boolean.
      *
      * @param sql         This is a given select SQL Statement.
