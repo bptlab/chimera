@@ -531,24 +531,35 @@ public class RestInterface {
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID,
                                          @QueryParam("status") String state) {
-//        String states[] = {"enabled", "terminated"};
-//        ExecutionService executionService = new ExecutionService();
-//        executionService.
-//        Map<Integer, Map<String, Object>> activityInstanceMaps;
-//        DbActivityInstance activityInstance = new DbActivityInstance();
-//        activityInstance.
-//        if (state == null) {
-//            activityInstanceMaps = activityInstance.getActivitiesForId(scenarioInstanceID, activityID);
-//        }
-//        if (!(new LinkedList<>(Arrays.asList(states))).contains(state)) {
-//            return Response.status(Response.Status.NOT_FOUND)
-//                    .type(MediaType.APPLICATION_JSON)
-//                    .entity("{\"error\":\"The state is not allowed " + state + " \"}")
-//                    .build();
-//        }
-//        activityInstance.getActivitiesForIdAndState(scenarioInstanceID, activityID, state);
-        return Response.status(Response.Status.NOT_IMPLEMENTED)
-                .build();
+
+        boolean result;
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(new Integer(scenarioID), scenarioInstanceID);
+        switch (state) {
+            case "begin":
+                result = executionService.beginActivity(scenarioInstanceID, activityID);
+                break;
+            case "terminate":
+                result = executionService.terminateActivity(scenarioInstanceID, activityID);
+                break;
+            default:
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .type(MediaType.APPLICATION_JSON)
+                        .entity("{\"error\":\"The state transition " + state +  "is unknown\"}")
+                        .build();
+        }
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"activity state changed.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"impsossible to " + (state.equals("begin") ? "start" : "terminate") +
+                            "activity with id" + activityID + "\"}")
+                    .build();
+        }
     }
 
     /**
@@ -633,7 +644,37 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @PathParam("dataObjectID") int dataObjectID) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.existScenarioInstance(instanceID)) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no instance with the id " + instanceID + "\"}")
+                    .build();
+        } else if (!executionService.existScenario(scenarioID)) {
+            try {
+                return Response.seeOther(new URI("v2/scenario/" +
+                        executionService.getScenarioIDForScenarioInstance(instanceID) +
+                        "/instance/" + instanceID + "/dataobject/" + dataObjectID)).build();
+            } catch (URISyntaxException e) {
+                return Response.serverError().build();
+            }
+        }
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
+        LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(instanceID);
+        HashMap<Integer, String> states = executionService.getAllDataObjectStates(instanceID);
+        HashMap<Integer, String> labels = executionService.getAllDataObjectNames(instanceID);
+        if (!dataObjects.contains(new Integer(dataObjectID))) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no dataobject with the id " + dataObjectID +
+                            " for the scenario instance " + instanceID + "\"}")
+                    .build();
+        }
+        DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        dataObject.id = dataObjectID;
+        dataObject.label = labels.get(new Integer(dataObjectID));
+        dataObject.state = states.get(new Integer(dataObjectID));
+        return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -695,5 +736,29 @@ public class RestInterface {
          * The name which should be assigned to the entity.
          */
         public String name;
+    }
+
+    /**
+     * A JAX bean which is used for dataobject data.
+     * It contains the data of one dataobject.
+     * It can be used to create a JSON Object
+     */
+    @XmlRootElement
+    public static class DataObjectJaxBean {
+        /**
+         * The label of the data object.
+         */
+        public String label;
+        /**
+         * The id the dataobject (not the instance) has inside
+         * the database
+         */
+        public int id;
+        /**
+         * The state inside the database of the dataobject
+         * which is stored in the table.
+         * The label not the id will be holded.
+         */
+        public String state;
     }
 }
