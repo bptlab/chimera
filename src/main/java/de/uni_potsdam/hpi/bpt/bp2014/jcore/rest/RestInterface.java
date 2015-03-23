@@ -215,19 +215,11 @@ public class RestInterface {
             @PathParam("instanceID") int instanceID) {
         ExecutionService executionService = new ExecutionService();
         if (executionService.existScenario(scenarioID)) {
-            foo =  executionService.terminateScenarioInstance(instanceID);
-            if (foo) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"success\":\"1\"}")
+            executionService.terminateScenarioInstance(instanceID);
+            return Response.status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON)
+                    .entity("")
                     .build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"Could not terminate provided Scenario Instance\"}")
-                    .build();
-            }
-            
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
