@@ -61,7 +61,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     @Before
     public void setUpBase() {
-        base = target("v2/");
+        base = target("v2/interface");
     }
 
     /**
@@ -508,7 +508,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"states\":{\"1\":\"init\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}",
+                "{\"ids\":[1,2],\"results\":{\"1\":{\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -545,7 +545,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"states\":{\"1\":\"init\",\"2\":\"init\"},\"ids\":[1,2],\"label\":{\"1\":\"object1\",\"2\":\"object2\"}}",
+                "{\"ids\":[1,2],\"results\":{\"1\":{\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -564,7 +564,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"states\":{\"1\":\"init\"},\"ids\":[1],\"label\":{\"1\":\"object1\"}}",
+                "{\"ids\":[1],\"results\":{\"1\":{\"id\":1,\"label\":\"object1\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }

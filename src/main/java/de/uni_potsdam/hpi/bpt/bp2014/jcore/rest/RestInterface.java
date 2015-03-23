@@ -17,10 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -33,7 +30,7 @@ import java.util.Map;
  * This class will use {@link de.uni_potsdam.hpi.bpt.bp2014.database.Connection}
  * to access the database directly.
  */
-@Path("v2/")
+@Path("v2/interface")
 public class RestInterface {
 
 
@@ -125,7 +122,6 @@ public class RestInterface {
                 .entity(new JSONObject(data).toString())
                 .build();
     }
-    //TODO: Write a POST to change the name of an scenario
 
     /**
      * This method provides information about all email Tasks inside
@@ -207,7 +203,6 @@ public class RestInterface {
      * @return A JSON-Object with an array of information about all instances of
      * one specified scenario. The information contains the id and name.
      */
-    // TODO: Return the instance
     @GET
     @Path("scenario/{scenarioID}/instance")
     @Produces(MediaType.APPLICATION_JSON)
@@ -337,7 +332,7 @@ public class RestInterface {
             scenarioID = instance.getScenarioID(instanceID);
             try {
                 return Response
-                        .seeOther(new URI("v2/scenario/" + scenarioID + "/instance/" + instanceID))
+                        .seeOther(new URI("v2/interface/scenario/" + scenarioID + "/instance/" + instanceID))
                         .build();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
@@ -368,6 +363,7 @@ public class RestInterface {
      * will point to the correct URL.
      * If the instance ID is incorrect a 404 (NOT_FOUND) will
      * be returned.
+     * TODO: Use the ExecutionService instead - be aware that using the E.S. leads to state changes.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity")
@@ -385,7 +381,7 @@ public class RestInterface {
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
-                return Response.seeOther(new URI("v2/scenario/" +
+                return Response.seeOther(new URI("v2/interface/scenario/" +
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/activity")).build();
             } catch (URISyntaxException e) {
@@ -593,7 +589,7 @@ public class RestInterface {
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
-                return Response.seeOther(new URI("v2/scenario/" +
+                return Response.seeOther(new URI("v2/interface/scenario/" +
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/dataobject")).build();
             } catch (URISyntaxException e) {
@@ -602,7 +598,6 @@ public class RestInterface {
         }
 
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
-        // TODO: Change in order to get real objects
         LinkedList<Integer> dataObjects = executionService.getAllDataObjectIDs(instanceID);
         HashMap<Integer, String> states = executionService.getAllDataObjectStates(instanceID);
         HashMap<Integer, String> labels = executionService.getAllDataObjectNames(instanceID);
@@ -615,8 +610,9 @@ public class RestInterface {
                 }
             }
         }
-        String jsonRepresentation = JsonUtil.JsonWrapperMultipleHashMap(dataObjects, labels, states);
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        JSONObject result = buildListForDataObjects(dataObjects, states, labels);
+        return Response.ok(result.toString(),
+                MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -652,7 +648,7 @@ public class RestInterface {
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
-                return Response.seeOther(new URI("v2/scenario/" +
+                return Response.seeOther(new URI("v2/interface/scenario/" +
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/dataobject/" + dataObjectID)).build();
             } catch (URISyntaxException e) {
@@ -681,6 +677,37 @@ public class RestInterface {
     /*
      * Helper
      */
+
+
+    /**
+     * Creates an array of DataObjects.
+     * The data objects will be created out of the information received from the execution Service.
+     * The array elements will be of type {@link RestInterface.DataObjectJaxBean), hence JSON and
+     * XML can be generated automatically.
+     *
+     * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
+     * @param states The states, mapped from dataobject database id to state (String)
+     * @param labels The labels, mapped from dataobject database id to label (String)
+     * @return A array with a DataObject for each entry in dataObjectIds
+     */
+    private JSONObject buildListForDataObjects(
+            LinkedList<Integer> dataObjectIds,
+            HashMap<Integer, String> states,
+            HashMap<Integer, String> labels) {
+        JSONObject result = new JSONObject();
+        result.put("ids", dataObjectIds);
+        JSONObject results = new JSONObject();
+        for (int i = 0; i < dataObjectIds.size(); i++) {
+            Integer id = dataObjectIds.get(i);
+            JSONObject dataObject = new JSONObject();
+            dataObject.put("id", id);
+            dataObject.put("label", labels.get(id));
+            dataObject.put("state", states.get(id));
+            results.put("" + id, dataObject);
+        }
+        result.put("results", results);
+        return result;
+    }
 
     /**
      * Creates a JSON object from an HashMap.
