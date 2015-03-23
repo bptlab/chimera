@@ -61,7 +61,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     @Before
     public void setUpBase() {
-        base = target("v2/interface");
+        base = target("interface/v2");
     }
 
     /**
