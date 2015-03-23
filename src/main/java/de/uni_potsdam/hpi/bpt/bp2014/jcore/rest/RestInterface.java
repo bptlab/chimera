@@ -138,6 +138,29 @@ public class RestInterface {
     }
 
     /**
+     * This method provides information about the termination condition.
+     * Of the specified Scenario.
+     * The termination condition is a set of sets of conditions.
+     * Only if all conditions of one set are true the scenario will
+     * terminate.
+     * If the scenario does not exists a 404 with an error will be returned.
+     * If the scenario exists the JSON representation of the condition set
+     * will be returned.
+     *
+     * @param scenarioID This id specifies the scenario. The id is the
+     *                   primary key inside the database.
+     * @return Returns a response object. It will either  be a 200 or
+     * 404. The content will be either the JSON representation of the termination
+     * condition or an JSON object with the error message.
+     */
+    @GET
+    @Path("scenario/{scenarioId}/terminationCondition")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTerminationCondition(@PathParam("scenarioId") int scenarioID) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+    /**
      * Creates a new instance of a specified scenario.
      * This method assumes that the name of then new instance will be the same
      * as the name of the scenario.
