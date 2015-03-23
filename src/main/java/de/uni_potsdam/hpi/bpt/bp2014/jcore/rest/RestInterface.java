@@ -30,7 +30,7 @@ import java.util.*;
  * This class will use {@link de.uni_potsdam.hpi.bpt.bp2014.database.Connection}
  * to access the database directly.
  */
-@Path("v2/interface")
+@Path("interface/v2")
 public class RestInterface {
 
 
@@ -332,7 +332,7 @@ public class RestInterface {
             scenarioID = instance.getScenarioID(instanceID);
             try {
                 return Response
-                        .seeOther(new URI("v2/interface/scenario/" + scenarioID + "/instance/" + instanceID))
+                        .seeOther(new URI("interface/v2/scenario/" + scenarioID + "/instance/" + instanceID))
                         .build();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
@@ -381,7 +381,7 @@ public class RestInterface {
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
-                return Response.seeOther(new URI("v2/interface/scenario/" +
+                return Response.seeOther(new URI("interface/v2/scenario/" +
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/activity")).build();
             } catch (URISyntaxException e) {
@@ -589,7 +589,7 @@ public class RestInterface {
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
-                return Response.seeOther(new URI("v2/interface/scenario/" +
+                return Response.seeOther(new URI("interface/v2/scenario/" +
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/dataobject")).build();
             } catch (URISyntaxException e) {
@@ -648,7 +648,7 @@ public class RestInterface {
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
-                return Response.seeOther(new URI("v2/interface/scenario/" +
+                return Response.seeOther(new URI("interface/v2/scenario/" +
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/dataobject/" + dataObjectID)).build();
             } catch (URISyntaxException e) {
