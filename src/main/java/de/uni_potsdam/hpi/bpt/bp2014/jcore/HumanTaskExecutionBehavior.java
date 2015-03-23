@@ -53,8 +53,8 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         //diese Methode wird von der REST aufgerufen. Man bekommt eine Map
         //Key ist die ID der daten attribute instance und die value ist die value des daten attributes
     }
-    public void setValue(int dataAttribute_id, Object value){
-        DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(dataAttribute_id);
+    public void setValue(int dataAttributeInstance_id, Object value){
+        DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(dataAttributeInstance_id);
         //nun kann auf das daten attribute zugegriffen werden ;)
     }
 

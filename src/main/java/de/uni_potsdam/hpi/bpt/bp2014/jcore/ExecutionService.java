@@ -359,4 +359,12 @@ public class ExecutionService {
     public ScenarioInstance getScenarioInstance(int scenarioInstanceID) {
         return sortedScenarioInstances.get(scenarioInstanceID);
     }
+
+    /**
+     * Terminates the given scenario instance.
+     * @param scenarioInstanceID The id of the scenario instance.
+     */
+    public void terminateScenarioInstance(int scenarioInstanceID){
+        dbScenarioInstance.setTerminated(scenarioInstanceID, true);
+    }
 }
