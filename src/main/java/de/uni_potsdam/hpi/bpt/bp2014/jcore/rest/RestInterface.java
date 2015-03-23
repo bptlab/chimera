@@ -296,6 +296,36 @@ public class RestInterface {
         }
     }
 
+    @POST
+    @Path("scenario/{scenarioID}/instance/{instanceID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response terminateScenarioInstance(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("instanceID") int instanceID) {
+        ExecutionService executionService = new ExecutionService();
+        if (executionService.existScenario(scenarioID)) {
+            foo =  executionService.terminateScenarioInstance(instanceID);
+            if (foo) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"success\":\"1\"}")
+                    .build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"Could not terminate provided Scenario Instance\"}")
+                    .build();
+            }
+            
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The Scenario could not be found!\"}")
+                    .build();
+        }
+    }
+
     // TODO: Change the state of an instance via POST
 
     /**
