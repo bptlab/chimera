@@ -161,7 +161,7 @@ public class ActivityInstance extends ControlNodeInstance {
      * sets the dataAttributes for an activity
      */
     public void setDataAttributeValues(Map<Integer, String> values){
-
+        taskExecutionBehavior.setDataAttributeValues(values);
     }
 
     /**
