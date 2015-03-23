@@ -1,11 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
-import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,10 +9,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -157,6 +151,22 @@ public class RestInterface {
     @Path("scenario/{scenarioId}/terminationCondition")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTerminationCondition(@PathParam("scenarioId") int scenarioID) {
+        DbScenario dbScenario = new DbScenario();
+        if (!dbScenario.existScenario(scenarioID)) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no scenario with the id" + scenarioID + "\"}")
+                    .build();
+        }
+        DbTerminationCondition terminationCondition = new DbTerminationCondition();
+        List<Integer> conditionSets = terminationCondition.getConditionsSetIDsForScenario(scenarioID);
+        for (int conditionSetId : conditionSets) {
+            List<Condition> conditions = terminationCondition
+                    .getConditionsForConditionSetAndScenario(scenarioID, conditionSetId);
+            for (Condition condition : conditions) {
+                JSONObject conditionJSON = new JSONObject();
+            }
+        }
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
@@ -240,7 +250,7 @@ public class RestInterface {
         if (executionService.existScenario(scenarioID)) {
             executionService.terminateScenarioInstance(instanceID);
             return Response.status(Response.Status.CREATED)
-                .type(MediaType.APPLICATION_JSON)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity("")
                     .build();
         } else {
@@ -365,7 +375,7 @@ public class RestInterface {
      * @return The Response object as described above.
      */
     private Response getAllActivitiesWithFilterAndState(int instanceID, String filterString, String state) {
-        String states[] = {"enabled", "terminated"};
+        String states[] = {"enabled", "terminated", "running"};
         if ((new LinkedList<>(Arrays.asList(states))).contains(state)) {
             DbActivityInstance activityInstance = new DbActivityInstance();
             Map<Integer, Map<String, Object>> instances =
@@ -387,7 +397,8 @@ public class RestInterface {
      * The Content will be a JSON Object, containing information about activities.
      * The Label of the activities mus correspond to the filter String and be
      * part of the scenario instance specified by the instanceID.
-     * @param instanceID The id of the scenario instance.
+     *
+     * @param instanceID   The id of the scenario instance.
      * @param filterString The string which will be the filter condition for the activity ids.
      * @return The created Response object with a 200 and a JSON.
      */
@@ -402,7 +413,7 @@ public class RestInterface {
     }
 
     private Response getAllActivitiesOfInstanceWithState(int instanceID, String state) {
-        String states[] = {"enabled", "terminated"};
+        String states[] = {"enabled", "terminated", "running"};
         if ((new LinkedList<>(Arrays.asList(states))).contains(state)) {
             DbActivityInstance activityInstance = new DbActivityInstance();
             Map<Integer, Map<String, Object>> instances;
@@ -470,7 +481,7 @@ public class RestInterface {
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @param state             the new status of the activity.
+     * @param state              the new status of the activity.
      * @return Returns a Response, the response code implies the
      * outcome of the POST-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
@@ -496,7 +507,7 @@ public class RestInterface {
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state transition " + state +  "is unknown\"}")
+                        .entity("{\"error\":\"The state transition " + state + "is unknown\"}")
                         .build();
         }
         if (result) {
@@ -641,8 +652,8 @@ public class RestInterface {
      * XML can be generated automatically.
      *
      * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
-     * @param states The states, mapped from dataobject database id to state (String)
-     * @param labels The labels, mapped from dataobject database id to label (String)
+     * @param states        The states, mapped from dataobject database id to state (String)
+     * @param labels        The labels, mapped from dataobject database id to label (String)
      * @return A array with a DataObject for each entry in dataObjectIds
      */
     private JSONObject buildListForDataObjects(
