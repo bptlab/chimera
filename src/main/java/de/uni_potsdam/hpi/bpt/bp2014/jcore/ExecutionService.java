@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -362,9 +362,43 @@ public class ExecutionService {
 
     /**
      * Terminates the given scenario instance.
+     *
      * @param scenarioInstanceID The id of the scenario instance.
      */
-    public void terminateScenarioInstance(int scenarioInstanceID){
+    public void terminateScenarioInstance(int scenarioInstanceID) {
         dbScenarioInstance.setTerminated(scenarioInstanceID, true);
+    }
+
+    /**
+     * Sets the values of the data attributes for an activity instance.
+     *
+     * @param scenarioInstance_id The id of the scenario instance.
+     * @param activityInstanceID  The id of the activity instance.
+     * @param values              A Map with the data attribute instance id as key and the value of the data attribute as value.
+     */
+    public void setDataAttributeValues(int scenarioInstance_id, int activityInstanceID, Map<Integer, String> values) {
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+            if (nodeInstance.getControlNodeInstance_id() == activityInstanceID) {
+                ((ActivityInstance) nodeInstance).setDataAttributeValues(values);
+            }
+        }
+    }
+
+    /**
+     * Returns a Map with all DataAttributeInstanceIDs, values and types for scenario instance.
+     *
+     * @param scenarioInstance_id The id of the scenario instance.
+     * @return a Map with data attribute instances.
+     */
+    public Map<Integer, Map<String, String>> getAllDataAttributeInstances(int scenarioInstance_id) {
+        Map<Integer, Map<String, String>> attributeInstances = new HashMap<>();
+        for (DataAttributeInstance dataAttributeInstance : sortedScenarioInstances.get(scenarioInstance_id).getDataAttributeInstances().values()) {
+            Map<String, String> values = new HashMap<>();
+            values.put("type", dataAttributeInstance.getType());
+            values.put("value", dataAttributeInstance.getValue().toString());
+            attributeInstances.put(dataAttributeInstance.getDataAttributeInstance_id(), values);
+        }
+        return attributeInstances;
     }
 }
