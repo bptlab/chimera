@@ -446,7 +446,7 @@ public class RestInterfaceTest extends AbstractTest {
      * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
      * with an wrong scenario ID the request should be redirected to the correct one.
      */
-    //@Test
+    @Test
     public void testGetActivitiesRedirects() {
         Response response = base.path("scenario/9999/instance/72/activity").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
