@@ -200,16 +200,10 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void terminateScenarioInstance() {
         Response response = base.path("scenario/1/instance/47/").request().post(null);
-        /*assertEquals("The Response code of start new instances was not 201",
+        assertEquals("The Response code of start terminating an instances was not 201",
                 201, response.getStatus());
-        assertEquals("Start new isntance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":966}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-                        */
     }
+
 
     /**
      * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
