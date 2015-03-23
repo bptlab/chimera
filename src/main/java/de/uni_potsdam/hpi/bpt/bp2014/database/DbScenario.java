@@ -88,7 +88,7 @@ public class DbScenario extends DbObject {
      * The Information consists of the id, name and version.
      */
     public Map<String, Object> getScenarioDetails(int id) {
-        String sql = "SELECT id, name, modelversion FROM scenario WHERE id = " + id;
+        String sql = "SELECT id, name, modelversion, modelid FROM scenario WHERE id = " + id;
         return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelid", "modelversion");
     }
 }

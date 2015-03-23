@@ -145,7 +145,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertNotEquals("Get scenarios did not respond with a valid JSON Array",
                 null, new JSONObject(responseEntity));
         assertThat("The content of the valid request is not as expected",
-                "{\"id\":1,\"name\":\"HELLOWORLD\",\"modelversion\":0}",
+                "{\"modelid\":0,\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
                 jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
 
     }
