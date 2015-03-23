@@ -50,4 +50,8 @@ public class DataAttributeInstance {
     public int getDataAttributeInstance_id() {
         return dataAttributeInstance_id;
     }
+
+    public int getDataAttribute_id() {
+        return dataAttribute_id;
+    }
 }
