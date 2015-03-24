@@ -78,7 +78,7 @@ public class DataObjectInstance {
         for(int dataAttribute_id : dataAttribute_ids){
             DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(dataAttribute_id, dataObjectInstance_id, this);
             dataAttributeInstances.add(dataAttributeInstance);
-            scenarioInstance.getDataAttributeInstances().put(dataAttributeInstance.getDataAttribute_id(), dataAttributeInstance);
+            scenarioInstance.getDataAttributeInstances().put(dataAttributeInstance.getDataAttributeInstance_id(), dataAttributeInstance);
         }
     }
 
