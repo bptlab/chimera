@@ -54,16 +54,9 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         //Key ist die ID des data attributes instance und die value ist die value des daten attributes
         for(Integer i : values.keySet()){
             DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
-            setValue(dataAttributeInstance.getDataAttributeInstance_id(), values.get(i));
+            dataAttributeInstance.setValue(i, values.get(i));
         }
         ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
-    }
-
-    //scenarioInstance.getDataAttributeInstances() liefert eine Map mit der DataAttributeInstance_ID als Key und der DataAttributeInstance als value
-    public void setValue(int dataAttributeInstance_id, Object value){
-        DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(dataAttributeInstance_id);
-        //nun kann auf das daten attribute zugegriffen werden ;)
-        dataAttributeInstance.setValue(dataAttributeInstance.getDataAttributeInstance_id(), value);
     }
 
 
