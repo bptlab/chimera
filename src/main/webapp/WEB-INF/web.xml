@@ -47,13 +47,13 @@
     <env-entry>
         <env-entry-name>username</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>root</env-entry-value>
+        <env-entry-value>bp2014</env-entry-value>
     </env-entry>
 
     <env-entry>
         <env-entry-name>password</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>foi6cixoo0Quah2e</env-entry-value>
+        <env-entry-value>samsa</env-entry-value>
     </env-entry>
 
     <env-entry>
