@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+
 import java.util.Map;
 
 /**
@@ -31,20 +33,23 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
 
-    //diese Methode wird immer aufgerufen wenn eine Aktivität gestartet wird.
-    //Hier können eventuell sonderfälle behandelt werden.
     @Override
     public void execute() {
-        //darf erst true werden wenn alle attribute richtig gesetzt wurden.
-        //denn erst dann kann die aktivität terminieren
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        if(dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()){
+            ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        }
+        //TODO: Change this later when we have forms 
         ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
     @Override
     public void setDataAttributeValues(Map<Integer, String> values){
-        for(Integer i : values.keySet()){
-            DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
-            dataAttributeInstance.setValue(i, values.get(i));
+        if(values.keySet() != null) {
+            for (Integer i : values.keySet()) {
+                DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
+                dataAttributeInstance.setValue(i, values.get(i));
+            }
         }
         ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
