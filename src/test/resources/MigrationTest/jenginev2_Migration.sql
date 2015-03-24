@@ -79,7 +79,7 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (4276, 0, 164, 903);
 
 INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
-(144, 'Testszenario', 1442712096, 0, NULL, NULL);
+(144, 'Testszenario', 1442712096, 0, 269479299, 0);
 
 INSERT INTO `scenarioinstance` (`id`, `terminated`, `scenario_id`) VALUES
 (902, 0, 144),

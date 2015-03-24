@@ -35,10 +35,12 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
     public void execute() {
         this.setValues();
         this.sendMail();
+        this.setCanTerminate(true);
+        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
     /**
-     * Sets the attributes for the e mail reading the information from database.
+     * Sets the values for the e mail reading the information from database.
      */
     private void setValues() {
         port = 587;
@@ -47,8 +49,16 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         sendMail = emailConfiguration.getSendEmailAddress(controlNode_id);
         subject = emailConfiguration.getSubject(controlNode_id);
         message = emailConfiguration.getMessage(controlNode_id);
+        this.setDataAttributes();
     }
 
+    private void setDataAttributes(){
+        for(DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()){
+            message = message.replace(
+                    "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                            + "."+dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+        }
+    }
 
     /**
      * Sends an e mail.

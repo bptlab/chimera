@@ -606,13 +606,16 @@ public class Connector extends DbDataObject {
                 "SET dataobject_id = " + newDataObjectID +
                 " WHERE dataobject_id = " + oldDataObjectID;
         dbDataObject.executeUpdateStatement(update);
-        String sql = "SELECT state_id FROM dataobjectinstance WHERE dataobject_id = "+newDataObjectID;
-        String state_id = dbDataObject.executeStatementReturnsString(sql, "state_id");
-        update = "UPDATE dataobjectinstance SET state_id = " +
-                "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
-                "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
-                "WHERE dataobject_id = " + newDataObjectID;
-        dbDataObject.executeUpdateStatement(update);
+        String sql = "SELECT state_id FROM dataobjectinstance WHERE dataobject_id = " + newDataObjectID;
+        List<Integer> state_ids = dbDataObject.executeStatementReturnsListInt(sql, "state_id");
+        for (int state_id : state_ids) {
+            update = "UPDATE dataobjectinstance SET state_id = " +
+                    "(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "+newDataObjectID+") " +
+                    "AND name = (SELECT state.name FROM state WHERE state.id = "+state_id+")) " +
+                    "WHERE dataobject_id = " + newDataObjectID +
+                    " AND state_id = " + state_id;
+            dbDataObject.executeUpdateStatement(update);
+        }
     }
     /**
      * Get all modelIDs of the fragments for one scenario.
@@ -675,7 +678,7 @@ public class Connector extends DbDataObject {
         String select = "SELECT id, name " +
                 "FROM dataattribute " +
                 "WHERE dataclass_id = " + dataClassID;
-        return dbDataObject.executeStatementReturnsHashMap(select, "id", "name");
+        return dbDataObject.executeStatementReturnsMap(select, "id", "name");
 
     }
 
@@ -693,6 +696,33 @@ public class Connector extends DbDataObject {
         dbDataObject.executeUpdateStatement(update);
     }
 
+    /**
+     * Get the version of the domainModel that belongs to the specified scenario.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The version of the domainModel
+     */
+    public int getDataModelVersion(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelversion " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
+    }
+
+    /**
+     * Get the modelID of the domainModel (from the XML) that belongs to the specified scenario.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The modelID of the domainModel
+     */
+    public long getDataModelID(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT datamodelid " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsListLong(select, "datamodelid").get(0);
+    }
     public void updateStates(Integer state_id, int dataClassID) {
         DbDataObject dbDataObject = new DbDataObject();
         String sql = "UPDATE state " +

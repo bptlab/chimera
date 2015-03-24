@@ -207,6 +207,56 @@ public class DbObject {
     }
 
     /**
+     * Executes the given select SQL statement and returns the result as Obejct.
+     *
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return Object.
+     */
+    public Object executeStatementReturnsObject(String sql, String columnLabel) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Object results = -1;
+        if (conn == null) {
+            return results;
+        }
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                results = rs.getObject(columnLabel);
+            }
+            //Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+
+    /**
      * Executes the given select SQL statement and returns the result as boolean.
      *
      * @param sql         This is a given select SQL Statement.
@@ -385,7 +435,16 @@ public class DbObject {
         return rowId;
     }
 
-    public Map<Integer, String> executeStatementReturnsHashMap(String sql, String key, String value) {
+    /**
+     * This method makes a sql Query and returns the keys and values in a Map.
+     * We assume that every key is an integer.
+     *
+     * @param sql The query string to be executed
+     * @param key The column name which will be key of the map
+     * @param value The column name which will be the value of the map
+     * @return A Map from the key Column to the Value Column
+     */
+    public Map<Integer, String> executeStatementReturnsMap(String sql, String key, String value) {
         Map<Integer, String> result = new LinkedHashMap<>();
 
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -435,6 +494,45 @@ public class DbObject {
                 keysValues.put(results.getInt("id"), new HashMap<String, Object>());
                 for (String key : keys) {
                     (keysValues.get(results.getInt("id"))).put(key, results.getObject(key));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return keysValues;
+    }
+
+
+
+    /**
+     * Creates a Map for the SQL-Result.
+     * Each Column will be added as a key and the first result as
+     * the result.
+     *
+     * @param sql  The SQl query to be executed.
+     * @param keys The column names.
+     * @return A Map of the results.
+     */
+    protected Map<String, Object> executeStatementReturnsMapWithKeys(String sql, String... keys) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        Map<String, Object> keysValues = new LinkedHashMap<>();
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+            if (results.next()) {
+                for (String key : keys) {
+                    keysValues.put(key, results.getObject(key));
                 }
             }
         } catch (SQLException e) {

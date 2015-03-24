@@ -253,6 +253,31 @@ public class Scenario implements IDeserialisable, IPersistable {
                 }
             }
         }
+        checkDomainModelVersion(oldScenarioDbID);
+
+    }
+    /**
+     * Checks the version of the domainModel in the database and compares it with the version of this scenario.
+     * If the version in the database older as this one, migration won't be initiated.
+     *
+     * @param oldScenarioDbID The databaseID of the newest scenario in the database
+     */
+    private void checkDomainModelVersion(int oldScenarioDbID) {
+        Connector connector = new Connector();
+        int oldDataModelVersion = connector.getDataModelVersion(oldScenarioDbID);
+        // case 1: We have a newer version of the domainModel now
+        if (domainModel.getVersionNumber() > oldDataModelVersion) {
+            migrationNecessary = false;
+            needsToBeSaved = true;
+        }
+        else {
+            // case 2: There is another domainModel now
+            long oldDataModelID = connector.getDataModelID(oldScenarioDbID);
+            if (oldDataModelID != domainModel.getDomainModelModelID()) {
+                migrationNecessary = false;
+                needsToBeSaved = true;
+            }
+        }
     }
 
     /**
