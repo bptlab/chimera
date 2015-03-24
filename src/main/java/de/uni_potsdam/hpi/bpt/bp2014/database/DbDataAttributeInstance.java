@@ -36,5 +36,8 @@ public class DbDataAttributeInstance extends DbObject{
         return this.executeStatementReturnsString(sql, "name");
     }
 
-    //TODO: dataAttributes methods to set values
+    public void setValue(int dataAttribute_id, Object value){
+        String sql = "UPDATE dataattributeinstance SET value = " + value + " WHERE id = " + dataAttribute_id;
+        executeUpdateStatement(sql);
+    }
 }
