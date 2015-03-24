@@ -213,7 +213,7 @@ public class  ScenarioTest {
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         Assert.assertEquals("The URI has not been set correctly",
-                "http://bp2014w1-dev:1205/models/2049535559", scenarioWOVersion.getDomainModelURI());
+                "2049535559", scenarioWOVersion.getDomainModelURI());
         PowerMock.verify(scenarioWOVersion);
     }
     /**
@@ -579,10 +579,10 @@ public class  ScenarioTest {
         Assert.assertEquals("ControlNodeInstance not migrated properly", fragment2.getControlNodes().get(426160629L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6305));
         Assert.assertEquals("ControlNodeInstance not migrated properly", fragment2.getControlNodes().get(426160629L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6307));
 
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO1").getDatabaseId(), dbDataObjectInstance.getDataObjectID(731));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO1").getDatabaseId(), dbDataObjectInstance.getDataObjectID(733));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO2").getDatabaseId(), dbDataObjectInstance.getDataObjectID(730));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO2").getDatabaseId(), dbDataObjectInstance.getDataObjectID(732));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(731));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(733));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(730));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(732));
     }
 
 
