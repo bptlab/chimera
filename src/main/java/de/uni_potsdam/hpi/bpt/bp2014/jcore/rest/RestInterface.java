@@ -1,6 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -235,6 +238,18 @@ public class RestInterface {
         }
     }
 
+    /**
+     * This post can be used to terminate an existing scenario instance.
+     * The scenario instance is specified by an instance id and a scenario id.
+     * The Response will be either a JSON Object with an error message (400)
+     * or an 201 without an content.
+     *
+     * @param scenarioID The Id of the scenario.
+     * @param instanceID The Id of the instance to be terminated.
+     * @return A Response object with json Object.
+     * A Created Response will be returned if the POST has been successful
+     * and a BAD_REQUEST else.
+     */
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -243,7 +258,8 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID) {
         ExecutionService executionService = new ExecutionService();
-        if (executionService.existScenario(scenarioID)) {
+        if (executionService.existScenario(scenarioID) &&
+                executionService.existScenarioInstance(instanceID)) {
             executionService.terminateScenarioInstance(instanceID);
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
@@ -252,7 +268,7 @@ public class RestInterface {
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The Scenario could not be found!\"}")
+                    .entity("{\"error\":\"The Scenario instance could not be found!\"}")
                     .build();
         }
     }
@@ -338,7 +354,7 @@ public class RestInterface {
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"There is no instance with id" + instanceID + "\"}")
+                    .entity("{\"message\":\"There is no instance with id " + instanceID + "\"}")
                     .build();
         } else if (!executionService.existScenario(scenarioID)) {
             try {
@@ -371,7 +387,7 @@ public class RestInterface {
      * @return The Response object as described above.
      */
     private Response getAllActivitiesWithFilterAndState(int instanceID, String filterString, String state) {
-        String states[] = {"enabled", "terminated", "running"};
+        String states[] = {"ready", "terminated", "running"};
         if ((new LinkedList<>(Arrays.asList(states))).contains(state)) {
             DbActivityInstance activityInstance = new DbActivityInstance();
             Map<Integer, Map<String, Object>> instances =
@@ -383,7 +399,7 @@ public class RestInterface {
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .type(MediaType.APPLICATION_JSON)
-                .entity("{\"error\":\"The state is not allowed " + state + " \"}")
+                .entity("{\"error\":\"The state is not allowed " + state + "\"}")
                 .build();
     }
 
@@ -409,7 +425,7 @@ public class RestInterface {
     }
 
     private Response getAllActivitiesOfInstanceWithState(int instanceID, String state) {
-        String states[] = {"enabled", "terminated", "running"};
+        String states[] = {"ready", "terminated", "running"};
         if ((new LinkedList<>(Arrays.asList(states))).contains(state)) {
             DbActivityInstance activityInstance = new DbActivityInstance();
             Map<Integer, Map<String, Object>> instances;
@@ -421,7 +437,7 @@ public class RestInterface {
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .type(MediaType.APPLICATION_JSON)
-                .entity("{\"error\":\"The state is not allowed " + state + " \"}")
+                .entity("{\"error\":\"The state is not allowed " + state + "\"}")
                 .build();
     }
 
@@ -484,7 +500,7 @@ public class RestInterface {
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @POST
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/")
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
     public Response updateActivityStatus(@PathParam("scenarioID") String scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID,
@@ -503,7 +519,7 @@ public class RestInterface {
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state transition " + state + "is unknown\"}")
+                        .entity("{\"error\":\"The state transition " + state + " is unknown\"}")
                         .build();
         }
         if (result) {
@@ -514,8 +530,8 @@ public class RestInterface {
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"impsossible to " + (state.equals("begin") ? "start" : "terminate") +
-                            "activity with id" + activityID + "\"}")
+                    .entity("{\"error\":\"impossible to " + (state.equals("begin") ? "start" : "terminate") +
+                            " activity with id " + activityID + "\"}")
                     .build();
         }
     }
@@ -672,7 +688,7 @@ public class RestInterface {
 
     /**
      * Creates a JSON object from an HashMap.
-     * The keys will be listed seperatly.
+     * The keys will be listed separately.
      *
      * @param data        The HashMap which contains the data of the Object
      * @param keyLabel    The name which will be used
@@ -717,7 +733,7 @@ public class RestInterface {
         /**
          * The state inside the database of the dataobject
          * which is stored in the table.
-         * The label not the id will be holded.
+         * The label not the id will be saved.
          */
         public String state;
     }
