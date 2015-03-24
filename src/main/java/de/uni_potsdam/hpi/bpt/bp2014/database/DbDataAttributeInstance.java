@@ -31,5 +31,10 @@ public class DbDataAttributeInstance extends DbObject{
         return this.executeStatementReturnsObject(sql, "value");
     }
 
+    public String getName(int dataAttribute_id) {
+        String sql = "SELECT name FROM dataattribute WHERE id = " + dataAttribute_id;
+        return this.executeStatementReturnsString(sql, "name");
+    }
+
     //TODO: dataAttributes methods to set values
 }
