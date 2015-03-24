@@ -40,18 +40,8 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
-
-
-
-    //TODO: dataAttributes
-    //methoden zum setzen der attribute für die jeweilige Aktivität.
-    //Wenn alle nötigen Attribute gesetzt wurden -> ((ActivityInstance)controlNodeInstance).setCanTerminate(true);((ActivityInstance)controlNodeInstance).setCanTerminate(true);
-    //Dadurch ist Aktivität zum Terminieren aktiviert und kann auch erst dann(!!) terminieren.
-
     @Override
     public void setDataAttributeValues(Map<Integer, String> values){
-        //diese Methode wird von der REST aufgerufen. Man bekommt eine Map
-        //Key ist die ID des data attributes instance und die value ist die value des daten attributes
         for(Integer i : values.keySet()){
             DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
             dataAttributeInstance.setValue(i, values.get(i));

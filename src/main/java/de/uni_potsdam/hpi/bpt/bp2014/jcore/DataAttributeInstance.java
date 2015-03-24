@@ -32,10 +32,6 @@ public class DataAttributeInstance {
         this.name = dbDataAttributeInstance.getName(dataAttribute_id);
     }
 
-    //TODO: dataAttributes
-    //methode zum schreiben eines Attributes
-    //d.h. hier wird nur die value gesetzt und dbDataAttributeInstance aufgerufen,
-    //um die Änderung in die Datenbank zu speichern
     public void setValue(int dataAttributeInstance_id, Object value){
         this.value = value;
         dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
