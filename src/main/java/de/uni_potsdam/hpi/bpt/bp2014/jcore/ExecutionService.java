@@ -272,11 +272,14 @@ public class ExecutionService {
      */
     public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstance_id) {
         LinkedList<Integer> dataObjectIDs = new LinkedList<Integer>();
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
-            dataObjectIDs.add(dataObject.getDataObject_id());
-        }
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
-            dataObjectIDs.add(dataObject.getDataObject_id());
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        if (scenarioInstance != null) {
+            for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstances()) {
+                dataObjectIDs.add(dataObject.getDataObject_id());
+            }
+            for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstancesOnChange()) {
+                dataObjectIDs.add(dataObject.getDataObject_id());
+            }
         }
         return dataObjectIDs;
     }
@@ -290,11 +293,14 @@ public class ExecutionService {
     public HashMap<Integer, String> getAllDataObjectStates(int scenarioInstance_id) {
         DbState dbState = new DbState();
         HashMap<Integer, String> dataObjectStates = new HashMap<Integer, String>();
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
-            dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
-        }
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
-            dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        if (scenarioInstance != null) {
+            for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstances()) {
+                dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
+            }
+            for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstancesOnChange()) {
+                dataObjectStates.put(dataObject.getDataObject_id(), dbState.getStateName(dataObject.getState_id()));
+            }
         }
         return dataObjectStates;
     }
@@ -308,11 +314,14 @@ public class ExecutionService {
     public HashMap<Integer, String> getAllDataObjectNames(int scenarioInstance_id) {
         DbDataObject dbDataObject = new DbDataObject();
         HashMap<Integer, String> dataObjectNames = new HashMap<Integer, String>();
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstances()) {
-            dataObjectNames.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getDataObject_id()));
-        }
-        for (DataObjectInstance dataObject : sortedScenarioInstances.get(scenarioInstance_id).getDataObjectInstancesOnChange()) {
-            dataObjectNames.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getDataObject_id()));
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        if (scenarioInstance != null) {
+            for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstances()) {
+                dataObjectNames.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getDataObject_id()));
+            }
+            for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstancesOnChange()) {
+                dataObjectNames.put(dataObject.getDataObject_id(), dbDataObject.getName(dataObject.getDataObject_id()));
+            }
         }
         return dataObjectNames;
     }

@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -64,6 +63,21 @@ public class DbScenarioInstance extends DbObject {
     public int createNewScenarioInstance(int id) {
         String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + id + ", (SELECT name FROM scenario WHERE id = " + id + "))";
         return this.executeInsertStatement(sql);
+    }
+
+    /**
+     * Creates a new scenario instance from a scenario.
+     * The given name will be assigned.
+     *
+     * @param id The id of the scenario.
+     * @param name The name, which has to be assigned to the instance.
+     * @return -1 if something went wrong else it returns the database ID of the newly created scenario instance.
+     */
+    public int createNewScenarioInstance(int id, String name) {
+        String sql = "INSERT INTO scenarioinstance (scenario_id, name) " +
+                "VALUES (" + id + "," + "'" + name + "'" + ")";
+        return this.executeInsertStatement(sql);
+
     }
 
     /**
@@ -134,6 +148,11 @@ public class DbScenarioInstance extends DbObject {
         if (null != filterString && !filterString.equals("")) {
             sql = sql + " AND name LIKE '%" + filterString + "%'";
         }
-        return this.executeStatementReturnsHashMap(sql, "id", "name");
+        return this.executeStatementReturnsMap(sql, "id", "name");
+    }
+
+    public Map<String, Object> getInstanceMap(int instanceId) {
+        String sql = "SELECT * FROM scenarioinstance WHERE id = " + instanceId;
+        return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "terminated", "scenario_id");
     }
 }
