@@ -547,4 +547,41 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+
+    /**
+     * When you send a Get to {@link RestInterface#getTerminationCondition(int)}
+     * with an valid id
+     * then a JSON with the termination condition will be returned
+     */
+    @Test
+    public void testGetTerminationCondition() {
+        Response response = base.path("scenario/105/terminationcondition").request().get();
+        assertEquals("The Response code of getTermiantionCondition was not 200",
+                200, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}],\"setIDs\":[1]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getTerminationCondition(int)}
+     * with an invalid id
+     * then a 404 with an error message should be returned
+     */
+    @Test
+    public void testInvalidGetTerminationCondition() {
+        Response response = base.path("scenario/102/terminationcondition").request().get();
+        assertEquals("The Response code of getTermiantionCondition was not 404",
+                404, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"There is no scenario with the id 102\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
 }

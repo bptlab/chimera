@@ -148,26 +148,22 @@ public class RestInterface {
      * condition or an JSON object with the error message.
      */
     @GET
-    @Path("scenario/{scenarioId}/terminationCondition")
+    @Path("scenario/{scenarioId}/terminationcondition")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTerminationCondition(@PathParam("scenarioId") int scenarioID) {
         DbScenario dbScenario = new DbScenario();
         if (!dbScenario.existScenario(scenarioID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no scenario with the id" + scenarioID + "\"}")
+                    .entity("{\"error\":\"There is no scenario with the id " + scenarioID + "\"}")
                     .build();
         }
         DbTerminationCondition terminationCondition = new DbTerminationCondition();
-        List<Integer> conditionSets = terminationCondition.getConditionsSetIDsForScenario(scenarioID);
-        for (int conditionSetId : conditionSets) {
-            List<Condition> conditions = terminationCondition
-                    .getConditionsForConditionSetAndScenario(scenarioID, conditionSetId);
-            for (Condition condition : conditions) {
-                JSONObject conditionJSON = new JSONObject();
-            }
-        }
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        Map<Integer, List<Map<String, Object>>> conditionSets = terminationCondition
+                .getDetailedConditionsForScenario(scenarioID);
+        JSONObject result = new JSONObject(conditionSets);
+        result.put("setIDs", new JSONArray(conditionSets.keySet()));
+        return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
 
     /**
