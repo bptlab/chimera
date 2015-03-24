@@ -782,5 +782,15 @@ public class RestInterfaceTest extends AbstractTest {
                 "{\"message\":\"activity state changed.\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
+        response = base.path("scenario/1/instance/72/activity/2")
+                .queryParam("status", "terminate").request().post(null);
+        assertEquals("The Response code of getTerminationCondition was not 202",
+                202, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"activity state changed.\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
     }
 }
