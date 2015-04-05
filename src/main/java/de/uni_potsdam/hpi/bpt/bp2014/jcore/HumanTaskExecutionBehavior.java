@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+
 import java.util.Map;
 
 /**
@@ -31,33 +33,25 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
 
-    //diese Methode wird immer aufgerufen wenn eine Aktivität gestartet wird.
-    //Hier können eventuell sonderfälle behandelt werden.
     @Override
     public void execute() {
-        //darf erst true werden wenn alle attribute richtig gesetzt wurden.
-        //denn erst dann kann die aktivität terminieren
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        if(dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()){
+            ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        }
+        //TODO: Change this later when we have forms 
         ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
-
-
-
-    //TODO: dataAttributes
-    //methoden zum setzen der attribute für die jeweilige Aktivität.
-    //Wenn alle nötigen Attribute gesetzt wurden -> ((ActivityInstance)controlNodeInstance).setCanTerminate(true);((ActivityInstance)controlNodeInstance).setCanTerminate(true);
-    //Dadurch ist Aktivität zum Terminieren aktiviert und kann auch erst dann(!!) terminieren.
-
     @Override
     public void setDataAttributeValues(Map<Integer, String> values){
-        //diese Methode wird von der REST aufgerufen. Man bekommt eine Map
-        //Key ist die ID des data attributes instance und die value ist die value des daten attributes
-    }
-
-    //scenarioInstance.getDataAttributeInstances() liefert eine Map mit der DataAttributeInstance_ID als Key und der DataAttributeInstance als value
-    public void setValue(int dataAttribute_id, Object value){
-        DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(dataAttribute_id);
-        //nun kann auf das daten attribute zugegriffen werden ;)
+        if(values.keySet() != null) {
+            for (Integer i : values.keySet()) {
+                DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
+                dataAttributeInstance.setValue(i, values.get(i));
+            }
+        }
+        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
 
