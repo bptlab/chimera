@@ -2,10 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 
+import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import java.sql.SQLException;
 
 
 public class RestTest extends AbstractTest {
-    String serverURL = de.uni_potsdam.hpi.bpt.bp2014.config.Config.jcomparserServerUrl;
+    String serverURL = Settings.jcomparserServerUrl;
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     static {
