@@ -379,7 +379,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString,
-            @QueryParam("status") String state) {
+            @QueryParam("state") String state) {
         ExecutionService executionService = new ExecutionService();
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -522,7 +522,7 @@ public class RestInterface {
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @param state             the new status of the activity.
+     * @param state             the new state of the activity.
      * @return Returns a Response, the response code implies the
      * outcome of the PATCH-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
@@ -530,10 +530,10 @@ public class RestInterface {
      */
     @PATCH
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/")
-    public Response updateActivityStatus(@PathParam("scenarioID") String scenarioID,
+    public Response updateActivityState(@PathParam("scenarioID") String scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID,
-                                         @QueryParam("status") String state) {
+                                         @QueryParam("state") String state) {
 
         boolean result;
         ExecutionService executionService = new ExecutionService();
