@@ -242,6 +242,9 @@ public class RestInterface {
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
+    @POST
+    @Path("scenario/{scenarioID}/instance")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response startNewInstance(@PathParam("scenarioID") int scenarioID) {
         ExecutionService executionService = new ExecutionService();
         //TODO: add link to detail REST call for more information about new scenarioinstanceID
@@ -269,13 +272,13 @@ public class RestInterface {
      *
      * @param scenarioID the id of the scenario.
      * @param name       The name, which will be used for the new instance.
-     * @return The Response of the POST. The Response code will be
+     * @return The Response of the PUT. The Response code will be
      * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
      * if the scenarioID was invalid.
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -521,11 +524,11 @@ public class RestInterface {
      * @param activityID         the control node id of the activity.
      * @param state             the new status of the activity.
      * @return Returns a Response, the response code implies the
-     * outcome of the POST-Request.
+     * outcome of the PATCH-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
-    @POST
+    @PATCH
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/")
     public Response updateActivityStatus(@PathParam("scenarioID") String scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,

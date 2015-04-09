@@ -42,8 +42,8 @@ public class RestConfigurator {
      * @return A Response 202 (ACCEPTED) if the update was successful.
      * A 404 (NOT_FOUND) if the mail task could not be found.
      */
-    @POST
-    @Path("config/emailtask/{emailtaskID}/")
+    @PUT //would be PATCH if only selected fields are updated
+    @Path("emailtask/{emailtaskID}/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
             @PathParam("emailtaskID") int emailTaskID,
