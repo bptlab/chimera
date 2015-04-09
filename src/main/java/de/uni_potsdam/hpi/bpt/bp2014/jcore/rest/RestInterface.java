@@ -20,6 +20,27 @@ import java.net.URL;
 import java.util.*;
 
 /**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
+
+/**
  * This class implements the REST interface of the JEngine core.
  * The core module provides methods to execute PCM instances
  * and to access the date inside the engine.
@@ -32,31 +53,6 @@ import java.util.*;
  */
 @Path("interface/v2")
 public class RestInterface {
-
-
-    /**
-     * Updates the email configuration for a specified task.
-     * The Task is specified by the email Task ID and the new
-     * configuration will submitted as a JSON-Object.
-     *
-     * @param emailTaskID The ControlNode id of the email task.
-     * @param input       The new configuration.
-     * @return A Response 202 (ACCEPTED) if the update was successful.
-     * A 404 (NOT_FOUND) if the mail task could not be found.
-     */
-    @POST
-    @Path("config/emailtask/{emailtaskID}/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEmailConfiguration(
-            @PathParam("emailtaskID") int emailTaskID,
-            final EmailConfigJaxBean input) {
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
-                input.receiver, input.subject, input.content);
-        return Response.status(
-                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
-                .build();
-    }
 
     /**
      * This method allows to give an overview of all scenarios.
