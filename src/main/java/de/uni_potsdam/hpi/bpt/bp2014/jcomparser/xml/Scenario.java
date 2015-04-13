@@ -159,7 +159,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Retrieval jRetrieval = new Retrieval();
             String versionXML = jRetrieval.getHTMLwithAuth(
                     processeditorServerUrl,
-                    processeditorServerUrl + "models/" + domainModelURI);
+                    processeditorServerUrl + "models/" + domainModelURI + ".pm");
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(versionXML));
             DocumentBuilder db = DocumentBuilderFactory
@@ -184,6 +184,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         try {
             domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
             domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length-1];
+            domainModelURI = domainModelURI.split("\\.")[0];
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
