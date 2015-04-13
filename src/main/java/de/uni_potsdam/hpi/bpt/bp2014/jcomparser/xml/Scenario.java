@@ -196,16 +196,14 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void checkIfVersionAlreadyInDatabase() {
         Connector connector = new Connector();
-        long fragmentModelID;
         int newestFragmentDatabaseVersion;
         int oldScenarioDbID = connector.getScenarioID(scenarioID);
-        int scenarioDbVersion = connector.getNewestScenarioVersion(scenarioID);
+        int scenarioDbVersion = connector.getScenarioVersion(oldScenarioDbID);
         boolean changesMade = false;
         needsToBeSaved = false;
         newFragments = new LinkedList<>();
         for (Fragment fragment : fragments) {
-            fragmentModelID = fragment.getFragmentID();
-            newestFragmentDatabaseVersion = connector.getNewestFragmentVersion(fragmentModelID, scenarioID);
+            newestFragmentDatabaseVersion = connector.getFragmentVersion(oldScenarioDbID, fragment.getFragmentID());
             // case 1: We don't have a fragment with this modelid in the database
             if (newestFragmentDatabaseVersion == -1) {
                 needsToBeSaved = true;

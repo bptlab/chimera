@@ -387,7 +387,7 @@ public class HugeComparserTest extends TestSetUp {
         testScenario();
         testFragments();
         testDataClass();
-        //testDataAttributes();
+        testDataAttributes();
         testAggregation();
         testStates();
         testDataObjects();
