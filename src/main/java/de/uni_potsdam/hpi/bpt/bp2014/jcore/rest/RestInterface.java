@@ -14,7 +14,31 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -55,6 +79,7 @@ public class RestInterface {
         } else {
             scenarios = scenario.getScenariosLike(filterString);
         }
+        //TODO: add links to detail REST calls for each scenarios
         return Response
                 .ok()
                 .type(MediaType.APPLICATION_JSON)
@@ -81,6 +106,8 @@ public class RestInterface {
     public Response getScenario(@PathParam("scenarioID") int scenarioID) {
         DbScenario dbScenario = new DbScenario();
         Map<String, Object> data = dbScenario.getScenarioDetails(scenarioID);
+        //TODO: add links to detail REST calls for scenarioInstance overview
+        //TODO: add link to detail REST call to create new scenarioInstance
         if (data.isEmpty()) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -93,6 +120,72 @@ public class RestInterface {
                 .type(MediaType.APPLICATION_JSON)
                 .entity(new JSONObject(data).toString())
                 .build();
+    }
+
+    /**
+     * This method provides information about all email Tasks inside
+     * a given scenario.
+     * The information consists of the id and the label.
+     * A Json Object will be returned with an array of ids and a Map
+     * from ids to labels.
+     *
+     * @param scenarioID   The ID of the scenario, its mail tasks will be returned.
+     * @param filterString A Filter String, only mail tasks with a label containing
+     *                     this filter String will be returned.
+     * @return The JSON Object with ids and labels.
+     */
+    @GET
+    @Path("scenario/{scenarioID}/emailtask")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllEmailTasks(
+            @PathParam("scenarioID") int scenarioID,
+            @QueryParam("filter") String filterString) {
+        DbScenario scenario = new DbScenario();
+        DbEmailConfiguration mail = new DbEmailConfiguration();
+        //TODO: add links to detail REST calls for each emailtask
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     * This method provides information about an email Task.
+     * It will return a JSON-Object with information about the mail
+     * configuration.
+     * A Configuration contains a receiver, a subject and a content.
+     * A Mail task is specified by:
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param mailTaskID The control node ID of the mail Task.
+     * @return Returns a 404 if the mail Task or scenario does not exist
+     * and a 200 (OK) with a JSON-Object if the emailTask was found.
+     */
+    @GET
+    @Path("scenario/{scenarioID}/emailtask/{emailTaskID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEmailTaskConfiguration(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("emailTaskID") int mailTaskID) {
+        DbScenario scenario = new DbScenario();
+        DbEmailConfiguration mail = new DbEmailConfiguration();
+        EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
+        mailConfig.receiver = mail.getReceiverEmailAddress(mailTaskID);
+        if (!scenario.existScenario(scenarioID) || mailConfig.receiver.equals("")) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        mailConfig.content = mail.getMessage(mailTaskID);
+        mailConfig.subject = mail.getSubject(mailTaskID);
+        return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -129,6 +222,7 @@ public class RestInterface {
         Map<Integer, String> data = instance.getScenarioInstancesLike(scenarioID, filterString);
         result.put("ids", new JSONArray(data.keySet()));
         result.put("labels", new JSONObject(data));
+        //TODO: add links to detail REST calls for each scenarioinstance
         return Response
                 .ok(result.toString(), MediaType.APPLICATION_JSON)
                 .build();
@@ -183,8 +277,12 @@ public class RestInterface {
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
+    @POST
+    @Path("scenario/{scenarioID}/instance")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response startNewInstance(@PathParam("scenarioID") int scenarioID) {
         ExecutionService executionService = new ExecutionService();
+        //TODO: add link to detail REST call for more information about new scenarioinstanceID
         if (executionService.existScenario(scenarioID)) {
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
@@ -209,13 +307,13 @@ public class RestInterface {
      *
      * @param scenarioID the id of the scenario.
      * @param name       The name, which will be used for the new instance.
-     * @return The Response of the POST. The Response code will be
+     * @return The Response of the PUT. The Response code will be
      * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
      * if the scenarioID was invalid.
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -224,6 +322,7 @@ public class RestInterface {
             return startNewInstance(scenarioID);
         }
         ExecutionService executionService = new ExecutionService();
+        //TODO: add link to detail REST call for more information about new scenarioinstanceID
         if (executionService.existScenario(scenarioID)) {
             DbScenarioInstance instance = new DbScenarioInstance();
             return Response.status(Response.Status.CREATED)
@@ -300,6 +399,7 @@ public class RestInterface {
             @PathParam("instanceID") int instanceID) {
         ExecutionService executionService = new ExecutionService();
         DbScenarioInstance instance = new DbScenarioInstance();
+        //TODO: add links to detail REST calls for more information about each activity instance
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"There is no instance with the id " + instanceID + "\"}")
@@ -349,7 +449,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString,
-            @QueryParam("status") String state) {
+            @QueryParam("state") String state) {
         ExecutionService executionService = new ExecutionService();
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -493,18 +593,18 @@ public class RestInterface {
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @param state              the new status of the activity.
+     * @param state              the new state of the activity.
      * @return Returns a Response, the response code implies the
-     * outcome of the POST-Request.
+     * outcome of the PATCH-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
-    public Response updateActivityStatus(@PathParam("scenarioID") String scenarioID,
-                                         @PathParam("instanceID") int scenarioInstanceID,
-                                         @PathParam("activityID") int activityID,
-                                         @QueryParam("status") String state) {
+    public Response updateActivityState(@PathParam("scenarioID") String scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID,
+                                        @QueryParam("state") String state) {
 
         boolean result;
         ExecutionService executionService = new ExecutionService();
@@ -519,7 +619,7 @@ public class RestInterface {
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state transition " + state + " is unknown\"}")
+                        .entity("{\"error\":\"The state transition " + state + "is unknown\"}")
                         .build();
         }
         if (result) {
@@ -560,6 +660,7 @@ public class RestInterface {
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString) {
         ExecutionService executionService = new ExecutionService();
+        //TODO: add link to detail REST call for more information about each dataobject
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)

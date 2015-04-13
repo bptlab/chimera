@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
-import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.xml.sax.SAXException;
 
@@ -47,11 +47,11 @@ public class REST {
     /**
      * The URL to the ProcessEditor Model repository.
      */
-    private static final String PCM_URL = Config.processeditorServerUrl + "models/";
+    private static final String PCM_URL = Settings.processeditorServerUrl + "models/";
     /**
      * The URL to the ProcessEditor.
      */
-    private static final String PROCESS_SERVER_URI = Config.processeditorServerUrl;
+    private static final String PROCESS_SERVER_URI = Settings.processeditorServerUrl;
 
     /**
      * This methods parses a new scenario and saves it to the database.
@@ -68,8 +68,11 @@ public class REST {
             throws IOException, SAXException, ParserConfigurationException {
         JComparser comparser = new JComparser();
         String scenarioURL = PCM_URL + scenarioID + ".pm";
+        //TODO: create a db record with the status of the import & return its value with REST call link for further informations
         return comparser.fetchAndParseScenarioFromServer(scenarioURL, PROCESS_SERVER_URI);
     }
+
+    //TODO: implement GET call to get status of scenario import
 
     /**
      * Fetches a List of all Scenarios and their IDs from the PE-Server.

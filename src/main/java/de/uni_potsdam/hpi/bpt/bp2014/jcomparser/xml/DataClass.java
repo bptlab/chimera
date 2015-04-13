@@ -115,7 +115,7 @@ public class DataClass implements IDeserialisable, IPersistable {
         String[] attributes = value.split(" ;");
         for(String attribute : attributes){
             if(!attribute.isEmpty()){
-                DataAttribute newDataAttribute = new DataAttribute(attribute.replaceAll("[^a-zA-Z]", ""));
+                DataAttribute newDataAttribute = new DataAttribute(attribute.replaceAll("\\{[0-9]*\\}|[^a-zA-Z0-9]", ""));
                 dataAttributes.add(newDataAttribute);
             }
         }
