@@ -47,7 +47,7 @@ public class RestConfigurator {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
             @PathParam("emailtaskID") int emailTaskID,
-            final EmailConfigJaxBean input) {
+            final RestInterface.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
                 input.receiver, input.subject, input.content);
