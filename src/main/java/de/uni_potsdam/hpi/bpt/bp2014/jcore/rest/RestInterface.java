@@ -13,11 +13,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * ********************************************************************************
@@ -439,7 +440,8 @@ public class RestInterface {
      * The Content will be a JSON Object, containing information about activities.
      * The Label of the activities mus correspond to the filter String and be
      * part of the scenario instance specified by the instanceID.
-     * @param instanceID The id of the scenario instance.
+     *
+     * @param instanceID   The id of the scenario instance.
      * @param filterString The string which will be the filter condition for the activity ids.
      * @return The created Response object with a 200 and a JSON.
      */
@@ -522,18 +524,18 @@ public class RestInterface {
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @param state             the new state of the activity.
+     * @param state              the new state of the activity.
      * @return Returns a Response, the response code implies the
      * outcome of the PATCH-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
-    @PATCH
+    @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/")
     public Response updateActivityState(@PathParam("scenarioID") String scenarioID,
-                                         @PathParam("instanceID") int scenarioInstanceID,
-                                         @PathParam("activityID") int activityID,
-                                         @QueryParam("state") String state) {
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID,
+                                        @QueryParam("state") String state) {
 
         boolean result;
         ExecutionService executionService = new ExecutionService();
@@ -548,7 +550,7 @@ public class RestInterface {
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state transition " + state +  "is unknown\"}")
+                        .entity("{\"error\":\"The state transition " + state + "is unknown\"}")
                         .build();
         }
         if (result) {
@@ -694,8 +696,8 @@ public class RestInterface {
      * XML can be generated automatically.
      *
      * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
-     * @param states The states, mapped from dataobject database id to state (String)
-     * @param labels The labels, mapped from dataobject database id to label (String)
+     * @param states        The states, mapped from dataobject database id to state (String)
+     * @param labels        The labels, mapped from dataobject database id to label (String)
      * @return A array with a DataObject for each entry in dataObjectIds
      */
     private JSONObject buildListForDataObjects(
