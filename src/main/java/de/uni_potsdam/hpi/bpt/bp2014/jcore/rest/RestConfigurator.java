@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,7 +36,7 @@ public class RestConfigurator {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
             @PathParam("emailtaskID") int emailTaskID,
-            final RestInterface.EmailConfigJaxBean input) {
+            final de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestInterface.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
                 input.receiver, input.subject, input.content);

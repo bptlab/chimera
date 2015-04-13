@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
-
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
 import java.io.*;
@@ -45,11 +43,11 @@ public class Retrieval {
     /**
      * The username needed for the authentication.
      */
-    private String username = Settings.processeditorServerName;
+    private String username = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerName;
     /**
      * The password needed for the authentication.
      */
-    private String password = Settings.processeditorServerPassword;
+    private String password = de.uni_potsdam.hpi.bpt.bp2014.config.Config.processeditorServerPassword;
 
     /**
      * Get HTML from URL.

@@ -38,7 +38,6 @@ public class DataObject implements IPersistable {
      * The database ID of the initial State.
      */
     private Integer initState;
-    private DataClass dataClass;
 
     /**
      * Creates a new DataObject.
@@ -66,6 +65,8 @@ public class DataObject implements IPersistable {
      */
     private void initializeStates() {
         Connector connector = new Connector();
+        String dataClassName = dataNodes.get(0).getText();
+        classId = connector.insertDataClassIntoDatabase(dataClassName);
         for (Node dataNode : dataNodes) {
             if (!states.containsKey(dataNode.getState())) {
                 int stateId = connector.insertStateIntoDatabase(
@@ -99,6 +100,10 @@ public class DataObject implements IPersistable {
      */
     private void addState(final String state) {
         Connector connector = new Connector();
+        if (0 >= classId) {
+            String dataClassName = dataNodes.get(0).getText();
+            classId = connector.insertDataClassIntoDatabase(dataClassName);
+        }
         if (!states.containsKey(state)) {
             int stateId = connector.insertStateIntoDatabase(state, classId);
             states.put(state, stateId);
@@ -107,18 +112,15 @@ public class DataObject implements IPersistable {
 
     @Override
     public int save() {
-        if (0 >= scenarioId) {
+        if (0 >= scenarioId || 0 >= classId) {
             return -1;
         }
         Connector connector = new Connector();
         // We assume, that every DataObject starts with the state "init"
-        for(Integer state : states.values()) {
-            connector.updateStates(state, dataClass.getDataClassID());
-        }
         initState = states.get("init");
         String dataObjectName = dataNodes.get(0).getText();
         databaseId = connector.insertDataObjectIntoDatabase(dataObjectName,
-                dataClass.getDataClassID(),
+                classId,
                 scenarioId,
                 initState);
         saveDataNodes();
@@ -135,7 +137,7 @@ public class DataObject implements IPersistable {
             int nodeId = connector.insertDataNodeIntoDatabase(
                     scenarioId,
                     states.get(dataNode.getState()),
-                    dataClass.getDataClassID(),
+                    classId,
                     databaseId,
                     dataNode.getId());
             dataNode.setDatabaseID(nodeId);
@@ -192,13 +194,5 @@ public class DataObject implements IPersistable {
      */
     public Map<String, Integer> getStates() {
         return states;
-    }
-
-    public void setDataClass(Map<Long, DataClass> dataClasses) {
-        for(Long i : dataClasses.keySet()) {
-            if(dataNodes.get(0).getText().equals(dataClasses.get(i).getDataClassName())) {
-                dataClass = dataClasses.get(i);
-            }
-        }
     }
 }
