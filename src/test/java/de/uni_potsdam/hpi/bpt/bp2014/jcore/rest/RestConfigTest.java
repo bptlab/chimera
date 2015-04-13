@@ -69,7 +69,7 @@ public class RestConfigTest extends AbstractTest {
     //@Test
     //TODO: test open
     public void testChangingConfigOfeMailTasks() {
-        Response response = base.path("emailtask/1/").queryParam("filter", "HELLO").request().put();
+        //Response response = base.path("emailtask/1/").queryParam("filter", "HELLO").request().put();
         //assertThat("Get e did not contain the expected information",
         //         "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}",
         //       jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
