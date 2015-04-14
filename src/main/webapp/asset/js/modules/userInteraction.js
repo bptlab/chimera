@@ -24,24 +24,26 @@
 			var controller = this;
 			
 			// initialize an empty list of scenario Ids
-			this.scenarioIds = [];
+			this.scenarioDetails = {};
+            this.currentScenario = {};
 			this.scenarios = {};
 			
-			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
+			$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
 				success(function(data){
-					controller.scenarioIds = data['ids'];
-					controller.getDetailedInformation();
+					controller.scenarios = data;
+					//controller.getDetailedInformation();
 				});
 				
-			this.getDetailedInformation = function(){
-				this.scenarioIds.forEach(function(id){
+			this.getDetailedInformation = function(id){
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 						success(function(data) {
-							controller.scenarios["" + id] = data;
-							controller.getImageForScenario(id);
+							controller.currentScenario['details'] = data;
+							//controller.getImageForScenario(id);
 							controller.getInstancesOfScenario(id);
-						});
-				});
+						}).
+                        error(function(data) {
+                            console.log('request failed');
+                        });
 			};
 			
 			this.getImageForScenario = function(id){
@@ -56,19 +58,21 @@
 			
 			this.getCurrentScenario = function(){
 				if ($routeParams.id != null) {
-					var ret = this.scenarios["" + $routeParams.id];
-					if (ret) {
-						ret.id = $routeParams.id;
-						return ret;
-					}
+                    controller.getDetailedInformation($routeParams.id);
+                    controller.getInstancesOfScenario($routeParams.id);
+
+                    controller.currentScenario['id'] = $routeParams.id;
 				}
 			};
 			
 			this.getInstancesOfScenario = function(id) {
-				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ id + "/instance/0/").
+				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ id + "/instance/").
 					success(function(data) {
-						controller.scenarios["" + id]['instanceIds'] = data['ids'];
-				});
+						controller.currentScenario['instances'] = data;
+				}).
+                    error(function(data) {
+                         console.log('request failed');
+                });
 			};
 			
 			// Creates a new instance of the scenario with the given Id
@@ -76,7 +80,10 @@
 				$http.post(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ id+"/").
 					success(function(data) {
 						$location.path("/scenario/" + id + "/instance/" + data);
-					});
+					}).
+                    error(function(data) {
+                        console.log('request failed');
+                    });
 			};
 		}]
 	);
@@ -88,6 +95,7 @@
 			
 			// initialize an empty object for the instances
 			this.instances = {};
+            this.instanceDetails = {};
 			this.scenario = {};
 			
 			/* ____ BEGIN_INITIALIZATION ____ */
@@ -99,8 +107,11 @@
 						JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" +
 						$routeParams.id + "/instance/" + $routeParams.instanceId + "/activityinstance/0?status=" + state).
 					success(function(data){
-						instanceCtrl.instances[$routeParams.instanceId].activities[state] = data;
-					});
+						instanceCtrl.instanceDetails.activities[state] = data;
+					}).
+                        error(function(data) {
+                            console.log('request failed');
+                        });
 				});
 			}
 
@@ -110,28 +121,37 @@
 						  "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/dataobject/0/").
 					success(function(data){
-						instanceCtrl.instances[$routeParams.instanceId].dataobjects = data;
-					});
+						instanceCtrl.instanceDetails.dataobjects = data;
+					}).
+                        error(function(data) {
+                            console.log('request failed');
+                        });
 			}
 			// activitylogs
 			this.initializeActivitylogInstances = function(){
 				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
-					$http.get(JEngine_Server_URL + "/" + JCore_REST_new_Interface + "/history" +
+					$http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
 						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/activities/").
 					success(function(data){
-						instanceCtrl.instances[$routeParams.instanceId].activitylogs = data;
-					});
+						instanceCtrl.instanceDetails.activitylogs = data;
+					}).
+                        error(function(data) {
+                            console.log('request failed');
+                        });
 			}
 			// dataobjectlogs
 			this.initializeDataobjectlogInstances = function(){
 				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
-					$http.get(JEngine_Server_URL + "/" + JCore_REST_new_Interface + "/history" +
+					$http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
 						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/dataobjects/").
 					success(function(data){
-						instanceCtrl.instances[$routeParams.instanceId].dataobjectlogs = data;
-					});
+						instanceCtrl.instanceDetails.dataobjectlogs = data;
+					}).
+                        error(function(data) {
+                            console.log('request failed');
+                        });
 			}
 
 			this.initialize = function(){
@@ -141,21 +161,13 @@
 					this.initializeInstance($routeParams.instanceId);
 				} else {
 					// First get the Scenario InstanceIds
-					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/0/").
+					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/").
 					success(function(data) {
-						instanceCtrl.scenario['instanceIds'] = data['ids'];
-						// fetch the detail information of every scenario Instance
-						// The scenario is specified by the routeParams
-						instanceCtrl.scenario['instanceIds'].forEach(function(instanceId){
-							$http.get(
-								JEngine_Server_URL + "/" + JCore_REST_Interface +
-								"/scenario/" + $routeParams.id + "/instance/" + instanceId + "/"
-							).success(function(data){
-								instanceCtrl.instances['' + instanceId] = data;
-								instanceCtrl.initializeInstance(instanceId);
-							});
-						});
-					});
+						instanceCtrl.scenario['instances'] = data;
+                        instanceCtrl.scenario['id'] = $routeParams.id;
+					}).error(function(data) {
+                            console.log('request failed');
+                        });
 				}
 			};
 			
@@ -166,16 +178,20 @@
 					"/scenario/" + $routeParams.id + "/instance/" + 
 					id + "/"
 				).success(function(data){
-					instanceCtrl.scenario['instanceIds'] = instanceCtrl.scenario['instanceIds'] || [];
-					instanceCtrl.scenario['instanceIds'].push(id);
-					instanceCtrl.instances['' + id] = data;
+					//instanceCtrl.scenario['instanceIds'] = instanceCtrl.scenario['instanceIds'] || [];
+					//instanceCtrl.scenario['instanceIds'].push(id);
+					//instanceCtrl.instances['' + id] = data;
+                        instanceCtrl.instanceDetails['id'] = id;
 					if ($routeParams.instanceId) {
 						instanceCtrl.initializeActivityInstances();
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
 					}
-				});
+				}).
+                    error(function(data) {
+                        console.log('request failed');
+                    });
 			}
 			
 			// if necessary initialize the specified Scenario
@@ -216,7 +232,10 @@
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
-					});
+					}).
+                    error(function(data) {
+                        console.log('request failed');
+                    });
 			};
 			
 			// terminates an activity
@@ -230,7 +249,10 @@
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
-					});
+					}).
+                    error(function(data) {
+                        console.log('request failed');
+                    });
 			};				
 		}
 	]);

@@ -54,7 +54,7 @@
 			//post update for email tasks
 			this.submitMyForm=function(){
 				var data=$scope.form;  
-				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/config/emailtask/"+ controller.workingID + "/?", data);        
+				$http.post(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/"+ controller.workingID + "/?", data);
 		   	 }
 
 			//get all infos for popup

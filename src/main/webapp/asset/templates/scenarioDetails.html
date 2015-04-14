@@ -1,4 +1,6 @@
-<h2>{{scenarioCtrl.getCurrentScenario()['label']}}</h2>
+{{scenarioCtrl.getCurrentScenario()}}
+<h2>{{scenarioCtrl.currentScenario['id']}}</h2>
+
 <br>
 <div class="row">
 	<!--<div class="col-xs-4">
@@ -8,13 +10,13 @@
 	<table>
 		<tr>
 			<th>ScenarioID</th>
-			<th>{{"# " + scenarioCtrl.getCurrentScenario()['id']}}</th>
+			<th>{{"# " + scenarioCtrl.currentScenario['id']}}</th>
 		</tr><tr>
 			<th>ScenarioName</th>
-			<th>{{scenarioCtrl.getCurrentScenario()['label']}}</th>
+			<th>{{scenarioCtrl.currentScenario['details']['name']}}</th>
 		</tr><tr>
 			<th>Amount of Instances&nbsp;&nbsp;</th>
-			<th>{{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}</th>
+			<th>{{scenarioCtrl.currentScenario()['instances']['ids'].length}}</th>
 		</tr>
 	</table>
 	<div class="pull-right">
@@ -35,9 +37,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.instances track by $index"  ng-show="!searchText || value['label'].indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);" >
+				<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.instances track by $index"  ng-show="!searchText || value.indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);" >
 					<td>{{key}}</td>
-					<td>{{value['label']}}</td>
+					<td>{{value}}</td>
 				</tr>
 				</a>
 			</tbody>
