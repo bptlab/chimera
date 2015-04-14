@@ -1,15 +1,6 @@
 (function(){
 	var userIn = angular.module('userInteraction', []);
 	
-	// TODO: At a future state we maybe should use a service to share data between the controllers
-	// Create an Object which holds the scenario Data globally
-	/*scenario.factory('globalStorage', function(){
-		var globalStorage = {
-			scenarios: {}
-		};
-		return globalStorage;
-	});*/
-	
 	// Create a directive for Scenarios Menu Entry
 	userIn.directive('scenarioMenuEntry', function(){
 		return {
@@ -34,22 +25,21 @@
 					//controller.getDetailedInformation();
 				});
 				
-			this.getDetailedInformation = function(id){
+			this.getScenarioDetails = function(id){
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 						success(function(data) {
 							controller.currentScenario['details'] = data;
 							//controller.getImageForScenario(id);
-							controller.getInstancesOfScenario(id);
+							//controller.getInstancesOfScenario(id);
 						}).
-                        error(function(data) {
+                        error(function() {
                             console.log('request failed');
                         });
 			};
 			
 			this.getImageForScenario = function(id){
 				this.scenarios["" + id]['imageUrl'] =
-					JEngine_Server_URL + "/" + JComparser_REST_Interface + 
-					"/scenarios/" + id + "/image/";
+					JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios/" + id + "/image/";
 			};
 			
 			this.goToDetailsFrom = function(id){
@@ -58,7 +48,7 @@
 			
 			this.getCurrentScenario = function(){
 				if ($routeParams.id != null) {
-                    controller.getDetailedInformation($routeParams.id);
+                    controller.getScenarioDetails($routeParams.id);
                     controller.getInstancesOfScenario($routeParams.id);
 
                     controller.currentScenario['id'] = $routeParams.id;
@@ -66,22 +56,22 @@
 			};
 			
 			this.getInstancesOfScenario = function(id) {
-				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ id + "/instance/").
+				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
 					success(function(data) {
 						controller.currentScenario['instances'] = data;
 				}).
-                    error(function(data) {
+                    error(function() {
                          console.log('request failed');
                 });
 			};
 			
 			// Creates a new instance of the scenario with the given Id
 			this.createInstance = function(id){
-				$http.post(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/"+ id+"/").
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 					success(function(data) {
 						$location.path("/scenario/" + id + "/instance/" + data);
 					}).
-                    error(function(data) {
+                    error(function() {
                         console.log('request failed');
                     });
 			};
@@ -109,7 +99,7 @@
 					success(function(data){
 						instanceCtrl.instanceDetails.activities[state] = data;
 					}).
-                        error(function(data) {
+                        error(function() {
                             console.log('request failed');
                         });
 				});
@@ -123,7 +113,7 @@
 					success(function(data){
 						instanceCtrl.instanceDetails.dataobjects = data;
 					}).
-                        error(function(data) {
+                        error(function() {
                             console.log('request failed');
                         });
 			}
@@ -136,7 +126,7 @@
 					success(function(data){
 						instanceCtrl.instanceDetails.activitylogs = data;
 					}).
-                        error(function(data) {
+                        error(function() {
                             console.log('request failed');
                         });
 			}
@@ -149,7 +139,7 @@
 					success(function(data){
 						instanceCtrl.instanceDetails.dataobjectlogs = data;
 					}).
-                        error(function(data) {
+                        error(function() {
                             console.log('request failed');
                         });
 			}
@@ -165,7 +155,7 @@
 					success(function(data) {
 						instanceCtrl.scenario['instances'] = data;
                         instanceCtrl.scenario['id'] = $routeParams.id;
-					}).error(function(data) {
+					}).error(function() {
                             console.log('request failed');
                         });
 				}
@@ -189,7 +179,7 @@
 						instanceCtrl.initializeDataobjectlogInstances();
 					}
 				}).
-                    error(function(data) {
+                    error(function() {
                         console.log('request failed');
                     });
 			}
@@ -233,7 +223,7 @@
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
 					}).
-                    error(function(data) {
+                    error(function() {
                         console.log('request failed');
                     });
 			};
@@ -250,7 +240,7 @@
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
 					}).
-                    error(function(data) {
+                    error(function() {
                         console.log('request failed');
                     });
 			};				
