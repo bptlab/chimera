@@ -116,6 +116,8 @@ public class Edge implements IDeserialisable, IPersistable {
                 id = Integer.parseInt(value);
                 break;
             case "label":
+                if (label != null && label.equals("DEFAULT"))
+                    break;
                 label = value;
                 break;
             case "#sourceNode":
@@ -123,6 +125,12 @@ public class Edge implements IDeserialisable, IPersistable {
                 break;
             case "#targetNode":
                 targetNodeId = Long.parseLong(value);
+                break;
+            case "sequence_type":
+                if (value.equals("DEFAULT")) {
+                    label = value;
+                    break;
+                }
                 break;
             default:
                 // This type is not supported by the JComparser
