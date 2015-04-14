@@ -684,7 +684,7 @@ public class HugeComparserTest extends TestSetUp {
         Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(a1FragA, secondANDFragA, "")));
         Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(refFragA, secondANDFragA, "")));
         Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(secondANDFragA, endEventFragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(firstXORFragB, b2FragB, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(firstXORFragB, b2FragB, "DEFAULT")));
         Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(b2FragB, secondXORFragB, "")));
         Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(secondXORFragB, endEventFragB, "")));
         Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(startEventFragB, refFragB, "")));
