@@ -78,9 +78,9 @@
 			
 			// Creates a new instance of the scenario with the given Id
 			this.createInstance = function(id){
-				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
 					success(function(data) {
-						$location.path("/scenario/" + id + "/instance/" + data);
+						$location.path("/scenario/" + id + "/instance/" + data['id']);
 					}).
                     error(function() {
                         console.log('request failed');
