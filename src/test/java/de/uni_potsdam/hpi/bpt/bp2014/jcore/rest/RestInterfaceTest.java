@@ -576,7 +576,6 @@ public class RestInterfaceTest extends AbstractTest {
                 "{\"error\":\"There is no instance with the id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
-
     }
 
     /**
