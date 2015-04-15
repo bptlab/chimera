@@ -25,29 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Path("config/v2")
 public class RestConfigurator {
-    /**
-     * Updates the email configuration for a specified task.
-     * The Task is specified by the email Task ID and the new
-     * configuration will submitted as a JSON-Object.
-     *
-     * @param emailTaskID The ControlNode id of the email task.
-     * @param input       The new configuration.
-     * @return A Response 202 (ACCEPTED) if the update was successful.
-     * A 404 (NOT_FOUND) if the mail task could not be found.
-     */
-    @PUT //would be PATCH if only selected fields are updated
-    @Path("emailtask/{emailtaskID}/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEmailConfiguration(
-            @PathParam("emailtaskID") int emailTaskID,
-            final RestInterface.EmailConfigJaxBean input) {
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
-                input.receiver, input.subject, input.content);
-        return Response.status(
-                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
-                .build();
-    }
 
     /**
      * Deletes a scenario with all its instances.
@@ -76,6 +53,32 @@ public class RestConfigurator {
                     .entity("{\"error\":\"scenario deletion failed\"}")
                     .build();
         }
+    }
+
+    /*************************** EMAIL SERVICE TASKS **********************************/
+
+    /**
+     * Updates the email configuration for a specified task.
+     * The Task is specified by the email Task ID and the new
+     * configuration will submitted as a JSON-Object.
+     *
+     * @param emailTaskID The ControlNode id of the email task.
+     * @param input       The new configuration.
+     * @return A Response 202 (ACCEPTED) if the update was successful.
+     * A 404 (NOT_FOUND) if the mail task could not be found.
+     */
+    @PUT //would be PATCH if only selected fields are updated
+    @Path("emailtask/{emailtaskID}/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateEmailConfiguration(
+            @PathParam("emailtaskID") int emailTaskID,
+            final RestInterface.EmailConfigJaxBean input) {
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
+                input.receiver, input.subject, input.content);
+        return Response.status(
+                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
+                .build();
     }
 
     /**

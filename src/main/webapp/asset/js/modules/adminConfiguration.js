@@ -11,7 +11,7 @@
 			this.scenarios = {};
 			this.scenarioDetails = {};
 			
-			$http.get(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/scenarios").
+			$http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
 				success(function(data){
 				    controller.scenarioDetails = data['ids'];
 				    
@@ -24,7 +24,7 @@
 					
 			// Creates a new instance of the scenario with the given Id
 			this.loadInstance = function(id){
-				$http.post(JEngine_Server_URL+"/"+JComparser_REST_Interface+"/launch/"+ id).
+				$http.post(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/launch/" + id).
 					success(function(data) {
 						if (data) {
 							return data;
@@ -45,7 +45,7 @@
 			this.scenarioIDs = [];
 			this.detailsForID = [];
 
-			$http.get(JEngine_Server_URL+"/"+JCore_REST_Interface+"/scenario/0/").
+			$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
 				success(function(data){
 				    controller.scenarioIDs = data['ids'];
 				    
@@ -65,7 +65,7 @@
 
 			// Got all emailtasks with the given Id
 			this.getAllMailtaskForScenarioID = function(id){
-				$http.get(JEngine_Server_URL+"/" + JCore_REST_Interface + "/scenario/" + id + "/emailtask/0/").
+				$http.get(JEngine_Server_URL+"/" + JCore_REST_Interface + "/scenario/" + id + "/emailtask/").
 					success(function(data) {
 						controller.emailtaskIDs = data['ids'];
 					});
