@@ -99,7 +99,7 @@ public class RestConfigurator {
             final EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
-                input.receiver, input.subject, input.content);
+                input.receiver, input.subject, input.message);
         return Response.status(
                 result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
                 .build();
@@ -167,7 +167,7 @@ public class RestConfigurator {
                     .entity("{}")
                     .build();
         }
-        mailConfig.content = mail.getMessage(mailTaskID);
+        mailConfig.message = mail.getMessage(mailTaskID);
         mailConfig.subject = mail.getSubject(mailTaskID);
         return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
@@ -196,6 +196,6 @@ public class RestConfigurator {
          * The content of the email.
          * Could be any String but null.
          */
-        public String content;
+        public String message;
     }
 }

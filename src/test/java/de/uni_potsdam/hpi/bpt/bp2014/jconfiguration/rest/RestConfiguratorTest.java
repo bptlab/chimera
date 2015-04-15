@@ -150,13 +150,13 @@ public class RestConfiguratorTest extends AbstractTest {
 
     /**
      * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
-     * a valid json object with "receiver", "content", "subject" should be returned
+     * a valid json object with "receiver", "message", "subject" should be returned
      */
     @Test
     public void testGetEmailTaskReturnsCorrectJSON() {
         Response response = base.path("scenario/142/emailtask/353").request().get();
         assertThat("Get mail Task configuration returns not an valid JSON object",
-                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"content\":\"Test Message\"}",
+                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
