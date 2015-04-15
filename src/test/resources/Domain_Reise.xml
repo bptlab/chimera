@@ -33,7 +33,7 @@
         </node>
         <node>
             <property name="abstract" value="0"/>
-            <property name="text" value="Hotel"/>
+            <property name="text" value="bike"/>
             <property name="#attributes" value="{0}+Name ;{1}+Rating ;{2}+Adresse ;{3}+AnzahlNaechte ;"/>
             <property name="color_background" value="-5321155"/>
             <property name="width" value="100"/>

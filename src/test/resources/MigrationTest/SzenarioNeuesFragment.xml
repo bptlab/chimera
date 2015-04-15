@@ -74,7 +74,7 @@
          <property name="x" value="295" />
          <property name="width" value="100" />
          <property name="y" value="162" />
-         <property name="text" value="DO1" />
+         <property name="text" value="bike" />
          <property name="stereotype" value="" />
          <property name="#id" value="1836429333" />
          <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
@@ -87,7 +87,7 @@
          <property name="x" value="295" />
          <property name="width" value="100" />
          <property name="y" value="142" />
-         <property name="text" value="DO2" />
+         <property name="text" value="Flug" />
          <property name="stereotype" value="" />
          <property name="#id" value="139171186" />
          <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
@@ -100,7 +100,7 @@
          <property name="x" value="295" />
          <property name="width" value="100" />
          <property name="y" value="102" />
-         <property name="text" value="DO3" />
+         <property name="text" value="Person" />
          <property name="stereotype" value="" />
          <property name="#id" value="1546103035" />
          <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
