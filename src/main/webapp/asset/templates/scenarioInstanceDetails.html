@@ -265,9 +265,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="(key, value) in scenarioCtrl.currentScenario['terminationcondition'] track by $index">
+
+                                <tr ng-repeat="(key, value) in instanceCtrl.scenario['terminationcondition'] track by $index">
                                     <td>{{key}}</td>
-                                    <td>{{value}}</td>
+                                    <td>
+                                        <div ng-repeat="(key2, value2) in instanceCtrl.scenario['terminationcondition'][key] track by $index">
+                                            dataobject {{value2['data_object']}} should be {{value2['state']}}.
+                                        </div>
+                                    </td>
                                 </tr>
                                 </a>
                                 </tbody>

@@ -23,11 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
- * This class is the test for {@link RestInterface}.
+ * This class is the test for {@link RestConfigurator}.
  * It extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest} class,
  * hence the database configuration will be restored afterwards.
  */
-public class RestInterfaceTest extends AbstractTest {
+public class RestConfiguratorTest extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     /**
@@ -51,7 +51,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestInterface.class);
+        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.class);
     }
 
     @Before

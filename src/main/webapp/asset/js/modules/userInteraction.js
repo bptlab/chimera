@@ -210,7 +210,7 @@
                             instanceCtrl.initializeDataobjectInstances();
                             instanceCtrl.initializeActivitylogInstances();
                             instanceCtrl.initializeDataobjectlogInstances();
-                            scenarioCtrl.getTerminationConditionOfScenario(id);
+                            instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
                         }
                     }).
                     error(function () {
@@ -275,7 +275,17 @@
                     error(function() {
                         console.log('request failed');
                     });
-			};				
+			};
+
+            this.getTerminationConditionOfScenario = function(id) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
+                    success(function(data) {
+                        instanceCtrl.scenario['terminationcondition'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
 		}
 	]);
 })();
