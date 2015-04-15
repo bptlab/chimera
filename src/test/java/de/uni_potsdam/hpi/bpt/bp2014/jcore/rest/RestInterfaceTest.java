@@ -15,6 +15,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -65,7 +66,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(String)}
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)}
      * the media type of the response will be JSON.
      */
     @Test
@@ -78,7 +79,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a get to {@link RestInterface#getScenarios(String)}
+     * When you sent a get to {@link RestInterface#getScenarios(UriInfo, String)} 
      * the entity of the response will be a valid JSON array.
      */
     @Test
@@ -89,7 +90,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(String)}
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)} 
      * the returned JSON will contain the latest version of all Scenarios.
      */
     @Test
@@ -101,7 +102,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(String)} and
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)} and
      * you use a Filter
      * then the returned JSON will contain the latest version of all Scenarios with
      * a name containing the filterString.
@@ -115,7 +116,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getScenario(int) with an invalid id
+     * When you send a GET to {@link RestInterface#getScenario(UriInfo, int)} with an invalid id
      * a empty JSON with a 404 will be returned.
      */
     @Test
@@ -131,7 +132,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * If you send a GET to {@link RestInterface#getScenario(int)} with an valid id
+     * If you send a GET to {@link RestInterface#getScenario(UriInfo, int)}  with an valid id
      * a JSON containing the id, name and modelversion will be returned.
      */
     @Test
@@ -151,7 +152,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link RestInterface#getScenarioInstances(UriInfo, int, String)} 
      * with valid params and no filter
      * then you get 200 a JSON Object.
      */
@@ -165,7 +166,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with an invalid scenario
      * then you get 404 with an error message inside the returned JSON object
      */
@@ -182,7 +183,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with a valid scenario id
      * then a json object with all instances, id and label should be returned.
      * The schema should be:
@@ -229,7 +230,7 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with a valid scenario id and a filter
      * only instances with names containing this string will be returned.
      */
@@ -243,7 +244,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -260,7 +261,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)} 
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -277,7 +278,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Put to {@link RestInterface#startNewInstance(int)}
+     * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -297,7 +298,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -373,7 +374,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an wrong scenario ID the request should be redirected to the correct one.
      */
     @Test
@@ -384,13 +385,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                "{\"activities\":{\"189\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"},\"6686\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,189,6686]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with an wrong scenario instance ID
      * then a 404 with error message (inside JSON) should be returned.
      */
@@ -408,7 +409,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -421,13 +422,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,189]}",
+                "{\"activities\":[{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"},{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"},{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"}],\"ids\":[186,189,6686]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with an correct parameters, an invalid state but no filter
      * the request should return a 404 with error message
      */
@@ -448,7 +449,7 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -461,33 +462,33 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"}],\"ids\":[187,188]}",
+                "{\"activities\":[],\"ids\":[]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with an correct parameters a state and a filter
-     * then the request should return all activities with the state who fullfil the filter condition.
+     * then the request should return all activities with the state who fulfill the filter condition.
      */
     @Test
     public void testGetActivitiesWithStateAndFilter() {
         Response response = base.path("scenario/1/instance/72/activity")
             .queryParam("status", "ready")
-                .queryParam("filter", "1").request().get();
+                .queryParam("filter", "2").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
                 200, response.getStatus());
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,189]}",
+                "{\"activities\":[{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"}],\"ids\":[189]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters, an invalid state but no filter
      * the request should return a 404 with error message
      */
@@ -507,7 +508,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with correct instance and scenario
      * a 200 with json content will be returned.
      */
@@ -519,13 +520,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                "{\"activities\":{\"189\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"},\"6686\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,189,6686]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with a filter String
      * then only activities with a label like the filter String will be returned.
      */
@@ -537,13 +538,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[187,188,189]}",
+                "{\"activities\":{\"189\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"}},\"ids\":[189]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with a correct instance id and a wrong scenario ID
      * you will be redirected automatically.
      */
@@ -561,7 +562,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with an invalid instance
      * an 404 with error message will be returned
      */
@@ -579,7 +580,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with an valid instance and scenario and no filter String
      * you will get a list of all DataObjects for this scenario.
      */
@@ -597,7 +598,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with an valid instance and scenario and an filter String
      * you will get a list of all DataObjects with labels like the filter String for this scenario.
      */

@@ -440,7 +440,6 @@ public class RestInterface {
      * will point to the correct URL.
      * If the instance ID is incorrect a 404 (NOT_FOUND) will
      * be returned.
-     * TODO: Use the ExecutionService instead - be aware that using the E.S. leads to state changes.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity")
@@ -467,13 +466,13 @@ public class RestInterface {
             }
         }
         if ((filterString == null || filterString.isEmpty()) && (state == null || state.isEmpty())) {
-            return getAllActivitiesOfInstance(instanceID, uriInfo);
+            return getAllActivitiesOfInstance(scenarioID, instanceID, uriInfo);
         } else if ((filterString == null || filterString.isEmpty())) {
-            return getAllActivitiesOfInstanceWithState(instanceID, state, uriInfo);
+            return getAllActivitiesOfInstanceWithState(scenarioID, instanceID, state, uriInfo);
         } else if ((state == null || state.isEmpty())) {
-            return getAllActivitiesOfInstanceWithFilter(instanceID, filterString, uriInfo);
+            return getAllActivitiesOfInstanceWithFilter(scenarioID, instanceID, filterString, uriInfo);
         } else {
-            return getAllActivitiesWithFilterAndState(instanceID, filterString, state, uriInfo);
+            return getAllActivitiesWithFilterAndState(scenarioID, instanceID, filterString, state, uriInfo);
         }
     }
 
@@ -488,8 +487,10 @@ public class RestInterface {
      * @return The Response object as described above.
      */
     private Response getAllActivitiesWithFilterAndState(
-            int instanceID, String filterString, String state, UriInfo uriInfo) {
+            int scenarioID, int instanceID, String filterString,
+            String state, UriInfo uriInfo) {
         ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Collection<ActivityInstance> instances;
         switch (state) {
             case "ready":
@@ -531,8 +532,9 @@ public class RestInterface {
      * @return The created Response object with a 200 and a JSON.
      */
     private Response getAllActivitiesOfInstanceWithFilter(
-            int instanceID, String filterString, UriInfo uriInfo) {
+            int scenarioID, int instanceID, String filterString, UriInfo uriInfo) {
         ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
         instances.put("ready", executionService.getEnabledActivities(instanceID));
         instances.put("running", executionService.getRunningActivities(instanceID));
@@ -542,14 +544,14 @@ public class RestInterface {
         for (Map.Entry<String, Collection<ActivityInstance>> entry : instances.entrySet()) {
             for (ActivityInstance instance : entry.getValue()) {
                 if (instance.getLabel().contains(filterString)) {
-                    ids.put(instance.getControlNode_id());
+                    ids.put(instance.getControlNodeInstance_id());
                     JSONObject activityJSON = new JSONObject();
-                    activityJSON.put("id", instance.getControlNode_id());
+                    activityJSON.put("id", instance.getControlNodeInstance_id());
                     activityJSON.put("label", instance.getLabel());
                     activityJSON.put("state", entry.getKey());
                     activityJSON.put("link", uriInfo.getAbsolutePath() + "/" +
-                            instance.getControlNode_id());
-                    activities.put("" + instance.getControlNode_id(), activityJSON);
+                            instance.getControlNodeInstance_id());
+                    activities.put("" + instance.getControlNodeInstance_id(), activityJSON);
                 }
             }
         }
@@ -561,8 +563,10 @@ public class RestInterface {
                 .build();
     }
 
-    private Response getAllActivitiesOfInstanceWithState(int instanceID, String state, UriInfo uriInfo) {
+    private Response getAllActivitiesOfInstanceWithState(
+            int scenarioID, int instanceID, String state, UriInfo uriInfo) {
         ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Collection<ActivityInstance> instances;
         switch (state) {
             case "ready":
@@ -601,12 +605,12 @@ public class RestInterface {
         JSONArray activities = new JSONArray();
         for (ActivityInstance instance : instances) {
             JSONObject activityJSON = new JSONObject();
-            ids.add(instance.getControlNode_id());
-            activityJSON.put("id", instance.getControlNode_id());
+            ids.add(instance.getControlNodeInstance_id());
+            activityJSON.put("id", instance.getControlNodeInstance_id());
             activityJSON.put("label", instance.getLabel());
             activityJSON.put("state", state);
             activityJSON.put("link", uriInfo.getAbsolutePath() + "/" +
-                instance.getControlNode_id());
+                instance.getControlNodeInstance_id());
             activities.put(activityJSON);
         }
         JSONObject result = new JSONObject();
@@ -624,8 +628,10 @@ public class RestInterface {
      * @param instanceID the instance id of the scenario instance.
      * @return The Response Object, with 200 and JSON Content.
      */
-    private Response getAllActivitiesOfInstance(int instanceID, UriInfo uriInfo) {
+    private Response getAllActivitiesOfInstance(
+            int scenarioID, int instanceID, UriInfo uriInfo) {
         ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
         instances.put("ready", executionService.getEnabledActivities(instanceID));
         instances.put("running", executionService.getRunningActivities(instanceID));
@@ -634,14 +640,14 @@ public class RestInterface {
         JSONObject activities = new JSONObject();
         for (Map.Entry<String, Collection<ActivityInstance>> entry : instances.entrySet()) {
             for (ActivityInstance instance : entry.getValue()) {
-                ids.put(instance.getControlNode_id());
+                ids.put(instance.getControlNodeInstance_id());
                 JSONObject activityJSON = new JSONObject();
-                activityJSON.put("id", instance.getControlNode_id());
+                activityJSON.put("id", instance.getControlNodeInstance_id());
                 activityJSON.put("label", instance.getLabel());
                 activityJSON.put("state", entry.getKey());
                 activityJSON.put("link", uriInfo.getAbsolutePath() + "/" +
-                        instance.getControlNode_id());
-                activities.put("" + instance.getControlNode_id(), activityJSON);
+                        instance.getControlNodeInstance_id());
+                activities.put("" + instance.getControlNodeInstance_id(), activityJSON);
             }
         }
         JSONObject result = new JSONObject();
