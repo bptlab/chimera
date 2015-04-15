@@ -774,7 +774,7 @@ public class RestInterface {
      * It is used by Jersey to deserialize JSON.
      * Also it can be used for tests to provide the correct contents.
      * This class in particular is used by the POST for the email configuration.
-     * See the {@link RestConfigurator.updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.updateEmailConfiguration(int, EmailConfigJaxBean)}
      * updateEmailConfiguration} method for more information.
      */
     @XmlRootElement

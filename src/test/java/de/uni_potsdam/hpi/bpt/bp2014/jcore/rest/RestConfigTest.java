@@ -3,24 +3,17 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import net.javacrumbs.jsonunit.core.Option;
+import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-
-import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
-import static org.junit.Assert.*;
 
 /**
  * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
@@ -58,7 +51,7 @@ public class RestConfigTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestConfigurator.class);
+        return new ResourceConfig(RestConfigurator.class);
     }
 
     @Before
