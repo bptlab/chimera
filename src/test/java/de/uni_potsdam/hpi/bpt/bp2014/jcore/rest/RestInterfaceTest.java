@@ -96,7 +96,7 @@ public class RestInterfaceTest extends AbstractTest {
     public void testGetScenarioContent() {
         Response response = base.path("scenario").request().get();
         assertThat("Get Scenarios did not contain the expected information",
-                "{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"labels\":{\"1\":\"HELLOWORLD\",\"3\":\"EmailTest\",\"2\":\"helloWorld2\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}",
+                "{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134,135,136,138,139,140,141,142,143,144],\"links\":{\"140\":\"http://localhost:9998/interface/v2/scenario/140\",\"141\":\"http://localhost:9998/interface/v2/scenario/141\",\"142\":\"http://localhost:9998/interface/v2/scenario/142\",\"143\":\"http://localhost:9998/interface/v2/scenario/143\",\"1\":\"http://localhost:9998/interface/v2/scenario/1\",\"100\":\"http://localhost:9998/interface/v2/scenario/100\",\"111\":\"http://localhost:9998/interface/v2/scenario/111\",\"144\":\"http://localhost:9998/interface/v2/scenario/144\",\"2\":\"http://localhost:9998/interface/v2/scenario/2\",\"101\":\"http://localhost:9998/interface/v2/scenario/101\",\"134\":\"http://localhost:9998/interface/v2/scenario/134\",\"3\":\"http://localhost:9998/interface/v2/scenario/3\",\"113\":\"http://localhost:9998/interface/v2/scenario/113\",\"135\":\"http://localhost:9998/interface/v2/scenario/135\",\"103\":\"http://localhost:9998/interface/v2/scenario/103\",\"114\":\"http://localhost:9998/interface/v2/scenario/114\",\"136\":\"http://localhost:9998/interface/v2/scenario/136\",\"115\":\"http://localhost:9998/interface/v2/scenario/115\",\"105\":\"http://localhost:9998/interface/v2/scenario/105\",\"116\":\"http://localhost:9998/interface/v2/scenario/116\",\"138\":\"http://localhost:9998/interface/v2/scenario/138\",\"117\":\"http://localhost:9998/interface/v2/scenario/117\",\"139\":\"http://localhost:9998/interface/v2/scenario/139\",\"118\":\"http://localhost:9998/interface/v2/scenario/118\"},\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\",\"3\":\"EmailTest\",\"100\":\"TestScenario\",\"101\":\"Test Insert Scenario\",\"134\":\"ReiseTestScenario\",\"103\":\"ScenarioTest1\",\"135\":\"ReiseTestScenario\",\"136\":\"TXOR1Scenario\",\"105\":\"TestScenarioTerminationCondition\",\"138\":\"TestEmail1Scenario\",\"139\":\"TestEmail1Scenario\",\"140\":\"TestEmail1Scenario\",\"141\":\"TestEmail2Scenario\",\"142\":\"TestEmail3Scenario\",\"111\":\"Test2_2ReferenceTest\",\"143\":\"TestEmail3Scenario\",\"144\":\"XORTest2Scenario\",\"113\":\"referencetest3_2\",\"114\":\"RT4Scenario\",\"115\":\"TT2Scenario\",\"116\":\"TT2Scenario\",\"117\":\"AT2Scenario\",\"118\":\"AT3Scenario\"}}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
@@ -110,7 +110,7 @@ public class RestInterfaceTest extends AbstractTest {
     public void testGetScenarioContentWithFilter() {
         Response response = base.path("scenario").queryParam("filter", "HELLO").request().get();
         assertThat("Get Scenarios did not contain the expected information",
-                "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}",
+                "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"},\"links\":{\"1\":\"http://localhost:9998/interface/v2/scenario/1\",\"2\":\"http://localhost:9998/interface/v2/scenario/2\"}}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
@@ -145,7 +145,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertNotEquals("Get scenarios did not respond with a valid JSON Array",
                 null, new JSONObject(responseEntity));
         assertThat("The content of the valid request is not as expected",
-                "{\"modelid\":0,\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
+                "{\"modelid\":0,\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
                 jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
 
     }
@@ -277,7 +277,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Put to {@link RestInterface#startNewInstance(int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -288,7 +288,7 @@ public class RestInterfaceTest extends AbstractTest {
                 .request().put(Entity.json(newName));
         assertEquals("The Response code of start new instances was not 201",
                 201, response.getStatus());
-        assertEquals("Start new isntance returns a Response with the wrong media Type",
+        assertEquals("Start new instance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 "{\"id\":966,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/966\"}",
@@ -555,7 +555,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[1,2],\"results\":{\"1\":{\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
+                "{\"ids\":[1,2],\"results\":{\"1\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/dataobject/1\",\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/dataobject/2\",\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
