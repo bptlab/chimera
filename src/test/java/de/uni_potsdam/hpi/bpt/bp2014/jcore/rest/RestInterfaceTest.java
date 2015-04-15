@@ -204,9 +204,9 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void terminateScenarioInstance() {
-        Response response = base.path("scenario/1/instance/47").request().post(null);
-        assertEquals("The Response code of terminating an instances was not 201",
-                201, response.getStatus());
+        Response response = base.path("scenario/1/instance/47").request().put(Entity.json(""));
+        assertEquals("The Response code of terminating an instances was not 200",
+                200, response.getStatus());
     }
 
     /**
@@ -216,7 +216,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void terminateScenarioInstanceInvalidId() {
-        Response response = base.path("scenario/1/instance/9999").request().post(null);
+        Response response = base.path("scenario/1/instance/9999").request().put(Entity.json(""));
         assertEquals("The Response code of terminating an instances was not 400",
                 400, response.getStatus());
         assertEquals("The Media type of terminating an instance was not JSON",
@@ -732,7 +732,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testInvalidStateUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "complete").request().post(null);
+                .queryParam("state", "complete").request().put(Entity.json(""));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -752,7 +752,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testInvalidActivityUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "begin").request().post(null);
+                .queryParam("state", "begin").request().put(Entity.json(""));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
