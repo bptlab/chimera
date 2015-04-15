@@ -772,7 +772,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/2")
-                .queryParam("state", "begin").request().post(null);
+                .queryParam("state", "begin").request().put(Entity.json(""));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -782,7 +782,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/1/instance/72/activity/2")
-                .queryParam("status", "terminate").request().post(null);
+                .queryParam("state", "terminate").request().put(Entity.json(""));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",

@@ -532,7 +532,7 @@ public class RestInterface {
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
     public Response updateActivityState(@PathParam("scenarioID") String scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,
