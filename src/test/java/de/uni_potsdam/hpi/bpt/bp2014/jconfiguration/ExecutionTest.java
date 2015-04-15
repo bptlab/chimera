@@ -39,17 +39,15 @@ public class ExecutionTest {
         runner.runScript(new StringReader(insertScenarios));
         runner.runScript(new StringReader(insertScenarioInstances));
         Execution exec = new Execution();
-        try {
-            exec.deleteScenario(4);
-            Assert.fail("No Exception thrown even though running instances of the scenario exist.");
-        } catch (Exception expectedException) {
-            Assert.assertTrue(expectedException.getMessage().equals("Scenario can't be deleted as there are still running scenarioInstances"));
-        }
+        exec.deleteScenario(4);
         exec.deleteScenario(5);
         exec.deleteScenario(6);
         DbObject dbObject = new DbObject();
-        String select = "SELECT deleted FROM scenario WHERE id = 5";
+        String select = "SELECT deleted FROM scenario WHERE id = 4";
         List<Integer> deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
+        Assert.assertEquals("Scenario deleted even though there are still running instances", 0, deleted.get(0).intValue());
+        select = "SELECT deleted FROM scenario WHERE id = 5";
+        deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
         Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());
         select = "SELECT deleted FROM scenario WHERE id = 6";
         deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
