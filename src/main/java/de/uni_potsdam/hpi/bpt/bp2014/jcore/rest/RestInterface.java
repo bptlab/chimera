@@ -20,69 +20,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 /**
- * This is a data class for the email configuration.
- * It is used by Jersey to deserialize JSON.
- * Also it can be used for tests to provide the correct contents.
- * This class in particular is used by the POST for the email configuration.
- * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.updateEmailConfiguration(int, EmailConfigJaxBean)}
- * updateEmailConfiguration} method for more information.
- */
-@XmlRootElement
-public static class EmailConfigJaxBean {
-    /**
-     * The receiver of the email.
-     * coded as an valid email address (as String)
-     */
-    public String receiver;
-    /**
-     * The subject of the email.
-     * Could be any String but null.
-     */
-    public String subject;
-    /**
-     * The content of the email.
-     * Could be any String but null.
-     */
-    public String content;
-}
-
-/**
- * A JAX bean which is used for a naming an entity.
- * Therefor a name can be transmitted.
- */
-@XmlRootElement
-public static class NamedJaxBean {
-    /**
-     * The name which should be assigned to the entity.
-     */
-    public String name;
-}
-
-/**
- * A JAX bean which is used for dataobject data.
- * It contains the data of one dataobject.
- * It can be used to create a JSON Object
- */
-@XmlRootElement
-public static class DataObjectJaxBean {
-    /**
-     * The label of the data object.
-     */
-    public String label;
-    /**
-     * The id the dataobject (not the instance) has inside
-     * the database
-     */
-    public int id;
-    /**
-     * The state inside the database of the dataobject
-     * which is stored in the table.
-     * The label not the id will be saved.
-     */
-    public String state;
-}
-
-/**
  * This class implements the REST interface of the JEngine core.
  * The core module provides methods to execute PCM instances
  * and to access the date inside the engine.
@@ -95,6 +32,68 @@ public static class DataObjectJaxBean {
  */
 @Path("interface/v2")
 public class RestInterface {
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * updateEmailConfiguration} method for more information.
+     */
+    @XmlRootElement
+    public static class EmailConfigJaxBean {
+        /**
+         * The receiver of the email.
+         * coded as an valid email address (as String)
+         */
+        public String receiver;
+        /**
+         * The subject of the email.
+         * Could be any String but null.
+         */
+        public String subject;
+        /**
+         * The content of the email.
+         * Could be any String but null.
+         */
+        public String content;
+    }
+
+    /**
+     * A JAX bean which is used for a naming an entity.
+     * Therefor a name can be transmitted.
+     */
+    @XmlRootElement
+    public static class NamedJaxBean {
+        /**
+         * The name which should be assigned to the entity.
+         */
+        public String name;
+    }
+
+    /**
+     * A JAX bean which is used for dataobject data.
+     * It contains the data of one dataobject.
+     * It can be used to create a JSON Object
+     */
+    @XmlRootElement
+    public static class DataObjectJaxBean {
+        /**
+         * The label of the data object.
+         */
+        public String label;
+        /**
+         * The id the dataobject (not the instance) has inside
+         * the database
+         */
+        public int id;
+        /**
+         * The state inside the database of the dataobject
+         * which is stored in the table.
+         * The label not the id will be saved.
+         */
+        public String state;
+    }
 
     /**
      * This method allows to give an overview of all scenarios.
