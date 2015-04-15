@@ -219,6 +219,14 @@ public class Node implements IDeserialisable, IPersistable {
     }
 
     /**
+     * Returns the URI of the datClass.
+     *
+     * @return the dataClassURI
+     */
+    public String getDataClassURI() {
+        return dataClassURI;
+    }
+    /**
      * Returns the ID of the node.
      * It is the id used inside the XML.
      *

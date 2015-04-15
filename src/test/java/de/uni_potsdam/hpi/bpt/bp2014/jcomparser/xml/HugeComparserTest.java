@@ -36,8 +36,7 @@ public class HugeComparserTest extends TestSetUp {
         @Override
         public boolean equals (Object object) {
             DbScenario scenario = (DbScenario) object;
-            if (scenario.id == id &&
-                    scenario.name.equals(name) &&
+            if (scenario.name.equals(name) &&
                     scenario.modelID == modelID &&
                     scenario.modelversion == modelversion &&
                     scenario.datamodelID == datamodelID &&
@@ -64,16 +63,15 @@ public class HugeComparserTest extends TestSetUp {
         @Override
         public boolean equals (Object object) {
             DbFragment fragment = (DbFragment) object;
-            if (fragment.id == id &&
-                    fragment.name.equals(name) &&
+            if (fragment.name.equals(name) &&
                     fragment.scenarioID == scenarioID &&
                     fragment.modelversion == modelversion &&
                     fragment.modelID == modelID &&
                     fragment.modelversion == modelversion)
                 return true;
             return false;
-            }
         }
+    }
 
     private class DbDataClass {
         int id;
@@ -86,8 +84,7 @@ public class HugeComparserTest extends TestSetUp {
         @Override
         public boolean equals (Object object) {
             DbDataClass dataClass = (DbDataClass) object;
-            if (dataClass.id == id &&
-                    dataClass.name.equals(name))
+            if (dataClass.name.equals(name))
                 return true;
             return false;
         }
@@ -110,8 +107,7 @@ public class HugeComparserTest extends TestSetUp {
         @Override
         public boolean equals (Object object) {
             DbDataAttribute dataAttribute = (DbDataAttribute) object;
-            if (dataAttribute.id == id &&
-                    dataAttribute.name.equals(name) &&
+            if (dataAttribute.name.equals(name) &&
                     dataAttribute.type.equals(type) &&
                     dataAttribute.defaultValue.equals(defaultValue) &&
                     dataAttribute.dataClassID == dataClassID)
@@ -143,10 +139,12 @@ public class HugeComparserTest extends TestSetUp {
     }
 
     private class DbState {
+        int id;
         String name;
         int dataClassID;
 
-        public DbState(String name, int dataClassID) {
+        public DbState(int id, String name, int dataClassID) {
+            this.id = id;
             this.name = name;
             this.dataClassID = dataClassID;
         }
@@ -177,8 +175,7 @@ public class HugeComparserTest extends TestSetUp {
         @Override
         public boolean equals (Object object) {
             DbDataObject dataObject = (DbDataObject) object;
-            if (dataObject.id == id &&
-                    dataObject.name.equals(name) &&
+            if (dataObject.name.equals(name) &&
                     dataObject.dataClassID == dataClassID &&
                     dataObject.scenarioID == scenarioID &&
                     dataObject.startStateID == startStateID)
@@ -188,12 +185,14 @@ public class HugeComparserTest extends TestSetUp {
     }
 
     private class DbControlNode {
+        int id;
         String name;
         String type;
         int fragmentID;
         long modelID;
 
-        public DbControlNode(String name, String type, int fragmentID, long modelID) {
+        public DbControlNode(int id, String name, String type, int fragmentID, long modelID) {
+            this.id = id;
             this.name = name;
             this.type = type;
             this.fragmentID = fragmentID;
@@ -213,13 +212,15 @@ public class HugeComparserTest extends TestSetUp {
     }
 
     private class DbDataNode {
+        int id;
         int scenarioID;
         int stateID;
         int dataClassID;
         int dataObjectID;
         long modelID;
 
-        public DbDataNode(int scenarioID, int stateID, int dataClassID, int dataObjectID, long modelID) {
+        public DbDataNode(int id, int scenarioID, int stateID, int dataClassID, int dataObjectID, long modelID) {
+            this.id = id;
             this.scenarioID = scenarioID;
             this.stateID = stateID;
             this.dataClassID = dataClassID;
@@ -240,6 +241,7 @@ public class HugeComparserTest extends TestSetUp {
     }
 
     private class DbDataSetAndFlow {
+        int dataSetID;
         // table dataflow
         int controlNodeID;
         short inputDataFlow;
@@ -248,7 +250,8 @@ public class HugeComparserTest extends TestSetUp {
         // table datasetconsistsofdatanode
         int dataNodeID;
 
-        public DbDataSetAndFlow(int controlNodeID, short inputDataFlow, short inputDataSet, int dataNodeID) {
+        public DbDataSetAndFlow(int dataSetID, int controlNodeID, short inputDataFlow, short inputDataSet, int dataNodeID) {
+            this.dataSetID = dataSetID;
             this.controlNodeID = controlNodeID;
             this.inputDataFlow = inputDataFlow;
             this.inputDataSet = inputDataSet;
@@ -322,32 +325,6 @@ public class HugeComparserTest extends TestSetUp {
     private List<DbDataSetAndFlow> sets;
     private List<DbControlFlow> controlFlows;
     private List<DbReference> references;
-    // stateIDs
-    private int subDOInit;
-    private int subDOEnd;
-    private int dOInit;
-    private int dOState1;
-    // dataNodeIDs
-    private int dOInitFragA;
-    private int dOState1FragA;
-    private int dOState1FragB;
-    private int subDOInitFragB;
-    private int subDOEndFragB;
-    private int dOInitFragB;
-    // controlNodeIDs
-    private int startEventFagA;
-    private int firstANDFragA;
-    private int refFragA;
-    private int a1FragA;
-    private int secondANDFragA;
-    private int endEventFragA;
-    private int startEventFragB;
-    private int firstXORFragB;
-    private int b2FragB;
-    private int secondXORFragB;
-    private int endEventFragB;
-    private int refFragB;
-    private int b1FragB;
 
     @Before
     public void setUp() throws Exception {
@@ -410,6 +387,7 @@ public class HugeComparserTest extends TestSetUp {
                     scenarios.getLong("datamodelid"),
                     scenarios.getInt("datamodelversion"));
             this.scenarios.add(scenario);
+            Assert.assertTrue("ScenarioID smaller than 1", scenario.id > 0);
         }
         Assert.assertTrue("Scenario not inserted correctly", this.scenarios.contains(new DbScenario(1, "Scenario", 358512L, 1, 790983467L, 0)));
         Assert.assertTrue("Too many scenarios inserted", this.scenarios.size() == 1);
@@ -420,12 +398,13 @@ public class HugeComparserTest extends TestSetUp {
         ResultSet fragments = getDbEntries("fragment");
         while (fragments.next()) {
             DbFragment fragment = new DbFragment(
-                fragments.getInt("id"),
-                fragments.getString("name"),
-                fragments.getInt("scenario_id"),
-                fragments.getLong("modelid"),
-                fragments.getInt("modelversion"));
+                    fragments.getInt("id"),
+                    fragments.getString("name"),
+                    fragments.getInt("scenario_id"),
+                    fragments.getLong("modelid"),
+                    fragments.getInt("modelversion"));
             this.fragments.put(fragments.getString("name"), fragment);
+            Assert.assertTrue("FragmentID smaller than 1", fragment.id > 0);
         }
         Assert.assertTrue("Fragment not inserted correctly", this.fragments.values().contains(new DbFragment(1, "FragmentA", scenarios.get(0).id, 1084827857L, 0)));
         Assert.assertTrue("Fragment not inserted correctly", this.fragments.values().contains(new DbFragment(2, "FragmentB", scenarios.get(0).id, 894096069L, 0)));
@@ -440,6 +419,7 @@ public class HugeComparserTest extends TestSetUp {
                     dataClasses.getInt("id"),
                     dataClasses.getString("name"));
             this.dataClasses.put(dataClasses.getString("name"), dataClass);
+            Assert.assertTrue("DataClassID smaller than 1", dataClass.id > 0);
         }
         Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(1, "DO")));
         Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(2, "SubDO")));
@@ -450,13 +430,14 @@ public class HugeComparserTest extends TestSetUp {
     private void testDataAttributes() throws Exception {
         ResultSet dataAttributes = getDbEntries("dataattribute");
         while (dataAttributes.next()) {
-            DbDataAttribute dataClass = new DbDataAttribute(
+            DbDataAttribute dataAttribute = new DbDataAttribute(
                     dataAttributes.getInt("id"),
                     dataAttributes.getString("name"),
                     dataAttributes.getString("type"),
                     dataAttributes.getString("default"),
                     dataAttributes.getInt("dataclass_id"));
-            this.dataAttributes.add(dataClass);
+            this.dataAttributes.add(dataAttribute);
+            Assert.assertTrue("DataAttributeID smaller than 1", dataAttribute.id > 0);
         }
         Assert.assertTrue("DataAttributes not inserted correctly", this.dataAttributes.contains(new DbDataAttribute(1, "Attr1", "", "", dataClasses.get("DO").id)));
         Assert.assertTrue("DataAttributes not inserted correctly", this.dataAttributes.contains(new DbDataAttribute(2, "Attr2", "", "", dataClasses.get("DO").id)));
@@ -483,26 +464,16 @@ public class HugeComparserTest extends TestSetUp {
         ResultSet states = getDbEntries("state");
         while (states.next()) {
             DbState state = new DbState (
+                    states.getInt("id"),
                     states.getString("name"),
                     states.getInt("olc_id"));
             this.states.add(state);
-            int id = states.getInt("id");
-            Assert.assertTrue("ID in table 'state' smaller than 1", id > 0);
-            if (state.name.equals("end"))
-                subDOEnd = id;
-            else if (state.name.equals("state1"))
-                dOState1 = id;
-            else if (state.name.equals("init")) {
-                if (state.dataClassID == dataClasses.get("DO").id)
-                    dOInit = id;
-                else
-                    subDOInit = id;
-            }
+            Assert.assertTrue("StateID smaller than 1", state.id > 0);
         }
-        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState("state1", dataClasses.get("DO").id)));
-        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState("init", dataClasses.get("DO").id)));
-        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState("end", dataClasses.get("SubDO").id)));
-        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState("init", dataClasses.get("SubDO").id)));
+        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(1, "state1", dataClasses.get("DO").id)));
+        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(2, "init", dataClasses.get("DO").id)));
+        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(3, "end", dataClasses.get("SubDO").id)));
+        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(4, "init", dataClasses.get("SubDO").id)));
         Assert.assertTrue("Too many states have been inserted", this.states.size() == 4);
         states.close();
     }
@@ -517,9 +488,17 @@ public class HugeComparserTest extends TestSetUp {
                     dataObjects.getInt("scenario_id"),
                     dataObjects.getInt("start_state_id"));
             this.dataObjects.put(dataObjects.getString("name"), dO);
+            Assert.assertTrue("DataObjectID smaller than 1", dO.id > 0);
         }
-        Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(1, "SubDO", dataClasses.get("SubDO").id, scenarios.get(0).id, subDOInit)));
-        Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(2, "DO", dataClasses.get("DO").id, scenarios.get(0).id, dOInit)));
+        int initDO = 0, initSubDO = 0;
+        for (DbState state : states) {
+            if (state.name.equals("init") && state.dataClassID == dataClasses.get("DO").id)
+                initDO = state.id;
+            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubDO").id)
+                initSubDO = state.id;
+        }
+        Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(1, "SubDO", dataClasses.get("SubDO").id, scenarios.get(0).id, initSubDO)));
+        Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(2, "DO", dataClasses.get("DO").id, scenarios.get(0).id, initDO)));
         Assert.assertTrue("Too many dataObjects have been inserted", this.dataObjects.size() == 2);
         dataObjects.close();
     }
@@ -528,42 +507,32 @@ public class HugeComparserTest extends TestSetUp {
         ResultSet dataNodes = getDbEntries("datanode");
         while (dataNodes.next()) {
             DbDataNode dataNode = new DbDataNode(
+                    dataNodes.getInt("id"),
                     dataNodes.getInt("scenario_id"),
                     dataNodes.getInt("state_id"),
                     dataNodes.getInt("dataclass_id"),
                     dataNodes.getInt("dataobject_id"),
                     dataNodes.getLong("modelid"));
-            int id = dataNodes.getInt("id");
-            switch (dataNodes.getString("modelid")) {
-                case "135409402":
-                    dOInitFragA = id;
-                    break;
-                case "650069438":
-                    dOState1FragA = id;
-                    break;
-                case "611573211":
-                    dOState1FragB = id;
-                    break;
-                case "1368161079":
-                    subDOInitFragB = id;
-                    break;
-                case "1517694277":
-                    subDOEndFragB = id;
-                    break;
-                case "155099451":
-                    dOInitFragB = id;
-                    break;
-                default: Assert.fail("Wrong modelID in table 'datanode' inserted");
-            }
-
             this.dataNodes.put(dataNodes.getLong("modelid"), dataNode);
+            Assert.assertTrue("DataNodeID smaller than 1", dataNode.id > 0);
         }
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(scenarios.get(0).id, subDOEnd, dataClasses.get("SubDO").id, dataObjects.get("SubDO").id, 1517694277L)));
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(scenarios.get(0).id, subDOInit, dataClasses.get("SubDO").id, dataObjects.get("SubDO").id, 1368161079L)));
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(scenarios.get(0).id, dOState1, dataClasses.get("DO").id, dataObjects.get("DO").id, 650069438L)));
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(scenarios.get(0).id, dOInit, dataClasses.get("DO").id, dataObjects.get("DO").id, 135409402L)));
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(scenarios.get(0).id, dOInit, dataClasses.get("DO").id, dataObjects.get("DO").id, 155099451L)));
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(scenarios.get(0).id, dOState1, dataClasses.get("DO").id, dataObjects.get("DO").id, 611573211L)));
+        int endSubDO = 0, initSubDO = 0, state1DO = 0, initDO = 0;
+        for (DbState state : states) {
+            if (state.name.equals("end"))
+                endSubDO = state.id;
+            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubDO").id)
+                initSubDO = state.id;
+            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("DO").id)
+                initDO = state.id;
+            else if (state.name.equals("state1"))
+                state1DO = state.id;
+        }
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(1, scenarios.get(0).id, endSubDO, dataClasses.get("SubDO").id, dataObjects.get("SubDO").id, 1517694277L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(2, scenarios.get(0).id, initSubDO, dataClasses.get("SubDO").id, dataObjects.get("SubDO").id, 1368161079L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(3, scenarios.get(0).id, state1DO, dataClasses.get("DO").id, dataObjects.get("DO").id, 650069438L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(4, scenarios.get(0).id, initDO, dataClasses.get("DO").id, dataObjects.get("DO").id, 135409402L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(5, scenarios.get(0).id, initDO, dataClasses.get("DO").id, dataObjects.get("DO").id, 155099451L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(6, scenarios.get(0).id, state1DO, dataClasses.get("DO").id, dataObjects.get("DO").id, 611573211L)));
         Assert.assertTrue("Too many dataNodes have been inserted", this.dataNodes.size() == 6);
         dataNodes.close();
     }
@@ -572,6 +541,7 @@ public class HugeComparserTest extends TestSetUp {
         ResultSet controlNodes = getDbEntries("controlnode");
         while (controlNodes.next()) {
             DbControlNode controlNode = new DbControlNode(
+                    controlNodes.getInt("id"),
                     controlNodes.getString("label"),
                     controlNodes.getString("type"),
                     controlNodes.getInt("fragment_id"),
@@ -584,65 +554,21 @@ public class HugeComparserTest extends TestSetUp {
             else if (controlNodes.getLong("modelid") == 826790323L && controlNodes.getInt("fragment_id") == fragments.get("FragmentB").id)
                 controlNode.modelID = 8267903231L;
             this.controlNodes.put(controlNode.modelID, controlNode);
-            int id = controlNodes.getInt("id");
-            Assert.assertTrue("ControlNodeID in table 'controlnode' smaller than 1", id > 0);
-            switch (Long.toString(controlNode.modelID)) {
-                case "1069345757":
-                    startEventFagA = id;
-                    break;
-                case "1569336784":
-                    firstANDFragA = id;
-                    break;
-                case "8267903230":
-                    refFragA = id;
-                    break;
-                case "517729148":
-                    a1FragA = id;
-                    break;
-                case "2081480666":
-                    secondANDFragA = id;
-                    break;
-                case "1914825610":
-                    endEventFragA = id;
-                    break;
-                case "509231813":
-                    startEventFragB = id;
-                    break;
-                case "1689490932":
-                    firstXORFragB = id;
-                    break;
-                case "1821614206":
-                    b2FragB = id;
-                    break;
-                case "564114893":
-                    secondXORFragB = id;
-                    break;
-                case "2136115766":
-                    endEventFragB = id;
-                    break;
-                case "8267903231":
-                    refFragB = id;
-                    break;
-                case "1407636184":
-                    b1FragB = id;
-                    break;
-                default:
-                    Assert.fail("Wrong modelID in table 'controlnode' inserted");
-            }
+            Assert.assertTrue("ControlNodeID smaller than 1", controlNode.id > 0);
         }
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "Startevent", fragments.get("FragmentA").id, 1069345757L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("Ref", "Activity", fragments.get("FragmentA").id, 8267903230L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("A1", "Activity", fragments.get("FragmentA").id, 517729148L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "AND", fragments.get("FragmentA").id, 1569336784L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "AND", fragments.get("FragmentA").id, 2081480666L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "Endevent", fragments.get("FragmentA").id, 1914825610L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("Ref", "Activity", fragments.get("FragmentB").id, 8267903231L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "XOR", fragments.get("FragmentB").id, 564114893L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "Endevent", fragments.get("FragmentB").id, 2136115766L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "XOR", fragments.get("FragmentB").id, 1689490932L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("B2", "EmailTask", fragments.get("FragmentB").id, 1821614206)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("B1", "Activity", fragments.get("FragmentB").id, 1407636184)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode("", "Startevent", fragments.get("FragmentB").id, 509231813L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(1, "", "Startevent", fragments.get("FragmentA").id, 1069345757L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(2, "Ref", "Activity", fragments.get("FragmentA").id, 8267903230L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(3, "A1", "Activity", fragments.get("FragmentA").id, 517729148L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(4, "", "AND", fragments.get("FragmentA").id, 1569336784L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(5, "", "AND", fragments.get("FragmentA").id, 2081480666L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(6, "", "Endevent", fragments.get("FragmentA").id, 1914825610L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(9, "Ref", "Activity", fragments.get("FragmentB").id, 8267903231L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(7, "", "XOR", fragments.get("FragmentB").id, 564114893L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(8, "", "Endevent", fragments.get("FragmentB").id, 2136115766L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(10, "", "XOR", fragments.get("FragmentB").id, 1689490932L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(11, "B2", "EmailTask", fragments.get("FragmentB").id, 1821614206)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(12, "B1", "Activity", fragments.get("FragmentB").id, 1407636184)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(13, "", "Startevent", fragments.get("FragmentB").id, 509231813L)));
         Assert.assertTrue("Too many controlNodes have been inserted", this.controlNodes.size() == 13);
         controlNodes.close();
     }
@@ -651,19 +577,20 @@ public class HugeComparserTest extends TestSetUp {
         ResultSet dataSets = getDataSetJoins();
         while (dataSets.next()) {
             DbDataSetAndFlow set = new DbDataSetAndFlow(
+                    dataSets.getInt("dataset.id"),
                     dataSets.getInt("dataflow.controlnode_id"),
                     dataSets.getShort("dataflow.input"),
                     dataSets.getShort("dataset.input"),
                     dataSets.getInt("datasetconsistsofdatanode.datanode_id"));
             this.sets.add(set);
-            Assert.assertTrue("DataSetID in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' smaller than 1", dataSets.getInt("dataset.id") > 0);
+            Assert.assertTrue("DataSetID smaller than 1", set.dataSetID > 0);
         }
-        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(a1FragA, (short)1, (short)1, dOInitFragA)));
-        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(a1FragA, (short)0, (short)0, dOState1FragA)));
-        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(refFragB, (short)1, (short)1, dOState1FragB)));
-        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(b1FragB, (short)1, (short)1, subDOInitFragB)));
-        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(b2FragB, (short)0, (short)0, dOInitFragB)));
-        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(b1FragB, (short)0, (short)0, subDOEndFragB)));
+        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(1, controlNodes.get(517729148L).id, (short)1, (short)1, dataNodes.get(135409402L).id)));
+        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(2, controlNodes.get(517729148L).id, (short)0, (short)0, dataNodes.get(650069438L).id)));
+        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(3, controlNodes.get(8267903231L).id, (short)1, (short)1, dataNodes.get(611573211L).id)));
+        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(4, controlNodes.get(1407636184L).id, (short)1, (short)1, dataNodes.get(1368161079L).id)));
+        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(5, controlNodes.get(1821614206L).id, (short)0, (short)0, dataNodes.get(155099451L).id)));
+        Assert.assertTrue("DataSet in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' not inserted correctly", this.sets.contains(new DbDataSetAndFlow(6, controlNodes.get(1407636184L).id, (short)0, (short)0, dataNodes.get(1517694277L).id)));
         Assert.assertTrue("Too many datasets in table 'dataset', 'dataflow' or 'datasetconsistsofdatanode' have been inserted", this.sets.size() == 6);
 
         dataSets.close();
@@ -678,19 +605,19 @@ public class HugeComparserTest extends TestSetUp {
                     controlFlows.getString("condition"));
             this.controlFlows.add(flow);
         }
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(startEventFagA, firstANDFragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(firstANDFragA, refFragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(firstANDFragA, a1FragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(a1FragA, secondANDFragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(refFragA, secondANDFragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(secondANDFragA, endEventFragA, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(firstXORFragB, b2FragB, "DEFAULT")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(b2FragB, secondXORFragB, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(secondXORFragB, endEventFragB, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(startEventFragB, refFragB, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(refFragB, firstXORFragB, "")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(firstXORFragB, b1FragB, "DO.Attr1 > 0")));
-        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(b1FragB, secondXORFragB, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1069345757L).id, controlNodes.get(1569336784L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1569336784L).id, controlNodes.get(8267903230L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1569336784L).id, controlNodes.get(517729148L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(517729148L).id, controlNodes.get(2081480666L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(8267903230L).id, controlNodes.get(2081480666L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(2081480666L).id, controlNodes.get(1914825610L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1689490932L).id, controlNodes.get(1821614206L).id, "DEFAULT")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1821614206L).id, controlNodes.get(564114893L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(564114893L).id, controlNodes.get(2136115766L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(509231813L).id, controlNodes.get(8267903231L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(8267903231L).id, controlNodes.get(1689490932L).id, "")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1689490932L).id, controlNodes.get(1407636184L).id, "DO.Attr1 > 0")));
+        Assert.assertTrue("Controlflow in table 'controlfow' not inserted correctly", this.controlFlows.contains(new DbControlFlow(controlNodes.get(1407636184L).id, controlNodes.get(564114893L).id, "")));
         Assert.assertTrue("Too many controlfows in table 'controlflow' have been inserted", this.controlFlows.size() == 13);
         controlFlows.close();
     }
@@ -703,8 +630,8 @@ public class HugeComparserTest extends TestSetUp {
                     references.getInt("controlnode_id2"));
             this.references.add(reference);
         }
-        Assert.assertTrue("Reference in table 'reference' not inserted correctly", this.references.contains(new DbReference(refFragB, refFragA)));
-        Assert.assertTrue("Reference in table 'reference' not inserted correctly", this.references.contains(new DbReference(refFragA, refFragB)));
+        Assert.assertTrue("Reference in table 'reference' not inserted correctly", this.references.contains(new DbReference(controlNodes.get(8267903230L).id, controlNodes.get(8267903231L).id)));
+        Assert.assertTrue("Reference in table 'reference' not inserted correctly", this.references.contains(new DbReference(controlNodes.get(8267903231L).id, controlNodes.get(8267903230L).id)));
         Assert.assertTrue("Too many references in table 'reference' have been inserted", this.references.size() == 2);
         references.close();
     }
@@ -712,9 +639,14 @@ public class HugeComparserTest extends TestSetUp {
     private void testTerminationCondition() throws Exception {
         ResultSet terminationCondition = getDbEntries("terminationcondition");
         terminationCondition.next();
+        DbState terminatingState = null;
+        for (DbState state : states) {
+            if (state.name.equals("end"))
+                terminatingState = state;
+        }
         Assert.assertEquals("ConditionsetID in table 'terminationcondition' not inserted correctly", 1, terminationCondition.getInt("conditionset_id"));
         Assert.assertEquals("DataobjectID in table 'terminationcondition' not inserted correctly", dataObjects.get("SubDO").id, terminationCondition.getInt("dataobject_id"));
-        Assert.assertEquals("StateID in table 'terminationcondition' not inserted correctly", subDOEnd, terminationCondition.getInt("state_id"));
+        Assert.assertEquals("StateID in table 'terminationcondition' not inserted correctly", terminatingState.id, terminationCondition.getInt("state_id"));
         Assert.assertEquals("ScenarioID in table 'terminationcondition' not inserted correctly", scenarios.get(0).id, terminationCondition.getInt("scenario_id"));
         Assert.assertFalse("Too many entries in table 'terminationcondition'", terminationCondition.next());
         terminationCondition.close();

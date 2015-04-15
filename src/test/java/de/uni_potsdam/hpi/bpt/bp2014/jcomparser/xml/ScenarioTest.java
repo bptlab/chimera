@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import org.easymock.IAnswer;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,18 +12,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -36,8 +27,8 @@ import static org.junit.Assert.assertTrue;
  * from communicating with the ProcessEditor Server.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Scenario.class,Fragment.class, DomainModel.class})
-public class  ScenarioTest {
+@PrepareForTest({Scenario.class, Fragment.class, DomainModel.class})
+public class  ScenarioTest extends TestSetUp {
     // We need the name of all methods which communicate to the server.
     /**
      * During the initialization of a Scenario we create fragments.
@@ -58,61 +49,41 @@ public class  ScenarioTest {
     private static final String CREATE_DO_METHOD = "createDataObjects";
 
     /**
-     * This Method fetches The Version from the PE-Server.
-     */
-    private static final String FETCH_VERSION_METHOD = "fetchVersionXML";
-
-    /**
-     * This creates and initializes a fragment.
-     */
-    private static final String CREATE_FRAGMENT_METHOD
-            = "createAndInitializeFragment";
-
-    /**
      * This checks if a version of fragment or scenario already exists in the database.
      * Method can't be called without initialized fragments.
      */
     private static final String CHECK_VERSION_DATABASE
             = "checkIfVersionAlreadyInDatabase";
-    /**
-     * This checks the XML for the URI of the domainModel and sets it.
-     * It is found in the ScenarioXML.
-     */
-    private static final String FETCH_DOMAIN_MODEL_METHOD =
-            "fetchDomainModelXML";
-    /**
-     * This method creates the the domainModel from the given domainModelXML.
-     */
-    private static final String SET_DOMAIN_MODEL_METHOD =
-            "createAndInitializeDomainModel";
+
     /**
      * This scenario will be used to be tested.
      * It will be initialized without a Version.
      */
-    Scenario scenarioWOVersion;
+    private Scenario scenarioWOVersion;
     /**
      * This scenario will be used for testing.
      * It will be initialized with a Version Number.
      * Extracted from the Version_XML.
      */
-    Scenario scenarioWVersion;
+    private Scenario scenarioWVersion;
     /**
      * This scenario will be used for testing
      * It will be initialized with a Fragment.
      */
-    Scenario scenarioWFragment;
+    private Scenario scenarioWFragment;
     /**
      * This scenario will be used for testing
      * It will be initialized with a terminationCondition.
      */
-    Scenario scenarioWTermination;
-
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
-    private static final String TRUNCATE_TABLES_FILE = "src/test/resources/truncate_all_tables.sql";
+    private Scenario scenarioWTermination;
+    /**
+     * File which contains insert-statements for the database which are needed for testing.
+     */
     private static final String INSERT_TESTDATA_FILE = "src/test/resources/MigrationTest/jenginev2_Migration.sql";
 
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
+     * @throws Exception java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -147,8 +118,7 @@ public class  ScenarioTest {
 
     /**
      * This Test asserts parsing without exceptions.
-     *
-     * @throws Exception
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testInitializeFromXMLRunsWithoutException() throws Exception {
@@ -167,7 +137,7 @@ public class  ScenarioTest {
     /**
      * This method tests if the given URL of an XML is correctly set.
      *
-     * @throws Exception
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testSetDomainURL() throws Exception {
@@ -181,7 +151,7 @@ public class  ScenarioTest {
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         Assert.assertEquals("The URI has not been set correctly",
-                "http://bp2014w1-dev:1205/models/2049535559", scenarioWOVersion.getDomainModelURI());
+                "2049535559", scenarioWOVersion.getDomainModelURI());
         PowerMock.verify(scenarioWOVersion);
     }
     /**
@@ -198,7 +168,7 @@ public class  ScenarioTest {
      * This Test asserts that MetaInformation about the Scenario are Set
      * correctly.
      *
-     * @throws Exception
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testMetaData() throws Exception {
@@ -338,6 +308,7 @@ public class  ScenarioTest {
 
     /**
      * Test if the scenario is created and initialized correctly.
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testSaveCompleteScenario() throws Exception {
@@ -358,6 +329,7 @@ public class  ScenarioTest {
 
     /**
      * Assure that a unchanged scenario is not written to the database once again.
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testSameScenarioNotSavedTwice() throws Exception {
@@ -375,12 +347,13 @@ public class  ScenarioTest {
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Testszenario.xml")));
         assertTrue("Even though the scenario is the same, it has been saved again", scenario.save() == -1);
-        assertTrue("Instances should not be migrated.", scenario.isMigrationNecessary() == false);
+        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
 
     /**
      * Assure that when a fragment of a scenario has been modified and the older version of the scenario
      * is already in the database, it gets saved as a new scenario.
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testModificationInFragmentScenarioNewlySaved() throws Exception {
@@ -398,7 +371,7 @@ public class  ScenarioTest {
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Testszenario.xml")));
         assertTrue("Scenario with modified fragment is not saved.", scenario.save() > 0);
-        assertTrue("Instances should not be migrated.", scenario.isMigrationNecessary() == false);
+        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
 
     /**
@@ -421,12 +394,13 @@ public class  ScenarioTest {
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Testszenario.xml")));
         assertTrue("Modified scenario is not saved.", scenario.save() > 0);
-        assertTrue("Instances should not be migrated.", scenario.isMigrationNecessary() == false);
+        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
 
     /**
      * Assure that when a fragment of a scenario has been modified and the older version of the scenario
      * is already in the database, it gets saved as a new scenario, even when fragments were added (no migration!).
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testNoMigrationWhenFragmentAddedAndModificationsExist() throws Exception {
@@ -447,12 +421,13 @@ public class  ScenarioTest {
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/SzenarioNeuesFragment.xml")));
         assertTrue("Scenario with modified fragment is not saved", scenario.save() > 0);
-        assertTrue("Migration should not be initiated", scenario.isMigrationNecessary() == false);
+        assertTrue("Migration should not be initiated", !scenario.isMigrationNecessary());
     }
 
     /**
      * Assure that when a fragment of a scenario has been deleted and the older version of the scenario
      * is already in the database, it gets saved as a new scenario, even when fragments were added (no migration!).
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testNoMigrationWhenFragmentDeletedDespiteNewFragment() throws Exception {
@@ -471,12 +446,13 @@ public class  ScenarioTest {
                 new File("src/test/resources/MigrationTest/EntferntesFragmentSzenario.xml")));
 
         assertTrue("Scenario with deleted fragment is not saved", scenario.save() > 0);
-        assertTrue("Migration should not be initiated when fragment deleted", scenario.isMigrationNecessary() == false);
+        assertTrue("Migration should not be initiated when fragment deleted", !scenario.isMigrationNecessary());
     }
 
     /**
      * Assure that migration is initiated when a scenario is written to the database and a new one is initialized
      * which is only changed in so far, that new fragments are addded.
+     * @throws Exception java.lang.Exception
      */
     @Test
     public void testMigration() throws Exception {
@@ -519,17 +495,18 @@ public class  ScenarioTest {
         Assert.assertEquals("ControlNodeInstance not migrated properly", fragment2.getControlNodes().get(426160629L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6305));
         Assert.assertEquals("ControlNodeInstance not migrated properly", fragment2.getControlNodes().get(426160629L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6307));
 
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO1").getDatabaseId(), dbDataObjectInstance.getDataObjectID(731));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO1").getDatabaseId(), dbDataObjectInstance.getDataObjectID(733));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO2").getDatabaseId(), dbDataObjectInstance.getDataObjectID(730));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO2").getDatabaseId(), dbDataObjectInstance.getDataObjectID(732));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(731));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(733));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(730));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(732));
     }
 
     /**
      * Test that a scenario is newly saved both when the version of the datamodel has been changed or the datamodel is a new one.
+     * @throws Exception java.lang.Exception
      */
     @Test
-    public void testDomainModelVersionImpactOnSaving() throws Exception{
+    public void testDomainModelVersionImpactOnSaving() throws Exception {
         refillDatabase();
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
@@ -544,7 +521,7 @@ public class  ScenarioTest {
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Testszenario.xml")));
         Assert.assertFalse("Even though the domainModel has been changed, the scenario isn't saved as a new one", scenario.save() == -1);
-        assertTrue("Instances should not be migrated.", scenario.isMigrationNecessary() == false);
+        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
 
         domainModel = initializeDomainModel("src/test/resources/Version.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
@@ -553,170 +530,16 @@ public class  ScenarioTest {
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Testszenario.xml")));
         Assert.assertFalse("Even though there is a new domainModel the scenario isn't saved as a new one", scenario.save() == -1);
-        assertTrue("Instances should not be migrated.", scenario.isMigrationNecessary() == false);
+        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
 
     }
-
     /**
-     * Initialize a fragment by configuring the mock
-     * @param versionLocation Location of the XML-file that contains the versions of the fragment
+     * Emptys the database and fills it from INSERT_TESTDATA_FILE afterwards.
+     * @throws Exception java.lang.Exception
      */
-    private Fragment initializeFragment(final String versionLocation) throws Exception {
-        final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
-                FETCH_VERSION_METHOD);
-        PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
-                .andAnswer(new IAnswer<Node>() {
-                    @Override
-                    public Node answer() throws Throwable {
-                        return getDocumentFromXmlFile(
-                                new File(versionLocation))
-                                .getDocumentElement();
-                    }
-                });
-        PowerMock.replay(fragment);
-        return fragment;
-    }
-
-    /**
-     * Initialize a domainModel by configuring the mock.
-     *
-     * @param versionLocation Location of the XML-file that contains the versions of the domainModel
-     */
-    private DomainModel initializeDomainModel(final String versionLocation) throws Exception {
-        final DomainModel domainModel = PowerMock.createPartialMock(DomainModel.class,
-                FETCH_VERSION_METHOD);
-        PowerMock.expectPrivate(domainModel, FETCH_VERSION_METHOD).
-                andAnswer(new IAnswer<Node>() {
-                    @Override
-                    public Node answer() throws Throwable {
-                        return getDocumentFromXmlFile(
-                                new File(versionLocation))
-                                .getDocumentElement();
-                    }
-                });
-        PowerMock.replay(domainModel);
-        return domainModel;
-    }
-
-    /**
-     * Initialize a scenario by configuring the mock
-     * @param versionLocation Location of the XML-file that contains the versions of the fragment
-     * @param fragments List of fragments the scenario consists of
-     */
-    private Scenario initializeCompleteScenario(final String versionLocation, final List<Fragment> fragments, final DomainModel domainModel) throws Exception {
-        final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
-                FETCH_VERSION_METHOD,
-                CREATE_FRAGMENT_METHOD,
-                SET_DOMAIN_MODEL_METHOD,
-                FETCH_DOMAIN_MODEL_METHOD);
-        PowerMock.expectPrivate(scenario, FETCH_DOMAIN_MODEL_METHOD).andReturn(null);
-        PowerMock.expectPrivate(scenario, SET_DOMAIN_MODEL_METHOD)
-                .andAnswer(new IAnswer<DomainModel>() {
-                    @Override
-                    public DomainModel answer() throws Throwable {
-                        return domainModel;
-                    }
-                });
-        PowerMock.expectPrivate(scenario, FETCH_VERSION_METHOD)
-                .andAnswer(new IAnswer<Node>() {
-                    @Override
-                    public Node answer() throws Throwable {
-                        return getDocumentFromXmlFile(
-                                new File(versionLocation))
-                                .getDocumentElement();
-                    }
-                });
-        for (final Fragment fragment : fragments) {
-            PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentID()))
-                    .andAnswer(new IAnswer<Fragment>() {
-                        @Override
-                        public Fragment answer() throws Throwable {
-                            return fragment;
-                        }
-                    });
-            if (fragments.size() == 1) {
-                PowerMock.replay(scenario, fragment, Fragment.class, domainModel);
-            }
-        }
-        if (fragments.size() > 1) {
-            PowerMock.replayAll(scenario, domainModel);
-        }
-        //PowerMock.replay(scenario, fragments, Fragment.class);
-        return scenario;
-    }
-
-    /**
-     * Casts a XML from its String Representation to a w3c Document.
-     *
-     * @param xml The String representation of the XML.
-     * @return The from String created Document.
-     */
-    private Document getDocumentFromXmlFile(final File xml) {
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(xml);
-            doc.getDocumentElement().normalize();
-            return doc;
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Refill database from DEVELOPMENT_SQL_SEED_FILE after clearing it.
-     */
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
+     private void refillDatabase() throws Exception {
+        emptyDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
-
-    /**
-     * Drops and recreates the database.
-     */
-    protected static void clearDatabase() {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        if (conn == null) {
-            return;
-        }
-        try {
-            //Execute a querystmt = conn.createStatement();
-            stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE JEngineV2");
-            stmt.execute("CREATE DATABASE JEngineV2");
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-    }
-
-    private void refillDatabase() throws Exception {
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
         runner.runScript(new FileReader(INSERT_TESTDATA_FILE));
     }
 }
