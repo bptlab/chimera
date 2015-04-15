@@ -24,33 +24,30 @@ import java.util.List;
  */
 public class DataClass implements IDeserialisable, IPersistable {
     /**
-     *
+     * This is the modelID of the dataClass.
      */
     private long dataClassModelID;
     /**
-     *
+     * This is the databaseID of the dataClass.
      */
     private int dataClassID;
     /**
-     *
+     * This is the name of the dataClass.
      */
     private String dataClassName;
     /**
-     *
+     * This boolean is used to identify the root element
+     * of the domainModel which is used to get the caseDataObject.
      */
     private boolean rootNode = false;
     /**
-     *
+     * This is a list containing all dataAttributes belonging to this dataClass.
      */
     private List<DataAttribute> dataAttributes = new LinkedList<>();
     /**
-     *
+     * This contains the XML representation of the dataClass.
      */
     private org.w3c.dom.Node dataClassXML;
-    /**
-     *
-     * @param element The XML Node which will be used for deserialisation
-     */
     /**
      * Sets the processeditorServerUrl which is needed for connecting to the server
      * in order to get the XML-files for the fragments.
@@ -60,10 +57,16 @@ public class DataClass implements IDeserialisable, IPersistable {
     }
 
     /**
-     * This constructor is only used for testcases as a connection to the server is not needed therefore
+     * The standard constructor.
      */
     public DataClass() {
     }
+
+    /**
+     * This initializes the dataClass from the XML.
+     *
+     * @param element The XML Node which will be used for deserialisation
+     */
     @Override
     public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
         this.dataClassXML = element;
@@ -76,6 +79,12 @@ public class DataClass implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This sets the corresponding attributes of the dataClass class or
+     * calls corresponding method based on the property found in the XML.
+     *
+     * @param property
+     */
     private void initializeField(final org.w3c.dom.Node property) {
 
         NamedNodeMap attributes = property.getAttributes();
@@ -101,6 +110,11 @@ public class DataClass implements IDeserialisable, IPersistable {
         }
     }
 
+    /**
+     * This method saves the dataClass to the database.
+     *
+     * @return the databaseID of the dataClass.
+     */
     @Override
     public int save() {
         Connector conn = new Connector();
@@ -111,16 +125,31 @@ public class DataClass implements IDeserialisable, IPersistable {
         return dataClassID;
     }
 
+    /**
+     * This method gets all the dataAttributes from the XML.
+     * DataAttributes can only be alphanumerical.
+     *
+     * @param value This String contains all dataAttributes from the XML, separated by ";".
+     */
     private void generateDataAttributeList(String value) {
         String[] attributes = value.split(" ;");
         for(String attribute : attributes){
             if(!attribute.isEmpty()){
+                /*
+                    DataAttributes are saved in the following form:
+                    "{[number]}+[nameOfTheAttribute]".
+                    This regex removes all the stuff not needed.
+                 */
                 DataAttribute newDataAttribute = new DataAttribute(attribute.replaceAll("\\{[0-9]*\\}|[^a-zA-Z0-9]", ""));
                 dataAttributes.add(newDataAttribute);
             }
         }
     }
 
+    /**
+     * This method iterates through all dataAttributes and sets
+     * the dataClass for them as well as calling the save method.
+     */
     private void saveDataAttributes() {
         for (DataAttribute dataAttribute : dataAttributes) {
             dataAttribute.setDataClassID(dataClassID);
