@@ -205,6 +205,10 @@ public class RestInterface {
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
+    @POST
+    @Path("scenario/{scenarioID}/instance")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response startNewInstance(
             @Context UriInfo uri,
             @PathParam("scenarioID") int scenarioID) {
