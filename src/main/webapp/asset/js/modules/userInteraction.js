@@ -112,11 +112,11 @@
 			/* ____ BEGIN_INITIALIZATION ____ */
 			this.initializeActivityInstances = function(){
 				instanceCtrl.instanceDetails.activities = {};
-				["enabled", "terminated", "running"].forEach(function(state){
+				["ready", "terminated", "running"].forEach(function(state){
 					var state2 = state;
 					$http.get(
 						JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" +
-						$routeParams.id + "/instance/" + $routeParams.instanceId + "/activityinstance/0?status=" + state).
+						$routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/?state=" + state).
 					success(function(data){
 						instanceCtrl.instanceDetails.activities[state] = data;
 					}).
@@ -130,7 +130,7 @@
 				instanceCtrl.instanceDetails.dataobjects = {};
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
 						  "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-						"/dataobject/0/").
+						"/dataobject/").
 					success(function(data){
 						instanceCtrl.instanceDetails.dataobjects = data;
 					}).
@@ -251,7 +251,7 @@
 			this.terminateActivity = function(activityId) {
 				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-					"/activityinstance/"+ activityId + "?status=terminate").
+					"/activity/"+ activityId + "?status=terminate").
 					success(function(data) {
 						instanceCtrl.instanceDetails.activities = {};
 						instanceCtrl.initializeActivityInstances();

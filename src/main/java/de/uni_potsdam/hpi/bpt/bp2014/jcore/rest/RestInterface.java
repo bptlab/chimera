@@ -501,10 +501,10 @@ public class RestInterface {
      */
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
-    public Response updateActivityStatus(@PathParam("scenarioID") String scenarioID,
+    public Response updateActivityState(@PathParam("scenarioID") String scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID,
-                                         @QueryParam("status") String state) {
+                                         @QueryParam("state") String state) {
 
         boolean result;
         ExecutionService executionService = new ExecutionService();
