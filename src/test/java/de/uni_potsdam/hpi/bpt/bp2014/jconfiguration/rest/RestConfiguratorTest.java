@@ -56,11 +56,11 @@ public class RestConfiguratorTest extends AbstractTest {
 
     @Before
     public void setUpBase() {
-        base = target("config/v1");
+        base = target("config/v2");
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
+     * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * the response should be of type json.
      */
     @Test
@@ -73,7 +73,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)} and
+     * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)} and
      * the scenario does not contain any mail task an object with no ids will be returned.
      */
     @Test
@@ -84,7 +84,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
+     * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * the returned JSON Object should be a specified.
      * {"ids":[1,2,...],"labels":{1:"abcd"...}}}
      */
@@ -96,7 +96,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getAllEmailTasks(int, String)}
+     * When you send a Get to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * and the ScenarioID is invalid a 404 will be returned but the media type is still
      * JSON.
      */
@@ -110,7 +110,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * with an invalid scenario an empty JSON object should be returned, with a 404.
      */
     @Test
@@ -123,7 +123,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * with an invalid mailTask an empty JSON object should be returned, with a 404.
      */
     @Test
@@ -136,7 +136,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * a 200 with an json object should be returned
      */
     @Test
@@ -149,7 +149,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * a valid json object with "receiver", "content", "subject" should be returned
      */
     @Test
