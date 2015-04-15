@@ -75,6 +75,16 @@
                          console.log('request failed');
                 });
 			};
+
+            this.getTerminationConditionOfScenario = function(id) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
+                    success(function(data) {
+                        controller.currentScenario['terminationcondition'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
 			
 			// Creates a new instance of the scenario with the given Id
 			this.createInstance = function(id){
@@ -200,6 +210,7 @@
                             instanceCtrl.initializeDataobjectInstances();
                             instanceCtrl.initializeActivitylogInstances();
                             instanceCtrl.initializeDataobjectlogInstances();
+                            scenarioCtrl.getTerminationConditionOfScenario(id);
                         }
                     }).
                     error(function () {
