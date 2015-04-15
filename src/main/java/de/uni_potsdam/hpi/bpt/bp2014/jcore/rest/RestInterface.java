@@ -9,8 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,6 +39,8 @@ public class RestInterface {
      * If different versions of an scenarios exist only the latest
      * ones will be added to the json.
      *
+     * @param uriInfo      Specifies the context. For example the uri
+     *                     of the request.
      * @param filterString Specifies a search. Only scenarios which
      *                     name contain the specified string will be
      *                     returned.
@@ -47,7 +51,9 @@ public class RestInterface {
     @GET
     @Path("scenario")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getScenarios(@QueryParam("filter") String filterString) {
+    public Response getScenarios(
+            @Context UriInfo uriInfo,
+            @QueryParam("filter") String filterString) {
         DbScenario scenario = new DbScenario();
         Map<Integer, String> scenarios;
         if (filterString == null || filterString.equals("")) {
@@ -55,10 +61,16 @@ public class RestInterface {
         } else {
             scenarios = scenario.getScenariosLike(filterString);
         }
+        JSONObject jsonResult = mapToKeysAndResults(scenarios, "ids", "labels");
+        JSONObject refs = new JSONObject();
+        for (int id : scenarios.keySet()) {
+            refs.put("" + id, uriInfo.getAbsolutePath() + "/" + id);
+        }
+        jsonResult.put("links", refs);
         return Response
                 .ok()
                 .type(MediaType.APPLICATION_JSON)
-                .entity(mapToKeysAndResults(scenarios, "ids", "labels").toString())
+                .entity(jsonResult.toString())
                 .build();
     }
 
@@ -78,7 +90,8 @@ public class RestInterface {
     @GET
     @Path("scenario/{scenarioID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getScenario(@PathParam("scenarioID") int scenarioID) {
+    public Response getScenario(@Context UriInfo uri,
+                                @PathParam("scenarioID") int scenarioID) {
         DbScenario dbScenario = new DbScenario();
         Map<String, Object> data = dbScenario.getScenarioDetails(scenarioID);
         if (data.isEmpty()) {
@@ -88,6 +101,8 @@ public class RestInterface {
                     .entity("{}")
                     .build();
         }
+        data.put("instances",
+                uri.getAbsolutePath() + "/instance");
         return Response
                 .ok()
                 .type(MediaType.APPLICATION_JSON)
@@ -114,6 +129,7 @@ public class RestInterface {
     @Path("scenario/{scenarioID}/instance")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenarioInstances(
+            @Context UriInfo uri,
             @PathParam("scenarioID") int scenarioID,
             @QueryParam("filter") String filterString) {
         ExecutionService executionService = new ExecutionService();
@@ -127,8 +143,13 @@ public class RestInterface {
         DbScenarioInstance instance = new DbScenarioInstance();
         JSONObject result = new JSONObject();
         Map<Integer, String> data = instance.getScenarioInstancesLike(scenarioID, filterString);
+        JSONObject links = new JSONObject();
+        for (int id : data.keySet()) {
+            links.put("" + id, uri.getAbsolutePath() + "/" + id);
+        }
         result.put("ids", new JSONArray(data.keySet()));
         result.put("labels", new JSONObject(data));
+        result.put("links", links);
         return Response
                 .ok(result.toString(), MediaType.APPLICATION_JSON)
                 .build();
@@ -176,6 +197,7 @@ public class RestInterface {
      * Hence no additional information should be transmitted.
      * The response will imply if the post was successful.
      *
+     * @param uri a context, which holds information about the server
      * @param scenarioID the id of the scenario.
      * @return The Response of the POST. The Response code will be
      * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
@@ -183,12 +205,20 @@ public class RestInterface {
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
-    public Response startNewInstance(@PathParam("scenarioID") int scenarioID) {
+    @POST
+    @Path("scenario/{scenarioID}/instance")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response startNewInstance(
+            @Context UriInfo uri,
+            @PathParam("scenarioID") int scenarioID) {
         ExecutionService executionService = new ExecutionService();
         if (executionService.existScenario(scenarioID)) {
+            int instanceId = executionService.startNewScenarioInstance(scenarioID);
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"id\":" + executionService.startNewScenarioInstance(scenarioID) + "}")
+                    .entity("{\"id\":" + instanceId +
+                            ",\"link\":\"" + uri.getAbsolutePath() + "/" + instanceId + "\"}")
                     .build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -207,6 +237,7 @@ public class RestInterface {
      * {@code {"name": <nameOfInstance>}}.
      * The response will imply if the post was successful.
      *
+     * @param uriInfo    The context of the server, used to receive the url.
      * @param scenarioID the id of the scenario.
      * @param name       The name, which will be used for the new instance.
      * @return The Response of the POST. The Response code will be
@@ -215,20 +246,24 @@ public class RestInterface {
      * The content of the Response will be a JSON-Object containing information
      * about the new instance.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startNewNamedInstance(@PathParam("scenarioID") int scenarioID, NamedJaxBean name) {
+    public Response startNewNamedInstance(
+            @Context UriInfo uriInfo,
+            @PathParam("scenarioID") int scenarioID, NamedJaxBean name) {
         if (name == null) {
-            return startNewInstance(scenarioID);
+            return startNewInstance(uriInfo, scenarioID);
         }
         ExecutionService executionService = new ExecutionService();
         if (executionService.existScenario(scenarioID)) {
             DbScenarioInstance instance = new DbScenarioInstance();
+            int instanceId = instance.createNewScenarioInstance(scenarioID, name.name);
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"id\":" + instance.createNewScenarioInstance(scenarioID, name.name) + "}")
+                    .entity("{\"id\":" + instanceId +
+                            ",\"link\":\"" + uriInfo.getAbsolutePath() + "/" + instanceId + "\"}")
                     .build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -250,7 +285,7 @@ public class RestInterface {
      * A Created Response will be returned if the POST has been successful
      * and a BAD_REQUEST else.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -261,9 +296,9 @@ public class RestInterface {
         if (executionService.existScenario(scenarioID) &&
                 executionService.existScenarioInstance(instanceID)) {
             executionService.terminateScenarioInstance(instanceID);
-            return Response.status(Response.Status.CREATED)
+            return Response.status(Response.Status.OK)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("")
+                    .entity("{\"message\":\"The is instance has been terminated.\"}")
                     .build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -272,8 +307,6 @@ public class RestInterface {
                     .build();
         }
     }
-
-    // TODO: Change the state of an instance via POST
 
     /**
      * This method provides detailed information about a scenario instance.
@@ -556,6 +589,7 @@ public class RestInterface {
     @Path("scenario/{scenarioID}/instance/{instanceID}/dataobject")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataObjects(
+            @Context UriInfo uriInfo,
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString) {
@@ -588,7 +622,7 @@ public class RestInterface {
                 }
             }
         }
-        JSONObject result = buildListForDataObjects(dataObjects, states, labels);
+        JSONObject result = buildListForDataObjects(uriInfo, dataObjects, states, labels);
         return Response.ok(result.toString(),
                 MediaType.APPLICATION_JSON).build();
     }
@@ -663,12 +697,14 @@ public class RestInterface {
      * The array elements will be of type {@link RestInterface.DataObjectJaxBean), hence JSON and
      * XML can be generated automatically.
      *
+     * @param uriInfo       A Context object of the server request
      * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
      * @param states        The states, mapped from dataobject database id to state (String)
      * @param labels        The labels, mapped from dataobject database id to label (String)
      * @return A array with a DataObject for each entry in dataObjectIds
      */
     private JSONObject buildListForDataObjects(
+            UriInfo uriInfo,
             LinkedList<Integer> dataObjectIds,
             HashMap<Integer, String> states,
             HashMap<Integer, String> labels) {
@@ -680,6 +716,7 @@ public class RestInterface {
             dataObject.put("id", id);
             dataObject.put("label", labels.get(id));
             dataObject.put("state", states.get(id));
+            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + id);
             results.put("" + id, dataObject);
         }
         result.put("results", results);

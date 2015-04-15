@@ -84,8 +84,17 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If migration is necessary, we need the databaseID of the scenario that is supposed to be migrated.
      */
     private int migratingScenarioDbID = -1;
+    /**
+     * This is a String containing the ProcessEditorServerID for the domainModel.
+     */
     private String domainModelURI;
+    /**
+     * This Element contains the XML representation of the domainModel.
+     */
     private Element domainModelXML;
+    /**
+     * This is the domainModel Object belonging to this scenario.
+      */
     private DomainModel domainModel;
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
@@ -128,7 +137,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * This method calls 2 more methods which get and set the domainModel.
+     * This method calls 2 more methods which get the domainModelXML and set the domainModel.
      */
     private void setDomainModel() {
         domainModelXML = fetchDomainModelXML();
@@ -159,7 +168,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Retrieval jRetrieval = new Retrieval();
             String versionXML = jRetrieval.getHTMLwithAuth(
                     processeditorServerUrl,
-                    domainModelURI);
+                    processeditorServerUrl + "models/" + domainModelURI + ".pm");
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(versionXML));
             DocumentBuilder db = DocumentBuilderFactory
@@ -183,6 +192,9 @@ public class Scenario implements IDeserialisable, IPersistable {
                 "[@name='domainModelURI']/@value";
         try {
             domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+            //This is used to make sure we only get the domainModelModelID
+            domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length-1];
+            domainModelURI = domainModelURI.split("\\.")[0];
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
@@ -194,16 +206,14 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void checkIfVersionAlreadyInDatabase() {
         Connector connector = new Connector();
-        long fragmentModelID;
         int newestFragmentDatabaseVersion;
         int oldScenarioDbID = connector.getScenarioID(scenarioID);
-        int scenarioDbVersion = connector.getNewestScenarioVersion(scenarioID);
+        int scenarioDbVersion = connector.getScenarioVersion(oldScenarioDbID);
         boolean changesMade = false;
         needsToBeSaved = false;
         newFragments = new LinkedList<>();
         for (Fragment fragment : fragments) {
-            fragmentModelID = fragment.getFragmentID();
-            newestFragmentDatabaseVersion = connector.getNewestFragmentVersion(fragmentModelID, scenarioID);
+            newestFragmentDatabaseVersion = connector.getFragmentVersion(oldScenarioDbID, fragment.getFragmentID());
             // case 1: We don't have a fragment with this modelid in the database
             if (newestFragmentDatabaseVersion == -1) {
                 needsToBeSaved = true;
@@ -561,6 +571,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void saveDataObjects() {
         for (DataObject dataObject : dataObjects.values()) {
+            dataObject.setDataClass(domainModel.getDataClasses());
             dataObject.setScenarioId(databaseID);
             dataObject.save();
         }
