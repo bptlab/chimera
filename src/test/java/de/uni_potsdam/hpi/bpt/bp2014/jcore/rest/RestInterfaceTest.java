@@ -766,7 +766,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityStatus(String, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
