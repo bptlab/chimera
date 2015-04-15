@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * This class implements the REST interface of the JEngine history.
  */
-@Path("v2/history/")
+@Path("history/v2/")
 public class RestInterface {
     private HistoryService historyService = new HistoryService();
 
