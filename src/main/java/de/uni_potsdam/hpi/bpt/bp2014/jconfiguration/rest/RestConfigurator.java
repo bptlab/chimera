@@ -1,10 +1,10 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
+package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -36,12 +36,34 @@ public class RestConfigurator {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
             @PathParam("emailtaskID") int emailTaskID,
-            final de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestInterface.EmailConfigJaxBean input) {
+            final RestInterface.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
                 input.receiver, input.subject, input.content);
         return Response.status(
                 result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
                 .build();
+    }
+
+    //TODO: delete scenario
+    @DELETE
+    @Path("scenario/{scenarioID}/")
+    public Response updateActivityState(@PathParam("scenarioID") Integer scenarioID) throws Exception {
+
+        boolean result;
+        Execution execution = new Execution();
+        result = execution.deleteScenario(scenarioID);
+
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"scenario deletion successfully.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"scenario deletion failed\"}")
+                    .build();
+        }
     }
 }

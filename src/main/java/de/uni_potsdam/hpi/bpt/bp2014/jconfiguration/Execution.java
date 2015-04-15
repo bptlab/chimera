@@ -13,13 +13,14 @@ public class Execution {
      * @param scenarioID DatabaseID of the scenario that is supposed to get marked as deleted
      * @throws Exception Running instances of the scenario exist.
      */
-    public void deleteScenario (int scenarioID) throws Exception{
+    public boolean deleteScenario (int scenarioID) throws Exception{
         DbConfigurationConnection conn = new DbConfigurationConnection();
         List<Integer> runningInstances = conn.getRunningScenarioInstances(scenarioID);
         if (runningInstances.size() > 0) {
-            throw new Exception("Scenario can't be deleted as there are still running scenarioInstances");
+            return false;
         } else {
             conn.deleteScenario(scenarioID);
+            return true;
         }
     }
 }
