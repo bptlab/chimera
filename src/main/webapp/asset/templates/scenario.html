@@ -10,12 +10,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<!--<tr style="cursor: pointer" ng-repeat="id in scenarioCtrl.scenarioIds | filter:searchText" ng-click="scenarioCtrl.goToDetailsFrom(id);">-->
-			<tr style="cursor: pointer" ng-repeat="(key, value) in scenarioCtrl.scenarios" ng-show="!searchText || value['label'].indexOf(searchText) > -1" ng-click="scenarioCtrl.goToDetailsFrom(key);">
-				<!--<li ng-if="scenarioCtrl.scenarios['' + id]['label'].match(searchText)">-->
+			<tr style="cursor: pointer" ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']" ng-show="!searchText || value.indexOf(searchText) > -1" ng-click="scenarioCtrl.goToDetailsFrom(key);">
 					<td>{{key}}</td>
-					<td>{{value['label']}}</td>
-				<!--</li>-->
+					<td>{{value}}</td>
 			</tr>
 			</a>
 		</tbody>

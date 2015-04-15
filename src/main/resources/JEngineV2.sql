@@ -3,7 +3,12 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 24. Mrz 2015 um 10:36
+-- phpMyAdmin SQL Dump
+-- version 4.2.7.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Erstellungszeit: 14. Apr 2015 um 11:41
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -34,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8568 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8572 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -7353,7 +7358,11 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 (8564, 'HumanTask', 0, 0, 1, 'ready', 'init'),
 (8565, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
 (8566, 'HumanTask', 1, 1, 1, 'terminated', 'init'),
-(8567, 'HumanTask', 0, 0, 1, 'ready', 'init');
+(8567, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8568, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(8569, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8570, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
+(8571, 'HumanTask', 0, 0, 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -7762,10 +7771,7 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (485, 481, ''),
 (486, 485, ''),
 (488, 489, ''),
-(489, 487, ''),
-(490, 492, ''),
-(491, 490, ''),
-(492, 493, '');
+(489, 487, '');
 
 -- --------------------------------------------------------
 
@@ -7779,7 +7785,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL,
   `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=494 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=490 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -8196,11 +8202,7 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 (486, 'Bestellung abschicken', 'EmailTask', 183, 559874449),
 (487, '', 'Endevent', 184, 1996116430),
 (488, '', 'Startevent', 184, 695419264),
-(489, 'Kaffeemaschine reinigen', 'Activity', 184, 1769949872),
-(490, 'a', 'Activity', 185, 639985621),
-(491, '', 'Startevent', 185, 1232260974),
-(492, 'email senden', 'EmailTask', 185, 793962142),
-(493, '', 'Endevent', 185, 741682296);
+(489, 'Kaffeemaschine reinigen', 'Activity', 184, 1769949872);
 
 -- --------------------------------------------------------
 
@@ -8213,7 +8215,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8568 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8572 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -16715,7 +16717,11 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (8564, 'Activity', 490, 5219),
 (8565, 'Activity', 490, 5220),
 (8566, 'Activity', 492, 5220),
-(8567, 'Activity', 490, 5221);
+(8567, 'Activity', 490, 5221),
+(8568, 'Activity', 2, 5222),
+(8569, 'Activity', 4, 5223),
+(8570, 'Activity', 10, 5224),
+(8571, 'Activity', 16, 5225);
 
 -- --------------------------------------------------------
 
@@ -16729,20 +16735,16 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
   `type` varchar(256) NOT NULL,
   `default` varchar(1024) NOT NULL,
   `dataclass_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `dataattribute`
 --
 
 INSERT INTO `dataattribute` (`id`, `name`, `type`, `default`, `dataclass_id`) VALUES
-(1, 'Fuellstand', 'String', 'voll', 43),
-(2, 'Milch', 'int', '2', 44),
-(3, 'Zucker', 'int', '5', 44),
-(4, 'Gehalt', 'int', '12500', 51),
-(5, 'Datum', 'int', '2015', 51),
-(6, 'Vorname', 'String', 'Stephan', 51),
-(7, 'Nachname', 'String', 'Karphen', 51);
+(1, 'Fuellstand', '', '', 43),
+(2, 'Milch', '', '', 44),
+(3, 'Zucker', '', '', 44);
 
 -- --------------------------------------------------------
 
@@ -16755,7 +16757,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
   `dataobjectinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `dataattributeinstance`
@@ -16770,33 +16772,7 @@ INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobj
 (6, '', 1, 915),
 (7, '', 2, 916),
 (8, '', 3, 916),
-(9, '', 1, 917),
-(10, '', 2, 918),
-(11, '', 3, 918),
-(12, '', 1, 919),
-(13, '', 2, 920),
-(14, '', 3, 920),
-(15, '', 1, 921),
-(16, '2', 2, 912),
-(17, '2', 2, 922),
-(18, '5', 3, 922),
-(19, 'voll', 1, 923),
-(20, '12500', 4, 964),
-(21, '2015', 5, 964),
-(22, 'Stephan', 6, 964),
-(23, 'Karphen', 7, 964),
-(24, '12500', 4, 965),
-(25, '2015', 5, 965),
-(26, 'Stephan', 6, 965),
-(27, 'Karphen', 7, 965),
-(28, '12500', 4, 966),
-(29, '2015', 5, 966),
-(30, 'Stephan', 6, 966),
-(31, 'Karphen', 7, 966),
-(32, '12500', 4, 967),
-(33, '2015', 5, 967),
-(34, 'Stephan', 6, 967),
-(35, 'Karphen', 7, 967);
+(9, '', 1, 917);
 
 -- --------------------------------------------------------
 
@@ -16807,7 +16783,7 @@ INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobj
 CREATE TABLE IF NOT EXISTS `dataclass` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=53 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
 -- Daten für Tabelle `dataclass`
@@ -16861,10 +16837,7 @@ INSERT INTO `dataclass` (`id`, `name`) VALUES
 (45, 'Kaffeestand'),
 (46, 'Kaffee'),
 (47, 'Kaffeestand'),
-(48, 'Kaffee'),
-(49, 'Gehlat'),
-(50, 'Gehlat'),
-(51, 'Gehalt');
+(48, 'Kaffee');
 
 -- --------------------------------------------------------
 
@@ -17071,8 +17044,7 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 (483, 186, 1),
 (483, 188, 0),
 (484, 187, 1),
-(486, 189, 0),
-(492, 190, 1);
+(486, 189, 0);
 
 -- --------------------------------------------------------
 
@@ -17087,7 +17059,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=153 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=152 ;
 
 --
 -- Daten für Tabelle `datanode`
@@ -17244,8 +17216,7 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 (148, 149, 121, 41, 29, 1806637322),
 (149, 149, 117, 41, 29, 1916019522),
 (150, 149, 118, 41, 29, 509366292),
-(151, 149, 121, 41, 29, 1432099697),
-(152, 151, 137, 51, 30, 1313216970);
+(151, 149, 121, 41, 29, 1432099697);
 
 -- --------------------------------------------------------
 
@@ -17259,7 +17230,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
   `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
   `start_state_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
 --
 -- Daten für Tabelle `dataobject`
@@ -17294,8 +17265,7 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 (26, 'Kaffee', 40, 148, 116),
 (27, 'Kaffeestand', 39, 148, 111),
 (28, 'Kaffee', 44, 149, 122),
-(29, 'Kaffeestand', 43, 149, 117),
-(30, 'Gehlat', 51, 151, 137);
+(29, 'Kaffeestand', 43, 149, 117);
 
 -- --------------------------------------------------------
 
@@ -17309,7 +17279,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=968 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=970 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -18276,7 +18246,9 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (964, 1187, 137, 30, 0),
 (965, 1188, 137, 30, 0),
 (966, 1189, 137, 30, 0),
-(967, 1190, 137, 30, 0);
+(967, 1190, 137, 30, 0),
+(968, 1191, 1, 1, 0),
+(969, 1191, 5, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -18287,7 +18259,7 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 CREATE TABLE IF NOT EXISTS `dataset` (
 `id` int(11) NOT NULL,
   `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=191 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=190 ;
 
 --
 -- Daten für Tabelle `dataset`
@@ -18482,8 +18454,7 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 (186, 1),
 (187, 1),
 (188, 0),
-(189, 0),
-(190, 1);
+(189, 0);
 
 -- --------------------------------------------------------
 
@@ -18679,8 +18650,7 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 (174, 150),
 (175, 151),
 (176, 143),
-(177, 149),
-(190, 152);
+(177, 149);
 
 -- --------------------------------------------------------
 
@@ -18695,7 +18665,7 @@ CREATE TABLE IF NOT EXISTS `emailconfiguration` (
   `subject` varchar(2048) NOT NULL,
   `message` text NOT NULL,
   `controlnode_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Daten für Tabelle `emailconfiguration`
@@ -18715,8 +18685,7 @@ INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`
 (11, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 424),
 (12, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 448),
 (13, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 467),
-(14, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 486),
-(15, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Lieber Kunde #Gehlat.Vorname #Gehlat.Nachname, Sie bekommen am #Gehlat.Datum #Gehlat.Gehalt überwiesen. #Test lol test', 492);
+(14, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 486);
 
 -- --------------------------------------------------------
 
@@ -18754,7 +18723,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
   `scenario_id` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=186 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=185 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -18850,8 +18819,7 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) 
 (181, 'Kaffee fertigstellen', 150, 823029322, 0),
 (182, 'Leeren Kaffeestand pruefen', 150, 81567466, 0),
 (183, 'Kaffee kochen', 150, 1959503507, 0),
-(184, 'Kaffeemaschine reinigen', 150, 894025424, 0),
-(185, 'GehaltF1', 151, 1532475570, 0);
+(184, 'Kaffeemaschine reinigen', 150, 894025424, 0);
 
 -- --------------------------------------------------------
 
@@ -18864,7 +18832,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5222 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5226 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -24015,7 +23983,11 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (5218, 1, 185, 1189),
 (5219, 0, 185, 1189),
 (5220, 1, 185, 1190),
-(5221, 0, 185, 1190);
+(5221, 0, 185, 1190),
+(5222, 0, 1, 1191),
+(5223, 0, 2, 1191),
+(5224, 0, 3, 1191),
+(5225, 0, 4, 1191);
 
 -- --------------------------------------------------------
 
@@ -25154,73 +25126,7 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 (8224, 'XOR', 'executing'),
 (8228, 'XOR', 'executing'),
 (8232, 'XOR', 'executing'),
-(8236, 'XOR', 'executing'),
-(8242, 'XOR', 'executing'),
-(8246, 'XOR', 'executing'),
-(8250, 'XOR', 'executing'),
-(8254, 'XOR', 'executing'),
-(8258, 'XOR', 'executing'),
-(8262, 'XOR', 'executing'),
-(8265, 'AND', 'init'),
-(8270, 'AND', 'init'),
-(8279, 'XOR', 'init'),
-(8281, 'XOR', 'init'),
-(8282, 'AND', 'init'),
-(8287, 'XOR', 'init'),
-(8289, 'XOR', 'init'),
-(8290, 'AND', 'init'),
-(8291, 'AND', 'terminated'),
-(8294, 'AND', 'terminated'),
-(8296, 'AND', 'terminated'),
-(8299, 'AND', 'terminated'),
-(8305, 'XOR', 'executing'),
-(8310, 'XOR', 'terminated'),
-(8312, 'AND', 'terminated'),
-(8315, 'AND', 'terminated'),
-(8316, 'XOR', 'executing'),
-(8322, 'AND', 'terminated'),
-(8325, 'AND', 'terminated'),
-(8326, 'AND', 'terminated'),
-(8329, 'AND', 'terminated'),
-(8330, 'AND', 'terminated'),
-(8335, 'XOR', 'terminated'),
-(8336, 'AND', 'skipped'),
-(8363, 'AND', 'terminated'),
-(8365, 'AND', 'terminated'),
-(8370, 'XOR', 'terminated'),
-(8371, 'AND', 'terminated'),
-(8381, 'XOR', 'executing'),
-(8400, 'XOR', 'executing'),
-(8410, 'AND', 'terminated'),
-(8413, 'AND', 'terminated'),
-(8415, 'AND', 'terminated'),
-(8418, 'AND', 'terminated'),
-(8428, 'XOR', 'terminated'),
-(8432, 'XOR', 'executing'),
-(8435, 'XOR', 'terminated'),
-(8437, 'AND', 'terminated'),
-(8440, 'AND', 'terminated'),
-(8441, 'XOR', 'executing'),
-(8451, 'AND', 'terminated'),
-(8454, 'AND', 'terminated'),
-(8455, 'AND', 'terminated'),
-(8458, 'AND', 'terminated'),
-(8459, 'AND', 'terminated'),
-(8464, 'XOR', 'terminated'),
-(8465, 'AND', 'skipped'),
-(8502, 'AND', 'terminated'),
-(8504, 'AND', 'terminated'),
-(8509, 'XOR', 'terminated'),
-(8510, 'AND', 'terminated'),
-(8520, 'XOR', 'terminated'),
-(8524, 'XOR', 'executing'),
-(8526, 'XOR', 'terminated'),
-(8527, 'XOR', 'terminated'),
-(8531, 'XOR', 'executing'),
-(8534, 'XOR', 'executing'),
-(8536, 'XOR', 'terminated'),
-(8537, 'XOR', 'skipped'),
-(8541, 'XOR', 'executing');
+(8236, 'XOR', 'executing');
 
 -- --------------------------------------------------------
 
@@ -25239,7 +25145,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `role_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `comment` text
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2767 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2777 ;
 
 --
 -- Daten für Tabelle `historyactivityinstance`
@@ -27263,7 +27169,17 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `ti
 (2763, 8566, 'email senden', '2015-03-24 09:36:03', 'running', 'terminated', 1190, NULL, NULL, NULL),
 (2764, 8567, 'a', '2015-03-24 09:36:04', NULL, 'init', 1190, NULL, NULL, NULL),
 (2765, 8567, 'a', '2015-03-24 09:36:04', 'init', 'ready(ControlFlow)', 1190, NULL, NULL, NULL),
-(2766, 8567, 'a', '2015-03-24 09:36:04', 'ready(ControlFlow)', 'ready', 1190, NULL, NULL, NULL);
+(2766, 8567, 'a', '2015-03-24 09:36:04', 'ready(ControlFlow)', 'ready', 1190, NULL, NULL, NULL),
+(2767, 8568, 'Activity1Fragment1', '2015-04-14 09:26:48', NULL, 'init', 1191, NULL, NULL, NULL),
+(2768, 8568, 'Activity1Fragment1', '2015-04-14 09:26:48', 'init', 'ready(ControlFlow)', 1191, NULL, NULL, NULL),
+(2769, 8568, 'Activity1Fragment1', '2015-04-14 09:26:48', 'ready(ControlFlow)', 'ready', 1191, NULL, NULL, NULL),
+(2770, 8569, 'Activity1Fragment2', '2015-04-14 09:26:49', NULL, 'init', 1191, NULL, NULL, NULL),
+(2771, 8569, 'Activity1Fragment2', '2015-04-14 09:26:49', 'init', 'ready(ControlFlow)', 1191, NULL, NULL, NULL),
+(2772, 8570, 'ActivityFragment3', '2015-04-14 09:26:49', NULL, 'init', 1191, NULL, NULL, NULL),
+(2773, 8570, 'ActivityFragment3', '2015-04-14 09:26:49', 'init', 'ready(ControlFlow)', 1191, NULL, NULL, NULL),
+(2774, 8571, 'ActivityFragment4', '2015-04-14 09:26:49', NULL, 'init', 1191, NULL, NULL, NULL),
+(2775, 8571, 'ActivityFragment4', '2015-04-14 09:26:49', 'init', 'ready(ControlFlow)', 1191, NULL, NULL, NULL),
+(2776, 8571, 'ActivityFragment4', '2015-04-14 09:26:49', 'ready(ControlFlow)', 'ready', 1191, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -27293,7 +27209,7 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `old_state_name` varchar(200) DEFAULT '',
   `new_state_id` int(11) NOT NULL,
   `new_state_name` varchar(200) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=217 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=219 ;
 
 --
 -- Daten für Tabelle `historydataobjectinstance`
@@ -27454,7 +27370,9 @@ INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `name`, `t
 (213, 1187, 'Gehlat', '2015-03-24 09:23:14', 964, NULL, '', 137, 'init'),
 (214, 1188, 'Gehlat', '2015-03-24 09:32:21', 965, NULL, '', 137, 'init'),
 (215, 1189, 'Gehlat', '2015-03-24 09:33:11', 966, NULL, '', 137, 'init'),
-(216, 1190, 'Gehlat', '2015-03-24 09:36:03', 967, NULL, '', 137, 'init');
+(216, 1190, 'Gehlat', '2015-03-24 09:36:03', 967, NULL, '', 137, 'init'),
+(217, 1191, 'object1', '2015-04-14 09:26:48', 968, NULL, '', 1, 'init'),
+(218, 1191, 'object2', '2015-04-14 09:26:48', 969, NULL, '', 5, 'init');
 
 -- --------------------------------------------------------
 
@@ -27525,54 +27443,74 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `saggregation`
+--
+
+CREATE TABLE IF NOT EXISTS `saggregation` (
+  `dataclass_id1` int(11) NOT NULL,
+  `dataclass_id2` int(11) NOT NULL,
+  `multiplicity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `saggregation`
+--
+
+INSERT INTO `saggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VALUES
+(43, 44, 2147483647);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `scenario`
 --
 
 CREATE TABLE IF NOT EXISTS `scenario` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `modelid` bigint(11) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   `datamodelid` bigint(11) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=152 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=151 ;
 
 --
 -- Daten für Tabelle `scenario`
 --
 
-INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
-(1, 'HELLOWORLD', 0, 0, NULL, NULL),
-(2, 'helloWorld2', 0, 0, NULL, NULL),
-(3, 'EmailTest', 0, 0, NULL, NULL),
-(100, 'TestScenario', 0, 0, NULL, NULL),
-(101, 'Test Insert Scenario', 0, 0, NULL, NULL),
-(103, 'ScenarioTest1', 0, 0, NULL, NULL),
-(105, 'TestScenarioTerminationCondition', 0, 0, NULL, NULL),
-(111, 'Test2_2ReferenceTest', 483134892, 0, NULL, NULL),
-(113, 'referencetest3_2', 1607828466, 0, NULL, NULL),
-(114, 'RT4Scenario', 494340875, 0, NULL, NULL),
-(115, 'TT2Scenario', 2003613382, 0, NULL, NULL),
-(116, 'TT2Scenario', 2003613382, 0, NULL, NULL),
-(117, 'AT2Scenario', 1149737035, 0, NULL, NULL),
-(118, 'AT3Scenario', 668857574, 0, NULL, NULL),
-(134, 'ReiseTestScenario', 1047638939, 0, NULL, NULL),
-(135, 'ReiseTestScenario', 1047638939, 0, NULL, NULL),
-(136, 'TXOR1Scenario', 1273761406, 0, NULL, NULL),
-(138, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
-(139, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
-(140, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
-(141, 'TestEmail2Scenario', 339737652, 0, NULL, NULL),
-(142, 'TestEmail3Scenario', 93160132, 0, NULL, NULL),
-(143, 'TestEmail3Scenario', 93160132, 1, NULL, NULL),
-(144, 'XORTest2Scenario', 2081570932, 0, NULL, NULL),
-(145, 'TestXOR3Scenario', 497733244, 0, NULL, NULL),
-(146, 'TestSpecialCaseXORScenario', 1684110411, 0, NULL, NULL),
-(147, 'ETScenario', 376235492, 0, NULL, NULL),
-(148, 'Kaffeeprozess', 396446332, 0, NULL, NULL),
-(149, 'Kaffeeprozess', 932221086, 2, 1930183929, 0),
-(150, 'Kaffeeprozess', 932221086, 8, NULL, NULL),
-(151, 'GehaltScenario', 1961173552, 1, 1696623414, 0);
+INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
+(1, 'HELLOWORLD', 0, 0, 0, NULL, NULL),
+(2, 'helloWorld2', 0, 0, 0, NULL, NULL),
+(3, 'EmailTest', 0, 0, 0, NULL, NULL),
+(100, 'TestScenario', 0, 0, 0, NULL, NULL),
+(101, 'Test Insert Scenario', 0, 0, 0, NULL, NULL),
+(103, 'ScenarioTest1', 0, 0, 0, NULL, NULL),
+(105, 'TestScenarioTerminationCondition', 0, 0, 0, NULL, NULL),
+(111, 'Test2_2ReferenceTest', 0, 483134892, 0, NULL, NULL),
+(113, 'referencetest3_2', 0, 1607828466, 0, NULL, NULL),
+(114, 'RT4Scenario', 0, 494340875, 0, NULL, NULL),
+(115, 'TT2Scenario', 0, 2003613382, 0, NULL, NULL),
+(116, 'TT2Scenario', 0, 2003613382, 0, NULL, NULL),
+(117, 'AT2Scenario', 0, 1149737035, 0, NULL, NULL),
+(118, 'AT3Scenario', 0, 668857574, 0, NULL, NULL),
+(134, 'ReiseTestScenario', 0, 1047638939, 0, NULL, NULL),
+(135, 'ReiseTestScenario', 0, 1047638939, 0, NULL, NULL),
+(136, 'TXOR1Scenario', 0, 1273761406, 0, NULL, NULL),
+(138, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
+(139, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
+(140, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
+(141, 'TestEmail2Scenario', 0, 339737652, 0, NULL, NULL),
+(142, 'TestEmail3Scenario', 0, 93160132, 0, NULL, NULL),
+(143, 'TestEmail3Scenario', 0, 93160132, 1, NULL, NULL),
+(144, 'XORTest2Scenario', 0, 2081570932, 0, NULL, NULL),
+(145, 'TestXOR3Scenario', 0, 497733244, 0, NULL, NULL),
+(146, 'TestSpecialCaseXORScenario', 0, 1684110411, 0, NULL, NULL),
+(147, 'ETScenario', 0, 376235492, 0, NULL, NULL),
+(148, 'Kaffeeprozess', 0, 396446332, 0, NULL, NULL),
+(149, 'Kaffeeprozess', 0, 932221086, 2, 1930183929, 0),
+(150, 'Kaffeeprozess', 0, 932221086, 8, NULL, NULL),
+(151, 'GehaltScenario', 0, 1961173552, 1, 1696623414, 0);
 
 -- --------------------------------------------------------
 
@@ -27585,7 +27523,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1191 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1192 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -28734,7 +28672,8 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 (1187, 'GehaltScenario', 0, 151),
 (1188, 'GehaltScenario', 0, 151),
 (1189, 'GehaltScenario', 0, 151),
-(1190, 'GehaltScenario', 0, 151);
+(1190, 'GehaltScenario', 0, 151),
+(1191, 'HELLOWORLD', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -28746,7 +28685,7 @@ CREATE TABLE IF NOT EXISTS `state` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `olc_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=138 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=135 ;
 
 --
 -- Daten für Tabelle `state`
@@ -28885,10 +28824,7 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 (131, 'fertig', 48),
 (132, 'gekocht', 48),
 (133, 'nicht ausreichend', 47),
-(134, 'init', 48),
-(135, 'init', 49),
-(136, 'init', 50),
-(137, 'init', 51);
+(134, 'init', 48);
 
 -- --------------------------------------------------------
 
@@ -29153,6 +29089,12 @@ ALTER TABLE `rolehasright`
  ADD PRIMARY KEY (`role_id`,`right_id`);
 
 --
+-- Indexes for table `saggregation`
+--
+ALTER TABLE `saggregation`
+ ADD PRIMARY KEY (`dataclass_id1`,`dataclass_id2`);
+
+--
 -- Indexes for table `scenario`
 --
 ALTER TABLE `scenario`
@@ -29214,7 +29156,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8568;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8572;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -29224,52 +29166,52 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=494;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=490;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8568;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8572;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
 ALTER TABLE `dataattribute`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `dataattributeinstance`
 --
 ALTER TABLE `dataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `dataclass`
 --
 ALTER TABLE `dataclass`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=49;
 --
 -- AUTO_INCREMENT for table `datanode`
 --
 ALTER TABLE `datanode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=153;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=152;
 --
 -- AUTO_INCREMENT for table `dataobject`
 --
 ALTER TABLE `dataobject`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=31;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=968;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=970;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
 ALTER TABLE `dataset`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=191;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=190;
 --
 -- AUTO_INCREMENT for table `emailconfiguration`
 --
 ALTER TABLE `emailconfiguration`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `eventinstance`
 --
@@ -29284,17 +29226,17 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=186;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=185;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5222;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5226;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
 ALTER TABLE `historyactivityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2767;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2777;
 --
 -- AUTO_INCREMENT for table `historycontrolflow`
 --
@@ -29304,7 +29246,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `historydataobjectinstance`
 --
 ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=217;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=219;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -29319,17 +29261,17 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `scenario`
 --
 ALTER TABLE `scenario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=152;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=151;
 --
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1191;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1192;
 --
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=138;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=135;
 --
 -- AUTO_INCREMENT for table `user`
 --

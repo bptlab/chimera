@@ -49,7 +49,7 @@
          <property name="x" value="168" />
          <property name="width" value="40" />
          <property name="y" value="55" />
-         <property name="text" value="Flug" />
+         <property name="text" value="DO2" />
          <property name="stereotype" value="" />
          <property name="state" value="init" />
          <property name="#id" value="1343047300" />
@@ -64,7 +64,7 @@
          <property name="x" value="239" />
          <property name="width" value="40" />
          <property name="y" value="265" />
-         <property name="text" value="bike" />
+         <property name="text" value="DO1" />
          <property name="stereotype" value="" />
          <property name="state" value="terminated" />
          <property name="#id" value="500103237" />

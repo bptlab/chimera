@@ -17,8 +17,8 @@
 				<span class="pull-right fa arrow"></span>
 			</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="enabledActivitiesMenu">
-				<li ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" role="presentation">
-					<a role="menuitem" data-toggle="modal" data-target="{{'#modal' + id}}" tabindex="-1">{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}</a>
+				<li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" role="presentation">
+					<a role="menuitem" data-toggle="modal" data-target="{{'#modal' + value['id']}}" tabindex="-1">{{value['label']}}</a>
 				</li>
 			</ul>
 		</div>
@@ -36,10 +36,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
-						<td>{{id}}</td>
-						<td>{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}</td>
-						<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalTerminate' + id}}">Terminate</a>
+					<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
+						<td>{{value['id']}}</td>
+						<td>{{value['label']}}</td>
+						<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalTerminate' + value['id']}}">Terminate</a>
 					</tr>
 					</a>
 				</tbody>
@@ -56,9 +56,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids'] track by $index">
-						<td>{{id}}</td>
-						<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
+					<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
+						<td>{{value['id']}}</td>
+						<td>{{value['label']}}</td>
 					</tr>
 					</a>
 				</tbody>
@@ -76,11 +76,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
-						<td>{{key}}</td>
-						<td>{{value}}</td>
-						<td>{{instanceCtrl.getCurrentInstance().dataobjects['states'][key]}}</td>
-					</tr>
+                        <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
+                            <td>{{key}}</td>
+                            <td>{{value['label']}}</td>
+                            <td>{{value['state']}}</td>
+                        </tr>
 					</a>
 				</tbody>
 			</table>
@@ -107,10 +107,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjects['label'] track by $index">
-									<td>{{value}}</td>
-									<td>{{instanceCtrl.getCurrentInstance().dataobjects['states'][key]}}</td>
-								</tr>
+                            <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
+                                <td>{{value['label']}}</td>
+                                <td>{{value['state']}}</td>
+                            </tr>
 								</a>
 							</tbody>
 						</table>
@@ -142,9 +142,9 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index">
-												<td>{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}</td>
-												<td><a type="button" data-toggle="modal" data-target="{{'#modalTerminate' + id}}"><i class="fa fa-check text-navy"></i></a></td>
+											<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
+												<td>{{value['label']}}</td>
+												<td><a type="button" data-toggle="modal" data-target="{{'#modalTerminate' + value['id']}}"><i class="fa fa-check text-navy"></i></a></td>
                         
 											</tr>
 											</a>
@@ -163,9 +163,9 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr ng-repeat="id in instanceCtrl.getCurrentInstance().activities['terminated']['ids'] track by $index">
-											<td>{{id}}</td>
-											<td>{{instanceCtrl.getCurrentInstance().activities.terminated.label[id]}}</td>
+										<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
+											<td>{{value['id']}}</td>
+											<td>{{value['label']}}</td>
 										</tr>
 										</a>
 									</tbody>
@@ -176,8 +176,6 @@
 	   			</div>
      				<div class="panel-footer">
 					<select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
-					<!--<button type="button" class="btn btn-default" value="open" ng-model="todoSelection">Open Tasks</a>
-					<button type="button" class="btn btn-default" value="completed" ng-model="todoSelection">Completed Tasks</a>-->
 				</div>
 		   	   </div>
 			</div>
@@ -192,8 +190,8 @@
 					</div>
 					<div class="panel-body list">
 						<ul aria-labelledby="enabledActivitiesMenu">
-							<li ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" role="presentation">
-								<a data-toggle="modal" data-target="{{'#modal' + id}}" tabindex="-1">{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}</a>
+							<li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" role="presentation">
+								<a data-toggle="modal" data-target="{{'#modal' + value['id']}}" tabindex="-1">{{value['label']}}</a>
 							</li>
 						</ul>
 					</div>
@@ -223,7 +221,7 @@
 						<div class="animate-switch-container" ng-switch on="logSelection">
 	 						<div class="animate-switch" ng-switch-default>						
 								<div class="list-item-container">
-								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().activitylogs track by $index">
+								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
 									<div class="list-item">
 										<h3 class="no-margins text-success">{{value['label']}}</h3>
 										<small>{{value['oldstate']}} -> {{value['newstate']}}</small>
@@ -234,7 +232,7 @@
 							</div>
 	 						<div class="animate-switch" ng-switch-when="dataobject">						
 								<div class="list-item-container">
-								    <div ng-repeat="(key, value) in instanceCtrl.getCurrentInstance().dataobjectlogs track by $index">
+								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
 									<div class="list-item">
 										<h3 class="no-margins text-success">{{value['name']}}</h3>
 										<small>{{value['old_state_name']}} -> {{value['new_state_name']}}</small>
@@ -255,7 +253,7 @@
 
 <!--___________________________________ MODALS ___________________________________-->
 <!-- modal for beginning an Activity-->
-<div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['enabled']['ids']" id="{{'modal' + id}}" class="modal fade">
+<div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" id="{{'modal' + value['id']}}" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -263,18 +261,18 @@
         <h4 class="modal-title">Begin activity?</h4>
       </div>
       <div class="modal-body">
-        <p>Do you want to start Activity "{{instanceCtrl.getCurrentInstance().activities.enabled.label[id]}}"?</p>
+        <p>Do you want to start Activity "{{value['label']}}"?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="instanceCtrl.beginActivity(id);" data-dismiss="modal" class="btn btn-primary">Begin</button>
+        <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- A model as a Dialog for terminating an Activity -->
-<div ng-repeat="id in instanceCtrl.getCurrentInstance().activities['running']['ids']  track by $index" id="{{'modalTerminate' + id}}" class="modal fade">
+<div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index" id="{{'modalTerminate' + value['id']}}" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -282,11 +280,11 @@
         <h4 class="modal-title">Terminate activity?</h4>
       </div>
       <div class="modal-body">
-        <p>Do you really want to termiante Activity "{{instanceCtrl.getCurrentInstance().activities.running.label[id]}}"?</p>
+        <p>Do you really want to terminate Activity "{{value['label']}}"?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="instanceCtrl.terminateActivity(id);" data-dismiss="modal" class="btn btn-primary">Terminate</button>
+        <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Terminate</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

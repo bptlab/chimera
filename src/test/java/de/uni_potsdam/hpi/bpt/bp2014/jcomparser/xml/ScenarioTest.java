@@ -538,7 +538,7 @@ public class  ScenarioTest extends TestSetUp {
      * @throws Exception java.lang.Exception
      */
      private void refillDatabase() throws Exception {
-         emptyDatabase();
+        emptyDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(INSERT_TESTDATA_FILE));
     }
