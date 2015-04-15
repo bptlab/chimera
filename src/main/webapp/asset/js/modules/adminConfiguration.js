@@ -65,14 +65,14 @@
 
 			// Got all emailtasks with the given Id
 			this.getAllMailtaskForScenarioID = function(id){
-				$http.get(JEngine_Server_URL+"/" + JCore_REST_Interface + "/scenario/" + id + "/emailtask/").
+				$http.get(JEngine_Server_URL+"/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").
 					success(function(data) {
 						controller.emailtaskIDs = data['ids'];
 					});
 			};
 			// Got to the instance with the given Id
 			this.getDetailsForMailtaskID = function(id){
-				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
 					"/scenario/0/emailtask/" + id + "/?").
 					success(function(data) {
 						controller.detailsForID = data;
