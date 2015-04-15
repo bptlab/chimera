@@ -425,41 +425,40 @@ public class Connector extends DbDataObject {
         return result;
     }
     /**
-     * Get the latest version of a fragment which is in the database.
+     * Get the version of a fragment which is in the database.
      *
-     * @param fragmentModelID modelID of the fragment
-     * @param scenarioModelID modelID of the scenario the fragment belongs to
-     * @return latest version of the specified fragment (return -1 if there is no fragment of this id)
+     * @param scenarioID databaseID of the scenario the fragment belongs to
+     * @param modelID modelID of the fragment
+     * @return version of the specified fragment (return -1 if there is no fragment of this id)
      */
-    public int getNewestFragmentVersion(long fragmentModelID, long scenarioModelID) {
+    public int getFragmentVersion(int scenarioID, long modelID) {
 
         DbDataObject dbDataObject = new DbDataObject();
-        String select = "SELECT fragment.modelversion FROM scenario, fragment " +
-                "WHERE scenario.id = fragment.scenario_ID " +
-                "AND scenario.modelid = " + scenarioModelID +
-                " AND fragment.modelid = " + fragmentModelID;
+        String select = "SELECT modelversion FROM fragment " +
+                "WHERE scenario_id = " + scenarioID+
+                " AND modelid = " + modelID;
         LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select, "modelversion");
         if (versions.size() == 0) {
             return -1;
         }
-        return Collections.max(versions);
+        return versions.get(0);
     }
     /**
-     * Get the latest version of a scenario which is in the database.
+     * Get the version of a scenario which is in the database.
      *
-     * @param scenarioID modelID of the scenario
-     * @return latest version of the scenario with the scenarioID (return -1 if there is no scenario of this id)
+     * @param scenarioID databaseID of the scenario
+     * @return version of the scenario with the scenarioID (return -1 if there is no scenario of this id)
      */
-    public int getNewestScenarioVersion(long scenarioID) {
+    public int getScenarioVersion(int scenarioID) {
 
         DbDataObject dbDataObject = new DbDataObject();
         String select = "SELECT modelversion FROM scenario " +
-                "WHERE modelid = " + scenarioID;
+                "WHERE id = " + scenarioID;
         LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select, "modelversion");
         if (versions.size() == 0) {
             return -1;
         }
-        return Collections.max(versions);
+        return versions.get(0);
     }
 
     /**
