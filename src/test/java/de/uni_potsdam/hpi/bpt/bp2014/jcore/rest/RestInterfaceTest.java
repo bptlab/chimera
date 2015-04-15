@@ -725,14 +725,14 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityStatus(String, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
     @Test
     public void testInvalidStateUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("status", "complete").request().post(null);
+                .queryParam("state", "complete").request().post(null);
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -745,14 +745,14 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityStatus(String, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
     @Test
     public void testInvalidActivityUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("status", "begin").request().post(null);
+                .queryParam("state", "begin").request().post(null);
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -772,7 +772,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/2")
-                .queryParam("status", "begin").request().post(null);
+                .queryParam("state", "begin").request().post(null);
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -802,7 +802,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testTerminateInvalidScenarioInstance() {
         Response response = base.path("scenario/9999/instance/72")
-                .queryParam("status", "begin").request().put(Entity.json("{}"));
+                .queryParam("state", "begin").request().put(Entity.json("{}"));
         assertEquals("The Response code of terminateScenarioInstance was not 400",
                 400, response.getStatus());
         assertEquals("Get terminateScenarioInstance does not return a JSON",
@@ -832,7 +832,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testTerminateScenarioInstance() {
         Response response = base.path("scenario/1/instance/72")
-                .queryParam("status", "begin").request().put(Entity.json("{}"));
+                .queryParam("state", "begin").request().put(Entity.json("{}"));
         assertEquals("The Response code of terminateScenarioInstance was not 200",
                 200, response.getStatus());
         assertEquals("terminateScenarioInstance does not return a JSON",
