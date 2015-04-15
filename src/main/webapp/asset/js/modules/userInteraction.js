@@ -15,7 +15,6 @@
 			var controller = this;
 			
 			// initialize an empty list of scenario Ids
-			this.scenarioDetails = {};
             this.currentScenario = {};
 			this.scenarios = {};
 			
@@ -24,7 +23,16 @@
 					controller.scenarios = data;
 					//controller.getDetailedInformation();
 				});
-				
+
+            /* ____ BEGIN_INITIALIZATION ____ */
+            this.initialize();
+
+            this.initialize = function(){
+                controller.getCurrentScenario();
+            };
+
+            /* ____ END_INITIALIZATION ____ */
+
 			this.getScenarioDetails = function(id){
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 						success(function(data) {
@@ -49,9 +57,8 @@
 			this.getCurrentScenario = function(){
 				if ($routeParams.id != null) {
                     controller.getScenarioDetails($routeParams.id);
-                    controller.getInstancesOfScenario($routeParams.id);
 
-                    controller.currentScenario['id'] = $routeParams.id;
+                    //controller.currentScenario['id'] = $routeParams.id;
 				}
 			};
 			
@@ -87,10 +94,53 @@
 			this.instances = {};
             this.instanceDetails = {};
 			this.scenario = {};
-			
+
+            // if necessary initialize the specified Scenario
+            this.initialize();
+
+            this.initialize = function(){
+                if ($routeParams.instanceId) {
+                    // initialize if necessary the specified instance
+                    // The scenario and instance is specified by the routeParams
+                    this.initializeInstance($routeParams.instanceId);
+                } else {
+                    // First get the Scenario InstanceIds
+                    $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/").
+                        success(function(data) {
+                            instanceCtrl.scenario['instances'] = data;
+                            instanceCtrl.scenario['id'] = $routeParams.id;
+                        }).error(function() {
+                            console.log('request failed');
+                        });
+                }
+            };
+
+            // Initializes an Instance object for the given ID by fetching the information
+            this.initializeInstance = function(id) {
+                $http.get(
+                    JEngine_Server_URL + "/" + JCore_REST_Interface +
+                    "/scenario/" + $routeParams.id + "/instance/" +
+                    id + "/"
+                ).success(function (data) {
+                        //instanceCtrl.scenario['instanceIds'] = instanceCtrl.scenario['instanceIds'] || [];
+                        //instanceCtrl.scenario['instanceIds'].push(id);
+                        //instanceCtrl.instances['' + id] = data;
+                        instanceCtrl.instanceDetails['id'] = id;
+                        if ($routeParams.instanceId) {
+                            instanceCtrl.initializeActivityInstances();
+                            instanceCtrl.initializeDataobjectInstances();
+                            instanceCtrl.initializeActivitylogInstances();
+                            instanceCtrl.initializeDataobjectlogInstances();
+                        }
+                    }).
+                    error(function () {
+                        console.log('request failed');
+                    });
+            }
+
 			/* ____ BEGIN_INITIALIZATION ____ */
 			this.initializeActivityInstances = function(){
-				instanceCtrl.instances[$routeParams.instanceId].activities = {};
+				instanceCtrl.instanceDetails.activities = {};
 				["enabled", "terminated", "running"].forEach(function(state){
 					var state2 = state;
 					$http.get(
@@ -106,7 +156,7 @@
 			}
 
 			this.initializeDataobjectInstances = function(){
-				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+				instanceCtrl.instanceDetails.dataobjects = {};
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface +
 						  "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/dataobject/0/").
@@ -119,7 +169,7 @@
 			}
 			// activitylogs
 			this.initializeActivitylogInstances = function(){
-				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+				instanceCtrl.instanceDetails.dataobjects = {};
 					$http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
 						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/activities/").
@@ -132,7 +182,7 @@
 			}
 			// dataobjectlogs
 			this.initializeDataobjectlogInstances = function(){
-				instanceCtrl.instances[$routeParams.instanceId].dataobjects = {};
+				instanceCtrl.instanceDetails.dataobjects = {};
 					$http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
 						"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 						"/dataobjects/").
@@ -143,60 +193,17 @@
                             console.log('request failed');
                         });
 			}
-
-			this.initialize = function(){
-				if ($routeParams.instanceId) {
-					// initialize if necessary the specified instance
-					// The scenario and instance is specified by the routeParams
-					this.initializeInstance($routeParams.instanceId);
-				} else {
-					// First get the Scenario InstanceIds
-					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/").
-					success(function(data) {
-						instanceCtrl.scenario['instances'] = data;
-                        instanceCtrl.scenario['id'] = $routeParams.id;
-					}).error(function() {
-                            console.log('request failed');
-                        });
-				}
-			};
-			
-			// Initializes an Instance object for the given ID by fetching the information
-			this.initializeInstance = function(id){
-				$http.get(
-					JEngine_Server_URL + "/" + JCore_REST_Interface +
-					"/scenario/" + $routeParams.id + "/instance/" + 
-					id + "/"
-				).success(function(data){
-					//instanceCtrl.scenario['instanceIds'] = instanceCtrl.scenario['instanceIds'] || [];
-					//instanceCtrl.scenario['instanceIds'].push(id);
-					//instanceCtrl.instances['' + id] = data;
-                        instanceCtrl.instanceDetails['id'] = id;
-					if ($routeParams.instanceId) {
-						instanceCtrl.initializeActivityInstances();
-						instanceCtrl.initializeDataobjectInstances();
-						instanceCtrl.initializeActivitylogInstances();
-						instanceCtrl.initializeDataobjectlogInstances();
-					}
-				}).
-                    error(function() {
-                        console.log('request failed');
-                    });
-			}
-			
-			// if necessary initialize the specified Scenario
-			this.initialize();
-			/* ____ END_INITIALIZATION ____ */
+            /* ____ END_INITIALIZATION ____ */
 			
 			// returns the label of the current scenario
-			this.getScenarioName = function(){
-				// The scenarioId is specified by the routeParams
-				var instanceArray = instanceCtrl.scenario['instanceIds'];
-				// There is a lot of concurrency, check if all values are set
-				if (instanceArray && instanceArray[0] && this.instances[instanceArray[0]]) {
-					return this.instances[instanceArray[0]]['label'];
-				}
-			};
+			//this.getScenarioName = function(){
+			//	// The scenarioId is specified by the routeParams
+			//	var instanceArray = instanceCtrl.scenario['instanceIds'];
+			//	// There is a lot of concurrency, check if all values are set
+			//	if (instanceArray && instanceArray[0] && this.instances[instanceArray[0]]) {
+			//		return this.instances[instanceArray[0]]['label'];
+			//	}
+			//};
 			
 			// Got to the instance with the given Id
 			this.goToDetailsFrom = function(id){
@@ -205,10 +212,7 @@
 			
 			// returns the current instance object
 			this.getCurrentInstance = function(){
-				var ret = this.instances[$routeParams.instanceId];
-				if (ret) {
-					return ret;
-				}
+                instanceCtrl.instanceDetails['id'] = $routeParams.instanceId;
 			};
 			
 			// begins an activity
@@ -217,7 +221,7 @@
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activityinstance/"+ activityId + "?status=begin").
 					success(function(data) {
-						instanceCtrl.instances.activities = {};
+						instanceCtrl.instanceDetails.activities = {};
 						instanceCtrl.initializeActivityInstances();
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();
@@ -234,7 +238,7 @@
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activityinstance/"+ activityId + "?status=terminate").
 					success(function(data) {
-						instanceCtrl.instances.activities = {};
+						instanceCtrl.instanceDetails.activities = {};
 						instanceCtrl.initializeActivityInstances();
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();

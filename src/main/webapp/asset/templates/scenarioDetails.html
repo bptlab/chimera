@@ -1,9 +1,7 @@
 <h2>{{scenarioCtrl.currentScenario['details']['name']}}</h2>
-{{scenarioCtrl.getCurrentScenario()}}
 
 <br>
 <div class="row">
-    {{scenarioCtrl.currentScenario}}
 	<table>
 		<tr>
 			<th>ScenarioID</th>
@@ -13,7 +11,7 @@
 			<th>{{scenarioCtrl.currentScenario['details']['name']}}</th>
 		</tr><tr>
 			<th>Amount of Instances&nbsp;&nbsp;</th>
-			<th>{{scenarioCtrl.currentScenario['instances']['ids'].length}}</th>
+			<th>{{instanceCtrl.instanceDetails['instances']['ids'].length}}</th>
 		</tr>
 	</table>
 	<div class="pull-right">
