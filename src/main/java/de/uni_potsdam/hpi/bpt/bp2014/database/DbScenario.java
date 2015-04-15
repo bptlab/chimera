@@ -36,7 +36,7 @@ public class DbScenario extends DbObject {
      * @return a list of database ID's of all scenarios.
      */
     public LinkedList<Integer> getScenarioIDs() {
-        String sql = "SELECT id FROM scenario";
+        String sql = "SELECT id FROM scenario WHERE deleted = 0";
         return this.executeStatementReturnsListInt(sql, "id");
     }
 
@@ -68,7 +68,7 @@ public class DbScenario extends DbObject {
      * @return It returns a HashMap of the Database ids and their label.
      */
     public Map<Integer, String> getScenarios() {
-        String sql = "SELECT id, name FROM scenario";
+        String sql = "SELECT id, name FROM scenario WHERE deleted = 0";
         return this.executeStatementReturnsMap(sql, "id", "name");
     }
 
@@ -79,7 +79,7 @@ public class DbScenario extends DbObject {
      * @return It returns a HashMap of the Database ids and their label.
      */
     public Map<Integer, String> getScenariosLike(String filterString) {
-        String sql = "SELECT id, name FROM scenario WHERE name LIKE '%" + filterString + "%'";
+        String sql = "SELECT id, name FROM scenario WHERE deleted = 0 AND name LIKE '%" + filterString + "%'";
         return this.executeStatementReturnsMap(sql, "id", "name");
     }
 
@@ -88,7 +88,7 @@ public class DbScenario extends DbObject {
      * The Information consists of the id, name and version.
      */
     public Map<String, Object> getScenarioDetails(int id) {
-        String sql = "SELECT id, name, modelversion, modelid FROM scenario WHERE id = " + id;
-        return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelid", "modelversion");
+        String sql = "SELECT id, name, modelversion FROM scenario WHERE deleted = 0 AND id = " + id;
+        return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion");
     }
 }
