@@ -285,7 +285,7 @@ public class RestInterface {
      * A Created Response will be returned if the POST has been successful
      * and a BAD_REQUEST else.
      */
-    @POST
+    @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -296,9 +296,9 @@ public class RestInterface {
         if (executionService.existScenario(scenarioID) &&
                 executionService.existScenarioInstance(instanceID)) {
             executionService.terminateScenarioInstance(instanceID);
-            return Response.status(Response.Status.CREATED)
+            return Response.status(Response.Status.OK)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("")
+                    .entity("{\"message\":\"The is instance has been terminated.\"}")
                     .build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -307,8 +307,6 @@ public class RestInterface {
                     .build();
         }
     }
-
-    // TODO: Change the state of an instance via POST
 
     /**
      * This method provides detailed information about a scenario instance.

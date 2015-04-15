@@ -793,4 +793,54 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+    /**
+     * Given is the Rest API
+     * When you send a PUT to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * with an invalid scenario id or instance id
+     * then a 400 will be returned with an error message
+     */
+    @Test
+    public void testTerminateInvalidScenarioInstance() {
+        Response response = base.path("scenario/9999/instance/72")
+                .queryParam("status", "begin").request().put(Entity.json("{}"));
+        assertEquals("The Response code of terminateScenarioInstance was not 400",
+                400, response.getStatus());
+        assertEquals("Get terminateScenarioInstance does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+        response = base.path("scenario/1/instance/9999")
+                .queryParam("status", "begin").request().put(Entity.json("{}"));
+        assertEquals("The Response code of terminateScenarioInstance was not 400",
+                400, response.getStatus());
+        assertEquals("Get terminateScenarioInstance does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given is the Rest API
+     * When you send a PUT to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * with an valid scenario and instance id
+     * the instance will be terminated.
+     */
+    @Test
+    public void testTerminateScenarioInstance() {
+        Response response = base.path("scenario/1/instance/72")
+                .queryParam("status", "begin").request().put(Entity.json("{}"));
+        assertEquals("The Response code of terminateScenarioInstance was not 200",
+                200, response.getStatus());
+        assertEquals("terminateScenarioInstance does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"message\":\"The is instance has been terminated.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
 }
