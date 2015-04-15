@@ -185,7 +185,9 @@ public class RestInterface {
         DbTerminationCondition terminationCondition = new DbTerminationCondition();
         Map<Integer, List<Map<String, Object>>> conditionSets = terminationCondition
                 .getDetailedConditionsForScenario(scenarioID);
-        JSONObject result = new JSONObject(conditionSets);
+        JSONObject conditions = new JSONObject(conditionSets);
+        JSONObject result = new JSONObject();
+        result.put("conditions", conditions);
         result.put("setIDs", new JSONArray(conditionSets.keySet()));
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
