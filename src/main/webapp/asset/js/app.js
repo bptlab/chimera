@@ -49,6 +49,11 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 					controller: 'mailConfig',
 					controllerAs: 'mailC'
 				}).
+                when('/admin/core/', {
+                    templateUrl: 'asset/templates/jcoreConfig.html',
+                    controller: 'jcoreConfig',
+                    controllerAs: 'jcoreC'
+                }).
 			// default Route
 				otherwise({
 					redirectTo: '/scenario'

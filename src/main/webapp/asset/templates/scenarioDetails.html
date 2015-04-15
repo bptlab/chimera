@@ -21,6 +21,12 @@
 		<a type="button" data-toggle="modal" data-target="#createInstance" class="btn btn-default">
 					Start Instance
 		</a>
+        <!-- @TODO: amount doesnt work yet -->
+        <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">
+            <a type="button" data-toggle="modal" data-target="#deleteScenario" class="btn btn-default">
+                Delete Scenario
+            </a>
+        </div>
 	</div>
 </div>
 <hr><br>
@@ -38,6 +44,7 @@
 					<td>{{key}}</td>
 					<td>{{value}}</td>
 				</tr>
+                <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">No items found</div>
 				</a>
 			</tbody>
 		</table>
@@ -61,4 +68,22 @@
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="deleteScenario" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">delete Scenario?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to delete the scenario "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" ng-click="scenarioCtrl.deleteScenario(scenarioCtrl.currentScenario['id']);" data-dismiss="modal" class="btn btn-primary">Start Instance</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

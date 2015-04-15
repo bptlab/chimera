@@ -89,4 +89,22 @@
 			};
 		}]
 	);
+
+    // Create a Controller for mail config
+    adminCon.controller('jcoreConfig', ['$routeParams', '$location', '$http', '$scope',
+            function($routeParams, $location, $http, $scope){
+                var jcoreC = this;
+
+                // Got to the instance with the given Id
+                this.deleteScenario = function(id){
+                    $http.delete(JEngine_Server_URL + "/" + JConfig_REST_Interface +
+                    "/scenario/" + id + "/?").
+                        success(function(data) {
+                            console.log("deleting scenario was successful..");
+                        });
+                };
+
+
+            }]
+    );
 })();
