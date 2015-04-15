@@ -45,7 +45,14 @@ public class RestConfigurator {
                 .build();
     }
 
-    //TODO: delete scenario
+    /**
+     * Deletes a scenario with all its instances.
+     * internally realizes via a flag.
+     *
+     * @param scenarioID The ID of the scenario which is supposed to be deleted
+     * @return           The status code if the operation was successful or not
+     * @throws Exception
+     */
     @DELETE
     @Path("scenario/{scenarioID}/")
     public Response updateActivityState(@PathParam("scenarioID") Integer scenarioID) throws Exception {
