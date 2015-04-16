@@ -57,6 +57,12 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
             message = message.replace(
                     "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "."+dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+            subject = subject.replace(
+                    "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                            + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+            receiverMail = receiverMail.replace(
+                    "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                            + "."+dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
         }
     }
 
