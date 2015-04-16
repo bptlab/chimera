@@ -798,7 +798,7 @@ public class RestInterface {
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state transition " + state + "is unknown\"}")
+                        .entity("{\"error\":\"The state transition " + state + " is unknown\"}")
                         .build();
         }
         if (result) {
