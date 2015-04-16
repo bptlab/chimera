@@ -20108,6 +20108,7 @@ INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, 
 (142, 'TestEmail3Scenario', 93160132, 0, NULL, NULL),
 (143, 'TestEmail3Scenario', 93160132, 1, NULL, NULL),
 (144, 'XORTest2Scenario', 2081570932, 0, NULL, NULL);
+(152, 'deleteScenarioTest', 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 

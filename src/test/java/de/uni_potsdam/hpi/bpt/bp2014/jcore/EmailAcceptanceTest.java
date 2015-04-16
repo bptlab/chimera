@@ -204,32 +204,4 @@ public class EmailAcceptanceTest {
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
     }
-
-    //Email Test Scenario 151
-    @Test
-    public void testScenario151() throws MessagingException, IOException, EmailException {
-        ExecutionService executionService = new ExecutionService();
-        int scenarioInstance = executionService.startNewScenarioInstance(151);
-        int activity1 = 490;
-        System.out.println("Start Scenario 151");
-
-
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-
-        //do activity 1
-        System.out.println("do activity " + activity1);
-        executionService.beginActivity(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        executionService.terminateActivity(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-
-        //check for new Email
-        List<Message> inbox = Mailbox.get(receiver);
-        assertTrue(inbox.size() == 1);
-        assertEquals("Test", inbox.get(0).getSubject());
-        assertEquals("Lieber Kunde Stephan Karphen, Sie bekommen am 2015 12500 überwiesen. #Test lol test", inbox.get(0).getContent());
-
-    }
 }

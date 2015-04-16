@@ -15,6 +15,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -65,7 +66,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(String)}
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)}
      * the media type of the response will be JSON.
      */
     @Test
@@ -78,7 +79,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a get to {@link RestInterface#getScenarios(String)}
+     * When you sent a get to {@link RestInterface#getScenarios(UriInfo, String)} 
      * the entity of the response will be a valid JSON array.
      */
     @Test
@@ -89,7 +90,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(String)}
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)} 
      * the returned JSON will contain the latest version of all Scenarios.
      */
     @Test
@@ -101,7 +102,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(String)} and
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)} and
      * you use a Filter
      * then the returned JSON will contain the latest version of all Scenarios with
      * a name containing the filterString.
@@ -110,12 +111,12 @@ public class RestInterfaceTest extends AbstractTest {
     public void testGetScenarioContentWithFilter() {
         Response response = base.path("scenario").queryParam("filter", "HELLO").request().get();
         assertThat("Get Scenarios did not contain the expected information",
-                "{\"ids\":[1,2],\"links\":{\"1\":\"http://localhost:9998/interface/v2/scenario/1\",\"2\":\"http://localhost:9998/interface/v2/scenario/2\"},\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"}}",
+                "{\"ids\":[1,2],\"labels\":{\"1\":\"HELLOWORLD\",\"2\":\"helloWorld2\"},\"links\":{\"1\":\"http://localhost:9998/interface/v2/scenario/1\",\"2\":\"http://localhost:9998/interface/v2/scenario/2\"}}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getScenario(int) with an invalid id
+     * When you send a GET to {@link RestInterface#getScenario(UriInfo, int)} with an invalid id
      * a empty JSON with a 404 will be returned.
      */
     @Test
@@ -131,7 +132,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * If you send a GET to {@link RestInterface#getScenario(int)} with an valid id
+     * If you send a GET to {@link RestInterface#getScenario(UriInfo, int)}  with an valid id
      * a JSON containing the id, name and modelversion will be returned.
      */
     @Test
@@ -145,115 +146,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertNotEquals("Get scenarios did not respond with a valid JSON Array",
                 null, new JSONObject(responseEntity));
         assertThat("The content of the valid request is not as expected",
-                "{\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
+                "{\"modelid\":0,\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
                 jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
 
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
-     * the response should be of type json.
-     */
-    @Test
-    public void testGetMailTasksReturnsJson() {
-        Response response = base.path("scenario/1/emailtask").request().get();
-        assertEquals("The Response code of get all mail tasks was not 200",
-                200, response.getStatus());
-        assertEquals("Get all mail tasks returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-    }
-
-    /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)} and
-     * the scenario does not contain any mail task an object with no ids will be returned.
-     */
-    @Test
-    public void testGetAllMailTasksIfAbsent() {
-        Response response = base.path("scenario/1/emailtask").request().get();
-        assertThat("Get all mail Tasks returns not an empty JSON Object when the scenario has no mail tasks",
-                "{\"ids\":[],\"links\":{}}", jsonEquals(response.readEntity(String.class)));
-    }
-
-    /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
-     * the returned JSON Object should be a specified.
-     * {"ids":[1,2,...],"labels":{1:"abcd"...}}}
-     */
-    @Test
-    public void testGetAllMailTasksJSONResponse() {
-        Response response = base.path("scenario/142/emailtask").request().get();
-        assertThat("Get all mail Tasks returns not an empty JSON Object when the scenario has no mail tasks",
-                "{\"ids\":[362],\"links\":{\"362\":\"http://localhost:9998/interface/v2/scenario/142/emailtask/362\"}}",
-                jsonEquals(response.readEntity(String.class)));
-    }
-
-    /**
-     * When you send a Get to {@link RestInterface#getAllEmailTasks(int, String)}
-     * and the ScenarioID is invalid a 404 will be returned but the media type is still
-     * JSON.
-     */
-    @Test
-    public void testGetAllMailTasksMissingScenario() {
-        Response response = base.path("scenario/99999/emailtask").request().get();
-        assertEquals("The Response code of get all mail tasks was not 404",
-                404, response.getStatus());
-        assertEquals("Get all mail tasks returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-    }
-
-    /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
-     * with an invalid scenario an empty JSON object should be returned, with a 404.
-     */
-    @Test
-    public void testGetEmailTaskConfigurationMissingScenario() {
-        Response response = base.path("scenario/99999/emailtask/1").request().get();
-        assertEquals("The Response code of get email task configuration was not 404",
-                404, response.getStatus());
-        assertEquals("Get mail task configuration responses with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-    }
-
-    /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
-     * with an invalid mailTask an empty JSON object should be returned, with a 404.
-     */
-    @Test
-    public void testGetEmailTaskConfigurationMissingMailTask() {
-        Response response = base.path("scenario/1/emailtask/9999").request().get();
-        assertEquals("The Response code of get email task configuration was not 404",
-                404, response.getStatus());
-        assertEquals("Get mail task configuration responses with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-    }
-
-    /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
-     * a 200 with an json object should be returned
-     */
-    @Test
-    public void testGetEmailTaskReturnsJSON() {
-        Response response = base.path("scenario/142/emailtask/353").request().get();
-        assertEquals("The Response code of get  mail configuration was not 200",
-                200, response.getStatus());
-        assertEquals("Get all mail tasks returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-    }
-
-    /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
-     * a valid json object with "receiver", "content", "subject" should be returned
-     */
-    @Test
-    public void testGetEmailTaskReturnsCorrectJSON() {
-        Response response = base.path("scenario/142/emailtask/353").request().get();
-        assertThat("Get mail Task configuration returns not an valid JSON object",
-                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"content\":\"Test Message\"}",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    /**
-     * When you send a Get to {@link RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link RestInterface#getScenarioInstances(UriInfo, int, String)} 
      * with valid params and no filter
      * then you get 200 a JSON Object.
      */
@@ -267,7 +166,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with an invalid scenario
      * then you get 404 with an error message inside the returned JSON object
      */
@@ -284,7 +183,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
+     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with a valid scenario id
      * then a json object with all instances, id and label should be returned.
      * The schema should be:
@@ -300,7 +199,38 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(int, String)}
+     * When you send a Post to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * with an valid scenario instance id
+     * the scenario should be terminated and the response is a 201.
+     */
+    @Test
+    public void terminateScenarioInstance() {
+        Response response = base.path("scenario/1/instance/47").request().put(Entity.json(""));
+        assertEquals("The Response code of terminating an instances was not 200",
+                200, response.getStatus());
+    }
+
+    /**
+     * When you send a Post to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * with an invalid instance id
+     * then the Response should be a 404 with an error message.
+     */
+    @Test
+    public void terminateScenarioInstanceInvalidId() {
+        Response response = base.path("scenario/1/instance/9999").request().put(Entity.json(""));
+        assertEquals("The Response code of terminating an instances was not 400",
+                400, response.getStatus());
+        assertEquals("The Media type of terminating an instance was not JSON",
+                MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
+        assertThat("The content of the response was not as expected",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+
+    /**
+     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with a valid scenario id and a filter
      * only instances with names containing this string will be returned.
      */
@@ -314,7 +244,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -331,7 +261,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)} 
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -348,7 +278,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -359,7 +289,7 @@ public class RestInterfaceTest extends AbstractTest {
                 .request().put(Entity.json(newName));
         assertEquals("The Response code of start new instances was not 201",
                 201, response.getStatus());
-        assertEquals("Start new isntance returns a Response with the wrong media Type",
+        assertEquals("Start new instance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 "{\"id\":966,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/966\"}",
@@ -368,7 +298,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(int)}
+     * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -444,10 +374,10 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an wrong scenario ID the request should be redirected to the correct one.
      */
-    //@Test
+    @Test
     public void testGetActivitiesRedirects() {
         Response response = base.path("scenario/9999/instance/72/activity").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
@@ -455,13 +385,130 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                "{\"activities\":{\"189\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"},\"6686\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,189,6686]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * with an wrong scenario instance ID
+     * then a 404 with error message (inside JSON) should be returned.
+     */
+    @Test
+    public void testGetActivitiesInvalidInstance() {
+        Response response = base.path("scenario/1/instance/9999/activity").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 404",
+                404, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"There is no instance with id 9999\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * with an correct parameters a state but no filter
+     * then the request should return all activities with this state.
+     */
+    @Test
+    public void testGetActivitiesWithState() {
+        Response response = base.path("scenario/1/instance/72/activity")
+                .queryParam("state", "ready").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 200",
+                200, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"activities\":[{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"},{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"},{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"}],\"ids\":[186,189,6686]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * with an correct parameters, an invalid state but no filter
+     * the request should return a 404 with error message
+     */
+    @Test
+    public void testGetActivitiesWithInvalidState() {
+        Response response = base.path("scenario/1/instance/72/activity")
+                .queryParam("state", "enabled").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 404",
+                404, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The state is not allowed enabled\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * with an correct parameters a state but no filter
+     * then the request should return all activities with this state.
+     */
+    @Test
+    public void testGetActivitiesWithStateTerminated() {
+        Response response = base.path("scenario/1/instance/72/activity")
+                .queryParam("state", "terminated").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 200",
+                200, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"activities\":[],\"ids\":[]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * with an correct parameters a state and a filter
+     * then the request should return all activities with the state who fulfill the filter condition.
+     */
+    @Test
+    public void testGetActivitiesWithStateAndFilter() {
+        Response response = base.path("scenario/1/instance/72/activity")
+            .queryParam("state", "ready")
+                .queryParam("filter", "2").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 200",
+                200, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"activities\":[{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"}],\"ids\":[189]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
+     * with an correct parameters, an invalid state but no filter
+     * the request should return a 404 with error message
+     */
+    @Test
+    public void testGetActivitiesWithInvalidStateFilter() {
+        Response response = base.path("scenario/1/instance/72/activity")
+                .queryParam("state", "enabled")
+                .queryParam("filter", "1").request().get();
+        assertEquals("The Response code of getActivitiesOfInstance was not 404",
+                404, response.getStatus());
+        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The state is not allowed enabled\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with correct instance and scenario
      * a 200 with json content will be returned.
      */
@@ -473,13 +520,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":186,\"label\":\"Activity1Fragment1\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"},{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[186,187,188,189]}",
+                "{\"activities\":{\"189\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"},\"6686\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,189,6686]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(int, int, String, String)}
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
      * with a filter String
      * then only activities with a label like the filter String will be returned.
      */
@@ -491,13 +538,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":[{\"id\":187,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":188,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"terminated\"},{\"id\":189,\"label\":\"Activity1Fragment2\",\"type\":\"HumanTask\",\"activity_state\":\"ready\"}],\"ids\":[187,188,189]}",
+                "{\"activities\":{\"189\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"id\":189,\"label\":\"Activity1Fragment2\",\"state\":\"ready\"}},\"ids\":[189]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with a correct instance id and a wrong scenario ID
      * you will be redirected automatically.
      */
@@ -515,7 +562,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with an invalid instance
      * an 404 with error message will be returned
      */
@@ -530,11 +577,10 @@ public class RestInterfaceTest extends AbstractTest {
                 "{\"error\":\"There is no instance with the id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
-
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with an valid instance and scenario and no filter String
      * you will get a list of all DataObjects for this scenario.
      */
@@ -552,7 +598,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(int, int, String)}
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
      * with an valid instance and scenario and an filter String
      * you will get a list of all DataObjects with labels like the filter String for this scenario.
      */
@@ -639,6 +685,162 @@ public class RestInterfaceTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+
+    /**
+     * When you send a Get to {@link RestInterface#getTerminationCondition(int)}
+     * with an valid id
+     * then a JSON with the termination condition will be returned
+     */
+    @Test
+    public void testGetTerminationCondition() {
+        Response response = base.path("scenario/105/terminationcondition").request().get();
+        assertEquals("The Response code of getTermiantionCondition was not 200",
+                200, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}]},\"setIDs\":[1]}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getTerminationCondition(int)}
+     * with an invalid id
+     * then a 404 with an error message should be returned
+     */
+    @Test
+    public void testInvalidGetTerminationCondition() {
+        Response response = base.path("scenario/102/terminationcondition").request().get();
+        assertEquals("The Response code of getTermiantionCondition was not 404",
+                404, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"There is no scenario with the id 102\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
+     * with an invalid state
+     * a bad request with an error message should be returned.
+     */
+    @Test
+    public void testInvalidStateUpdateActivity() {
+        Response response = base.path("scenario/1/instance/72/activity/105")
+                .queryParam("state", "complete").request().put(Entity.json(""));
+        assertEquals("The Response code of getTerminationCondition was not 400",
+                400, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The state transition complete is unknown\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     *
+     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
+     * with an valid state for an invalid activity.
+     * a bad request with an error message should be returned.
+     */
+    @Test
+    public void testInvalidActivityUpdateActivity() {
+        Response response = base.path("scenario/1/instance/72/activity/105")
+                .queryParam("state", "begin").request().put(Entity.json(""));
+        assertEquals("The Response code of getTerminationCondition was not 400",
+                400, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"impossible to start activity with id 105\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     *
+     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
+     * with an valid state and valid activity
+     * then a 201 will be returned with a message inside a JSON-Object.
+     */
+    @Test
+    public void testUpdateActivity() {
+        Response response = base.path("scenario/1/instance/72/activity/186")
+                .queryParam("state", "begin").request().put(Entity.json(""));
+        assertEquals("The Response code of getTerminationCondition was not 202",
+                202, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"activity state changed.\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+        response = base.path("scenario/1/instance/72/activity/186")
+                .queryParam("state", "terminate").request().put(Entity.json(""));
+        assertEquals("The Response code of getTerminationCondition was not 202",
+                202, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"activity state changed.\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given is the Rest API
+     * When you send a PUT to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * with an invalid scenario id or instance id
+     * then a 400 will be returned with an error message
+     */
+    @Test
+    public void testTerminateInvalidScenarioInstance() {
+        Response response = base.path("scenario/9999/instance/72")
+                .queryParam("state", "begin").request().put(Entity.json("{}"));
+        assertEquals("The Response code of terminateScenarioInstance was not 400",
+                400, response.getStatus());
+        assertEquals("Get terminateScenarioInstance does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+        response = base.path("scenario/1/instance/9999")
+                .queryParam("status", "begin").request().put(Entity.json("{}"));
+        assertEquals("The Response code of terminateScenarioInstance was not 400",
+                400, response.getStatus());
+        assertEquals("Get terminateScenarioInstance does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given is the Rest API
+     * When you send a PUT to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * with an valid scenario and instance id
+     * the instance will be terminated.
+     */
+    @Test
+    public void testTerminateScenarioInstance() {
+        Response response = base.path("scenario/1/instance/72")
+                .queryParam("state", "begin").request().put(Entity.json("{}"));
+        assertEquals("The Response code of terminateScenarioInstance was not 200",
+                200, response.getStatus());
+        assertEquals("terminateScenarioInstance does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"message\":\"The is instance has been terminated.\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 }

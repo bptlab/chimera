@@ -4,7 +4,7 @@
 	<span class="fa arrow"></span>
 </a>
 <ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
-	<li ng-repeat="id in scenarioCtrl.scenarioIds">
-		<a ng-href="#/scenario/{{id}}">{{id + ': ' + scenarioCtrl.scenarios['' + id]['label']}}</a>
+	<li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
+		<a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
 	</li>
 </ul>

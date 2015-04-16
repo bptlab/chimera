@@ -1,8 +1,8 @@
 // Constants
 var JEngine_Server_URL = window.location.origin;
-var JCore_REST_Interface_Version = "v1";
-var JCore_REST_Interface = "JEngine/api/interface/" + JCore_REST_Interface_Version +"/en";
-var JCore_REST_new_Interface = "JEngine/api/v2";
+var JCore_REST_Interface = "JEngine/api/interface/v2";
+var JConfig_REST_Interface = "JEngine/api/config/v2";
+var JHistory_REST_Interface = "JEngine/api/history/v2";
 var JComparser_REST_Interface = "JEngine/api/jcomparser";
 
 
@@ -49,6 +49,11 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
 					controller: 'mailConfig',
 					controllerAs: 'mailC'
 				}).
+                when('/admin/core/', {
+                    templateUrl: 'asset/templates/jcoreConfig.html',
+                    controller: 'jcoreConfig',
+                    controllerAs: 'jcoreC'
+                }).
 			// default Route
 				otherwise({
 					redirectTo: '/scenario'
