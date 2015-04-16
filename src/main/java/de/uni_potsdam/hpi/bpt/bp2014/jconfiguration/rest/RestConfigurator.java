@@ -36,7 +36,7 @@ public class RestConfigurator {
      */
     @DELETE
     @Path("scenario/{scenarioID}/")
-    public Response updateActivityState(@PathParam("scenarioID") Integer scenarioID) throws Exception {
+    public Response deleteScenario(@PathParam("scenarioID") Integer scenarioID) throws Exception {
 
         boolean result;
         Execution execution = new Execution();
