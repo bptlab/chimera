@@ -772,7 +772,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testUpdateActivity() {
-        Response response = base.path("scenario/1/instance/72/activity/2")
+        Response response = base.path("scenario/1/instance/72/activity/186")
                 .queryParam("state", "begin").request().put(Entity.json(""));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
@@ -782,7 +782,7 @@ public class RestInterfaceTest extends AbstractTest {
                 "{\"message\":\"activity state changed.\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
-        response = base.path("scenario/1/instance/72/activity/2")
+        response = base.path("scenario/1/instance/72/activity/186")
                 .queryParam("state", "terminate").request().put(Entity.json(""));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());

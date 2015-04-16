@@ -239,6 +239,42 @@ public class ExecutionService {
     }
 
     /**
+     * Starts the execution of an activity specified by the params.
+     * The state will only be changed if the activity is enabled.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @param activityInstance_id Specifies the activity instance id.
+     * @return Indicates the success. True if the activity has been started, else false.
+     */
+    public boolean beginActivityInstance(int scenarioInstance_id, int activityInstance_id) {
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+            if (((ActivityInstance) nodeInstance).controlNodeInstance_id == activityInstance_id) {
+                return ((ActivityInstance) nodeInstance).begin();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Terminates the execution of an activity specified by the params.
+     * The state will only be changed if the activity is enabled.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @param activityInstance_id Specifies the activity instance id.
+     * @return Indicates the success. True if the activity has been started, else false.
+     */
+    public boolean terminateActivityInstance(int scenarioInstance_id, int activityInstance_id) {
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
+            if (((ActivityInstance) nodeInstance).controlNodeInstance_id == activityInstance_id) {
+                return ((ActivityInstance) nodeInstance).terminate();
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns information about all enabled Activities of a given scenario instance
      *
      * @scenarioInstanceId The id which specifies the scenario
@@ -258,7 +294,7 @@ public class ExecutionService {
 
 
     /**
-     * Returns information about all terminated Activities of a given scenario instance
+     * Returns information about all Activities of a given scenario instance
      *
      * @scenarioInstanceId The id which specifies the scenario
      * @return a Collection of Activity instances, which are terminated and part of the

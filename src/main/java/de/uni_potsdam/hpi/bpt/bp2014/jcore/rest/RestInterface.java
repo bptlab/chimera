@@ -696,10 +696,10 @@ public class RestInterface {
         executionService.openExistingScenarioInstance(new Integer(scenarioID), scenarioInstanceID);
         switch (state) {
             case "begin":
-                result = executionService.beginActivity(scenarioInstanceID, activityID);
+                result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
                 break;
             case "terminate":
-                result = executionService.terminateActivity(scenarioInstanceID, activityID);
+                result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
