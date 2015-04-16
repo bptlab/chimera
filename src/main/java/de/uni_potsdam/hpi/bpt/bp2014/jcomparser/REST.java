@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
-import de.uni_potsdam.hpi.bpt.bp2014.config.Config;
+import de.uni_potsdam.hpi.bpt.bp2014.config.Settings;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.xml.sax.SAXException;
 
@@ -12,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * ********************************************************************************
@@ -47,11 +46,11 @@ public class REST {
     /**
      * The URL to the ProcessEditor Model repository.
      */
-    private static final String PCM_URL = Config.processeditorServerUrl + "models/";
+    private static final String PCM_URL = Settings.processeditorServerUrl + "models/";
     /**
      * The URL to the ProcessEditor.
      */
-    private static final String PROCESS_SERVER_URI = Config.processeditorServerUrl;
+    private static final String PROCESS_SERVER_URI = Settings.processeditorServerUrl;
 
     /**
      * This methods parses a new scenario and saves it to the database.

@@ -22,7 +22,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.config;
  */
 
 
-public class Config {
+public class Settings {
 
     // Processeditor URL
     public static String processeditorServerUrl = "http://localhost:1205/";
