@@ -13686,6 +13686,7 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 CREATE TABLE IF NOT EXISTS `scenario` (
 `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `modelid` bigint(11) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1'
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=135 ;

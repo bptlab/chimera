@@ -65,7 +65,16 @@
                     //controller.currentScenario['id'] = $routeParams.id;
 				}
 			};
-			
+
+            this.deleteScenario = function(id){
+                $http.delete(JEngine_Server_URL + "/" + JConfig_REST_Interface +
+                "/scenario/" + id + "/?").
+                    success(function(data) {
+                        console.log("deleting scenario was successful..");
+                    });
+                $location.path("/scenario/");
+            };
+
 			this.getInstancesOfScenario = function(id) {
 				$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
 					success(function(data) {
@@ -75,6 +84,16 @@
                          console.log('request failed');
                 });
 			};
+
+            this.getTerminationConditionOfScenario = function(id) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
+                    success(function(data) {
+                        controller.currentScenario['terminationcondition'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
 			
 			// Creates a new instance of the scenario with the given Id
 			this.createInstance = function(id){
@@ -200,6 +219,7 @@
                             instanceCtrl.initializeDataobjectInstances();
                             instanceCtrl.initializeActivitylogInstances();
                             instanceCtrl.initializeDataobjectlogInstances();
+                            instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
                         }
                     }).
                     error(function () {
@@ -264,7 +284,17 @@
                     error(function() {
                         console.log('request failed');
                     });
-			};				
+			};
+
+            this.getTerminationConditionOfScenario = function(id) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
+                    success(function(data) {
+                        instanceCtrl.scenario['terminationcondition'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
 		}
 	]);
 })();

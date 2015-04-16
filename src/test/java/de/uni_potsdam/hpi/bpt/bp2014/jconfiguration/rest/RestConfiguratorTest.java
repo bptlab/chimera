@@ -23,11 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
- * This class is the test for {@link RestInterface}.
+ * This class is the test for {@link RestConfigurator}.
  * It extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest} class,
  * hence the database configuration will be restored afterwards.
  */
-public class RestInterfaceTest extends AbstractTest {
+public class RestConfiguratorTest extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
     /**
@@ -51,16 +51,16 @@ public class RestInterfaceTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestInterface.class);
+        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.class);
     }
 
     @Before
     public void setUpBase() {
-        base = target("config/v1");
+        base = target("config/v2");
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
+     * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * the response should be of type json.
      */
     @Test
@@ -73,7 +73,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)} and
+     * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)} and
      * the scenario does not contain any mail task an object with no ids will be returned.
      */
     @Test
@@ -84,7 +84,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getAllEmailTasks(int, String)}
+     * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * the returned JSON Object should be a specified.
      * {"ids":[1,2,...],"labels":{1:"abcd"...}}}
      */
@@ -96,7 +96,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getAllEmailTasks(int, String)}
+     * When you send a Get to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * and the ScenarioID is invalid a 404 will be returned but the media type is still
      * JSON.
      */
@@ -110,7 +110,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * with an invalid scenario an empty JSON object should be returned, with a 404.
      */
     @Test
@@ -123,7 +123,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * with an invalid mailTask an empty JSON object should be returned, with a 404.
      */
     @Test
@@ -136,7 +136,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
      * a 200 with an json object should be returned
      */
     @Test
@@ -149,14 +149,14 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getEmailTaskConfiguration(int, int)}
-     * a valid json object with "receiver", "content", "subject" should be returned
+     * When you send a Get to {@link RestConfigurator#getEmailTaskConfiguration(int, int)}
+     * a valid json object with "receiver", "message", "subject" should be returned
      */
     @Test
     public void testGetEmailTaskReturnsCorrectJSON() {
         Response response = base.path("scenario/142/emailtask/353").request().get();
         assertThat("Get mail Task configuration returns not an valid JSON object",
-                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"content\":\"Test Message\"}",
+                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 

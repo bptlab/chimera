@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -235,6 +236,64 @@ public class ExecutionService {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns information about all enabled Activities of a given scenario instance
+     *
+     * @scenarioInstanceId The id which specifies the scenario
+     * @return a Collection of Activity instances, which are enabled and part of the
+     *         specified scenario instance.
+     */
+    public Collection<ActivityInstance> getEnabledActivities(int scenarioInstanceId) {
+        Collection<ActivityInstance> enabledActivities = new LinkedList<>();
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+            if ( nodeInstance instanceof ActivityInstance) {
+                enabledActivities.add((ActivityInstance)nodeInstance);
+            }
+        }
+        return enabledActivities;
+    }
+
+
+    /**
+     * Returns information about all terminated Activities of a given scenario instance
+     *
+     * @scenarioInstanceId The id which specifies the scenario
+     * @return a Collection of Activity instances, which are terminated and part of the
+     *         specified scenario instance.
+     */
+    public Collection<ActivityInstance> getTerminatedActivities(int scenarioInstanceId) {
+        Collection<ActivityInstance> terminatedActivities = new LinkedList<>();
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getTerminatedControlNodeInstances()) {
+            if ( nodeInstance instanceof ActivityInstance) {
+                terminatedActivities.add((ActivityInstance) nodeInstance);
+            }
+        }
+        return terminatedActivities;
+    }
+
+
+
+
+    /**
+     * Returns information about all running Activities of a given scenario instance
+     *
+     * @scenarioInstanceId The id which specifies the scenario
+     * @return a Collection of Activity instances, which are running and part of the
+     *         specified scenario instance.
+     */
+    public Collection<ActivityInstance> getRunningActivities(int scenarioInstanceId) {
+        Collection<ActivityInstance> runningActivities = new LinkedList<>();
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
+            if ( nodeInstance instanceof ActivityInstance) {
+                runningActivities.add((ActivityInstance) nodeInstance);
+            }
+        }
+        return runningActivities;
     }
 
     /**
