@@ -2,10 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.config.Settings;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 
-import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.AfterClass;
 import org.junit.Test;
