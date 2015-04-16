@@ -118,8 +118,10 @@ public class DataClass implements IDeserialisable, IPersistable {
     @Override
     public int save() {
         Connector conn = new Connector();
+        int root = this.rootNode?1:0;
         this.dataClassID = conn.insertDataClassIntoDatabase(
-                this.dataClassName);
+                this.dataClassName,
+                root);
         saveDataAttributes();
 
         return dataClassID;
