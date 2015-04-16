@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /***********************************************************************************
  *
@@ -58,5 +59,16 @@ public class DbControlFlow extends DbObject {
     public LinkedList<Integer> getPredecessorControlNodes(int controlNode_id) {
         String sql = "SELECT controlnode_id1 FROM controlflow WHERE controlnode_id2 = " + controlNode_id;
         return this.executeStatementReturnsListInt(sql, "controlnode_id1");
+    }
+
+    /**
+     * This method returns all database ID's of all controlNodes and the conditions preceding the given controlNode.
+     *
+     * @param controlNode_id This is the database ID of a controlNode.
+     * @return a map of database ID's of controlNodes and conditions which precede the given controlNode.
+     */
+    public Map<Integer, String> getConditions(int controlNode_id){
+        String sql = "SELECT controlnode_id2, controlflow.condition FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
+        return this.executeStatementReturnsMap(sql, "controlnode_id2", "condition");
     }
 }
