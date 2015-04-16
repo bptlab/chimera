@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
@@ -37,7 +36,7 @@ public class RestInterface {
      * It is used by Jersey to deserialize JSON.
      * Also it can be used for tests to provide the correct contents.
      * This class in particular is used by the POST for the email configuration.
-     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator#updateEmailConfiguration(int, EmailConfigJaxBean)}
      * updateEmailConfiguration} method for more information.
      */
     @XmlRootElement
@@ -563,6 +562,19 @@ public class RestInterface {
                 .build();
     }
 
+    /**
+     * This method creates a Response object for all specified activities.
+     * The activities are specified by an scenario instance and a state.
+     * In addition UriInfo object is needed in order to create the links
+     * to the activity instances.
+     *
+     * @param scenarioID The ID of the scenario (model).
+     * @param instanceID The ID of the scenario instance.
+     * @param state      A String identifying the state.
+     * @param uriInfo    A UriInfo object, which holds the server context.
+     * @return A Response object, which is either a 404 if the state is invalid,
+     *         or a 200 if with json content.
+     */
     private Response getAllActivitiesOfInstanceWithState(
             int scenarioID, int instanceID, String state, UriInfo uriInfo) {
         ExecutionService executionService = new ExecutionService();
@@ -872,7 +884,7 @@ public class RestInterface {
      * @param resultLabel The label of the results.
      * @return The newly created JSON Object.
      */
-    public JSONObject mapToKeysAndResults(Map data, String keyLabel, String resultLabel) {
+    private JSONObject mapToKeysAndResults(Map data, String keyLabel, String resultLabel) {
         JSONObject result = new JSONObject();
         result.put(keyLabel, new JSONArray(data.keySet()));
         result.put(resultLabel, data);
