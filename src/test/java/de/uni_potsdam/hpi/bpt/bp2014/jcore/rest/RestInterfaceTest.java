@@ -416,7 +416,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetActivitiesWithState() {
         Response response = base.path("scenario/1/instance/72/activity")
-                .queryParam("status", "ready").request().get();
+                .queryParam("state", "ready").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
                 200, response.getStatus());
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
@@ -435,7 +435,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetActivitiesWithInvalidState() {
         Response response = base.path("scenario/1/instance/72/activity")
-                .queryParam("status", "enabled").request().get();
+                .queryParam("state", "enabled").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 404",
                 404, response.getStatus());
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
@@ -456,7 +456,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetActivitiesWithStateTerminated() {
         Response response = base.path("scenario/1/instance/72/activity")
-                .queryParam("status", "terminated").request().get();
+                .queryParam("state", "terminated").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
                 200, response.getStatus());
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
@@ -475,7 +475,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetActivitiesWithStateAndFilter() {
         Response response = base.path("scenario/1/instance/72/activity")
-            .queryParam("status", "ready")
+            .queryParam("state", "ready")
                 .queryParam("filter", "2").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
                 200, response.getStatus());
@@ -495,7 +495,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetActivitiesWithInvalidStateFilter() {
         Response response = base.path("scenario/1/instance/72/activity")
-                .queryParam("status", "enabled")
+                .queryParam("state", "enabled")
                 .queryParam("filter", "1").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 404",
                 404, response.getStatus());
