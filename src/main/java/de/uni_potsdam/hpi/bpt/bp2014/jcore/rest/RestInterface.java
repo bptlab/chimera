@@ -448,7 +448,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString,
-            @QueryParam("status") String state) {
+            @QueryParam("state") String state) {
         ExecutionService executionService = new ExecutionService();
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)

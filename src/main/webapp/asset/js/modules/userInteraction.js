@@ -252,9 +252,9 @@
 			
 			// begins an activity
 			this.beginActivity = function(activityId) {
-				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-					"/activityinstance/"+ activityId + "?state=begin").
+					"/activity/"+ activityId + "?state=begin").
 					success(function(data) {
 						instanceCtrl.instanceDetails.activities = {};
                         //reloading content so the dashboard is uptodate
@@ -270,7 +270,7 @@
 			
 			// terminates an activity
 			this.terminateActivity = function(activityId) {
-				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activity/"+ activityId + "?state=terminate").
 					success(function(data) {
