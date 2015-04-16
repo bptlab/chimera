@@ -118,6 +118,9 @@ public class DataObject implements IPersistable {
             connector.updateStates(state, dataClass.getDataClassID());
         }
         // We assume, that every DataObject starts with the state "init"
+        for(Integer state : states.values()) {
+            connector.updateStates(state, dataClass.getDataClassID());
+        }
         initState = states.get("init");
         String dataObjectName = dataNodes.get(0).getText();
         databaseId = connector.insertDataObjectIntoDatabase(dataObjectName,

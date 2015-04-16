@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import de.uni_potsdam.hpi.bpt.bp2014.config.Settings;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;

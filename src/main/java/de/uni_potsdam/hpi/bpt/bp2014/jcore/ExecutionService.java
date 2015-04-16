@@ -342,7 +342,7 @@ public class ExecutionService {
     public boolean terminateActivity(int scenarioInstance_id, int activity_id) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
-            if (((ActivityInstance) nodeInstance).controlNode_id == activity_id) {
+            if (((ActivityInstance) nodeInstance).getControlNode_id() == activity_id) {
                 return ((ActivityInstance) nodeInstance).terminate();
             }
         }

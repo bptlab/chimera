@@ -36,6 +36,7 @@ public class DataObjectInstance {
     private final int dataObject_id;
     private final int scenario_id;
     private final int scenarioInstance_id;
+    private final String name;
     private LinkedList<DataAttributeInstance> dataAttributeInstances = new LinkedList<>();
     /**
      * Database Connection objects.
@@ -59,6 +60,7 @@ public class DataObjectInstance {
         this.dataObject_id = dataObject_id;
         this.scenario_id = scenario_id;
         this.scenarioInstance_id = scenarioInstance_id;
+        this.name = dbDataObject.getName(dataObject_id);
         if (dbDataObjectInstance.existDataObjectInstance(scenarioInstance_id, dataObject_id)) {
             //creates an existing DataObject Instance using the database information
             dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
@@ -76,7 +78,7 @@ public class DataObjectInstance {
         for(int dataAttribute_id : dataAttribute_ids){
             DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(dataAttribute_id, dataObjectInstance_id, this);
             dataAttributeInstances.add(dataAttributeInstance);
-            scenarioInstance.getDataAttributeInstances().put(dataAttributeInstance.getDataAttribute_id(), dataAttributeInstance);
+            scenarioInstance.getDataAttributeInstances().put(dataAttributeInstance.getDataAttributeInstance_id(), dataAttributeInstance);
         }
     }
 
@@ -134,5 +136,9 @@ public class DataObjectInstance {
 
     public int getState_id() {
         return state_id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -12,6 +12,7 @@ public class DataAttributeInstance {
     final DataObjectInstance dataObjectInstance;
     Object value;
     final String type;
+    final String name;
 
     DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
@@ -28,13 +29,13 @@ public class DataAttributeInstance {
             this.dataAttributeInstance_id = dbDataAttributeInstance.createNewDataAttributeInstance(dataAttribute_id, dataObjectInstance_id);
         }
         this.value = dbDataAttributeInstance.getValue(dataAttributeInstance_id);
+        this.name = dbDataAttributeInstance.getName(dataAttribute_id);
     }
 
-    //TODO: dataAttributes
-    //methode zum schreiben eines Attributes
-    //d.h. hier wird nur die value gesetzt und dbDataAttributeInstance aufgerufen,
-    //um die Änderung in die Datenbank zu speichern
-
+    public void setValue(int dataAttributeInstance_id, Object value){
+        this.value = value;
+        dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
+    }
 
     //Getter
 
@@ -53,5 +54,13 @@ public class DataAttributeInstance {
 
     public int getDataAttribute_id() {
         return dataAttribute_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public DataObjectInstance getDataObjectInstance() {
+        return dataObjectInstance;
     }
 }

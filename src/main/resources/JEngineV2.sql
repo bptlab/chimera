@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `activityinstance`
+-- Tabellenstruktur für Tabelle `activityinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `activityinstance` (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8718 ;
 
 --
--- Daten fÃ¼r Tabelle `activityinstance`
+-- Daten für Tabelle `activityinstance`
 --
 
 INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminate`, `role_id`, `activity_state`, `workitem_state`) VALUES
@@ -7479,7 +7479,7 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `activitystate`
+-- Tabellenstruktur für Tabelle `activitystate`
 --
 
 CREATE TABLE IF NOT EXISTS `activitystate` (
@@ -7487,7 +7487,7 @@ CREATE TABLE IF NOT EXISTS `activitystate` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `activitystate`
+-- Daten für Tabelle `activitystate`
 --
 
 INSERT INTO `activitystate` (`state`) VALUES
@@ -7502,7 +7502,7 @@ INSERT INTO `activitystate` (`state`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `aggregation`
+-- Tabellenstruktur für Tabelle `aggregation`
 --
 
 CREATE TABLE IF NOT EXISTS `aggregation` (
@@ -7512,7 +7512,7 @@ CREATE TABLE IF NOT EXISTS `aggregation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `aggregation`
+-- Daten für Tabelle `aggregation`
 --
 
 INSERT INTO `aggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VALUES
@@ -7521,7 +7521,7 @@ INSERT INTO `aggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VAL
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `configuration`
+-- Tabellenstruktur für Tabelle `configuration`
 --
 
 CREATE TABLE IF NOT EXISTS `configuration` (
@@ -7534,7 +7534,7 @@ CREATE TABLE IF NOT EXISTS `configuration` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `controlflow`
+-- Tabellenstruktur für Tabelle `controlflow`
 --
 
 CREATE TABLE IF NOT EXISTS `controlflow` (
@@ -7544,7 +7544,7 @@ CREATE TABLE IF NOT EXISTS `controlflow` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `controlflow`
+-- Daten für Tabelle `controlflow`
 --
 
 INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VALUES
@@ -7899,7 +7899,7 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `controlnode`
+-- Tabellenstruktur für Tabelle `controlnode`
 --
 
 CREATE TABLE IF NOT EXISTS `controlnode` (
@@ -7911,7 +7911,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=502 ;
 
 --
--- Daten fÃ¼r Tabelle `controlnode`
+-- Daten für Tabelle `controlnode`
 --
 
 INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALUES
@@ -8342,7 +8342,7 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `controlnodeinstance`
+-- Tabellenstruktur für Tabelle `controlnodeinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
@@ -8353,7 +8353,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8718 ;
 
 --
--- Daten fÃ¼r Tabelle `controlnodeinstance`
+-- Daten für Tabelle `controlnodeinstance`
 --
 
 INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinstance_id`) VALUES
@@ -17007,7 +17007,7 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataattribute`
+-- Tabellenstruktur für Tabelle `dataattribute`
 --
 
 CREATE TABLE IF NOT EXISTS `dataattribute` (
@@ -17019,7 +17019,7 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Daten fÃ¼r Tabelle `dataattribute`
+-- Daten für Tabelle `dataattribute`
 --
 
 INSERT INTO `dataattribute` (`id`, `name`, `type`, `default`, `dataclass_id`) VALUES
@@ -17030,7 +17030,7 @@ INSERT INTO `dataattribute` (`id`, `name`, `type`, `default`, `dataclass_id`) VA
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataattributeinstance`
+-- Tabellenstruktur für Tabelle `dataattributeinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
@@ -17041,7 +17041,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
--- Daten fÃ¼r Tabelle `dataattributeinstance`
+-- Daten für Tabelle `dataattributeinstance`
 --
 
 INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobjectinstance_id`) VALUES
@@ -17058,7 +17058,7 @@ INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobj
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataclass`
+-- Tabellenstruktur für Tabelle `dataclass`
 --
 
 CREATE TABLE IF NOT EXISTS `dataclass` (
@@ -17068,7 +17068,7 @@ CREATE TABLE IF NOT EXISTS `dataclass` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
--- Daten fÃ¼r Tabelle `dataclass`
+-- Daten für Tabelle `dataclass`
 --
 
 INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
@@ -17124,7 +17124,7 @@ INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataflow`
+-- Tabellenstruktur für Tabelle `dataflow`
 --
 
 CREATE TABLE IF NOT EXISTS `dataflow` (
@@ -17134,7 +17134,7 @@ CREATE TABLE IF NOT EXISTS `dataflow` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `dataflow`
+-- Daten für Tabelle `dataflow`
 --
 
 INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
@@ -17331,7 +17331,7 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `datanode`
+-- Tabellenstruktur für Tabelle `datanode`
 --
 
 CREATE TABLE IF NOT EXISTS `datanode` (
@@ -17344,7 +17344,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=152 ;
 
 --
--- Daten fÃ¼r Tabelle `datanode`
+-- Daten für Tabelle `datanode`
 --
 
 INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
@@ -17503,7 +17503,7 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataobject`
+-- Tabellenstruktur für Tabelle `dataobject`
 --
 
 CREATE TABLE IF NOT EXISTS `dataobject` (
@@ -17515,7 +17515,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
 --
--- Daten fÃ¼r Tabelle `dataobject`
+-- Daten für Tabelle `dataobject`
 --
 
 INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_state_id`) VALUES
@@ -17552,7 +17552,7 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataobjectinstance`
+-- Tabellenstruktur für Tabelle `dataobjectinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
@@ -17564,7 +17564,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=981 ;
 
 --
--- Daten fÃ¼r Tabelle `dataobjectinstance`
+-- Daten für Tabelle `dataobjectinstance`
 --
 
 INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `onchange`) VALUES
@@ -18546,7 +18546,7 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `dataset`
+-- Tabellenstruktur für Tabelle `dataset`
 --
 
 CREATE TABLE IF NOT EXISTS `dataset` (
@@ -18555,7 +18555,7 @@ CREATE TABLE IF NOT EXISTS `dataset` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=190 ;
 
 --
--- Daten fÃ¼r Tabelle `dataset`
+-- Daten für Tabelle `dataset`
 --
 
 INSERT INTO `dataset` (`id`, `input`) VALUES
@@ -18752,7 +18752,7 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `datasetconsistsofdatanode`
+-- Tabellenstruktur für Tabelle `datasetconsistsofdatanode`
 --
 
 CREATE TABLE IF NOT EXISTS `datasetconsistsofdatanode` (
@@ -18761,7 +18761,7 @@ CREATE TABLE IF NOT EXISTS `datasetconsistsofdatanode` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `datasetconsistsofdatanode`
+-- Daten für Tabelle `datasetconsistsofdatanode`
 --
 
 INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
@@ -18948,7 +18948,7 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `emailconfiguration`
+-- Tabellenstruktur für Tabelle `emailconfiguration`
 --
 
 CREATE TABLE IF NOT EXISTS `emailconfiguration` (
@@ -18961,7 +18961,7 @@ CREATE TABLE IF NOT EXISTS `emailconfiguration` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
--- Daten fÃ¼r Tabelle `emailconfiguration`
+-- Daten für Tabelle `emailconfiguration`
 --
 
 INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`, `subject`, `message`, `controlnode_id`) VALUES
@@ -18983,7 +18983,7 @@ INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `eventinstance`
+-- Tabellenstruktur für Tabelle `eventinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `eventinstance` (
@@ -18995,7 +18995,7 @@ CREATE TABLE IF NOT EXISTS `eventinstance` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `eventlog`
+-- Tabellenstruktur für Tabelle `eventlog`
 --
 
 CREATE TABLE IF NOT EXISTS `eventlog` (
@@ -19007,7 +19007,7 @@ CREATE TABLE IF NOT EXISTS `eventlog` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `fragment`
+-- Tabellenstruktur für Tabelle `fragment`
 --
 
 CREATE TABLE IF NOT EXISTS `fragment` (
@@ -19019,7 +19019,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=187 ;
 
 --
--- Daten fÃ¼r Tabelle `fragment`
+-- Daten für Tabelle `fragment`
 --
 
 INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) VALUES
@@ -19119,7 +19119,7 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `fragmentinstance`
+-- Tabellenstruktur für Tabelle `fragmentinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `fragmentinstance` (
@@ -19130,7 +19130,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5285 ;
 
 --
--- Daten fÃ¼r Tabelle `fragmentinstance`
+-- Daten für Tabelle `fragmentinstance`
 --
 
 INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinstance_id`) VALUES
@@ -24346,7 +24346,7 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `gatewayandeventstate`
+-- Tabellenstruktur für Tabelle `gatewayandeventstate`
 --
 
 CREATE TABLE IF NOT EXISTS `gatewayandeventstate` (
@@ -24356,7 +24356,7 @@ CREATE TABLE IF NOT EXISTS `gatewayandeventstate` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `gatewayinstance`
+-- Tabellenstruktur für Tabelle `gatewayinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `gatewayinstance` (
@@ -24366,7 +24366,7 @@ CREATE TABLE IF NOT EXISTS `gatewayinstance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `gatewayinstance`
+-- Daten für Tabelle `gatewayinstance`
 --
 
 INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
@@ -25519,7 +25519,7 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `historyactivityinstance`
+-- Tabellenstruktur für Tabelle `historyactivityinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
@@ -25536,7 +25536,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3235 ;
 
 --
--- Daten fÃ¼r Tabelle `historyactivityinstance`
+-- Daten für Tabelle `historyactivityinstance`
 --
 
 INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `timestamp`, `oldstate`, `newstate`, `scenarioinstance_id`, `role_id`, `user_id`, `comment`) VALUES
@@ -28031,7 +28031,7 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `label`, `ti
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `historycontrolflow`
+-- Tabellenstruktur für Tabelle `historycontrolflow`
 --
 
 CREATE TABLE IF NOT EXISTS `historycontrolflow` (
@@ -28043,7 +28043,7 @@ CREATE TABLE IF NOT EXISTS `historycontrolflow` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `historydataobjectinstance`
+-- Tabellenstruktur für Tabelle `historydataobjectinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
@@ -28059,7 +28059,7 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=248 ;
 
 --
--- Daten fÃ¼r Tabelle `historydataobjectinstance`
+-- Daten für Tabelle `historydataobjectinstance`
 --
 
 INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `name`, `timestamp`, `dataobjectinstance_id`, `old_state_id`, `old_state_name`, `new_state_id`, `new_state_name`) VALUES
@@ -28253,7 +28253,7 @@ INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `name`, `t
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `reference`
+-- Tabellenstruktur für Tabelle `reference`
 --
 
 CREATE TABLE IF NOT EXISTS `reference` (
@@ -28262,7 +28262,7 @@ CREATE TABLE IF NOT EXISTS `reference` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `reference`
+-- Daten für Tabelle `reference`
 --
 
 INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
@@ -28286,7 +28286,7 @@ INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `right`
+-- Tabellenstruktur für Tabelle `right`
 --
 
 CREATE TABLE IF NOT EXISTS `right` (
@@ -28297,7 +28297,7 @@ CREATE TABLE IF NOT EXISTS `right` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `role`
+-- Tabellenstruktur für Tabelle `role`
 --
 
 CREATE TABLE IF NOT EXISTS `role` (
@@ -28308,7 +28308,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `rolehasright`
+-- Tabellenstruktur für Tabelle `rolehasright`
 --
 
 CREATE TABLE IF NOT EXISTS `rolehasright` (
@@ -28319,7 +28319,7 @@ CREATE TABLE IF NOT EXISTS `rolehasright` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `saggregation`
+-- Tabellenstruktur für Tabelle `saggregation`
 --
 
 CREATE TABLE IF NOT EXISTS `saggregation` (
@@ -28329,7 +28329,7 @@ CREATE TABLE IF NOT EXISTS `saggregation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `saggregation`
+-- Daten für Tabelle `saggregation`
 --
 
 INSERT INTO `saggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VALUES
@@ -28338,7 +28338,7 @@ INSERT INTO `saggregation` (`dataclass_id1`, `dataclass_id2`, `multiplicity`) VA
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `scenario`
+-- Tabellenstruktur für Tabelle `scenario`
 --
 
 CREATE TABLE IF NOT EXISTS `scenario` (
@@ -28352,7 +28352,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=154 ;
 
 --
--- Daten fÃ¼r Tabelle `scenario`
+-- Daten für Tabelle `scenario`
 --
 
 INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
@@ -28393,7 +28393,7 @@ INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `dat
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `scenarioinstance`
+-- Tabellenstruktur für Tabelle `scenarioinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `scenarioinstance` (
@@ -28404,7 +28404,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1209 ;
 
 --
--- Daten fÃ¼r Tabelle `scenarioinstance`
+-- Daten für Tabelle `scenarioinstance`
 --
 
 INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUES
@@ -29573,7 +29573,7 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `state`
+-- Tabellenstruktur für Tabelle `state`
 --
 
 CREATE TABLE IF NOT EXISTS `state` (
@@ -29583,7 +29583,7 @@ CREATE TABLE IF NOT EXISTS `state` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=135 ;
 
 --
--- Daten fÃ¼r Tabelle `state`
+-- Daten für Tabelle `state`
 --
 
 INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
@@ -29724,7 +29724,7 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `statetransition`
+-- Tabellenstruktur für Tabelle `statetransition`
 --
 
 CREATE TABLE IF NOT EXISTS `statetransition` (
@@ -29735,7 +29735,7 @@ CREATE TABLE IF NOT EXISTS `statetransition` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `successor`
+-- Tabellenstruktur für Tabelle `successor`
 --
 
 CREATE TABLE IF NOT EXISTS `successor` (
@@ -29746,7 +29746,7 @@ CREATE TABLE IF NOT EXISTS `successor` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `terminationcondition`
+-- Tabellenstruktur für Tabelle `terminationcondition`
 --
 
 CREATE TABLE IF NOT EXISTS `terminationcondition` (
@@ -29757,7 +29757,7 @@ CREATE TABLE IF NOT EXISTS `terminationcondition` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten fÃ¼r Tabelle `terminationcondition`
+-- Daten für Tabelle `terminationcondition`
 --
 
 INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenario_id`) VALUES
@@ -29769,7 +29769,7 @@ INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_i
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `user`
+-- Tabellenstruktur für Tabelle `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -29781,7 +29781,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `userismemberofrole`
+-- Tabellenstruktur für Tabelle `userismemberofrole`
 --
 
 CREATE TABLE IF NOT EXISTS `userismemberofrole` (
@@ -29792,7 +29792,7 @@ CREATE TABLE IF NOT EXISTS `userismemberofrole` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur fÃ¼r Tabelle `workitemstate`
+-- Tabellenstruktur für Tabelle `workitemstate`
 --
 
 CREATE TABLE IF NOT EXISTS `workitemstate` (

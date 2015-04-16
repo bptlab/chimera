@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.config;
+package de.uni_potsdam.hpi.bpt.bp2014.settings;
 
 /**
  * ********************************************************************************
