@@ -49,6 +49,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         sendMail = emailConfiguration.getSendEmailAddress(controlNode_id);
         subject = emailConfiguration.getSubject(controlNode_id);
         message = emailConfiguration.getMessage(controlNode_id);
+        this.setDataAttributes();
     }
 
     private void setDataAttributes(){
