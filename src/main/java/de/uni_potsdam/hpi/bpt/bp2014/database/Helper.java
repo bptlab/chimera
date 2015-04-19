@@ -249,6 +249,8 @@ public class Helper {
 
             //Clean-up environment
             rs.close();
+
+            results = true;
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
@@ -368,12 +370,13 @@ public class Helper {
      *
      * @param sql This is a given SQL Statement.
      */
-    public void executeUpdateStatement(String sql) {
+    public static boolean executeUpdateStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
+        Boolean results = false;
         if (conn == null) {
-            return;
+            return results;
         }
         try {
             //Execute a querystmt = conn.createStatement();
@@ -387,17 +390,22 @@ public class Helper {
             try {
                 if (stmt != null) {
                     stmt.close();
+                    results = true;
                 }
             } catch (SQLException se2) {
                 se2.printStackTrace();
+                results = false;
             }
             try {
                 if (conn != null) {
                     conn.close();
+                    results = true;
                 }
             } catch (SQLException se) {
                 se.printStackTrace();
+                results = false;
             }
         }
+        return results;
     }
 }
