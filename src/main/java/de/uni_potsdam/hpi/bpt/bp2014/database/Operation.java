@@ -54,7 +54,7 @@ public class Operation {
     }
 
     public static ArrayList<HashMap<String,Object>> SelectSpecificRow(String type, int id) {
-        String sql = "SELECT *  FROM " + type + "WHERE id = " + id;
+        String sql = "SELECT * FROM " + type + " WHERE id = " + id;
         return Helper.executeStatementReturnsHashMap(sql);
     }
 }

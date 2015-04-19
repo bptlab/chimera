@@ -10,7 +10,12 @@ import java.util.LinkedList;
 
 public class Helper {
 
-    public static ArrayList<HashMap<String,Object>>  executeStatementReturnsHashMap(String sql) {
+    /**
+     *
+     * @param sql
+     * @return
+     */
+    public static ArrayList<HashMap<String,Object>> executeStatementReturnsHashMap(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         try {
