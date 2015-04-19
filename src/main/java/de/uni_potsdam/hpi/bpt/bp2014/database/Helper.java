@@ -77,9 +77,6 @@ public class Helper {
     }
 
 
-
-
-
     /**
      * Executes the given select SQL statement and returns the result in List with Integer.
      *
@@ -325,7 +322,7 @@ public class Helper {
      * @param sql This is a given SQL Statement.
      * @return the generated key for the insert statement.
      */
-    public int executeInsertStatement(String sql) {
+    public static int executeInsertStatement(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;

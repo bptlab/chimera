@@ -4,12 +4,11 @@ import de.uni_potsdam.hpi.bpt.bp2014.core.Controller;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ public class RestInterface {
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUser(@QueryParam("filter") String filterString) {
-            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetrieveAllItems("user"));
+            String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveAllItems("user"));
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -31,12 +30,76 @@ public class RestInterface {
     @Path("role")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoles(@QueryParam("filter") String filterString) {
-        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetrieveAllItems("role"));
+        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveAllItems("role"));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
-  
-   
+    @PUT
+    @Path("role")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewRole(
+            @Context UriInfo uriInfo,
+            NamedJaxBean name) {
+
+            int roleId = Controller.CreateNewRole(name.name, name.description, name.admin_id);
+            return Response.status(Response.Status.CREATED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"id\":" + roleId +
+                            ",\"link\":\"" + uriInfo.getAbsolutePath() + "/role/" + roleId + "\"}")
+                    .build();
+    }
+
+    @PUT
+    @Path("role/{roleID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateRoleSpecs(
+            @Context UriInfo uriInfo,
+            @PathParam("roleID") int roleID,
+            NamedJaxBean name) {
+
+        int roleId = Controller.UpdateRole(roleID, name.name, name.description, name.admin_id);
+        return Response.status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"id\":" + roleId +
+                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/role/" + roleId + "\"}")
+                .build();
+    }
+
+    @PUT
+    @Path("user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewUser(
+            @Context UriInfo uriInfo,
+            NamedJaxBean name) {
+
+        int roleId = Controller.CreateNewUser(name.name, name.role_id, name.description);
+        return Response.status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"id\":" + roleId +
+                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/role/" + roleId + "\"}")
+                .build();
+    }
+
+    @PUT
+    @Path("user/{userID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateUserSpecs(
+            @Context UriInfo uriInfo,
+            @PathParam("userID") int userID,
+            NamedJaxBean name) {
+
+        int roleId = Controller.UpdateUser(userID, name.name, name.role_id, name.description);
+        return Response.status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"id\":" + userID +
+                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/user/" + userID + "\"}")
+                .build();
+    }
+
 
     /**********************************************************************************************
      * Helper
@@ -97,6 +160,9 @@ public class RestInterface {
          * The name which should be assigned to the entity.
          */
         public String name;
+        public String description;
+        public int admin_id;
+        public int role_id;
     }
 
     /**

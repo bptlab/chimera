@@ -14,8 +14,9 @@ import java.util.Map;
  */
 public class JsonUtil {
 
-
-    //TODO
+    // {"myArrayList":[{"map":{"id":1,"rolename":"marketing","description":"die, die viel reden","admin_id":1}}]}
+    // {"myArrayList":[{"map":{"id":1,"username":"max","role_id":1,"description":""}},{"map":{"id":2,"username":"robert","role_id":1,"description":""}}]}
+    //TODO: edit correct naming within json string
     public static String JsonWrapperArrayListHashMap(ArrayList<HashMap<String,Object>> content) {
         Gson gson = new Gson();
         JSONArray json = new JSONArray(content);
