@@ -18,6 +18,15 @@ import java.util.Map;
 @Path("interface/v1")
 public class RestInterface {
 
+    /**********************************************************************************************
+     * GETs
+     */
+
+    /************************************************************
+     *
+     * @param filterString
+     * @return
+     */
     @GET
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
@@ -26,6 +35,27 @@ public class RestInterface {
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
+
+    /**
+     *
+     * @param filterString
+     * @param userID
+     * @return
+     */
+    @GET
+    @Path("user/{userID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSpecificUser(@QueryParam("filter") String filterString,
+                                    @PathParam("userID") int userID) {
+        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveItem("user", userID));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     *
+     * @param filterString
+     * @return
+     */
     @GET
     @Path("role")
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +64,31 @@ public class RestInterface {
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     *
+     * @param filterString
+     * @param roleID
+     * @return
+     */
+    @GET
+    @Path("role/{roleID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSpecificRole(@QueryParam("filter") String filterString,
+                                    @PathParam("roleID") int roleID) {
+        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveItem("role", roleID));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**********************************************************************************************
+     * PUTs
+     */
+
+    /**
+     *
+     * @param uriInfo
+     * @param name
+     * @return
+     */
     @PUT
     @Path("role")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,6 +105,13 @@ public class RestInterface {
                     .build();
     }
 
+    /**
+     *
+     * @param uriInfo
+     * @param roleID
+     * @param name
+     * @return
+     */
     @PUT
     @Path("role/{roleID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -67,6 +129,12 @@ public class RestInterface {
                 .build();
     }
 
+    /**
+     *
+     * @param uriInfo
+     * @param name
+     * @return
+     */
     @PUT
     @Path("user")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -83,6 +151,13 @@ public class RestInterface {
                 .build();
     }
 
+    /**
+     *
+     * @param uriInfo
+     * @param userID
+     * @param name
+     * @return
+     */
     @PUT
     @Path("user/{userID}")
     @Consumes(MediaType.APPLICATION_JSON)

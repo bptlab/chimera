@@ -23,7 +23,7 @@ public class Controller {
         return Operation.UpdateUserRow(userID, username, role_id, description);
     }
 
-    public static ArrayList<HashMap<String,Object>> RetreiveItem(String type, int id) {
+    public static ArrayList<HashMap<String,Object>> RetrieveItem(String type, int id) {
         return Operation.SelectSpecificRow(type, id);
     }
 
