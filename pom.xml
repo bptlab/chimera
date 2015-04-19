@@ -11,7 +11,7 @@
     <name>JUserManagement</name>
 
 <build>
-        <finalName>JEngine</finalName>
+        <finalName>JUserManagement</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
