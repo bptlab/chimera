@@ -23,7 +23,7 @@ public class RestInterface {
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUser(@QueryParam("filter") String filterString) {
-            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetreiveAllItems("user"));
+            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetrieveAllItems("user"));
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -31,7 +31,7 @@ public class RestInterface {
     @Path("role")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoles(@QueryParam("filter") String filterString) {
-        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetreiveAllItems("role"));
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetrieveAllItems("role"));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
