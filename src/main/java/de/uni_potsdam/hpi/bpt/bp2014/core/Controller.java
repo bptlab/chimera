@@ -15,11 +15,11 @@ public class Controller {
         return Operation.InsertUserRow(username, role_id, description);
     }
 
-    public static int UpdateRole(int roleID, String rolename, String description, int admin_id) {
+    public static boolean UpdateRole(int roleID, String rolename, String description, int admin_id) {
         return Operation.UpdateRoleRow(roleID, rolename, description, admin_id);
     }
 
-    public static int UpdateUser(int userID, String username, int role_id, String description) {
+    public static boolean UpdateUser(int userID, String username, int role_id, String description) {
         return Operation.UpdateUserRow(userID, username, role_id, description);
     }
 
@@ -31,5 +31,12 @@ public class Controller {
         return Operation.SelectAllRows(type);
     }
 
+    public static boolean UpdateUser(int id) {
+        return Operation.DeleteRow("user", id);
+    }
+
+    public static boolean UpdateRole(int id) {
+        return Operation.DeleteRow("role", id);
+    }
 
 }

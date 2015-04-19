@@ -24,14 +24,14 @@ public class Operation {
      Update
      */
 
-    public static int UpdateRoleRow(int id, String rolename, String description, Integer admin_id) {
-        String sql = "UPDATE `role` SET rolename='"+rolename+"', description='"+description+"', admin_id="+admin_id+" WHERE id="+id+";";
-        return Helper.executeInsertStatement(sql);
+    public static boolean UpdateRoleRow(int id, String rolename, String description, Integer admin_id) {
+        String sql = "UPDATE `role` SET `rolename` = '"+rolename+"', `description` = '"+description+"', `admin_id` = "+admin_id+" WHERE id="+id+";";
+        return Helper.executeStatementReturnsBoolean(sql);
     }
 
-    public static int UpdateUserRow(int id, String username, Integer role_id, String description) {
-        String sql = "UPDATE `user` SET username='"+username+"', description='"+description+"', role_id="+role_id+" WHERE id="+id+";";
-        return Helper.executeInsertStatement(sql);
+    public static boolean UpdateUserRow(int id, String username, Integer role_id, String description) {
+        String sql = "UPDATE `user` SET `username` = '"+username+"', `description` = '"+description+"', `role_id` = "+role_id+" WHERE id="+id+";";
+        return Helper.executeStatementReturnsBoolean(sql);
     }
 
 
@@ -56,5 +56,10 @@ public class Operation {
     public static ArrayList<HashMap<String,Object>> SelectSpecificRow(String type, int id) {
         String sql = "SELECT * FROM " + type + " WHERE id = " + id;
         return Helper.executeStatementReturnsHashMap(sql);
+    }
+
+    public static boolean DeleteRow(String type, int id) {
+        String sql = "DELETE FROM "+type+" WHERE id="+id+";";
+        return Helper.executeStatementReturnsBoolean(sql);
     }
 }

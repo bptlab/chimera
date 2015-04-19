@@ -80,6 +80,46 @@ public class RestInterface {
     }
 
     /**********************************************************************************************
+     * Delete
+     */
+
+    @DELETE
+    @Path("user/{userID}/")
+    public Response deleteUser(@PathParam("userID") Integer userID) throws Exception {
+        boolean result;
+        result = Controller.UpdateUser(userID);
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"user deletion successfully.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"user deletion failed\"}")
+                    .build();
+        }
+    }
+
+    @DELETE
+    @Path("role/{roleID}/")
+    public Response deleteRole(@PathParam("roleID") Integer roleID) throws Exception {
+        boolean result;
+        result = Controller.UpdateRole(roleID);
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"user deletion successfully.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"user deletion failed\"}")
+                    .build();
+        }
+    }
+
+    /**********************************************************************************************
      * PUTs
      */
 
@@ -101,7 +141,7 @@ public class RestInterface {
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"id\":" + roleId +
-                            ",\"link\":\"" + uriInfo.getAbsolutePath() + "/role/" + roleId + "\"}")
+                            ",\"link\":\"" + uriInfo.getAbsolutePath() + "/" + roleId + "\"}")
                     .build();
     }
 
@@ -121,12 +161,20 @@ public class RestInterface {
             @PathParam("roleID") int roleID,
             NamedJaxBean name) {
 
-        int roleId = Controller.UpdateRole(roleID, name.name, name.description, name.admin_id);
-        return Response.status(Response.Status.CREATED)
-                .type(MediaType.APPLICATION_JSON)
-                .entity("{\"id\":" + roleId +
-                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/role/" + roleId + "\"}")
-                .build();
+        boolean result = Controller.UpdateRole(roleID, name.name, name.description, name.admin_id);
+
+        if(!result) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The Scenario instance could not be found!\"}")
+                    .build();
+
+        } else {
+            return Response.status(Response.Status.OK)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"The user details were updated.\"}")
+                    .build();
+        }
     }
 
     /**
@@ -143,11 +191,12 @@ public class RestInterface {
             @Context UriInfo uriInfo,
             NamedJaxBean name) {
 
-        int roleId = Controller.CreateNewUser(name.name, name.role_id, name.description);
+        int userId = Controller.CreateNewUser(name.name, name.role_id, name.description);
+
         return Response.status(Response.Status.CREATED)
                 .type(MediaType.APPLICATION_JSON)
-                .entity("{\"id\":" + roleId +
-                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/role/" + roleId + "\"}")
+                .entity("{\"id\":" + userId +
+                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/" + userId + "\"}")
                 .build();
     }
 
@@ -167,12 +216,20 @@ public class RestInterface {
             @PathParam("userID") int userID,
             NamedJaxBean name) {
 
-        int roleId = Controller.UpdateUser(userID, name.name, name.role_id, name.description);
-        return Response.status(Response.Status.CREATED)
-                .type(MediaType.APPLICATION_JSON)
-                .entity("{\"id\":" + userID +
-                        ",\"link\":\"" + uriInfo.getAbsolutePath() + "/user/" + userID + "\"}")
-                .build();
+        boolean result = Controller.UpdateUser(userID, name.name, name.role_id, name.description);
+
+        if(!result) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The Scenario instance could not be found!\"}")
+                    .build();
+
+        } else {
+            return Response.status(Response.Status.OK)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"The user details were updated.\"}")
+                    .build();
+         }
     }
 
 

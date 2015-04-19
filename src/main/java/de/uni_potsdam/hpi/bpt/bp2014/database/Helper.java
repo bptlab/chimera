@@ -231,11 +231,10 @@ public class Helper {
      * Executes the given select SQL statement and returns the result as boolean.
      *
      * @param sql         This is a given select SQL Statement.
-     * @param columnLabel This is the label of the column which is used as the result.
      * @return boolean.
      */
 
-    public boolean executeStatementReturnsBoolean(String sql, String columnLabel) {
+    public static boolean executeStatementReturnsBoolean(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         ResultSet rs = null;
@@ -247,9 +246,7 @@ public class Helper {
             //Execute a query
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                results = rs.getBoolean(columnLabel);
-            }
+
             //Clean-up environment
             rs.close();
         } catch (SQLException se) {
