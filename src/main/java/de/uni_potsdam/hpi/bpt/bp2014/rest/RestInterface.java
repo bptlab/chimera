@@ -83,6 +83,12 @@ public class RestInterface {
      * Delete
      */
 
+    /**
+     * 
+     * @param userID
+     * @return
+     * @throws Exception
+     */
     @DELETE
     @Path("user/{userID}/")
     public Response deleteUser(@PathParam("userID") Integer userID) throws Exception {
@@ -101,6 +107,12 @@ public class RestInterface {
         }
     }
 
+    /**
+     *
+     * @param roleID
+     * @return
+     * @throws Exception
+     */
     @DELETE
     @Path("role/{roleID}/")
     public Response deleteRole(@PathParam("roleID") Integer roleID) throws Exception {
