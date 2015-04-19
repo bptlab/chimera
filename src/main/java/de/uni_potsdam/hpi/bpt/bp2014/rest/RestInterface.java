@@ -19,20 +19,20 @@ import java.util.Map;
 @Path("interface/v1")
 public class RestInterface {
 
-
     @GET
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUser(@QueryParam("filter") String filterString) {
-        Controller.RetreiveAllItems("user");
+            String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetreiveAllItems("user"));
+            return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
-
 
     @GET
     @Path("role")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoles(@QueryParam("filter") String filterString) {
-        Controller.RetreiveAllItems("user");
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(Controller.RetreiveAllItems("role"));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
   

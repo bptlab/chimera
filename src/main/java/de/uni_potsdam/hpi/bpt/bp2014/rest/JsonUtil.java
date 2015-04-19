@@ -129,6 +129,6 @@ public class JsonUtil {
     public static Map parse(String jsonLine) {
         Map jsonJavaRootObject = new Gson().fromJson(jsonLine, Map.class);
         return jsonJavaRootObject;
-        
+
     }
 }
