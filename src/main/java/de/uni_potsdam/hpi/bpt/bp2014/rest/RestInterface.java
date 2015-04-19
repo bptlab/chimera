@@ -1,13 +1,19 @@
+package de.uni_potsdam.hpi.bpt.bp2014.rest;
+
+import de.uni_potsdam.hpi.bpt.bp2014.core.Controller;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 
 @Path("interface/v1")
@@ -17,25 +23,24 @@ public class RestInterface {
     @GET
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getScenarios(@QueryParam("filter") String filterString) {
-
+    public Response getAllUser(@QueryParam("filter") String filterString) {
+        Controller.RetreiveAllItems("user");
     }
 
 
     @GET
     @Path("role")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getScenario(@QueryParam("filter") String filterString) {
-
+    public Response getAllRoles(@QueryParam("filter") String filterString) {
+        Controller.RetreiveAllItems("user");
     }
 
   
    
 
-    /*
+    /**********************************************************************************************
      * Helper
      */
-
 
     /**
      * Creates an array of DataObjects.
