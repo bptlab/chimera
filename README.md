@@ -6,7 +6,10 @@ We currently support the
 * creation
 * modification
 * deletion
+
 of 
+
 * users
 * roles
+
 :)
