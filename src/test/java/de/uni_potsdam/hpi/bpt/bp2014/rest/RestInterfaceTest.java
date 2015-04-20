@@ -64,5 +64,16 @@ public class RestInterfaceTest extends AbstractTest {
         base = target("interface/v1");
     }
 
+    /***********************************************************************************
+     * TESTs
+     */
 
+    @Test
+    public void testGetAllUserStatusCheck() {
+        Response response = base.path("user").request().get();
+        assertEquals("The Response code of get Scenario was not 200",
+                200, response.getStatus());
+        assertEquals("Get Scenarios returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    }
 }
