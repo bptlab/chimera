@@ -21,7 +21,6 @@
 			$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
 				success(function(data){
 					controller.scenarios = data;
-					//controller.getDetailedInformation();
 					});
             //if we are within the layer scenario
             if ($routeParams.id != null) {
@@ -41,8 +40,6 @@
 					$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
 						success(function(data) {
 							controller.currentScenario['details'] = data;
-							//controller.getImageForScenario(id);
-							//controller.getInstancesOfScenario(id);
 						}).
                         error(function() {
                             console.log('request failed');
@@ -61,8 +58,6 @@
 			this.getCurrentScenario = function(){
 				if ($routeParams.id != null) {
                     controller.getScenarioDetails($routeParams.id);
-
-                    //controller.currentScenario['id'] = $routeParams.id;
 				}
 			};
 
@@ -108,7 +103,6 @@
 
             /* ____ BEGIN_INITIALIZATION ____ */
             this.initialize = function(){
-                //controller.getCurrentScenario();
                 console.log('initializing...');
             }
 
@@ -210,9 +204,6 @@
                     "/scenario/" + $routeParams.id + "/instance/" +
                     id + "/"
                 ).success(function (data) {
-                        //instanceCtrl.scenario['instanceIds'] = instanceCtrl.scenario['instanceIds'] || [];
-                        //instanceCtrl.scenario['instanceIds'].push(id);
-                        //instanceCtrl.instances['' + id] = data;
                         instanceCtrl.instanceDetails['id'] = id;
                         if ($routeParams.instanceId) {
                             instanceCtrl.initializeActivityInstances();
@@ -229,16 +220,6 @@
 
             this.initialize();
             /* ____ END_INITIALIZATION ____ */
-			
-			// returns the label of the current scenario
-			//this.getScenarioName = function(){
-			//	// The scenarioId is specified by the routeParams
-			//	var instanceArray = instanceCtrl.scenario['instanceIds'];
-			//	// There is a lot of concurrency, check if all values are set
-			//	if (instanceArray && instanceArray[0] && this.instances[instanceArray[0]]) {
-			//		return this.instances[instanceArray[0]]['label'];
-			//	}
-			//};
 			
 			// Got to the instance with the given Id
 			this.goToDetailsFrom = function(id){
