@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import org.antlr.runtime.tree.CommonTree;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -167,18 +169,10 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         //TODO: richtige Nachfolger enablen
     }
 
-    private boolean evaluateCondition(String condition){
-        String dataObjectName = getDataObjectName(condition);
-        String dataAttributeName = getDataAttributeName(condition);
-
-        if(condition.contains("=")){
-
-        }else if(condition.contains("<")){
-
-        }else if(condition.contains(">")){
-
-        }
-
+    public static boolean evaluateCondition(String condition){
+        XORGrammarCompiler compiler = new XORGrammarCompiler();
+        CommonTree ast = compiler.compile(condition);
+        System.out.println(ast.toStringTree());
         return true;
     }
 
