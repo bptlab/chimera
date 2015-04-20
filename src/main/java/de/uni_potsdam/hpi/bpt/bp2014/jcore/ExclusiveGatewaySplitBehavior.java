@@ -55,7 +55,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
 
-
     /**
      * Adds the ids of the following control nodes to the list.
      * Creates for every control node a bucket.
@@ -176,43 +175,48 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
     public boolean evaluateCondition(String condition) {
+        System.out.println("Condition:  " + condition);
         XORGrammarCompiler compiler = new XORGrammarCompiler();
         CommonTree ast = compiler.compile(condition);
         System.out.println(ast.getFirstChildWithType(7) + " this is the end!");
         System.out.println(ast.getFirstChildWithType(7) + " this is the end!");
         //List<CommonTree> children = (List<CommonTree>)ast.getChildren();
-        evaluate(0, ast);
+
+
+        System.out.println(ast.getChildCount());
+        if (ast.getChildCount() > 0) {
+
+                System.out.println(ast.getChild(0).toStringTree());
+                return evaluate(0, ast);
+
+        }
         /*
         for(int i = 0; i < ast.getChildCount(); i++){
             evaluate(i, ast);
         }*/
         System.out.println(ast.toStringTree());
-        return true;
-    }
-
-    private boolean evaluate(int i, Tree ast) {
-        Tree child = ast.getChild(i);
-        boolean condition = false;
-        if (child.getType() == 7) {
-            condition = checkCondition(ast.getChild(i));
-            if (ast.getChildCount() >= i + 2) {
-                if (ast.getChild(i + 1).toStringTree().equals("&") | ast.getChild(i + 1).toStringTree().equals(" & ")) {
-                    return condition & evaluate(i + 2, ast);
-                } else {
-                    return condition | evaluate(i + 2, ast);
-                }
-            } else {
-                System.out.println(ast.getChild(i));
-                return condition;
-            }
-        }
         return false;
     }
 
-    private boolean checkCondition(Tree ast) {
-        String left = ast.getChild(0).toStringTree();
-        String comparison = ast.getChild(1).toStringTree();
-        String right = ast.getChild(2).toStringTree();
+    private boolean evaluate(int i, Tree ast) {
+        boolean condition = false;
+        condition = checkCondition(ast , i);
+        if (ast.getChildCount() >= i + 4) {
+            if (ast.getChild(i + 3).toStringTree().equals("&") | ast.getChild(i + 1).toStringTree().equals(" & ")) {
+                return condition & evaluate(i + 4, ast);
+            } else {
+                return condition | evaluate(i + 4, ast);
+            }
+        } else {
+            System.out.println(ast.getChild(i));
+            return condition;
+        }
+    }
+
+    private boolean checkCondition(Tree ast, int i) {
+        String left = ast.getChild(i).toStringTree();
+        String comparison = ast.getChild(i + 1).toStringTree();
+        String right = ast.getChild(i + 2).toStringTree();
         for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
             left = left.replace(
                     (dataAttributeInstance.getDataObjectInstance()).getName()
