@@ -22,12 +22,12 @@ public class RestInterface {
      * GETs
      */
 
-    /************************************************************
+    /**
      * By sending an GET on user, the method returns all available
      * resources regarding the users as json.
      *
      * @param filterString the filter params filters the result set
-     * @return a json with all user informations in its content
+     * @return a json with all user information in its content
      */
     @GET
     @Path("user")
@@ -39,12 +39,12 @@ public class RestInterface {
 
 
     /**
-     * By sending an GET on user, the method returns details
+     * By sending an GET on a user id, the method returns details
      * regarding this userID as json.
      *
      * @param filterString the filter params filters the result set
-     * @param userID
-     * @return a json with all user informations in its content
+     * @param userID defining the specific resource
+     * @return a json with all user information in its content
      */
     @GET
     @Path("user/{userID}")
@@ -56,9 +56,11 @@ public class RestInterface {
     }
 
     /**
+     * By sending an GET on role, the method returns all available
+     * resources regarding the users as json.
      *
-     * @param filterString
-     * @return
+     * @param filterString the filter params filters the result set
+     * @return a json with all user information in its content
      */
     @GET
     @Path("role")
@@ -69,10 +71,12 @@ public class RestInterface {
     }
 
     /**
+     * By sending an GET on a role ID, the method returns details
+     * regarding this userID as json.
      *
-     * @param filterString
-     * @param roleID
-     * @return
+     * @param filterString the filter params filters the result set
+     * @param roleID defining resource which is supposed to be requested in detail
+     * @return a json with all user information in its content
      */
     @GET
     @Path("role/{roleID}")
@@ -88,9 +92,11 @@ public class RestInterface {
      */
 
     /**
-     * 
-     * @param userID
-     * @return
+     * By sending an DELETE on a user ID, the method deletes the
+     * resource and returns a status code regarding the success.
+     *
+     * @param userID defining resource which is supposed to be deleted
+     * @return a json with all user information in its content
      * @throws Exception
      */
     @DELETE
@@ -112,9 +118,11 @@ public class RestInterface {
     }
 
     /**
+     * By sending an DELETE on a role ID, the method deletes the
+     * resource and returns a status code regarding the success.
      *
-     * @param roleID
-     * @return
+     * @param roleID defining resource which is supposed to be deleted
+     * @return a json with all user information in its content
      * @throws Exception
      */
     @DELETE
@@ -140,10 +148,13 @@ public class RestInterface {
      */
 
     /**
+     * By sending an PUT on role, the method creates a new
+     * resource with regards to the transmitting data and
+     * returns a status code regarding the success.
      *
      * @param uriInfo
-     * @param name
-     * @return
+     * @param name processed PUT input for a new resource
+     * @return a json with all user information in its content
      */
     @PUT
     @Path("role")
@@ -162,11 +173,14 @@ public class RestInterface {
     }
 
     /**
+     * By sending an PUT on a role ID, the method updates the
+     * resource with regards to the transmitting data and
+     * returns a status code regarding the success.
      *
      * @param uriInfo
-     * @param roleID
-     * @param name
-     * @return
+     * @param roleID defining resource which is supposed to be updated
+     * @param name processed PUT input for updating defined resource
+     * @return a json with all user information in its content
      */
     @PUT
     @Path("role/{roleID}")
@@ -194,10 +208,13 @@ public class RestInterface {
     }
 
     /**
+     * By sending an PUT on user, the method creates a new
+     * resource with regards to the transmitting data and
+     * returns a status code regarding the success.
      *
      * @param uriInfo
-     * @param name
-     * @return
+     * @param name processed PUT input for a new resource
+     * @return a json with all user information in its content
      */
     @PUT
     @Path("user")
@@ -217,11 +234,14 @@ public class RestInterface {
     }
 
     /**
+     * By sending an PUT on a user ID, the method updates the
+     * resource with regards to the transmitting data and
+     * returns a status code regarding the success.
      *
      * @param uriInfo
-     * @param userID
-     * @param name
-     * @return
+     * @param userID defining resource which is supposed to be updated
+     * @param name processed PUT input for updating defined resource
+     * @return a json with all user information in its content
      */
     @PUT
     @Path("user/{userID}")

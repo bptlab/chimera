@@ -68,6 +68,9 @@ public class RestInterfaceTest extends AbstractTest {
      * TESTs
      */
 
+    /**
+     *
+     */
     @Test
     public void testGetAllUserStatusCheck() {
         Response response = base.path("user").request().get();
@@ -77,6 +80,9 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetAllUserContentCheck() {
         Response response = base.path("user").request().get();
@@ -85,6 +91,9 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetAllRoleStatusCheck() {
         Response response = base.path("role").request().get();
@@ -94,6 +103,9 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetAllRoleContentCheck() {
         Response response = base.path("role").request().get();
@@ -102,6 +114,9 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
+    /**
+     *
+     */
     @Test
     public void testDeleteUserStatusCheck() {
         Response response = base.path("user/1/").request().delete();
@@ -109,6 +124,9 @@ public class RestInterfaceTest extends AbstractTest {
                 202, response.getStatus());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testDeleteRoleStatusCheck() {
         Response response = base.path("role/1/").request().delete();
