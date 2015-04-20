@@ -127,6 +127,8 @@
             function($routeParams, $location, $http, $scope){
                 var userMgmtC = this;
 
+                this.workingID = "";
+                this.type = "";
                 this.Details = {};
 
                 $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/user").
@@ -145,11 +147,39 @@
                         console.log('request failed');
                     });
 
+                this.setWorkingID = function(id){
+                    userMgmtC.workingID = id;
+                };
+
+                this.setTypeRole = function(){
+                    userMgmtC.type = "role";
+                };
+
+                this.setTypeUser = function(){
+                    userMgmtC.type = "user";
+                };
+
+                this.getDetailsForRoleId = function(id){
+                    $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
+                    "/role/" + id + "/?").
+                        success(function(data) {
+                            var value = {};
+                            value = data['myArrayList'][0]['map'];
+                            $scope.form = {
+                                name: value['rolename'],
+                                description: value['description'],
+                                admin_id: value['admin_id'],
+                                id: value['id']
+                            };
+                        });
+                    userMgmtC.setWorkingID(id);
+                };
+
                 //post update for user or role data
-                this.submitMyForm=function($scope){
+                this.submitMyForm=function(){
                     var data=$scope.form;
                     console.log(data);
-                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + data.type + "/" + data.id + "/?", data);
+                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID + "/?", data);
                     $location.path("/admin/userMgmt/");
                 }
 
