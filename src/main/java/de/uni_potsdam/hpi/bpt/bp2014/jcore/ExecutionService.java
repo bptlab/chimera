@@ -387,7 +387,7 @@ public class ExecutionService {
      */
     public void setDataAttributeValues(int scenarioInstance_id, int activityInstanceID, Map<Integer, String> values) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
-        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
             if (nodeInstance.getControlNodeInstance_id() == activityInstanceID) {
                 ((ActivityInstance) nodeInstance).setDataAttributeValues(values);
             }
