@@ -1,10 +1,11 @@
 // Constants
 var JEngine_Server_URL = window.location.origin;
+var JUserManagement_Server_URL = window.location.origin;
 var JCore_REST_Interface = "JEngine/api/interface/v2";
 var JConfig_REST_Interface = "JEngine/api/config/v2";
 var JHistory_REST_Interface = "JEngine/api/history/v2";
 var JComparser_REST_Interface = "JEngine/api/jcomparser";
-
+var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 
 (function(){
 	// Vars defining the URIs of the REST-APIs
@@ -53,6 +54,11 @@ var JComparser_REST_Interface = "JEngine/api/jcomparser";
                     templateUrl: 'asset/templates/jcoreConfig.html',
                     controller: 'jcoreConfig',
                     controllerAs: 'jcoreC'
+                }).
+                when('/admin/userMgmt/', {
+                    templateUrl: 'asset/templates/userMgmtConfig.html',
+                    controller: 'userMgmtController',
+                    controllerAs: 'userMgmtC'
                 }).
 			// default Route
 				otherwise({

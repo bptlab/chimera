@@ -14,8 +14,10 @@
 			$http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
 				success(function(data){
 				    controller.scenarioDetails = data['ids'];
-				    
-        		});
+                }).
+                error(function() {
+                    console.log('request failed');
+                });
 
 			this.getImageForScenario = function(id){
 				return	JEngine_Server_URL + "/" + JComparser_REST_Interface + 
@@ -29,7 +31,10 @@
 						if (data) {
 							return data;
 						}
-					});
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
 			};
 		}]
 	);
@@ -48,8 +53,11 @@
 			$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
 				success(function(data){
 				    controller.scenarioIDs = data['ids'];
-				    
-        		});
+
+                }).
+                error(function() {
+                    console.log('request failed');
+                });
 
 			//post update for email tasks
 			this.submitMyForm=function(){
@@ -68,7 +76,10 @@
 				$http.get(JEngine_Server_URL+"/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").
 					success(function(data) {
 						controller.emailtaskIDs = data['ids'];
-					});
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
 			};
 			// Got to the instance with the given Id
 			this.getDetailsForMailtaskID = function(id){
@@ -101,9 +112,72 @@
                     "/scenario/" + id + "/?").
                         success(function(data) {
                             console.log("deleting scenario was successful..");
+                        }).
+                        error(function() {
+                            console.log('request failed');
                         });
                 };
 
+
+            }]
+    );
+
+    // Create a Controller for mail config
+    adminCon.controller('userManagement', ['$routeParams', '$location', '$http', '$scope',
+            function($routeParams, $location, $http, $scope){
+                var userMgmtC = this;
+
+                this.Details = {};
+
+                $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/user").
+                        success(function(data) {
+                        userMgmtC.Details['user'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+
+                $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/role").
+                    success(function(data) {
+                        userMgmtC.Details['role'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+
+                //post update for user or role data
+                this.submitMyForm=function(){
+                    var data=$scope.form;
+                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" +$scope.form.type + "/" + $scope.form.id + "/?", data);
+                }
+
+                // Got to the instance with the given Id
+                this.deleteUser = function(id){
+                    $http.delete(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
+                    "/user/" + id + "/?").
+                        success(function(data) {
+                            console.log("deleting user was successful..");
+                        }).
+                        error(function() {
+                            console.log('request failed');
+                        });
+                };
+
+                // Got to the instance with the given Id
+                this.deleteRole = function(id){
+                    $http.delete(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
+                    "/role/" + id + "/?").
+                        success(function(data) {
+                            console.log("deleting role was successful..");
+                        }).
+                        error(function() {
+                            console.log('request failed');
+                        });
+                };
+
+                this.loadData = function(){
+                    controller.getDetailsForMailtaskID(controller.workingID);
+                };
 
             }]
     );
