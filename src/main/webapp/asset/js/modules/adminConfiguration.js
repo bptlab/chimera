@@ -175,6 +175,22 @@
                     userMgmtC.setWorkingID(id);
                 };
 
+                this.getDetailsForUserId = function(id){
+                    $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
+                    "/user/" + id + "/?").
+                        success(function(data) {
+                            var value = {};
+                            value = data['myArrayList'][0]['map'];
+                            $scope.form = {
+                                name: value['username'],
+                                description: value['description'],
+                                admin_id: value['admin_id'],
+                                id: value['id']
+                            };
+                        });
+                    userMgmtC.setWorkingID(id);
+                };
+
                 //post update for user or role data
                 this.submitMyForm=function(){
                     var data=$scope.form;

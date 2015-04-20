@@ -1,36 +1,100 @@
 <h2>User Management</h2>
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <caption>Role</caption>
-        <div class="pull-right">
-            <input ng-model="searchText" placeholder="SearchTerm">
-            <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole();" data-target="#modalcreateRole"  class="btn btn-default">
-                Create New Role
-            </a>
+
+<div class="row">
+    <div class="pull-right">
+        <input ng-model="searchText" placeholder="SearchTerm">
+    </div>
+    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
+        <div class="hpanel stats">
+            <div class="panel-heading">
+                <div class="panel-tools">
+                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                    <a class="closebox"><i class="fa fa-times"></i></a>
+                </div>
+                Role Management
+            </div>
+            <div class="panel-body list">
+                <div class="pull-right">
+                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole();" data-target="#modalcreateRole"  class="btn btn-default">
+                        Create New Role
+                    </a>
+                </div>
+                <div class="panel-title">Role</div>
+                <small class="fo">Modify or delete roles..</small>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Admin Id</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']" ng-show="!searchText || value['map']['rolename'].indexOf(searchText) > -1">
+                            <td>{{value['map']['rolename']}}</td>
+                            <td>{{value['map']['description']}}</td>
+                            <td>{{value['map']['admin_id']}}</td>
+                            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['map']['id']}}">Delete</a>
+                                <a type="button" class="btn btn-default" ng-click="userMgmtC.getDetailsForRoleId(value['map']['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['map']['id']}}">Change</a>
+                        </tr>
+                        </a>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer"></div>
         </div>
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Admin Id</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']" ng-show="!searchText || value['map']['rolename'].indexOf(searchText) > -1">
-            {{value['map']}}
-            <td>{{value['map']['id']}}</td>
-            <td>{{value['map']['rolename']}}</td>
-            <td>{{value['map']['description']}}</td>
-            <td>{{value['map']['admin_id']}}</td>
-            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['map']['id']}}">Delete</a>
-                <a type="button" class="btn btn-default" ng-click="userMgmtC.getDetailsForRoleId(value['map']['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['map']['id']}}">Change</a>
-        </tr>
-        </a>
-        </tbody>
-    </table>
+    </div>
+    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
+        <div class="hpanel stats">
+            <div class="panel-heading">
+                <div class="panel-tools">
+                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                    <a class="closebox"><i class="fa fa-times"></i></a>
+                </div>
+                User Management
+            </div>
+            <div class="panel-body list">
+                <div class="pull-right">
+                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeUser();" data-target="#modalcreateUser"  class="btn btn-default">
+                        Create New User
+                    </a>
+                </div>
+                <div class="panel-title">User</div>
+                <small class="fo">Modify or delete users..</small>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Admin Id</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']['myArrayList']" ng-show="!searchText || value['map']['username'].indexOf(searchText) > -1">
+                            {{value['map']}}
+                            <td>{{value['map']['rolename']}}</td>
+                            <td>{{value['map']['description']}}</td>
+                            <td>{{value['map']['admin_id']}}</td>
+                            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['map']['id']}}">Delete</a>
+                                <a type="button" class="btn btn-default" ng-click="userMgmtC.getDetailsForUserId(value['map']['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['map']['id']}}">Change</a>
+                        </tr>
+                        </a>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer"></div>
+        </div>
+    </div>
 </div>
+
+
+
 
 
 <!--___________________________________ MODALS ___________________________________-->
@@ -87,6 +151,79 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Create New Role</h4>
+            </div>
+            <div class="modal-body">
+                <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
+                    <input type="hidden" ng-model="form.id" value="0"  /><br>
+                    name:
+                    <input type="text" ng-model="form.name"  /><br>
+                    description:
+                    <input type="text" ng-model="form.description"  /><br>
+                    admin_id:
+                    <input type="text" ng-model="form.admin_id" /><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- modal for deleting user-->
+<div ng-repeat="(key, value) in userMgmtC.Details['user']['myArrayList']" id="{{'modalDeleteUser' + value['map']['id']}}" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Delete User?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to delete the role "{{value['map']['username']}}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" ng-click="userMgmtC.deleteUser(value['map']['id']);" data-dismiss="modal" class="btn btn-primary">Delete</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- modal for updating user-->
+<div ng-repeat="(key, value) in userMgmtC.Details['user']['myArrayList']" id="{{'modalUpdateUser' + value['map']['id']}}" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update User?</h4>
+            </div>
+            <div class="modal-body">
+                <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
+                    <input type="hidden" ng-model="form.id" ng-value="{{value['map']['id']}}"  /><br>
+                    name:
+                    <input type="text" ng-model="form.name"  /><br>
+                    description:
+                    <input type="text" ng-model="form.description"  /><br>
+                    admin_id:
+                    <input type="text" ng-model="form.admin_id" /><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- modal for creating new user-->
+<div id="modalcreateUser" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create New User</h4>
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
