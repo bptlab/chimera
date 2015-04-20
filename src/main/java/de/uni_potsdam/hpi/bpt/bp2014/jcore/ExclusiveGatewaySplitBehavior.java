@@ -1,7 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
+
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * ********************************************************************************
@@ -31,6 +38,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
      */
     private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<LinkedList<Integer>>();
 
+    private DbState dbState = new DbState();
+
     /**
      * Initializes and creates an ExclusiveGatewaySplitBehavior
      *
@@ -44,6 +53,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         this.fragmentInstance_id = fragmentInstance_id;
         initializeFollowingControlNodeIds();
     }
+
+
 
     /**
      * Adds the ids of the following control nodes to the list.
@@ -142,4 +153,93 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         return false;
     }
 
+    /**
+     * Evaluates Conditions for the control flow.
+     */
+    public void evaluateConditions() {
+        Map<Integer, String> conditions = dbControlFlow.getConditions(controlNode_id);
+        Set keys = conditions.keySet();
+        Iterator key = keys.iterator();
+        Integer controlNode_id = 0;
+        while (key.hasNext()) {
+            controlNode_id = (Integer) key.next();
+            if (evaluateCondition(conditions.get(controlNode_id))) {
+                break;
+            }
+        }
+        ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(controlNode_id);
+        controlNodeInstance.getIncomingBehavior().enableControlFlow();
+
+        //TODO: Conditions holen
+        //TODO: Auswerten
+        //TODO: richtige Nachfolger enablen
+    }
+
+    public boolean evaluateCondition(String condition) {
+        XORGrammarCompiler compiler = new XORGrammarCompiler();
+        CommonTree ast = compiler.compile(condition);
+        System.out.println(ast.getFirstChildWithType(7) + " this is the end!");
+        System.out.println(ast.getFirstChildWithType(7) + " this is the end!");
+        //List<CommonTree> children = (List<CommonTree>)ast.getChildren();
+        evaluate(0, ast);
+        /*
+        for(int i = 0; i < ast.getChildCount(); i++){
+            evaluate(i, ast);
+        }*/
+        System.out.println(ast.toStringTree());
+        return true;
+    }
+
+    private boolean evaluate(int i, Tree ast) {
+        Tree child = ast.getChild(i);
+        boolean condition = false;
+        if (child.getType() == 7) {
+            condition = checkCondition(ast.getChild(i));
+            if (ast.getChildCount() >= i + 2) {
+                if (ast.getChild(i + 1).toStringTree().equals("&") | ast.getChild(i + 1).toStringTree().equals(" & ")) {
+                    return condition & evaluate(i + 2, ast);
+                } else {
+                    return condition | evaluate(i + 2, ast);
+                }
+            } else {
+                System.out.println(ast.getChild(i));
+                return condition;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkCondition(Tree ast) {
+        String left = ast.getChild(0).toStringTree();
+        String comparison = ast.getChild(1).toStringTree();
+        String right = ast.getChild(2).toStringTree();
+        for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+            left = left.replace(
+                    (dataAttributeInstance.getDataObjectInstance()).getName()
+                            + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+            right = right.replace(
+                    (dataAttributeInstance.getDataObjectInstance()).getName()
+                            + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+        }
+        for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
+            left = left.replace(
+                    dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
+            right = right.replace(
+                    dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
+        }
+        switch (comparison) {
+            case "=":
+                return left.equals(right);
+            case "<":
+                return Float.parseFloat(left) < Float.parseFloat(right);
+            case "<=":
+                return Float.parseFloat(left) <= Float.parseFloat(right);
+            case ">":
+                return Float.parseFloat(left) > Float.parseFloat(right);
+            case ">=":
+                return Float.parseFloat(left) >= Float.parseFloat(right);
+
+        }
+        return false;
+    }
 }

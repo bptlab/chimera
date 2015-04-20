@@ -1,7 +1,6 @@
 TRUNCATE `activityinstance`;
 TRUNCATE `activitystate`;
 TRUNCATE `aggregation`;
-TRUNCATE `attributeinstance`;
 TRUNCATE `configuration`;
 TRUNCATE `controlflow`;
 TRUNCATE `controlnode`;
@@ -37,3 +36,5 @@ TRUNCATE `terminationcondition`;
 TRUNCATE `user`;
 TRUNCATE `userismemberofrole`;
 TRUNCATE `workitemstate`;
+INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`, `subject`, `message`, `controlnode_id`) VALUES
+(-1, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 20);

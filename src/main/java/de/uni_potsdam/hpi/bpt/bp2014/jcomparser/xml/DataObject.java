@@ -38,6 +38,9 @@ public class DataObject implements IPersistable {
      * The database ID of the initial State.
      */
     private Integer initState;
+    /**
+     * This is the dataClass belonging to this dataObject.
+     */
     private DataClass dataClass;
 
     /**
@@ -111,6 +114,9 @@ public class DataObject implements IPersistable {
             return -1;
         }
         Connector connector = new Connector();
+        for(Integer state : states.values()) {
+            connector.updateStates(state, dataClass.getDataClassID());
+        }
         // We assume, that every DataObject starts with the state "init"
         for(Integer state : states.values()) {
             connector.updateStates(state, dataClass.getDataClassID());
@@ -165,9 +171,9 @@ public class DataObject implements IPersistable {
 
     /**
      * Returns the databaseID of the initial State.
-     * (We assume that the initial State is ("init")
+     * (We assume that the initial State is ("init").
      *
-     * @return the databaseId of the state "init"
+     * @return the databaseId of the state "init".
      */
     public Integer getInitState() {
         return initState;
@@ -176,7 +182,7 @@ public class DataObject implements IPersistable {
     /**
      * Returns the database id.
      *
-     * @return the id (int) which is primary key inside the database
+     * @return the id (int) which is primary key inside the database.
      */
     public int getDatabaseId() {
         return databaseId;
@@ -185,19 +191,38 @@ public class DataObject implements IPersistable {
     /**
      * Returns the map of states.
      * The map contains all states with their name (key)
-     * and their Id (value)
+     * and their Id (value).
      * Any changes will affect the state of the DataObject.
      *
-     * @return the map of states
+     * @return the map of states.
      */
     public Map<String, Integer> getStates() {
         return states;
     }
 
+
+    /**
+     * This method is used to set the dataClass corresponding to the dataObject.
+     *
+     * @param dataClasses This is a Map containing all dataClasses of the scenario.
+     */
     public void setDataClass(Map<Long, DataClass> dataClasses) {
+        long dataClassModelID = -1;
+        if(dataNodes.get(0).getDataClassURI() != null && dataNodes.get(0).getDataClassURI() != "") {
+            //regex fun to get only the ID from the URI.
+            String[] modelID = dataNodes.get(0).getDataClassURI().split("\\/");
+            String[] mID = modelID[modelID.length-1].split("\\.");
+            dataClassModelID = new Long(mID[0]);
+        }
         for(Long i : dataClasses.keySet()) {
-            if(dataNodes.get(0).getText().equals(dataClasses.get(i).getDataClassName())) {
-                dataClass = dataClasses.get(i);
+            if(dataClassModelID != -1){
+                if(dataClassModelID == dataClasses.get(i).getDataClassModelID()){
+                    this.dataClass = dataClasses.get(i);
+                }
+            }else {
+                if (dataNodes.get(0).getText().equals(dataClasses.get(i).getDataClassName())) {
+                    dataClass = dataClasses.get(i);
+                }
             }
         }
     }

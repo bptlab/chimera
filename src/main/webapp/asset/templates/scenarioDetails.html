@@ -1,20 +1,19 @@
-<h2>{{scenarioCtrl.getCurrentScenario()['label']}}</h2>
+<h2>{{scenarioCtrl.currentScenario['details']['name']}}</h2>
+
 <br>
 <div class="row">
-	<!--<div class="col-xs-4">
-		<img src="{{scenarioCtrl.getCurrentScenario()['imageUrl']}}" alt="{{scenarioCtrl.getCurrentScenario()['label']}}" class="img-thumbnail">
-		</img>
-	</div>-->
 	<table>
 		<tr>
 			<th>ScenarioID</th>
-			<th>{{"# " + scenarioCtrl.getCurrentScenario()['id']}}</th>
+			<th>{{"# " + scenarioCtrl.currentScenario['id']}}</th>
 		</tr><tr>
 			<th>ScenarioName</th>
-			<th>{{scenarioCtrl.getCurrentScenario()['label']}}</th>
+			<th>{{scenarioCtrl.currentScenario['details']['name']}}</th>
 		</tr><tr>
 			<th>Amount of Instances&nbsp;&nbsp;</th>
-			<th>{{scenarioCtrl.getCurrentScenario()['instanceIds'].length}}</th>
+            <!-- @TODO: amount doesnt work yet -->
+            <th>{{instanceCtrl.scenario['instances']['ids'].length}}</th>
+
 		</tr>
 	</table>
 	<div class="pull-right">
@@ -22,6 +21,12 @@
 		<a type="button" data-toggle="modal" data-target="#createInstance" class="btn btn-default">
 					Start Instance
 		</a>
+        <!-- @TODO: amount doesnt work yet -->
+        <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">
+            <a type="button" data-toggle="modal" data-target="#deleteScenario" class="btn btn-default">
+                Delete Scenario
+            </a>
+        </div>
 	</div>
 </div>
 <hr><br>
@@ -35,10 +40,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.instances track by $index"  ng-show="!searchText || value['label'].indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);" >
+				<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.scenario['instances']['labels'] track by $index"  ng-show="!searchText || value.indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);" >
 					<td>{{key}}</td>
-					<td>{{value['label']}}</td>
+					<td>{{value}}</td>
 				</tr>
+                <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">No items found</div>
 				</a>
 			</tbody>
 		</table>
@@ -54,12 +60,30 @@
 				<h4 class="modal-title">Start instance?</h4>
 			</div>
 			<div class="modal-body">
-				<p>Do you really want to start a new instance of scenario "{{scenarioCtrl.getCurrentScenario()['label']}}"?</p>
+				<p>Do you really want to start a new instance of scenario "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" ng-click="scenarioCtrl.createInstance(scenarioCtrl.getCurrentScenario()['id']);" data-dismiss="modal" class="btn btn-primary">Start Instance</button>
+				<button type="button" ng-click="scenarioCtrl.createInstance(scenarioCtrl.currentScenario['id']);" data-dismiss="modal" class="btn btn-primary">Start Instance</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="deleteScenario" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">delete Scenario?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to delete the scenario "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" ng-click="scenarioCtrl.deleteScenario(scenarioCtrl.currentScenario['id']);" data-dismiss="modal" class="btn btn-primary">Delete Scenario</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

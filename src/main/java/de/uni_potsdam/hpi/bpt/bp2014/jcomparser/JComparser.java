@@ -215,7 +215,7 @@ public class JComparser {
 */
     }
 
-    // replacing with a config.java file
+    // replacing with a settings.java file
    /* private String getServerSpecs(String path, String requestedConfig) {
         File file = new File(path);
         if (requestedConfig.equals("processeditorServerUrl")) {

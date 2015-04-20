@@ -3,7 +3,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jaspar.mang on 04.02.15.
@@ -45,6 +48,20 @@ public class DbTerminationCondition extends DbObject {
     public LinkedList<Condition> getConditionsForConditionSetAndScenario(int scenario_id, int conditionSet_id) {
         String sql = "SELECT conditionset_id, dataobject_id, state_id, scenario_id FROM terminationcondition WHERE scenario_id = " + scenario_id + " AND conditionset_id = " + conditionSet_id;
         return this.executeStatementReturnsListCondition(sql);
+    }
+
+    /**
+     * Returns a list of Hashmap with all the information
+     * of a Termination Condition of one specific Scenario.
+     * Tje Scenario is specified by the given id.
+     *
+     * @param scenarioID the id of the given Scenario
+     */
+    public Map<Integer, List<Map<String, Object>>> getDetailedConditionsForScenario(int scenarioID) {
+        String sql = "SELECT t.conditionset_id AS set_id, s.name AS state, d.name AS data_object " +
+                "FROM terminationcondition AS t, dataobject AS d, state AS s " +
+                "WHERE t.dataobject_id = d.id AND t.state_id = s.id AND t.scenario_id = " + scenarioID;
+        return this.executeStatementReturnsMapOfListOfMapsWithKeys(sql, "state", "data_object", "set_id");
     }
 
     /**
@@ -92,5 +109,39 @@ public class DbTerminationCondition extends DbObject {
             }
         }
         return results;
+    }
+
+    public Map<Integer, List<Map<String, Object>>> executeStatementReturnsMapOfListOfMapsWithKeys(String sql, String... keys) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        Map<Integer, List<Map<String, Object>>> conditionSets = new HashMap<>();
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+            while (results.next()) {
+                Integer conditionSetId = results.getInt("set_id");
+                if (!conditionSets.containsKey(conditionSetId)) {
+                    conditionSets.put(conditionSetId, new LinkedList<Map<String, Object>>());
+                }
+                Map<String, Object> condition = new HashMap<>();
+                for (String key : keys) {
+                    condition.put(key, results.getObject(key));
+                }
+                conditionSets.get(conditionSetId).add(condition);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return conditionSets;
     }
 }
