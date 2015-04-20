@@ -11,7 +11,7 @@ before_script:
   - mysql -e "create database IF NOT EXISTS JUserManagement;" -uroot
 
 script:
-  - mysql JEngineV2 < src/main/resources/JUserManagement.sql -uroot
+  - mysql JUserManagement < src/main/resources/JUserManagement.sql -uroot
   - mvn test
  
 after_success:
