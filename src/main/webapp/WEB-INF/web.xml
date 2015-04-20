@@ -25,7 +25,7 @@
     <env-entry>
         <env-entry-name>username</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>root</env-entry-value>
+        <env-entry-value>juser</env-entry-value>
     </env-entry>
 
     <env-entry>
