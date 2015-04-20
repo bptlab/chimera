@@ -169,38 +169,20 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(controlNode_id);
         controlNodeInstance.getIncomingBehavior().enableControlFlow();
 
-        //TODO: Conditions holen
-        //TODO: Auswerten
-        //TODO: richtige Nachfolger enablen
     }
 
     public boolean evaluateCondition(String condition) {
-        System.out.println("Condition:  " + condition);
         XORGrammarCompiler compiler = new XORGrammarCompiler();
         CommonTree ast = compiler.compile(condition);
-        System.out.println(ast.getFirstChildWithType(7) + " this is the end!");
-        System.out.println(ast.getFirstChildWithType(7) + " this is the end!");
-        //List<CommonTree> children = (List<CommonTree>)ast.getChildren();
-
-
-        System.out.println(ast.getChildCount());
         if (ast.getChildCount() > 0) {
-
-                System.out.println(ast.getChild(0).toStringTree());
-                return evaluate(0, ast);
-
+            return evaluate(0, ast);
         }
-        /*
-        for(int i = 0; i < ast.getChildCount(); i++){
-            evaluate(i, ast);
-        }*/
-        System.out.println(ast.toStringTree());
         return false;
     }
 
     private boolean evaluate(int i, Tree ast) {
         boolean condition = false;
-        condition = checkCondition(ast , i);
+        condition = checkCondition(ast, i);
         if (ast.getChildCount() >= i + 4) {
             if (ast.getChild(i + 3).toStringTree().equals("&") | ast.getChild(i + 1).toStringTree().equals(" & ")) {
                 return condition & evaluate(i + 4, ast);
@@ -208,7 +190,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
                 return condition | evaluate(i + 4, ast);
             }
         } else {
-            System.out.println(ast.getChild(i));
             return condition;
         }
     }

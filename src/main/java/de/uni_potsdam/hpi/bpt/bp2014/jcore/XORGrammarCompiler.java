@@ -20,7 +20,7 @@ public class XORGrammarCompiler {
 
                         //acquire parse result
                         CommonTree ast = (CommonTree) ret.tree;
-                        printTree(ast);
+                        //printTree(ast);
                         return ast;
                 } catch (RecognitionException e) {
                         throw new IllegalStateException("Recognition exception is never thrown, only declared.");
