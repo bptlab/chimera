@@ -125,7 +125,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * 
+     *
      */
     @Test
     public void testDeleteRoleStatusCheck() {
