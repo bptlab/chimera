@@ -1,6 +1,7 @@
 [![Travic CI Build Status](https://travis-ci.org/BP2014W1/JEngine.svg?branch=dev)](https://travis-ci.org/BP2014W1/JEngine)
 [![Coverage Status](https://coveralls.io/repos/BP2014W1/JEngine/badge.svg?branch=dev)](https://coveralls.io/r/BP2014W1/JEngine?branch=dev)
 
+
 # JEngine
 
 The JEngine is a ProcessEngine to execute Production Case Management (PCM).
@@ -12,7 +13,7 @@ The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## RESTful
 
-See [the documentation](https://github.com/BP2014W1/JEngine/tree/dev/docu/REST) inside the doc folder.
+See the documentation inside the doc folder.
 
 ## Setup
 
@@ -76,5 +77,3 @@ This JEngine does execute
 * XOR gateways
 * email services tasks
 * termination condition for scenarios
-
-Additionally, we use an AngularJS frontend to control the JComparser and the JEngine..
