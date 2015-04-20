@@ -3,6 +3,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 
+import java.util.LinkedList;
+
 
 /**
  * ********************************************************************************
@@ -34,6 +36,8 @@ public class DataObjectInstance {
     private final int dataObject_id;
     private final int scenario_id;
     private final int scenarioInstance_id;
+    private final String name;
+    private LinkedList<DataAttributeInstance> dataAttributeInstances = new LinkedList<>();
     /**
      * Database Connection objects.
      */
@@ -56,6 +60,7 @@ public class DataObjectInstance {
         this.dataObject_id = dataObject_id;
         this.scenario_id = scenario_id;
         this.scenarioInstance_id = scenarioInstance_id;
+        this.name = dbDataObject.getName(dataObject_id);
         if (dbDataObjectInstance.existDataObjectInstance(scenarioInstance_id, dataObject_id)) {
             //creates an existing DataObject Instance using the database information
             dataObjectInstance_id = dbDataObjectInstance.getDataObjectInstanceID(scenarioInstance_id, dataObject_id);
@@ -64,6 +69,16 @@ public class DataObjectInstance {
             //creates a new DataObject Instance also in database
             state_id = dbDataObject.getStartStateID(dataObject_id);
             this.dataObjectInstance_id = dbDataObjectInstance.createNewDataObjectInstance(scenarioInstance_id, state_id, dataObject_id);
+        }
+        this.initializeAttributes();
+    }
+
+    private void initializeAttributes(){
+        LinkedList<Integer> dataAttribute_ids = dbDataObject.getAllDataAttributesForDataObject(dataObject_id);
+        for(int dataAttribute_id : dataAttribute_ids){
+            DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(dataAttribute_id, dataObjectInstance_id, this);
+            dataAttributeInstances.add(dataAttributeInstance);
+            scenarioInstance.getDataAttributeInstances().put(dataAttributeInstance.getDataAttributeInstance_id(), dataAttributeInstance);
         }
     }
 
@@ -121,5 +136,9 @@ public class DataObjectInstance {
 
     public int getState_id() {
         return state_id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

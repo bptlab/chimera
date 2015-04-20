@@ -1,6 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+
+import java.util.Map;
+
 /**
  * ********************************************************************************
  * <p/>
@@ -25,9 +29,30 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 
-
     public HumanTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
+
+    @Override
+    public void execute() {
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        if(dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()){
+            ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        }
+        //TODO: Change this later when we have forms 
+        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+    }
+
+    @Override
+    public void setDataAttributeValues(Map<Integer, String> values){
+        if(values.keySet() != null) {
+            for (Integer i : values.keySet()) {
+                DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
+                dataAttributeInstance.setValue(i, values.get(i));
+            }
+        }
+        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+    }
+
 
 }

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<model xmlns="http://frapu.net/xsd/ProcessEditor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="269479298" name="Domain_Reise" type="net.frapu.code.visualization.domainModel.DomainModel" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+    <nodes>
+        <node>
+            <property name="abstract" value="0"/>
+            <property name="text" value="Reise"/>
+            <property name="#attributes" value="{0}+Beginn ;{1}+Ende ;{2}+Gesamtkosten ;"/>
+            <property name="color_background" value="-817661"/>
+            <property name="width" value="100"/>
+            <property name="#id" value="801101005"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.DomainClass"/>
+            <property name="height" value="94"/>
+            <property name="stereotype" value="root_instance"/>
+            <property name="shadow" value="1"/>
+            <property name="key" value=""/>
+            <property name="y" value="169"/>
+            <property name="x" value="431"/>
+        </node>
+        <node>
+            <property name="abstract" value="0"/>
+            <property name="text" value="Flug"/>
+            <property name="#attributes" value="{0}+Abflugsdatum ;{1}+Ankunftsdatum ;{2}+StartFlughafen ;{3}+EndFlughafen ;"/>
+            <property name="color_background" value="-5321155"/>
+            <property name="width" value="100"/>
+            <property name="#id" value="679826034"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.DomainClass"/>
+            <property name="height" value="90"/>
+            <property name="stereotype" value=""/>
+            <property name="shadow" value="0"/>
+            <property name="key" value=""/>
+            <property name="y" value="398"/>
+            <property name="x" value="613"/>
+        </node>
+        <node>
+            <property name="abstract" value="0"/>
+            <property name="text" value="bike"/>
+            <property name="#attributes" value="{0}+Name ;{1}+Rating ;{2}+Adresse ;{3}+AnzahlNaechte ;"/>
+            <property name="color_background" value="-5321155"/>
+            <property name="width" value="100"/>
+            <property name="#id" value="940990347"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.DomainClass"/>
+            <property name="height" value="88"/>
+            <property name="stereotype" value=""/>
+            <property name="shadow" value="0"/>
+            <property name="key" value=""/>
+            <property name="y" value="397"/>
+            <property name="x" value="431"/>
+        </node>
+        <node>
+            <property name="abstract" value="0"/>
+            <property name="text" value="Person"/>
+            <property name="#attributes" value="{0}+Name ;{1}+Anschrift ;{2}+Alter ;"/>
+            <property name="color_background" value="-5321155"/>
+            <property name="width" value="100"/>
+            <property name="#id" value="1175017344"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.DomainClass"/>
+            <property name="height" value="80"/>
+            <property name="stereotype" value=""/>
+            <property name="shadow" value="0"/>
+            <property name="key" value=""/>
+            <property name="y" value="393"/>
+            <property name="x" value="276"/>
+        </node>
+    </nodes>
+    <edges>
+        <edge>
+            <property name="sourceMultiplicity" value="1..*"/>
+            <property name="color_arc" value="-16777216"/>
+            <property name="direction" value="NONE"/>
+            <property name="targetMultiplicity" value="1..*"/>
+            <property name="label" value=""/>
+            <property name="sourceVisibility" value=""/>
+            <property name="targetName" value=""/>
+            <property name="#id" value="470092328"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.Aggregation"/>
+            <property name="targetVisibility" value=""/>
+            <property name="sourceName" value=""/>
+            <property name="#sourceNode" value="801101005"/>
+            <property name="composition" value="0"/>
+            <property name="points" value="683,169+683,398"/>
+            <property name="#targetNode" value="679826034"/>
+            <property name="#source_dockpoint" value="49,0"/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="#target_dockpoint" value="49,0"/>
+        </edge>
+        <edge>
+            <property name="sourceMultiplicity" value="1..*"/>
+            <property name="color_arc" value="-16777216"/>
+            <property name="direction" value="NONE"/>
+            <property name="targetMultiplicity" value="1..*"/>
+            <property name="label" value=""/>
+            <property name="sourceVisibility" value=""/>
+            <property name="targetName" value=""/>
+            <property name="#id" value="2019640333"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.Aggregation"/>
+            <property name="targetVisibility" value=""/>
+            <property name="sourceName" value=""/>
+            <property name="#sourceNode" value="801101005"/>
+            <property name="composition" value="0"/>
+            <property name="points" value=""/>
+            <property name="#targetNode" value="940990347"/>
+            <property name="#source_dockpoint" value="0,46"/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="#target_dockpoint" value="0,-43"/>
+        </edge>
+        <edge>
+            <property name="sourceMultiplicity" value="1..*"/>
+            <property name="color_arc" value="-16777216"/>
+            <property name="direction" value="NONE"/>
+            <property name="targetMultiplicity" value="1..*"/>
+            <property name="label" value=""/>
+            <property name="sourceVisibility" value=""/>
+            <property name="targetName" value=""/>
+            <property name="#id" value="1521680189"/>
+            <property name="#type" value="net.frapu.code.visualization.domainModel.Aggregation"/>
+            <property name="targetVisibility" value=""/>
+            <property name="sourceName" value=""/>
+            <property name="#sourceNode" value="801101005"/>
+            <property name="composition" value="0"/>
+            <property name="points" value="208,169+208,393"/>
+            <property name="#targetNode" value="1175017344"/>
+            <property name="#source_dockpoint" value="-50,0"/>
+            <property name="#label_offset" value="0.5"/>
+            <property name="#target_dockpoint" value="-50,0"/>
+        </edge>
+    </edges>
+    <properties>
+        <property name="author" value=""/>
+        <property name="#source" value=""/>
+        <property name="#creationDate" value="12. M??rz 2015 13:58:21 MEZ"/>
+        <property name="name" value="Domain_Reise"/>
+        <property name="namespacePrefix" value=""/>
+        <property name="#folder" value="/"/>
+        <property name="namespaceUri" value=""/>
+        <property name="#data" value=""/>
+        <property name="#uri" value="/models/269479299/versions/0"/>
+        <property name="comment" value=""/>
+    </properties>
+</model>

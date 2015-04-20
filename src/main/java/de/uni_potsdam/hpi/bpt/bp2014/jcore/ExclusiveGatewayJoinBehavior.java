@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import java.util.Collection;
+
 /**
  * ********************************************************************************
  * <p/>
@@ -42,10 +44,17 @@ public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
     @Override
     public void enableControlFlow() {
         //TODO: check for conditions, if true -> terminate
-        boolean conditions = true;
-        if (conditions) {
+        //TODO: Wie auswerten ob es Conditions gibt.
+        Collection conditions = dbControlFlow.getConditions(controlNodeInstance.getControlNode_id()).values();
+        boolean condition = true;
+        if(conditions.size() > 0 && !conditions.iterator().next().equals("")){
+            condition = false;
+        }
+        if (condition) {
             ((GatewayStateMachine) stateMachine).execute();
             ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).execute();
+        }else{
+            ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).evaluateConditions();
         }
 
     }

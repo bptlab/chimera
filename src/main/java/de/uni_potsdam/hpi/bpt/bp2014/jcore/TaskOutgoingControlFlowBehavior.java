@@ -32,7 +32,7 @@ import java.util.LinkedList;
  * Handles the behavior of a terminating activity instance.
  */
 public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
-    private final ControlNodeInstance controlNodeInstance;
+    private final ActivityInstance activityInstance;
     /**
      * Database Connection objects.
      */
@@ -45,13 +45,13 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
      * @param activity_id         This is the database id from the activity instance.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      * @param fragmentInstance_id This is the database id from the fragment instance.
-     * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+     * @param activityInstance This is an instance from the class ControlNodeInstance.
      */
-    public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id, ControlNodeInstance controlNodeInstance) {
+    public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id, ActivityInstance activityInstance) {
         this.controlNode_id = activity_id;
         this.scenarioInstance = scenarioInstance;
         this.fragmentInstance_id = fragmentInstance_id;
-        this.controlNodeInstance = controlNodeInstance;
+        this.activityInstance = activityInstance;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
      * Terminates all referential running activities.
      */
     public void terminateReferences() {
-        for (int activity_id : ((ActivityInstance) controlNodeInstance).getReferences()) {
+        for (int activity_id : (activityInstance).getReferences()) {
             scenarioInstance.terminateReferenceControlNodeInstanceForControlNodeInstanceID(activity_id);
         }
     }

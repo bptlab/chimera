@@ -49,8 +49,8 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 (118, 144, 107, 36, 24, 500103237);
 
 INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_state_id`) VALUES
-(23, 'DO2', 37, 144, 106),
-(24, 'DO1', 36, 144, 105);
+(23, 'Flug', 37, 144, 106),
+(24, 'bike', 36, 144, 105);
 
 INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `onchange`) VALUES
 (730, 902, 106, 23, 0),
@@ -79,7 +79,7 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (4276, 0, 164, 903);
 
 INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
-(144, 'Testszenario', 1442712096, 0, NULL, NULL);
+(144, 'Testszenario', 1442712096, 0, 269479299, 0);
 
 INSERT INTO `scenarioinstance` (`id`, `terminated`, `scenario_id`) VALUES
 (902, 0, 144),
