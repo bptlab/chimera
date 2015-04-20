@@ -178,8 +178,7 @@
                 //post update for user or role data
                 this.submitMyForm=function(){
                     var data=$scope.form;
-                    console.log(data);
-                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID + "/?", data);
+                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID, data);
                     $location.path("/admin/userMgmt/");
                 }
 

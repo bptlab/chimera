@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']">
+        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']" ng-show="!searchText || value['map']['rolename'].indexOf(searchText) > -1">
             {{value['map']}}
             <td>{{value['map']['id']}}</td>
             <td>{{value['map']['rolename']}}</td>
@@ -63,12 +63,13 @@
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
+                    <input type="hidden" ng-model="form.id" ng-value="{{value['map']['id']}}"  /><br>
                     name:
-                    <input type="text" ng-model="userMgmtC.name"  /><br>
+                    <input type="text" ng-model="form.name"  /><br>
                     description:
-                    <input type="text" ng-model="userMgmtC.description"  /><br>
+                    <input type="text" ng-model="form.description"  /><br>
                     admin_id:
-                    <input type="text" ng-model="userMgmtC.admin_id" /><br>
+                    <input type="text" ng-model="form.admin_id" /><br>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
@@ -89,12 +90,13 @@
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
+                    <input type="hidden" ng-model="form.id" value="0"  /><br>
                     name:
-                    <input type="text" ng-model="userMgmtC.name"  /><br>
+                    <input type="text" ng-model="form.name"  /><br>
                     description:
-                    <input type="text" ng-model="userMgmtC.description"  /><br>
+                    <input type="text" ng-model="form.description"  /><br>
                     admin_id:
-                    <input type="text" ng-model="userMgmtC.admin_id" /><br>
+                    <input type="text" ng-model="form.admin_id" /><br>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
