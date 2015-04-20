@@ -152,7 +152,7 @@
                 };
 
                 this.unsetWorkingID = function(){
-                    userMgmtC.workingID = null;
+                    userMgmtC.workingID = "";
                 };
 
                 this.setTypeRole = function(){
@@ -199,8 +199,10 @@
                 //post update for user or role data
                 this.submitMyForm=function(){
                     var data=$scope.form;
-                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID, data);
-                    userMgmtC.refreshContent();
+                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID, data).
+                        success(function(data) {
+                            userMgmtC.refreshContent();
+                        });
                 }
 
                 // Got to the instance with the given Id
@@ -208,7 +210,6 @@
                     $http.delete(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
                     "/user/" + id + "/?").
                         success(function(data) {
-                            console.log("deleting user was successful..");
                             userMgmtC.refreshContent();
                         }).
                         error(function() {
@@ -222,7 +223,6 @@
                     $http.delete(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
                     "/role/" + id + "/?").
                         success(function(data) {
-                            console.log("deleting role was successful..");
                             userMgmtC.refreshContent();
                         }).
                         error(function() {
