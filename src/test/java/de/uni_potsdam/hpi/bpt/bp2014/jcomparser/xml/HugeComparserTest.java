@@ -23,14 +23,16 @@ public class HugeComparserTest extends TestSetUp {
         int modelversion;
         long datamodelID;
         int datamodelversion;
+        short deleted;
 
-        public DbScenario(int id, String name, long modelID, int modelversion, long datamodelID, int datamodelversion) {
+        public DbScenario(int id, String name, long modelID, int modelversion, long datamodelID, int datamodelversion, short deleted) {
             this.id = id;
             this.name = name;
             this.modelID = modelID;
             this.modelversion = modelversion;
             this.datamodelID = datamodelID;
             this.datamodelversion = datamodelversion;
+            this.deleted = deleted;
         }
 
         @Override
@@ -40,7 +42,8 @@ public class HugeComparserTest extends TestSetUp {
                     scenario.modelID == modelID &&
                     scenario.modelversion == modelversion &&
                     scenario.datamodelID == datamodelID &&
-                    scenario.datamodelversion == datamodelversion)
+                    scenario.datamodelversion == datamodelversion &&
+                    scenario.deleted == deleted)
                 return true;
             return false;
         }
@@ -76,15 +79,18 @@ public class HugeComparserTest extends TestSetUp {
     private class DbDataClass {
         int id;
         String name;
+        short rootnode;
 
-        public DbDataClass(int id, String name) {
+        public DbDataClass(int id, String name, short rootnode) {
             this.id = id;
             this.name = name;
+            this.rootnode = rootnode;
         }
         @Override
         public boolean equals (Object object) {
             DbDataClass dataClass = (DbDataClass) object;
-            if (dataClass.name.equals(name))
+            if (dataClass.name.equals(name) &&
+                    dataClass.rootnode == rootnode)
                 return true;
             return false;
         }
@@ -385,11 +391,12 @@ public class HugeComparserTest extends TestSetUp {
                     scenarios.getLong("modelid"),
                     scenarios.getInt("modelversion"),
                     scenarios.getLong("datamodelid"),
-                    scenarios.getInt("datamodelversion"));
+                    scenarios.getInt("datamodelversion"),
+                    scenarios.getShort("deleted"));
             this.scenarios.add(scenario);
             Assert.assertTrue("ScenarioID smaller than 1", scenario.id > 0);
         }
-        Assert.assertTrue("Scenario not inserted correctly", this.scenarios.contains(new DbScenario(1, "Scenario", 358512L, 1, 790983467L, 0)));
+        Assert.assertTrue("Scenario not inserted correctly", this.scenarios.contains(new DbScenario(1, "Scenario", 358512L, 1, 790983467L, 0, (short) 0)));
         Assert.assertTrue("Too many scenarios inserted", this.scenarios.size() == 1);
         scenarios.close();
     }
@@ -417,12 +424,13 @@ public class HugeComparserTest extends TestSetUp {
         while (dataClasses.next()) {
             DbDataClass dataClass = new DbDataClass(
                     dataClasses.getInt("id"),
-                    dataClasses.getString("name"));
+                    dataClasses.getString("name"),
+                    dataClasses.getShort("rootnode"));
             this.dataClasses.put(dataClasses.getString("name"), dataClass);
             Assert.assertTrue("DataClassID smaller than 1", dataClass.id > 0);
         }
-        Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(1, "DO")));
-        Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(2, "SubDO")));
+        Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(1, "DO", (short) 1)));
+        Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(2, "SubDO", (short) 0)));
         Assert.assertTrue("Too many dataClasses inserted", this.dataClasses.size() == 2);
         dataClasses.close();
     }
