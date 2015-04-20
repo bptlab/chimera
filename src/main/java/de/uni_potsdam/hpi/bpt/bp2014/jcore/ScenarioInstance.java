@@ -9,6 +9,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 
@@ -57,6 +58,7 @@ public class ScenarioInstance {
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
     private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<ControlNodeInstance>();
     private LinkedList<GatewayInstance> executingGateways = new LinkedList<GatewayInstance>();
+    private HashMap<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
     private final int scenarioInstance_id;
     private final int scenario_id;
     private final String name;
@@ -486,5 +488,9 @@ public class ScenarioInstance {
 
     public LinkedList<GatewayInstance> getExecutingGateways() {
         return executingGateways;
+    }
+
+    public HashMap<Integer, DataAttributeInstance> getDataAttributeInstances() {
+        return dataAttributeInstances;
     }
 }

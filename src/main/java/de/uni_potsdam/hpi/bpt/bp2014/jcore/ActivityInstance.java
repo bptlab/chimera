@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -42,6 +43,7 @@ public class ActivityInstance extends ControlNodeInstance {
     private LinkedList<Integer> references;
     private final boolean isMailTask;
     private boolean automaticExecution;
+    private boolean canTerminate;
     /**
      * Database Connection objects.
      */
@@ -80,6 +82,7 @@ public class ActivityInstance extends ControlNodeInstance {
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine) stateMachine).enableControlFlow();
         }
+        this.canTerminate = dbActivityInstance.getCanTerminate(controlNodeInstance_id);
         this.automaticExecution = dbActivityInstance.getAutomaticExecution(controlNodeInstance_id);
         this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
         this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
@@ -145,10 +148,20 @@ public class ActivityInstance extends ControlNodeInstance {
      */
     @Override
     public boolean terminate() {
-        boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
-        ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
-        outgoingBehavior.terminate();
-        return workingFine;
+        if(canTerminate) {
+            boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
+            ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
+            outgoingBehavior.terminate();
+            return workingFine;
+        }
+        return false;
+    }
+
+    /**
+     * sets the dataAttributes for an activity
+     */
+    public void setDataAttributeValues(Map<Integer, String> values){
+        taskExecutionBehavior.setDataAttributeValues(values);
     }
 
     /**
@@ -194,5 +207,10 @@ public class ActivityInstance extends ControlNodeInstance {
     public boolean isAutomaticExecution() {
 
         return automaticExecution;
+    }
+
+    public void setCanTerminate(boolean canTerminate) {
+        this.canTerminate = canTerminate;
+        this.dbActivityInstance.setCanTerminate(controlNodeInstance_id, canTerminate);
     }
 }

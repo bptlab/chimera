@@ -1,7 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import org.antlr.runtime.tree.CommonTree;
+
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * ********************************************************************************
@@ -142,4 +147,51 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         return false;
     }
 
+    /**
+     * Evaluates Conditions for the control flow.
+     */
+    public void evaluateConditions() {
+        Map<Integer, String> conditions = dbControlFlow.getConditions(controlNode_id);
+        Set keys = conditions.keySet();
+        Iterator key = keys.iterator();
+        Integer controlNode_id = 0;
+        while(key.hasNext()){
+            controlNode_id = (Integer)key.next();
+            if(evaluateCondition(conditions.get(controlNode_id))){
+                break;
+            }
+        }
+        ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(controlNode_id);
+        controlNodeInstance.getIncomingBehavior().enableControlFlow();
+
+        //TODO: Conditions holen
+        //TODO: Auswerten
+        //TODO: richtige Nachfolger enablen
+    }
+
+    public static boolean evaluateCondition(String condition){
+        XORGrammarCompiler compiler = new XORGrammarCompiler();
+        CommonTree ast = compiler.compile(condition);
+        System.out.println(ast.toStringTree());
+        return true;
+    }
+
+    private String getDataObjectName(String condition){
+        System.out.println(condition.split(".")[0]);
+        return condition.split(".")[0];
+    }
+
+    private String getDataAttributeName(String condition){
+        String name = condition.split(".")[1];
+        if(condition.contains("=")){
+            name = name.split("=")[1];
+        }else if(condition.contains("<")){
+            name = name.split("<")[1];
+        }else if(condition.contains(">")){
+            name = name.split(">")[1];
+        }
+        name.replace(" ", "");
+        System.out.println(name);
+        return name;
+    }
 }
