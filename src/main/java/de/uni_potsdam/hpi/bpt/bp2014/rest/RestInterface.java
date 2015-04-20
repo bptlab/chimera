@@ -23,9 +23,11 @@ public class RestInterface {
      */
 
     /************************************************************
+     * By sending an GET on user, the method returns all available
+     * resources regarding the users as json.
      *
-     * @param filterString
-     * @return
+     * @param filterString the filter params filters the result set
+     * @return a json with all user informations in its content
      */
     @GET
     @Path("user")
@@ -37,10 +39,12 @@ public class RestInterface {
 
 
     /**
+     * By sending an GET on user, the method returns details
+     * regarding this userID as json.
      *
-     * @param filterString
+     * @param filterString the filter params filters the result set
      * @param userID
-     * @return
+     * @return a json with all user informations in its content
      */
     @GET
     @Path("user/{userID}")
