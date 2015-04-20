@@ -49,9 +49,7 @@ and start tomcat again
 
     service tomcat7 start
 
-Now, you may access the jFrontend via
-
-   http://localhost:8080/JUserManagement
+Now, you may access the REST Interface.
 
 
 ## REST
