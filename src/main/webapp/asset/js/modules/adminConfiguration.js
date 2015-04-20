@@ -122,8 +122,8 @@
             }]
     );
 
-    // Create a Controller for mail config
-    adminCon.controller('userManagement', ['$routeParams', '$location', '$http', '$scope',
+    // Create a Controller for user management config
+    adminCon.controller('userMgmtController', ['$routeParams', '$location', '$http', '$scope',
             function($routeParams, $location, $http, $scope){
                 var userMgmtC = this;
 
