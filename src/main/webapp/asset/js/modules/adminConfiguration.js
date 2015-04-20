@@ -151,6 +151,10 @@
                     userMgmtC.workingID = id;
                 };
 
+                this.unsetWorkingID = function(){
+                    userMgmtC.workingID = null;
+                };
+
                 this.setTypeRole = function(){
                     userMgmtC.type = "role";
                 };
@@ -185,6 +189,7 @@
                                 name: value['username'],
                                 description: value['description'],
                                 admin_id: value['admin_id'],
+                                role_id: value['role_id'],
                                 id: value['id']
                             };
                         });
@@ -195,7 +200,7 @@
                 this.submitMyForm=function(){
                     var data=$scope.form;
                     $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID, data);
-                    $location.path("/admin/userMgmt/");
+                    userMgmtC.refreshContent();
                 }
 
                 // Got to the instance with the given Id
@@ -204,6 +209,7 @@
                     "/user/" + id + "/?").
                         success(function(data) {
                             console.log("deleting user was successful..");
+                            userMgmtC.refreshContent();
                         }).
                         error(function() {
                             console.log('request failed');
@@ -217,12 +223,35 @@
                     "/role/" + id + "/?").
                         success(function(data) {
                             console.log("deleting role was successful..");
+                            userMgmtC.refreshContent();
                         }).
                         error(function() {
                             console.log('request failed');
                         });
+                };
+
+                this.goToOverview = function(){
                     $location.path("/admin/userMgmt/");
                 };
+
+                this.refreshContent = function(){
+                    $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/user").
+                        success(function(data) {
+                            userMgmtC.Details['user'] = data;
+                        }).
+                        error(function() {
+                            console.log('request failed');
+                        });
+
+                    $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/role").
+                        success(function(data) {
+                            userMgmtC.Details['role'] = data;
+                        }).
+                        error(function() {
+                            console.log('request failed');
+                        });
+                };
+
 
             }]
     );

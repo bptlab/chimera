@@ -15,7 +15,7 @@
             </div>
             <div class="panel-body list">
                 <div class="pull-right">
-                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole();" data-target="#modalcreateRole"  class="btn btn-default">
+                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole(); userMgmtC.unsetWorkingID();" data-target="#modalcreateRole"  class="btn btn-default">
                         Create New Role
                     </a>
                 </div>
@@ -58,7 +58,7 @@
             </div>
             <div class="panel-body list">
                 <div class="pull-right">
-                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeUser();" data-target="#modalcreateUser"  class="btn btn-default">
+                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeUser(); userMgmtC.unsetWorkingID();" data-target="#modalcreateUser"  class="btn btn-default">
                         Create New User
                     </a>
                 </div>
@@ -70,16 +70,16 @@
                         <tr>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Admin Id</th>
+                            <th>Role Id</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']['myArrayList']" ng-show="!searchText || value['map']['username'].indexOf(searchText) > -1">
                             {{value['map']}}
-                            <td>{{value['map']['rolename']}}</td>
+                            <td>{{value['map']['username']}}</td>
                             <td>{{value['map']['description']}}</td>
-                            <td>{{value['map']['admin_id']}}</td>
+                            <td>{{value['map']['role_id']}}</td>
                             <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['map']['id']}}">Delete</a>
                                 <a type="button" class="btn btn-default" ng-click="userMgmtC.getDetailsForUserId(value['map']['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['map']['id']}}">Change</a>
                         </tr>
@@ -134,7 +134,7 @@
                     <input type="text" ng-model="form.description"  /><br>
                     admin_id:
                     <input type="text" ng-model="form.admin_id" /><br>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit"  class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -161,7 +161,7 @@
                     <input type="text" ng-model="form.description"  /><br>
                     admin_id:
                     <input type="text" ng-model="form.admin_id" /><br>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit"  class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -205,9 +205,9 @@
                     <input type="text" ng-model="form.name"  /><br>
                     description:
                     <input type="text" ng-model="form.description"  /><br>
-                    admin_id:
-                    <input type="text" ng-model="form.admin_id" /><br>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    role_id:
+                    <input type="text" ng-model="form.role_id" /><br>
+                    <button type="submit"  class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -232,9 +232,9 @@
                     <input type="text" ng-model="form.name"  /><br>
                     description:
                     <input type="text" ng-model="form.description"  /><br>
-                    admin_id:
-                    <input type="text" ng-model="form.admin_id" /><br>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    role_id:
+                    <input type="text" ng-model="form.role_id" /><br>
+                    <button type="submit"  class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
