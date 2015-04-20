@@ -1,44 +1,108 @@
 <h2>User Management</h2>
-{{userMgmtC.Details['role']}}
-{{userMgmtC.Details['user']}}
 <div class="table-responsive">
     <table class="table table-striped table-hover">
         <caption>Role</caption>
+        <div class="pull-right">
+            <input ng-model="searchText" placeholder="SearchTerm">
+            <a type="button" data-toggle="modal" data-target="#modalcreateRole" class="btn btn-default">
+                Create New Role
+            </a>
+        </div>
         <thead>
         <tr>
             <th>#</th>
             <th>Name</th>
             <th>Description</th>
+            <th>Admin Id</th>
             <th>Action</th>
         </tr>
         </thead>
         <tbody>
-        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']">
-            <td>{{key}}</td>
-            <td>{{value}}</td>
-            <td>{{value}}</td>
-            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['id']}}">Delete</a>
-                <a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['id']}}">Change</a>
+        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']">
+            {{value['map']}}
+            <td>{{value['map']['id']}}</td>
+            <td>{{value['map']['rolename']}}</td>
+            <td>{{value['map']['description']}}</td>
+            <td>{{value['map']['admin_id']}}</td>
+            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['map']['id']}}">Delete</a>
+                <a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['map']['id']}}">Change</a>
         </tr>
         </a>
         </tbody>
     </table>
 </div>
+
+
 <!--___________________________________ MODALS ___________________________________-->
 <!-- modal for deleting role-->
-<div ng-repeat="(key, value) in userMgmtC.Details['role']" id="{{'modalDeleteRole' + value['id']}}" class="modal fade">
+<div ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']" id="{{'modalDeleteRole' + value['map']['id']}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Begin activity?</h4>
+                <h4 class="modal-title">Delete Role?</h4>
             </div>
             <div class="modal-body">
-                <p>Do you want to start Activity "{{value['label']}}"?</p>
+                <p>Do you want to delete the role "{{value['map']['rolename']}}"?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" ng-click="userMgmtC.deleteRole(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
+                <button type="button" ng-click="userMgmtC.deleteRole(value['map']['id']);" data-dismiss="modal" class="btn btn-primary">Delete</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- modal for updating role-->
+<div ng-repeat="(key, value) in userMgmtC.Details['role']['myArrayList']" id="{{'modalUpdateRole' + value['map']['id']}}" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Delete Role?</h4>
+            </div>
+            <div class="modal-body">
+                <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
+                    <input type="hidden" ng-model="userMgmtC.type" value="role"  /><br>
+                    <input type="hidden" ng-model="userMgmtC.id" ng-value="{{'modalUpdateRole' + value['map']['id']}}"  /><br>
+                    Receiver:
+                    <input type="text" ng-model="userMgmtC.name"  /><br>
+                    Subject:
+                    <input type="text" ng-model="userMgmtC.description"  /><br>
+                    Message:
+                    <input type="text" ng-model="userMgmtC.admin_id" /><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- modal for creating new role-->
+<div id="modalcreateRole" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create New Role</h4>
+            </div>
+            <div class="modal-body">
+                <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
+                    <input type="hidden" ng-model="userMgmtC.type" value="role"  /><br>
+                    Receiver:
+                    <input type="text" ng-model="userMgmtC.name"  /><br>
+                    Subject:
+                    <input type="text" ng-model="userMgmtC.description"  /><br>
+                    Message:
+                    <input type="text" ng-model="userMgmtC.admin_id" /><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

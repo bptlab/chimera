@@ -146,9 +146,11 @@
                     });
 
                 //post update for user or role data
-                this.submitMyForm=function(){
+                this.submitMyForm=function($scope){
                     var data=$scope.form;
-                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" +$scope.form.type + "/" + $scope.form.id + "/?", data);
+                    console.log(data);
+                    $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + data.type + "/" + data.id + "/?", data);
+                    $location.path("/admin/userMgmt/");
                 }
 
                 // Got to the instance with the given Id
@@ -161,6 +163,7 @@
                         error(function() {
                             console.log('request failed');
                         });
+                    $location.path("/admin/userMgmt/");
                 };
 
                 // Got to the instance with the given Id
@@ -173,10 +176,7 @@
                         error(function() {
                             console.log('request failed');
                         });
-                };
-
-                this.loadData = function(){
-                    controller.getDetailsForMailtaskID(controller.workingID);
+                    $location.path("/admin/userMgmt/");
                 };
 
             }]
