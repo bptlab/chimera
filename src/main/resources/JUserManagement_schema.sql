@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 20, 2015 at 09:34 AM
+-- Generation Time: Apr 19, 2015 at 10:39 PM
 -- Server version: 5.5.41-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.7
 
@@ -32,15 +32,7 @@ CREATE TABLE IF NOT EXISTS `role` (
   `description` varchar(255) NOT NULL,
   `admin_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
-
---
--- Dumping data for table `role`
---
-
-INSERT INTO `role` (`id`, `rolename`, `description`, `admin_id`) VALUES
-(1, 'service_mitarbeiter', 'Die Bearbeiten Anträge und rufen Leute an', 2),
-(10, 'manager', 'Die koordinieren und managen die Aufgaben', 0);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -54,18 +46,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `role_id` int(11) NOT NULL,
   `description` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
-
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`id`, `username`, `role_id`, `description`) VALUES
-(1, 'max', 1, 'Max der Große'),
-(2, 'robert', 1, 'Mitarbeiter des Monats, admin der rolle 1'),
-(3, 'Lisa', 1, ''),
-(4, 'Steffi', 10, 'Manager'),
-(5, 'Rolf', 10, 'Top Manager');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
