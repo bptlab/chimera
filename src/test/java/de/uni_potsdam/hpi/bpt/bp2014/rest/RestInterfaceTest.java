@@ -109,7 +109,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetAllRoleContentCheck() {
         Response response = base.path("role").request().get();
-        assertThat("Get Scenarios did not contain the expected information",
+        assertThat("Get all roles did not contain the expected information",
                 "{\"myArrayList\":[{\"map\":{\"id\":1,\"rolename\":\"service_mitarbeiter\",\"description\":\"Die Bearbeiten Antraege und rufen Leute an\",\"admin_id\":2}},{\"map\":{\"id\":10,\"rolename\":\"manager\",\"description\":\"Die koordinieren und managen die Aufgaben\",\"admin_id\":0}}]}\n",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
