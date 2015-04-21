@@ -14,7 +14,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 }
 
-fragment CHARAC: ('A'..'Z' | 'a'..'z' | '0'..'9')+;
+fragment CHARAC: '$'?('A'..'Z' | 'a'..'z' | '0'..'9')+;
 COMPARISON: '=' | '<' | '>' | '<=' | '>=';
 fragment DOT: '.';
 OPERATOR: ' & ' | ' | ' | '&' | '|';

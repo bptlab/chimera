@@ -219,7 +219,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
         }
         for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
-            System.out.println("$" + dataObjectInstance.getName() + "  durch:  " + dbState.getStateName(dataObjectInstance.getState_id()));
             left = left.replace(
                     "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
             right = right.replace(
