@@ -94,6 +94,11 @@ public class GatewayInstance extends ControlNodeInstance {
         }
     }
 
+    /**
+     * Checks if the gateway can terminate.
+     * @param controlNode_id A control node id.
+     * @return true if the gateway can terminate
+     */
     public boolean checkTermination(int controlNode_id) {
         return ((ExclusiveGatewaySplitBehavior) outgoingBehavior).checkTermination(controlNode_id);
     }

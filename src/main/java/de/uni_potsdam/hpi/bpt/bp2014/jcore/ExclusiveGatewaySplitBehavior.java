@@ -153,7 +153,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
     /**
-     * Evaluates Conditions for the control flow.
+     * Evaluates Conditions for the control flow of an XOR gateway.
      */
     public void evaluateConditions() {
         Map<Integer, String> conditions = dbControlFlow.getConditions(controlNode_id);
@@ -183,6 +183,11 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 
     }
 
+    /**
+     * Evaluates one specific condition.
+     * @param condition The condition as String.
+     * @return true if the condition ist true.
+     */
     public boolean evaluateCondition(String condition) {
         XORGrammarCompiler compiler = new XORGrammarCompiler();
         CommonTree ast = compiler.compile(condition);
@@ -191,6 +196,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         }
         return false;
     }
+
 
     private boolean evaluate(int i, Tree ast) {
         boolean condition = false;

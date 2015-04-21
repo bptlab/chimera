@@ -43,8 +43,6 @@ public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
 
     @Override
     public void enableControlFlow() {
-        //TODO: check for conditions, if true -> terminate
-        //TODO: Wie auswerten ob es Conditions gibt.
         Collection conditions = dbControlFlow.getConditions(controlNodeInstance.getControlNode_id()).values();
         boolean condition = true;
         if(conditions.size() > 0 && !conditions.iterator().next().equals("")){
