@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 21. Apr 2015 um 14:48
+-- Erstellungszeit: 21. Apr 2015 um 16:34
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -31289,7 +31289,9 @@ CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
   `old_value` varchar(1024) DEFAULT NULL,
   `new_value` varchar(1024) NOT NULL,
   `dataobjectinstance_id` int(11) NOT NULL,
-  `datattribute_id` int(11) NOT NULL
+  `datattribute_id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `scenarioinstance_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
