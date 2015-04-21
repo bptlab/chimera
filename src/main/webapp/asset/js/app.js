@@ -60,6 +60,11 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
+                when('/admin/user/', {
+                    templateUrl: 'asset/templates/user.html',
+                    controller: 'userMgmtController',
+                    controllerAs: 'userMgmtC'
+                }).
 			// default Route
 				otherwise({
 					redirectTo: '/scenario'
