@@ -40,7 +40,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
             ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
         }
         //TODO: Change this later when we have forms 
-        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        //((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
     @Override

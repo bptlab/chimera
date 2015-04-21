@@ -784,6 +784,7 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/1/instance/72/activity/186")
                 .queryParam("state", "terminate").request().put(Entity.json(""));
+        //TODO: change Test to match the preposition of getting a Map with changed dataAttributes.
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
