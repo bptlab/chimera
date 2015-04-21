@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 21. Apr 2015 um 14:04
+-- Erstellungszeit: 21. Apr 2015 um 14:48
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -31280,6 +31280,21 @@ CREATE TABLE IF NOT EXISTS `historycontrolflow` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `historydataattributeinstance`
+--
+
+CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
+`id` int(11) NOT NULL,
+  `dataattributeinstance_id` int(11) NOT NULL,
+  `old_value` varchar(1024) DEFAULT NULL,
+  `new_value` varchar(1024) NOT NULL,
+  `dataobjectinstance_id` int(11) NOT NULL,
+  `datattribute_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `historydataobjectinstance`
 --
 
@@ -33404,6 +33419,12 @@ ALTER TABLE `historycontrolflow`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `historydataattributeinstance`
+--
+ALTER TABLE `historydataattributeinstance`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `historydataobjectinstance`
 --
 ALTER TABLE `historydataobjectinstance`
@@ -33580,6 +33601,11 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4829;
 -- AUTO_INCREMENT for table `historycontrolflow`
 --
 ALTER TABLE `historycontrolflow`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `historydataattributeinstance`
+--
+ALTER TABLE `historydataattributeinstance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `historydataobjectinstance`
