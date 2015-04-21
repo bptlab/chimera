@@ -160,14 +160,26 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         Set keys = conditions.keySet();
         Iterator key = keys.iterator();
         Integer controlNode_id = 0;
+        boolean defaultExecution = true;
+        int defaultControlNode = -1;
         while (key.hasNext()) {
             controlNode_id = (Integer) key.next();
-            if (evaluateCondition(conditions.get(controlNode_id))) {
+            if((conditions.get(controlNode_id)).equals("default")){
+                defaultControlNode = controlNode_id;
+            } else if (evaluateCondition(conditions.get(controlNode_id))) {
+                defaultExecution = false;
                 break;
             }
         }
-        ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(controlNode_id);
-        controlNodeInstance.getIncomingBehavior().enableControlFlow();
+        if(defaultExecution){
+            if(defaultControlNode != -1) {
+                ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(defaultControlNode);
+                controlNodeInstance.getIncomingBehavior().enableControlFlow();
+            }
+        } else {
+            ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(controlNode_id);
+            controlNodeInstance.getIncomingBehavior().enableControlFlow();
+        }
 
     }
 

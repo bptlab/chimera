@@ -471,6 +471,8 @@ public class RestInterface {
      * number of activities in the different states.
      * The Response is JSON-Object.
      *
+     * @param uriInfo    Contains the context information, is used to build
+     *                   links to other resources.
      * @param scenarioID The ID of the scenario.
      * @param instanceID The ID of the instance.
      * @return Will return a Response with a JSON-Object body, containing
@@ -486,6 +488,7 @@ public class RestInterface {
     @Path("scenario/{scenarioID}/instance/{instanceID}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenarioInstance(
+            @Context UriInfo uriInfo,
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID) {
         ExecutionService executionService = new ExecutionService();
@@ -506,8 +509,10 @@ public class RestInterface {
                 e.printStackTrace();
             }
         }
+        JSONObject result = new JSONObject(instance.getInstanceMap(instanceID));
+        result.put("activities", uriInfo.getAbsolutePath() + "/activity");
         return Response
-                .ok((new JSONObject(instance.getInstanceMap(instanceID))).toString(),
+                .ok(result.toString(),
                         MediaType.APPLICATION_JSON)
                 .build();
     }
@@ -793,6 +798,8 @@ public class RestInterface {
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
                 break;
             case "terminate":
+                //TODO: expand REST to get a MAP of changed dataAttributes.
+                executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:
