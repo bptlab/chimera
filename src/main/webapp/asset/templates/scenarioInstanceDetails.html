@@ -213,8 +213,6 @@
 					<div class="panel-body list">
 						<div class="pull-right">
 						    <select ng-model="logSelection" ng-options="item for item in ['activity','dataobject']"></select>
-						    <!--<a href="#" class="btn btn-xs btn-default">Today</a>
-						    <a href="#" class="btn btn-xs btn-default">Month</a>-->
 						</div>
 						<div class="panel-title">Last Activity</div>
 						<small class="fo">This is simple example</small>
@@ -320,7 +318,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Terminate</button>
+        <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
