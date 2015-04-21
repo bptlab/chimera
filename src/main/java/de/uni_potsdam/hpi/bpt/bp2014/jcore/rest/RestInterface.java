@@ -793,6 +793,8 @@ public class RestInterface {
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
                 break;
             case "terminate":
+                //TODO: expand REST to get a MAP of changed dataAttributes.
+                executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:
