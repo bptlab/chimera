@@ -98,7 +98,7 @@ public class DbScenarioInstance extends DbObject {
      * @return a list of database ID's of all scenario instances belonging to this scenario.
      */
     public LinkedList<Integer> getScenarioInstances(int scenario_id) {
-        String sql = "SELECT id FROM scenarioinstance WHERE terminated = 0 AND scenario_id = " + scenario_id;
+        String sql = "SELECT * FROM scenarioinstance WHERE scenarioinstance.terminated = 0 AND scenario_id = " + scenario_id;
         return this.executeStatementReturnsListInt(sql, "id");
     }
 

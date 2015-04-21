@@ -318,7 +318,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#getScenarioInstance(int, int)}
+     * When you send a Post to {@link RestInterface#getScenarioInstance(UriInfo, int, int)}
      * with a correct scenario id and a correct instance id
      * the respond will be a 200 with a JSONObject
      */
@@ -330,13 +330,13 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getScenarioInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1}",
+                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1,\"activities\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Post to {@link RestInterface#getScenarioInstance(int, int)}
+     * When you send a Post to {@link RestInterface#getScenarioInstance(UriInfo, int, int)}
      * with a wrong scenario id and a correct instance id
      * the respond will be a 200 with a redirected URI.
      */
@@ -348,7 +348,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getScenarioInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1}",
+                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1,\"activities\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
