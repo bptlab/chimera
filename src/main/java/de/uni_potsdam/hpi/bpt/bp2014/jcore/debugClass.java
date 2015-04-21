@@ -94,6 +94,9 @@ public class debugClass {
             System.out.println("Select Activity ID");
             int read = new Integer(readLine());
             executionService.beginActivity(scenarioInstanceID, read);
+            int activityinstance_id = executionService.getScenarioInstance(scenarioInstanceID).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
+            executionService.setDataAttributeValues(scenarioInstanceID, activityinstance_id, new HashMap<Integer, String>());
+
             System.out.println("----------start activity-----------");
             System.out.println("enabled Aktivität ID");
             activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
@@ -103,7 +106,9 @@ public class debugClass {
             }
             //readLine();
             System.out.println("---------terminate activity------------");
-            executionService.terminateActivity(scenarioInstanceID, read);
+            if(!executionService.terminateActivity(scenarioInstanceID, read)){
+                System.out.println("nicht terminiert");
+            }
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
                 System.out.println("Scenario ist terminiert");
             /*executionService = null;

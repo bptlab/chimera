@@ -164,7 +164,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         int defaultControlNode = -1;
         while (key.hasNext()) {
             controlNode_id = (Integer) key.next();
-            if((conditions.get(controlNode_id)).equals("default")){
+            if((conditions.get(controlNode_id)).equals("DEFAULT")){
                 defaultControlNode = controlNode_id;
             } else if (evaluateCondition(conditions.get(controlNode_id))) {
                 defaultExecution = false;
@@ -173,11 +173,11 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         }
         if(defaultExecution){
             if(defaultControlNode != -1) {
-                ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(defaultControlNode);
+                ControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(defaultControlNode);
                 controlNodeInstance.getIncomingBehavior().enableControlFlow();
             }
         } else {
-            ControlNodeInstance controlNodeInstance = createFollowingNodeInstance(controlNode_id);
+            ControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(controlNode_id);
             controlNodeInstance.getIncomingBehavior().enableControlFlow();
         }
 
@@ -212,17 +212,17 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         String right = ast.getChild(i + 2).toStringTree();
         for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
             left = left.replace(
-                    (dataAttributeInstance.getDataObjectInstance()).getName()
+                    "$" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
             right = right.replace(
-                    (dataAttributeInstance.getDataObjectInstance()).getName()
+                    "$" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
         }
         for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
             left = left.replace(
-                    dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
+                    "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
             right = right.replace(
-                    dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
+                    "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
         }
         switch (comparison) {
             case "=":
