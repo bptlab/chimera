@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 --
 
 INSERT INTO `role` (`id`, `rolename`, `description`, `admin_id`) VALUES
-(1, 'service_mitarbeiter', 'Die Bearbeiten Anträge und rufen Leute an', 2),
+(1, 'service_mitarbeiter', 'Die Bearbeiten Antraege und rufen Leute an', 2),
 (10, 'manager', 'Die koordinieren und managen die Aufgaben', 0);
 
 -- --------------------------------------------------------
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `role_id`, `description`) VALUES
-(1, 'max', 1, 'Max der Große'),
+(1, 'max', 1, 'Max der Grosse'),
 (2, 'robert', 1, 'Mitarbeiter des Monats, admin der rolle 1'),
 (3, 'Lisa', 1, ''),
 (4, 'Steffi', 10, 'Manager'),
