@@ -1,4 +1,4 @@
-// $ANTLR 3.5 de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g 2015-04-20 15:37:33
+// $ANTLR 3.5 de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g 2015-04-21 10:20:18
 
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
@@ -35,20 +35,36 @@ public class XORGrammarLexer extends Lexer {
 	// $ANTLR start "CHARAC"
 	public final void mCHARAC() throws RecognitionException {
 		try {
-			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:16: ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' )+ )
-			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:18: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' )+
+			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:16: ( ( '$' )? ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' )+ )
+			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:18: ( '$' )? ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' )+
 			{
-			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:18: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' )+
-			int cnt1=0;
-			loop1:
+			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:18: ( '$' )?
+			int alt1=2;
+			int LA1_0 = input.LA(1);
+			if ( (LA1_0=='$') ) {
+				alt1=1;
+			}
+			switch (alt1) {
+				case 1 :
+					// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:18: '$'
+					{
+					match('$'); 
+					}
+					break;
+
+			}
+
+			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:17:22: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' )+
+			int cnt2=0;
+			loop2:
 			while (true) {
-				int alt1=2;
-				int LA1_0 = input.LA(1);
-				if ( ((LA1_0 >= '0' && LA1_0 <= '9')||(LA1_0 >= 'A' && LA1_0 <= 'Z')||(LA1_0 >= 'a' && LA1_0 <= 'z')) ) {
-					alt1=1;
+				int alt2=2;
+				int LA2_0 = input.LA(1);
+				if ( ((LA2_0 >= '0' && LA2_0 <= '9')||(LA2_0 >= 'A' && LA2_0 <= 'Z')||(LA2_0 >= 'a' && LA2_0 <= 'z')) ) {
+					alt2=1;
 				}
 
-				switch (alt1) {
+				switch (alt2) {
 				case 1 :
 					// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:
 					{
@@ -64,11 +80,11 @@ public class XORGrammarLexer extends Lexer {
 					break;
 
 				default :
-					if ( cnt1 >= 1 ) break loop1;
-					EarlyExitException eee = new EarlyExitException(1, input);
+					if ( cnt2 >= 1 ) break loop2;
+					EarlyExitException eee = new EarlyExitException(2, input);
 					throw eee;
 				}
-				cnt1++;
+				cnt2++;
 			}
 
 			}
@@ -86,45 +102,45 @@ public class XORGrammarLexer extends Lexer {
 			int _type = COMPARISON;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
 			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:18:11: ( '=' | '<' | '>' | '<=' | '>=' )
-			int alt2=5;
+			int alt3=5;
 			switch ( input.LA(1) ) {
 			case '=':
 				{
-				alt2=1;
+				alt3=1;
 				}
 				break;
 			case '<':
 				{
-				int LA2_2 = input.LA(2);
-				if ( (LA2_2=='=') ) {
-					alt2=4;
+				int LA3_2 = input.LA(2);
+				if ( (LA3_2=='=') ) {
+					alt3=4;
 				}
 
 				else {
-					alt2=2;
+					alt3=2;
 				}
 
 				}
 				break;
 			case '>':
 				{
-				int LA2_3 = input.LA(2);
-				if ( (LA2_3=='=') ) {
-					alt2=5;
+				int LA3_3 = input.LA(2);
+				if ( (LA3_3=='=') ) {
+					alt3=5;
 				}
 
 				else {
-					alt2=3;
+					alt3=3;
 				}
 
 				}
 				break;
 			default:
 				NoViableAltException nvae =
-					new NoViableAltException("", 2, 0, input);
+					new NoViableAltException("", 3, 0, input);
 				throw nvae;
 			}
-			switch (alt2) {
+			switch (alt3) {
 				case 1 :
 					// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:18:13: '='
 					{
@@ -190,16 +206,16 @@ public class XORGrammarLexer extends Lexer {
 			int _type = OPERATOR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
 			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:20:9: ( ' & ' | ' | ' | '&' | '|' )
-			int alt3=4;
+			int alt4=4;
 			switch ( input.LA(1) ) {
 			case ' ':
 				{
-				int LA3_1 = input.LA(2);
-				if ( (LA3_1=='&') ) {
-					alt3=1;
+				int LA4_1 = input.LA(2);
+				if ( (LA4_1=='&') ) {
+					alt4=1;
 				}
-				else if ( (LA3_1=='|') ) {
-					alt3=2;
+				else if ( (LA4_1=='|') ) {
+					alt4=2;
 				}
 
 				else {
@@ -207,7 +223,7 @@ public class XORGrammarLexer extends Lexer {
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 3, 1, input);
+							new NoViableAltException("", 4, 1, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -218,20 +234,20 @@ public class XORGrammarLexer extends Lexer {
 				break;
 			case '&':
 				{
-				alt3=3;
+				alt4=3;
 				}
 				break;
 			case '|':
 				{
-				alt3=4;
+				alt4=4;
 				}
 				break;
 			default:
 				NoViableAltException nvae =
-					new NoViableAltException("", 3, 0, input);
+					new NoViableAltException("", 4, 0, input);
 				throw nvae;
 			}
-			switch (alt3) {
+			switch (alt4) {
 				case 1 :
 					// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:20:11: ' & '
 					{
@@ -275,9 +291,9 @@ public class XORGrammarLexer extends Lexer {
 			int _type = NAME;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
 			// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:21:5: ( CHARAC | CHARAC DOT CHARAC )
-			int alt4=2;
-			alt4 = dfa4.predict(input);
-			switch (alt4) {
+			int alt5=2;
+			alt5 = dfa5.predict(input);
+			switch (alt5) {
 				case 1 :
 					// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:21:7: CHARAC
 					{
@@ -310,22 +326,23 @@ public class XORGrammarLexer extends Lexer {
 	@Override
 	public void mTokens() throws RecognitionException {
 		// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:1:8: ( COMPARISON | OPERATOR | NAME )
-		int alt5=3;
+		int alt6=3;
 		switch ( input.LA(1) ) {
 		case '<':
 		case '=':
 		case '>':
 			{
-			alt5=1;
+			alt6=1;
 			}
 			break;
 		case ' ':
 		case '&':
 		case '|':
 			{
-			alt5=2;
+			alt6=2;
 			}
 			break;
+		case '$':
 		case '0':
 		case '1':
 		case '2':
@@ -389,15 +406,15 @@ public class XORGrammarLexer extends Lexer {
 		case 'y':
 		case 'z':
 			{
-			alt5=3;
+			alt6=3;
 			}
 			break;
 		default:
 			NoViableAltException nvae =
-				new NoViableAltException("", 5, 0, input);
+				new NoViableAltException("", 6, 0, input);
 			throw nvae;
 		}
-		switch (alt5) {
+		switch (alt6) {
 			case 1 :
 				// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:1:10: COMPARISON
 				{
@@ -424,54 +441,55 @@ public class XORGrammarLexer extends Lexer {
 	}
 
 
-	protected DFA4 dfa4 = new DFA4(this);
-	static final String DFA4_eotS =
-		"\1\uffff\1\2\2\uffff";
-	static final String DFA4_eofS =
-		"\4\uffff";
-	static final String DFA4_minS =
-		"\1\60\1\56\2\uffff";
-	static final String DFA4_maxS =
-		"\2\172\2\uffff";
-	static final String DFA4_acceptS =
-		"\2\uffff\1\1\1\2";
-	static final String DFA4_specialS =
-		"\4\uffff}>";
-	static final String[] DFA4_transitionS = {
-			"\12\1\7\uffff\32\1\6\uffff\32\1",
-			"\1\3\1\uffff\12\1\7\uffff\32\1\6\uffff\32\1",
+	protected DFA5 dfa5 = new DFA5(this);
+	static final String DFA5_eotS =
+		"\2\uffff\1\3\2\uffff";
+	static final String DFA5_eofS =
+		"\5\uffff";
+	static final String DFA5_minS =
+		"\1\44\1\60\1\56\2\uffff";
+	static final String DFA5_maxS =
+		"\3\172\2\uffff";
+	static final String DFA5_acceptS =
+		"\3\uffff\1\1\1\2";
+	static final String DFA5_specialS =
+		"\5\uffff}>";
+	static final String[] DFA5_transitionS = {
+			"\1\1\13\uffff\12\2\7\uffff\32\2\6\uffff\32\2",
+			"\12\2\7\uffff\32\2\6\uffff\32\2",
+			"\1\4\1\uffff\12\2\7\uffff\32\2\6\uffff\32\2",
 			"",
 			""
 	};
 
-	static final short[] DFA4_eot = DFA.unpackEncodedString(DFA4_eotS);
-	static final short[] DFA4_eof = DFA.unpackEncodedString(DFA4_eofS);
-	static final char[] DFA4_min = DFA.unpackEncodedStringToUnsignedChars(DFA4_minS);
-	static final char[] DFA4_max = DFA.unpackEncodedStringToUnsignedChars(DFA4_maxS);
-	static final short[] DFA4_accept = DFA.unpackEncodedString(DFA4_acceptS);
-	static final short[] DFA4_special = DFA.unpackEncodedString(DFA4_specialS);
-	static final short[][] DFA4_transition;
+	static final short[] DFA5_eot = DFA.unpackEncodedString(DFA5_eotS);
+	static final short[] DFA5_eof = DFA.unpackEncodedString(DFA5_eofS);
+	static final char[] DFA5_min = DFA.unpackEncodedStringToUnsignedChars(DFA5_minS);
+	static final char[] DFA5_max = DFA.unpackEncodedStringToUnsignedChars(DFA5_maxS);
+	static final short[] DFA5_accept = DFA.unpackEncodedString(DFA5_acceptS);
+	static final short[] DFA5_special = DFA.unpackEncodedString(DFA5_specialS);
+	static final short[][] DFA5_transition;
 
 	static {
-		int numStates = DFA4_transitionS.length;
-		DFA4_transition = new short[numStates][];
+		int numStates = DFA5_transitionS.length;
+		DFA5_transition = new short[numStates][];
 		for (int i=0; i<numStates; i++) {
-			DFA4_transition[i] = DFA.unpackEncodedString(DFA4_transitionS[i]);
+			DFA5_transition[i] = DFA.unpackEncodedString(DFA5_transitionS[i]);
 		}
 	}
 
-	protected class DFA4 extends DFA {
+	protected class DFA5 extends DFA {
 
-		public DFA4(BaseRecognizer recognizer) {
+		public DFA5(BaseRecognizer recognizer) {
 			this.recognizer = recognizer;
-			this.decisionNumber = 4;
-			this.eot = DFA4_eot;
-			this.eof = DFA4_eof;
-			this.min = DFA4_min;
-			this.max = DFA4_max;
-			this.accept = DFA4_accept;
-			this.special = DFA4_special;
-			this.transition = DFA4_transition;
+			this.decisionNumber = 5;
+			this.eot = DFA5_eot;
+			this.eof = DFA5_eof;
+			this.min = DFA5_min;
+			this.max = DFA5_max;
+			this.accept = DFA5_accept;
+			this.special = DFA5_special;
+			this.transition = DFA5_transition;
 		}
 		@Override
 		public String getDescription() {

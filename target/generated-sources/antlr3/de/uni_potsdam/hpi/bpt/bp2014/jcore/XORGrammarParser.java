@@ -1,4 +1,4 @@
-// $ANTLR 3.5 de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g 2015-04-20 15:37:33
+// $ANTLR 3.5 de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g 2015-04-21 10:20:18
 
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
@@ -81,15 +81,15 @@ public class XORGrammarParser extends Parser {
 			root_0 = (Object)adaptor.nil();
 
 
-			NAME1=(Token)match(input,NAME,FOLLOW_NAME_in_expr2138); 
+			NAME1=(Token)match(input,NAME,FOLLOW_NAME_in_expr2140); 
 			NAME1_tree = (Object)adaptor.create(NAME1);
 			adaptor.addChild(root_0, NAME1_tree);
 
-			COMPARISON2=(Token)match(input,COMPARISON,FOLLOW_COMPARISON_in_expr2140); 
+			COMPARISON2=(Token)match(input,COMPARISON,FOLLOW_COMPARISON_in_expr2142); 
 			COMPARISON2_tree = (Object)adaptor.create(COMPARISON2);
 			adaptor.addChild(root_0, COMPARISON2_tree);
 
-			NAME3=(Token)match(input,NAME,FOLLOW_NAME_in_expr2142); 
+			NAME3=(Token)match(input,NAME,FOLLOW_NAME_in_expr2144); 
 			NAME3_tree = (Object)adaptor.create(NAME3);
 			adaptor.addChild(root_0, NAME3_tree);
 
@@ -142,7 +142,7 @@ public class XORGrammarParser extends Parser {
 			root_0 = (Object)adaptor.nil();
 
 
-			pushFollow(FOLLOW_expr2_in_expr148);
+			pushFollow(FOLLOW_expr2_in_expr150);
 			expr24=expr2();
 			state._fsp--;
 
@@ -161,11 +161,11 @@ public class XORGrammarParser extends Parser {
 				case 1 :
 					// de/uni_potsdam/hpi/bpt/bp2014/jcore/XORGrammar.g:23:14: OPERATOR expr2
 					{
-					OPERATOR5=(Token)match(input,OPERATOR,FOLLOW_OPERATOR_in_expr151); 
+					OPERATOR5=(Token)match(input,OPERATOR,FOLLOW_OPERATOR_in_expr153); 
 					OPERATOR5_tree = (Object)adaptor.create(OPERATOR5);
 					adaptor.addChild(root_0, OPERATOR5_tree);
 
-					pushFollow(FOLLOW_expr2_in_expr153);
+					pushFollow(FOLLOW_expr2_in_expr155);
 					expr26=expr2();
 					state._fsp--;
 
@@ -203,10 +203,10 @@ public class XORGrammarParser extends Parser {
 
 
 
-	public static final BitSet FOLLOW_NAME_in_expr2138 = new BitSet(new long[]{0x0000000000000020L});
-	public static final BitSet FOLLOW_COMPARISON_in_expr2140 = new BitSet(new long[]{0x0000000000000080L});
-	public static final BitSet FOLLOW_NAME_in_expr2142 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_expr2_in_expr148 = new BitSet(new long[]{0x0000000000000102L});
-	public static final BitSet FOLLOW_OPERATOR_in_expr151 = new BitSet(new long[]{0x0000000000000080L});
-	public static final BitSet FOLLOW_expr2_in_expr153 = new BitSet(new long[]{0x0000000000000102L});
+	public static final BitSet FOLLOW_NAME_in_expr2140 = new BitSet(new long[]{0x0000000000000020L});
+	public static final BitSet FOLLOW_COMPARISON_in_expr2142 = new BitSet(new long[]{0x0000000000000080L});
+	public static final BitSet FOLLOW_NAME_in_expr2144 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_expr2_in_expr150 = new BitSet(new long[]{0x0000000000000102L});
+	public static final BitSet FOLLOW_OPERATOR_in_expr153 = new BitSet(new long[]{0x0000000000000080L});
+	public static final BitSet FOLLOW_expr2_in_expr155 = new BitSet(new long[]{0x0000000000000102L});
 }
