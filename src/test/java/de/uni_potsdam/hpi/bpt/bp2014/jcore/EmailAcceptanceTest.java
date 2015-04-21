@@ -23,7 +23,6 @@ public class EmailAcceptanceTest {
         Mailbox.clearAll();
 
     }
-
     //Email Test Scenario 142
     @Test
     public void testScenario142() throws MessagingException, IOException, EmailException {

@@ -11,8 +11,7 @@
 			<th>{{scenarioCtrl.currentScenario['details']['name']}}</th>
 		</tr><tr>
 			<th>Amount of Instances&nbsp;&nbsp;</th>
-            <!-- @TODO: amount doesnt work yet -->
-            <th>{{instanceCtrl.scenario['instances']['ids'].length}}</th>
+            <th>{{scenarioCtrl.currentScenario['instances']['ids'].length}}</th>
 
 		</tr>
 	</table>
@@ -21,8 +20,7 @@
 		<a type="button" data-toggle="modal" data-target="#createInstance" class="btn btn-default">
 					Start Instance
 		</a>
-        <!-- @TODO: amount doesnt work yet -->
-        <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">
+        <div ng-hide="scenarioCtrl.currentScenario['instances']['ids'].length">
             <a type="button" data-toggle="modal" data-target="#deleteScenario" class="btn btn-default">
                 Delete Scenario
             </a>
