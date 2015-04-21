@@ -4,6 +4,8 @@
     <div class="pull-right">
         <input ng-model="searchText" placeholder="SearchTerm">
     </div>
+</div>
+<div class="row">
     <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
             <div class="panel-heading">
@@ -36,8 +38,8 @@
                             <td>{{value['rolename']}}</td>
                             <td>{{value['description']}}</td>
                             <td>{{value['admin_id']}}</td>
-                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['id']}}"><i class="fa fa-trash-o"></i>Delete</a>
-                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForRoleId(value['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['id']}}"><i class="fa fa-paste"></i>Change</a>
+                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['id']}}"><i class="fa fa-trash-o"></i></a>
+                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForRoleId(value['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['id']}}"><i class="fa fa-paste"></i></a>
                         </tr>
                         </a>
                         </tbody>
@@ -79,8 +81,8 @@
                             <td>{{value['username']}}</td>
                             <td>{{value['description']}}</td>
                             <td>{{value['role_id']}}</td>
-                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['id']}}"><i class="fa fa-trash-o"></i>Delete</a>
-                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForUserId(value['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['id']}}"><i class="fa fa-paste"></i>Change</a>
+                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['id']}}"><i class="fa fa-trash-o"></i></a>
+                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForUserId(value['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['id']}}"><i class="fa fa-paste"></i></a>
                         </tr>
                         </a>
                         </tbody>
