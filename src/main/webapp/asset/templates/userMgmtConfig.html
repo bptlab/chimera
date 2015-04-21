@@ -36,8 +36,8 @@
                             <td>{{value['map']['rolename']}}</td>
                             <td>{{value['map']['description']}}</td>
                             <td>{{value['map']['admin_id']}}</td>
-                            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['map']['id']}}">Delete</a>
-                                <a type="button" class="btn btn-default" ng-click="userMgmtC.getDetailsForRoleId(value['map']['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['map']['id']}}">Change</a>
+                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['map']['id']}}"><i class="fa fa-trash-o"></i>Delete</a>
+                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForRoleId(value['map']['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['map']['id']}}"><i class="fa fa-paste"></i>Change</a>
                         </tr>
                         </a>
                         </tbody>
@@ -80,8 +80,8 @@
                             <td>{{value['map']['username']}}</td>
                             <td>{{value['map']['description']}}</td>
                             <td>{{value['map']['role_id']}}</td>
-                            <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['map']['id']}}">Delete</a>
-                                <a type="button" class="btn btn-default" ng-click="userMgmtC.getDetailsForUserId(value['map']['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['map']['id']}}">Change</a>
+                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['map']['id']}}"><i class="fa fa-trash-o"></i>Delete</a>
+                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForUserId(value['map']['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['map']['id']}}"><i class="fa fa-paste"></i>Change</a>
                         </tr>
                         </a>
                         </tbody>
