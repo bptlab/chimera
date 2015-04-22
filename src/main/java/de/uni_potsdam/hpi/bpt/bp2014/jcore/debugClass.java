@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -84,29 +85,27 @@ public class debugClass {
         }
 
         while (true) {
-            LinkedList<Integer> activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
-            HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
+            Collection<ActivityInstance> acts = executionService.getEnabledActivities(scenarioInstanceID);
+
             System.out.println("\nenabled Aktivität ID");
-            for (int activityID : activitiesIDs) {
-                System.out.println(activityID + ", " + labels.get(activityID));
+            for (ActivityInstance activityInstance: acts) {
+                System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
             }
 
             System.out.println("Select Activity ID");
             int read = new Integer(readLine());
-            executionService.beginActivity(scenarioInstanceID, read);
-            int activityinstance_id = executionService.getScenarioInstance(scenarioInstanceID).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
-            executionService.setDataAttributeValues(scenarioInstanceID, activityinstance_id, new HashMap<Integer, String>());
+            executionService.beginActivityInstance(scenarioInstanceID, read);
+            executionService.setDataAttributeValues(scenarioInstanceID, read, new HashMap<Integer, String>());
 
             System.out.println("----------start activity-----------");
             System.out.println("enabled Aktivität ID");
-            activitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstanceID);
-            labels = executionService.getEnabledActivityLabelsForScenarioInstance(scenarioInstanceID);
-            for (int activityID : activitiesIDs) {
-                System.out.println(activityID + ", " + labels.get(activityID));
+            acts = executionService.getEnabledActivities(scenarioInstanceID);
+            for (ActivityInstance activityInstance: acts) {
+                System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
             }
             //readLine();
             System.out.println("---------terminate activity------------");
-            if(!executionService.terminateActivity(scenarioInstanceID, read)){
+            if(!executionService.terminateActivityInstance(scenarioInstanceID, read)){
                 System.out.println("nicht terminiert");
             }
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
