@@ -202,10 +202,10 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         boolean condition = false;
         condition = checkCondition(ast, i);
         if (ast.getChildCount() >= i + 4) {
-            if (ast.getChild(i + 3).toStringTree().equals("&") | ast.getChild(i + 1).toStringTree().equals(" & ")) {
-                return condition & evaluate(i + 4, ast);
+            if (ast.getChild(i + 3).toStringTree().equals("&") || ast.getChild(i + 3).toStringTree().equals(" & ")) {
+                return (condition & evaluate(i + 4, ast));
             } else {
-                return condition | evaluate(i + 4, ast);
+                return (condition | evaluate(i + 4, ast));
             }
         } else {
             return condition;

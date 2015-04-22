@@ -168,7 +168,7 @@
                     "/role/" + id + "/?").
                         success(function(data) {
                             var value = {};
-                            value = data['myArrayList'][0]['map'];
+                            value = data[0];
                             $scope.form = {
                                 name: value['rolename'],
                                 description: value['description'],
@@ -184,7 +184,7 @@
                     "/user/" + id + "/?").
                         success(function(data) {
                             var value = {};
-                            value = data['myArrayList'][0]['map'];
+                            value = data[0];
                             $scope.form = {
                                 name: value['username'],
                                 description: value['description'],
