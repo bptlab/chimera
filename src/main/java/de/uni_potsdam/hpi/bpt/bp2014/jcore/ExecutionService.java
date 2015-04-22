@@ -501,6 +501,7 @@ public class ExecutionService {
             Map<String, String> values = new HashMap<>();
             values.put("type", dataAttributeInstance.getType());
             values.put("value", dataAttributeInstance.getValue().toString());
+            values.put("name", dataAttributeInstance.getName());
             attributeInstances.put(dataAttributeInstance.getDataAttributeInstance_id(), values);
         }
         return attributeInstances;

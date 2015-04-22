@@ -1,10 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
@@ -15,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -94,6 +94,39 @@ public class RestInterface {
     }
 
     /**
+     *
+     */
+    @XmlRootElement
+    public static class ActivityJaxBean {
+        /**
+         *
+         */
+        public int id;
+        /**
+         *
+         */
+        public String label;
+        /**
+         *
+         */
+        public DataObjectSetsJaxBean outputSet;
+        /**
+         *
+         */
+        public DataObjectSetsJaxBean inputSet;
+    }
+    /**
+     *
+     */
+    @XmlRootElement
+    public static class DataObjectSetsJaxBean {
+        /**
+         *
+         */
+        public String linkDataObject;
+
+    }
+    /**
      * A JAX bean which is used for dataobject data.
      * It contains the data of one dataobject.
      * It can be used to create a JSON Object
@@ -115,6 +148,10 @@ public class RestInterface {
          * The label not the id will be saved.
          */
         public String state;
+        /**
+         *
+         */
+        public Map<Integer,Map<String,String>> attributeConfiguration;
     }
 
     /**
@@ -770,6 +807,127 @@ public class RestInterface {
     }
 
     /**
+     *
+     * @param uriInfo
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityID
+     * @return
+     */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
+    public Response getActivity(@Context UriInfo uriInfo,
+                                @PathParam("scenarioID") int scenarioID,
+                                @PathParam("instanceID") int scenarioInstanceID,
+                                @PathParam("activityID") int activityID) {
+
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        ActivityJaxBean activity = new ActivityJaxBean();
+        DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
+        inputSet.linkDataObject = uriInfo.getAbsolutePath() + "/input";
+        DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
+        outputSet.linkDataObject = uriInfo.getAbsolutePath() + "/output";
+        activity.id = activityID;
+        LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
+        for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
+            if(controlNodeInstance.getControlNodeInstance_id() == activityID){
+                activity.label = executionService.getLabelForControlNodeID(controlNodeInstance.getControlNode_id());
+            }
+        }
+        activity.inputSet = inputSet;
+        activity.outputSet = outputSet;
+        return Response.ok(activity, MediaType.APPLICATION_JSON).build();
+
+    }
+
+    /**
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityID
+     * @return
+     */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
+    public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID) {
+
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
+        int controlNodeID = -1;
+        for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
+            if(controlNodeInstance.getControlNodeInstance_id() == activityID){
+                controlNodeID = controlNodeInstance.getControlNode_id();
+            }
+        }
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        DbDataNode dbDataNode = new DbDataNode();
+        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNodeID);
+        DataObjectJaxBean[] dataObjects = null;
+        for (int inputSet : inputSets) {
+            LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
+            dataObjects = new DataObjectJaxBean[dObjects.size()];
+            for (DataObject dO : dObjects) {
+                int i = 0;
+                DataObjectJaxBean dataObject = new DataObjectJaxBean();
+                dataObject.id = dO.getId();
+                dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
+                dataObject.label = executionService.getAllDataObjectNames(scenarioInstanceID).get(dO.getId());
+                dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
+                dataObjects[i] = dataObject;
+                i++;
+            }
+        }
+        return Response.ok(dataObjects,MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    /**
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityID
+     * @return
+     */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
+    public Response getOutputDataObjects(@PathParam("scenarioID") int scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID) {
+
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
+        Integer controlNodeID = -1;
+        for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
+            if(controlNodeInstance.getControlNodeInstance_id() == activityID){
+                controlNodeID = controlNodeInstance.getControlNode_id();
+            }
+        }
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        DbDataNode dbDataNode = new DbDataNode();
+        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeID);
+        DataObjectJaxBean[] dataObjects = null;
+        for (int outputSet : outputSets) {
+            LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
+            dataObjects = new DataObjectJaxBean[dObjects.size()];
+            for (DataObject dO : dObjects) {
+                int i = 0;
+                DataObjectJaxBean dataObject = new DataObjectJaxBean();
+                dataObject.id = dO.getId();
+                dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
+                dataObject.label = executionService.getAllDataObjectNames(scenarioInstanceID).get(dO.getId());
+                dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
+                dataObjects[i] = dataObject;
+                i++;
+            }
+        }
+        return Response.ok(dataObjects,MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    /**
      * Updates the state of an activity instance.
      * The state will be changed to the specified one.
      * The activity Instance is specified by:
@@ -779,27 +937,35 @@ public class RestInterface {
      * @param activityID         the control node id of the activity.
      * @param state              the new state of the activity.
      * @return Returns a Response, the response code implies the
-     * outcome of the PATCH-Request.
+     * outcome of the PUT-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
-    public Response updateActivityState(@PathParam("scenarioID") String scenarioID,
+    public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID,
-                                        @QueryParam("state") String state) {
+                                        @QueryParam("state") String state,
+                                        final DataObjectJaxBean[] dataObjects) {
 
         boolean result;
         ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(new Integer(scenarioID), scenarioInstanceID);
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         switch (state) {
             case "begin":
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
                 break;
             case "terminate":
-                //TODO: expand REST to get a MAP of changed dataAttributes.
-                executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
+                Map<Integer,String> values = new HashMap<Integer, String>();
+                for(DataObjectJaxBean dataObject : dataObjects){
+                    Map<Integer, Map<String, String>> dataAttributes = dataObject.attributeConfiguration;
+                    for(Integer i : dataAttributes.keySet()){
+                        String value = dataAttributes.get(i).get("value");
+                        values.put(i,value);
+                    }
+                }
+                executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:

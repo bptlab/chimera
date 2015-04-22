@@ -297,6 +297,7 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
+
     /**
      * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
@@ -356,7 +357,7 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Post to {@link RestInterface#getScenarioInstance(int, int)}
+     * When you send a Post to {@link RestInterface#getScenarioInstance(UriInfo, int, int)}
      * with a wrong scenario id and a correct instance id
      * the respond will be a 404 with a redirected URI.
      */
@@ -715,7 +716,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testInvalidGetTerminationCondition() {
         Response response = base.path("scenario/102/terminationcondition").request().get();
-        assertEquals("The Response code of getTermiantionCondition was not 404",
+        assertEquals("The Response code of getTerminationCondition was not 404",
                 404, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
@@ -726,14 +727,56 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
+     * When you send a Get to {@link RestInterface#getActivity(UriInfo, int, int, int)}
+     */
+    @Test
+    public void testGetActivity(){
+        Response response = base.path("scenario/135/instance/808/activity/4517").request().get();
+        assertEquals("The Response code of getActivity was not 200", 200, response.getStatus());
+        assertEquals("Get Activity does not return a JSON", MediaType.APPLICATION_JSON,
+                response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"id\":4517,\"label\":\"Reiseplanung beginnen\",\"outputSet\":{\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/output\"},\"inputSet\":{\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/input\"}}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     */
+    @Test
+    public void testGetInputDataObjects(){
+        Response response = base.path("scenario/135/instance/808/activity/4518/input").request().get();
+        assertEquals("The response code of getInputDataObjects was not 200", 200, response.getStatus());
+        assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
+                response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250?}\"}]}}]', got '{}'.",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#getOutputDataObjects(int, int, int)}
+     */
+    @Test
+    public void testGetOutputDataObjects(){
+        Response response = base.path("scenario/135/instance/808/activity/4518/output").request().get();
+        assertEquals("The response code of getOutputDataObjects was not 200", 200, response.getStatus());
+        assertEquals("GetOutputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
+                response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250?}\"}]}}]', got '{}'.",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
     @Test
     public void testInvalidStateUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "complete").request().put(Entity.json(""));
+                .queryParam("state", "complete").request().put(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -746,14 +789,14 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
     @Test
     public void testInvalidActivityUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "begin").request().put(Entity.json(""));
+                .queryParam("state", "begin").request().put(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -766,14 +809,14 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(String, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
     @Test
     public void testUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/186")
-                .queryParam("state", "begin").request().put(Entity.json(""));
+                .queryParam("state", "begin").request().put(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -783,8 +826,37 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/1/instance/72/activity/186")
-                .queryParam("state", "terminate").request().put(Entity.json(""));
-        //TODO: change Test to match the preposition of getting a Map with changed dataAttributes.
+                .queryParam("state", "terminate").request().put(Entity.json("[]"));
+        assertEquals("The Response code of getTerminationCondition was not 202",
+                202, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"activity state changed.\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
+     * with an valid state and valid activity
+     * then a 201 will be returned with a message inside a JSON-Object.
+     */
+    @Test
+    public void testUpdateActivityWAttributes(){
+        Response response = base.path("scenario/135/instance/808/activity/4518")
+                .queryParam("state", "begin").request().put(Entity.json("[]"));
+        assertEquals("The Response code of getTerminationCondition was not 202",
+                202, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"activity state changed.\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+        response = base.path("scenario/135/instance/808/activity/4518")
+                .queryParam("state", "terminate").request()
+                .put(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]', got '{}'."));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",

@@ -2,8 +2,8 @@
 -- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Erstellungszeit: 19. Mrz 2015 um 22:35
+-- Host: 127.0.0.1
+-- Erstellungszeit: 22. Apr 2015 um 14:16
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Datenbank: `JEngineV2`
+-- Datenbank: `jenginev2`
 --
 
 -- --------------------------------------------------------
@@ -13212,7 +13212,14 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
   `type` varchar(256) NOT NULL,
   `default` varchar(1024) NOT NULL,
   `dataclass_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `dataattribute`
+--
+
+INSERT INTO `dataattribute` (`ID`, `name`, `type`, `default`, `dataclass_id`) VALUES
+(1, 'Preis', '', '', 35);
 
 -- --------------------------------------------------------
 
@@ -13225,7 +13232,14 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
   `dataobjectinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `dataattributeinstance`
+--
+
+INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobjectinstance_id`) VALUES
+(1, '250€', 1, 675);
 
 -- --------------------------------------------------------
 
@@ -20083,32 +20097,31 @@ CREATE TABLE IF NOT EXISTS `scenario` (
 -- Daten für Tabelle `scenario`
 --
 
-INSERT INTO `scenario` (`id`, `name`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
-(1, 'HELLOWORLD', 0, 0, NULL, NULL),
-(2, 'helloWorld2', 0, 0, NULL, NULL),
-(3, 'EmailTest', 0, 0, NULL, NULL),
-(100, 'TestScenario', 0, 0, NULL, NULL),
-(101, 'Test Insert Scenario', 0, 0, NULL, NULL),
-(103, 'ScenarioTest1', 0, 0, NULL, NULL),
-(105, 'TestScenarioTerminationCondition', 0, 0, NULL, NULL),
-(111, 'Test2_2ReferenceTest', 483134892, 0, NULL, NULL),
-(113, 'referencetest3_2', 1607828466, 0, NULL, NULL),
-(114, 'RT4Scenario', 494340875, 0, NULL, NULL),
-(115, 'TT2Scenario', 2003613382, 0, NULL, NULL),
-(116, 'TT2Scenario', 2003613382, 0, NULL, NULL),
-(117, 'AT2Scenario', 1149737035, 0, NULL, NULL),
-(118, 'AT3Scenario', 668857574, 0, NULL, NULL),
-(134, 'ReiseTestScenario', 1047638939, 0, NULL, NULL),
-(135, 'ReiseTestScenario', 1047638939, 0, NULL, NULL),
-(136, 'TXOR1Scenario', 1273761406, 0, NULL, NULL),
-(138, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
-(139, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
-(140, 'TestEmail1Scenario', 368900431, 0, NULL, NULL),
-(141, 'TestEmail2Scenario', 339737652, 0, NULL, NULL),
-(142, 'TestEmail3Scenario', 93160132, 0, NULL, NULL),
-(143, 'TestEmail3Scenario', 93160132, 1, NULL, NULL),
-(144, 'XORTest2Scenario', 2081570932, 0, NULL, NULL);
-(152, 'deleteScenarioTest', 0, 0, NULL, NULL);
+INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
+(1, 'HELLOWORLD', 0, 0, 0, NULL, NULL),
+(2, 'helloWorld2', 0, 0, 0, NULL, NULL),
+(3, 'EmailTest', 0, 0, 0, NULL, NULL),
+(100, 'TestScenario', 0, 0, 0, NULL, NULL),
+(101, 'Test Insert Scenario', 0, 0, 0, NULL, NULL),
+(103, 'ScenarioTest1', 0, 0, 0, NULL, NULL),
+(105, 'TestScenarioTerminationCondition', 0, 0, 0, NULL, NULL),
+(111, 'Test2_2ReferenceTest', 0, 483134892, 0, NULL, NULL),
+(113, 'referencetest3_2', 0, 1607828466, 0, NULL, NULL),
+(114, 'RT4Scenario', 0, 494340875, 0, NULL, NULL),
+(115, 'TT2Scenario', 0, 2003613382, 0, NULL, NULL),
+(116, 'TT2Scenario', 0, 2003613382, 0, NULL, NULL),
+(117, 'AT2Scenario', 0, 1149737035, 0, NULL, NULL),
+(118, 'AT3Scenario', 0, 668857574, 0, NULL, NULL),
+(134, 'ReiseTestScenario', 0, 1047638939, 0, NULL, NULL),
+(135, 'ReiseTestScenario', 0, 1047638939, 0, NULL, NULL),
+(136, 'TXOR1Scenario', 0, 1273761406, 0, NULL, NULL),
+(138, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
+(139, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
+(140, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
+(141, 'TestEmail2Scenario', 0, 339737652, 0, NULL, NULL),
+(142, 'TestEmail3Scenario', 0, 93160132, 0, NULL, NULL),
+(143, 'TestEmail3Scenario', 0, 93160132, 1, NULL, NULL),
+(144, 'XORTest2Scenario', 0, 2081570932, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -21523,12 +21536,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6685;
 -- AUTO_INCREMENT for table `dataattribute`
 --
 ALTER TABLE `dataattribute`
-MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `dataattributeinstance`
 --
 ALTER TABLE `dataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `dataclass`
 --
@@ -21627,4 +21640,3 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
