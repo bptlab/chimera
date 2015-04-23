@@ -947,7 +947,7 @@ public class RestInterface {
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID,
                                         @QueryParam("state") String state,
-                                        final DataObjectJaxBean[] dataObjects) {
+                                        final String dataObjects) {
 
         boolean result;
         ExecutionService executionService = new ExecutionService();
@@ -958,13 +958,20 @@ public class RestInterface {
                 break;
             case "terminate":
                 Map<Integer,String> values = new HashMap<Integer, String>();
-                for(DataObjectJaxBean dataObject : dataObjects){
+                JSONArray dObjects = new JSONArray(dataObjects);
+                for(int i = 0; i < dObjects.length(); i++){
+                    int databaseID = dObjects.getJSONObject(i).getInt("id");
+                    JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration");
+                    String value = entry.getString("value");
+                    values.put(databaseID,value);
+                }
+                /*for(DataObjectJaxBean dataObject : dataObjects){
                     Map<Integer, Map<String, String>> dataAttributes = dataObject.attributeConfiguration;
                     for(Integer i : dataAttributes.keySet()){
                         String value = dataAttributes.get(i).get("value");
                         values.put(i,value);
                     }
-                }
+                }*/
                 executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;

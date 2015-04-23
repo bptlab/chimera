@@ -856,7 +856,7 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "terminate").request()
-                .put(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]', got '{}'."));
+                .put(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
