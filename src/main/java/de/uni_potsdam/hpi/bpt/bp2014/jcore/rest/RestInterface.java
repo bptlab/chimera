@@ -964,6 +964,7 @@ public class RestInterface {
                     int databaseID = entry.getInt("key");
                     String attribute = entry.getString("value");
                     String value = attribute.split("\\,")[attribute.split("\\,").length-1].replaceAll("value\\=", "").replaceAll("}", "");
+                    value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]","").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]","").replaceAll("[{ }]","").replaceAll("value\\=","");
                     values.put(databaseID,value);
                 }
                 /*for(DataObjectJaxBean dataObject : dataObjects){

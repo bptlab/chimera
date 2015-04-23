@@ -769,7 +769,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
@@ -789,7 +789,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
@@ -809,7 +809,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -838,7 +838,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
