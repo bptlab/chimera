@@ -960,9 +960,10 @@ public class RestInterface {
                 Map<Integer,String> values = new HashMap<Integer, String>();
                 JSONArray dObjects = new JSONArray(dataObjects);
                 for(int i = 0; i < dObjects.length(); i++){
-                    int databaseID = dObjects.getJSONObject(i).getInt("id");
-                    JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration");
-                    String value = entry.getString("value");
+                    JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
+                    int databaseID = entry.getInt("key");
+                    String attribute = entry.getString("value");
+                    String value = attribute.split("\\,")[attribute.split("\\,").length-1].replaceAll("value\\=", "").replaceAll("}", "");
                     values.put(databaseID,value);
                 }
                 /*for(DataObjectJaxBean dataObject : dataObjects){
