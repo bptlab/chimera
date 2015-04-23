@@ -751,7 +751,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]', got '{}'.",
+                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
@@ -765,7 +765,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetOutputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]', got '{}'.",
+                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
