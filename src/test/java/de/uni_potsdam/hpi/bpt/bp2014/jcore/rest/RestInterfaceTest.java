@@ -752,7 +752,7 @@ public class RestInterfaceTest extends AbstractTest {
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
     }
 
     /**
@@ -766,7 +766,7 @@ public class RestInterfaceTest extends AbstractTest {
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
      * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, RestInterface.DataObjectJaxBean[])}
