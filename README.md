@@ -13,7 +13,7 @@ The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## RESTful
 
-See the documentation inside the doc folder.
+See the [documentation](https://github.com/BP2014W1/JEngine/blob/dev/docu/REST/JEngine_REST_Specs.pdf) inside the doc folder.
 
 ## Setup
 
