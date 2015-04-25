@@ -71,9 +71,11 @@ Now, you may access the jFrontend via
 
 This JEngine does execute
 * sequential
-* usertasks
-* data objects
 * AND gateways
 * XOR gateways
+
+* usertasks
 * email services tasks
+
+* data objects
 * termination condition for scenarios
