@@ -253,9 +253,10 @@
 			
 			// terminates an activity
 			this.terminateActivity = function(activityId) {
+				var data = "";
 				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-					"/activity/"+ activityId + "?state=terminate").
+					"/activity/"+ activityId + "?state=terminate", data).
 					success(function(data) {
 						instanceCtrl.instanceDetails.activities = {};
                         //reloading content so the dashboard is uptodate
