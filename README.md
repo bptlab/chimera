@@ -66,6 +66,8 @@ Now, you may access the jFrontend via
 
    http://localhost:8080/JEngine
 
+We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-responsive-admin-theme-WB055J451); please be sure to download the [AngularJS libs](https://docs.angularjs.org/misc/downloading)
+   
 
 ## Features
 
