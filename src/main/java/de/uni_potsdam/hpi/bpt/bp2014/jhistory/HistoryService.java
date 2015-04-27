@@ -76,4 +76,9 @@ public class HistoryService {
         DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
         return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
+
+    public Map<Integer, Map<String, Object>> getSelectedActivityInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
+        DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
+        return dbHistoryActivityInstance.getterminatedLogEntriesForScenarioInstance(scenarioInstance_id);
+    }
 }

@@ -924,7 +924,7 @@ public class RestInterface {
                 i++;
             }
         }
-        return Response.ok(dataObjects,MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     /**
@@ -950,6 +950,12 @@ public class RestInterface {
                                         final String dataObjects) {
 
         boolean result;
+        if(state == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The state is not set\"}")
+                    .build();
+        }
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         switch (state) {
