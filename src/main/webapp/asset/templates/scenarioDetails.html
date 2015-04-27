@@ -12,7 +12,34 @@
 		</tr><tr>
 			<th>Amount of Instances&nbsp;&nbsp;</th>
             <th>{{scenarioCtrl.currentScenario['instances']['ids'].length}}</th>
+        </tr><tr>
+            <th> Termination Condition</th>
+            <th>
+                <div class="panel-body list">
+                    <div class="responsive-table pull-left">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Condition</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
+                            <tr ng-repeat="(key, value) in scenarioCtrl.scenario['terminationcondition']['conditions'] track by $index">
+                                <td>{{key}}</td>
+                                <td>
+                                    <div ng-repeat="(key, value2) in value track by $index">
+                                        The dataobject {{value2['data_object']}} should be in state {{value2['state']}}.<br>
+                                    </div>
+                                </td>
+                            </tr>
+                            </a>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </th>
 		</tr>
 	</table>
 	<div class="pull-right">

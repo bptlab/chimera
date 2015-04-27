@@ -108,6 +108,16 @@
                     });
 			};
 
+            this.getTerminationConditionOfScenario = function(id) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
+                    success(function(data) {
+                        controller.currentScenario['terminationcondition'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
+
             /* ____ BEGIN_INITIALIZATION ____ */
             this.initialize = function(){
                 console.log('initializing...');
