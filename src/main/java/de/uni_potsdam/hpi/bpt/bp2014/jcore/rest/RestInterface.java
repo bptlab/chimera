@@ -871,8 +871,8 @@ public class RestInterface {
         for (int inputSet : inputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];
+            int i = 0;
             for (DataObject dO : dObjects) {
-                int i = 0;
                 DataObjectJaxBean dataObject = new DataObjectJaxBean();
                 dataObject.id = dO.getId();
                 dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
