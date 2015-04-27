@@ -91,7 +91,7 @@ public class JComparser {
             XPath xPath = XPathFactory.newInstance().newXPath();
             // select all models whose type is scenario
             String xPathQuery = "/models/model[type/text()=" +
-                    "'net.frapu.code.visualization.pcm.PCMScenario']";
+                    "'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario']";
             NodeList models = (NodeList) xPath.compile(xPathQuery)
                     .evaluate(modelDoc, XPathConstants.NODESET);
 
@@ -137,7 +137,7 @@ public class JComparser {
             XPath xPath = XPathFactory.newInstance().newXPath();
             // select all URIS of models whose type is scenario
             String xPathQuery = "/models/model[type/text()=" +
-                    "'net.frapu.code.visualization.pcm.PCMScenario']/uri/text()";
+                    "'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario']/uri/text()";
             NodeList xmlModelURIs = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(models, XPathConstants.NODESET);
