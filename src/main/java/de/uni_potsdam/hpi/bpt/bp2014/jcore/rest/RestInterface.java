@@ -824,6 +824,7 @@ public class RestInterface {
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         ActivityJaxBean activity = new ActivityJaxBean();
+        // @TODO: check for correct links
         DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
         inputSet.linkDataObject = uriInfo.getAbsolutePath() + "/input";
         DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
@@ -848,7 +849,7 @@ public class RestInterface {
      * @param activityID
      * @return
      */
-    @GET
+    @GET //
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
     public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
