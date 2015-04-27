@@ -1,4 +1,4 @@
-<model id="358512" name="Scenario" type="net.frapu.code.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model id="358512" name="Scenario" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0" />
@@ -11,7 +11,7 @@
          <property name="text" value="" />
          <property name="stereotype" value="" />
          <property name="#id" value="72088939" />
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentCollection" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentCollection" />
          <property name="height" value="500" />
       </node>
       <node>
@@ -25,7 +25,7 @@
          <property name="text" value="" />
          <property name="stereotype" value="" />
          <property name="#id" value="538104329" />
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectCollection" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectCollection" />
          <property name="height" value="500" />
       </node>
       <node>
@@ -38,7 +38,7 @@
          <property name="text" value="FragmentA" />
          <property name="stereotype" value="" />
          <property name="#id" value="1899707170" />
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentNode" />
          <property name="height" value="20" />
       </node>
       <node>
@@ -51,7 +51,7 @@
          <property name="text" value="FragmentB" />
          <property name="stereotype" value="" />
          <property name="#id" value="463926493" />
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentNode" />
          <property name="height" value="20" />
       </node>
       <node>
@@ -64,7 +64,7 @@
          <property name="text" value="DO" />
          <property name="stereotype" value="" />
          <property name="#id" value="30460774" />
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode" />
          <property name="height" value="20" />
       </node>
       <node>
@@ -77,7 +77,7 @@
          <property name="text" value="SubDO" />
          <property name="stereotype" value="" />
          <property name="#id" value="2034242068" />
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode" />
          <property name="height" value="20" />
       </node>
    </nodes>

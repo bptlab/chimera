@@ -955,9 +955,10 @@ public class RestInterface {
         switch (state) {
             case "begin":
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
+                executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 break;
             case "terminate":
-                Map<Integer,String> values = new HashMap<Integer, String>();
+                /*Map<Integer,String> values = new HashMap<Integer, String>();
                 if(dataObjects != "" && dataObjects != null) {
                     JSONArray dObjects = new JSONArray(dataObjects);
                     if (dObjects != null) {
@@ -970,7 +971,7 @@ public class RestInterface {
                             values.put(databaseID, value);
                         }
                     }
-                }
+                }*/
                 /*for(DataObjectJaxBean dataObject : dataObjects){
                     Map<Integer, Map<String, String>> dataAttributes = dataObject.attributeConfiguration;
                     for(Integer i : dataAttributes.keySet()){
@@ -978,7 +979,7 @@ public class RestInterface {
                         values.put(i,value);
                     }
                 }*/
-                executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
+                //executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:
