@@ -1,4 +1,4 @@
-<model id="894096069" name="FragmentB" type="net.frapu.code.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model id="894096069" name="FragmentB" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0" />

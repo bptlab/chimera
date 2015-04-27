@@ -1,4 +1,4 @@
-<model xmlns="http://frapu.net/xsd/ProcessEditor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="514683112" name="bikeScenario" type="net.frapu.code.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model xmlns="http://frapu.net/xsd/ProcessEditor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="514683112" name="bikeScenario" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0"/>
@@ -11,7 +11,7 @@
          <property name="text" value=""/>
          <property name="stereotype" value=""/>
          <property name="#id" value="1340431798"/>
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentCollection"/>
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentCollection"/>
          <property name="height" value="500"/>
       </node>
       <node>
@@ -25,7 +25,7 @@
          <property name="text" value=""/>
          <property name="stereotype" value=""/>
          <property name="#id" value="1256273478"/>
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectCollection"/>
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectCollection"/>
          <property name="height" value="500"/>
       </node>
       <node>
@@ -38,7 +38,7 @@
          <property name="text" value="assembleBike"/>
          <property name="stereotype" value=""/>
          <property name="#id" value="2060128231"/>
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMFragmentNode"/>
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentNode"/>
          <property name="height" value="20"/>
       </node>
       <node>
@@ -51,7 +51,7 @@
          <property name="text" value="bike"/>
          <property name="stereotype" value=""/>
          <property name="#id" value="970817444"/>
-         <property name="#type" value="net.frapu.code.visualization.pcm.PCMDataObjectNode"/>
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode"/>
          <property name="height" value="20"/>
       </node>
    </nodes>
