@@ -729,4 +729,18 @@ public class Connector extends DbDataObject {
                 " WHERE state.id = " + state_id;
         dbDataObject.executeUpdateStatement(sql);
     }
+
+    /**
+     * Find out if the scenario in the database is marked a s deleted.
+     *
+     * @param scenarioID DatabaseID of the scenario
+     * @return The value of the deleted flag (1 if scenario is deleted; 0 otherwise)
+     */
+    public int isScenarioDeleted(int scenarioID) {
+        DbDataObject dbDataObject = new DbDataObject();
+        String select = "SELECT deleted " +
+                "FROM scenario " +
+                "WHERE id = " + scenarioID;
+        return dbDataObject.executeStatementReturnsInt(select, "deleted");
+    }
 }

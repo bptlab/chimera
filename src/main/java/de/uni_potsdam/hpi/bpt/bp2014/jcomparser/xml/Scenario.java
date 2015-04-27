@@ -263,6 +263,13 @@ public class Scenario implements IDeserialisable, IPersistable {
             }
         }
         checkDomainModelVersion(oldScenarioDbID);
+        // in case old scenario is deleted...
+        if(!needsToBeSaved) {
+            int oldScenarioDeleted = connector.isScenarioDeleted(oldScenarioDbID);
+            if (oldScenarioDeleted == 1) {
+                needsToBeSaved = true;
+            }
+        }
 
     }
     /**
