@@ -789,6 +789,23 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
+     */
+    @Test
+    public void testInvalidStateUpdateActivity2() {
+        Response response = base.path("scenario/1/instance/72/activity/105")
+                .request().put(Entity.json("[]"));
+        assertEquals("The Response code of getTerminationCondition was not 400",
+                400, response.getStatus());
+        assertEquals("Get TerminationCondition does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The state is not set\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     *
      * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.

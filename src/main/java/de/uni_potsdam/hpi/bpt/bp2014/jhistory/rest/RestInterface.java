@@ -3,10 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import org.json.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
@@ -25,13 +22,25 @@ public class RestInterface {
      * @return a JSON-Object with the log entries.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/activities")
+    @Path("scenario/{scenarioID}/instance/{InstanceID}/activities")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getActivityLog(
             @PathParam("scenarioID") int scenarioID,
-            @PathParam("scenarioInstanceID") int scenarioInstanceID) {
+            @PathParam("InstanceID") int instanceID,
+            @QueryParam("state") String state) {
         Map<Integer, Map<String, Object>> activityLog;
-        activityLog = historyService.getActivityInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+        //TODO: check if instanceID exists
+        if(state == null) {
+            state = "";
+        }
+        switch (state) {
+            case "terminated":
+                activityLog = historyService.getSelectedActivityInstanceLogEntriesForScenarioInstance(instanceID);
+                break;
+            default:
+                activityLog = historyService.getActivityInstanceLogEntriesForScenarioInstance(instanceID);
+                break;
+        }
         return Response
                 .ok()
                 .type(MediaType.APPLICATION_JSON)
@@ -52,6 +61,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("scenarioInstanceID") int scenarioInstanceID) {
         Map<Integer, Map<String, Object>> dataObjectLog;
+        //TODO: check if instanceID exists
         dataObjectLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response
                 .ok()
