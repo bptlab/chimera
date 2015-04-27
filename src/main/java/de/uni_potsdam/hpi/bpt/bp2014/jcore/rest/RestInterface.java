@@ -959,7 +959,7 @@ public class RestInterface {
                 break;
             case "terminate":
                 Map<Integer,String> values = new HashMap<Integer, String>();
-                if(dataObjects != "" && dataObjects != null) {
+                if(dataObjects != null && dataObjects != "") {
                     JSONArray dObjects = new JSONArray(dataObjects);
                     if (dObjects != null) {
                         for (int i = 0; i < dObjects.length(); i++) {
