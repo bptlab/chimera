@@ -990,7 +990,7 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("")
+                jsonEquals("[]")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
@@ -1050,7 +1050,7 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("").when(Option.IGNORING_ARRAY_ORDER));
+                jsonEquals("[]").when(Option.IGNORING_ARRAY_ORDER));
     }
 
 }
