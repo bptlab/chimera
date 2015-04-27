@@ -824,6 +824,7 @@ public class RestInterface {
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         ActivityJaxBean activity = new ActivityJaxBean();
+        // @TODO: check for correct links
         DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
         inputSet.linkDataObject = uriInfo.getAbsolutePath() + "/input";
         DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
@@ -848,7 +849,7 @@ public class RestInterface {
      * @param activityID
      * @return
      */
-    @GET
+    @GET //
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
     public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
@@ -870,8 +871,8 @@ public class RestInterface {
         for (int inputSet : inputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];
+            int i = 0;
             for (DataObject dO : dObjects) {
-                int i = 0;
                 DataObjectJaxBean dataObject = new DataObjectJaxBean();
                 dataObject.id = dO.getId();
                 dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
@@ -961,17 +962,22 @@ public class RestInterface {
         switch (state) {
             case "begin":
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
+                //executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 break;
             case "terminate":
                 Map<Integer,String> values = new HashMap<Integer, String>();
-                JSONArray dObjects = new JSONArray(dataObjects);
-                for(int i = 0; i < dObjects.length(); i++){
-                    JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
-                    int databaseID = entry.getInt("key");
-                    String attribute = entry.getString("value");
-                    String value = attribute.split("\\,")[attribute.split("\\,").length-1].replaceAll("value\\=", "").replaceAll("}", "");
-                    value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]","").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]","").replaceAll("[{ }]","").replaceAll("value\\=","");
-                    values.put(databaseID,value);
+                if(dataObjects != null && !dataObjects.isEmpty()) {
+                    JSONArray dObjects = new JSONArray(dataObjects);
+                    if (dObjects != null) {
+                        for (int i = 0; i < dObjects.length(); i++) {
+                            JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
+                            int databaseID = entry.getInt("key");
+                            String attribute = entry.getString("value");
+                            String value = attribute.split("\\,")[attribute.split("\\,").length - 1].replaceAll("value\\=", "").replaceAll("}", "");
+                            value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
+                            values.put(databaseID, value);
+                        }
+                    }
                 }
                 /*for(DataObjectJaxBean dataObject : dataObjects){
                     Map<Integer, Map<String, String>> dataAttributes = dataObject.attributeConfiguration;
