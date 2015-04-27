@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class DbHistoryDataObjectInstance extends DbObject {
     /**
-     * This method saves a log entry containing a DataObject instance state transition into the database.
+     * This method saves a log entry containing a DataAttributeInstance value change into the database.
      *
      * @param object_instance_id the ID of the DataObjectInstance that is changed.
      * @param state_id the new state of the DataObjectInstance.
@@ -50,7 +50,7 @@ public class DbHistoryDataObjectInstance extends DbObject {
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
     public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT * FROM historydataobjectinstance WHERE scenarioinstance_id = "+scenarioInstanceId;
+        String sql = "SELECT * FROM historydataobjectinstance WHERE scenarioinstance_id = "+scenarioInstanceId+" ORDER BY timestamp DESC";
         return this.executeStatementReturnsMapWithMapWithKeys(sql, "scenarioinstance_id", "name", "timestamp","dataobjectinstance_id", "old_state_id", "old_state_name", "new_state_id", "new_state_name");
     }
 

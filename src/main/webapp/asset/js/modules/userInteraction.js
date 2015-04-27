@@ -79,6 +79,11 @@
                     success(function(data) {
                         console.log("deleting scenario was successful..");
                     });
+                //load new scenario list
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
+                    success(function(data){
+                        controller.scenarios = data;
+                    });
                 $location.path("/scenario/");
             };
 
