@@ -45,7 +45,12 @@ public class DbHistoryActivityInstance extends DbObject {
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
     public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT * FROM historyactivityinstance WHERE scenarioinstance_id = "+scenarioInstanceId;
+        String sql = "SELECT * FROM historyactivityinstance WHERE scenarioinstance_id = "+scenarioInstanceId+" ORDER BY timestamp DESC";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "activityinstance_id", "label", "timestamp", "oldstate", "newstate", "scenarioinstance_id", "role_id", "user_id", "comment");
+    }
+
+    public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId){
+        String sql = "SELECT * FROM historyactivityinstance WHERE scenarioinstance_id = "+scenarioInstanceId+" AND newstate = 'terminated' ORDER BY timestamp DESC";
         return this.executeStatementReturnsMapWithMapWithKeys(sql, "activityinstance_id", "label", "timestamp", "oldstate", "newstate", "scenarioinstance_id", "role_id", "user_id", "comment");
     }
 }
