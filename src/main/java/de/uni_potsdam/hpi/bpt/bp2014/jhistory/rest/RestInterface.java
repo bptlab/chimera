@@ -22,22 +22,23 @@ public class RestInterface {
      * @return a JSON-Object with the log entries.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/activities")
+    @Path("scenario/{scenarioID}/instance/{InstanceID}/activities")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getActivityLog(
             @PathParam("scenarioID") int scenarioID,
-            @PathParam("scenarioInstanceID") int scenarioInstanceID,
+            @PathParam("InstanceID") int instanceID,
             @QueryParam("state") String state) {
         Map<Integer, Map<String, Object>> activityLog;
+        //TODO: check if instanceID exists
         if(state == null) {
             state = "";
         }
         switch (state) {
             case "terminated":
-                activityLog = historyService.getActivityInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+                activityLog = historyService.getSelectedActivityInstanceLogEntriesForScenarioInstance(instanceID);
                 break;
             default:
-                activityLog = historyService.getSelectedActivityInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+                activityLog = historyService.getActivityInstanceLogEntriesForScenarioInstance(instanceID);
                 break;
         }
         return Response
@@ -60,6 +61,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("scenarioInstanceID") int scenarioInstanceID) {
         Map<Integer, Map<String, Object>> dataObjectLog;
+        //TODO: check if instanceID exists
         dataObjectLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response
                 .ok()

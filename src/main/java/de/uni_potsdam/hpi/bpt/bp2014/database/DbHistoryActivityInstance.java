@@ -50,7 +50,7 @@ public class DbHistoryActivityInstance extends DbObject {
     }
 
     public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT * FROM historyactivityinstance WHERE scenarioinstance_id = "+scenarioInstanceId+" AND newstate = 'terminated' ORDER BY timestamp DESC";
+        String sql = "SELECT * FROM historyactivityinstance WHERE `scenarioinstance_id` = "+scenarioInstanceId+" AND `newstate` = 'terminated' ORDER BY timestamp DESC";
         return this.executeStatementReturnsMapWithMapWithKeys(sql, "activityinstance_id", "label", "timestamp", "oldstate", "newstate", "scenarioinstance_id", "role_id", "user_id", "comment");
     }
 }
