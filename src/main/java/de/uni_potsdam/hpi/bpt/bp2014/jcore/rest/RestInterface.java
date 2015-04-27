@@ -958,15 +958,17 @@ public class RestInterface {
                 break;
             case "terminate":
                 Map<Integer,String> values = new HashMap<Integer, String>();
-                JSONArray dObjects = new JSONArray(dataObjects);
-                if(dObjects != null && dataObjects != "") {
-                    for (int i = 0; i < dObjects.length(); i++) {
-                        JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
-                        int databaseID = entry.getInt("key");
-                        String attribute = entry.getString("value");
-                        String value = attribute.split("\\,")[attribute.split("\\,").length - 1].replaceAll("value\\=", "").replaceAll("}", "");
-                        value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
-                        values.put(databaseID, value);
+                if(dataObjects != "" && dataObjects != null) {
+                    JSONArray dObjects = new JSONArray(dataObjects);
+                    if (dObjects != null) {
+                        for (int i = 0; i < dObjects.length(); i++) {
+                            JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
+                            int databaseID = entry.getInt("key");
+                            String attribute = entry.getString("value");
+                            String value = attribute.split("\\,")[attribute.split("\\,").length - 1].replaceAll("value\\=", "").replaceAll("}", "");
+                            value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
+                            values.put(databaseID, value);
+                        }
                     }
                 }
                 /*for(DataObjectJaxBean dataObject : dataObjects){
