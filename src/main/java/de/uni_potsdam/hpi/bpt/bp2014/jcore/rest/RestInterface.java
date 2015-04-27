@@ -890,7 +890,7 @@ public class RestInterface {
         if (dataObjects == null) {
             Response.ok("[]", MediaType.APPLICATION_JSON_TYPE).build();
         }
-        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(dataObjects, MediaType.APPLICATION_JSON).build();
     }
 
     /**
