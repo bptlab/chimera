@@ -955,9 +955,10 @@ public class RestInterface {
         switch (state) {
             case "begin":
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
+                executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 break;
             case "terminate":
-                Map<Integer,String> values = new HashMap<Integer, String>();
+                /*Map<Integer,String> values = new HashMap<Integer, String>();
                 JSONArray dObjects = new JSONArray(dataObjects);
                 for(int i = 0; i < dObjects.length(); i++){
                     JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
@@ -966,7 +967,7 @@ public class RestInterface {
                     String value = attribute.split("\\,")[attribute.split("\\,").length-1].replaceAll("value\\=", "").replaceAll("}", "");
                     value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]","").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]","").replaceAll("[{ }]","").replaceAll("value\\=","");
                     values.put(databaseID,value);
-                }
+                }*/
                 /*for(DataObjectJaxBean dataObject : dataObjects){
                     Map<Integer, Map<String, String>> dataAttributes = dataObject.attributeConfiguration;
                     for(Integer i : dataAttributes.keySet()){
@@ -974,7 +975,7 @@ public class RestInterface {
                         values.put(i,value);
                     }
                 }*/
-                executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
+                //executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:
