@@ -72,6 +72,13 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
      */
     private void setDataStates(int outputSet_id) {
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNode_id);
+        for (int outputSet : outputSets) {
+            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
+            for (DataObject dataObject : dataObjects) {
+                //resets DataObjectInstance from OnChange back to not OnChange
+                scenarioInstance.setDataObjectInstanceToNotOnChange(dataObject.getId());
+            }
+        }
         //TODO: Output Set
         if(outputSets.size() != 0) {
             int outputSet = outputSets.get(0);
@@ -83,13 +90,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
                 scenarioInstance.changeDataObjectInstanceState(dataObject.getId(), dataObject.getStateID());
             }
         }
-        for (int outputSet : outputSets) {
-            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
-            for (DataObject dataObject : dataObjects) {
-                //resets DataObjectInstance from OnChange back to not OnChange
-                scenarioInstance.setDataObjectInstanceToNotOnChange(dataObject.getId());
-            }
-        }
+
 
     }
 
