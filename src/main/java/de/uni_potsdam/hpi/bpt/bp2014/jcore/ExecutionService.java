@@ -576,4 +576,24 @@ public class ExecutionService {
         }
         return attributeInstances;
     }
+
+    public Map<Integer,Map<String, String>> getOutputSetsForActivityInstance(int activityInstanceId){
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        DbDataNode dbDataNode = new DbDataNode();
+        DbDataObject dbDataObject = new DbDataObject();
+        DbState dbState = new DbState();
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        int controlNode_id = dbControlNodeInstance.getControlNodeID(activityInstanceId);
+
+        Map<Integer, Map<String, String>> allOutputSets = new HashMap<>();
+        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNode_id);
+        for (int outputSet : outputSets) {
+            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
+            for (DataObject dataObject : dataObjects) {
+                allOutputSets.put(outputSet, new HashMap<String, String>());
+                allOutputSets.get(outputSet).put(dbDataObject.getName(dataObject.getId()), dbState.getStateName(dataObject.getStateID()));
+            }
+        }
+        return allOutputSets;
+    }
 }
