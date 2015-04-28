@@ -843,12 +843,34 @@ public class RestInterface {
 
     /**
      *
+     * @param uriInfo
      * @param scenarioID
      * @param scenarioInstanceID
      * @param activityID
      * @return
      */
-    @GET //
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references")
+    public Response getReferencesForActivity(@Context UriInfo uriInfo,
+                                @PathParam("scenarioID") int scenarioID,
+                                @PathParam("instanceID") int scenarioInstanceID,
+                                @PathParam("activityID") int activityID) {
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+
+        Collection<ActivityInstance> referencedActivities = executionService.getReferentialEnabledActivities(scenarioInstanceID, activityID);
+        String referencedActivitiesJSON = JsonUtil.JsonWrapperCollection(referencedActivities);
+        return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityID
+     * @return
+     */
+    @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
     public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,

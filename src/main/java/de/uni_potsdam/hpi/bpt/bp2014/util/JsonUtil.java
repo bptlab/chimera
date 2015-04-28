@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.*;
 import org.json.JSONArray;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -33,6 +30,12 @@ public class JsonUtil {
     public static String JsonWrapperLinkedList(LinkedList<Integer> content) {
         Gson gson = new Gson();
         JsonIntegerList json = new JsonIntegerList(content);
+        return gson.toJson(json);
+    }
+
+    public static String JsonWrapperCollection(Collection content) {
+        Gson gson = new Gson();
+        String json = gson.toJson(content);
         return gson.toJson(json);
     }
 
