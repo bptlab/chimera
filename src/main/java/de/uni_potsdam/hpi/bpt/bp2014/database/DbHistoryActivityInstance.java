@@ -45,12 +45,12 @@ public class DbHistoryActivityInstance extends DbObject {
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
     public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT h.id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id  ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
+        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id  ORDER BY timestamp DESC";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id","h.scenarioinstance_id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 
     public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT h.id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id AND `newstate` = 'terminated' ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "cn.label", "h.id", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
+        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id AND `newstate` = 'terminated' ORDER BY timestamp DESC";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "cn.label", "h.scenarioinstance_id", "h.id", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 }
