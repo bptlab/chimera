@@ -275,6 +275,24 @@ public class ExecutionService {
     }
 
     /**
+     * Terminates the execution of an activity specified by the params.
+     * The state will only be changed if the activity is enabled.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @param activityInstance_id Specifies the activity instance id.
+     * @return Indicates the success. True if the activity has been started, else false.
+     */
+    public boolean terminateActivityInstance(int scenarioInstance_id, int activityInstance_id, int outputSet_id) {
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
+            if (((ActivityInstance) nodeInstance).controlNodeInstance_id == activityInstance_id) {
+                return ((ActivityInstance) nodeInstance).terminate(outputSet_id);
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns information about all enabled Activities of a given scenario instance
      *
      * @scenarioInstanceId The id which specifies the scenario
@@ -344,6 +362,23 @@ public class ExecutionService {
         for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
             if (((ActivityInstance) nodeInstance).getControlNode_id() == activity_id) {
                 return ((ActivityInstance) nodeInstance).terminate();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Terminates an activity which is running.
+     *
+     * @param scenarioInstance_id This is the id of the scenario instance.
+     * @param activity_id         This is the id of the activity.
+     * @return true if the activity could been terminated. false if not.
+     */
+    public boolean terminateActivity(int scenarioInstance_id, int activity_id, int outputSet_id) {
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
+            if (((ActivityInstance) nodeInstance).getControlNode_id() == activity_id) {
+                return ((ActivityInstance) nodeInstance).terminate(outputSet_id);
             }
         }
         return false;

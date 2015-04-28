@@ -872,7 +872,7 @@ public class RestInterface {
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
         LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = null;
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
         for (int inputSet : inputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];
@@ -886,9 +886,6 @@ public class RestInterface {
                 dataObjects[i] = dataObject;
                 i++;
             }
-        }
-        if (dataObjects == null) {
-            Response.ok("[]", MediaType.APPLICATION_JSON_TYPE).build();
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON).build();
     }
@@ -925,7 +922,7 @@ public class RestInterface {
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = null;
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
         for (int outputSet : outputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];
@@ -939,9 +936,6 @@ public class RestInterface {
                 dataObjects[i] = dataObject;
                 i++;
             }
-        }
-        if (dataObjects == null) {
-            Response.ok("[]", MediaType.APPLICATION_JSON_TYPE).build();
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
     }
