@@ -300,11 +300,46 @@ public class ExecutionService {
      *         specified scenario instance.
      */
     public Collection<ActivityInstance> getEnabledActivities(int scenarioInstanceId) {
-        Collection<ActivityInstance> enabledActivities = new LinkedList<>();
+        Collection<ActivityInstance> allEnabledActivities = new LinkedList<>();
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
-            if ( nodeInstance instanceof ActivityInstance) {
-                enabledActivities.add((ActivityInstance)nodeInstance);
+            if (nodeInstance instanceof ActivityInstance) {
+                allEnabledActivities.add((ActivityInstance) nodeInstance);
+            }
+        }
+        Collection<ActivityInstance> activities = new LinkedList<>();
+        Collection<ActivityInstance> enabledActivities = allEnabledActivities;
+        for(ActivityInstance activityInstance: allEnabledActivities){
+            if(!activities.contains(activityInstance)){
+                Collection<ActivityInstance> references = this.getReferentialEnabledActivities(scenarioInstanceId, activityInstance.getControlNodeInstance_id());
+                enabledActivities.removeAll(references);
+                activities.addAll(references);
+            }
+        }
+        return enabledActivities;
+    }
+
+    /**
+     * Returns information about all referential Activities of a given scenario instance and activity
+     *
+     * @scenarioInstanceId The id which specifies the scenario
+     * @return a Collection of referential Activity instances for an Activity, which are enabled and part of the
+     *         specified scenario instance.
+     */
+    public Collection<ActivityInstance> getReferentialEnabledActivities(int scenarioInstanceId, int activityInstanceId) {
+        Collection<ActivityInstance> enabledActivities = new LinkedList<>();
+        DbReference dbReference = new DbReference();
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        LinkedList<Integer> references = dbReference.getReferenceActivitiesForActivity(dbControlNodeInstance.getControlNodeID(activityInstanceId));
+        ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+            if (nodeInstance instanceof ActivityInstance) {
+                for (int id : references){
+                    if(id == nodeInstance.getControlNode_id()){
+                        enabledActivities.add((ActivityInstance) nodeInstance);
+                        break;
+                    }
+                }
             }
         }
         return enabledActivities;
