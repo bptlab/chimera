@@ -933,4 +933,124 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals("{\"message\":\"The is instance has been terminated.\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+    /**
+     * Given: Is an invalid scenario instance
+     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * with an invalid scenario and instance id
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testGetInputForInvalidScenario() {
+        Response response = base.path("scenario/9987/instance/1234/activity/1/input")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given: Is an invalid activity instance
+     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * with an invalid activity instance id
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testGetInputForInvalidActivity() {
+        Response response = base.path("scenario/1/instance/72/activity/9999/input")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such activity instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given: Is an valid activity instance
+     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * with a valid activity instance without input sets
+     * a 200 with an empty JSON array will be returned
+     */
+    @Test
+    public void testGetInputForWOInputSets() {
+        Response response = base.path("scenario/135/instance/808/activity/4517/input")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 200",
+                200, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("[]")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given: Is an invalid scenario instance
+     * when you send a get to {@link RestInterface#getOutputDataObjects(int, int, int)}
+     * with an invalid scenario and instance id
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testGetOutputForInvalidScenario() {
+        Response response = base.path("scenario/9987/instance/1234/activity/1/input")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given: Is an invalid activity instance
+     * when you send a get to {@link RestInterface#getOutputDataObjects(int, int, int)}
+     * with an invalid activity instance id
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testGetOutputInvalidActivity() {
+        Response response = base.path("scenario/1/instance/72/activity/9999/output")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such activity instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     * Given: Is an valid activity instance
+     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * with a valid activity instance without input sets
+     * a 200 with an empty JSON array will be returned
+     */
+    @Test
+    public void testGetOutputForWOOutputSets() {
+        Response response = base.path("scenario/118/instance/704/activity/3749/output")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 200",
+                200, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("[]").when(Option.IGNORING_ARRAY_ORDER));
+    }
+
 }

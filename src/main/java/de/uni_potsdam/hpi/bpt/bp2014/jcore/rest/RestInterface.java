@@ -405,7 +405,6 @@ public class RestInterface {
             @Context UriInfo uri,
             @PathParam("scenarioID") int scenarioID) {
         ExecutionService executionService = new ExecutionService();
-        //TODO: add link to detail REST call for more information about new scenarioinstanceID
         if (executionService.existScenario(scenarioID)) {
             int instanceId = executionService.startNewScenarioInstance(scenarioID);
             return Response.status(Response.Status.CREATED)
@@ -854,9 +853,11 @@ public class RestInterface {
     public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
-
         ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
         LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
         int controlNodeID = -1;
         for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
@@ -864,10 +865,14 @@ public class RestInterface {
                 controlNodeID = controlNodeInstance.getControlNode_id();
             }
         }
+        if (controlNodeID == -1) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
         LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = null;
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
         for (int inputSet : inputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];
@@ -882,7 +887,7 @@ public class RestInterface {
                 i++;
             }
         }
-        return Response.ok(dataObjects,MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(dataObjects, MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -899,7 +904,10 @@ public class RestInterface {
                                         @PathParam("activityID") int activityID) {
 
         ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
         LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
         Integer controlNodeID = -1;
         for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
@@ -907,10 +915,14 @@ public class RestInterface {
                 controlNodeID = controlNodeInstance.getControlNode_id();
             }
         }
+        if (controlNodeID == -1) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = null;
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
         for (int outputSet : outputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];

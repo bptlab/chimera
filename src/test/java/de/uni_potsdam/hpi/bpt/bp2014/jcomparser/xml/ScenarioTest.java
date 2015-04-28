@@ -80,6 +80,11 @@ public class  ScenarioTest extends TestSetUp {
      * File which contains insert-statements for the database which are needed for testing.
      */
     private static final String INSERT_TESTDATA_FILE = "src/test/resources/MigrationTest/jenginev2_Migration.sql";
+    /**
+     * File which contains insert-statements for the database which are needed for testing (the difference to
+     * INSERT_TESTDATA_FILE is that the scenario which is already in the database is marked as deleted).
+     */
+    private static final String INSERT_TESTDATA2_FILE = "src/test/resources/MigrationTest/jenginev2_with_deleted_scenario.sql";
 
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
@@ -333,7 +338,7 @@ public class  ScenarioTest extends TestSetUp {
      */
     @Test
     public void testSameScenarioNotSavedTwice() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Fragment1.xml")));
@@ -351,13 +356,37 @@ public class  ScenarioTest extends TestSetUp {
     }
 
     /**
+     * Assure that a unchanged scenario is written to the database once again, if the old scenario in the database which
+     * seems to be the same has been deleted.
+     * @throws Exception java.lang.Exception
+     */
+    @Test
+    public void testSameScenarioNotDeletedSavedAgain() throws Exception {
+        refillDatabase(INSERT_TESTDATA2_FILE);
+        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
+        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/Fragment1.xml")));
+        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
+        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/Fragment2.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Domain_Reise.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment1, fragment2), domainModel);
+        scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/MigrationTest/Testszenario.xml")));
+        assertTrue("Oh, scenario should have been saved!", scenario.save() > 0);
+        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
+    }
+
+    /**
      * Assure that when a fragment of a scenario has been modified and the older version of the scenario
      * is already in the database, it gets saved as a new scenario.
      * @throws Exception java.lang.Exception
      */
     @Test
     public void testModificationInFragmentScenarioNewlySaved() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Fragment1.xml")));
@@ -380,7 +409,7 @@ public class  ScenarioTest extends TestSetUp {
      */
     @Test
     public void testModificationInScenarioScenarioNewlySaved() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Fragment1.xml")));
@@ -404,7 +433,7 @@ public class  ScenarioTest extends TestSetUp {
      */
     @Test
     public void testNoMigrationWhenFragmentAddedAndModificationsExist() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Fragment1.xml")));
@@ -431,7 +460,7 @@ public class  ScenarioTest extends TestSetUp {
      */
     @Test
     public void testNoMigrationWhenFragmentDeletedDespiteNewFragment() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Fragment1.xml")));
@@ -456,7 +485,7 @@ public class  ScenarioTest extends TestSetUp {
      */
     @Test
     public void testMigration() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
 
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
@@ -507,7 +536,7 @@ public class  ScenarioTest extends TestSetUp {
      */
     @Test
     public void testDomainModelVersionImpactOnSaving() throws Exception {
-        refillDatabase();
+        refillDatabase(INSERT_TESTDATA_FILE);
         final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
         fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/MigrationTest/Fragment1.xml")));
@@ -536,10 +565,11 @@ public class  ScenarioTest extends TestSetUp {
     /**
      * Emptys the database and fills it from INSERT_TESTDATA_FILE afterwards.
      * @throws Exception java.lang.Exception
+     * @param fileLocation Location of the file which is loaded into the database
      */
-     private void refillDatabase() throws Exception {
-         emptyDatabase();
+     private void refillDatabase(String fileLocation) throws Exception {
+        emptyDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(INSERT_TESTDATA_FILE));
+        runner.runScript(new FileReader(fileLocation));
     }
 }

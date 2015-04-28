@@ -148,10 +148,14 @@ public class ActivityInstance extends ControlNodeInstance {
      */
     @Override
     public boolean terminate() {
+        return this.terminate(-1);
+    }
+
+    public boolean terminate(int outputSet_id) {
         if(canTerminate) {
             boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
             ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
-            outgoingBehavior.terminate();
+            ((TaskOutgoingControlFlowBehavior)outgoingBehavior).terminate(outputSet_id);
             return workingFine;
         }
         return false;

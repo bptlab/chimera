@@ -14,11 +14,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 }
 
-fragment CHARAC: '$'?('A'..'Z' | 'a'..'z' | '0'..'9')+;
+fragment STRING: '$'?('A'..'Z' | 'a'..'z' | '0'..'9')+;
 COMPARISON: '=' | '<' | '>' | '<=' | '>=';
 fragment DOT: '.';
 OPERATOR: ' & ' | ' | ' | '&' | '|';
-NAME: CHARAC | CHARAC  DOT CHARAC;
+NAME: STRING | STRING  DOT STRING;
 expr2: NAME COMPARISON NAME;
 expr: expr2 (OPERATOR expr2)*;
 
