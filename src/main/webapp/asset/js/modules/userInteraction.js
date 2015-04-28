@@ -33,6 +33,16 @@
                     });
             };
 
+            this.getTerminationConditionOfScenario = function(id) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
+                    success(function(data) {
+                        controller.currentScenario['terminationcondition'] = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
+
             //if we are within the layer scenario
             if ($routeParams.id != null) {
                 //setting current id of scenario based on the URI
@@ -46,6 +56,7 @@
                         console.log('request failed');
                     });
                 controller.getInstancesOfScenario(controller.currentScenario['id']);
+                controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
             }
 
 			this.getScenarioDetails = function(id){
@@ -107,16 +118,6 @@
                         console.log('request failed');
                     });
 			};
-
-            this.getTerminationConditionOfScenario = function(id) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
-                    success(function(data) {
-                        controller.currentScenario['terminationcondition'] = data;
-                    }).
-                    error(function() {
-                        console.log('request failed');
-                    });
-            };
 
             /* ____ BEGIN_INITIALIZATION ____ */
             this.initialize = function(){
