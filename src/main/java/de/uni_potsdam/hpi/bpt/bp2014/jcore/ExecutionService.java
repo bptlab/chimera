@@ -320,9 +320,10 @@ public class ExecutionService {
     }
 
     /**
-     * Returns information about all referential Activities of a given scenario instance and activity
+     * Returns information about all referential Activities of a given scenario instance and activity instance
      *
      * @scenarioInstanceId The id which specifies the scenario
+     * @activityInstanceId The id which specifies the activity
      * @return a Collection of referential Activity instances for an Activity, which are enabled and part of the
      *         specified scenario instance.
      */
@@ -577,6 +578,11 @@ public class ExecutionService {
         return attributeInstances;
     }
 
+    /**
+     * Returns a Map with all OutputSets, DataOjects and Data States for activity instance.
+     * @param activityInstanceId The id of the activity instance.
+     * @return a Map with outputsets.
+     */
     public Map<Integer,Map<String, String>> getOutputSetsForActivityInstance(int activityInstanceId){
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
