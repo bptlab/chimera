@@ -55,8 +55,12 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
     }
 
     @Override
-    public void terminate() {
-        setDataStates();
+    public void terminate(){
+        this.terminate(-1);
+    }
+
+    public void terminate(int outputSet_id) {
+        setDataStates(outputSet_id);
         this.checkAfterTermination();
         this.enableFollowing();
         this.runAfterTermination();
@@ -66,10 +70,14 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
      * Sets the states of the data object to the output states of the activity.
      * Sets all this data object to not on change.
      */
-    private void setDataStates() {
+    private void setDataStates(int outputSet_id) {
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNode_id);
         //TODO: Output Set
-        for (int outputSet : outputSets) {
+        if(outputSets.size() != 0) {
+            int outputSet = outputSets.get(0);
+            if (outputSets.size() > 1) {
+                outputSet = outputSet_id;
+            }
             LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
             for (DataObject dataObject : dataObjects) {
                 //resets DataObjectInstance from OnChange back to not OnChange
@@ -77,6 +85,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
                 scenarioInstance.changeDataObjectInstanceState(dataObject.getId(), dataObject.getStateID());
             }
         }
+
     }
 
     /**
