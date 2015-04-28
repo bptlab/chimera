@@ -71,7 +71,6 @@ public class debugClass {
         int scenarioID = new Integer(selectScenario());
         int scenarioInstanceID = new Integer(selectScenarioInstance());
         ExecutionService executionService = new ExecutionService();
-        executionService.getOutputSetsForActivityInstance(9642);
         String scenarioName = executionService.getScenarioName(scenarioID);
         if (scenarioInstanceID == -1) {
             scenarioInstanceID = executionService.startNewScenarioInstance(scenarioID);
