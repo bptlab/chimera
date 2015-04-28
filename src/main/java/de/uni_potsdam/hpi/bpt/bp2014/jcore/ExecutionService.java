@@ -334,12 +334,12 @@ public class ExecutionService {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         LinkedList<Integer> references = dbReference.getReferenceActivitiesForActivity(dbControlNodeInstance.getControlNodeID(activityInstanceId));
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
-        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getControlFlowEnabledControlNodeInstances()) {
             if (nodeInstance instanceof ActivityInstance) {
                 for (int id : references){
                     if(id == nodeInstance.getControlNode_id()){
                         enabledActivities.add((ActivityInstance) nodeInstance);
-                        break;
                     }
                 }
             }

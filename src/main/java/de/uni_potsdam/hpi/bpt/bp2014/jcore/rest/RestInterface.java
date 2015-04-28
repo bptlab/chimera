@@ -865,12 +865,34 @@ public class RestInterface {
 
     /**
      *
+     * @param uriInfo
      * @param scenarioID
      * @param scenarioInstanceID
      * @param activityID
      * @return
      */
-    @GET //
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references")
+    public Response getReferencesForActivity(@Context UriInfo uriInfo,
+                                @PathParam("scenarioID") int scenarioID,
+                                @PathParam("instanceID") int scenarioInstanceID,
+                                @PathParam("activityID") int activityID) {
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+
+        Collection<ActivityInstance> referencedActivities = executionService.getReferentialEnabledActivities(scenarioInstanceID, activityID);
+        String referencedActivitiesJSON = JsonUtil.JsonWrapperCollection(referencedActivities);
+        return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param activityID
+     * @return
+     */
+    @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
     public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
@@ -926,7 +948,9 @@ public class RestInterface {
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
 
-        /*ExecutionService executionService = new ExecutionService();
+        //TODO: return the value from getOutputSetsForActivityInstance(int activityInstanceId)
+
+        ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
@@ -1126,6 +1150,32 @@ public class RestInterface {
                     .build();
         }
     }
+
+    /*
+    @POST
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/outputset/{outputsetID}")
+    public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID,
+                                        @PathParam("outputsetID") int outputsetID) {
+
+        boolean result;
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputsetID);
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"activity state changed.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"impossible to \"}")
+                    .build();
+        }
+    }
+    */
 
     /**
      * Returns a JSON-Object, which contains information about all

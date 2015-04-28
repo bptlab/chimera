@@ -1,18 +1,85 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 
-/**
- * Created by jaspar.mang on 17.02.15.
- */
 public class DbObject {
+
+    /**
+     *
+     * @param sql
+     * @return
+     */
+    public static ArrayList<HashMap<String,Object>> executeStatementReturnsHashMap(String sql) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+
+            //query
+            ResultSet Result = null;
+            boolean Returning_Rows = stmt.execute(sql);
+            if (Returning_Rows)
+                Result = stmt.getResultSet();
+            else
+                return new ArrayList<HashMap<String,Object>>();
+
+            //get metadata
+            ResultSetMetaData Meta = null;
+            Meta = Result.getMetaData();
+
+            //get column names
+            int Col_Count = Meta.getColumnCount();
+            ArrayList<String> Cols = new ArrayList<String>();
+            for (int Index=1; Index<=Col_Count; Index++)
+                Cols.add(Meta.getColumnName(Index));
+
+            //fetch out rows
+            ArrayList<HashMap<String,Object>> Rows =
+                    new ArrayList<HashMap<String,Object>>();
+
+            while (Result.next()) {
+                HashMap<String,Object> Row = new HashMap<String,Object>();
+                for (String Col_Name:Cols) {
+                    Object Val = Result.getObject(Col_Name);
+                    Row.put(Col_Name,Val);
+                }
+                Rows.add(Row);
+            }
+
+            //close statement
+            stmt.close();
+
+            //pass back rows
+            return Rows;
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     /**
      * Executes the given select SQL statement and returns the result in List with Integer.
      *
