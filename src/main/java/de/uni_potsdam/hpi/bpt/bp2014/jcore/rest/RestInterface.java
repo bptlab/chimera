@@ -903,6 +903,8 @@ public class RestInterface {
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
 
+        //TODO: return the value from getOutputSetsForActivityInstance(int activityInstanceId)
+
         ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
@@ -937,6 +939,8 @@ public class RestInterface {
                 i++;
             }
         }
+        //String dataObjectsJson = JsonUtil.JsonWrapperArrayListHashMap(dataObjects);
+        //return Response.ok(dataObjectsJson, MediaType.APPLICATION_JSON_TYPE).build();
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
@@ -1020,6 +1024,32 @@ public class RestInterface {
                     .build();
         }
     }
+
+    /*
+    @POST
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/outputset/{outputsetID}")
+    public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID,
+                                        @PathParam("outputsetID") int outputsetID) {
+
+        boolean result;
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputsetID);
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"activity state changed.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"impossible to \"}")
+                    .build();
+        }
+    }
+    */
 
     /**
      * Returns a JSON-Object, which contains information about all
