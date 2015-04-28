@@ -14,9 +14,9 @@ public class DbHistoryActivityInstance extends DbObject {
      * @return the generated key for the insert statement.
      */
     public int createEntry(int id, String state) {
-        String sql = "INSERT INTO historyactivityinstance(`activityinstance_id`, `label`, `oldstate`,`newstate`, `scenarioinstance_id`)" +
+        String sql = "INSERT INTO historyactivityinstance(`activityinstance_id`, `oldstate`,`newstate`, `scenarioinstance_id`)" +
                 " SELECT `id`, " +
-                "(SELECT `label` FROM `controlnode`, `controlnodeinstance` WHERE `controlnode`.id=`controlnodeinstance`.controlnode_id AND `controlnodeinstance`.id = "+ id +") AS `label`, " +
+                //"(SELECT `label` FROM `controlnode`, `controlnodeinstance` WHERE `controlnode`.id=`controlnodeinstance`.controlnode_id AND `controlnodeinstance`.id = "+ id +") AS `label`, " +
                 "(SELECT activity_state FROM activityinstance WHERE id = " + id + ") AS `oldstate`, \"" + state + "\" AS `newstate`, " +
                 "(SELECT scenarioinstance_id FROM fragmentinstance, controlnodeinstance WHERE fragmentinstance.id = controlnodeinstance.fragmentinstance_id AND controlnodeinstance.id = " + id + ") AS `scenarioinstance_id` " +
                 "FROM activityinstance WHERE id = " + id;
@@ -29,9 +29,9 @@ public class DbHistoryActivityInstance extends DbObject {
      * @return the generated key for the insert statement.
      */
     public int createNewActivityEntry(int id) {
-        String sql = "INSERT INTO historyactivityinstance(`activityinstance_id`,`label`,`newstate`, `scenarioinstance_id`) " +
+        String sql = "INSERT INTO historyactivityinstance(`activityinstance_id`,`newstate`, `scenarioinstance_id`) " +
                 "SELECT `id`, " +
-                "(SELECT `label` FROM `controlnode`, `controlnodeinstance` WHERE `controlnode`.id=`controlnodeinstance`.controlnode_id AND `controlnodeinstance`.id = "+ id +") AS `label`, " +
+                //"(SELECT `label` FROM `controlnode`, `controlnodeinstance` WHERE `controlnode`.id=`controlnodeinstance`.controlnode_id AND `controlnodeinstance`.id = "+ id +") AS `label`, " +
                 "(SELECT activity_state FROM activityinstance WHERE id = " + id + ") AS `newstate`, " +
                 "(SELECT scenarioinstance_id FROM fragmentinstance, controlnodeinstance WHERE fragmentinstance.id = controlnodeinstance.fragmentinstance_id AND controlnodeinstance.id = " + id + ") AS `scenarioinstance_id` " +
                 "FROM activityinstance WHERE id = " + id;
@@ -45,12 +45,12 @@ public class DbHistoryActivityInstance extends DbObject {
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
     public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT * FROM historyactivityinstance WHERE scenarioinstance_id = "+scenarioInstanceId+" ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "activityinstance_id", "label", "timestamp", "oldstate", "newstate", "scenarioinstance_id", "role_id", "user_id", "comment");
+        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id  ORDER BY timestamp DESC";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id","h.scenarioinstance_id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 
     public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT * FROM historyactivityinstance WHERE `scenarioinstance_id` = "+scenarioInstanceId+" AND `newstate` = 'terminated' ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "activityinstance_id", "label", "timestamp", "oldstate", "newstate", "scenarioinstance_id", "role_id", "user_id", "comment");
+        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id AND `newstate` = 'terminated' ORDER BY timestamp DESC";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "cn.label", "h.scenarioinstance_id", "h.id", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 }
