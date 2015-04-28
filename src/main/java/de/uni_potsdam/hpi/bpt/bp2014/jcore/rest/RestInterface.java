@@ -1,10 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -151,7 +150,31 @@ public class RestInterface {
         /**
          *
          */
-        public Map<Integer,Map<String,String>> attributeConfiguration;
+        public DataAttributeJaxBean[] attributeConfiguration;
+    }
+
+    /**
+     *
+     */
+    @XmlRootElement
+    public static class DataAttributeJaxBean {
+        /**
+         *
+         */
+        public int id;
+        /**
+         *
+         */
+        public String name;
+        /**
+         *
+         */
+        public String type;
+        /**
+         *
+         */
+        public String value;
+
     }
 
     /**
@@ -823,7 +846,6 @@ public class RestInterface {
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         ActivityJaxBean activity = new ActivityJaxBean();
-        // @TODO: check for correct links
         DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
         inputSet.linkDataObject = uriInfo.getAbsolutePath() + "/input";
         DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
@@ -858,7 +880,8 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
+        LinkedList<ControlNodeInstance> controlNodeInstances = executionService
+                .getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
         int controlNodeID = -1;
         for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
             if(controlNodeInstance.getControlNodeInstance_id() == activityID){
@@ -882,7 +905,7 @@ public class RestInterface {
                 dataObject.id = dO.getId();
                 dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
                 dataObject.label = executionService.getAllDataObjectNames(scenarioInstanceID).get(dO.getId());
-                dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
+                //dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
                 dataObjects[i] = dataObject;
                 i++;
             }
@@ -903,18 +926,12 @@ public class RestInterface {
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
 
-        ExecutionService executionService = new ExecutionService();
+        /*ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
-        Integer controlNodeID = -1;
-        for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
-            if(controlNodeInstance.getControlNodeInstance_id() == activityID){
-                controlNodeID = controlNodeInstance.getControlNode_id();
-            }
-        }
+        Integer controlNodeID = executionService.getControlNodeInstanceForActivityInstanceID(scenarioInstanceID, activityID);
         if (controlNodeID == -1) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
@@ -926,18 +943,107 @@ public class RestInterface {
         for (int outputSet : outputSets) {
             LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
             dataObjects = new DataObjectJaxBean[dObjects.size()];
+            int i = 0;
             for (DataObject dO : dObjects) {
-                int i = 0;
                 DataObjectJaxBean dataObject = new DataObjectJaxBean();
-                dataObject.id = dO.getId();
-                dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
-                dataObject.label = executionService.getAllDataObjectNames(scenarioInstanceID).get(dO.getId());
-                dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
+                DbState dbState = new DbState();
+                LinkedList<DataObjectInstance> dataObjectInstances= executionService.getScenarioInstance(scenarioInstanceID).getDataObjectInstances();
+                for(DataObjectInstance dataObjectInstance : dataObjectInstances) {
+                    if (dO.getId() == dataObjectInstance.getDataObject_id()) {
+                        dataObject.id = dataObjectInstance.getDataObjectInstance_id();
+                        dataObject.label = dataObjectInstance.getName();
+                        dataObject.state = dbState.getStateName(dataObjectInstance.getState_id());
+                        dataObject.attributeConfiguration = getDataAttributes(dataObjectInstance);
+                    }
+                }
                 dataObjects[i] = dataObject;
                 i++;
             }
+        }*/
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
+        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    /**
+     *
+     * @param scenarioID
+     * @param scenarioInstanceID
+     * @param inputsetID
+     * @return
+     */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}")
+    public Response getInputDataObjectsAndAttributes(@PathParam("scenarioID") int scenarioID,
+                                                      @PathParam("instanceID") int scenarioInstanceID,
+                                                      @PathParam("inputsetID") int inputsetID) {
+
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
+        DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        DataObjectInstance[] dataObjectInstances = executionService
+                .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID);
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
+        for (int i = 0; i < dataObjectInstances.length; i++) {
+            dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
+            dataObject.label = dataObjectInstances[i].getName();
+            dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
+            dataObject.attributeConfiguration = getDataAttributes(dataObjectInstances[i]);
+            dataObjects[i] = dataObject;
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+    }
+    /**
+    *
+    * @param scenarioID
+    * @param scenarioInstanceID
+    * @param outputsetID
+    * @return
+    */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}")
+    public Response getOutputDataObjectsAndAttributes(@PathParam("scenarioID") int scenarioID,
+                                         @PathParam("instanceID") int scenarioInstanceID,
+                                         @PathParam("outputsetID") int outputsetID) {
+
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
+        DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        DataObjectInstance[] dataObjectInstances = executionService
+                .getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
+        for(int i = 0; i < dataObjectInstances.length; i++) {
+            dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
+            dataObject.label = dataObjectInstances[i].getName();
+            dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
+            dataObject.attributeConfiguration = getDataAttributes(dataObjectInstances[i]);
+            dataObjects[i] = dataObject;
+        }
+        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    /**
+     * This method is used to generate an array of all dataAttributes belonging to the given dataObjectInstance.
+     *
+     * @param dataObjectInstance This is the dataObjectInstance.
+     * @return an array of DataAttributeJaxBean belonging to this dataObjectInstance.
+     */
+    private DataAttributeJaxBean[] getDataAttributes(DataObjectInstance dataObjectInstance) {
+        DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
+        int i = 0;
+        for(DataAttributeInstance dataAttributeInstance : dataObjectInstance.getDataAttributeInstances()){
+            dataAttributes[i].id = dataAttributeInstance.getDataAttributeInstance_id();
+            dataAttributes[i].name = dataAttributeInstance.getName();
+            dataAttributes[i].type = dataAttributeInstance.getType();
+            dataAttributes[i].value = dataAttributeInstance.getValue().toString();
+            i++;
+        }
+        return dataAttributes;
     }
 
     /**
