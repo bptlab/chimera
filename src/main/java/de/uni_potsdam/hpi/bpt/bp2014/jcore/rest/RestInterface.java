@@ -767,6 +767,31 @@ public class RestInterface {
     }
 
     /**
+     *
+     * @param instances
+     * @param uriInfo
+     * @return
+     */
+    private JSONObject buildJSONObjectForReferencedActivities(
+            Collection<ActivityInstance> instances, UriInfo uriInfo) {
+        List<Integer> ids = new ArrayList<>(instances.size());
+        JSONArray activities = new JSONArray();
+        for (ActivityInstance instance : instances) {
+            JSONObject activityJSON = new JSONObject();
+            ids.add(instance.getControlNodeInstance_id());
+            activityJSON.put("id", instance.getControlNodeInstance_id());
+            activityJSON.put("label", instance.getLabel());
+            activityJSON.put("link", uriInfo.getAbsolutePath() + "/" +
+                    instance.getControlNodeInstance_id());
+            activities.put(activityJSON);
+        }
+        JSONObject result = new JSONObject();
+        result.put("ids", new JSONArray(ids));
+        result.put("activities", activities);
+        return result;
+    }
+
+    /**
      * Returns a Response Object for all activities with the instance Id.
      * We assume that the instanceId is correct.
      * The Response will be a 200 with json content.
@@ -859,8 +884,13 @@ public class RestInterface {
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
 
         Collection<ActivityInstance> referencedActivities = executionService.getReferentialEnabledActivities(scenarioInstanceID, activityID);
-        String referencedActivitiesJSON = JsonUtil.JsonWrapperCollection(referencedActivities);
-        return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
+
+        JSONObject result = buildJSONObjectForReferencedActivities(referencedActivities,  uriInfo);
+        return Response
+                .ok(result.toString(), MediaType.APPLICATION_JSON)
+                .build();
+        //String referencedActivitiesJSON = JsonUtil.JsonWrapperCollection(referencedActivities);
+       // return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
     }
 
     /**

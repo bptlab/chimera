@@ -198,9 +198,8 @@
 					<div class="panel-footer"></div>
 			   	</div>
 			</div>
-		
 		</div>
-		<div class="row">
+          <div class="row">
 			<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
 				<div class="hpanel stats">
 					<div class="panel-heading">
@@ -221,9 +220,9 @@
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
 									<div class="list-item">
-										<h3 class="no-margins text-success">{{value['label']}}</h3>
-										<small>{{value['oldstate']}} -> {{value['newstate']}}</small>
-										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+										<h3 class="no-margins text-success">{{value['cn.label']}}</h3>
+										<small>{{value['h.oldstate']}} -> {{value['h.newstate']}}</small>
+										<div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>
 									</div>
 								    </div>
 								</div>
@@ -231,7 +230,8 @@
 	 						<div class="animate-switch" ng-switch-when="dataobject">						
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
-									<div class="list-item">
+                                        {{value}}
+                                        <div class="list-item">
 										<h3 class="no-margins text-success">{{value['name']}}</h3>
 										<small>{{value['old_state_name']}} -> {{value['new_state_name']}}</small>
 										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
