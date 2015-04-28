@@ -897,22 +897,10 @@ public class RestInterface {
     public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
-        ExecutionService executionService = new ExecutionService();
+        /*ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
-        }
-        LinkedList<ControlNodeInstance> controlNodeInstances = executionService
-                .getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
-        int controlNodeID = -1;
-        for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
-            if(controlNodeInstance.getControlNodeInstance_id() == activityID){
-                controlNodeID = controlNodeInstance.getControlNode_id();
-            }
-        }
-        if (controlNodeID == -1) {
-            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
@@ -931,7 +919,8 @@ public class RestInterface {
                 dataObjects[i] = dataObject;
                 i++;
             }
-        }
+        }*/
+        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON).build();
     }
 
@@ -950,15 +939,10 @@ public class RestInterface {
 
         //TODO: return the value from getOutputSetsForActivityInstance(int activityInstanceId)
 
-        ExecutionService executionService = new ExecutionService();
+        /*ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
-        }
-        Integer controlNodeID = executionService.getControlNodeInstanceForActivityInstanceID(scenarioInstanceID, activityID);
-        if (controlNodeID == -1) {
-            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();
