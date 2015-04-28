@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-/**
- * Created by jaspar.mang on 19.03.15.
- */
 public class DbDataAttributeInstance extends DbObject{
 
     public int createNewDataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id) {

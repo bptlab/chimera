@@ -1,10 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 /**
- * Created by jaspar.mang on 19.02.15.
- */
-
-/**
  * This class is the representation of a dataObject.
  */
 public class DataObject {
