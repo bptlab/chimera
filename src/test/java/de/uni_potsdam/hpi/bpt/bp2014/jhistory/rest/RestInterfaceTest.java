@@ -84,10 +84,7 @@ public class RestInterfaceTest extends AbstractTest {
                 response.readEntity(String.class),
                 jsonEquals("{\"119\":{\"activityinstance_id\":6686,\"scenarioinstance_id\":966,\"oldstate\":\"running\",\"label\":\"Activity1Fragment2\",\"newstate\":\"terminated\"},\"102\":{\"activityinstance_id\":6685,\"scenarioinstance_id\":966,\"oldstate\":\"running\",\"label\":\"Activity1Fragment1\",\"newstate\":\"terminated\"},\"113\":{\"activityinstance_id\":6687,\"scenarioinstance_id\":966,\"oldstate\":\"running\",\"label\":\"ActivityFragment3\",\"newstate\":\"terminated\"},\"108\":{\"activityinstance_id\":6689,\"scenarioinstance_id\":966,\"oldstate\":\"running\",\"label\":\"Activity2Fragment1\",\"newstate\":\"terminated\"},\"124\":{\"activityinstance_id\":6688,\"scenarioinstance_id\":966,\"oldstate\":\"running\",\"label\":\"ActivityFragment4\",\"newstate\":\"terminated\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
-
-
-
-
+    
     /**
      *
      */
