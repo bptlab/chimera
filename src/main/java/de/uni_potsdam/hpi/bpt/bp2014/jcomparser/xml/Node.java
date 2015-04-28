@@ -320,12 +320,22 @@ public class Node implements IDeserialisable, IPersistable {
 
     /**
      * Sets the Id of the Node.
-     * Currenctly only used by tests.
+     * Currently only used by tests.
      *
      * @param newId the new id of the data Node.
      */
     protected void setId(final long newId) {
         this.id = newId;
+    }
+
+    /**
+     * Sets the Label of the Node.
+     * Currently only used by tests.
+     *
+     * @param newLabel the new label of the data Node.
+     */
+    protected void setText(final String newLabel) {
+        this.text = newLabel;
     }
     // END: Getter & Setter
 }
