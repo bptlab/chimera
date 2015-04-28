@@ -605,7 +605,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void saveOutputSetsConsistOf(final Fragment frag) {
         Connector connector = new Connector();
         for (OutputSet oSet : frag.getOutputSets()) {
-            for (Node dataNode : oSet.getOutputs()) {
+            for (Node dataNode : oSet.getDataObjects()) {
                 connector.insertDataSetConsistOfDataNodeIntoDatabase(
                         oSet.getDatabaseId(),
                         dataNode.getDatabaseID());
@@ -622,7 +622,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private void saveInputSetsConsistOf(final Fragment frag) {
         Connector connector = new Connector();
         for (InputSet iSet : frag.getInputSets()) {
-            for (Node dataNode : iSet.getInputs()) {
+            for (Node dataNode : iSet.getDataObjects()) {
                 connector.insertDataSetConsistOfDataNodeIntoDatabase(
                         iSet.getDatabaseId(),
                         dataNode.getDatabaseID());

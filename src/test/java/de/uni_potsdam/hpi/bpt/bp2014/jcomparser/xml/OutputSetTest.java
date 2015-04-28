@@ -17,7 +17,7 @@ public class OutputSetTest {
     private List<Element> dataFlows;
     private List<Edge> dataFlowEdges;
     private Node activity;
-    private OutputSet outputSet;
+    private List<OutputSet> outputSets;
     private List<Node> dataNodes;
 
     // BEGIN: Set-Up
@@ -68,11 +68,13 @@ public class OutputSetTest {
         // dataNodes
         Node datanode = new Node();
         datanode.setId(2L);
+        datanode.setText("DO1");
         nodes.put(2L, datanode);
         dataNodes.add(datanode);
 
         datanode = new Node();
         datanode.setId(3L);
+        datanode.setText("DO2");
         nodes.put(3L, datanode);
         dataNodes.add(datanode);
 
@@ -82,22 +84,25 @@ public class OutputSetTest {
     }
 
     public void setUpOutputSet() {
-        outputSet = OutputSet.createOutputSetForTaskAndEdges(activity, dataFlowEdges);
+        outputSets = OutputSet.createOutputSetForTaskAndEdges(activity, dataFlowEdges);
     }
     // END: Set-Up
 
     // BEGIN: Tests
     @Test
     public void testOutputSetDeserialization() {
-        Assert.assertEquals("The producer-Node has not been set correctly", activity, outputSet.getProducer());
-        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes, outputSet.getOutputs());
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges, outputSet.getAssociations());
+        Assert.assertEquals("There is actually just one outputSet", 1, outputSets.size());
+        Assert.assertEquals("The producer-Node has not been set correctly", activity, outputSets.get(0).getNode());
+        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(0), outputSets.get(0).getDataObjects().get(1));
+        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(0).getDataObjects().get(0));
+        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), outputSets.get(0).getAssociations().get(1));
+        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), outputSets.get(0).getAssociations().get(0));
     }
 
     @Test
     public void testSaveSequenceFlow() {
-        outputSet.save();
-        Assert.assertTrue("No database-ID set", outputSet.getDatabaseId() != 0);
+        outputSets.get(0).save();
+        Assert.assertTrue("No database-ID set", outputSets.get(0).getDatabaseId() != 0);
     }
     // END: Tests
 
