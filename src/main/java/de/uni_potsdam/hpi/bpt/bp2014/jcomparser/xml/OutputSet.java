@@ -2,52 +2,60 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-public class OutputSet implements IPersistable {
-    /**
-     * The list of (Associations-)Edges.
-     * Each each has a (DataObject-) Node as the target
-     * and a (Control) Node as the source.
-     */
-    private List<Edge> associations;
-    /**
-     * The (DataObjects) which are part of the DataNode
-     */
-    private List<Node> outputs;
-    /**
-     * The task which has the input set
-     */
-    private Node producer;
-    /**
-     * The Database ID of the OutputSet
-     */
-    private int databaseId = -1;
+public class OutputSet extends Set implements IPersistable {
 
     /**
      * Creates an Output Set for the given Node (task) and the given Edges (edges). The edges should at least contain
      * all outgoing associations of the task, but can contain more edges.
      *
-     * @param task  - The (Task)Node which has the OutputSet
-     * @param edges - The List of Edges
-     * @return the newly created OutputSet or null if now Outgoing (DataFlow)-Association was found.
+     * @param task  The task which has an output set
+     * @param edges The list of all edges that are part of the fragment the task belongs to
+     *              (the list has to contain at least all the outgoing associations of the task)
+     * @return The newly created OutputSets or null if no outgoing (DataFlow)-Associations were found.
      */
-    public static OutputSet createOutputSetForTaskAndEdges(Node task, List<Edge> edges) {
-        OutputSet instance = new OutputSet();
-        instance.associations = new LinkedList<Edge>();
-        instance.outputs = new LinkedList<Node>();
-        instance.producer = task;
+    public static List<OutputSet> createOutputSetForTaskAndEdges(
+            final Node task,
+            final List<Edge> edges) {
+        List<Edge> associations = new LinkedList<>();
         for (Edge edge : edges) {
-            if (edge.getSourceNodeId() == instance.producer.getId() && edge.getType().contains("Association")) {
-                instance.associations.add(edge);
-                instance.outputs.add(edge.getTarget());
+            if (edge.getSourceNodeId() == task.getId()
+                    && edge.getType().contains("Association")) {
+                associations.add(edge);
             }
         }
-        if (instance.outputs.isEmpty()) {
+        if (associations.isEmpty()) {
             return null;
         }
-        return instance;
+        Map<String, List<Edge>> orderedAssociations = new HashMap<>();
+        for (Edge edge : associations) {
+            String targetNodeLabel = edge.getTarget().getText();
+            if (orderedAssociations.get(targetNodeLabel) == null) {
+                List<Edge> value = new LinkedList<>();
+                value.add(edge);
+                orderedAssociations.put(targetNodeLabel, value);
+            }
+            else {
+                orderedAssociations.get(targetNodeLabel).add(edge);
+            }
+        }
+        List<List<Edge>> cartProd = cartesianProduct(orderedAssociations);
+        List<OutputSet> outputSets = new LinkedList<>();
+        for (List<Edge> edgeSet : cartProd) {
+            OutputSet instance = new OutputSet();
+            instance.associations = edgeSet;
+            instance.dataObjects = new LinkedList<>();
+            instance.node = task;
+            for (Edge e : edgeSet) {
+                instance.dataObjects.add(e.getTarget());
+            }
+            outputSets.add(instance);
+        }
+        return outputSets;
     }
 
     @Override
@@ -56,31 +64,5 @@ public class OutputSet implements IPersistable {
         databaseId = connector.insertDataSetIntoDatabase(false);
         updateEdges();
         return databaseId;
-    }
-
-    /**
-     * Adds the Database ID of the Set to the edges, so that the edges can be saved to the database.
-     * Assert that the OutputSet has been written to the Database.
-     */
-    private void updateEdges() {
-        for (Edge edge : associations) {
-            edge.setSetId(databaseId);
-        }
-    }
-
-    public int getDatabaseId() {
-        return databaseId;
-    }
-
-    public List<Node> getOutputs() {
-        return outputs;
-    }
-
-    public Node getProducer() {
-        return producer;
-    }
-
-    public List<Edge> getAssociations() {
-        return associations;
     }
 }
