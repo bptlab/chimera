@@ -5,9 +5,6 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
-/**
- * Created by jaspar.mang on 28.01.15.
- */
 public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
     private int port;
     private String serverAddress;
