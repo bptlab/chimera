@@ -31,6 +31,7 @@ import java.util.LinkedList;
  * Represents data object instances.
  */
 public class DataObjectInstance {
+
     private int state_id;
     private final int dataObjectInstance_id;
     private final int dataObject_id;
@@ -141,4 +142,9 @@ public class DataObjectInstance {
     public String getName() {
         return name;
     }
+
+    public LinkedList<DataAttributeInstance> getDataAttributeInstances() {
+        return dataAttributeInstances;
+    }
+
 }

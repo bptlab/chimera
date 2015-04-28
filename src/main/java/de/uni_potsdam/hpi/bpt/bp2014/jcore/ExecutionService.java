@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import sun.awt.image.ImageWatched;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -333,12 +334,12 @@ public class ExecutionService {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         LinkedList<Integer> references = dbReference.getReferenceActivitiesForActivity(dbControlNodeInstance.getControlNodeID(activityInstanceId));
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstanceId);
-        for (ControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
+
+        for (ControlNodeInstance nodeInstance : scenarioInstance.getControlFlowEnabledControlNodeInstances()) {
             if (nodeInstance instanceof ActivityInstance) {
                 for (int id : references){
                     if(id == nodeInstance.getControlNode_id()){
                         enabledActivities.add((ActivityInstance) nodeInstance);
-                        break;
                     }
                 }
             }
@@ -601,5 +602,27 @@ public class ExecutionService {
             }
         }
         return allOutputSets;
+    }
+
+    public DataObjectInstance[] getDataObjectInstancesForDataSetId(int setID, int scenarioInstanceID){
+        DbDataNode dbDataNode = new DbDataNode();
+        LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
+        int j = 0;
+        DataObjectInstance[] dataObjectInstancesArray = new DataObjectInstance[dataObjects.size()];
+        for(DataObject dataObject : dataObjects){
+            LinkedList<DataObjectInstance> dataObjectInstances = sortedScenarioInstances.get(scenarioInstanceID).getDataObjectInstances();
+            for(int i = 0; i < dataObjectInstances.size(); i++) {
+                if (dataObject.getId() == dataObjectInstances.get(i).getDataObject_id()) {
+                    dataObjectInstancesArray[j] = dataObjectInstances.get(i);
+                    j++;
+                }
+            }
+        }
+        return dataObjectInstancesArray;
+    }
+
+    public String getStateNameForDataObjectInstance(DataObjectInstance dataObjectInstance) {
+        DbState dbState = new DbState();
+        return dbState.getStateName(dataObjectInstance.getState_id());
     }
 }
