@@ -97,7 +97,7 @@ public class FragmentTest {
     public void testSetsSetCorrectly(){
         Assert.assertEquals("The inputSet has not been set correctly", 0, fragment.getInputSets().size());
         Assert.assertEquals("The outputSet has not been set correctly", 1, fragment.getOutputSets().size());
-        Assert.assertEquals("The producerNode of the outputSet has not been set correctly", 1080362683L, fragment.getOutputSets().get(0).getProducer().getId());
+        Assert.assertEquals("The producerNode of the outputSet has not been set correctly", 1080362683L, fragment.getOutputSets().get(0).getNode().getId());
     }
 
     /**

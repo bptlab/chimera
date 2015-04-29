@@ -59,6 +59,10 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
         this.terminate(-1);
     }
 
+    /**
+     * Terminates the activity.
+     * @param outputSet_id of the set that get executed.
+     */
     public void terminate(int outputSet_id) {
         setDataStates(outputSet_id);
         this.checkAfterTermination();

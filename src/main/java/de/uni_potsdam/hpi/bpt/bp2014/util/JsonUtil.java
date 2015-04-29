@@ -2,16 +2,27 @@ package de.uni_potsdam.hpi.bpt.bp2014.util;
 
 import com.google.gson.Gson;
 import com.google.gson.*;
+import org.json.JSONArray;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 
 /**
  * This class provides the helper methods/classes used for the JSON representation for the REST connections.
  */
 public class JsonUtil {
+
+    /**
+     *
+     * @param content is an ArrayList<HashMap<String,Object>>
+     * @return
+     */
+    public static String JsonWrapperArrayListHashMap(ArrayList<HashMap<String,Object>> content) {
+        Gson gson = new Gson();
+        JSONArray json = new JSONArray(content);
+        return gson.toJson(json);
+    }
+
     /**
      * @param content contains a LinkedList.
      * @return a wrapped json.
@@ -19,6 +30,12 @@ public class JsonUtil {
     public static String JsonWrapperLinkedList(LinkedList<Integer> content) {
         Gson gson = new Gson();
         JsonIntegerList json = new JsonIntegerList(content);
+        return gson.toJson(json);
+    }
+
+    public static String JsonWrapperCollection(Collection content) {
+        Gson gson = new Gson();
+        String json = gson.toJson(content);
         return gson.toJson(json);
     }
 
