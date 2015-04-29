@@ -33,7 +33,7 @@ public class RestTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.RestConnection.class);
+        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface.class);
 
     }
 
