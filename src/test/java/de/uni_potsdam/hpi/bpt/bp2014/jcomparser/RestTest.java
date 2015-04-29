@@ -49,7 +49,6 @@ public class RestTest extends AbstractTest {
     public void testGetScenarios() {
         final Response test = target("jcomparser/scenarios/").request().get();
         //assertEquals("{\"ids\":[1,2,3,100,101,103,105,111,113,114,115,116,117,118,134]}", test.readEntity(String.class));
-
     }
 
     @Test
@@ -71,6 +70,5 @@ public class RestTest extends AbstractTest {
          String scenarioID = "000000";
          final Response test = target("/jcomparser/launch/" + scenarioID + "/").request().get();
         //assertEquals("{true}", test.readEntity(String.class));
-   
     }
 }
