@@ -48,7 +48,7 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
     @Override
     public void enableControlFlow() {
         if (checkEnabled()) {
-            ((GatewayInstance) controlNodeInstance).terminate();
+            controlNodeInstance.terminate();
         }
     }
 

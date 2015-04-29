@@ -26,16 +26,16 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
  */
 
 public class GatewayInstance extends ControlNodeInstance {
-    private boolean isXOR;
-    private boolean isAND;
-    private ScenarioInstance scenarioInstance;
-    private boolean automaticExecution;
     /**
      * Database Connection objects.
      */
     private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private final DbControlNode dbControlNode = new DbControlNode();
     private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
+    private boolean isXOR;
+    private boolean isAND;
+    private ScenarioInstance scenarioInstance;
+    private boolean automaticExecution;
 
     /**
      * Creates and initializes a new gateway instance.
@@ -96,6 +96,7 @@ public class GatewayInstance extends ControlNodeInstance {
 
     /**
      * Checks if the gateway can terminate.
+     *
      * @param controlNode_id A control node id.
      * @return true if the gateway can terminate
      */

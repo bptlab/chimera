@@ -45,7 +45,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
      * @param activity_id         This is the database id from the activity instance.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      * @param fragmentInstance_id This is the database id from the fragment instance.
-     * @param activityInstance This is an instance from the class ControlNodeInstance.
+     * @param activityInstance    This is an instance from the class ControlNodeInstance.
      */
     public TaskOutgoingControlFlowBehavior(int activity_id, ScenarioInstance scenarioInstance, int fragmentInstance_id, ActivityInstance activityInstance) {
         this.controlNode_id = activity_id;
@@ -55,12 +55,13 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
     }
 
     @Override
-    public void terminate(){
+    public void terminate() {
         this.terminate(-1);
     }
 
     /**
      * Terminates the activity.
+     *
      * @param outputSet_id of the set that get executed.
      */
     public void terminate(int outputSet_id) {
@@ -84,7 +85,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
             }
         }
         //TODO: Output Set
-        if(outputSets.size() != 0) {
+        if (outputSets.size() != 0) {
             int outputSet = outputSets.get(0);
             if (outputSets.size() > 1) {
                 outputSet = outputSet_id;
