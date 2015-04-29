@@ -91,10 +91,15 @@ public class InputSetTest {
         setUpInputSet();
         Assert.assertEquals("There is actually just one inputSet", 1, inputSets.size());
         Assert.assertEquals("The consumer-Node has not been set correctly", activity, inputSets.get(0).getNode());
-        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(0), inputSets.get(0).getDataObjects().get(1));
-        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(1), inputSets.get(0).getDataObjects().get(0));
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), inputSets.get(0).getAssociations().get(1));
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), inputSets.get(0).getAssociations().get(0));
+
+        Assert.assertEquals("The input-Nodes have not been set correctly", 2, inputSets.get(0).getDataObjects().size());
+        Assert.assertTrue("The input-Nodes have not been set correctly", inputSets.get(0).getDataObjects().contains(dataNodes.get(0)));
+        Assert.assertTrue("The input-Nodes have not been set correctly", inputSets.get(0).getDataObjects().contains(dataNodes.get(1)));
+
+        Assert.assertEquals("The associations have not been set correctly", 2, inputSets.get(0).getAssociations().size());
+        Assert.assertTrue("The associations have not been set correctly", inputSets.get(0).getAssociations().contains(dataFlowEdges.get(0)));
+        Assert.assertTrue("The associations have not been set correctly", inputSets.get(0).getAssociations().contains(dataFlowEdges.get(1)));
+
         Assert.assertTrue("Something went wrong saving the inputset", inputSets.get(0).save() > 0);
     }
 
