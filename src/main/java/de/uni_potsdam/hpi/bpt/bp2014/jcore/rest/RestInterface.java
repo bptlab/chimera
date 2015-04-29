@@ -920,6 +920,11 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        if(executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID).length == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such inputSet instance.\"}").build();
+        }
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
@@ -951,6 +956,11 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        if(executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such outputSet instance.\"}").build();
+        }
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];

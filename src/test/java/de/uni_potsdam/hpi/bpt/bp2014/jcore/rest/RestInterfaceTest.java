@@ -1050,21 +1050,103 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no outputSet for this activity instance.\"}").when(Option.IGNORING_ARRAY_ORDER));
+                jsonEquals("{\"error\":\"There is no outputSet for this activity instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
-     *  when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     *  when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
      */
     @Test
     public void testGetOutputSetDataAttributes() {
         Response response = base.path("scenario/135/instance/808/outputset/140")
                 .request().get();
-        assertEquals("The Response code of getDataAttributes was not 200",
+        assertEquals("The Response code of getOutputDataAttributes was not 200",
+                200, response.getStatus());
+        assertEquals("getOutputDataAttributes does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     */
+    @Test
+    public void testInvalidScenarioGetOutputSetDataAttributes() {
+        Response response = base.path("scenario/9987/instance/1234/outputset/140")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     */
+    @Test
+    public void testInvalidOutputSetGetOutputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/outputset/1400")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such outputSet instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     *  when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     */
+    @Test
+    public void testGetInputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/inputset/139")
+                .request().get();
+        assertEquals("The Response code of getInputDataAttributes was not 200",
                 200, response.getStatus());
         assertEquals("getDataAttributes does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]").when(Option.IGNORING_ARRAY_ORDER));
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     */
+    @Test
+    public void testInvalidScenarioGetInputSetDataAttributes() {
+        Response response = base.path("scenario/9987/instance/1234/inputset/140")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     */
+    @Test
+    public void testInvalidInputSetGetInputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/inputset/1400")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such inputSet instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
     }
 }
