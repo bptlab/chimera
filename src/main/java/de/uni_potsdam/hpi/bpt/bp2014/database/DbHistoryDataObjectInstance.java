@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * This class provides the actual implementation for the logging of DataObjectInstances and the retrieval of log entries for presentation.
  */
-
+//this one mergetool
 public class DbHistoryDataObjectInstance extends DbObject {
     /**
      * This method saves a log entry containing a DataAttributeInstance value change into the database.
