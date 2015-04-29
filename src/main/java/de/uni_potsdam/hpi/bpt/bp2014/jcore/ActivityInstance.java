@@ -41,7 +41,7 @@ public class ActivityInstance extends ControlNodeInstance {
     private final ScenarioInstance scenarioInstance;
     private final String label;
     private LinkedList<Integer> references;
-    private final boolean isMailTask;
+    private final boolean isAutomaticTask;
     private boolean automaticExecution;
     private boolean canTerminate;
     /**
@@ -68,6 +68,7 @@ public class ActivityInstance extends ControlNodeInstance {
         this.label = dbControlNode.getLabel(controlNode_id);
         this.references = dbReference.getReferenceActivitiesForActivity(controlNode_id);
         scenarioInstance.getControlNodeInstances().add(this);
+
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
             //creates an existing Activity Instance using the database information
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
@@ -75,23 +76,33 @@ public class ActivityInstance extends ControlNodeInstance {
         } else {
             //creates a new Activity Instance also in database
             this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
-            dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
-            if (dbControlNode.getType(controlNode_id).equals("EmailTask")) {
-                dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
+
+            switch (dbControlNode.getType(controlNode_id)) {
+                case "EmailTask":
+                    dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "EmailTask", "init");
+                    dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
+                    break;
+                default:
+                    dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
             }
+
             this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
             ((ActivityStateMachine) stateMachine).enableControlFlow();
         }
+
         this.canTerminate = dbActivityInstance.getCanTerminate(controlNodeInstance_id);
         this.automaticExecution = dbActivityInstance.getAutomaticExecution(controlNodeInstance_id);
         this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);
         this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNode_id, scenarioInstance, fragmentInstance_id, this);
-        if (dbControlNode.getType(controlNode_id).equals("EmailTask")) {
-            this.taskExecutionBehavior = new EmailTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
-            this.isMailTask = true;
-        } else {
-            this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
-            this.isMailTask = false;
+
+        switch (dbControlNode.getType(controlNode_id)) {
+            case "EmailTask":
+                this.taskExecutionBehavior = new EmailTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
+                this.isAutomaticTask = true;
+                break;
+            default:
+                this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
+                this.isAutomaticTask = false;
         }
     }
 
@@ -110,7 +121,7 @@ public class ActivityInstance extends ControlNodeInstance {
             scenarioInstance.checkExecutingGateways(controlNode_id);
             taskExecutionBehavior.execute();
             //System.out.println("Start Activity " + controlNode_id);
-            if(isMailTask){
+            if(isAutomaticTask){
                 this.terminate();
             }
             return true;
@@ -201,8 +212,8 @@ public class ActivityInstance extends ControlNodeInstance {
         return references;
     }
 
-    public boolean getIsMailTask() {
-        return isMailTask;
+    public boolean getIsAutomaticTask() {
+        return isAutomaticTask;
     }
 
     public void setAutomaticExecution(boolean automaticExecution) {
