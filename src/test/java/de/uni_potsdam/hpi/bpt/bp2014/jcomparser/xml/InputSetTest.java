@@ -110,14 +110,22 @@ public class InputSetTest {
 
         Assert.assertEquals("The input-Nodes have not been set correctly", 1, inputSets.get(0).getDataObjects().size());
         Assert.assertEquals("The input-Nodes have not been set correctly", 1, inputSets.get(1).getDataObjects().size());
-        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(0), inputSets.get(0).getDataObjects().get(0));
-        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(1), inputSets.get(1).getDataObjects().get(0));
+        if (dataNodes.get(0) == inputSets.get(0).getDataObjects().get(0))
+            Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(1), inputSets.get(1).getDataObjects().get(0));
+        else if (dataNodes.get(0) == inputSets.get(1).getDataObjects().get(0))
+            Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(1), inputSets.get(0).getDataObjects().get(0));
+        else
+            Assert.fail("The input-Nodes have not been set correctly");
 
         Assert.assertEquals("The associations have not been set correctly", 1, inputSets.get(0).getAssociations().size());
         Assert.assertEquals("The associations have not been set correctly", 1, inputSets.get(1).getAssociations().size());
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), inputSets.get(0).getAssociations().get(0));
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), inputSets.get(1).getAssociations().get(0));
-        inputSets.get(0).save();
+        if ( dataFlowEdges.get(0) == inputSets.get(0).getAssociations().get(0))
+            Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), inputSets.get(1).getAssociations().get(0));
+        else if (dataFlowEdges.get(0) == inputSets.get(1).getAssociations().get(0))
+            Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), inputSets.get(0).getAssociations().get(0));
+        else
+            Assert.fail("The associations have not been set correctly");
+
         Assert.assertTrue("Something went wrong saving the inputset", inputSets.get(0).save() > 0);
         Assert.assertTrue("Something went wrong saving the inputset", inputSets.get(1).save() > 0);
     }
