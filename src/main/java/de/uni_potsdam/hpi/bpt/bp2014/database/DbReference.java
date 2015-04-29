@@ -22,9 +22,6 @@ import java.util.LinkedList;
  *   Please be aware of the License. You may found it in the root directory.
  *
  ************************************************************************************/
-/**
- * Created by jaspar.mang on 28.01.15.
- */
 
 /**
  * This class holds the functionality to get all referenced activities for a known activity.

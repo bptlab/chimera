@@ -1,9 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-/**
- * Created by jaspar.mang on 28.01.15.
- */
-
 import java.util.LinkedList;
 
 /**

@@ -8,9 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by jaspar.mang on 04.02.15.
- */
 
 /**
  * This class creates and executes sql statements to get the terminationCondition for a scenario.

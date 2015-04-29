@@ -2,9 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
 
-/**
- * Created by jaspar.mang on 19.03.15.
- */
 public class DataAttributeInstance {
     final int dataAttributeInstance_id;
     final int dataAttribute_id;

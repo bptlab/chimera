@@ -1,14 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 
 /**
@@ -30,10 +27,6 @@ import java.util.LinkedList;
  * Please be aware of the License. You may found it in the root directory.
  * <p/>
  * **********************************************************************************
- */
-
-/*
- * Jaspars Spielwiese
  */
 
 public class debugClass {
