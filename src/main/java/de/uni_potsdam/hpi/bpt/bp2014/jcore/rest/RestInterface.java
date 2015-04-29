@@ -825,7 +825,12 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
-        if (executionService.getInputSetsForActivityInstance(activityID) == null && executionService.getInputSetsForActivityInstance(activityID).size() == 0) {
+        boolean activityExists = testActivityInstanceExists(scenarioInstanceID, activityID, executionService);
+        if(!activityExists){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
+        if(executionService.getInputSetsForActivityInstance(activityID) == null || executionService.getInputSetsForActivityInstance(activityID).size() == 0){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no inputSet for this activity instance.\"}").build();
         }
@@ -848,6 +853,38 @@ public class RestInterface {
     }
 
     /**
+     * This method is used to test the existence of an activity instance in a given scenarioInstance.
+     *
+     * @param scenarioInstanceID The given scenarioInstance databaseID of the request.
+     * @param activityID The databaseID of the activityInstance which is to be checked.
+     * @param executionService The intialised executionService from the calling method.
+     * @return a boolean. True == activity is existing/ False == activity does not exist.
+     */
+    private boolean testActivityInstanceExists(int scenarioInstanceID, int activityID, ExecutionService executionService) {
+        boolean enabledActivityExists = true;
+        for(ActivityInstance activityInstance : executionService.getEnabledActivities(scenarioInstanceID)) {
+            if (activityInstance.getControlNodeInstance_id() == activityID) {
+                enabledActivityExists = false;
+            }
+        }
+        boolean runningActivityExists = true;
+        for(ActivityInstance activityInstance : executionService.getRunningActivities(scenarioInstanceID)) {
+            if(activityInstance.getControlNodeInstance_id() == activityID) {
+                runningActivityExists = false;
+            }
+        }
+        boolean terminatedActivityExists = true;
+        for(ActivityInstance activityInstance : executionService.getTerminatedActivities(scenarioInstanceID)) {
+            if(activityInstance.getControlNodeInstance_id() == activityID) {
+                terminatedActivityExists = false;
+            }
+        }
+
+        return !(runningActivityExists && enabledActivityExists && terminatedActivityExists);
+    }
+
+    /**
+     *
      * @param scenarioID
      * @param scenarioInstanceID
      * @param activityID
@@ -894,7 +931,12 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
-        if (executionService.getOutputSetsForActivityInstance(activityID) == null && executionService.getOutputSetsForActivityInstance(activityID).size() == 0) {
+        boolean activityExists = testActivityInstanceExists(scenarioInstanceID, activityID, executionService);
+        if(!activityExists){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
+        if(executionService.getOutputSetsForActivityInstance(activityID) == null || executionService.getOutputSetsForActivityInstance(activityID).size() == 0){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no outputSet for this activity instance.\"}").build();
         }
