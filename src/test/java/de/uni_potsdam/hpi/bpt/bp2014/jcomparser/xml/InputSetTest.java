@@ -20,13 +20,11 @@ public class InputSetTest {
     private List<InputSet> inputSets;
     private List<Node> dataNodes;
 
-    // BEGIN: Set-Up
     @Before
     public void setUp() {
         setUpDataFlows();
         setUpEdges();
         setUpNodes();
-        setUpInputSet();
     }
 
     private void setUpDataFlows() {
@@ -69,13 +67,11 @@ public class InputSetTest {
         // dataNodes
         Node datanode = new Node();
         datanode.setId(2L);
-        datanode.setText("DO1");
         nodes.put(2L, datanode);
         dataNodes.add(datanode);
 
         datanode = new Node();
         datanode.setId(3L);
-        datanode.setText("DO2");
         nodes.put(3L, datanode);
         dataNodes.add(datanode);
 
@@ -87,27 +83,45 @@ public class InputSetTest {
     public void setUpInputSet() {
         inputSets = InputSet.createInputSetForTaskAndEdges(activity, dataFlowEdges);
     }
-    // END: Set-Up
 
-    // BEGIN: Tests
     @Test
-    public void testInputSetDeserialization() {
+    public void testOneInputSet() {
+        dataNodes.get(0).setText("DO");
+        dataNodes.get(1).setText("DO1");
+        setUpInputSet();
         Assert.assertEquals("There is actually just one inputSet", 1, inputSets.size());
         Assert.assertEquals("The consumer-Node has not been set correctly", activity, inputSets.get(0).getNode());
         Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(0), inputSets.get(0).getDataObjects().get(1));
         Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(1), inputSets.get(0).getDataObjects().get(0));
         Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), inputSets.get(0).getAssociations().get(1));
         Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), inputSets.get(0).getAssociations().get(0));
+        Assert.assertTrue("Something went wrong saving the inputset", inputSets.get(0).save() > 0);
     }
 
     @Test
-    public void testSaveSequenceFlow() {
-        inputSets.get(0).save();
-        Assert.assertTrue("No database-ID set", inputSets.get(0).getDatabaseId() != 0);
-    }
-    // END: Tests
+    public void testTwoInputSets() {
+        dataNodes.get(0).setText("DO");
+        dataNodes.get(1).setText("DO");
+        setUpInputSet();
+        Assert.assertEquals("There should be two inputSets", 2, inputSets.size());
 
-    //BEGIN: Util-Methods
+        Assert.assertEquals("The consumer-Node has not been set correctly", activity, inputSets.get(0).getNode());
+        Assert.assertEquals("The consumer-Node has not been set correctly", activity, inputSets.get(1).getNode());
+
+        Assert.assertEquals("The input-Nodes have not been set correctly", 1, inputSets.get(0).getDataObjects().size());
+        Assert.assertEquals("The input-Nodes have not been set correctly", 1, inputSets.get(1).getDataObjects().size());
+        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(0), inputSets.get(0).getDataObjects().get(0));
+        Assert.assertEquals("The input-Nodes have not been set correctly", dataNodes.get(1), inputSets.get(1).getDataObjects().get(0));
+
+        Assert.assertEquals("The associations have not been set correctly", 1, inputSets.get(0).getAssociations().size());
+        Assert.assertEquals("The associations have not been set correctly", 1, inputSets.get(1).getAssociations().size());
+        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), inputSets.get(0).getAssociations().get(0));
+        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), inputSets.get(1).getAssociations().get(0));
+        inputSets.get(0).save();
+        Assert.assertTrue("Something went wrong saving the inputset", inputSets.get(0).save() > 0);
+        Assert.assertTrue("Something went wrong saving the inputset", inputSets.get(1).save() > 0);
+    }
+
     private Element createProperty(String name, String value) {
         if (null == document) {
             return null;
@@ -117,5 +131,4 @@ public class InputSetTest {
         property.setAttribute("value", value);
         return property;
     }
-    // END: Util-Methods
 }
