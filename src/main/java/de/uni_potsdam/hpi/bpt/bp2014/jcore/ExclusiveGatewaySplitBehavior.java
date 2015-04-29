@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 
+import javax.naming.ldap.Control;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -105,26 +106,22 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
             }
         }
         String type = dbControlNode.getType(controlNode_id);
-        ControlNodeInstance controlNodeInstance = null;
+        ControlNodeInstance controlNodeInstance = createControlNode(type, controlNode_id);
+        setAutomaticExecutionToFalse(type, controlNodeInstance);
+        return controlNodeInstance;
+    }
+
+    private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance){
         //TODO type
         switch (type) {
             case "Activity":
             case "EmailTask":
-                controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
                 ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 break;
-            case "Endevent":
-                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
-                break;
-            case "XOR":
-                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-                break;
             case "AND":
-                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
                 ((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
                 break;
         }
-        return controlNodeInstance;
     }
 
     /**

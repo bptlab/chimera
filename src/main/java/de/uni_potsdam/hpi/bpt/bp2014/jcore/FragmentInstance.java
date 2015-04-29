@@ -97,13 +97,18 @@ public class FragmentInstance {
         int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
         String controlNodeType = dbControlNode.getType(controlNode);
         //TODO: type
-        if (controlNodeType.equals("Activity") || controlNodeType.equals("EmailTask")) {
-            ActivityInstance activityInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
-            activityInstance.incomingBehavior.enableControlFlow();
-        } else if (controlNodeType.equals("AND") || controlNodeType.equals("XOR")) {
-            GatewayInstance gatewayInstance = new GatewayInstance(controlNode, fragmentInstance_id, scenarioInstance);
-            gatewayInstance.incomingBehavior.enableControlFlow();
+        ControlNodeInstance controlNodeInstance = null;
+        switch (controlNodeType) {
+            case "Activity":
+            case "EmailTask":
+                controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
+                break;
+            case "AND":
+            case "XOR":
+                controlNodeInstance = new GatewayInstance(controlNode, fragmentInstance_id, scenarioInstance);
+                break;
         }
+        (controlNodeInstance.getIncomingBehavior()).enableControlFlow();
     }
 
     /**

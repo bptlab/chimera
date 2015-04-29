@@ -52,4 +52,22 @@ public abstract class OutgoingBehavior {
         scenarioInstance.startAutomaticControlNodes();
     }
 
+    protected ControlNodeInstance createControlNode(String type, int id){
+        ControlNodeInstance controlNodeInstance = null;
+        switch (type) {
+            case "Activity":
+            case "EmailTask":
+                controlNodeInstance = new ActivityInstance(id, fragmentInstance_id, scenarioInstance);
+                break;
+            case "Endevent":
+                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
+                break;
+            case "XOR":
+            case "AND":
+                controlNodeInstance = new GatewayInstance(id, fragmentInstance_id, scenarioInstance);
+                break;
+        }
+        return controlNodeInstance;
+    }
+
 }
