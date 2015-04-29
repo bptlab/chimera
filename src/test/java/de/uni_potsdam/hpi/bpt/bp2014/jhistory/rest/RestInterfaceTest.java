@@ -86,7 +86,7 @@ public class RestInterfaceTest extends AbstractTest {
     /**
      *
      */
-    //@Test
+    @Test
     public void testGetDataObjectsLog() {
         Response response = base.path("scenario/1/instance/1302/dataobjects").request().get();
         assertThat("Get activities did not contain the expected information",
