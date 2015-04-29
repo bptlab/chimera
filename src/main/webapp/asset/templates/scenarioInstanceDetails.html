@@ -205,34 +205,21 @@
       </div>
       <div class="modal-body">
         <p>Do you want to start Activity "{{value['label']}}"?</p>
-          <br>
-          <div class="responsive-table project-list">
-              <table class="table table-striped">
-                  <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>Name</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="(key, refActivityID) in instanceCtrl.scenario['activity'][value['id']]['references']['ids'] track by $index">
-                      <td>{{key}}</td>
-                      <td>{{refActivityID}}</td>
-                      {{instanceCtrl.scenario['activity'][refActivityID]['output']}}
-                      <div ng-repeat="(key, outputsetID) in instanceCtrl.scenario['activity'][value2]['output'] track by $index">
-                          {{key}}:{{outputsetID}}<br>
-                          {{instanceCtrl.scenario['activity'][outputsetID]['outputsets']}}<br>
-                          <!--instanceCtrl.scenario['activity'][activityID]['outputsets'][outputsetID] = [{"label":"DO1","id":1069,"state":"init","attributeConfiguration":[]}]-->
-                      </div>
-                  </tr>
-                  </a>
-                  </tbody>
-              </table>
+          <div ng-show="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+              <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
+              <div ng-repeat="(key, value) in instanceCtrl.scenario['activity'][value['id']]['references']['activities'] track by $index">
+                  <td>
+                      //TODO: Add names of each outputset
+                      {{value['label']}} <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button> <br>
+                  </td>
+              </div>
           </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
+          <div ng-hide="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+              <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
+          </div>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
