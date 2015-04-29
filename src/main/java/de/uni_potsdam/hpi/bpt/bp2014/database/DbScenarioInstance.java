@@ -131,7 +131,6 @@ public class DbScenarioInstance extends DbObject {
      * @param terminated          This is the changed status of the scenario instance.
      */
     public void setTerminated(int scenarioInstance_id, boolean terminated) {
-        //TODO: history log
         int terminatedAsInt;
         if (terminated) {
             terminatedAsInt = 1;

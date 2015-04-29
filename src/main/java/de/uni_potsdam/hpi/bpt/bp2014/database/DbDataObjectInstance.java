@@ -49,7 +49,6 @@ public class DbDataObjectInstance extends DbObject {
      * @param state This is the desirable state of a dataObject instance.
      */
     public void setState(int id, int state) {
-        //TODO: history log
         Log log = new Log();
         log.newDataObjectInstanceState(id, state);
         String sql = "UPDATE dataobjectinstance SET state_id = " + state + " WHERE id = " + id;
@@ -65,7 +64,6 @@ public class DbDataObjectInstance extends DbObject {
      * @return -1 if something went wrong else return the database ID of the newly created dataObject instance.
      */
     public int createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
-        //TODO: history log
         String sql = "INSERT INTO dataobjectinstance (scenarioinstance_id, state_id, dataobject_id) VALUES (" + scenarioInstance_id + ", " + state_id + ", " + dataObject_id + ")";
         int id = this.executeInsertStatement(sql);
         Log log = new Log();
@@ -114,7 +112,6 @@ public class DbDataObjectInstance extends DbObject {
      * @param onChange This is the flag set to indicate if the dataObject instance is being modified or not.
      */
     public void setOnChange(int id, Boolean onChange) {
-        //TODO: history log
         int onChangeAsInt;
         if (onChange) {
             onChangeAsInt = 1;
