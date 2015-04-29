@@ -634,16 +634,16 @@ public class ExecutionService {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         int controlNode_id = dbControlNodeInstance.getControlNodeID(activityInstanceId);
 
-        Map<Integer, Map<String, String>> allOutputSets = new HashMap<>();
+        Map<Integer, Map<String, String>> allInputSets = new HashMap<>();
         LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNode_id);
         for (int inputSet : inputSets) {
             LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
             for (DataObject dataObject : dataObjects) {
-                allOutputSets.put(inputSet, new HashMap<String, String>());
-                allOutputSets.get(inputSet).put(dbDataObject.getName(dataObject.getId()), dbState.getStateName(dataObject.getStateID()));
+                allInputSets.put(inputSet, new HashMap<String, String>());
+                allInputSets.get(inputSet).put(dbDataObject.getName(dataObject.getId()), dbState.getStateName(dataObject.getStateID()));
             }
         }
-        return allOutputSets;
+        return allInputSets;
 
     }
 }
