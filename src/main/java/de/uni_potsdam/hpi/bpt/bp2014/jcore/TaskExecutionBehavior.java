@@ -51,11 +51,11 @@ public class TaskExecutionBehavior {
     public void execute() {
     }
 
-    protected void setCanTerminate(boolean canTerminate){
-        ((ActivityInstance)controlNodeInstance).setCanTerminate(canTerminate);
+    protected void setCanTerminate(boolean canTerminate) {
+        ((ActivityInstance) controlNodeInstance).setCanTerminate(canTerminate);
     }
 
-    public void setDataAttributeValues(Map<Integer, String>values){
+    public void setDataAttributeValues(Map<Integer, String> values) {
     }
 
 

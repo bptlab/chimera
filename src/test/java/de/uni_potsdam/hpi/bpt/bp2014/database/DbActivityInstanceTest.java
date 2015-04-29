@@ -28,5 +28,4 @@ public class DbActivityInstanceTest {
         assertEquals(2, (int)dbActivityInstance.getTerminatedActivitiesForScenarioInstance(223).get(0));
         assertEquals(5, (int)dbActivityInstance.getTerminatedActivitiesForScenarioInstance(223).get(1));
     }
-    //TODO: testCreateNewActivityInstance
 }

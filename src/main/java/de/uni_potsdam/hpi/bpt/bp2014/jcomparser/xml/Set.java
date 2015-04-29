@@ -24,35 +24,6 @@ public class Set {
      */
     public int databaseId;
 
-
-    // according to following link: http://www.java-forum.org/mathematik/67182-kartesisches-produkt-algorithmus.html
-    public static List<List<Edge>> cartesianProduct(Map<String, List<Edge>> sets) {
-        List<List<Edge>> result = new ArrayList<>();
-        List<Edge> cartesianProductElement;
-        int n = 1; // cardinality of the cartesian product
-        Iterator<?> setIterator = sets.values().iterator();
-        // loop to get cardinality n of the Cartesian product
-        while (setIterator.hasNext()) {
-            List<Edge> set = (List<Edge>) setIterator.next();
-            n*= set.size();
-        }
-        //loop to create all elements of Cartesian product
-        for (int i = 0, j = 1; i < n; i++){
-            cartesianProductElement = new ArrayList<>();
-            setIterator = sets.values().iterator();
-            // loop that collects one element of each class
-            while (setIterator.hasNext()) {
-                List<Edge> set = (List<Edge>) setIterator.next();
-                cartesianProductElement.add(set.get((i/j) % set.size()));
-                j*= set.size();
-            }
-            result.add(cartesianProductElement);
-        }
-        return result;
-    }
-
-
-
     /**
      * Adds the databaseId of the Set to the edge.
      * It is necessary towrite it to the Database.
