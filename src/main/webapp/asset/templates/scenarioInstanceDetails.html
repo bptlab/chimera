@@ -227,14 +227,13 @@
 								    </div>
 								</div>
 							</div>
-	 						<div class="animate-switch" ng-switch-when="dataobject">						
+	 						<div class="animate-switch" ng-switch-when="dataobject">
 								<div class="list-item-container">
 								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
-                                        {{value}}
                                         <div class="list-item">
-										<h3 class="no-margins text-success">{{value['name']}}</h3>
-										<small>{{value['old_state_name']}} -> {{value['new_state_name']}}</small>
-										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+										<h3 class="no-margins text-success">{{value['do.name']}}</h3>
+										<small>{{value['oldstate_name']}} -> {{value['newstate_name']}}</small>
+										<div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>
 									</div>
 								    </div>
 								</div>
