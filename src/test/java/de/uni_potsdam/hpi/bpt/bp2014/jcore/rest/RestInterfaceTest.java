@@ -743,7 +743,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * When you send a Get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
-     *//*
+     */
     @Test
     public void testGetInputDataObjects(){
         Response response = base.path("scenario/135/instance/808/activity/4518/input").request().get();
@@ -751,12 +751,12 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
+                "[{\"id\":139,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/inputset/139\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getOutputDataObjects(int, int, int)}
+     * When you send a Get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      *//*
     @Test
     public void testGetOutputDataObjects(){

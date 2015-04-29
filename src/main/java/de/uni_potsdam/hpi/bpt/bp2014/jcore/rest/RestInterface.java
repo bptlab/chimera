@@ -1046,7 +1046,7 @@ public class RestInterface {
             for(int k = 0; k < path.length - 3; k++){
                 outputSet.linkDataObject += path[k] + "/";
             }
-            outputSet.linkDataObject += "inputset/" + outputSet.id;
+            outputSet.linkDataObject += "outputset/" + outputSet.id;
             outputSets[j] = outputSet;
             j++;
         }
