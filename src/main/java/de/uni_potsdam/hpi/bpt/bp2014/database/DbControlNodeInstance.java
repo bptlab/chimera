@@ -40,6 +40,10 @@ public class DbControlNodeInstance extends DbObject {
         String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id + " AND fragmentinstance_id = " + fragmentInstance_id;
         return executeExistStatement(sql);
     }
+    public Boolean existControlNodeInstance(int controlNodeInstance_id) {
+        String sql = "SELECT id FROM controlnodeinstance WHERE id = " + controlNodeInstance_id;
+        return executeExistStatement(sql);
+    }
 
     /**
      * This method creates and saves a new controlNode instance to the database in the context of a fragment instance.
