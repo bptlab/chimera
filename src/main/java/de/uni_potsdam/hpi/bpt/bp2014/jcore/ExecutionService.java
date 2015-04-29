@@ -625,4 +625,25 @@ public class ExecutionService {
         DbState dbState = new DbState();
         return dbState.getStateName(dataObjectInstance.getState_id());
     }
+
+    public Map<Integer, Map<String, String>> getInputSetsForActivityInstance(int activityInstanceId) {
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        DbDataNode dbDataNode = new DbDataNode();
+        DbDataObject dbDataObject = new DbDataObject();
+        DbState dbState = new DbState();
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        int controlNode_id = dbControlNodeInstance.getControlNodeID(activityInstanceId);
+
+        Map<Integer, Map<String, String>> allOutputSets = new HashMap<>();
+        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNode_id);
+        for (int inputSet : inputSets) {
+            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
+            for (DataObject dataObject : dataObjects) {
+                allOutputSets.put(inputSet, new HashMap<String, String>());
+                allOutputSets.get(inputSet).put(dbDataObject.getName(dataObject.getId()), dbState.getStateName(dataObject.getStateID()));
+            }
+        }
+        return allOutputSets;
+
+    }
 }

@@ -1,288 +1,197 @@
 <h3>Scenario Instance {{instanceCtrl.scenario.instanceIds[0] + " - " + instanceCtrl.getScenarioName()}}</h3>
 
 <div class="row">
-	<div class="pull-right">
-		Choose Layout: <select ng-model="layoutSelection" ng-options="item for item in ['UserView','AdminView']"></select>
-	</div>
+<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
+    <div class="hpanel stats">
+        <div class="panel-heading">
+            <div class="panel-tools">
+                <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                <a class="closebox"><i class="fa fa-times"></i></a>
+                        </div>
+            Dataobjects
+        </div>
+        <div class="panel-body list">
+            <div class="responsive-table pull-left">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
+                        <td>{{value['label']}}</td>
+                        <td>{{value['state']}}</td>
+                    </tr>
+                        </a>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer"></div>
+    </div>
 </div>
 
-<div class="animate-switch-container" ng-switch on="layoutSelection">
-      <div class="animate-switch" ng-switch-when="AdminView">
-
-		<!-- Show enabled Activities -->
-		<div class="pull-right dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="enabledActivitiesMenu" data-toggle="dropdown">
-				Enabled Activities
-				<span class="badge"></span>
-				<span class="pull-right fa arrow"></span>
-			</button>
-			<ul class="dropdown-menu" role="menu" aria-labelledby="enabledActivitiesMenu">
-				<li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" role="presentation">
-					<a role="menuitem" data-toggle="modal" data-target="{{'#modal' + value['id']}}" tabindex="-1">{{value['label']}}</a>
-				</li>
-			</ul>
-		</div>
-		<br>
-		<!-- A list of all running activities -->
-		<h4>Running Activities</h4>
-		<div class="responsive-table">
-			<table class="table table-striped">
-				<caption>Activities successfully started</caption>
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Name</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
-						<td>{{value['id']}}</td>
-						<td>{{value['label']}}</td>
-						<td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#modalTerminate' + value['id']}}">Terminate</a>
-					</tr>
-					</a>
-				</tbody>
-			</table>
-		</div>
-		<h4>Terminated Activities</h4>
-		<div class="responsive-table">
-			<table class="table table-striped">
-				<caption>Activities successfully completed</caption>
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Name</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
-						<td>{{value['id']}}</td>
-						<td>{{value['label']}}</td>
-					</tr>
-					</a>
-				</tbody>
-			</table>
-		</div>
-		<br>
-		<h4>Dataobjects</h4>
-		<div class="responsive-table">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Name</th>
-						<th>State</th>
-					</tr>
-				</thead>
-				<tbody>
-                        <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
-                            <td>{{key}}</td>
-                            <td>{{value['label']}}</td>
-                            <td>{{value['state']}}</td>
-                        </tr>
-					</a>
-				</tbody>
-			</table>
-		</div>
-      </div>
-      <div class="animate-switch" ng-switch-default>
-	  <div class="row">
-		<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
-			<div class="hpanel stats">
-				<div class="panel-heading">
-					<div class="panel-tools">
-					    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-					    <a class="closebox"><i class="fa fa-times"></i></a>
-            			        </div>	
-					Dataobjects
-				</div>
-				<div class="panel-body list">
-					<div class="responsive-table pull-left">
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>State</th>
-								</tr>
-							</thead>
-							<tbody>
-                            <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
-                                <td>{{value['label']}}</td>
-                                <td>{{value['state']}}</td>
-                            </tr>
-								</a>
-							</tbody>
-						</table>
-					</div>				
-				</div>
-				<div class="panel-footer"></div>
-		   	</div>
-		</div>
-
-		<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
-			<div class="hpanel stats">
-				<div class="panel-heading">
-					<div class="panel-tools">
-					    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-					    <a class="closebox"><i class="fa fa-times"></i></a>
-            			        </div>	
-					ToDos
-				</div>
-				<div class="panel-body list">
-					<div class="animate-switch-container" ng-switch on="todoSelection">
-			     			 <div class="animate-switch" ng-switch-default>
-							<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 0.5s;">				
-								<div class="responsive-table project-list">
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
-												<td>{{value['label']}}</td>
-												<td><a type="button" data-toggle="modal" data-target="{{'#modalTerminate' + value['id']}}"><i class="fa fa-check text-navy"></i></a></td>
-                        
-											</tr>
-											</a>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-						<div class="animate-switch" ng-switch-when="completed">
-							<div class="responsive-table project-list">
-								<table class="table table-striped">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>Name</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
-											<td>{{value['id']}}</td>
-											<td>{{value['label']}}</td>
-										</tr>
-										</a>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>				
-	   			</div>
-     				<div class="panel-footer">
-					<select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
-				</div>
-		   	   </div>
-			</div>
-			<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
-				<div class="hpanel stats">
-					<div class="panel-heading">
-						<div class="panel-tools">
-						    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-						    <a class="closebox"><i class="fa fa-times"></i></a>
-		    			        </div>	
-						Unassigned Tasks
-					</div>
-					<div class="panel-body list">
-						<ul aria-labelledby="enabledActivitiesMenu">
-							<li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" role="presentation">
-								<a data-toggle="modal" data-target="{{'#modal' + value['id']}}" tabindex="-1">{{value['label']}}</a>
-							</li>
-						</ul>
-					</div>
-					<div class="panel-footer"></div>
-			   	</div>
-			</div>
-		</div>
-          <div class="row">
-			<div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
-				<div class="hpanel stats">
-					<div class="panel-heading">
-						<div class="panel-tools">
-						    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-						    <a class="closebox"><i class="fa fa-times"></i></a>
-		    			        </div>	
-						Document Activity
-					</div>
-					<div class="panel-body list">
-						<div class="pull-right">
-						    <select ng-model="logSelection" ng-options="item for item in ['activity','dataobject']"></select>
-						</div>
-						<div class="panel-title">Last Activity</div>
-						<small class="fo">This is simple example</small>
-						<div class="animate-switch-container" ng-switch on="logSelection">
-	 						<div class="animate-switch" ng-switch-default>						
-								<div class="list-item-container">
-								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
-									<div class="list-item">
-										<h3 class="no-margins text-success">{{value['cn.label']}}</h3>
-										<small>{{value['h.oldstate']}} -> {{value['h.newstate']}}</small>
-										<div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>
-									</div>
-								    </div>
-								</div>
-							</div>
-	 						<div class="animate-switch" ng-switch-when="dataobject">						
-								<div class="list-item-container">
-								    <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
-                                        {{value}}
-                                        <div class="list-item">
-										<h3 class="no-margins text-success">{{value['name']}}</h3>
-										<small>{{value['old_state_name']}} -> {{value['new_state_name']}}</small>
-										<div class="pull-right font-bold">{{value['timestamp']}}<i class="fa fa-level-up text-success"></i></div>
-									</div>
-								    </div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="panel-footer"></div>
-			   	</div>
-			</div>
-            <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
-                <div class="hpanel stats">
-                    <div class="panel-heading">
-                        <div class="panel-tools">
-                            <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                            <a class="closebox"><i class="fa fa-times"></i></a>
+<div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
+    <div class="hpanel stats">
+        <div class="panel-heading">
+            <div class="panel-tools">
+                <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                <a class="closebox"><i class="fa fa-times"></i></a>
                         </div>
-                        Termination
-                    </div>
-                    <div class="panel-body list">
-                        <div class="responsive-table pull-left">
+            ToDos
+        </div>
+        <div class="panel-body list">
+            <div class="animate-switch-container" ng-switch on="todoSelection">
+                     <div class="animate-switch" ng-switch-default>
+                    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 0.5s;">
+                        <div class="responsive-table project-list">
                             <table class="table table-striped">
                                 <thead>
-                                <tr>
-                                    <!--<th>ID</th>-->
-                                    <th>Condition</th>
-                                </tr>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
+                                        <td>{{value['label']}}</td>
+                                        <td><a type="button" data-toggle="modal" data-target="{{'#modalTerminate' + value['id']}}"><i class="fa fa-check text-navy"></i></a></td>
 
-                                <tr ng-repeat="(key, value) in instanceCtrl.scenario['terminationcondition']['conditions'] track by $index">
-                                    <!--<td>{{key}}</td>-->
-                                    <td>
-                                        <div ng-repeat="(key, value2) in value track by $index">
-                                        The dataobject "{{value2['data_object']}}" is in state "{{value2['state']}}".<br>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </a>
+                                    </tr>
+                                    </a>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="panel-footer"></div>
+                </div>
+                <div class="animate-switch" ng-switch-when="completed">
+                    <div class="responsive-table project-list">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
+                                    <td>{{value['id']}}</td>
+                                    <td>{{value['label']}}</td>
+                                </tr>
+                                </a>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-	   </div>
-	</div>
+            <div class="panel-footer">
+            <select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
+        </div>
+       </div>
+    </div>
+    <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
+        <div class="hpanel stats">
+            <div class="panel-heading">
+                <div class="panel-tools">
+                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                    <a class="closebox"><i class="fa fa-times"></i></a>
+                        </div>
+                Unassigned Tasks
+            </div>
+            <div class="panel-body list">
+                <ul aria-labelledby="enabledActivitiesMenu">
+                    <li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" role="presentation">
+                        <a data-toggle="modal" data-target="{{'#modal' + value['id']}}" tabindex="-1">{{value['label']}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-footer"></div>
+        </div>
+    </div>
+</div>
+  <div class="row">
+    <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
+        <div class="hpanel stats">
+            <div class="panel-heading">
+                <div class="panel-tools">
+                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                    <a class="closebox"><i class="fa fa-times"></i></a>
+                        </div>
+                Document Activity
+            </div>
+            <div class="panel-body list">
+                <div class="pull-right">
+                    <select ng-model="logSelection" ng-options="item for item in ['activity','dataobject']"></select>
+                </div>
+                <div class="panel-title">Last Activity</div>
+                <small class="fo">This is simple example</small>
+                <div class="animate-switch-container" ng-switch on="logSelection">
+                    <div class="animate-switch" ng-switch-default>
+                        <div class="list-item-container">
+                            <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
+                            <div class="list-item">
+                                <h3 class="no-margins text-success">{{value['cn.label']}}</h3>
+                                <small>{{value['h.oldstate']}} -> {{value['h.newstate']}}</small>
+                                <div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animate-switch" ng-switch-when="dataobject">
+                        <div class="list-item-container">
+                            <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
+                                <div class="list-item">
+                                <h3 class="no-margins text-success">{{value['do.name']}}</h3>
+                                <small>{{value['oldstate_name']}} -> {{value['newstate_name']}}</small>
+                                <div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer"></div>
+        </div>
+    </div>
+    <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
+        <div class="hpanel stats">
+            <div class="panel-heading">
+                <div class="panel-tools">
+                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                    <a class="closebox"><i class="fa fa-times"></i></a>
+                </div>
+                Termination
+            </div>
+            <div class="panel-body list">
+                <div class="responsive-table pull-left">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <!--<th>ID</th>-->
+                            <th>Condition</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-repeat="(key, value) in instanceCtrl.scenario['terminationcondition']['conditions'] track by $index">
+                            <!--<td>{{key}}</td>-->
+                            <td>
+                                <div ng-repeat="(key, value2) in value track by $index">
+                                The dataobject "{{value2['data_object']}}" is in state "{{value2['state']}}".<br>
+                                </div>
+                            </td>
+                        </tr>
+                        </a>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-footer"></div>
+        </div>
+    </div>
 </div>
 
 <!--___________________________________ MODALS ___________________________________-->
