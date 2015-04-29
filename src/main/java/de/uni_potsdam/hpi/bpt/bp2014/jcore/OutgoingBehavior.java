@@ -52,7 +52,7 @@ public abstract class OutgoingBehavior {
         scenarioInstance.startAutomaticControlNodes();
     }
 
-    protected ControlNodeInstance createControlNode(String type, int id){
+    protected ControlNodeInstance createControlNode(String type, int id) {
         ControlNodeInstance controlNodeInstance = null;
         //TODO: type
         switch (type) {

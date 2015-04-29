@@ -31,7 +31,6 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
             }
         }
         String type = dbControlNode.getType(controlNode_id);
-        ControlNodeInstance controlNodeInstance = createControlNode(type, controlNode_id);
-        return controlNodeInstance;
+        return createControlNode(type, controlNode_id);
     }
 }

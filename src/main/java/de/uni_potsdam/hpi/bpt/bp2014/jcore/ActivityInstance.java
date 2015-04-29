@@ -40,10 +40,7 @@ public class ActivityInstance extends ControlNodeInstance {
     private final TaskExecutionBehavior taskExecutionBehavior;
     private final ScenarioInstance scenarioInstance;
     private final String label;
-    private LinkedList<Integer> references;
     private final boolean isAutomaticTask;
-    private boolean automaticExecution;
-    private boolean canTerminate;
     /**
      * Database Connection objects.
      */
@@ -51,6 +48,9 @@ public class ActivityInstance extends ControlNodeInstance {
     private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
     private final DbControlNode dbControlNode = new DbControlNode();
     private final DbReference dbReference = new DbReference();
+    private LinkedList<Integer> references;
+    private boolean automaticExecution;
+    private boolean canTerminate;
 
     /**
      * Creates and initializes a new activity instance.
@@ -121,7 +121,7 @@ public class ActivityInstance extends ControlNodeInstance {
             scenarioInstance.checkExecutingGateways(controlNode_id);
             taskExecutionBehavior.execute();
             //System.out.println("Start Activity " + controlNode_id);
-            if(isAutomaticTask){
+            if (isAutomaticTask) {
                 this.terminate();
             }
             return true;
@@ -163,10 +163,10 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     public boolean terminate(int outputSet_id) {
-        if(canTerminate) {
-            boolean workingFine = ((ActivityStateMachine) stateMachine).terminate();
+        if (canTerminate) {
+            boolean workingFine = stateMachine.terminate();
             ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
-            ((TaskOutgoingControlFlowBehavior)outgoingBehavior).terminate(outputSet_id);
+            ((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate(outputSet_id);
             return workingFine;
         }
         return false;
@@ -175,8 +175,8 @@ public class ActivityInstance extends ControlNodeInstance {
     /**
      * sets the dataAttributes for an activity
      */
-    public void setDataAttributeValues(Map<Integer, String> values){
-        if(((ActivityStateMachine)stateMachine).state.equals("running")){
+    public void setDataAttributeValues(Map<Integer, String> values) {
+        if (((ActivityStateMachine) stateMachine).state.equals("running")) {
             taskExecutionBehavior.setDataAttributeValues(values);
         }
     }
@@ -190,7 +190,7 @@ public class ActivityInstance extends ControlNodeInstance {
 
     @Override
     public boolean skip() {
-        return ((ActivityStateMachine) stateMachine).skip();
+        return stateMachine.skip();
     }
 
     /**
@@ -216,14 +216,14 @@ public class ActivityInstance extends ControlNodeInstance {
         return isAutomaticTask;
     }
 
-    public void setAutomaticExecution(boolean automaticExecution) {
-        this.automaticExecution = automaticExecution;
-        this.dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, automaticExecution);
-    }
-
     public boolean isAutomaticExecution() {
 
         return automaticExecution;
+    }
+
+    public void setAutomaticExecution(boolean automaticExecution) {
+        this.automaticExecution = automaticExecution;
+        this.dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, automaticExecution);
     }
 
     public void setCanTerminate(boolean canTerminate) {

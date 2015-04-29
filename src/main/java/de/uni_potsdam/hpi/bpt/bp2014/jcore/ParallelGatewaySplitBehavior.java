@@ -60,7 +60,8 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
         this.setAutomaticExecutionToFalse(type, controlNodeInstance);
         return controlNodeInstance;
     }
-    private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance){
+
+    private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance) {
         switch (type) {
             case "Activity":
             case "EmailTask":

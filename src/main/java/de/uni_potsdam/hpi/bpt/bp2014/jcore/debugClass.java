@@ -81,7 +81,7 @@ public class debugClass {
             Collection<ActivityInstance> acts = executionService.getEnabledActivities(scenarioInstanceID);
 
             System.out.println("\nenabled Aktivität ID");
-            for (ActivityInstance activityInstance: acts) {
+            for (ActivityInstance activityInstance : acts) {
                 System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
             }
 
@@ -93,12 +93,12 @@ public class debugClass {
             System.out.println("----------start activity-----------");
             System.out.println("enabled Aktivität ID");
             acts = executionService.getEnabledActivities(scenarioInstanceID);
-            for (ActivityInstance activityInstance: acts) {
+            for (ActivityInstance activityInstance : acts) {
                 System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
             }
             //readLine();
             System.out.println("---------terminate activity------------");
-            if(!executionService.terminateActivityInstance(scenarioInstanceID, read)){
+            if (!executionService.terminateActivityInstance(scenarioInstanceID, read)) {
                 System.out.println("nicht terminiert");
             }
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
