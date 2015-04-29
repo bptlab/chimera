@@ -1052,4 +1052,19 @@ public class RestInterfaceTest extends AbstractTest {
                 response.readEntity(String.class),
                 jsonEquals("{\"error\":\"There is no outputSet for this activity instance.\"}").when(Option.IGNORING_ARRAY_ORDER));
     }
+    /**
+     *  when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     */
+    @Test
+    public void testGetOutputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/outputset/140")
+                .request().get();
+        assertEquals("The Response code of getDataAttributes was not 200",
+                200, response.getStatus());
+        assertEquals("getDataAttributes does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250?\"}]}]").when(Option.IGNORING_ARRAY_ORDER));
+    }
 }

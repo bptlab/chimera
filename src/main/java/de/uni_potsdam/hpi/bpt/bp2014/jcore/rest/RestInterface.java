@@ -972,12 +972,14 @@ public class RestInterface {
      */
     private DataAttributeJaxBean[] getDataAttributes(DataObjectInstance dataObjectInstance) {
         DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
+        DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
         int i = 0;
         for (DataAttributeInstance dataAttributeInstance : dataObjectInstance.getDataAttributeInstances()) {
-            dataAttributes[i].id = dataAttributeInstance.getDataAttributeInstance_id();
-            dataAttributes[i].name = dataAttributeInstance.getName();
-            dataAttributes[i].type = dataAttributeInstance.getType();
-            dataAttributes[i].value = dataAttributeInstance.getValue().toString();
+            dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
+            dataAttribute.name = dataAttributeInstance.getName();
+            dataAttribute.type = dataAttributeInstance.getType();
+            dataAttribute.value = dataAttributeInstance.getValue().toString();
+            dataAttributes[i] = dataAttribute;
             i++;
         }
         return dataAttributes;
