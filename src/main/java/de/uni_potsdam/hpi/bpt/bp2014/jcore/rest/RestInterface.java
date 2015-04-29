@@ -108,17 +108,25 @@ public class RestInterface {
         /**
          *
          */
-        public DataObjectSetsJaxBean outputSet;
+        public String outputSetLink;
         /**
          *
          */
-        public DataObjectSetsJaxBean inputSet;
+        public String inputSetLink;
     }
     /**
      *
      */
     @XmlRootElement
     public static class DataObjectSetsJaxBean {
+        /**
+         *
+         */
+        public int id;
+        /**
+         *
+         */
+        Map<String,String> dataObjects;
         /**
          *
          */
@@ -871,10 +879,6 @@ public class RestInterface {
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         ActivityJaxBean activity = new ActivityJaxBean();
-        DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
-        inputSet.linkDataObject = uriInfo.getAbsolutePath() + "/input";
-        DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
-        outputSet.linkDataObject = uriInfo.getAbsolutePath() + "/output";
         activity.id = activityID;
         LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
         for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
@@ -882,8 +886,8 @@ public class RestInterface {
                 activity.label = executionService.getLabelForControlNodeID(controlNodeInstance.getControlNode_id());
             }
         }
-        activity.inputSet = inputSet;
-        activity.outputSet = outputSet;
+        activity.inputSetLink = uriInfo.getAbsolutePath() + "/input";
+        activity.outputSetLink = uriInfo.getAbsolutePath() + "/output";
         return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 
     }
@@ -924,7 +928,8 @@ public class RestInterface {
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
-    public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
+    public Response getInputDataObjects(@Context UriInfo uriInfo,
+                                        @PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
         /*ExecutionService executionService = new ExecutionService();
@@ -950,8 +955,32 @@ public class RestInterface {
                 i++;
             }
         }*/
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        return Response.ok(dataObjects, MediaType.APPLICATION_JSON).build();
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
+        DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
+        if(executionService.getInputSetsForActivityInstance(activityID) == null && executionService.getInputSetsForActivityInstance(activityID).size() == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no inputSet for this activity instance.\"}").build();
+        }
+        Map<Integer,Map<String,String>> inputSetMap = executionService.getInputSetsForActivityInstance(activityID);
+        int j = 0;
+        DataObjectSetsJaxBean[] inputSets = new DataObjectSetsJaxBean[inputSetMap.keySet().size()];
+        for(Integer i  : inputSetMap.keySet()){
+            inputSet.id = i;
+            inputSet.dataObjects = inputSetMap.get(i);
+            String[] path = uriInfo.getAbsolutePath().toString().split("/");
+            inputSet.linkDataObject = "";
+            for(int k = 0; k < path.length - 3; k++){
+                inputSet.linkDataObject += path[k] + "/";
+            }
+            inputSet.linkDataObject += "inputset/" + inputSet.id;
+            inputSets[j] = inputSet;
+            j++;
+        }
+        return Response.ok(inputSets, MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -963,12 +992,10 @@ public class RestInterface {
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
-    public Response getOutputDataObjects(@PathParam("scenarioID") int scenarioID,
-                                        @PathParam("instanceID") int scenarioInstanceID,
-                                        @PathParam("activityID") int activityID) {
-
-        //TODO: return the value from getOutputSetsForActivityInstance(int activityInstanceId)
-
+    public Response getOutputDataObjects(@Context UriInfo uriInfo,
+                                         @PathParam("scenarioID") int scenarioID,
+                                         @PathParam("instanceID") int scenarioInstanceID,
+                                         @PathParam("activityID") int activityID) {
         /*ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
@@ -998,8 +1025,32 @@ public class RestInterface {
                 i++;
             }
         }*/
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+        ExecutionService executionService = new ExecutionService();
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
+        DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
+        if(executionService.getOutputSetsForActivityInstance(activityID) == null && executionService.getOutputSetsForActivityInstance(activityID).size() == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no outputSet for this activity instance.\"}").build();
+        }
+        Map<Integer,Map<String,String>> outputSetMap = executionService.getOutputSetsForActivityInstance(activityID);
+        int j = 0;
+        DataObjectSetsJaxBean[] outputSets = new DataObjectSetsJaxBean[outputSetMap.keySet().size()];
+        for(Integer i  : outputSetMap.keySet()){
+            outputSet.id = i;
+            outputSet.dataObjects = outputSetMap.get(i);
+            String[] path = uriInfo.getAbsolutePath().toString().split("/");
+            outputSet.linkDataObject = "";
+            for(int k = 0; k < path.length - 3; k++){
+                outputSet.linkDataObject += path[k] + "/";
+            }
+            outputSet.linkDataObject += "inputset/" + outputSet.id;
+            outputSets[j] = outputSet;
+            j++;
+        }
+        return Response.ok(outputSets, MediaType.APPLICATION_JSON).build();
     }
 
     /**
