@@ -1,4 +1,4 @@
-<h3>Scenario Instance {{instanceCtrl.scenario.instanceIds[0] + " - " + instanceCtrl.getScenarioName()}}</h3>
+<h3>Scenario Instance {{instanceCtrl.instanceDetails['id']}}</h3>
 
 <div class="row">
 <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
@@ -104,7 +104,7 @@
             <div class="panel-body list">
                 <ul aria-labelledby="enabledActivitiesMenu">
                     <li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']" role="presentation">
-                        <a data-toggle="modal" data-target="{{'#modal' + value['id']}}" tabindex="-1">{{value['label']}}</a>
+                        <a data-toggle="modal" data-target="{{'#modal' + value['id']}}" ng-click="instanceCtrl.handleReferencedActivities(value['id']);" tabindex="-1">{{value['label']}}</a>
                     </li>
                 </ul>
             </div>
@@ -205,6 +205,30 @@
       </div>
       <div class="modal-body">
         <p>Do you want to start Activity "{{value['label']}}"?</p>
+          <br>
+          <div class="responsive-table project-list">
+              <table class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="(key, refActivityID) in instanceCtrl.scenario['activity'][value['id']]['references']['ids'] track by $index">
+                      <td>{{key}}</td>
+                      <td>{{refActivityID}}</td>
+                      {{instanceCtrl.scenario['activity'][refActivityID]['output']}}
+                      <div ng-repeat="(key, outputsetID) in instanceCtrl.scenario['activity'][value2]['output'] track by $index">
+                          {{key}}:{{outputsetID}}<br>
+                          {{instanceCtrl.scenario['activity'][outputsetID]['outputsets']}}<br>
+                          <!--instanceCtrl.scenario['activity'][activityID]['outputsets'][outputsetID] = [{"label":"DO1","id":1069,"state":"init","attributeConfiguration":[]}]-->
+                      </div>
+                  </tr>
+                  </a>
+                  </tbody>
+              </table>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
