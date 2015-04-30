@@ -28,7 +28,7 @@ public class DataAttributeInstance {
         this.name = dbDataAttributeInstance.getName(dataAttribute_id);
     }
 
-    public void setValue(int dataAttributeInstance_id, Object value) {
+    public void setValue(Object value) {
         this.value = value;
         dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
     }

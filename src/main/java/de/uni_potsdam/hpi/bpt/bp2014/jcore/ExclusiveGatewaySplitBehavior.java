@@ -115,6 +115,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         switch (type) {
             case "Activity":
             case "EmailTask":
+            case "WebServiceTask":
                 ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 break;
             case "AND":

@@ -1,10 +1,10 @@
 <!-- Creates Menu Entries for the Scenarios -->
 <a id="headingOne" href="#scenarioEntries" data-toggle="collapse">
-	<span class="nav-label">Scenarios</span>
-	<span class="fa arrow"></span>
+    <span class="nav-label">Scenarios</span>
+    <span class="fa arrow"></span>
 </a>
 <ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
-	<li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
-		<a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
-	</li>
+    <li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
+        <a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
+    </li>
 </ul>

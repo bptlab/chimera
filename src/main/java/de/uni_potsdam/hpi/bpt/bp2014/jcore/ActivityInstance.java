@@ -82,6 +82,10 @@ public class ActivityInstance extends ControlNodeInstance {
                     dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "EmailTask", "init");
                     dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
                     break;
+                case "WebServiceTask":
+                    dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "WebServiceTask", "init");
+                    dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
+                    break;
                 default:
                     dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
             }
@@ -98,6 +102,10 @@ public class ActivityInstance extends ControlNodeInstance {
         switch (dbControlNode.getType(controlNode_id)) {
             case "EmailTask":
                 this.taskExecutionBehavior = new EmailTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
+                this.isAutomaticTask = true;
+                break;
+            case "WebServiceTask":
+                this.taskExecutionBehavior = new WebServiceTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
                 this.isAutomaticTask = true;
                 break;
             default:

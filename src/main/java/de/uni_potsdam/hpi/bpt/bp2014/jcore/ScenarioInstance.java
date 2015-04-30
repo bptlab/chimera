@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.HashMap;
@@ -408,7 +409,6 @@ public class ScenarioInstance {
         for (ControlNodeInstance controlNodeInstance : ((LinkedList<ControlNodeInstance>) enabledControlNodeInstances.clone())) {
             if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
                 ((ActivityInstance) controlNodeInstance).begin();
-                //((ActivityInstance) controlNodeInstance).terminate();
             }
         }
     }

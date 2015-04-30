@@ -62,9 +62,11 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
     private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance) {
+        //TODO: type
         switch (type) {
             case "Activity":
             case "EmailTask":
+            case "WebServiceTask":
                 if (!gatewayInstance.isAutomaticExecution()) {
                     ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 }
