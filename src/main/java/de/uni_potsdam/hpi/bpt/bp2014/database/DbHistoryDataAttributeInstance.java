@@ -46,7 +46,7 @@ public class DbHistoryDataAttributeInstance extends DbObject {
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
     public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql ="SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldvalue, h.newvalue, h.dataattributeinstace_id, da.name, do.name FROM historydataattributeinstance AS h, dataattributeinstance AS dai, dataattribute AS da, dataobjectinstance AS doi, dataobject AS do WHERE scenarioinstance_id = "+scenarioInstanceId+" AND h.dataattributeinstance = dai.id AND dai.dataattribute_id = da.id AND dai.dataobjectinstance_id = doi.id AND doi.dataobject_id = do.id ORDER BY timestamp DESC";
+        String sql ="SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldvalue, h.newvalue, h.dataattributeinstance_id, da.name, do.name FROM historydataattributeinstance AS h, dataattributeinstance AS dai, dataattribute AS da, dataobjectinstance AS doi, dataobject AS do WHERE h.scenarioinstance_id = "+scenarioInstanceId+" AND h.dataattributeinstance_id = dai.id AND dai.dataattribute_id = da.id AND dai.dataobjectinstance_id = doi.id AND doi.dataobject_id = do.id ORDER BY timestamp DESC";
         return this.executeStatementReturnsMapWithMapWithKeys(sql,"h.id", "h.scenarioinstance_id", "da.name", "h.timestamp", "h.oldvalue", "h.newvalue", "h.dataattributeinstance_id", "do.name");
     }
 }
