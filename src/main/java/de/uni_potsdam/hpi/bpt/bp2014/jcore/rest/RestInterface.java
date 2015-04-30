@@ -1403,7 +1403,7 @@ public class RestInterface {
         public String label;
         /**
          * The id the dataobject (not the instance) has inside
-         * the database
+         * the database.
          */
         public int id;
         /**
@@ -1413,7 +1413,8 @@ public class RestInterface {
          */
         public String state;
         /**
-         *
+         * An array of all dataAttributes belonging to this dataObject.
+         * Each attribute has an id, name, type and value.
          */
         public DataAttributeJaxBean[] attributeConfiguration;
     }
