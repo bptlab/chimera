@@ -18,17 +18,17 @@ public class RestInterface {
     /**
      * This method gives the log entries for all activities for a specific scenario instance.
      *
-     * @param scenarioInstanceID The id of the scenario instance.
+     * @param instanceID The id of the scenario instance.
      * @return a JSON-Object with the log entries.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/activities")
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activities")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getActivityLog(
             @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
-            @DefaultValue("0") @PathParam("scenarioInstanceID") int scenarioInstanceID,
+            @DefaultValue("0") @PathParam("instanceID") int instanceID,
             @DefaultValue(" ") @QueryParam("state") String state) {
-        if (scenarioInstanceID == 0 || scenarioID == 0) {
+        if (instanceID == 0 || scenarioID == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The instance or scenario ID is incorrect\"}")
@@ -36,7 +36,6 @@ public class RestInterface {
         }
 
         Map<Integer, Map<String, Object>> activityLog;
-        //TODO: check if instanceID exists
         if(state == null) {
             state = "";
         }
@@ -74,7 +73,6 @@ public class RestInterface {
                     .build();
         }
         Map<Integer, Map<String, Object>> dataObjectLog;
-        //TODO: check if instanceID exists
         dataObjectLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
         return Response
                 .ok()
@@ -93,15 +91,21 @@ public class RestInterface {
     @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/attributes")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataAttributeLog(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("scenarioInstanceID") int scenarioInstanceID) {
-        Map<Integer, Map<String, Object>> dataObjectLog;
-        //TODO: check if instanceID exists
-        dataObjectLog = historyService.getDataAtttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
-        return Response
-                .ok()
-                .type(MediaType.APPLICATION_JSON)
-                .entity(new JSONObject(dataObjectLog).toString())
-                .build();
+            @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
+            @DefaultValue("0") @PathParam("scenarioInstanceID") int scenarioInstanceID) {
+            if (scenarioInstanceID == 0 || scenarioID == 0) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .type(MediaType.APPLICATION_JSON)
+                        .entity("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                        .build();
+            }
+
+            Map<Integer, Map<String, Object>> attributeLog;
+            attributeLog = historyService.getDataAtttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+            return Response
+                    .ok()
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new JSONObject(attributeLog).toString())
+                    .build();
     }
 }
