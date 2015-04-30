@@ -90,7 +90,7 @@
 						$scope.form = { 
 								receiver: data['receiver'],
 								subject: data['subject'],
-								content: data['message']
+								message: data['message']
 								};
 					});
 			};
