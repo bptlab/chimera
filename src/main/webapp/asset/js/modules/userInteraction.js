@@ -330,7 +330,7 @@
             this.getOutputAndOutputsets = function(activityID) {
                     $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
                         success(function(data) {
-                            instanceCtrl.scenario['activity'][activityID] = {};
+                            //instanceCtrl.scenario['activity'][activityID] = {};
                             instanceCtrl.scenario['activity'][activityID]['output'] = data;
                             //now, we also want to get the details of the outputset to access the label e.g. for each entry
                             angular.forEach(instanceCtrl.scenario['activity'][activityID]['output'], function(outputset, key2) {
@@ -354,16 +354,20 @@
                 instanceCtrl.scenario['activity'] = {};
                 instanceCtrl.scenario['activity'][activityID] = {};
                 //get output and outputsets for the actual activity itself
-                instanceCtrl.getOutputAndOutputsets(activityID);
+                //instanceCtrl.getOutputAndOutputsets(activityID);
                 //retrieve referenced Activities for this activityID
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/references").
                     success(function(data) {
                         instanceCtrl.scenario['activity'][activityID]['references'] = data;
+                        var activities = instanceCtrl.scenario['activity'][activityID]['references']['ids'];
+                        activities.push(activityID);
+                        console.log('activities: ');
+                        console.log(activities);
                         //instanceCtrl.scenario['activity'][activityID]['references']['ids'].push(activityID);
                         //check if there are any referenced Activities
                         if(instanceCtrl.scenario['activity'][activityID]['references']['ids'].length > 0){
                             //if so, lets get the output for each of them
-                            angular.forEach(instanceCtrl.scenario['activity'][activityID]['references']['ids'], function(refActivityID, key) {
+                            angular.forEach(activities, function(refActivityID, key) {
                                 //retrieving the output for each retrieved referenced Activity
                                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + refActivityID + "/output").
                                     success(function(data) {
