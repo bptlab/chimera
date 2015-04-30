@@ -69,4 +69,26 @@ public class RestInterface {
                 .entity(new JSONObject(dataObjectLog).toString())
                 .build();
     }
+
+    /**
+     * This method gives the log entries for all DataAttributeInstances for a specific scenario instance.
+     *
+     * @param scenarioInstanceID The id of the scenario instance.
+     * @return a JSON-Object with the log entries.
+     */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/dataattributes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDataAttributeLog(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("scenarioInstanceID") int scenarioInstanceID) {
+        Map<Integer, Map<String, Object>> dataObjectLog;
+        //TODO: check if instanceID exists
+        dataObjectLog = historyService.getDataAtttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+        return Response
+                .ok()
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new JSONObject(dataObjectLog).toString())
+                .build();
+    }
 }

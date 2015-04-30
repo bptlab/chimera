@@ -93,4 +93,12 @@ public class RestInterfaceTest extends AbstractTest {
                 response.readEntity(String.class),
                 jsonEquals("{\"3\":{\"h.scenarioinstance_id\":1302,\"h.id\":3,\"h.oldstate_id\":1,\"h.newstate_id\":2,\"h.dataobjectinstance_id\":1058,\"newstate_name\":\"bearbeitet\",\"oldstate_name\":\"init\",\"do.name\":\"Wischeimer\"},\"4\":{\"h.scenarioinstance_id\":1302,\"h.id\":4,\"h.oldstate_id\":5,\"h.newstate_id\":6,\"h.dataobjectinstance_id\":1059,\"newstate_name\":\"fertig\",\"oldstate_name\":\"init\",\"do.name\":\"Wischeimer\"},\"5\":{\"h.scenarioinstance_id\":1302,\"h.id\":5,\"h.oldstate_id\":2,\"h.newstate_id\":3,\"h.dataobjectinstance_id\":1058,\"newstate_name\":\"gepr?ft\",\"oldstate_name\":\"bearbeitet\",\"do.name\":\"Wischeimer\"},\"6\":{\"h.scenarioinstance_id\":1302,\"h.id\":6,\"h.oldstate_id\":3,\"h.newstate_id\":4,\"h.dataobjectinstance_id\":1058,\"newstate_name\":\"abgeschlossen\",\"oldstate_name\":\"gepr?ft\",\"do.name\":\"Wischeimer\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
+
+    @Test
+    public void testGetDataAttributesLog() {
+        Response response = base.path("scenario/1/instance/1302/dataattributes").request().get();
+        assertThat("Get activities did not contain the expected information",
+                response.readEntity(String.class),
+                jsonEquals("{}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+    }
 }
