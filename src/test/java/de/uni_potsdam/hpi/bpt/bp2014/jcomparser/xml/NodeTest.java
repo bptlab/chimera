@@ -15,6 +15,7 @@ public class NodeTest {
     private Element activityGlobalNode;
     private Element activityLocalNode;
     private Element activitySendNode;
+    private Element serviceTask;
     private Element startEventNode;
     private Element endEventNode;
     private Element xorNode;
@@ -49,6 +50,7 @@ public class NodeTest {
         activityLocalNode.appendChild(createProperty("#id", "368338489"));
         activityLocalNode.appendChild(createProperty("stereotype", ""));
     }
+
     @Before
     public void setUpSendTask(){
         activitySendNode = document.createElement("node");
@@ -57,6 +59,16 @@ public class NodeTest {
         activitySendNode.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
         activitySendNode.appendChild(createProperty("#id", "368338489"));
         activitySendNode.appendChild(createProperty("stereotype", "SEND"));
+    }
+
+    @Before
+    public void setUpServiceTask(){
+        serviceTask = document.createElement("node");
+        serviceTask.appendChild(createProperty("text", "WebService ausfuehren"));
+        serviceTask.appendChild(createProperty("global", "0"));
+        serviceTask.appendChild(createProperty("#type", "net.frapu.code.visualization.bpmn.Task"));
+        serviceTask.appendChild(createProperty("#id", "368338489"));
+        serviceTask.appendChild(createProperty("stereotype", "SERVICE"));
     }
 
     @Before
@@ -115,6 +127,7 @@ public class NodeTest {
         Assert.assertEquals("Global has not been set correctly", true, activity.isGlobal());
         Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
         Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", activity.getStereotype());
     }
 
     @Test
@@ -127,6 +140,7 @@ public class NodeTest {
         Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
         Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
         Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", activity.getStereotype());
     }
 
     @Test
@@ -139,7 +153,20 @@ public class NodeTest {
         Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
         Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
         Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
-        Assert.assertEquals("The stereotype is not set or not equal 'SEND'", "SEND", activity.getStereotype());
+        Assert.assertEquals("The stereotype is not set correctly", "SEND", activity.getStereotype());
+    }
+
+    @Test
+    public void testServiceTaskDeserialization() {
+        Node activity = new Node();
+        activity.initializeInstanceFromXML(serviceTask);
+        Assert.assertEquals("Id has not been set correctly", 368338489L, activity.getId());
+        Assert.assertEquals("Text has not been set correctly", "WebService ausfuehren", activity.getText());
+        Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.Task", activity.getType());
+        Assert.assertEquals("Global has not been set correctly", false, activity.isGlobal());
+        Assert.assertTrue("The Node is a Task but isTask returns false", activity.isTask());
+        Assert.assertFalse("The Node is a Task but isDataNode returns true", activity.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "SERVICE", activity.getStereotype());
     }
 
     @Test
@@ -151,6 +178,7 @@ public class NodeTest {
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.StartEvent", startEvent.getType());
         Assert.assertFalse("The Node is a StartEvent but isTask returns true", startEvent.isTask());
         Assert.assertFalse("The Node is a StartEvent but isDataNode returns true", startEvent.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", startEvent.getStereotype());
     }
 
     @Test
@@ -162,6 +190,7 @@ public class NodeTest {
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.EndEvent", endEvent.getType());
         Assert.assertFalse("The Node is a endEvent but isTask returns true", endEvent.isTask());
         Assert.assertFalse("The Node is a endEvent but isDataNode returns true", endEvent.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", endEvent.getStereotype());
     }
 
     @Test
@@ -173,6 +202,7 @@ public class NodeTest {
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ExclusiveGateway", xor.getType());
         Assert.assertFalse("The Node is a xorGateway but isTask returns true", xor.isTask());
         Assert.assertFalse("The Node is a xorGateway but isDataNode returns true", xor.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", xor.getStereotype());
     }
 
     @Test
@@ -184,6 +214,7 @@ public class NodeTest {
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.ParallelGateway", and.getType());
         Assert.assertFalse("The Node is a andGateway but isTask returns true", and.isTask());
         Assert.assertFalse("The Node is a andGateway but isDataNode returns true", and.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", and.getStereotype());
     }
 
     @Test
@@ -195,6 +226,7 @@ public class NodeTest {
         Assert.assertEquals("Type has not been set correctly", "net.frapu.code.visualization.bpmn.DataObject", data.getType());
         Assert.assertFalse("The Node is a dataObject, but isTask returns true", data.isTask());
         Assert.assertTrue("The Node is a dataobject, but isDataNode returns false", data.isDataNode());
+        Assert.assertEquals("The stereotype is not set correctly", "", data.getStereotype());
     }
 
     /**
