@@ -726,11 +726,16 @@ public class RestInterface {
     }
 
     /**
-     * @param uriInfo
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * This method is used to get all the information for an activity.
+     * This means the label, id and a link for the input-/outputSets.
+     *
+     * @param uriInfo A UriInfo object, which holds the server context.
+     * @param scenarioID The databaseID of a scenario.
+     * @param scenarioInstanceID The databaseID of a scenarioInstance.
+     * @param activityID The databaseID of an activityInstance.
+     * @return a response Object with the status code:
+     * 200 if everything was correct and holds the information about the activityInstance.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
@@ -740,7 +745,14 @@ public class RestInterface {
                                 @PathParam("activityID") int activityID) {
 
         ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
+        if(!testActivityInstanceExists(activityID)){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
         ActivityJaxBean activity = new ActivityJaxBean();
         activity.id = activityID;
         LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
@@ -756,7 +768,9 @@ public class RestInterface {
     }
 
     /**
-     * @param uriInfo
+     *
+     *
+     * @param uriInfo  A UriInfo object, which holds the server context.
      * @param scenarioID
      * @param scenarioInstanceID
      * @param activityID
@@ -782,10 +796,22 @@ public class RestInterface {
     }
 
     /**
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * This method responds to a GET request by returning an array of inputSets.
+     * Each contains the inputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * The result is determined by:
+     *
+     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID The databaseID of the scenario.
+     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
+     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * array of inputSets containing the inputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a response status code:
+     *  A 200 if everything was correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     *  if the activity has no inputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
@@ -793,37 +819,14 @@ public class RestInterface {
                                         @PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
-        /*ExecutionService executionService = new ExecutionService();
-        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
-        }
-        DbDataFlow dbDataFlow = new DbDataFlow();
-        DbDataNode dbDataNode = new DbDataNode();
-        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        for (int inputSet : inputSets) {
-            LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
-            dataObjects = new DataObjectJaxBean[dObjects.size()];
-            int i = 0;
-            for (DataObject dO : dObjects) {
-                DataObjectJaxBean dataObject = new DataObjectJaxBean();
-                dataObject.id = dO.getId();
-                dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
-                dataObject.label = executionService.getAllDataObjectNames(scenarioInstanceID).get(dO.getId());
-                //dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
-                dataObjects[i] = dataObject;
-                i++;
-            }
-        }*/
+
         ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
-        boolean activityExists = testActivityInstanceExists(activityID);
-        if(!activityExists){
+        if(!testActivityInstanceExists(activityID)){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
@@ -863,11 +866,22 @@ public class RestInterface {
     }
 
     /**
+     * This method responds to a GET request by returning an array of outputSets.
+     * Each contains the outputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * The result is determined by:
      *
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID The databaseID of the scenario.
+     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
+     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * array of outputSets containing the outputSetDatabaseID, the name of the dataObject and their state as a Map &
+     *  a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a response status code:
+     *  A 200 if everything was correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     *  if the activity has no outputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
@@ -875,43 +889,14 @@ public class RestInterface {
                                          @PathParam("scenarioID") int scenarioID,
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID) {
-        /*ExecutionService executionService = new ExecutionService();
-        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
-        }
-        DbDataFlow dbDataFlow = new DbDataFlow();
-        DbDataNode dbDataNode = new DbDataNode();
-        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        for (int outputSet : outputSets) {
-            LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
-            dataObjects = new DataObjectJaxBean[dObjects.size()];
-            int i = 0;
-            for (DataObject dO : dObjects) {
-                DataObjectJaxBean dataObject = new DataObjectJaxBean();
-                DbState dbState = new DbState();
-                LinkedList<DataObjectInstance> dataObjectInstances= executionService.getScenarioInstance(scenarioInstanceID).getDataObjectInstances();
-                for(DataObjectInstance dataObjectInstance : dataObjectInstances) {
-                    if (dO.getId() == dataObjectInstance.getDataObject_id()) {
-                        dataObject.id = dataObjectInstance.getDataObjectInstance_id();
-                        dataObject.label = dataObjectInstance.getName();
-                        dataObject.state = dbState.getStateName(dataObjectInstance.getState_id());
-                        dataObject.attributeConfiguration = getDataAttributes(dataObjectInstance);
-                    }
-                }
-                dataObjects[i] = dataObject;
-                i++;
-            }
-        }*/
+
         ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
-        boolean activityExists = testActivityInstanceExists(activityID);
-        if(!activityExists){
+        if(!testActivityInstanceExists(activityID)){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
@@ -938,10 +923,19 @@ public class RestInterface {
     }
 
     /**
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param inputsetID
-     * @return
+     * This method responds to a GET request
+     * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an inputSet.
+     * The outcome is specified by:
+     *
+     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
+     * @param inputsetID This is the databaseID of an inputSet belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * an array of dataObjectsInstances with their dataAttributeInstances [also as an array].
+     * a response status code:
+     *  A 200 if everything is correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/inputSetInstance is non-existing &
+     *  with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}")
@@ -955,6 +949,11 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        if(executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID).length == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such inputSet instance.\"}").build();
+        }
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
@@ -969,10 +968,19 @@ public class RestInterface {
     }
 
     /**
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param outputsetID
-     * @return
+     * This method responds to a GET request
+     * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.
+     * The outcome is specified by:
+     *
+     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
+     * @param outputsetID This is the databaseID of an outputSet belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * an array of dataObjectsInstances with their dataAttributeInstances also as an array.
+     * a response status code:
+     *  A 200 if everything is correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/outputSetInstance is non-existing
+     *  with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}")
@@ -986,6 +994,11 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        if(executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such outputSet instance.\"}").build();
+        }
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
@@ -1007,12 +1020,14 @@ public class RestInterface {
      */
     private DataAttributeJaxBean[] getDataAttributes(DataObjectInstance dataObjectInstance) {
         DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
+        DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
         int i = 0;
         for (DataAttributeInstance dataAttributeInstance : dataObjectInstance.getDataAttributeInstances()) {
-            dataAttributes[i].id = dataAttributeInstance.getDataAttributeInstance_id();
-            dataAttributes[i].name = dataAttributeInstance.getName();
-            dataAttributes[i].type = dataAttributeInstance.getType();
-            dataAttributes[i].value = dataAttributeInstance.getValue().toString();
+            dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
+            dataAttribute.name = dataAttributeInstance.getName();
+            dataAttribute.type = dataAttributeInstance.getType();
+            dataAttribute.value = dataAttributeInstance.getValue().toString();
+            dataAttributes[i] = dataAttribute;
             i++;
         }
         return dataAttributes;
@@ -1063,8 +1078,7 @@ public class RestInterface {
                             JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
                             int databaseID = entry.getInt("key");
                             String attribute = entry.getString("value");
-                            String value = attribute.split("\\,")[attribute.split("\\,").length - 1].replaceAll("value\\=", "").replaceAll("}", "");
-                            value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
+                            String value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
                             values.put(databaseID, value);
                         }
                     }

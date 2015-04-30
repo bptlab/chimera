@@ -107,6 +107,8 @@ public class Node implements IDeserialisable, IPersistable {
                 "XOR");
         peTypeToDbType.put("SEND",
                 "EmailTask");
+        peTypeToDbType.put("SERVICE",
+                "WebServiceTask");
     }
 
 
@@ -177,7 +179,7 @@ public class Node implements IDeserialisable, IPersistable {
         }
         Connector connector = new Connector();
         if (!type.contains("DataObject")) {
-            if (stereotype.equals("SEND")) {
+            if (!stereotype.isEmpty()) {
                 // we identify mailtasks that need to be marked in the database by their stereotype
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         peTypeToDbType.get(stereotype),

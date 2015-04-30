@@ -33,7 +33,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         this.setValues();
         this.sendMail();
         this.setCanTerminate(true);
-        ((ActivityInstance) controlNodeInstance).setCanTerminate(true);
+        this.setCanTerminate(true);
     }
 
     /**

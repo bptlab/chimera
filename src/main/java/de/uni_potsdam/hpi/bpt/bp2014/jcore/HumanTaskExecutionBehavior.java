@@ -37,7 +37,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
     public void execute() {
         DbDataFlow dbDataFlow = new DbDataFlow();
         if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()) {
-            ((ActivityInstance) controlNodeInstance).setCanTerminate(true);
+            this.setCanTerminate(true);
         }
     }
 
@@ -47,7 +47,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
             DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
             dataAttributeInstance.setValue(i, values.get(i));
         }
-        ((ActivityInstance) controlNodeInstance).setCanTerminate(true);
+        this.setCanTerminate(true);
     }
 
 

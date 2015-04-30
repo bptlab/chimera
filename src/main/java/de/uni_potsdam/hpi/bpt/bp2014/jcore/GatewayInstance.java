@@ -60,13 +60,15 @@ public class GatewayInstance extends ControlNodeInstance {
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
         scenarioInstance.getControlNodeInstances().add(this);
-        String type = dbControlNode.getType(controlNode_id);
-        if (type.equals("AND")) {
-            this.isAND = true;
-            this.isXOR = false;
-        } else if (type.equals("XOR")) {
-            this.isAND = false;
-            this.isXOR = true;
+        switch (dbControlNode.getType(controlNode_id)) {
+            case "AND":
+                this.isAND = true;
+                this.isXOR = false;
+                break;
+            case "XOR":
+                this.isAND = false;
+                this.isXOR = true;
+                break;
         }
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
             //initializes all Gateway Instances in the database

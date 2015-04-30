@@ -566,7 +566,7 @@ public class HugeComparserTest extends TestSetUp {
         }
         Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(1, "", "Startevent", fragments.get("FragmentA").id, 1069345757L)));
         Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(2, "Ref", "Activity", fragments.get("FragmentA").id, 8267903230L)));
-        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(3, "A1", "Activity", fragments.get("FragmentA").id, 517729148L)));
+        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(3, "A1", "WebServiceTask", fragments.get("FragmentA").id, 517729148L)));
         Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(4, "", "AND", fragments.get("FragmentA").id, 1569336784L)));
         Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(5, "", "AND", fragments.get("FragmentA").id, 2081480666L)));
         Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(6, "", "Endevent", fragments.get("FragmentA").id, 1914825610L)));

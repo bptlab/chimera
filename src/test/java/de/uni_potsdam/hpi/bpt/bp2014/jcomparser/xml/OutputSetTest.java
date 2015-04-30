@@ -83,7 +83,6 @@ public class OutputSetTest {
         outputSets = OutputSet.createOutputSetForTaskAndEdges(activity, dataFlowEdges);
     }
 
-
     @Test
     public void testOneOutputSet() {
         dataNodes.get(0).setText("DO");
@@ -91,15 +90,20 @@ public class OutputSetTest {
         setUpOutputSet();
         Assert.assertEquals("There is actually just one outputSet", 1, outputSets.size());
         Assert.assertEquals("The producer-Node has not been set correctly", activity, outputSets.get(0).getNode());
-        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(0), outputSets.get(0).getDataObjects().get(1));
-        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(0).getDataObjects().get(0));
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), outputSets.get(0).getAssociations().get(1));
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), outputSets.get(0).getAssociations().get(0));
+
+        Assert.assertEquals("The output-Nodes have not been set correctly", 2, outputSets.get(0).getDataObjects().size());
+        Assert.assertTrue("The output-Nodes have not been set correctly", outputSets.get(0).getDataObjects().contains(dataNodes.get(0)));
+        Assert.assertTrue("The output-Nodes have not been set correctly", outputSets.get(0).getDataObjects().contains(dataNodes.get(1)));
+
+        Assert.assertEquals("The associations have not been set correctly", 2, outputSets.get(0).getAssociations().size());
+        Assert.assertTrue("The associations have not been set correctly", outputSets.get(0).getAssociations().contains(dataFlowEdges.get(0)));
+        Assert.assertTrue("The associations have not been set correctly", outputSets.get(0).getAssociations().contains(dataFlowEdges.get(1)));
+
         Assert.assertTrue("Something went wrong saving the outputset", outputSets.get(0).save() > 0);
     }
 
     @Test
-    public void testSaveTwoPutputSets() {
+    public void testSaveTwoOutputSets() {
         dataNodes.get(0).setText("DO");
         dataNodes.get(1).setText("DO");
         setUpOutputSet();
@@ -110,13 +114,21 @@ public class OutputSetTest {
 
         Assert.assertEquals("The output-Nodes have not been set correctly", 1, outputSets.get(0).getDataObjects().size());
         Assert.assertEquals("The output-Nodes have not been set correctly", 1, outputSets.get(1).getDataObjects().size());
-        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(0), outputSets.get(0).getDataObjects().get(0));
-        Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(1).getDataObjects().get(0));
+        if (dataNodes.get(0) == outputSets.get(0).getDataObjects().get(0))
+            Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(1).getDataObjects().get(0));
+        else if (dataNodes.get(0) == outputSets.get(1).getDataObjects().get(0))
+            Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(0).getDataObjects().get(0));
+        else
+            Assert.fail("The output-Nodes have not been set correctly");
 
         Assert.assertEquals("The associations have not been set correctly", 1, outputSets.get(0).getAssociations().size());
         Assert.assertEquals("The associations have not been set correctly", 1, outputSets.get(1).getAssociations().size());
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(0), outputSets.get(0).getAssociations().get(0));
-        Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), outputSets.get(1).getAssociations().get(0));
+        if (dataFlowEdges.get(0) == outputSets.get(0).getAssociations().get(0))
+            Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), outputSets.get(1).getAssociations().get(0));
+        else if (dataFlowEdges.get(0) == outputSets.get(1).getAssociations().get(0))
+            Assert.assertEquals("The associations have not been set correctly", dataFlowEdges.get(1), outputSets.get(0).getAssociations().get(0));
+        else
+            Assert.fail("The associations have not been set correctly");
         Assert.assertTrue("Something went wrong saving the outputset", outputSets.get(0).save() > 0);
         Assert.assertTrue("Something went wrong saving the outputset", outputSets.get(1).save() > 0);
     }
