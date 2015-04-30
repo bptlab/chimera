@@ -19,7 +19,7 @@ public class DbWebServiceTask extends DbObject {
     }
 
     public LinkedList<String> getKeys(int controlNode_id, int dataattribute_id){
-        String sql = "";
+        String sql = "SELECT `key` FROM `webservicetaskattribute` WHERE `controlnode_id` = " + controlNode_id + " AND `dataattribute_id` = " + dataattribute_id + " ORDER BY `order` ASC";
         return this.executeStatementReturnsListString(sql, "key");
     }
 }
