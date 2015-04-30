@@ -602,6 +602,13 @@ public class ExecutionService {
         return allOutputSets;
     }
 
+    /**
+     * This method is used to get all dataObjectInstances belonging to a specific setID of a scenarioInstance.
+     *
+     * @param setID This is the databaseID of a DataSet (either Input or Output).
+     * @param scenarioInstanceID This is the databaseID of a scenarioInstance.
+     * @return an array of dataObjectInstances of dataObjects belonging to the dataSet.
+     */
     public DataObjectInstance[] getDataObjectInstancesForDataSetId(int setID, int scenarioInstanceID) {
         DbDataNode dbDataNode = new DbDataNode();
         LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
@@ -619,11 +626,23 @@ public class ExecutionService {
         return dataObjectInstancesArray;
     }
 
+    /**
+     * This method is used to get the stateName corresponding to a dataObjectInstance.
+     *
+     * @param dataObjectInstance This is an object of the DataObjectInstance class.
+     * @return the name of the state of the dataObjectInstance as a String.
+     */
     public String getStateNameForDataObjectInstance(DataObjectInstance dataObjectInstance) {
         DbState dbState = new DbState();
         return dbState.getStateName(dataObjectInstance.getState_id());
     }
 
+    /**
+     * Returns a Map with all InputSets, DataObjects and Data States for activity instance.
+     *
+     * @param activityInstanceId The id of the activity instance.
+     * @return a Map with inputsets.
+     */
     public Map<Integer, Map<String, String>> getInputSetsForActivityInstance(int activityInstanceId) {
         DbDataFlow dbDataFlow = new DbDataFlow();
         DbDataNode dbDataNode = new DbDataNode();

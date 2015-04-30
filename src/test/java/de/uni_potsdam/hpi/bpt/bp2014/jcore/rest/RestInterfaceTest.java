@@ -728,6 +728,9 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * When you send a Get to {@link RestInterface#getActivity(UriInfo, int, int, int)}
+     * with valid arguments
+     * then you should get a 200 response code and
+     * a JSONObject with the id, label of the activity and a link to the outputSet and the inputSet.
      */
     @Test
     public void testGetActivity(){
@@ -743,6 +746,9 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * When you send a Get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
+     * with valid arguments
+     * then you then you should get a 200 response code and a JSONObject with the id of the inputSet and
+     * a link to get the dataObjectInstance with their dataAttributeInstance.
      */
     @Test
     public void testGetInputDataObjects(){
@@ -757,6 +763,9 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * When you send a Get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
+     * with valid arguments
+     * then you then you should get a 200 response code and a JSONObject with the id of the outputSet and
+     * a link to get the dataObjectInstance with their dataAttributeInstance.
      */
     @Test
     public void testGetOutputDataObjects(){
@@ -978,7 +987,7 @@ public class RestInterfaceTest extends AbstractTest {
      * Given: Is an valid activity instance
      * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with a valid activity instance without input sets
-     * a 200 with an empty JSON array will be returned
+     * a 404 with an error message will be returned
      */
     @Test
     public void testGetInputForWOInputSets() {
@@ -1038,7 +1047,7 @@ public class RestInterfaceTest extends AbstractTest {
      * Given: Is an valid activity instance
      * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with a valid activity instance without input sets
-     * a 200 with an empty JSON array will be returned
+     * a 404 with an error message will be returned
      */
     @Test
     public void testGetOutputForWOOutputSets() {
@@ -1055,6 +1064,8 @@ public class RestInterfaceTest extends AbstractTest {
     }
     /**
      *  when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     *  with valid arguments
+     *  a 200 is returned with a JSONArray with JSONObjects for each dataObjectInstance
      */
     @Test
     public void testGetOutputSetDataAttributes() {
@@ -1071,6 +1082,8 @@ public class RestInterfaceTest extends AbstractTest {
     }
     /**
      * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid scenario/Instance
+     * a 404 with an error message is returned
      */
     @Test
     public void testInvalidScenarioGetOutputSetDataAttributes() {
@@ -1087,6 +1100,8 @@ public class RestInterfaceTest extends AbstractTest {
     }
     /**
      * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid ouptutSetID
+     * a 404 with an error message is returned
      */
     @Test
     public void testInvalidOutputSetGetOutputSetDataAttributes() {
@@ -1103,6 +1118,8 @@ public class RestInterfaceTest extends AbstractTest {
     }
     /**
      *  when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     *  with valid arguments
+     *  a 200 is returned with a JSONArray with JSONObjects for each dataObjectInstance
      */
     @Test
     public void testGetInputSetDataAttributes() {
@@ -1119,6 +1136,8 @@ public class RestInterfaceTest extends AbstractTest {
     }
     /**
      * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid scenario/Instance
+     * a 404 with an error message is returned
      */
     @Test
     public void testInvalidScenarioGetInputSetDataAttributes() {
@@ -1135,6 +1154,8 @@ public class RestInterfaceTest extends AbstractTest {
     }
     /**
      * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid inputSetID
+     * a 404 with an error message is returned
      */
     @Test
     public void testInvalidInputSetGetInputSetDataAttributes() {
