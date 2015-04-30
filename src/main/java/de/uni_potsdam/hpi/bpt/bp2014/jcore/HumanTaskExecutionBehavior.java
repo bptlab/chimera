@@ -45,7 +45,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
     public void setDataAttributeValues(Map<Integer, String> values) {
         for (Integer i : values.keySet()) {
             DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
-            dataAttributeInstance.setValue(i, values.get(i));
+            dataAttributeInstance.setValue(values.get(i));
         }
         this.setCanTerminate(true);
     }
