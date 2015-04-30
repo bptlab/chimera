@@ -30,23 +30,30 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.get();
         if (response.getStatus() == 200) {
-            String content = response.readEntity(String.class);
-            LinkedList<Integer> dataAttributeIds = dbWebServiceTask.getAttributeIdsForControlNode(controlNodeInstance.getControlNode_id());
-            for (int dataAttributeId : dataAttributeIds) {
-                LinkedList<String> keys = dbWebServiceTask.getKeys(controlNodeInstance.getControlNode_id(), dataAttributeId);
-                JSONObject JSONContent = new JSONObject(content);
-                int i;
-                for (i = 0; i < keys.size() - 1; i++) {
-                    JSONContent = JSONContent.getJSONObject(keys.get(i));
-                }
-                for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
-                    if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
-                        dataAttributeInstance.setValue(JSONContent.get(keys.get(i)));
-                    }
-                }
-                System.out.println(JSONContent.get(keys.get(i)));
-            }
+            this.writeDataAttributes(response.readEntity(String.class));
         }
         this.setCanTerminate(true);
+    }
+
+    /**
+     * Sets the specific data attribute values to the content from the request.
+     * @param content from GET Request.
+     */
+    private void writeDataAttributes(String content){
+        LinkedList<Integer> dataAttributeIds = dbWebServiceTask.getAttributeIdsForControlNode(controlNodeInstance.getControlNode_id());
+        for (int dataAttributeId : dataAttributeIds) {
+            LinkedList<String> keys = dbWebServiceTask.getKeys(controlNodeInstance.getControlNode_id(), dataAttributeId);
+            JSONObject JSONContent = new JSONObject(content);
+            int i;
+            for (i = 0; i < keys.size() - 1; i++) {
+                JSONContent = JSONContent.getJSONObject(keys.get(i));
+            }
+            for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+                if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
+                    dataAttributeInstance.setValue(JSONContent.get(keys.get(i)));
+                }
+            }
+            System.out.println(JSONContent.get(keys.get(i)));
+        }
     }
 }
