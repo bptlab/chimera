@@ -32,19 +32,19 @@ import java.util.LinkedList;
  */
 public class DataObjectInstance {
 
-    private int state_id;
     private final int dataObjectInstance_id;
     private final int dataObject_id;
     private final int scenario_id;
     private final int scenarioInstance_id;
     private final String name;
-    private LinkedList<DataAttributeInstance> dataAttributeInstances = new LinkedList<>();
     /**
      * Database Connection objects.
      */
     private final ScenarioInstance scenarioInstance;
     private final DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
     private final DbDataObject dbDataObject = new DbDataObject();
+    private int state_id;
+    private LinkedList<DataAttributeInstance> dataAttributeInstances = new LinkedList<>();
 
     /**
      * Creates and initializes a new data object instance.
@@ -74,9 +74,9 @@ public class DataObjectInstance {
         this.initializeAttributes();
     }
 
-    private void initializeAttributes(){
+    private void initializeAttributes() {
         LinkedList<Integer> dataAttribute_ids = dbDataObject.getAllDataAttributesForDataObject(dataObject_id);
-        for(int dataAttribute_id : dataAttribute_ids){
+        for (int dataAttribute_id : dataAttribute_ids) {
             DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(dataAttribute_id, dataObjectInstance_id, this);
             dataAttributeInstances.add(dataAttributeInstance);
             scenarioInstance.getDataAttributeInstances().put(dataAttributeInstance.getDataAttributeInstance_id(), dataAttributeInstance);

@@ -36,22 +36,18 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
     @Override
     public void execute() {
         DbDataFlow dbDataFlow = new DbDataFlow();
-        if(dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()){
-            ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()) {
+            this.setCanTerminate(true);
         }
-        //TODO: Change this later when we have forms 
-        //((ActivityInstance)controlNodeInstance).setCanTerminate(true);
     }
 
     @Override
-    public void setDataAttributeValues(Map<Integer, String> values){
-        if(values.keySet() != null) {
-            for (Integer i : values.keySet()) {
-                DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
-                dataAttributeInstance.setValue(i, values.get(i));
-            }
+    public void setDataAttributeValues(Map<Integer, String> values) {
+        for (Integer i : values.keySet()) {
+            DataAttributeInstance dataAttributeInstance = scenarioInstance.getDataAttributeInstances().get(i);
+            dataAttributeInstance.setValue(values.get(i));
         }
-        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        this.setCanTerminate(true);
     }
 
 

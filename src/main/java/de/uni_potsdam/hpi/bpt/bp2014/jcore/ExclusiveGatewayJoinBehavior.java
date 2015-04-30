@@ -45,13 +45,13 @@ public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
     public void enableControlFlow() {
         Collection conditions = dbControlFlow.getConditions(controlNodeInstance.getControlNode_id()).values();
         boolean condition = true;
-        if(conditions.size() > 0 && !conditions.iterator().next().equals("")){
+        if (conditions.size() > 0 && !conditions.iterator().next().equals("")) {
             condition = false;
         }
         if (condition) {
             ((GatewayStateMachine) stateMachine).execute();
             ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).execute();
-        }else{
+        } else {
             ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).evaluateConditions();
         }
 

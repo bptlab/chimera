@@ -1,13 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Condition;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
-
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -44,21 +38,6 @@ import java.util.LinkedList;
  * The scenario instance provide methods for the administration of the data object instances
  */
 public class ScenarioInstance {
-    /**
-     * Lists to save all fragments and all control nodes sorted by state.
-     */
-    private LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<ControlNodeInstance> controlFlowEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<ControlNodeInstance> dataEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<ControlNodeInstance> runningControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
-    private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
-    private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
-    private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<ControlNodeInstance>();
-    private LinkedList<GatewayInstance> executingGateways = new LinkedList<GatewayInstance>();
-    private HashMap<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
     private final int scenarioInstance_id;
     private final int scenario_id;
     private final String name;
@@ -70,6 +49,21 @@ public class ScenarioInstance {
     private final DbDataObject dbDataObject = new DbDataObject();
     private final DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
     private final DbScenario dbScenario = new DbScenario();
+    /**
+     * Lists to save all fragments and all control nodes sorted by state.
+     */
+    private LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<>();
+    private LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<>();
+    private LinkedList<ControlNodeInstance> controlFlowEnabledControlNodeInstances = new LinkedList<>();
+    private LinkedList<ControlNodeInstance> dataEnabledControlNodeInstances = new LinkedList<>();
+    private LinkedList<ControlNodeInstance> runningControlNodeInstances = new LinkedList<>();
+    private LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<>();
+    private LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<>();
+    private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<>();
+    private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
+    private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<>();
+    private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();
+    private HashMap<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
     /**
      * Creates and initializes a new scenario instance from database.
@@ -148,13 +142,13 @@ public class ScenarioInstance {
         fragmentInstance.terminate();
 
         //removes the old control node instances
-        LinkedList<ControlNodeInstance> updatedList = new LinkedList<ControlNodeInstance>(terminatedControlNodeInstances);
+        LinkedList<ControlNodeInstance> updatedList = new LinkedList<>(terminatedControlNodeInstances);
         for (ControlNodeInstance controlNodeInstance : updatedList) {
             if (controlNodeInstance.fragmentInstance_id == fragmentInstance_id) {
                 terminatedControlNodeInstances.remove(controlNodeInstance);
             }
         }
-        updatedList = new LinkedList<ControlNodeInstance>(controlNodeInstances);
+        updatedList = new LinkedList<>(controlNodeInstances);
         for (ControlNodeInstance controlNodeInstance : updatedList) {
             if (controlNodeInstance.fragmentInstance_id == fragmentInstance_id) {
                 controlNodeInstances.remove(controlNodeInstance);
@@ -415,7 +409,6 @@ public class ScenarioInstance {
         for (ControlNodeInstance controlNodeInstance : ((LinkedList<ControlNodeInstance>) enabledControlNodeInstances.clone())) {
             if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
                 ((ActivityInstance) controlNodeInstance).begin();
-                //((ActivityInstance) controlNodeInstance).terminate();
             }
         }
     }

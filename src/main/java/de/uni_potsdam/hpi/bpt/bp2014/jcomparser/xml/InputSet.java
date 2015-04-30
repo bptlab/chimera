@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import jersey.repackaged.com.google.common.collect.Sets;
 
 import java.util.*;
 
@@ -30,11 +31,11 @@ public class InputSet extends Set implements IPersistable {
         if (associations.isEmpty()) {
             return null;
         }
-        Map<String, List<Edge>> orderedAssociations = new HashMap<>();
+        Map<String, java.util.Set<Edge>> orderedAssociations = new HashMap<>();
         for (Edge edge : associations) {
             String sourceNodeLabel = edge.getSource().getText();
             if (orderedAssociations.get(sourceNodeLabel) == null) {
-                List<Edge> value = new LinkedList<>();
+                java.util.Set<Edge> value = new java.util.HashSet<>();
                 value.add(edge);
                 orderedAssociations.put(sourceNodeLabel, value);
             }
@@ -42,7 +43,14 @@ public class InputSet extends Set implements IPersistable {
                 orderedAssociations.get(sourceNodeLabel).add(edge);
             }
         }
-        List<List<Edge>> cartProd = cartesianProduct(orderedAssociations);
+        // convert orderedAssociations to appropriate form for calculating the cartesian product (convert Map<String, Set> to List<Set>)
+        List<java.util.Set<Edge>> convertedAssociations = new LinkedList<>();
+        for(java.util.Set<Edge> coll : orderedAssociations.values()) {
+            java.util.Set<Edge> hashSet = new HashSet<>();
+            hashSet.addAll(coll);
+            convertedAssociations.add(hashSet);
+        }
+        java.util.Set<List<Edge>> cartProd = Sets.cartesianProduct(convertedAssociations);
         List<InputSet> inputSets = new LinkedList<>();
         for (List<Edge> edgeSet : cartProd) {
             InputSet instance = new InputSet();

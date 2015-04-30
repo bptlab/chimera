@@ -56,29 +56,26 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
             }
         }
         String type = dbControlNode.getType(controlNode_id);
-        ControlNodeInstance controlNodeInstance = null;
-        //TODO type
+        ControlNodeInstance controlNodeInstance = createControlNode(type, controlNode_id);
+        this.setAutomaticExecutionToFalse(type, controlNodeInstance);
+        return controlNodeInstance;
+    }
+
+    private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance) {
+        //TODO: type
         switch (type) {
             case "Activity":
             case "EmailTask":
-                controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+            case "WebServiceTask":
                 if (!gatewayInstance.isAutomaticExecution()) {
                     ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 }
                 break;
-            case "Endevent":
-                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
-                break;
-            case "XOR":
-                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-                break;
             case "AND":
-                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
                 if (!gatewayInstance.isAutomaticExecution()) {
                     ((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
                 }
                 break;
         }
-        return controlNodeInstance;
     }
 }

@@ -26,16 +26,16 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
  */
 
 public class GatewayInstance extends ControlNodeInstance {
-    private boolean isXOR;
-    private boolean isAND;
-    private ScenarioInstance scenarioInstance;
-    private boolean automaticExecution;
     /**
      * Database Connection objects.
      */
     private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
     private final DbControlNode dbControlNode = new DbControlNode();
     private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
+    private boolean isXOR;
+    private boolean isAND;
+    private ScenarioInstance scenarioInstance;
+    private boolean automaticExecution;
 
     /**
      * Creates and initializes a new gateway instance.
@@ -60,13 +60,15 @@ public class GatewayInstance extends ControlNodeInstance {
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
         scenarioInstance.getControlNodeInstances().add(this);
-        String type = dbControlNode.getType(controlNode_id);
-        if (type.equals("AND")) {
-            this.isAND = true;
-            this.isXOR = false;
-        } else if (type.equals("XOR")) {
-            this.isAND = false;
-            this.isXOR = true;
+        switch (dbControlNode.getType(controlNode_id)) {
+            case "AND":
+                this.isAND = true;
+                this.isXOR = false;
+                break;
+            case "XOR":
+                this.isAND = false;
+                this.isXOR = true;
+                break;
         }
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
             //initializes all Gateway Instances in the database
@@ -96,6 +98,7 @@ public class GatewayInstance extends ControlNodeInstance {
 
     /**
      * Checks if the gateway can terminate.
+     *
      * @param controlNode_id A control node id.
      * @return true if the gateway can terminate
      */

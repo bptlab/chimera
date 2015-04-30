@@ -29,6 +29,4 @@ public class DbControlNodeInstanceTest {
         assertEquals(2, (int)dbControlNodeInstance.getActivitiesForFragmentInstanceID(83).get(0));
         assertEquals(5, (int)dbControlNodeInstance.getActivitiesForFragmentInstanceID(83).get(1));
     }
-
-    //TODO createNewControlNodeInstance
 }

@@ -57,7 +57,6 @@ public class DbGatewayInstance extends DbObject {
      * @param state This is the desirable state of the gateway instance.
      */
     public void createNewGatewayInstance(int controlNodeInstance_id, String type, String state) {
-        //TODO: history log
         String sql = "INSERT INTO gatewayinstance (id, gatewayinstance.type, gateway_state) VALUES (" + controlNodeInstance_id + ", '" + type + "', '" + state + "')";
         this.executeUpdateStatement(sql);
     }
@@ -69,7 +68,6 @@ public class DbGatewayInstance extends DbObject {
      * @param state this is the desirable state of the gateway instance.
      */
     public void setState(int id, String state) {
-        //TODO: history log
         String sql = "UPDATE gatewayinstance SET gateway_state = '" + state + "' WHERE id = " + id;
         this.executeUpdateStatement(sql);
     }

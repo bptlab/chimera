@@ -4,6 +4,7 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
    <!-- SERVLET: FileUpload -->
+    <!--
     <servlet>
         <servlet-name>FileUpload</servlet-name>
         <servlet-class>de.uni_potsdam.hpi.bpt.bp2014.jcomparser.FileUpload</servlet-class>
@@ -12,7 +13,7 @@
         <servlet-name>upload</servlet-name>
         <jsp-file>/upload.jsp</jsp-file>
     </servlet>
-
+    -->
 
      <!-- SERVLET: Jengine -->
    <servlet>
@@ -32,6 +33,7 @@
    </servlet-mapping>
 
 <!-- SERVLET: FileUpload -->
+    <!--
     <servlet-mapping>
         <servlet-name>upload</servlet-name>
         <url-pattern>/upload</url-pattern>
@@ -41,6 +43,7 @@
         <servlet-name>FileUpload</servlet-name>
         <url-pattern>/done</url-pattern>
     </servlet-mapping>
+    -->
 
 <!-- DATABASE: Config -->
 
@@ -62,15 +65,4 @@
         <env-entry-value>jdbc:mysql://127.0.0.1:3306/JEngineV2</env-entry-value>
     </env-entry>
 
-<!-- Filter -->
-<!--
-	<filter>
-	  <filter-name>CorsFilter</filter-name>
-	  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	  <filter-name>CorsFilter</filter-name>
-	  <url-pattern>/*</url-pattern>
-	</filter-mapping>
--->
 </web-app>

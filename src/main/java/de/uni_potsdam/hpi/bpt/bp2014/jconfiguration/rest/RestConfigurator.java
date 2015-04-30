@@ -72,10 +72,10 @@ public class RestConfigurator {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
             @PathParam("emailtaskID") int emailTaskID,
-            final RestInterface.EmailConfigJaxBean input) {
+            final RestConfigurator.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
-                input.receiver, input.subject, input.content);
+                input.receiver, input.subject, input.message);
         return Response.status(
                 result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
                 .build();
@@ -91,12 +91,12 @@ public class RestConfigurator {
      * @return A Response 202 (ACCEPTED) if the update was successful.
      * A 404 (NOT_FOUND) if the mail task could not be found.
      */
-    @POST
+    @POST //TODO: twice to PUT? should we take out the POST ?
     @Path("emailtask/{emailtaskID}/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEmailConfiguration(
+    public Response updateEmailConfiguration2(
             @PathParam("emailtaskID") int emailTaskID,
-            final EmailConfigJaxBean input) {
+            final RestConfigurator.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
                 input.receiver, input.subject, input.message);
@@ -180,6 +180,77 @@ public class RestConfigurator {
      * See the {@link #updateEmailConfiguration(int, EmailConfigJaxBean)}
      * updateEmailConfiguration} method for more information.
      */
+    /*************************** WEB SERVICE TASKS **********************************/
+
+    @GET
+    @Path("scenario/{scenarioID}/webservice")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllWebserviceTasks(
+            @PathParam("scenarioID") int scenarioID,
+            @QueryParam("filter") String filterString) {
+        DbScenario scenario = new DbScenario();
+        //TODO: get all webservice tasks for one scenario ID
+        //DbEmailConfiguration mail = new DbEmailConfiguration();
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        //TODO: wrap them to json
+        //String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
+        String jsonRepresentation = "";
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSpecificWebserviceTask(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID) {
+        DbScenario scenario = new DbScenario();
+        DbEmailConfiguration mail = new DbEmailConfiguration();
+
+        //TODO: get details for a specific webservice task
+        //EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
+        //mailConfig.receiver = mail.getReceiverEmailAddress(mailTaskID);
+
+        /*TODO: check if return value is empty
+        if (!scenario.existScenario(scenarioID) || mailConfig.receiver.equals("")) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        */
+        //TODO: wrap them to json
+        //mailConfig.message = mail.getMessage(mailTaskID);
+        //mailConfig.subject = mail.getSubject(mailTaskID);
+        String jsonRepresentation = "";
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    @PUT
+    @Path("webservice/{webserviceID}/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateWebserviceConfiguration(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID,
+            final RestConfigurator.WebserviceConfigJaxBean input) {
+        //TODO: set Webservice details
+        //DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        //int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
+         //       input.test);
+        int result = 1;
+        return Response.status(
+                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
+                .build();
+    }
+
+    /*************************** HELPER **********************************/
     @XmlRootElement
     public static class EmailConfigJaxBean {
         /**
@@ -197,5 +268,12 @@ public class RestConfigurator {
          * Could be any String but null.
          */
         public String message;
+    }
+
+    @XmlRootElement
+    public static class WebserviceConfigJaxBean {
+
+        public String test;
+
     }
 }

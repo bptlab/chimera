@@ -129,6 +129,54 @@ public class DbObject {
     }
 
     /**
+     * Executes the given select SQL statement and returns the result in List with String.
+     *
+     * @param sql         This is a given select SQL Statement.
+     * @param columnLabel This is the label of the column which is used as the result.
+     * @return List with String.
+     */
+    public LinkedList<String> executeStatementReturnsListString(String sql, String columnLabel) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        LinkedList<String> results = new LinkedList<>();
+        if (conn == null) {
+            return results;
+        }
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                results.add(rs.getString(columnLabel));
+            }
+            //Clean-up environment
+            rs.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return results;
+    }
+
+    /**
      * Executes the given select SQL statement and returns the result in list with Long.
      *
      * @param sql         This is a given select SQL Statement.

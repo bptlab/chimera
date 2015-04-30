@@ -7,13 +7,12 @@ public class DataAttributeInstance {
     final int dataAttribute_id;
     final int dataObjectInstance_id;
     final DataObjectInstance dataObjectInstance;
-    Object value;
     final String type;
     final String name;
-
+    Object value;
     DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
-    public DataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id, DataObjectInstance dataObjectInstance){
+    public DataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id, DataObjectInstance dataObjectInstance) {
         this.dataAttribute_id = dataAttribute_id;
         this.dataObjectInstance_id = dataObjectInstance_id;
         this.dataObjectInstance = dataObjectInstance;
@@ -29,7 +28,7 @@ public class DataAttributeInstance {
         this.name = dbDataAttributeInstance.getName(dataAttribute_id);
     }
 
-    public void setValue(int dataAttributeInstance_id, Object value){
+    public void setValue(Object value) {
         this.value = value;
         dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
     }

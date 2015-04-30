@@ -36,7 +36,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     /**
      * List of IDs of following control nodes.
      */
-    private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<LinkedList<Integer>>();
+    private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<>();
 
     private DbState dbState = new DbState();
 
@@ -105,26 +105,23 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
             }
         }
         String type = dbControlNode.getType(controlNode_id);
-        ControlNodeInstance controlNodeInstance = null;
+        ControlNodeInstance controlNodeInstance = createControlNode(type, controlNode_id);
+        setAutomaticExecutionToFalse(type, controlNodeInstance);
+        return controlNodeInstance;
+    }
+
+    private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance) {
         //TODO type
         switch (type) {
             case "Activity":
             case "EmailTask":
-                controlNodeInstance = new ActivityInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
+            case "WebServiceTask":
                 ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 break;
-            case "Endevent":
-                controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
-                break;
-            case "XOR":
-                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
-                break;
             case "AND":
-                controlNodeInstance = new GatewayInstance(controlNode_id, fragmentInstance_id, scenarioInstance);
                 ((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
                 break;
         }
-        return controlNodeInstance;
     }
 
     /**
@@ -164,15 +161,15 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         int defaultControlNode = -1;
         while (key.hasNext()) {
             controlNode_id = (Integer) key.next();
-            if((conditions.get(controlNode_id)).equals("DEFAULT")){
+            if ((conditions.get(controlNode_id)).equals("DEFAULT")) {
                 defaultControlNode = controlNode_id;
             } else if (evaluateCondition(conditions.get(controlNode_id))) {
                 defaultExecution = false;
                 break;
             }
         }
-        if(defaultExecution){
-            if(defaultControlNode != -1) {
+        if (defaultExecution) {
+            if (defaultControlNode != -1) {
                 ControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(defaultControlNode);
                 controlNodeInstance.getIncomingBehavior().enableControlFlow();
             }
@@ -185,22 +182,19 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 
     /**
      * Evaluates one specific condition.
+     *
      * @param condition The condition as String.
      * @return true if the condition ist true.
      */
     public boolean evaluateCondition(String condition) {
         XORGrammarCompiler compiler = new XORGrammarCompiler();
         CommonTree ast = compiler.compile(condition);
-        if (ast.getChildCount() > 0) {
-            return evaluate(0, ast);
-        }
-        return false;
+        return ast.getChildCount() > 0 && evaluate(0, ast);
     }
 
 
     private boolean evaluate(int i, Tree ast) {
-        boolean condition = false;
-        condition = checkCondition(ast, i);
+        boolean condition = checkCondition(ast, i);
         if (ast.getChildCount() >= i + 4) {
             if (ast.getChild(i + 3).toStringTree().equals("&") || ast.getChild(i + 3).toStringTree().equals(" & ")) {
                 return (condition & evaluate(i + 4, ast));

@@ -22,12 +22,19 @@ public class RestInterface {
      * @return a JSON-Object with the log entries.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{InstanceID}/activities")
+    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/activities")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getActivityLog(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("InstanceID") int instanceID,
-            @QueryParam("state") String state) {
+            @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
+            @DefaultValue("0") @PathParam("scenarioInstanceID") int scenarioInstanceID,
+            @DefaultValue(" ") @QueryParam("state") String state) {
+        if (scenarioInstanceID == 0 || scenarioID == 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                    .build();
+        }
+
         Map<Integer, Map<String, Object>> activityLog;
         //TODO: check if instanceID exists
         if(state == null) {
@@ -58,8 +65,14 @@ public class RestInterface {
     @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/dataobjects")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataObjectLog(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("scenarioInstanceID") int scenarioInstanceID) {
+            @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
+            @DefaultValue("0") @PathParam("scenarioInstanceID") int scenarioInstanceID) {
+        if (scenarioInstanceID == 0 || scenarioID == 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                    .build();
+        }
         Map<Integer, Map<String, Object>> dataObjectLog;
         //TODO: check if instanceID exists
         dataObjectLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
@@ -77,7 +90,7 @@ public class RestInterface {
      * @return a JSON-Object with the log entries.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/dataattributes")
+    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/attributes")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataAttributeLog(
             @PathParam("scenarioID") int scenarioID,

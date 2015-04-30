@@ -1,8 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
@@ -13,7 +11,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,130 +50,6 @@ import java.util.*;
  */
 @Path("interface/v2")
 public class RestInterface {
-    /**
-     * This is a data class for the email configuration.
-     * It is used by Jersey to deserialize JSON.
-     * Also it can be used for tests to provide the correct contents.
-     * This class in particular is used by the POST for the email configuration.
-     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator#updateEmailConfiguration(int, EmailConfigJaxBean)}
-     * updateEmailConfiguration} method for more information.
-     */
-    @XmlRootElement
-    public static class EmailConfigJaxBean {
-        /**
-         * The receiver of the email.
-         * coded as an valid email address (as String)
-         */
-        public String receiver;
-        /**
-         * The subject of the email.
-         * Could be any String but null.
-         */
-        public String subject;
-        /**
-         * The content of the email.
-         * Could be any String but null.
-         */
-        public String content;
-    }
-
-    /**
-     * A JAX bean which is used for a naming an entity.
-     * Therefor a name can be transmitted.
-     */
-    @XmlRootElement
-    public static class NamedJaxBean {
-        /**
-         * The name which should be assigned to the entity.
-         */
-        public String name;
-    }
-
-    /**
-     *
-     */
-    @XmlRootElement
-    public static class ActivityJaxBean {
-        /**
-         *
-         */
-        public int id;
-        /**
-         *
-         */
-        public String label;
-        /**
-         *
-         */
-        public DataObjectSetsJaxBean outputSet;
-        /**
-         *
-         */
-        public DataObjectSetsJaxBean inputSet;
-    }
-    /**
-     *
-     */
-    @XmlRootElement
-    public static class DataObjectSetsJaxBean {
-        /**
-         *
-         */
-        public String linkDataObject;
-
-    }
-    /**
-     * A JAX bean which is used for dataobject data.
-     * It contains the data of one dataobject.
-     * It can be used to create a JSON Object
-     */
-    @XmlRootElement
-    public static class DataObjectJaxBean {
-        /**
-         * The label of the data object.
-         */
-        public String label;
-        /**
-         * The id the dataobject (not the instance) has inside
-         * the database
-         */
-        public int id;
-        /**
-         * The state inside the database of the dataobject
-         * which is stored in the table.
-         * The label not the id will be saved.
-         */
-        public String state;
-        /**
-         *
-         */
-        public DataAttributeJaxBean[] attributeConfiguration;
-    }
-
-    /**
-     *
-     */
-    @XmlRootElement
-    public static class DataAttributeJaxBean {
-        /**
-         *
-         */
-        public int id;
-        /**
-         *
-         */
-        public String name;
-        /**
-         *
-         */
-        public String type;
-        /**
-         *
-         */
-        public String value;
-
-    }
-
     /**
      * This method allows to give an overview of all scenarios.
      * The response will return a JSON-Array containing the basic
@@ -731,7 +604,7 @@ public class RestInterface {
      * @param state      A String identifying the state.
      * @param uriInfo    A UriInfo object, which holds the server context.
      * @return A Response object, which is either a 404 if the state is invalid,
-     *         or a 200 if with json content.
+     * or a 200 if with json content.
      */
     private Response getAllActivitiesOfInstanceWithState(
             int scenarioID, int instanceID, String state, UriInfo uriInfo) {
@@ -780,7 +653,7 @@ public class RestInterface {
             activityJSON.put("label", instance.getLabel());
             activityJSON.put("state", state);
             activityJSON.put("link", uriInfo.getAbsolutePath() + "/" +
-                instance.getControlNodeInstance_id());
+                    instance.getControlNodeInstance_id());
             activities.put(activityJSON);
         }
         JSONObject result = new JSONObject();
@@ -790,7 +663,6 @@ public class RestInterface {
     }
 
     /**
-     *
      * @param instances
      * @param uriInfo
      * @return
@@ -854,12 +726,16 @@ public class RestInterface {
     }
 
     /**
+     * This method is used to get all the information for an activity.
+     * This means the label, id and a link for the input-/outputSets.
      *
-     * @param uriInfo
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param uriInfo A UriInfo object, which holds the server context.
+     * @param scenarioID The databaseID of a scenario.
+     * @param scenarioInstanceID The databaseID of a scenarioInstance.
+     * @param activityID The databaseID of an activityInstance.
+     * @return a response Object with the status code:
+     * 200 if everything was correct and holds the information about the activityInstance.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
@@ -869,28 +745,32 @@ public class RestInterface {
                                 @PathParam("activityID") int activityID) {
 
         ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such scenario instance.\"}").build();
+        }
+        if(!testActivityInstanceExists(activityID)){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
         ActivityJaxBean activity = new ActivityJaxBean();
-        DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
-        inputSet.linkDataObject = uriInfo.getAbsolutePath() + "/input";
-        DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
-        outputSet.linkDataObject = uriInfo.getAbsolutePath() + "/output";
         activity.id = activityID;
         LinkedList<ControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
-        for(ControlNodeInstance controlNodeInstance : controlNodeInstances) {
-            if(controlNodeInstance.getControlNodeInstance_id() == activityID){
+        for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {
+            if (controlNodeInstance.getControlNodeInstance_id() == activityID) {
                 activity.label = executionService.getLabelForControlNodeID(controlNodeInstance.getControlNode_id());
             }
         }
-        activity.inputSet = inputSet;
-        activity.outputSet = outputSet;
+        activity.inputSetLink = uriInfo.getAbsolutePath() + "/input";
+        activity.outputSetLink = uriInfo.getAbsolutePath() + "/output";
         return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 
     }
 
     /**
      *
-     * @param uriInfo
+     *
+     * @param uriInfo  A UriInfo object, which holds the server context.
      * @param scenarioID
      * @param scenarioInstanceID
      * @param activityID
@@ -899,121 +779,169 @@ public class RestInterface {
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references")
     public Response getReferencesForActivity(@Context UriInfo uriInfo,
-                                @PathParam("scenarioID") int scenarioID,
-                                @PathParam("instanceID") int scenarioInstanceID,
-                                @PathParam("activityID") int activityID) {
+                                             @PathParam("scenarioID") int scenarioID,
+                                             @PathParam("instanceID") int scenarioInstanceID,
+                                             @PathParam("activityID") int activityID) {
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
 
         Collection<ActivityInstance> referencedActivities = executionService.getReferentialEnabledActivities(scenarioInstanceID, activityID);
 
-        JSONObject result = buildJSONObjectForReferencedActivities(referencedActivities,  uriInfo);
+        JSONObject result = buildJSONObjectForReferencedActivities(referencedActivities, uriInfo);
         return Response
                 .ok(result.toString(), MediaType.APPLICATION_JSON)
                 .build();
         //String referencedActivitiesJSON = JsonUtil.JsonWrapperCollection(referencedActivities);
-       // return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
+        // return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
     }
 
     /**
+     * This method responds to a GET request by returning an array of inputSets.
+     * Each contains the inputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * The result is determined by:
      *
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID The databaseID of the scenario.
+     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
+     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * array of inputSets containing the inputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a response status code:
+     *  A 200 if everything was correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     *  if the activity has no inputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
-    public Response getInputDataObjects(@PathParam("scenarioID") int scenarioID,
+    public Response getInputDataObjects(@Context UriInfo uriInfo,
+                                        @PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
-        /*ExecutionService executionService = new ExecutionService();
+
+        ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        DbDataFlow dbDataFlow = new DbDataFlow();
-        DbDataNode dbDataNode = new DbDataNode();
-        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        for (int inputSet : inputSets) {
-            LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(inputSet);
-            dataObjects = new DataObjectJaxBean[dObjects.size()];
-            int i = 0;
-            for (DataObject dO : dObjects) {
-                DataObjectJaxBean dataObject = new DataObjectJaxBean();
-                dataObject.id = dO.getId();
-                dataObject.state = executionService.getAllDataObjectStates(scenarioInstanceID).get(dO.getId());
-                dataObject.label = executionService.getAllDataObjectNames(scenarioInstanceID).get(dO.getId());
-                //dataObject.attributeConfiguration = executionService.getAllDataAttributeInstances(scenarioInstanceID);
-                dataObjects[i] = dataObject;
-                i++;
+        DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
+        if(!testActivityInstanceExists(activityID)){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
+        if(executionService.getInputSetsForActivityInstance(activityID) == null || executionService.getInputSetsForActivityInstance(activityID).size() == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no inputSet for this activity instance.\"}").build();
+        }
+        Map<Integer, Map<String, String>> inputSetMap = executionService.getInputSetsForActivityInstance(activityID);
+        int j = 0;
+        DataObjectSetsJaxBean[] inputSets = new DataObjectSetsJaxBean[inputSetMap.keySet().size()];
+        for (Integer i : inputSetMap.keySet()) {
+            inputSet.id = i;
+            inputSet.dataObjects = inputSetMap.get(i);
+            String[] path = uriInfo.getAbsolutePath().toString().split("/");
+            inputSet.linkDataObject = "";
+            for (int k = 0; k < path.length - 3; k++) {
+                inputSet.linkDataObject += path[k] + "/";
             }
-        }*/
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        return Response.ok(dataObjects, MediaType.APPLICATION_JSON).build();
+            inputSet.linkDataObject += "inputset/" + inputSet.id;
+            inputSets[j] = inputSet;
+            j++;
+        }
+        return Response.ok(inputSets, MediaType.APPLICATION_JSON).build();
     }
 
     /**
+     * This method is used to test the existence of an activity instance in a given scenarioInstance.
      *
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param activityID The databaseID of the activityInstance which is to be checked.
+     * @return a boolean. True == activity is existing/ False == activity does not exist.
+     */
+    private boolean testActivityInstanceExists(int activityID) {
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        boolean activityExists = dbControlNodeInstance.existControlNodeInstance(activityID);
+
+        return activityExists;
+    }
+
+    /**
+     * This method responds to a GET request by returning an array of outputSets.
+     * Each contains the outputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * The result is determined by:
+     *
+     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID The databaseID of the scenario.
+     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
+     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * array of outputSets containing the outputSetDatabaseID, the name of the dataObject and their state as a Map &
+     *  a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a response status code:
+     *  A 200 if everything was correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     *  if the activity has no outputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
-    public Response getOutputDataObjects(@PathParam("scenarioID") int scenarioID,
-                                        @PathParam("instanceID") int scenarioInstanceID,
-                                        @PathParam("activityID") int activityID) {
+    public Response getOutputDataObjects(@Context UriInfo uriInfo,
+                                         @PathParam("scenarioID") int scenarioID,
+                                         @PathParam("instanceID") int scenarioInstanceID,
+                                         @PathParam("activityID") int activityID) {
 
-        //TODO: return the value from getOutputSetsForActivityInstance(int activityInstanceId)
-
-        /*ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        DbDataFlow dbDataFlow = new DbDataFlow();
-        DbDataNode dbDataNode = new DbDataNode();
-        LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeID);
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        for (int outputSet : outputSets) {
-            LinkedList<DataObject> dObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
-            dataObjects = new DataObjectJaxBean[dObjects.size()];
-            int i = 0;
-            for (DataObject dO : dObjects) {
-                DataObjectJaxBean dataObject = new DataObjectJaxBean();
-                DbState dbState = new DbState();
-                LinkedList<DataObjectInstance> dataObjectInstances= executionService.getScenarioInstance(scenarioInstanceID).getDataObjectInstances();
-                for(DataObjectInstance dataObjectInstance : dataObjectInstances) {
-                    if (dO.getId() == dataObjectInstance.getDataObject_id()) {
-                        dataObject.id = dataObjectInstance.getDataObjectInstance_id();
-                        dataObject.label = dataObjectInstance.getName();
-                        dataObject.state = dbState.getStateName(dataObjectInstance.getState_id());
-                        dataObject.attributeConfiguration = getDataAttributes(dataObjectInstance);
-                    }
-                }
-                dataObjects[i] = dataObject;
-                i++;
+        DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
+        if(!testActivityInstanceExists(activityID)){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such activity instance.\"}").build();
+        }
+        if(executionService.getOutputSetsForActivityInstance(activityID) == null || executionService.getOutputSetsForActivityInstance(activityID).size() == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no outputSet for this activity instance.\"}").build();
+        }
+        Map<Integer, Map<String, String>> outputSetMap = executionService.getOutputSetsForActivityInstance(activityID);
+        int j = 0;
+        DataObjectSetsJaxBean[] outputSets = new DataObjectSetsJaxBean[outputSetMap.keySet().size()];
+        for (Integer i : outputSetMap.keySet()) {
+            outputSet.id = i;
+            outputSet.dataObjects = outputSetMap.get(i);
+            String[] path = uriInfo.getAbsolutePath().toString().split("/");
+            outputSet.linkDataObject = "";
+            for (int k = 0; k < path.length - 3; k++) {
+                outputSet.linkDataObject += path[k] + "/";
             }
-        }*/
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[0];
-        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+            outputSet.linkDataObject += "outputset/" + outputSet.id;
+            outputSets[j] = outputSet;
+            j++;
+        }
+        return Response.ok(outputSets, MediaType.APPLICATION_JSON).build();
     }
 
     /**
+     * This method responds to a GET request
+     * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an inputSet.
+     * The outcome is specified by:
      *
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param inputsetID
-     * @return
+     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
+     * @param inputsetID This is the databaseID of an inputSet belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * an array of dataObjectsInstances with their dataAttributeInstances [also as an array].
+     * a response status code:
+     *  A 200 if everything is correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/inputSetInstance is non-existing &
+     *  with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}")
     public Response getInputDataObjectsAndAttributes(@PathParam("scenarioID") int scenarioID,
-                                                      @PathParam("instanceID") int scenarioInstanceID,
-                                                      @PathParam("inputsetID") int inputsetID) {
+                                                     @PathParam("instanceID") int scenarioInstanceID,
+                                                     @PathParam("inputsetID") int inputsetID) {
 
         ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
@@ -1021,6 +949,11 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        if(executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID).length == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such inputSet instance.\"}").build();
+        }
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
@@ -1033,18 +966,27 @@ public class RestInterface {
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
     }
+
     /**
-    *
-    * @param scenarioID
-    * @param scenarioInstanceID
-    * @param outputsetID
-    * @return
-    */
+     * This method responds to a GET request
+     * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.
+     * The outcome is specified by:
+     *
+     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
+     * @param outputsetID This is the databaseID of an outputSet belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * an array of dataObjectsInstances with their dataAttributeInstances also as an array.
+     * a response status code:
+     *  A 200 if everything is correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/outputSetInstance is non-existing
+     *  with an error message instead of the array.
+     */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}")
     public Response getOutputDataObjectsAndAttributes(@PathParam("scenarioID") int scenarioID,
-                                         @PathParam("instanceID") int scenarioInstanceID,
-                                         @PathParam("outputsetID") int outputsetID) {
+                                                      @PathParam("instanceID") int scenarioInstanceID,
+                                                      @PathParam("outputsetID") int outputsetID) {
 
         ExecutionService executionService = new ExecutionService();
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
@@ -1052,10 +994,15 @@ public class RestInterface {
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        if(executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0){
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no such outputSet instance.\"}").build();
+        }
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
-        for(int i = 0; i < dataObjectInstances.length; i++) {
+        for (int i = 0; i < dataObjectInstances.length; i++) {
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
@@ -1073,12 +1020,14 @@ public class RestInterface {
      */
     private DataAttributeJaxBean[] getDataAttributes(DataObjectInstance dataObjectInstance) {
         DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
+        DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
         int i = 0;
-        for(DataAttributeInstance dataAttributeInstance : dataObjectInstance.getDataAttributeInstances()){
-            dataAttributes[i].id = dataAttributeInstance.getDataAttributeInstance_id();
-            dataAttributes[i].name = dataAttributeInstance.getName();
-            dataAttributes[i].type = dataAttributeInstance.getType();
-            dataAttributes[i].value = dataAttributeInstance.getValue().toString();
+        for (DataAttributeInstance dataAttributeInstance : dataObjectInstance.getDataAttributeInstances()) {
+            dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
+            dataAttribute.name = dataAttributeInstance.getName();
+            dataAttribute.type = dataAttributeInstance.getType();
+            dataAttribute.value = dataAttributeInstance.getValue().toString();
+            dataAttributes[i] = dataAttribute;
             i++;
         }
         return dataAttributes;
@@ -1107,7 +1056,7 @@ public class RestInterface {
                                         final String dataObjects) {
 
         boolean result;
-        if(state == null) {
+        if (state == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The state is not set\"}")
@@ -1121,16 +1070,15 @@ public class RestInterface {
                 //executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 break;
             case "terminate":
-                Map<Integer,String> values = new HashMap<Integer, String>();
-                if(dataObjects != null && !dataObjects.isEmpty()) {
+                Map<Integer, String> values = new HashMap<>();
+                if (dataObjects != null && !dataObjects.isEmpty()) {
                     JSONArray dObjects = new JSONArray(dataObjects);
                     if (dObjects != null) {
                         for (int i = 0; i < dObjects.length(); i++) {
                             JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
                             int databaseID = entry.getInt("key");
                             String attribute = entry.getString("value");
-                            String value = attribute.split("\\,")[attribute.split("\\,").length - 1].replaceAll("value\\=", "").replaceAll("}", "");
-                            value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
+                            String value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
                             values.put(databaseID, value);
                         }
                     }
@@ -1164,32 +1112,6 @@ public class RestInterface {
                     .build();
         }
     }
-
-    /*
-    @POST
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/outputset/{outputsetID}")
-    public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
-                                        @PathParam("instanceID") int scenarioInstanceID,
-                                        @PathParam("activityID") int activityID,
-                                        @PathParam("outputsetID") int outputsetID) {
-
-        boolean result;
-        ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-        result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputsetID);
-        if (result) {
-            return Response.status(Response.Status.ACCEPTED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"activity state changed.\"}")
-                    .build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"impossible to \"}")
-                    .build();
-        }
-    }
-    */
 
     /**
      * Returns a JSON-Object, which contains information about all
@@ -1250,7 +1172,6 @@ public class RestInterface {
                 MediaType.APPLICATION_JSON).build();
     }
 
-
     /**
      * This method provides detailed information about an data Object.
      * The information contain the id, parent scenario instance, label
@@ -1308,12 +1229,6 @@ public class RestInterface {
         return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
     }
 
-
-    /*
-     * Helper
-     */
-
-
     /**
      * Creates an array of DataObjects.
      * The data objects will be created out of the information received from the execution Service.
@@ -1360,5 +1275,170 @@ public class RestInterface {
         result.put(keyLabel, new JSONArray(data.keySet()));
         result.put(resultLabel, data);
         return result;
+    }
+
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator#updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * updateEmailConfiguration} method for more information.
+     */
+    @XmlRootElement
+    public static class EmailConfigJaxBean {
+        /**
+         * The receiver of the email.
+         * coded as an valid email address (as String)
+         */
+        public String receiver;
+        /**
+         * The subject of the email.
+         * Could be any String but null.
+         */
+        public String subject;
+        /**
+         * The content of the email.
+         * Could be any String but null.
+         */
+        public String content;
+    }
+
+    /**
+     * A JAX bean which is used for a naming an entity.
+     * Therefor a name can be transmitted.
+     */
+    @XmlRootElement
+    public static class NamedJaxBean {
+        /**
+         * The name which should be assigned to the entity.
+         */
+        public String name;
+    }
+
+    /*
+    @POST
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/outputset/{outputsetID}")
+    public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID,
+                                        @PathParam("outputsetID") int outputsetID) {
+
+        boolean result;
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputsetID);
+        if (result) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"activity state changed.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"impossible to \"}")
+                    .build();
+        }
+    }
+    */
+
+    /**
+     *
+     */
+    @XmlRootElement
+    public static class ActivityJaxBean {
+        /**
+         *
+         */
+        public int id;
+        /**
+         *
+         */
+        public String label;
+        /**
+         *
+         */
+        public String outputSetLink;
+        /**
+         *
+         */
+        public String inputSetLink;
+    }
+
+    /**
+     *
+     */
+    @XmlRootElement
+    public static class DataObjectSetsJaxBean {
+        /**
+         *
+         */
+        public int id;
+        /**
+         *
+         */
+        public String linkDataObject;
+        /**
+         *
+         */
+        Map<String, String> dataObjects;
+
+    }
+
+
+    /*
+     * Helper
+     */
+
+    /**
+     * A JAX bean which is used for dataobject data.
+     * It contains the data of one dataobject.
+     * It can be used to create a JSON Object
+     */
+    @XmlRootElement
+    public static class DataObjectJaxBean {
+        /**
+         * The label of the data object.
+         */
+        public String label;
+        /**
+         * The id the dataobject (not the instance) has inside
+         * the database
+         */
+        public int id;
+        /**
+         * The state inside the database of the dataobject
+         * which is stored in the table.
+         * The label not the id will be saved.
+         */
+        public String state;
+        /**
+         *
+         */
+        public DataAttributeJaxBean[] attributeConfiguration;
+    }
+
+    /**
+     *
+     */
+    @XmlRootElement
+    public static class DataAttributeJaxBean {
+        /**
+         *
+         */
+        public int id;
+        /**
+         *
+         */
+        public String name;
+        /**
+         *
+         */
+        public String type;
+        /**
+         *
+         */
+        public String value;
+
     }
 }

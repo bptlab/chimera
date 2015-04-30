@@ -6,14 +6,14 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
+    private final int controlNode_id;
+    private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
     private int port;
     private String serverAddress;
     private String receiverMail;
     private String sendMail;
     private String subject;
     private String message;
-    private final int controlNode_id;
-    private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 
 
     /**
@@ -33,7 +33,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         this.setValues();
         this.sendMail();
         this.setCanTerminate(true);
-        ((ActivityInstance)controlNodeInstance).setCanTerminate(true);
+        this.setCanTerminate(true);
     }
 
     /**
@@ -49,17 +49,17 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
         this.setDataAttributes();
     }
 
-    private void setDataAttributes(){
-        for(DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()){
+    private void setDataAttributes() {
+        for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
             message = message.replace(
                     "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
-                            + "."+dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                            + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
             subject = subject.replace(
                     "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
             receiverMail = receiverMail.replace(
                     "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
-                            + "."+dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                            + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
         }
     }
 

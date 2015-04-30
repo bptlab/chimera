@@ -728,6 +728,9 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * When you send a Get to {@link RestInterface#getActivity(UriInfo, int, int, int)}
+     * with valid arguments
+     * then you should get a 200 response code and
+     * a JSONObject with the id, label of the activity and a link to the outputSet and the inputSet.
      */
     @Test
     public void testGetActivity(){
@@ -736,14 +739,17 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("Get Activity does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":4517,\"label\":\"Reiseplanung beginnen\",\"outputSet\":{\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/output\"},\"inputSet\":{\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/input\"}}",
+                "{\"id\":4517,\"label\":\"Reiseplanung beginnen\",\"outputSetLink\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/output\",\"inputSetLink\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/input\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getInputDataObjects(int, int, int)}
-     *//*
+     * When you send a Get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
+     * with valid arguments
+     * then you then you should get a 200 response code and a JSONObject with the id of the inputSet and
+     * a link to get the dataObjectInstance with their dataAttributeInstance.
+     */
     @Test
     public void testGetInputDataObjects(){
         Response response = base.path("scenario/135/instance/808/activity/4518/input").request().get();
@@ -751,13 +757,16 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
+                "[{\"id\":139,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/inputset/139\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getOutputDataObjects(int, int, int)}
-     *//*
+     * When you send a Get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
+     * with valid arguments
+     * then you then you should get a 200 response code and a JSONObject with the id of the outputSet and
+     * a link to get the dataObjectInstance with their dataAttributeInstance.
+     */
     @Test
     public void testGetOutputDataObjects(){
         Response response = base.path("scenario/135/instance/808/activity/4518/output").request().get();
@@ -765,7 +774,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("GetOutputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=250€}\"}]}}]",
+                "[{\"id\":140,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/outputset/140\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
@@ -936,10 +945,10 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid scenario instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with an invalid scenario and instance id
      * a 404 with an error message is returned
-     *//*
+     */
     @Test
     public void testGetInputForInvalidScenario() {
         Response response = base.path("scenario/9987/instance/1234/activity/1/input")
@@ -956,10 +965,10 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid activity instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with an invalid activity instance id
      * a 404 with an error message is returned
-     *//*
+     */
     @Test
     public void testGetInputForInvalidActivity() {
         Response response = base.path("scenario/1/instance/72/activity/9999/input")
@@ -976,33 +985,33 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an valid activity instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with a valid activity instance without input sets
-     * a 200 with an empty JSON array will be returned
-     *//*
+     * a 404 with an error message will be returned
+     */
     @Test
     public void testGetInputForWOInputSets() {
         Response response = base.path("scenario/135/instance/808/activity/4517/input")
                 .request().get();
-        assertEquals("The Response code of getInputDataObjects was not 200",
-                200, response.getStatus());
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
         assertEquals("getInputDataObjects does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("[]")
+                jsonEquals("{\"error\":\"There is no inputSet for this activity instance.\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
      * Given: Is an invalid scenario instance
-     * when you send a get to {@link RestInterface#getOutputDataObjects(int, int, int)}
+     * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with an invalid scenario and instance id
      * a 404 with an error message is returned
-     *//*
+     */
     @Test
     public void testGetOutputForInvalidScenario() {
-        Response response = base.path("scenario/9987/instance/1234/activity/1/input")
+        Response response = base.path("scenario/9987/instance/1234/activity/1/output")
                 .request().get();
         assertEquals("The Response code of getOutputDataObjects was not 404",
                 404, response.getStatus());
@@ -1016,10 +1025,10 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid activity instance
-     * when you send a get to {@link RestInterface#getOutputDataObjects(int, int, int)}
+     * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with an invalid activity instance id
      * a 404 with an error message is returned
-     *//*
+     */
     @Test
     public void testGetOutputInvalidActivity() {
         Response response = base.path("scenario/1/instance/72/activity/9999/output")
@@ -1036,21 +1045,129 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an valid activity instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(int, int, int)}
+     * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with a valid activity instance without input sets
-     * a 200 with an empty JSON array will be returned
-     *//*
+     * a 404 with an error message will be returned
+     */
     @Test
     public void testGetOutputForWOOutputSets() {
         Response response = base.path("scenario/118/instance/704/activity/3749/output")
                 .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 200",
-                200, response.getStatus());
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
         assertEquals("getOutputDataObjects does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("[]").when(Option.IGNORING_ARRAY_ORDER));
+                jsonEquals("{\"error\":\"There is no outputSet for this activity instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
     }
-*/
+    /**
+     *  when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     *  with valid arguments
+     *  a 200 is returned with a JSONArray with JSONObjects for each dataObjectInstance
+     */
+    @Test
+    public void testGetOutputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/outputset/140")
+                .request().get();
+        assertEquals("The Response code of getOutputDataAttributes was not 200",
+                200, response.getStatus());
+        assertEquals("getOutputDataAttributes does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid scenario/Instance
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testInvalidScenarioGetOutputSetDataAttributes() {
+        Response response = base.path("scenario/9987/instance/1234/outputset/140")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid ouptutSetID
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testInvalidOutputSetGetOutputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/outputset/1400")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such outputSet instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     *  when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     *  with valid arguments
+     *  a 200 is returned with a JSONArray with JSONObjects for each dataObjectInstance
+     */
+    @Test
+    public void testGetInputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/inputset/139")
+                .request().get();
+        assertEquals("The Response code of getInputDataAttributes was not 200",
+                200, response.getStatus());
+        assertEquals("getDataAttributes does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid scenario/Instance
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testInvalidScenarioGetInputSetDataAttributes() {
+        Response response = base.path("scenario/9987/instance/1234/inputset/140")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+    /**
+     * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
+     * with an invalid inputSetID
+     * a 404 with an error message is returned
+     */
+    @Test
+    public void testInvalidInputSetGetInputSetDataAttributes() {
+        Response response = base.path("scenario/135/instance/808/inputset/1400")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such inputSet instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
 }
