@@ -70,8 +70,13 @@ public class DbWebServiceTask extends DbObject {
         return this.executeStatementReturnsListString(sql, "key");
     }
 
-    public int getMethod(int controlNode_id){
+    public String getMethod(int controlNode_id){
         String sql = "SELECT method FROM webservicetasklink WHERE `controlnode_id` = " + controlNode_id;
-        return this.executeStatementReturnsInt(sql, "method");
+        return this.executeStatementReturnsString(sql, "method");
+    }
+
+    public String getPOST(int controlNode_id){
+        String sql = "SELECT post FROM webservicetaskpost WHERE `controlnode_id` = " + controlNode_id;
+        return this.executeStatementReturnsString(sql, "post");
     }
 }
