@@ -97,7 +97,7 @@ public class RestInterface {
 
         Map<Integer, Map<String, Object>> attributeLog;
 
-        //TODO: get details for attributes and return them 
+        //TODO: get details for attributes and return them
         //attributeLog = historyService.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
         attributeLog = null;
         return Response
