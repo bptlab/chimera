@@ -61,8 +61,9 @@
 
 			//post update for email tasks
 			this.submitMyForm=function(){
-				var data=$scope.form;  
-				$http.post(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/"+ controller.workingID + "/?", data);
+				var data=$scope.form;
+                //TODO: change post to put
+				$http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/"+ controller.workingID + "/?", data);
 		   	 }
 
 			//get all infos for popup
@@ -124,7 +125,7 @@
                 //post update for webservice tasks
                 this.submitMyForm=function(){
                     var data=$scope.form;
-                    $http.post(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
+                    $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
                 }
 
                 //get all infos for popup
@@ -150,7 +151,7 @@
                         success(function(data) {
                             webserviceC.detailsForID = data;
                             $scope.form = {
-                                //TODO: to be adapted
+                                //TODO: to be adapted to exact json layout
                                 receiver: data['receiver'],
                                 subject: data['subject'],
                                 message: data['message']
