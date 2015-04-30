@@ -206,11 +206,22 @@
       <div class="modal-body">
         <p>Do you want to start Activity "{{value['label']}}"?</p>
           <div ng-show="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+              "{{value['label']}}" with output -
+              <div ng-repeat="(key2, output) in instanceCtrl.scenario['activity'][refActivity['id']]['output'] track by $index">
+                  <div ng-repeat="(key3, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
+                      "{{outputset['label']}}" - in state "{{outputset['state']}}"
+                  </div>
+              </div>
               <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
-              <div ng-repeat="(key, value) in instanceCtrl.scenario['activity'][value['id']]['references']['activities'] track by $index">
+              <div ng-repeat="(key, refActivity) in instanceCtrl.scenario['activity'][value['id']]['references']['activities'] track by $index">
                   <td>
-                      //TODO: Add names of each outputset
-                      {{value['label']}} <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button> <br>
+                      {{refActivity['label']}} with output -
+                      <div ng-repeat="(key4, output2) in instanceCtrl.scenario['activity'][refActivity['id']]['output'] track by $index">
+                          <div ng-repeat="(key5, outputset2) in instanceCtrl.scenario['outputsets'][output2['id']] track by $index">
+                              "{{outputset2['label']}}" - in state "{{outputset2['state']}}"
+                          </div>
+                      </div>
+                      <button type="button" ng-click="instanceCtrl.beginActivity(refActivity['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button> <br>
                   </td>
               </div>
           </div>
