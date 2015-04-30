@@ -139,6 +139,7 @@
             this.instanceDetails = {};
 			this.scenario = {};
 
+            this.activityOutput = {};
 
 			/* ____ BEGIN_INITIALIZATION ____ */
 			this.initializeActivityInstances = function(){
@@ -353,13 +354,14 @@
                 instanceCtrl.scenario['outputsets'] = {};
                 instanceCtrl.scenario['activity'] = {};
                 instanceCtrl.scenario['activity'][activityID] = {};
+                //instanceCtrl.scenario['activity'][activityID] = {};
                 //get output and outputsets for the actual activity itself
                 //instanceCtrl.getOutputAndOutputsets(activityID);
                 //retrieve referenced Activities for this activityID
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/references").
                     success(function(data) {
                         instanceCtrl.scenario['activity'][activityID]['references'] = data;
-                        var activityArray = instanceCtrl.scenario['activity'][activityID]['references']['ids'];
+                        var activityArray = data['ids'];
                         activityArray.push(activityID);
                         //instanceCtrl.scenario['activity'][activityID]['references']['ids'].push(activityID);
                         //check if there are any referenced Activities
@@ -368,15 +370,16 @@
                             angular.forEach(activityArray, function(refActivityID, key) {
                                 //retrieving the output for each retrieved referenced Activity
                                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + refActivityID + "/output").
-                                    success(function(data) {
-                                        instanceCtrl.scenario['activity'][refActivityID] = {};
-                                        instanceCtrl.scenario['activity'][refActivityID]['output'] = data;
+                                    success(function(data2) {
+                                        instanceCtrl.activityOutput[refActivityID] = {};
+                                        instanceCtrl.activityOutput[refActivityID] = data2;
+                                        //instanceCtrl.scenario['activity'][refActivityID].output = data2;
                                         //now, we also want to get the details of the outputset to access the label e.g. for each entry
-                                        angular.forEach(instanceCtrl.scenario['activity'][refActivityID]['output'], function(outputset, key2) {
+                                        angular.forEach(instanceCtrl.activityOutput[refActivityID], function(outputset, key2) {
                                             $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/outputset/" + outputset['id'] + "").
-                                                success(function(data) {
+                                                success(function(data3) {
                                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
-                                                    instanceCtrl.scenario['outputsets'][outputset['id']] = data;
+                                                    instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
                                                 }).
                                                 error(function() {
                                                     console.log('request failed');

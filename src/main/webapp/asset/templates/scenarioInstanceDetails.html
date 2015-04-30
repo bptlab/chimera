@@ -205,9 +205,7 @@
       </div>
       <div class="modal-body">
         <p>Do you want to start Activity "{{value['label']}}"?</p>
-
-
-          <div ng-hide="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+          <div ng-show="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
               <div class="responsive-table pull-left">
                   <table class="table table-striped">
                       <thead>
@@ -223,7 +221,7 @@
                           <td>{{value['id']}}</td>
                           <td>{{value['label']}}</td>
                           <td>
-                              <div ng-repeat="(key2, output) in instanceCtrl.scenario['activity'][value['id']]['output'] track by $index">
+                              <div ng-repeat="(key2, output) in instanceCtrl.activityOutput[value['id']] track by $index">
                                   <div ng-repeat="(key3, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
                                       "{{outputset['label']}}" in state "{{outputset['state']}}" <br>
                                   </div>
@@ -231,13 +229,11 @@
                           </td>
                           <td><button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button></td>
                       </tr>
-                      //TODO: refAcitivities wont get displayed
-                      instanceCtrl.scenario['activity'][value['id']]['references']['activities']= {{instanceCtrl.scenario['activity'][value['id']]['references']['activities']}}
                       <tr ng-repeat="(key, refActivity) in instanceCtrl.scenario['activity'][value['id']]['references']['activities'] track by $index">
                           <td>{{refActivity['id']}}</td>
                           <td>{{refActivity['label']}}</td>
                           <td>
-                              <div ng-repeat="(key4, output2) in instanceCtrl.scenario['activity'][refActivity['id']]['output'] track by $index">
+                              <div ng-repeat="(key4, output2) in instanceCtrl.activityOutput[refActivity['id']] track by $index">
                                   <div ng-repeat="(key5, outputset2) in instanceCtrl.scenario['outputsets'][output2['id']] track by $index">
                                       "{{outputset2['label']}}" in state "{{outputset2['state']}}"<br>
                                   </div>
@@ -277,7 +273,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <div ng-show="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+          <div ng-hide="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
               <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
           </div>
       </div>
