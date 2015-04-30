@@ -43,7 +43,16 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                             "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
                                     + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
                 }
-                response = invocationBuilder.post(Entity.json(""));
+                response = invocationBuilder.post(Entity.json(post));
+                break;
+            case "PUT":
+                post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
+                for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+                    post = post.replace(
+                            "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                                    + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                }
+                response = invocationBuilder.put(Entity.json(post));
                 break;
             default:
                response = invocationBuilder.get();
