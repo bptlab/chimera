@@ -733,9 +733,9 @@ public class RestInterface {
      * @param scenarioID The databaseID of a scenario.
      * @param scenarioInstanceID The databaseID of a scenarioInstance.
      * @param activityID The databaseID of an activityInstance.
-     * @return a response Object, which has the status 200 if everything
-     * was correct and holds the information about the activityInstance.
-     * If the status is 404 either the scenario/scenarioInstance/activityInstanceID was wrong.
+     * @return a response Object with the status code:
+     * 200 if everything was correct and holds the information about the activityInstance.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
@@ -796,12 +796,22 @@ public class RestInterface {
     }
 
     /**
+     * This method responds to a GET request by returning an array of inputSets.
+     * Each contains the inputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * The result is determined by:
      *
-     * @param uriInfo A UriInfo object, which holds the server context.
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID The databaseID of the scenario.
+     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
+     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * array of inputSets containing the inputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a response status code:
+     *  A 200 if everything was correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     *  if the activity has no inputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
@@ -856,12 +866,22 @@ public class RestInterface {
     }
 
     /**
+     * This method responds to a GET request by returning an array of outputSets.
+     * Each contains the outputSetDatabaseID, the name of the dataObject and their state as a Map &
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
+     * The result is determined by:
      *
-     * @param uriInfo  A UriInfo object, which holds the server context.
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID The databaseID of the scenario.
+     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
+     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * array of outputSets containing the outputSetDatabaseID, the name of the dataObject and their state as a Map &
+     *  a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a response status code:
+     *  A 200 if everything was correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     *  if the activity has no outputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
@@ -903,10 +923,19 @@ public class RestInterface {
     }
 
     /**
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param inputsetID
-     * @return
+     * This method responds to a GET request
+     * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an inputSet.
+     * The outcome is specified by:
+     *
+     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
+     * @param inputsetID This is the databaseID of an inputSet belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * an array of dataObjectsInstances with their dataAttributeInstances [also as an array].
+     * a response status code:
+     *  A 200 if everything is correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/inputSetInstance is non-existing &
+     *  with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}")
@@ -939,10 +968,19 @@ public class RestInterface {
     }
 
     /**
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param outputsetID
-     * @return
+     * This method responds to a GET request
+     * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.
+     * The outcome is specified by:
+     *
+     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
+     * @param outputsetID This is the databaseID of an outputSet belonging to this scenarioInstance.
+     * @return a response consisting of:
+     * an array of dataObjectsInstances with their dataAttributeInstances also as an array.
+     * a response status code:
+     *  A 200 if everything is correct.
+     *  A 404 Not Found is returned if the scenario/scenarioInstance/outputSetInstance is non-existing
+     *  with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}")
@@ -1040,8 +1078,7 @@ public class RestInterface {
                             JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
                             int databaseID = entry.getInt("key");
                             String attribute = entry.getString("value");
-                            String value = attribute.split("\\,")[attribute.split("\\,").length - 1].replaceAll("value\\=", "").replaceAll("}", "");
-                            value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
+                            String value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
                             values.put(databaseID, value);
                         }
                     }
