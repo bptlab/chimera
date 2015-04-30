@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -60,6 +61,11 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
             receiverMail = receiverMail.replace(
                     "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+        }
+        DbState dbState = new DbState();
+        for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
+            message = message.replace(
+                    "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
         }
     }
 
