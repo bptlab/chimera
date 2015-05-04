@@ -141,6 +141,13 @@
 
             this.activityOutput = {};
 
+            //post update for webservice tasks
+            this.submitAttributeForm=function(){
+                var data=$scope.form;
+                //TODO: edit path
+                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
+            }
+
 			/* ____ BEGIN_INITIALIZATION ____ */
 			this.initializeActivityInstances = function(){
 				instanceCtrl.instanceDetails.activities = {};
@@ -346,25 +353,29 @@
             };
 
             this.getOutputAndOutputsets = function(activityID) {
-                    $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
-                        success(function(data) {
-                            //instanceCtrl.scenario['activity'][activityID] = {};
-                            instanceCtrl.scenario['activity'][activityID]['output'] = data;
-                            //now, we also want to get the details of the outputset to access the label e.g. for each entry
-                            angular.forEach(instanceCtrl.scenario['activity'][activityID]['output'], function(outputset, key2) {
-                                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/outputset/" + outputset['id'] + "").
-                                    success(function(data) {
-                                        instanceCtrl.scenario['outputsets'][outputset['id']] = {};
-                                        instanceCtrl.scenario['outputsets'][outputset['id']] = data;
-                                    }).
-                                    error(function() {
-                                        console.log('request failed');
-                                    });
-                            });
-                        }).
-                        error(function() {
-                            console.log('request failed');
+                if(!instanceCtrl.scenario['outputsets']){
+                    instanceCtrl.scenario['outputsets'] = {};
+                }
+                //retrieving the output for each retrieved referenced Activity
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
+                    success(function(data2) {
+                        instanceCtrl.activityOutput[activityID] = {};
+                        instanceCtrl.activityOutput[activityID] = data2;
+                        //now, we also want to get the details of the outputset to access the label e.g. for each entry
+                        angular.forEach(instanceCtrl.activityOutput[activityID], function(outputset, key2) {
+                            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/outputset/" + outputset['id'] + "").
+                                success(function(data3) {
+                                    instanceCtrl.scenario['outputsets'][outputset['id']] = {};
+                                    instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
+                                }).
+                                error(function() {
+                                    console.log('request failed');
+                                });
                         });
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
             };
 
             this.handleReferencedActivities = function(activityID) {

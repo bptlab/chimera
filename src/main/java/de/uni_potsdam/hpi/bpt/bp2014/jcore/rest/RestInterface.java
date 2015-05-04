@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
@@ -1022,7 +1023,8 @@ public class RestInterface {
         DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
         DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
         int i = 0;
-        for (DataAttributeInstance dataAttributeInstance : dataObjectInstance.getDataAttributeInstances()) {
+        LinkedList<DataAttributeInstance> dataAttributeInstances = dataObjectInstance.getDataAttributeInstances();
+        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
             dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
             dataAttribute.name = dataAttributeInstance.getName();
             dataAttribute.type = dataAttributeInstance.getType();
