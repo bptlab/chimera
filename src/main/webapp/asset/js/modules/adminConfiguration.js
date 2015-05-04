@@ -152,7 +152,7 @@
                             webserviceC.detailsForID = data;
                             $scope.form = {
                                 //TODO: to be adapted to exact json layout
-                                receiver: data['receiver'],
+                                receiver: data['attributes']['entry'],
                                 subject: data['subject'],
                                 message: data['message']
                             };
