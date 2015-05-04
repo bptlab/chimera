@@ -27818,6 +27818,7 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `timestamp`,
 
 -- --------------------------------------------------------
 
+
 --
 -- Table structure for table `historydataattributeinstance`
 --
@@ -27830,9 +27831,21 @@ CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `scenarioinstance_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
--- --------------------------------------------------------
+--
+-- Dumping data for table `historydataattributeinstance`
+--
+
+INSERT INTO `historydataattributeinstance` (`id`, `dataattributeinstance_id`, `oldvalue`, `newvalue`, `timestamp`, `scenarioinstance_id`) VALUES
+(1, 150, NULL, '', '2015-05-04 09:32:06', 1329),
+(2, 151, NULL, '', '2015-05-04 09:32:06', 1329),
+(3, 150, '[9281]', '[9281]', '2015-05-04 09:32:08', 1329),
+(4, 151, 'Schmutzgrad pruefen', 'Schmutzgrad pruefen', '2015-05-04 09:32:08', 1329);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 --
 -- Table structure for table `historydataobjectinstance`

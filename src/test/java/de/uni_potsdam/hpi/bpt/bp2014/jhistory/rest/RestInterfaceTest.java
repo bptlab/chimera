@@ -11,12 +11,14 @@ import org.junit.Test;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -76,6 +78,36 @@ public class RestInterfaceTest extends AbstractTest {
      *
      */
     @Test
+    public void testGetActivitiesLogStatusCode404() {
+        Response response = base.path("scenario/9999/instance/9999/activities")
+                .request().get();
+        assertEquals("The Response code of getActivitiesLog was not 404",
+                404, response.getStatus());
+        assertEquals("getActivitiesLog does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testGetActivitiesLogStatusCode200() {
+        Response response = base.path("scenario/1/instance/1302/activities")
+                .request().get();
+        assertEquals("The Response code of getActivitiesLog was not 200",
+                200, response.getStatus());
+        assertEquals("getActivitiesLog does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    }
+
+    /**
+     *
+     */
+    @Test
     public void testGetActivitiesLogWithState() {
         Response response = base.path("scenario/1/instance/1302/activities").queryParam("state", "terminated").request().get();
         assertThat("Get activities did not contain the expected information",
@@ -97,12 +129,71 @@ public class RestInterfaceTest extends AbstractTest {
     /**
      *
      */
-    //@Test
+    @Test
+    public void testGetDataObjectsLogStatusCode404() {
+        Response response = base.path("scenario/0/instance/0/dataobjects")
+                .request().get();
+        assertEquals("The Response code of getDataObjectsLog was not 400",
+                400, response.getStatus());
+        assertEquals("getDataObjectsLog does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testGetDataObjectsLogStatusCode200() {
+        Response response = base.path("scenario/1/instance/1302/dataobjects")
+                .request().get();
+        assertEquals("The Response code of getDataObjectsLog was not 200",
+                200, response.getStatus());
+        assertEquals("getDataObjectsLog does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    }
+
+    /**
+     *
+     */
+    @Test
     public void testGetDataAttributesLog() {
-        Response response = base.path("scenario/1/instance/1302/dataattributes").request().get();
-        //TODO: adapt test to really test the json
+        Response response = base.path("scenario/156/instance/1329/attributes").request().get();
         assertThat("Get activities did not contain the expected information",
                 response.readEntity(String.class),
                 jsonEquals("{}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testGetDataAttributesLogStatusCode404() {
+        Response response = base.path("scenario/0/instance/0/attributes")
+                .request().get();
+        assertEquals("The Response code of getDataAttributesLog was not 404",
+                400, response.getStatus());
+        assertEquals("getDataAttributesLog does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testGetDataAttributesLogStatusCode200() {
+        Response response = base.path("scenario/1/instance/1302/attributes")
+                .request().get();
+        assertEquals("The Response code of getDataAttributesLog was not 200",
+                200, response.getStatus());
+        assertEquals("getDataAttributesLog does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
     }
 }
