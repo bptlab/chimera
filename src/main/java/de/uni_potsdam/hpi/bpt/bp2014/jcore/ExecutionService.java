@@ -622,6 +622,13 @@ public class ExecutionService {
                     j++;
                 }
             }
+            dataObjectInstances = sortedScenarioInstances.get(scenarioInstanceID).getDataObjectInstancesOnChange();
+            for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
+                if (dataObject.getId() == dataObjectInstance.getDataObject_id()) {
+                    dataObjectInstancesArray[j] = dataObjectInstance;
+                    j++;
+                }
+            }
         }
         return dataObjectInstancesArray;
     }
