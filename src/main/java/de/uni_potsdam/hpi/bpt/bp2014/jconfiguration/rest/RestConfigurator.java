@@ -231,8 +231,8 @@ public class RestConfigurator {
             @PathParam("webserviceID") int webserviceID,
             final RestConfigurator.WebserviceConfigJaxBean input) {
         //TODO: set Webservice details
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
+        //DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        //int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
          //       input.test);
         int result = 1;
         return Response.status(
