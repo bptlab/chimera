@@ -23,18 +23,13 @@ public class WebServiceAcceptanceTest extends JerseyTest{
         return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface.class);
     }
 
-    //@Test
+    @Test
     public void testGet(){
         System.out.println("\n ------------------ test Scenario 156 ------------------\n");
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(156);
         int activity1 = 524;
-        int activity2 = 184;
-        int activity3 = 191;
-        int activity4 = 193;
-        int activity5 = 187;
-        int activity6 = 189;
 
         System.out.println("Start Scenario 156");
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
@@ -60,7 +55,7 @@ public class WebServiceAcceptanceTest extends JerseyTest{
                 value13 = dataAttributeInstance.getValue().toString();
             }
         }
-        assertEquals("[9281]", value12);
+        assertEquals("[9450]", value12);
         assertEquals("Schmutzgrad pruefen", value13);
     }
 }
