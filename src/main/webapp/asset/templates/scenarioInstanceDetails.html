@@ -57,7 +57,7 @@
                                 <tbody>
                                     <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
                                         <td>{{value['label']}}</td>
-                                        <td><a type="button" data-toggle="modal" data-target="{{'#modalTerminate' + value['id']}}"><i class="fa fa-check text-navy"></i></a></td>
+                                        <td><a type="button" data-toggle="modal" ng-click="instanceCtrl.getOutputAndOutputsets(value['id'])" data-target="{{'#modalTerminate' + value['id']}}"><i class="fa fa-check text-navy"></i></a></td>
 
                                     </tr>
                                     </a>
@@ -279,6 +279,23 @@
         <h4 class="modal-title">Terminate activity?</h4>
       </div>
       <div class="modal-body">
+          <!--value['id'] = {{value['id']}}<br>-->
+          <!--instanceCtrl.activityOutput[{{value['id']}}] = {{instanceCtrl.activityOutput[value['id']]}}<br>-->
+
+          <div ng-repeat="(key, output) in instanceCtrl.activityOutput[value['id']] track by $index">
+            output = {{output}}<br>
+                      <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
+                          "{{outputset['label']}}" in state "{{outputset['state']}}"<br>
+                          <form name="myForm" ng-submit="instanceCtrl.submitAttributeForm()">
+                          <div ng-repeat="(key3, attributeConfiguration) in instanceCtrl.scenario['outputsets'][output['id']]['attributeConfiguration'] track by $index">
+                              {{attributeConfiguration['name']}} <input type="text" ng-model="form.receiver"  /><br>
+
+                              {{attributeConfiguration['value']}}
+
+                          </div>
+                          <button type="submit" class="btn btn-default">Submit</button></form>
+                      </div>
+          </div>
         <p>Do you really want to terminate Activity "{{value['label']}}"?</p>
       </div>
       <div class="modal-footer">
