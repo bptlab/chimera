@@ -82,7 +82,7 @@ public class debugClass {
 
             System.out.println("\nenabled Aktivität ID");
             for (ActivityInstance activityInstance : acts) {
-                System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
+                System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel() + ", (" + activityInstance.getControlNode_id() + ")");
             }
 
             System.out.println("Select Activity ID");

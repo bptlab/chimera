@@ -19,7 +19,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
 
-
+    //TODO: tabelle leer
     @Override
     public void execute() {
         String link = dbWebServiceTask.getLinkForControlNode(controlNodeInstance.getControlNode_id());
@@ -50,7 +50,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                 for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
                     post = post.replace(
                             "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
-                                    + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                                    + "." +  dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
                 }
                 response = invocationBuilder.put(Entity.json(post));
                 break;
@@ -104,10 +104,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                 if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
                     if (isJSONArray) {
                         dataAttributeInstance.setValue(jsonArray.get(new Integer(keys.get(i))));
-                        System.out.println(jsonArray.get(new Integer(keys.get(i))));
+                        //System.out.println(jsonArray.get(new Integer(keys.get(i))));
                     } else {
                         dataAttributeInstance.setValue(jsonContent.get(keys.get(i)));
-                        System.out.println(jsonContent.get(keys.get(i)));
+                        //System.out.println(jsonContent.get(keys.get(i)));
                     }
                 }
             }
