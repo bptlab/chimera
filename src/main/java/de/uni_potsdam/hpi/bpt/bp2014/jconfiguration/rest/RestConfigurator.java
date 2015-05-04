@@ -220,7 +220,7 @@ public class RestConfigurator {
     }
 
     @PUT
-    @Path("webservice/{webserviceID}/")
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateWebserviceConfiguration(
             @PathParam("scenarioID") int scenarioID,

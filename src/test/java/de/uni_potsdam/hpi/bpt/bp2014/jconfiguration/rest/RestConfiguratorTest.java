@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -183,6 +184,13 @@ public class RestConfiguratorTest extends AbstractTest {
         assertThat("Get mail Task configuration returns not an valid JSON object",
                 "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
+    public void testUpdateWebserviceConfiguration() {
+        Response response = base.path("scenario/145/webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",
+                202, response.getStatus());
     }
 
 
