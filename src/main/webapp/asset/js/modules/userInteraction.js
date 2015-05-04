@@ -196,6 +196,20 @@
                             console.log('request failed');
                         });
 			}
+
+            // dataobjectattributeslogs
+            this.initializeDataobjectAttributelogInstances = function(){
+                instanceCtrl.instanceDetails.dataobjects = {};
+                $http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
+                "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+                "/attributes/").
+                    success(function(data){
+                        instanceCtrl.instanceDetails.dataobjectAttributelogs = data;
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            }
             // if necessary initialize the specified Scenario
 
 
@@ -229,6 +243,7 @@
                             instanceCtrl.initializeDataobjectInstances();
                             instanceCtrl.initializeActivitylogInstances();
                             instanceCtrl.initializeDataobjectlogInstances();
+                            instanceCtrl.initializeDataobjectAttributelogInstances();
                             instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
                         }
                     }).
@@ -263,6 +278,7 @@
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
+                        instanceCtrl.initializeDataobjectAttributelogInstances();
 					}).
                     error(function() {
                         console.log('request failed');
@@ -282,6 +298,7 @@
 						instanceCtrl.initializeDataobjectInstances();
 						instanceCtrl.initializeActivitylogInstances();
 						instanceCtrl.initializeDataobjectlogInstances();
+                        instanceCtrl.initializeDataobjectAttributelogInstances();
 					}).
                     error(function() {
                         console.log('request failed');
