@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 30. Apr 2015 um 11:45
+-- Erstellungszeit: 04. Mai 2015 um 11:13
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9369 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9461 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -7932,7 +7932,99 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 (9362, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
 (9365, 'HumanTask', 0, 0, 1, 'ready', 'init'),
 (9366, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
-(9368, 'HumanTask', 0, 0, 1, 'ready', 'init');
+(9368, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9369, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9370, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9371, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9372, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9373, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9374, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9375, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9376, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9377, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9378, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9379, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9380, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9381, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9382, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9383, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9384, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9385, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9386, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9387, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9388, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9389, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9390, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9391, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9392, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9393, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9394, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9395, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9396, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9397, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9398, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9399, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9400, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9401, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9402, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9403, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9404, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9405, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9406, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9407, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9408, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9409, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9410, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9411, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9412, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9413, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9414, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9415, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9416, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9417, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9418, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9419, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9420, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9421, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9422, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9423, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9424, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9425, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9426, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9427, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9428, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9429, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9430, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9431, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9432, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9433, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9434, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9435, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9436, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9437, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9438, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9439, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9440, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9441, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9442, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9443, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9444, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9445, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9446, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9447, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9448, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9449, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9450, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9451, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9452, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9453, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9454, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9455, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9456, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9457, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9458, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9459, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9460, 'HumanTask', 0, 0, 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -8854,7 +8946,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9369 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9461 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -18158,7 +18250,99 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (9365, 'Activity', 507, 5542),
 (9366, 'Activity', 513, 5543),
 (9367, 'XOR', 516, 5543),
-(9368, 'Activity', 515, 5543);
+(9368, 'Activity', 515, 5543),
+(9369, 'Activity', 524, 5544),
+(9370, 'Activity', 523, 5544),
+(9371, 'Activity', 524, 5545),
+(9372, 'Activity', 524, 5546),
+(9373, 'Activity', 523, 5546),
+(9374, 'Activity', 524, 5547),
+(9375, 'Activity', 524, 5548),
+(9376, 'Activity', 523, 5548),
+(9377, 'Activity', 524, 5549),
+(9378, 'Activity', 524, 5550),
+(9379, 'Activity', 523, 5550),
+(9380, 'Activity', 524, 5551),
+(9381, 'Activity', 524, 5552),
+(9382, 'Activity', 523, 5552),
+(9383, 'Activity', 524, 5553),
+(9384, 'Activity', 524, 5554),
+(9385, 'Activity', 523, 5554),
+(9386, 'Activity', 524, 5555),
+(9387, 'Activity', 523, 5555),
+(9388, 'Activity', 524, 5556),
+(9389, 'Activity', 524, 5557),
+(9390, 'Activity', 523, 5557),
+(9391, 'Activity', 524, 5558),
+(9392, 'Activity', 524, 5559),
+(9393, 'Activity', 523, 5559),
+(9394, 'Activity', 524, 5560),
+(9395, 'Activity', 523, 5560),
+(9396, 'Activity', 524, 5561),
+(9397, 'Activity', 523, 5561),
+(9398, 'Activity', 524, 5562),
+(9399, 'Activity', 523, 5562),
+(9400, 'Activity', 524, 5563),
+(9401, 'Activity', 523, 5563),
+(9402, 'Activity', 524, 5564),
+(9403, 'Activity', 523, 5564),
+(9404, 'Activity', 524, 5565),
+(9405, 'Activity', 523, 5565),
+(9406, 'Activity', 524, 5566),
+(9407, 'Activity', 523, 5566),
+(9408, 'Activity', 524, 5567),
+(9409, 'Activity', 524, 5568),
+(9410, 'Activity', 523, 5568),
+(9411, 'Activity', 524, 5569),
+(9412, 'Activity', 524, 5570),
+(9413, 'Activity', 523, 5570),
+(9414, 'Activity', 524, 5571),
+(9415, 'Activity', 523, 5571),
+(9416, 'Activity', 524, 5572),
+(9417, 'Activity', 523, 5572),
+(9418, 'Activity', 524, 5573),
+(9419, 'Activity', 524, 5574),
+(9420, 'Activity', 523, 5574),
+(9421, 'Activity', 524, 5575),
+(9422, 'Activity', 524, 5576),
+(9423, 'Activity', 523, 5576),
+(9424, 'Activity', 524, 5577),
+(9425, 'Activity', 524, 5578),
+(9426, 'Activity', 523, 5578),
+(9427, 'Activity', 524, 5579),
+(9428, 'Activity', 524, 5580),
+(9429, 'Activity', 523, 5580),
+(9430, 'Activity', 524, 5581),
+(9431, 'Activity', 524, 5582),
+(9432, 'Activity', 523, 5582),
+(9433, 'Activity', 524, 5583),
+(9434, 'Activity', 524, 5584),
+(9435, 'Activity', 523, 5584),
+(9436, 'Activity', 524, 5585),
+(9437, 'Activity', 524, 5586),
+(9438, 'Activity', 523, 5586),
+(9439, 'Activity', 524, 5587),
+(9440, 'Activity', 524, 5588),
+(9441, 'Activity', 523, 5588),
+(9442, 'Activity', 524, 5589),
+(9443, 'Activity', 524, 5590),
+(9444, 'Activity', 523, 5590),
+(9445, 'Activity', 524, 5591),
+(9446, 'Activity', 524, 5592),
+(9447, 'Activity', 523, 5592),
+(9448, 'Activity', 524, 5593),
+(9449, 'Activity', 524, 5594),
+(9450, 'Activity', 523, 5594),
+(9451, 'Activity', 524, 5595),
+(9452, 'Activity', 524, 5596),
+(9453, 'Activity', 523, 5596),
+(9454, 'Activity', 524, 5597),
+(9455, 'Activity', 524, 5598),
+(9456, 'Activity', 523, 5598),
+(9457, 'Activity', 524, 5599),
+(9458, 'Activity', 524, 5600),
+(9459, 'Activity', 523, 5600),
+(9460, 'Activity', 524, 5601);
 
 -- --------------------------------------------------------
 
@@ -18204,7 +18388,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
   `dataobjectinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=120 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=186 ;
 
 --
 -- Daten für Tabelle `dataattributeinstance`
@@ -18329,7 +18513,73 @@ INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobj
 (116, '11', 10, 1054),
 (117, '7', 11, 1055),
 (118, '11', 10, 1067),
-(119, '7', 11, 1068);
+(119, '7', 11, 1068),
+(120, '', 12, 1069),
+(121, '', 13, 1069),
+(122, '', 12, 1070),
+(123, '', 13, 1070),
+(124, '', 12, 1071),
+(125, '', 13, 1071),
+(126, '9261', 12, 1072),
+(127, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/1302/activity/9261//input', 13, 1072),
+(128, '9261', 12, 1073),
+(129, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/1302/activity/9261//input', 13, 1073),
+(130, '9261', 12, 1074),
+(131, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/1302/activity/9261//input', 13, 1074),
+(132, '9261', 12, 1075),
+(133, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/1302/activity/9261//input', 13, 1075),
+(134, '[9281,9294]', 12, 1076),
+(135, '', 13, 1076),
+(136, '[9281,9294]', 12, 1077),
+(137, '', 13, 1077),
+(138, '[9281,9294]', 12, 1078),
+(139, '', 13, 1078),
+(140, '[9281,9294]', 12, 1079),
+(141, '', 13, 1079),
+(142, '[9281]', 12, 1080),
+(143, '', 13, 1080),
+(144, '[9281]', 12, 1081),
+(145, '', 13, 1081),
+(146, '[9281]', 12, 1082),
+(147, '', 13, 1082),
+(148, '[9281]', 12, 1083),
+(149, 'Schmutzgrad pruefen', 13, 1083),
+(150, '', 12, 1084),
+(151, '', 13, 1084),
+(152, '', 12, 1085),
+(153, '', 13, 1085),
+(154, '', 12, 1086),
+(155, '', 13, 1086),
+(156, '', 12, 1087),
+(157, '', 13, 1087),
+(158, '', 12, 1088),
+(159, '', 13, 1088),
+(160, '[9281]', 12, 1089),
+(161, 'Schmutzgrad pruefen', 13, 1089),
+(162, '[9281]', 12, 1090),
+(163, 'Schmutzgrad pruefen', 13, 1090),
+(164, '[9281]', 12, 1091),
+(165, 'Schmutzgrad pruefen', 13, 1091),
+(166, '[9281]', 12, 1092),
+(167, 'Schmutzgrad pruefen', 13, 1092),
+(168, '[9281]', 12, 1093),
+(169, 'Schmutzgrad pruefen', 13, 1093),
+(170, '[9281]', 12, 1094),
+(171, 'Schmutzgrad pruefen', 13, 1094),
+(172, '[9281]', 12, 1095),
+(173, 'Schmutzgrad pruefen', 13, 1095),
+(174, '[9281]', 12, 1096),
+(175, 'Schmutzgrad pruefen', 13, 1096),
+(176, '[9281]', 12, 1097),
+(177, 'Schmutzgrad pruefen', 13, 1097),
+(178, '[9281]', 12, 1098),
+(179, 'Schmutzgrad pruefen', 13, 1098),
+(180, '[9281]', 12, 1099),
+(181, 'Schmutzgrad pruefen', 13, 1099),
+(182, '[9281]', 12, 1100),
+(183, 'Schmutzgrad pruefen', 13, 1100),
+(184, '[9281]', 12, 1101),
+(185, 'Schmutzgrad pruefen', 13, 1101);
 
 -- --------------------------------------------------------
 
@@ -18867,7 +19117,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1069 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1102 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -19935,7 +20185,40 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (1065, 1311, 106, 24, 0),
 (1066, 1312, 148, 32, 0),
 (1067, 1313, 149, 33, 0),
-(1068, 1313, 150, 34, 0);
+(1068, 1313, 150, 34, 0),
+(1069, 1314, 151, 35, 0),
+(1070, 1315, 151, 35, 0),
+(1071, 1316, 151, 35, 0),
+(1072, 1317, 151, 35, 0),
+(1073, 1318, 151, 35, 0),
+(1074, 1319, 151, 35, 0),
+(1075, 1320, 151, 35, 0),
+(1076, 1321, 151, 35, 0),
+(1077, 1322, 151, 35, 0),
+(1078, 1323, 151, 35, 0),
+(1079, 1324, 151, 35, 0),
+(1080, 1325, 151, 35, 0),
+(1081, 1326, 151, 35, 0),
+(1082, 1327, 151, 35, 0),
+(1083, 1328, 151, 35, 0),
+(1084, 1329, 151, 35, 0),
+(1085, 1330, 151, 35, 0),
+(1086, 1331, 151, 35, 0),
+(1087, 1332, 151, 35, 0),
+(1088, 1333, 151, 35, 0),
+(1089, 1334, 151, 35, 0),
+(1090, 1335, 151, 35, 0),
+(1091, 1336, 151, 35, 0),
+(1092, 1337, 151, 35, 0),
+(1093, 1338, 151, 35, 0),
+(1094, 1339, 151, 35, 0),
+(1095, 1340, 151, 35, 0),
+(1096, 1341, 151, 35, 0),
+(1097, 1342, 151, 35, 0),
+(1098, 1343, 151, 35, 0),
+(1099, 1344, 151, 35, 0),
+(1100, 1345, 151, 35, 0),
+(1101, 1346, 151, 35, 0);
 
 -- --------------------------------------------------------
 
@@ -20542,7 +20825,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5544 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5602 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -26016,7 +26299,65 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (5540, 0, 168, 1311),
 (5541, 1, 188, 1312),
 (5542, 0, 188, 1312),
-(5543, 0, 189, 1313);
+(5543, 0, 189, 1313),
+(5544, 1, 190, 1314),
+(5545, 0, 190, 1314),
+(5546, 1, 190, 1315),
+(5547, 0, 190, 1315),
+(5548, 1, 190, 1316),
+(5549, 0, 190, 1316),
+(5550, 1, 190, 1317),
+(5551, 0, 190, 1317),
+(5552, 1, 190, 1318),
+(5553, 0, 190, 1318),
+(5554, 1, 190, 1319),
+(5555, 1, 190, 1319),
+(5556, 0, 190, 1319),
+(5557, 1, 190, 1320),
+(5558, 0, 190, 1320),
+(5559, 0, 190, 1321),
+(5560, 0, 190, 1322),
+(5561, 0, 190, 1323),
+(5562, 0, 190, 1324),
+(5563, 0, 190, 1325),
+(5564, 0, 190, 1326),
+(5565, 0, 190, 1327),
+(5566, 1, 190, 1328),
+(5567, 0, 190, 1328),
+(5568, 1, 190, 1329),
+(5569, 0, 190, 1329),
+(5570, 0, 190, 1330),
+(5571, 0, 190, 1331),
+(5572, 1, 190, 1332),
+(5573, 0, 190, 1332),
+(5574, 1, 190, 1333),
+(5575, 0, 190, 1333),
+(5576, 1, 190, 1334),
+(5577, 0, 190, 1334),
+(5578, 1, 190, 1335),
+(5579, 0, 190, 1335),
+(5580, 1, 190, 1336),
+(5581, 0, 190, 1336),
+(5582, 1, 190, 1337),
+(5583, 0, 190, 1337),
+(5584, 1, 190, 1338),
+(5585, 0, 190, 1338),
+(5586, 1, 190, 1339),
+(5587, 0, 190, 1339),
+(5588, 1, 190, 1340),
+(5589, 0, 190, 1340),
+(5590, 1, 190, 1341),
+(5591, 0, 190, 1341),
+(5592, 1, 190, 1342),
+(5593, 0, 190, 1342),
+(5594, 1, 190, 1343),
+(5595, 0, 190, 1343),
+(5596, 1, 190, 1344),
+(5597, 0, 190, 1344),
+(5598, 1, 190, 1345),
+(5599, 0, 190, 1345),
+(5600, 1, 190, 1346),
+(5601, 0, 190, 1346);
 
 -- --------------------------------------------------------
 
@@ -27458,7 +27799,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `oldstate` varchar(256) DEFAULT NULL,
   `newstate` varchar(256) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=344 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=747 ;
 
 --
 -- Daten für Tabelle `historyactivityinstance`
@@ -27807,7 +28148,410 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `timestamp`,
 (340, 9366, '2015-04-29 08:19:25', 'running', 'terminated', 1313),
 (341, 9368, '2015-04-29 08:19:25', NULL, 'init', 1313),
 (342, 9368, '2015-04-29 08:19:25', 'init', 'ready(ControlFlow)', 1313),
-(343, 9368, '2015-04-29 08:19:25', 'ready(ControlFlow)', 'ready', 1313);
+(343, 9368, '2015-04-29 08:19:25', 'ready(ControlFlow)', 'ready', 1313),
+(344, 9369, '2015-04-30 11:05:22', NULL, 'init', 1314),
+(345, 9369, '2015-04-30 11:05:22', 'init', 'ready(ControlFlow)', 1314),
+(346, 9369, '2015-04-30 11:05:22', 'ready(ControlFlow)', 'ready', 1314),
+(347, 9369, '2015-04-30 11:05:25', 'ready', 'running', 1314),
+(348, 9369, '2015-04-30 11:05:25', 'running', 'terminated', 1314),
+(349, 9370, '2015-04-30 11:05:25', NULL, 'init', 1314),
+(350, 9370, '2015-04-30 11:05:25', 'init', 'ready(ControlFlow)', 1314),
+(351, 9370, '2015-04-30 11:05:25', 'ready(ControlFlow)', 'ready', 1314),
+(352, 9370, '2015-04-30 11:05:25', 'ready', 'running', 1314),
+(353, 9370, '2015-04-30 11:05:26', 'running', 'terminated', 1314),
+(354, 9371, '2015-04-30 11:05:26', NULL, 'init', 1314),
+(355, 9371, '2015-04-30 11:05:26', 'init', 'ready(ControlFlow)', 1314),
+(356, 9371, '2015-04-30 11:05:26', 'ready(ControlFlow)', 'ready', 1314),
+(357, 9372, '2015-04-30 11:06:23', NULL, 'init', 1315),
+(358, 9372, '2015-04-30 11:06:23', 'init', 'ready(ControlFlow)', 1315),
+(359, 9372, '2015-04-30 11:06:23', 'ready(ControlFlow)', 'ready', 1315),
+(360, 9372, '2015-04-30 11:06:27', 'ready', 'running', 1315),
+(361, 9372, '2015-04-30 11:06:27', 'running', 'terminated', 1315),
+(362, 9373, '2015-04-30 11:06:27', NULL, 'init', 1315),
+(363, 9373, '2015-04-30 11:06:27', 'init', 'ready(ControlFlow)', 1315),
+(364, 9373, '2015-04-30 11:06:27', 'ready(ControlFlow)', 'ready', 1315),
+(365, 9373, '2015-04-30 11:06:27', 'ready', 'running', 1315),
+(366, 9373, '2015-04-30 11:06:28', 'running', 'terminated', 1315),
+(367, 9374, '2015-04-30 11:06:28', NULL, 'init', 1315),
+(368, 9374, '2015-04-30 11:06:28', 'init', 'ready(ControlFlow)', 1315),
+(369, 9374, '2015-04-30 11:06:28', 'ready(ControlFlow)', 'ready', 1315),
+(370, 9375, '2015-04-30 11:08:19', NULL, 'init', 1316),
+(371, 9375, '2015-04-30 11:08:19', 'init', 'ready(ControlFlow)', 1316),
+(372, 9375, '2015-04-30 11:08:19', 'ready(ControlFlow)', 'ready', 1316),
+(373, 9375, '2015-04-30 11:08:22', 'ready', 'running', 1316),
+(374, 9375, '2015-04-30 11:08:23', 'running', 'terminated', 1316),
+(375, 9376, '2015-04-30 11:08:23', NULL, 'init', 1316),
+(376, 9376, '2015-04-30 11:08:23', 'init', 'ready(ControlFlow)', 1316),
+(377, 9376, '2015-04-30 11:08:23', 'ready(ControlFlow)', 'ready', 1316),
+(378, 9376, '2015-04-30 11:08:23', 'ready', 'running', 1316),
+(379, 9376, '2015-04-30 11:08:23', 'running', 'terminated', 1316),
+(380, 9377, '2015-04-30 11:08:23', NULL, 'init', 1316),
+(381, 9377, '2015-04-30 11:08:23', 'init', 'ready(ControlFlow)', 1316),
+(382, 9377, '2015-04-30 11:08:23', 'ready(ControlFlow)', 'ready', 1316),
+(383, 9378, '2015-04-30 11:17:31', NULL, 'init', 1317),
+(384, 9378, '2015-04-30 11:17:31', 'init', 'ready(ControlFlow)', 1317),
+(385, 9378, '2015-04-30 11:17:31', 'ready(ControlFlow)', 'ready', 1317),
+(386, 9378, '2015-04-30 11:17:35', 'ready', 'running', 1317),
+(387, 9378, '2015-04-30 11:17:35', 'running', 'terminated', 1317),
+(388, 9379, '2015-04-30 11:17:35', NULL, 'init', 1317),
+(389, 9379, '2015-04-30 11:17:35', 'init', 'ready(ControlFlow)', 1317),
+(390, 9379, '2015-04-30 11:17:35', 'ready(ControlFlow)', 'ready', 1317),
+(391, 9379, '2015-04-30 11:17:35', 'ready', 'running', 1317),
+(392, 9379, '2015-04-30 11:17:36', 'running', 'terminated', 1317),
+(393, 9380, '2015-04-30 11:17:36', NULL, 'init', 1317),
+(394, 9380, '2015-04-30 11:17:36', 'init', 'ready(ControlFlow)', 1317),
+(395, 9380, '2015-04-30 11:17:36', 'ready(ControlFlow)', 'ready', 1317),
+(396, 9381, '2015-04-30 11:22:10', NULL, 'init', 1318),
+(397, 9381, '2015-04-30 11:22:10', 'init', 'ready(ControlFlow)', 1318),
+(398, 9381, '2015-04-30 11:22:10', 'ready(ControlFlow)', 'ready', 1318),
+(399, 9381, '2015-04-30 11:22:13', 'ready', 'running', 1318),
+(400, 9381, '2015-04-30 11:22:13', 'running', 'terminated', 1318),
+(401, 9382, '2015-04-30 11:22:13', NULL, 'init', 1318),
+(402, 9382, '2015-04-30 11:22:13', 'init', 'ready(ControlFlow)', 1318),
+(403, 9382, '2015-04-30 11:22:13', 'ready(ControlFlow)', 'ready', 1318),
+(404, 9382, '2015-04-30 11:22:13', 'ready', 'running', 1318),
+(405, 9382, '2015-04-30 11:22:14', 'running', 'terminated', 1318),
+(406, 9383, '2015-04-30 11:22:14', NULL, 'init', 1318),
+(407, 9383, '2015-04-30 11:22:14', 'init', 'ready(ControlFlow)', 1318),
+(408, 9383, '2015-04-30 11:22:14', 'ready(ControlFlow)', 'ready', 1318),
+(409, 9384, '2015-04-30 11:46:20', NULL, 'init', 1319),
+(410, 9384, '2015-04-30 11:46:20', 'init', 'ready(ControlFlow)', 1319),
+(411, 9384, '2015-04-30 11:46:20', 'ready(ControlFlow)', 'ready', 1319),
+(412, 9384, '2015-04-30 11:47:33', 'ready', 'running', 1319),
+(413, 9384, '2015-04-30 11:47:33', 'running', 'terminated', 1319),
+(414, 9385, '2015-04-30 11:47:33', NULL, 'init', 1319),
+(415, 9385, '2015-04-30 11:47:33', 'init', 'ready(ControlFlow)', 1319),
+(416, 9385, '2015-04-30 11:47:33', 'ready(ControlFlow)', 'ready', 1319),
+(417, 9385, '2015-04-30 11:47:33', 'ready', 'running', 1319),
+(418, 9385, '2015-04-30 11:47:34', 'running', 'terminated', 1319),
+(419, 9386, '2015-04-30 11:47:34', NULL, 'init', 1319),
+(420, 9386, '2015-04-30 11:47:34', 'init', 'ready(ControlFlow)', 1319),
+(421, 9386, '2015-04-30 11:47:34', 'ready(ControlFlow)', 'ready', 1319),
+(422, 9386, '2015-04-30 11:47:39', 'ready', 'running', 1319),
+(423, 9386, '2015-04-30 11:47:39', 'running', 'terminated', 1319),
+(424, 9387, '2015-04-30 11:47:39', NULL, 'init', 1319),
+(425, 9387, '2015-04-30 11:47:39', 'init', 'ready(ControlFlow)', 1319),
+(426, 9387, '2015-04-30 11:47:39', 'ready(ControlFlow)', 'ready', 1319),
+(427, 9387, '2015-04-30 11:47:39', 'ready', 'running', 1319),
+(428, 9387, '2015-04-30 11:47:40', 'running', 'terminated', 1319),
+(429, 9388, '2015-04-30 11:47:40', NULL, 'init', 1319),
+(430, 9388, '2015-04-30 11:47:40', 'init', 'ready(ControlFlow)', 1319),
+(431, 9388, '2015-04-30 11:47:40', 'ready(ControlFlow)', 'ready', 1319),
+(432, 9389, '2015-04-30 11:49:53', NULL, 'init', 1320),
+(433, 9389, '2015-04-30 11:49:53', 'init', 'ready(ControlFlow)', 1320),
+(434, 9389, '2015-04-30 11:49:53', 'ready(ControlFlow)', 'ready', 1320),
+(435, 9389, '2015-04-30 11:49:56', 'ready', 'running', 1320),
+(436, 9389, '2015-04-30 11:49:56', 'running', 'terminated', 1320),
+(437, 9390, '2015-04-30 11:49:56', NULL, 'init', 1320),
+(438, 9390, '2015-04-30 11:49:56', 'init', 'ready(ControlFlow)', 1320),
+(439, 9390, '2015-04-30 11:49:56', 'ready(ControlFlow)', 'ready', 1320),
+(440, 9390, '2015-04-30 11:49:56', 'ready', 'running', 1320),
+(441, 9390, '2015-04-30 11:49:57', 'running', 'terminated', 1320),
+(442, 9391, '2015-04-30 11:49:57', NULL, 'init', 1320),
+(443, 9391, '2015-04-30 11:49:57', 'init', 'ready(ControlFlow)', 1320),
+(444, 9391, '2015-04-30 11:49:57', 'ready(ControlFlow)', 'ready', 1320),
+(445, 9392, '2015-04-30 11:54:11', NULL, 'init', 1321),
+(446, 9392, '2015-04-30 11:54:11', 'init', 'ready(ControlFlow)', 1321),
+(447, 9392, '2015-04-30 11:54:11', 'ready(ControlFlow)', 'ready', 1321),
+(448, 9392, '2015-04-30 11:54:15', 'ready', 'running', 1321),
+(449, 9392, '2015-04-30 11:54:15', 'running', 'terminated', 1321),
+(450, 9393, '2015-04-30 11:54:15', NULL, 'init', 1321),
+(451, 9393, '2015-04-30 11:54:15', 'init', 'ready(ControlFlow)', 1321),
+(452, 9393, '2015-04-30 11:54:15', 'ready(ControlFlow)', 'ready', 1321),
+(453, 9393, '2015-04-30 11:54:15', 'ready', 'running', 1321),
+(454, 9394, '2015-04-30 11:54:48', NULL, 'init', 1322),
+(455, 9394, '2015-04-30 11:54:48', 'init', 'ready(ControlFlow)', 1322),
+(456, 9394, '2015-04-30 11:54:48', 'ready(ControlFlow)', 'ready', 1322),
+(457, 9394, '2015-04-30 11:54:52', 'ready', 'running', 1322),
+(458, 9394, '2015-04-30 11:54:52', 'running', 'terminated', 1322),
+(459, 9395, '2015-04-30 11:54:52', NULL, 'init', 1322),
+(460, 9395, '2015-04-30 11:54:52', 'init', 'ready(ControlFlow)', 1322),
+(461, 9395, '2015-04-30 11:54:52', 'ready(ControlFlow)', 'ready', 1322),
+(462, 9395, '2015-04-30 11:54:52', 'ready', 'running', 1322),
+(463, 9396, '2015-04-30 11:55:33', NULL, 'init', 1323),
+(464, 9396, '2015-04-30 11:55:33', 'init', 'ready(ControlFlow)', 1323),
+(465, 9396, '2015-04-30 11:55:33', 'ready(ControlFlow)', 'ready', 1323),
+(466, 9396, '2015-04-30 11:55:36', 'ready', 'running', 1323),
+(467, 9396, '2015-04-30 11:55:36', 'running', 'terminated', 1323),
+(468, 9397, '2015-04-30 11:55:36', NULL, 'init', 1323),
+(469, 9397, '2015-04-30 11:55:36', 'init', 'ready(ControlFlow)', 1323),
+(470, 9397, '2015-04-30 11:55:36', 'ready(ControlFlow)', 'ready', 1323),
+(471, 9397, '2015-04-30 11:55:36', 'ready', 'running', 1323),
+(472, 9398, '2015-04-30 11:58:19', NULL, 'init', 1324),
+(473, 9398, '2015-04-30 11:58:19', 'init', 'ready(ControlFlow)', 1324),
+(474, 9398, '2015-04-30 11:58:19', 'ready(ControlFlow)', 'ready', 1324),
+(475, 9398, '2015-04-30 11:58:23', 'ready', 'running', 1324),
+(476, 9398, '2015-04-30 11:58:23', 'running', 'terminated', 1324),
+(477, 9399, '2015-04-30 11:58:23', NULL, 'init', 1324),
+(478, 9399, '2015-04-30 11:58:23', 'init', 'ready(ControlFlow)', 1324),
+(479, 9399, '2015-04-30 11:58:23', 'ready(ControlFlow)', 'ready', 1324),
+(480, 9399, '2015-04-30 11:58:23', 'ready', 'running', 1324),
+(481, 9400, '2015-04-30 12:04:25', NULL, 'init', 1325),
+(482, 9400, '2015-04-30 12:04:25', 'init', 'ready(ControlFlow)', 1325),
+(483, 9400, '2015-04-30 12:04:25', 'ready(ControlFlow)', 'ready', 1325),
+(484, 9400, '2015-04-30 12:04:29', 'ready', 'running', 1325),
+(485, 9400, '2015-04-30 12:04:29', 'running', 'terminated', 1325),
+(486, 9401, '2015-04-30 12:04:29', NULL, 'init', 1325),
+(487, 9401, '2015-04-30 12:04:29', 'init', 'ready(ControlFlow)', 1325),
+(488, 9401, '2015-04-30 12:04:29', 'ready(ControlFlow)', 'ready', 1325),
+(489, 9401, '2015-04-30 12:04:29', 'ready', 'running', 1325),
+(490, 9402, '2015-04-30 12:30:46', NULL, 'init', 1326),
+(491, 9402, '2015-04-30 12:30:46', 'init', 'ready(ControlFlow)', 1326),
+(492, 9402, '2015-04-30 12:30:46', 'ready(ControlFlow)', 'ready', 1326),
+(493, 9402, '2015-04-30 12:30:49', 'ready', 'running', 1326),
+(494, 9402, '2015-04-30 12:30:49', 'running', 'terminated', 1326),
+(495, 9403, '2015-04-30 12:30:49', NULL, 'init', 1326),
+(496, 9403, '2015-04-30 12:30:49', 'init', 'ready(ControlFlow)', 1326),
+(497, 9403, '2015-04-30 12:30:49', 'ready(ControlFlow)', 'ready', 1326),
+(498, 9403, '2015-04-30 12:30:49', 'ready', 'running', 1326),
+(499, 9404, '2015-04-30 12:32:42', NULL, 'init', 1327),
+(500, 9404, '2015-04-30 12:32:42', 'init', 'ready(ControlFlow)', 1327),
+(501, 9404, '2015-04-30 12:32:42', 'ready(ControlFlow)', 'ready', 1327),
+(502, 9404, '2015-04-30 12:32:45', 'ready', 'running', 1327),
+(503, 9404, '2015-04-30 12:32:45', 'running', 'terminated', 1327),
+(504, 9405, '2015-04-30 12:32:45', NULL, 'init', 1327),
+(505, 9405, '2015-04-30 12:32:45', 'init', 'ready(ControlFlow)', 1327),
+(506, 9405, '2015-04-30 12:32:45', 'ready(ControlFlow)', 'ready', 1327),
+(507, 9405, '2015-04-30 12:32:45', 'ready', 'running', 1327),
+(508, 9406, '2015-04-30 12:33:13', NULL, 'init', 1328),
+(509, 9406, '2015-04-30 12:33:13', 'init', 'ready(ControlFlow)', 1328),
+(510, 9406, '2015-04-30 12:33:13', 'ready(ControlFlow)', 'ready', 1328),
+(511, 9406, '2015-04-30 12:33:17', 'ready', 'running', 1328),
+(512, 9406, '2015-04-30 12:33:17', 'running', 'terminated', 1328),
+(513, 9407, '2015-04-30 12:33:17', NULL, 'init', 1328),
+(514, 9407, '2015-04-30 12:33:17', 'init', 'ready(ControlFlow)', 1328),
+(515, 9407, '2015-04-30 12:33:17', 'ready(ControlFlow)', 'ready', 1328),
+(516, 9407, '2015-04-30 12:33:17', 'ready', 'running', 1328),
+(517, 9407, '2015-04-30 12:33:18', 'running', 'terminated', 1328),
+(518, 9408, '2015-04-30 12:33:18', NULL, 'init', 1328),
+(519, 9408, '2015-04-30 12:33:18', 'init', 'ready(ControlFlow)', 1328),
+(520, 9408, '2015-04-30 12:33:18', 'ready(ControlFlow)', 'ready', 1328),
+(521, 9409, '2015-04-30 13:28:20', NULL, 'init', 1329),
+(522, 9409, '2015-04-30 13:28:20', 'init', 'ready(ControlFlow)', 1329),
+(523, 9409, '2015-04-30 13:28:20', 'ready(ControlFlow)', 'ready', 1329),
+(524, 9409, '2015-04-30 13:28:23', 'ready', 'running', 1329),
+(525, 9409, '2015-04-30 13:28:23', 'running', 'terminated', 1329),
+(526, 9410, '2015-04-30 13:28:23', NULL, 'init', 1329),
+(527, 9410, '2015-04-30 13:28:23', 'init', 'ready(ControlFlow)', 1329),
+(528, 9410, '2015-04-30 13:28:23', 'ready(ControlFlow)', 'ready', 1329),
+(529, 9410, '2015-04-30 13:28:23', 'ready', 'running', 1329),
+(530, 9410, '2015-04-30 13:28:24', 'running', 'terminated', 1329),
+(531, 9411, '2015-04-30 13:28:24', NULL, 'init', 1329),
+(532, 9411, '2015-04-30 13:28:24', 'init', 'ready(ControlFlow)', 1329),
+(533, 9411, '2015-04-30 13:28:24', 'ready(ControlFlow)', 'ready', 1329),
+(534, 9412, '2015-05-04 08:40:22', NULL, 'init', 1330),
+(535, 9412, '2015-05-04 08:40:22', 'init', 'ready(ControlFlow)', 1330),
+(536, 9412, '2015-05-04 08:40:22', 'ready(ControlFlow)', 'ready', 1330),
+(537, 9412, '2015-05-04 08:40:51', 'ready', 'running', 1330),
+(538, 9412, '2015-05-04 08:40:51', 'running', 'terminated', 1330),
+(539, 9413, '2015-05-04 08:40:51', NULL, 'init', 1330),
+(540, 9413, '2015-05-04 08:40:51', 'init', 'ready(ControlFlow)', 1330),
+(541, 9413, '2015-05-04 08:40:51', 'ready(ControlFlow)', 'ready', 1330),
+(542, 9413, '2015-05-04 08:40:51', 'ready', 'running', 1330),
+(543, 9414, '2015-05-04 08:42:29', NULL, 'init', 1331),
+(544, 9414, '2015-05-04 08:42:29', 'init', 'ready(ControlFlow)', 1331),
+(545, 9414, '2015-05-04 08:42:29', 'ready(ControlFlow)', 'ready', 1331),
+(546, 9414, '2015-05-04 08:42:34', 'ready', 'running', 1331),
+(547, 9414, '2015-05-04 08:42:34', 'running', 'terminated', 1331),
+(548, 9415, '2015-05-04 08:42:34', NULL, 'init', 1331),
+(549, 9415, '2015-05-04 08:42:34', 'init', 'ready(ControlFlow)', 1331),
+(550, 9415, '2015-05-04 08:42:34', 'ready(ControlFlow)', 'ready', 1331),
+(551, 9415, '2015-05-04 08:42:34', 'ready', 'running', 1331),
+(552, 9416, '2015-05-04 08:52:33', NULL, 'init', 1332),
+(553, 9416, '2015-05-04 08:52:33', 'init', 'ready(ControlFlow)', 1332),
+(554, 9416, '2015-05-04 08:52:33', 'ready(ControlFlow)', 'ready', 1332),
+(555, 9416, '2015-05-04 08:52:37', 'ready', 'running', 1332),
+(556, 9416, '2015-05-04 08:52:37', 'running', 'terminated', 1332),
+(557, 9417, '2015-05-04 08:52:37', NULL, 'init', 1332),
+(558, 9417, '2015-05-04 08:52:37', 'init', 'ready(ControlFlow)', 1332),
+(559, 9417, '2015-05-04 08:52:37', 'ready(ControlFlow)', 'ready', 1332),
+(560, 9417, '2015-05-04 08:52:37', 'ready', 'running', 1332),
+(561, 9417, '2015-05-04 08:52:38', 'running', 'terminated', 1332),
+(562, 9418, '2015-05-04 08:52:38', NULL, 'init', 1332),
+(563, 9418, '2015-05-04 08:52:38', 'init', 'ready(ControlFlow)', 1332),
+(564, 9418, '2015-05-04 08:52:38', 'ready(ControlFlow)', 'ready', 1332),
+(565, 9419, '2015-05-04 08:54:59', NULL, 'init', 1333),
+(566, 9419, '2015-05-04 08:54:59', 'init', 'ready(ControlFlow)', 1333),
+(567, 9419, '2015-05-04 08:54:59', 'ready(ControlFlow)', 'ready', 1333),
+(568, 9419, '2015-05-04 08:54:59', 'ready', 'running', 1333),
+(569, 9419, '2015-05-04 08:54:59', 'running', 'terminated', 1333),
+(570, 9420, '2015-05-04 08:54:59', NULL, 'init', 1333),
+(571, 9420, '2015-05-04 08:54:59', 'init', 'ready(ControlFlow)', 1333),
+(572, 9420, '2015-05-04 08:54:59', 'ready(ControlFlow)', 'ready', 1333),
+(573, 9420, '2015-05-04 08:54:59', 'ready', 'running', 1333),
+(574, 9420, '2015-05-04 08:54:59', 'running', 'terminated', 1333),
+(575, 9421, '2015-05-04 08:54:59', NULL, 'init', 1333),
+(576, 9421, '2015-05-04 08:54:59', 'init', 'ready(ControlFlow)', 1333),
+(577, 9421, '2015-05-04 08:54:59', 'ready(ControlFlow)', 'ready', 1333),
+(578, 9422, '2015-05-04 08:57:58', NULL, 'init', 1334),
+(579, 9422, '2015-05-04 08:57:58', 'init', 'ready(ControlFlow)', 1334),
+(580, 9422, '2015-05-04 08:57:58', 'ready(ControlFlow)', 'ready', 1334),
+(581, 9422, '2015-05-04 08:58:01', 'ready', 'running', 1334),
+(582, 9422, '2015-05-04 08:58:01', 'running', 'terminated', 1334),
+(583, 9423, '2015-05-04 08:58:01', NULL, 'init', 1334),
+(584, 9423, '2015-05-04 08:58:01', 'init', 'ready(ControlFlow)', 1334),
+(585, 9423, '2015-05-04 08:58:01', 'ready(ControlFlow)', 'ready', 1334),
+(586, 9423, '2015-05-04 08:58:01', 'ready', 'running', 1334),
+(587, 9423, '2015-05-04 08:58:01', 'running', 'terminated', 1334),
+(588, 9424, '2015-05-04 08:58:01', NULL, 'init', 1334),
+(589, 9424, '2015-05-04 08:58:01', 'init', 'ready(ControlFlow)', 1334),
+(590, 9424, '2015-05-04 08:58:01', 'ready(ControlFlow)', 'ready', 1334),
+(591, 9425, '2015-05-04 08:58:09', NULL, 'init', 1335),
+(592, 9425, '2015-05-04 08:58:09', 'init', 'ready(ControlFlow)', 1335),
+(593, 9425, '2015-05-04 08:58:09', 'ready(ControlFlow)', 'ready', 1335),
+(594, 9425, '2015-05-04 08:58:09', 'ready', 'running', 1335),
+(595, 9425, '2015-05-04 08:58:09', 'running', 'terminated', 1335),
+(596, 9426, '2015-05-04 08:58:09', NULL, 'init', 1335),
+(597, 9426, '2015-05-04 08:58:09', 'init', 'ready(ControlFlow)', 1335),
+(598, 9426, '2015-05-04 08:58:09', 'ready(ControlFlow)', 'ready', 1335),
+(599, 9426, '2015-05-04 08:58:09', 'ready', 'running', 1335),
+(600, 9426, '2015-05-04 08:58:10', 'running', 'terminated', 1335),
+(601, 9427, '2015-05-04 08:58:10', NULL, 'init', 1335),
+(602, 9427, '2015-05-04 08:58:10', 'init', 'ready(ControlFlow)', 1335),
+(603, 9427, '2015-05-04 08:58:10', 'ready(ControlFlow)', 'ready', 1335),
+(604, 9428, '2015-05-04 09:05:04', NULL, 'init', 1336),
+(605, 9428, '2015-05-04 09:05:04', 'init', 'ready(ControlFlow)', 1336),
+(606, 9428, '2015-05-04 09:05:04', 'ready(ControlFlow)', 'ready', 1336),
+(607, 9428, '2015-05-04 09:05:04', 'ready', 'running', 1336),
+(608, 9428, '2015-05-04 09:05:04', 'running', 'terminated', 1336),
+(609, 9429, '2015-05-04 09:05:04', NULL, 'init', 1336),
+(610, 9429, '2015-05-04 09:05:04', 'init', 'ready(ControlFlow)', 1336),
+(611, 9429, '2015-05-04 09:05:04', 'ready(ControlFlow)', 'ready', 1336),
+(612, 9429, '2015-05-04 09:05:04', 'ready', 'running', 1336),
+(613, 9429, '2015-05-04 09:05:05', 'running', 'terminated', 1336),
+(614, 9430, '2015-05-04 09:05:05', NULL, 'init', 1336),
+(615, 9430, '2015-05-04 09:05:05', 'init', 'ready(ControlFlow)', 1336),
+(616, 9430, '2015-05-04 09:05:05', 'ready(ControlFlow)', 'ready', 1336),
+(617, 9431, '2015-05-04 09:06:47', NULL, 'init', 1337),
+(618, 9431, '2015-05-04 09:06:47', 'init', 'ready(ControlFlow)', 1337),
+(619, 9431, '2015-05-04 09:06:47', 'ready(ControlFlow)', 'ready', 1337),
+(620, 9431, '2015-05-04 09:06:47', 'ready', 'running', 1337),
+(621, 9431, '2015-05-04 09:06:47', 'running', 'terminated', 1337),
+(622, 9432, '2015-05-04 09:06:47', NULL, 'init', 1337),
+(623, 9432, '2015-05-04 09:06:47', 'init', 'ready(ControlFlow)', 1337),
+(624, 9432, '2015-05-04 09:06:47', 'ready(ControlFlow)', 'ready', 1337),
+(625, 9432, '2015-05-04 09:06:47', 'ready', 'running', 1337),
+(626, 9432, '2015-05-04 09:06:47', 'running', 'terminated', 1337),
+(627, 9433, '2015-05-04 09:06:47', NULL, 'init', 1337),
+(628, 9433, '2015-05-04 09:06:47', 'init', 'ready(ControlFlow)', 1337),
+(629, 9433, '2015-05-04 09:06:47', 'ready(ControlFlow)', 'ready', 1337),
+(630, 9434, '2015-05-04 09:07:19', NULL, 'init', 1338),
+(631, 9434, '2015-05-04 09:07:19', 'init', 'ready(ControlFlow)', 1338),
+(632, 9434, '2015-05-04 09:07:19', 'ready(ControlFlow)', 'ready', 1338),
+(633, 9434, '2015-05-04 09:07:19', 'ready', 'running', 1338),
+(634, 9434, '2015-05-04 09:07:19', 'running', 'terminated', 1338),
+(635, 9435, '2015-05-04 09:07:19', NULL, 'init', 1338),
+(636, 9435, '2015-05-04 09:07:19', 'init', 'ready(ControlFlow)', 1338),
+(637, 9435, '2015-05-04 09:07:19', 'ready(ControlFlow)', 'ready', 1338),
+(638, 9435, '2015-05-04 09:07:19', 'ready', 'running', 1338),
+(639, 9435, '2015-05-04 09:07:20', 'running', 'terminated', 1338),
+(640, 9436, '2015-05-04 09:07:20', NULL, 'init', 1338),
+(641, 9436, '2015-05-04 09:07:20', 'init', 'ready(ControlFlow)', 1338),
+(642, 9436, '2015-05-04 09:07:20', 'ready(ControlFlow)', 'ready', 1338),
+(643, 9437, '2015-05-04 09:07:51', NULL, 'init', 1339),
+(644, 9437, '2015-05-04 09:07:51', 'init', 'ready(ControlFlow)', 1339),
+(645, 9437, '2015-05-04 09:07:51', 'ready(ControlFlow)', 'ready', 1339),
+(646, 9437, '2015-05-04 09:07:51', 'ready', 'running', 1339),
+(647, 9437, '2015-05-04 09:07:51', 'running', 'terminated', 1339),
+(648, 9438, '2015-05-04 09:07:51', NULL, 'init', 1339),
+(649, 9438, '2015-05-04 09:07:51', 'init', 'ready(ControlFlow)', 1339),
+(650, 9438, '2015-05-04 09:07:51', 'ready(ControlFlow)', 'ready', 1339),
+(651, 9438, '2015-05-04 09:07:51', 'ready', 'running', 1339),
+(652, 9438, '2015-05-04 09:07:51', 'running', 'terminated', 1339),
+(653, 9439, '2015-05-04 09:07:52', NULL, 'init', 1339),
+(654, 9439, '2015-05-04 09:07:52', 'init', 'ready(ControlFlow)', 1339),
+(655, 9439, '2015-05-04 09:07:52', 'ready(ControlFlow)', 'ready', 1339),
+(656, 9440, '2015-05-04 09:07:57', NULL, 'init', 1340),
+(657, 9440, '2015-05-04 09:07:57', 'init', 'ready(ControlFlow)', 1340),
+(658, 9440, '2015-05-04 09:07:57', 'ready(ControlFlow)', 'ready', 1340),
+(659, 9440, '2015-05-04 09:07:57', 'ready', 'running', 1340),
+(660, 9440, '2015-05-04 09:07:57', 'running', 'terminated', 1340),
+(661, 9441, '2015-05-04 09:07:57', NULL, 'init', 1340),
+(662, 9441, '2015-05-04 09:07:57', 'init', 'ready(ControlFlow)', 1340),
+(663, 9441, '2015-05-04 09:07:57', 'ready(ControlFlow)', 'ready', 1340),
+(664, 9441, '2015-05-04 09:07:57', 'ready', 'running', 1340),
+(665, 9441, '2015-05-04 09:07:57', 'running', 'terminated', 1340),
+(666, 9442, '2015-05-04 09:07:58', NULL, 'init', 1340),
+(667, 9442, '2015-05-04 09:07:58', 'init', 'ready(ControlFlow)', 1340),
+(668, 9442, '2015-05-04 09:07:58', 'ready(ControlFlow)', 'ready', 1340),
+(669, 9443, '2015-05-04 09:07:59', NULL, 'init', 1341),
+(670, 9443, '2015-05-04 09:07:59', 'init', 'ready(ControlFlow)', 1341),
+(671, 9443, '2015-05-04 09:07:59', 'ready(ControlFlow)', 'ready', 1341),
+(672, 9443, '2015-05-04 09:07:59', 'ready', 'running', 1341),
+(673, 9443, '2015-05-04 09:07:59', 'running', 'terminated', 1341),
+(674, 9444, '2015-05-04 09:07:59', NULL, 'init', 1341),
+(675, 9444, '2015-05-04 09:07:59', 'init', 'ready(ControlFlow)', 1341),
+(676, 9444, '2015-05-04 09:07:59', 'ready(ControlFlow)', 'ready', 1341),
+(677, 9444, '2015-05-04 09:07:59', 'ready', 'running', 1341),
+(678, 9444, '2015-05-04 09:08:00', 'running', 'terminated', 1341),
+(679, 9445, '2015-05-04 09:08:00', NULL, 'init', 1341),
+(680, 9445, '2015-05-04 09:08:00', 'init', 'ready(ControlFlow)', 1341),
+(681, 9445, '2015-05-04 09:08:00', 'ready(ControlFlow)', 'ready', 1341),
+(682, 9446, '2015-05-04 09:08:25', NULL, 'init', 1342),
+(683, 9446, '2015-05-04 09:08:25', 'init', 'ready(ControlFlow)', 1342),
+(684, 9446, '2015-05-04 09:08:25', 'ready(ControlFlow)', 'ready', 1342),
+(685, 9446, '2015-05-04 09:08:25', 'ready', 'running', 1342),
+(686, 9446, '2015-05-04 09:08:25', 'running', 'terminated', 1342),
+(687, 9447, '2015-05-04 09:08:25', NULL, 'init', 1342),
+(688, 9447, '2015-05-04 09:08:25', 'init', 'ready(ControlFlow)', 1342),
+(689, 9447, '2015-05-04 09:08:25', 'ready(ControlFlow)', 'ready', 1342),
+(690, 9447, '2015-05-04 09:08:25', 'ready', 'running', 1342),
+(691, 9447, '2015-05-04 09:08:26', 'running', 'terminated', 1342),
+(692, 9448, '2015-05-04 09:08:26', NULL, 'init', 1342),
+(693, 9448, '2015-05-04 09:08:26', 'init', 'ready(ControlFlow)', 1342),
+(694, 9448, '2015-05-04 09:08:26', 'ready(ControlFlow)', 'ready', 1342),
+(695, 9449, '2015-05-04 09:09:59', NULL, 'init', 1343),
+(696, 9449, '2015-05-04 09:09:59', 'init', 'ready(ControlFlow)', 1343),
+(697, 9449, '2015-05-04 09:09:59', 'ready(ControlFlow)', 'ready', 1343),
+(698, 9449, '2015-05-04 09:09:59', 'ready', 'running', 1343),
+(699, 9449, '2015-05-04 09:09:59', 'running', 'terminated', 1343),
+(700, 9450, '2015-05-04 09:09:59', NULL, 'init', 1343),
+(701, 9450, '2015-05-04 09:09:59', 'init', 'ready(ControlFlow)', 1343),
+(702, 9450, '2015-05-04 09:09:59', 'ready(ControlFlow)', 'ready', 1343),
+(703, 9450, '2015-05-04 09:10:00', 'ready', 'running', 1343),
+(704, 9450, '2015-05-04 09:10:00', 'running', 'terminated', 1343),
+(705, 9451, '2015-05-04 09:10:00', NULL, 'init', 1343),
+(706, 9451, '2015-05-04 09:10:00', 'init', 'ready(ControlFlow)', 1343),
+(707, 9451, '2015-05-04 09:10:00', 'ready(ControlFlow)', 'ready', 1343),
+(708, 9452, '2015-05-04 09:10:08', NULL, 'init', 1344),
+(709, 9452, '2015-05-04 09:10:08', 'init', 'ready(ControlFlow)', 1344),
+(710, 9452, '2015-05-04 09:10:08', 'ready(ControlFlow)', 'ready', 1344),
+(711, 9452, '2015-05-04 09:10:08', 'ready', 'running', 1344),
+(712, 9452, '2015-05-04 09:10:08', 'running', 'terminated', 1344),
+(713, 9453, '2015-05-04 09:10:08', NULL, 'init', 1344),
+(714, 9453, '2015-05-04 09:10:08', 'init', 'ready(ControlFlow)', 1344),
+(715, 9453, '2015-05-04 09:10:08', 'ready(ControlFlow)', 'ready', 1344),
+(716, 9453, '2015-05-04 09:10:08', 'ready', 'running', 1344),
+(717, 9453, '2015-05-04 09:10:09', 'running', 'terminated', 1344),
+(718, 9454, '2015-05-04 09:10:09', NULL, 'init', 1344),
+(719, 9454, '2015-05-04 09:10:09', 'init', 'ready(ControlFlow)', 1344),
+(720, 9454, '2015-05-04 09:10:09', 'ready(ControlFlow)', 'ready', 1344),
+(721, 9455, '2015-05-04 09:11:35', NULL, 'init', 1345),
+(722, 9455, '2015-05-04 09:11:35', 'init', 'ready(ControlFlow)', 1345),
+(723, 9455, '2015-05-04 09:11:35', 'ready(ControlFlow)', 'ready', 1345),
+(724, 9455, '2015-05-04 09:11:36', 'ready', 'running', 1345),
+(725, 9455, '2015-05-04 09:11:36', 'running', 'terminated', 1345),
+(726, 9456, '2015-05-04 09:11:36', NULL, 'init', 1345),
+(727, 9456, '2015-05-04 09:11:36', 'init', 'ready(ControlFlow)', 1345),
+(728, 9456, '2015-05-04 09:11:36', 'ready(ControlFlow)', 'ready', 1345),
+(729, 9456, '2015-05-04 09:11:36', 'ready', 'running', 1345),
+(730, 9456, '2015-05-04 09:11:36', 'running', 'terminated', 1345),
+(731, 9457, '2015-05-04 09:11:36', NULL, 'init', 1345),
+(732, 9457, '2015-05-04 09:11:36', 'init', 'ready(ControlFlow)', 1345),
+(733, 9457, '2015-05-04 09:11:36', 'ready(ControlFlow)', 'ready', 1345),
+(734, 9458, '2015-05-04 09:11:46', NULL, 'init', 1346),
+(735, 9458, '2015-05-04 09:11:46', 'init', 'ready(ControlFlow)', 1346),
+(736, 9458, '2015-05-04 09:11:46', 'ready(ControlFlow)', 'ready', 1346),
+(737, 9458, '2015-05-04 09:11:46', 'ready', 'running', 1346),
+(738, 9458, '2015-05-04 09:11:46', 'running', 'terminated', 1346),
+(739, 9459, '2015-05-04 09:11:46', NULL, 'init', 1346),
+(740, 9459, '2015-05-04 09:11:46', 'init', 'ready(ControlFlow)', 1346),
+(741, 9459, '2015-05-04 09:11:46', 'ready(ControlFlow)', 'ready', 1346),
+(742, 9459, '2015-05-04 09:11:46', 'ready', 'running', 1346),
+(743, 9459, '2015-05-04 09:11:47', 'running', 'terminated', 1346),
+(744, 9460, '2015-05-04 09:11:47', NULL, 'init', 1346),
+(745, 9460, '2015-05-04 09:11:47', 'init', 'ready(ControlFlow)', 1346),
+(746, 9460, '2015-05-04 09:11:47', 'ready(ControlFlow)', 'ready', 1346);
 
 -- --------------------------------------------------------
 
@@ -27822,7 +28566,15 @@ CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
   `newvalue` varchar(256) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Daten für Tabelle `historydataattributeinstance`
+--
+
+INSERT INTO `historydataattributeinstance` (`id`, `dataattributeinstance_id`, `oldvalue`, `newvalue`, `timestamp`, `scenarioinstance_id`) VALUES
+(1, 1, NULL, '', '2015-05-04 07:50:49', 1129),
+(2, 1, NULL, '', '2015-05-04 07:51:37', 1129);
 
 -- --------------------------------------------------------
 
@@ -27837,7 +28589,7 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `dataobjectinstance_id` int(11) NOT NULL,
   `oldstate_id` int(11) DEFAULT NULL,
   `newstate_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
 
 --
 -- Daten für Tabelle `historydataobjectinstance`
@@ -27872,7 +28624,40 @@ INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `timestamp
 (26, 1312, '2015-04-29 08:19:22', 1066, NULL, 147),
 (27, 1312, '2015-04-29 08:19:23', 1066, 147, 148),
 (28, 1313, '2015-04-29 08:19:24', 1067, NULL, 149),
-(29, 1313, '2015-04-29 08:19:24', 1068, NULL, 150);
+(29, 1313, '2015-04-29 08:19:24', 1068, NULL, 150),
+(30, 1314, '2015-04-30 11:05:21', 1069, NULL, 151),
+(31, 1315, '2015-04-30 11:06:23', 1070, NULL, 151),
+(32, 1316, '2015-04-30 11:08:19', 1071, NULL, 151),
+(33, 1317, '2015-04-30 11:17:31', 1072, NULL, 151),
+(34, 1318, '2015-04-30 11:22:10', 1073, NULL, 151),
+(35, 1319, '2015-04-30 11:46:20', 1074, NULL, 151),
+(36, 1320, '2015-04-30 11:49:52', 1075, NULL, 151),
+(37, 1321, '2015-04-30 11:54:11', 1076, NULL, 151),
+(38, 1322, '2015-04-30 11:54:48', 1077, NULL, 151),
+(39, 1323, '2015-04-30 11:55:33', 1078, NULL, 151),
+(40, 1324, '2015-04-30 11:58:19', 1079, NULL, 151),
+(41, 1325, '2015-04-30 12:04:25', 1080, NULL, 151),
+(42, 1326, '2015-04-30 12:30:46', 1081, NULL, 151),
+(43, 1327, '2015-04-30 12:32:42', 1082, NULL, 151),
+(44, 1328, '2015-04-30 12:33:13', 1083, NULL, 151),
+(45, 1329, '2015-04-30 13:28:20', 1084, NULL, 151),
+(46, 1330, '2015-05-04 08:40:22', 1085, NULL, 151),
+(47, 1331, '2015-05-04 08:42:29', 1086, NULL, 151),
+(48, 1332, '2015-05-04 08:52:33', 1087, NULL, 151),
+(49, 1333, '2015-05-04 08:54:59', 1088, NULL, 151),
+(50, 1334, '2015-05-04 08:57:58', 1089, NULL, 151),
+(51, 1335, '2015-05-04 08:58:09', 1090, NULL, 151),
+(52, 1336, '2015-05-04 09:05:04', 1091, NULL, 151),
+(53, 1337, '2015-05-04 09:06:46', 1092, NULL, 151),
+(54, 1338, '2015-05-04 09:07:19', 1093, NULL, 151),
+(55, 1339, '2015-05-04 09:07:51', 1094, NULL, 151),
+(56, 1340, '2015-05-04 09:07:57', 1095, NULL, 151),
+(57, 1341, '2015-05-04 09:07:59', 1096, NULL, 151),
+(58, 1342, '2015-05-04 09:08:25', 1097, NULL, 151),
+(59, 1343, '2015-05-04 09:09:59', 1098, NULL, 151),
+(60, 1344, '2015-05-04 09:10:08', 1099, NULL, 151),
+(61, 1345, '2015-05-04 09:11:35', 1100, NULL, 151),
+(62, 1346, '2015-05-04 09:11:46', 1101, NULL, 151);
 
 -- --------------------------------------------------------
 
@@ -28008,7 +28793,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1314 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1347 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -29280,7 +30065,40 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 (1310, 'XORTest2Scenario', 0, 144),
 (1311, 'TestXOR3Scenario', 0, 145),
 (1312, 'XORTest2Scenario', 0, 154),
-(1313, 'FensterPutzen', 0, 155);
+(1313, 'FensterPutzen', 0, 155),
+(1314, 'ServiceTaskSzenario', 0, 156),
+(1315, 'ServiceTaskSzenario', 0, 156),
+(1316, 'ServiceTaskSzenario', 0, 156),
+(1317, 'ServiceTaskSzenario', 0, 156),
+(1318, 'ServiceTaskSzenario', 0, 156),
+(1319, 'ServiceTaskSzenario', 0, 156),
+(1320, 'ServiceTaskSzenario', 0, 156),
+(1321, 'ServiceTaskSzenario', 0, 156),
+(1322, 'ServiceTaskSzenario', 0, 156),
+(1323, 'ServiceTaskSzenario', 0, 156),
+(1324, 'ServiceTaskSzenario', 0, 156),
+(1325, 'ServiceTaskSzenario', 0, 156),
+(1326, 'ServiceTaskSzenario', 0, 156),
+(1327, 'ServiceTaskSzenario', 0, 156),
+(1328, 'ServiceTaskSzenario', 0, 156),
+(1329, 'ServiceTaskSzenario', 0, 156),
+(1330, 'ServiceTaskSzenario', 0, 156),
+(1331, 'ServiceTaskSzenario', 0, 156),
+(1332, 'ServiceTaskSzenario', 0, 156),
+(1333, 'ServiceTaskSzenario', 0, 156),
+(1334, 'ServiceTaskSzenario', 0, 156),
+(1335, 'ServiceTaskSzenario', 0, 156),
+(1336, 'ServiceTaskSzenario', 0, 156),
+(1337, 'ServiceTaskSzenario', 0, 156),
+(1338, 'ServiceTaskSzenario', 0, 156),
+(1339, 'ServiceTaskSzenario', 0, 156),
+(1340, 'ServiceTaskSzenario', 0, 156),
+(1341, 'ServiceTaskSzenario', 0, 156),
+(1342, 'ServiceTaskSzenario', 0, 156),
+(1343, 'ServiceTaskSzenario', 0, 156),
+(1344, 'ServiceTaskSzenario', 0, 156),
+(1345, 'ServiceTaskSzenario', 0, 156),
+(1346, 'ServiceTaskSzenario', 0, 156);
 
 -- --------------------------------------------------------
 
@@ -29536,9 +30354,10 @@ CREATE TABLE IF NOT EXISTS `webservicetaskattribute` (
 --
 
 INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute_id`, `key`) VALUES
-(1, 523, 13, 'inputSet'),
-(2, 523, 13, 'linkDataObject'),
-(1, 523, 12, 'id');
+(1, 523, 12, 'ids'),
+(1, 523, 13, 'activities'),
+(2, 523, 13, '0'),
+(3, 523, 13, 'label');
 
 -- --------------------------------------------------------
 
@@ -29548,15 +30367,35 @@ INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute
 
 CREATE TABLE IF NOT EXISTS `webservicetasklink` (
   `controlnode_id` int(11) NOT NULL DEFAULT '0',
-  `link` varchar(2048) NOT NULL
+  `link` varchar(2048) NOT NULL,
+  `method` varchar(64) NOT NULL DEFAULT 'GET'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `webservicetasklink`
 --
 
-INSERT INTO `webservicetasklink` (`controlnode_id`, `link`) VALUES
-(523, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/1302/activity/9261/');
+INSERT INTO `webservicetasklink` (`controlnode_id`, `link`, `method`) VALUES
+(523, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/1319/activity?state=terminated', 'GET'),
+(525, 'http://bp2014w1-dev:8080/JEngine/api/interface/v2/scenario/155/instance/', 'POST');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `webservicetaskpost`
+--
+
+CREATE TABLE IF NOT EXISTS `webservicetaskpost` (
+  `controlnode_id` int(11) NOT NULL,
+  `post` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `webservicetaskpost`
+--
+
+INSERT INTO `webservicetaskpost` (`controlnode_id`, `post`) VALUES
+(523, '');
 
 -- --------------------------------------------------------
 
@@ -29801,6 +30640,24 @@ ALTER TABLE `userismemberofrole`
  ADD PRIMARY KEY (`user_id`,`role_id`);
 
 --
+-- Indexes for table `webservicetaskattribute`
+--
+ALTER TABLE `webservicetaskattribute`
+ ADD PRIMARY KEY (`order`,`controlnode_id`,`dataattribute_id`);
+
+--
+-- Indexes for table `webservicetasklink`
+--
+ALTER TABLE `webservicetasklink`
+ ADD PRIMARY KEY (`controlnode_id`);
+
+--
+-- Indexes for table `webservicetaskpost`
+--
+ALTER TABLE `webservicetaskpost`
+ ADD PRIMARY KEY (`controlnode_id`);
+
+--
 -- Indexes for table `workitemstate`
 --
 ALTER TABLE `workitemstate`
@@ -29814,7 +30671,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9369;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9461;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -29829,7 +30686,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=525;
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9369;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9461;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -29839,7 +30696,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `dataattributeinstance`
 --
 ALTER TABLE `dataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=120;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=186;
 --
 -- AUTO_INCREMENT for table `dataclass`
 --
@@ -29859,7 +30716,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1069;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1102;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
@@ -29889,22 +30746,22 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=191;
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5544;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5602;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
 ALTER TABLE `historyactivityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=344;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=747;
 --
 -- AUTO_INCREMENT for table `historydataattributeinstance`
 --
 ALTER TABLE `historydataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `historydataobjectinstance`
 --
 ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=63;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -29924,7 +30781,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=157;
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1314;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1347;
 --
 -- AUTO_INCREMENT for table `state`
 --

@@ -97,7 +97,7 @@ public class RestInterfaceTest extends AbstractTest {
     /**
      *
      */
-    @Test
+    //@Test
     public void testGetDataAttributesLog() {
         Response response = base.path("scenario/1/instance/1302/dataattributes").request().get();
         //TODO: adapt test to really test the json
