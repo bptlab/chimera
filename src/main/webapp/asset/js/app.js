@@ -50,6 +50,11 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 					controller: 'mailConfig',
 					controllerAs: 'mailC'
 				}).
+                when('/admin/webservice/', {
+                    templateUrl: 'asset/templates/webserviceConfigDetails.html',
+                    controller: 'webserviceConfig',
+                    controllerAs: 'webserviceC'
+                }).
                 when('/admin/core/', {
                     templateUrl: 'asset/templates/jcoreConfig.html',
                     controller: 'jcoreConfig',

@@ -61,8 +61,9 @@
 
 			//post update for email tasks
 			this.submitMyForm=function(){
-				var data=$scope.form;  
-				$http.post(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/"+ controller.workingID + "/?", data);
+				var data=$scope.form;
+                //TODO: change post to put
+				$http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/"+ controller.workingID + "/?", data);
 		   	 }
 
 			//get all infos for popup
@@ -100,6 +101,69 @@
 			};
 		}]
 	);
+
+    // Create a Controller for mail config
+    adminCon.controller('webserviceC', ['$routeParams', '$location', '$http', '$scope',
+            function($routeParams, $location, $http, $scope){
+                var webserviceC = this;
+
+                // initialize an empty list of scenario Ids
+                this.Details = [];
+                this.webserviceIDs = [];
+                this.scenarioIDs = [];
+                this.detailsForID = [];
+
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
+                    success(function(data){
+                        webserviceC.scenarioIDs = data['ids'];
+
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+
+                //post update for webservice tasks
+                this.submitMyForm=function(){
+                    var data=$scope.form;
+                    $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
+                }
+
+                //get all infos for popup
+                this.getDetails = function(id){
+                    webserviceC.getDetailsForWebserviceID(id);
+                    webserviceC.workingID = id;
+                };
+
+                // Got all webservices with the given Id
+                this.getAllMailtaskForScenarioID = function(id){
+                    $http.get(JEngine_Server_URL+"/" + JConfig_REST_Interface + "/scenario/" + id + "/webservice/").
+                        success(function(data) {
+                            webserviceC.webserviceIDs = data['ids'];
+                        }).
+                        error(function() {
+                            console.log('request failed');
+                        });
+                };
+                // Got to the instance with the given Id
+                this.getDetailsForWebserviceID = function(id){
+                    $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
+                    "/scenario/1/webservice/" + id + "/?").
+                        success(function(data) {
+                            webserviceC.detailsForID = data;
+                            $scope.form = {
+                                //TODO: to be adapted to exact json layout
+                                receiver: data['receiver'],
+                                subject: data['subject'],
+                                message: data['message']
+                            };
+                        });
+                };
+
+                this.loadData = function(){
+                    webserviceC.getDetailsForWebserviceID(webserviceC.workingID);
+                };
+            }]
+    );
 
     // Create a Controller for mail config
     adminCon.controller('jcoreConfig', ['$routeParams', '$location', '$http', '$scope',
