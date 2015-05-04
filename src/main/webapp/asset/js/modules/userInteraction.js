@@ -282,8 +282,14 @@
                 $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
                 "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                 "/activity/"+ activityId, data);
+
+                instanceCtrl.changeAttributObject[''+id] = value;
+                //instanceCtrl.getOutputAndOutputsets(activityId);
             };
 
+            this.setCurrentAttributeObject = function(id, value) {
+                instanceCtrl.changeAttributObject[''+id] = value;
+            };
 
             // begins an activity
 			this.beginActivity = function(activityId) {

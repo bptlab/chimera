@@ -285,11 +285,11 @@
               <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
                   <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
                   <br>
-                  <form name="myForm" ng-submit="instanceCtrl.submitAttributeForm()">
+                 <!-- <form name="myForm" ng-submit="instanceCtrl.submitAttributeForm()">-->
                   <div ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
-                      {{instanceCtrl.changeAttributObject[''+attributeConfiguration['id']] = attributeConfiguration['value']}}
+                      {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'], attributeConfiguration['value'])}}
                      <!-- {{attributeConfiguration['name']}} <input type="text" name="{{attributeConfiguration['name']}}" [ng-value="attributeConfiguration['value']"]></input><br>-->
-                      {{attributeConfiguration['name']}} <input type="text" ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
+                      {{attributeConfiguration['name']}} <input type="text" ng-model-options='{ debounce: 1000 }' ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
                       <span ng-show="form.name.$pending.username">tipping...</span>
                   </div>
                   <!--<button type="submit" class="btn btn-default">Submit</button></form>-->
