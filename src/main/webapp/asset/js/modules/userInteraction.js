@@ -141,6 +141,8 @@
 
             this.activityOutput = {};
 
+            this.changeAttributObject = {};
+
             //post update for webservice tasks
             this.submitAttributeForm=function(){
                 var data=$scope.form;
@@ -271,11 +273,28 @@
 			this.getCurrentInstance = function(){
                 instanceCtrl.instanceDetails['id'] = $routeParams.instanceId;
 			};
-			
-			// begins an activity
+
+            this.setAttribute = function(id, value, activityId) {
+                var data= {};
+                data.id = id;
+                data.value = value;
+
+                $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+                "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+                "/activity/"+ activityId, data);
+
+                instanceCtrl.changeAttributObject[''+id] = value;
+                //instanceCtrl.getOutputAndOutputsets(activityId);
+            };
+
+            this.setCurrentAttributeObject = function(id, value) {
+                instanceCtrl.changeAttributObject[''+id] = value;
+            };
+
+            // begins an activity
 			this.beginActivity = function(activityId) {
 				var dataObject  = "";
-				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activity/"+ activityId + "?state=begin", dataObject).
 					success(function(data) {
@@ -295,7 +314,7 @@
 			// terminates an activity
 			this.terminateActivity = function(activityId) {
 				var dataObject = "";
-				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activity/"+ activityId + "?state=terminate", dataObject).
 					success(function(data) {

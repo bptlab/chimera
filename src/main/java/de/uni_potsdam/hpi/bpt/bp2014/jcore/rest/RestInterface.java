@@ -1049,13 +1049,12 @@ public class RestInterface {
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
-    @PUT
+    @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
     public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID,
-                                        @QueryParam("state") String state,
-                                        final String dataObjects) {
+                                        @QueryParam("state") String state) {
 
         boolean result;
         if (state == null) {
@@ -1069,30 +1068,8 @@ public class RestInterface {
         switch (state) {
             case "begin":
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
-                //executionService.setDataAttributeValues(scenarioInstanceID, activityID, new HashMap<Integer, String>());
                 break;
             case "terminate":
-                Map<Integer, String> values = new HashMap<>();
-                if (dataObjects != null && !dataObjects.isEmpty()) {
-                    JSONArray dObjects = new JSONArray(dataObjects);
-                    if (dObjects != null) {
-                        for (int i = 0; i < dObjects.length(); i++) {
-                            JSONObject entry = dObjects.getJSONObject(i).getJSONObject("attributeConfiguration").getJSONArray("entry").getJSONObject(0);
-                            int databaseID = entry.getInt("key");
-                            String attribute = entry.getString("value");
-                            String value = attribute.replaceAll("name\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("type\\=[a-zA-Z0-9]*[\\,|}]", "").replaceAll("[{ }]", "").replaceAll("value\\=", "");
-                            values.put(databaseID, value);
-                        }
-                    }
-                }
-                /*for(DataObjectJaxBean dataObject : dataObjects){
-                    Map<Integer, Map<String, String>> dataAttributes = dataObject.attributeConfiguration;
-                    for(Integer i : dataAttributes.keySet()){
-                        String value = dataAttributes.get(i).get("value");
-                        values.put(i,value);
-                    }
-                }*/
-                executionService.setDataAttributeValues(scenarioInstanceID, activityID, values);
                 result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
                 break;
             default:
@@ -1111,6 +1088,40 @@ public class RestInterface {
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"impossible to " + (state.equals("begin") ? "start" : "terminate") +
                             " activity with id " + activityID + "\"}")
+                    .build();
+        }
+    }
+
+    /**
+     *
+     * @param scenarioID         The id of a scenario model.
+     * @param scenarioInstanceID the id of an scenario instance.
+     * @param activityID         the control node id of the activity.
+     * @return
+     */
+    @PUT
+    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
+    public Response setDataAttribute(@PathParam("scenarioID") int scenarioID,
+                                        @PathParam("instanceID") int scenarioInstanceID,
+                                        @PathParam("activityID") int activityID,
+                                        final DataAttributeUpdateJaxBean input) {
+        ExecutionService executionService = new ExecutionService();
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+
+        Map<Integer, String> values = new HashMap<>();
+        if (input != null) {
+            values.put(input.id, input.value);
+        }
+
+        if (executionService.setDataAttributeValues(scenarioInstanceID, activityID, values)) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"attribute value was changed successfully.\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"error within the update of attributes\"}")
                     .build();
         }
     }
@@ -1438,6 +1449,22 @@ public class RestInterface {
          *
          */
         public String type;
+        /**
+         *
+         */
+        public String value;
+
+    }
+
+    /**
+     *
+     */
+    @XmlRootElement
+    public static class DataAttributeUpdateJaxBean {
+        /**
+         *
+         */
+        public int id;
         /**
          *
          */

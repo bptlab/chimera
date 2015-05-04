@@ -785,7 +785,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testInvalidStateUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "complete").request().put(Entity.json("[]"));
+                .queryParam("state", "complete").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -802,7 +802,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testInvalidStateUpdateActivity2() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .request().put(Entity.json("[]"));
+                .request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -822,7 +822,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testInvalidActivityUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "begin").request().put(Entity.json("[]"));
+                .queryParam("state", "begin").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -842,7 +842,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testUpdateActivity() {
         Response response = base.path("scenario/1/instance/72/activity/186")
-                .queryParam("state", "begin").request().put(Entity.json("[]"));
+                .queryParam("state", "begin").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -852,7 +852,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/1/instance/72/activity/186")
-                .queryParam("state", "terminate").request().put(Entity.json("[]"));
+                .queryParam("state", "terminate").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -871,7 +871,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testUpdateActivityWAttributes(){
         Response response = base.path("scenario/135/instance/808/activity/4518")
-                .queryParam("state", "begin").request().put(Entity.json("[]"));
+                .queryParam("state", "begin").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -881,8 +881,13 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/135/instance/808/activity/4518")
+                .request()
+                .put(Entity.json("{\"id\":1,\"value\":\"Test\"}"));
+        assertEquals("The Response code of setDataAttribute was not 202",
+                202, response.getStatus());
+        response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "terminate").request()
-                .put(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));
+                .post(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -893,16 +898,18 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
+    //TODO: write test for update attributeUpdate
+
     /**
      * Given is the Rest API
-     * When you send a PUT to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * When you send a POST to {@link RestInterface#terminateScenarioInstance(int, int)}
      * with an invalid scenario id or instance id
      * then a 400 will be returned with an error message
      */
     @Test
     public void testTerminateInvalidScenarioInstance() {
         Response response = base.path("scenario/9999/instance/72")
-                .queryParam("state", "begin").request().put(Entity.json("{}"));
+                .queryParam("state", "begin").request().post(Entity.json("{}"));
         assertEquals("The Response code of terminateScenarioInstance was not 400",
                 400, response.getStatus());
         assertEquals("Get terminateScenarioInstance does not return a JSON",
@@ -912,7 +919,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
         response = base.path("scenario/1/instance/9999")
-                .queryParam("status", "begin").request().put(Entity.json("{}"));
+                .queryParam("status", "begin").request().post(Entity.json("{}"));
         assertEquals("The Response code of terminateScenarioInstance was not 400",
                 400, response.getStatus());
         assertEquals("Get terminateScenarioInstance does not return a JSON",
@@ -925,14 +932,14 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given is the Rest API
-     * When you send a PUT to {@link RestInterface#terminateScenarioInstance(int, int)}
+     * When you send a POST to {@link RestInterface#terminateScenarioInstance(int, int)}
      * with an valid scenario and instance id
      * the instance will be terminated.
      */
     @Test
     public void testTerminateScenarioInstance() {
         Response response = base.path("scenario/1/instance/72")
-                .queryParam("state", "begin").request().put(Entity.json("{}"));
+                .queryParam("state", "begin").request().post(Entity.json("{}"));
         assertEquals("The Response code of terminateScenarioInstance was not 200",
                 200, response.getStatus());
         assertEquals("terminateScenarioInstance does not return a JSON",
