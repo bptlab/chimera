@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class DbWebServiceTask extends DbObject {
                 "WHERE controlnode_id = " + controlNodeID + " AND dataattribute_id = " + dataAttributeID;
         executeUpdateStatement(sql);
     }
+
     /**
      * Get all WebServiceTasks for one scenario
      * @param scenarioID The databaseID of the scenario
@@ -56,6 +58,16 @@ public class DbWebServiceTask extends DbObject {
                 "AND fragment.scenario_id = " + scenarioID + " " +
                 "AND controlnode.type = 'WebServiceTask'";
         return executeStatementReturnsListInt(sql, "controlnode.id");
+    }
+
+    public ArrayList<HashMap<String, Object>> getAllWebServiceTaskAttributeFancy() {
+        String sql = "SELECT *  FROM webservicetaskattribute";
+        return executeStatementReturnsHashMap(sql);
+    }
+
+    public ArrayList<HashMap<String, Object>> getSpecificWebServiceTaskAttributeFancy(int controlnode_id) {
+        String sql = "SELECT *  FROM webservicetaskattribute WHERE controlnode_id = "  +controlnode_id ;
+        return executeStatementReturnsHashMap(sql);
     }
 
     public HashMap<Integer, List<String>> getComplexAttributeMap(int controlNode_id){

@@ -12,10 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -192,16 +189,16 @@ public class RestConfigurator {
             @PathParam("scenarioID") int scenarioID,
             @QueryParam("filter") String filterString) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        LinkedList<Integer> webServiceTaskIDs = dbWebServiceTask.getWebServiceTasks(scenarioID);
+        ArrayList<HashMap<String, Object>> webServiceTaskIDs = dbWebServiceTask.getAllWebServiceTaskAttributeFancy();
         DbScenario scenario = new DbScenario();
         if (!scenario.existScenario(scenarioID)) {
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
+                    .entity("{\"error\":\"scenario ID is not existing\"}")
                     .build();
         }
-        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(webServiceTaskIDs);
+        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(webServiceTaskIDs);
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -212,15 +209,16 @@ public class RestConfigurator {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID) {
         DbWebServiceTask webService = new DbWebServiceTask();
-        String link = webService.getLinkForControlNode(webserviceID);
-        String method = webService.getMethod(webserviceID);
-        HashMap<Integer, List<String>> attributes = webService.getComplexAttributeMap(webserviceID);
-        WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
-        webserviceConfigJaxBean.link = link;
-        webserviceConfigJaxBean.method = method;
-        webserviceConfigJaxBean.attributes = attributes;
+        //String link = webService.getLinkForControlNode(webserviceID);
+        //String method = webService.getMethod(webserviceID);
+        ArrayList<HashMap<String, Object>> attributes = webService.getSpecificWebServiceTaskAttributeFancy(webserviceID);
+       // WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
+        //webserviceConfigJaxBean.link = link;
+        //webserviceConfigJaxBean.method = method;
+        //webserviceConfigJaxBean.attributes = attributes;
         //TODO: check if return value is empty
-        return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
+        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(attributes);
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
     @PUT

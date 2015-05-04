@@ -1011,7 +1011,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testGetOutputForInvalidScenario() {
-        Response response = base.path("scenario/9987/instance/1234/activity/1/output")
+        Response response = base.path("scenario/0/instance/0/activity/1/output")
                 .request().get();
         assertEquals("The Response code of getOutputDataObjects was not 404",
                 404, response.getStatus());
