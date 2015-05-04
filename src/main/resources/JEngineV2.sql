@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 04. Mai 2015 um 13:25
+-- Erstellungszeit: 04. Mai 2015 um 14:07
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `role_id` int(11) NOT NULL,
   `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9521 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9544 ;
 
 --
 -- Daten für Tabelle `activityinstance`
@@ -8083,7 +8083,30 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 (9517, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
 (9518, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
 (9519, 'HumanTask', 0, 0, 1, 'ready', 'init'),
-(9520, 'HumanTask', 0, 0, 1, 'ready', 'init');
+(9520, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9521, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9522, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9523, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9524, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9525, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9526, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9527, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9528, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9529, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9530, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9531, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9532, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9533, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9534, 'WebServiceTask', 1, 0, 1, 'running', 'init'),
+(9535, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9536, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9537, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9538, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9539, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9540, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(9541, 'HumanTask', 0, 1, 1, 'terminated', 'init'),
+(9542, 'WebServiceTask', 1, 1, 1, 'terminated', 'init'),
+(9543, 'HumanTask', 0, 0, 1, 'ready', 'init');
 
 -- --------------------------------------------------------
 
@@ -9031,7 +9054,7 @@ CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `Type` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9521 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9544 ;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -18487,7 +18510,30 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 (9517, 'Activity', 528, 5648),
 (9518, 'Activity', 527, 5648),
 (9519, 'Activity', 524, 5649),
-(9520, 'Activity', 528, 5650);
+(9520, 'Activity', 528, 5650),
+(9521, 'Activity', 532, 5651),
+(9522, 'Activity', 531, 5651),
+(9523, 'Activity', 532, 5652),
+(9524, 'Activity', 532, 5653),
+(9525, 'Activity', 531, 5653),
+(9526, 'Activity', 532, 5654),
+(9527, 'Activity', 532, 5655),
+(9528, 'Activity', 531, 5655),
+(9529, 'Activity', 532, 5656),
+(9530, 'Activity', 532, 5657),
+(9531, 'Activity', 531, 5657),
+(9532, 'Activity', 532, 5658),
+(9533, 'Activity', 532, 5659),
+(9534, 'Activity', 531, 5659),
+(9535, 'Activity', 532, 5660),
+(9536, 'Activity', 531, 5660),
+(9537, 'Activity', 532, 5661),
+(9538, 'Activity', 532, 5662),
+(9539, 'Activity', 531, 5662),
+(9540, 'Activity', 532, 5663),
+(9541, 'Activity', 532, 5664),
+(9542, 'Activity', 531, 5664),
+(9543, 'Activity', 532, 5665);
 
 -- --------------------------------------------------------
 
@@ -18524,7 +18570,7 @@ INSERT INTO `dataattribute` (`id`, `name`, `type`, `default`, `dataclass_id`) VA
 (14, 'Attribut1', '', '', 59),
 (15, 'Attribut2', '', '', 59),
 (16, 'Attribut1', '', '', 60),
-(17, 'Attribut2', '', '', 60),
+(17, 'Attribut2', '', 'new Instance', 60),
 (18, 'Preis', '', '', 61),
 (19, 'Artikel', '', '', 61);
 
@@ -18539,7 +18585,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
   `dataobjectinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=282 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=298 ;
 
 --
 -- Daten für Tabelle `dataattributeinstance`
@@ -18826,7 +18872,23 @@ INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobj
 (278, '1394', 14, 1174),
 (279, 'http://localhost:9998/interface/v2/scenario/156/instance/1394', 15, 1174),
 (280, '', 12, 1175),
-(281, '', 13, 1175);
+(281, '', 13, 1175),
+(282, '', 16, 1176),
+(283, '', 17, 1176),
+(284, '', 16, 1177),
+(285, '', 17, 1177),
+(286, '', 16, 1178),
+(287, '', 17, 1178),
+(288, '', 16, 1179),
+(289, '', 17, 1179),
+(290, '', 16, 1180),
+(291, '', 17, 1180),
+(292, '1401', 16, 1181),
+(293, 'new Instance', 17, 1181),
+(294, '1403', 16, 1182),
+(295, 'new Instance', 17, 1182),
+(296, '1405', 16, 1183),
+(297, 'new Instance', 17, 1183);
 
 -- --------------------------------------------------------
 
@@ -19385,7 +19447,7 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1176 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1184 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
@@ -20560,7 +20622,15 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 (1172, 1391, 151, 35, 0),
 (1173, 1392, 151, 35, 0),
 (1174, 1393, 152, 36, 0),
-(1175, 1394, 151, 35, 0);
+(1175, 1394, 151, 35, 0),
+(1176, 1395, 153, 37, 0),
+(1177, 1396, 153, 37, 0),
+(1178, 1397, 153, 37, 0),
+(1179, 1398, 153, 37, 0),
+(1180, 1399, 153, 37, 0),
+(1181, 1400, 153, 37, 0),
+(1182, 1402, 153, 37, 0),
+(1183, 1404, 153, 37, 0);
 
 -- --------------------------------------------------------
 
@@ -21189,7 +21259,7 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `fragment_id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5651 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5666 ;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -26770,7 +26840,22 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 (5647, 0, 190, 1392),
 (5648, 1, 191, 1393),
 (5649, 0, 190, 1394),
-(5650, 0, 191, 1393);
+(5650, 0, 191, 1393),
+(5651, 1, 192, 1395),
+(5652, 0, 192, 1395),
+(5653, 1, 192, 1396),
+(5654, 0, 192, 1396),
+(5655, 1, 192, 1397),
+(5656, 0, 192, 1397),
+(5657, 1, 192, 1398),
+(5658, 0, 192, 1398),
+(5659, 0, 192, 1399),
+(5660, 1, 192, 1400),
+(5661, 0, 192, 1400),
+(5662, 1, 192, 1402),
+(5663, 0, 192, 1402),
+(5664, 1, 192, 1404),
+(5665, 0, 192, 1404);
 
 -- --------------------------------------------------------
 
@@ -28214,7 +28299,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
   `oldstate` varchar(256) DEFAULT NULL,
   `newstate` varchar(256) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=947 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1047 ;
 
 --
 -- Daten für Tabelle `historyactivityinstance`
@@ -29167,7 +29252,107 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `timestamp`,
 (943, 9518, '2015-05-04 11:25:19', 'running', 'terminated', 1393),
 (944, 9520, '2015-05-04 11:25:19', NULL, 'init', 1393),
 (945, 9520, '2015-05-04 11:25:19', 'init', 'ready(ControlFlow)', 1393),
-(946, 9520, '2015-05-04 11:25:19', 'ready(ControlFlow)', 'ready', 1393);
+(946, 9520, '2015-05-04 11:25:19', 'ready(ControlFlow)', 'ready', 1393),
+(947, 9521, '2015-05-04 11:48:56', NULL, 'init', 1395),
+(948, 9521, '2015-05-04 11:48:56', 'init', 'ready(ControlFlow)', 1395),
+(949, 9521, '2015-05-04 11:48:56', 'ready(ControlFlow)', 'ready', 1395),
+(950, 9521, '2015-05-04 11:48:56', 'ready', 'running', 1395),
+(951, 9521, '2015-05-04 11:48:56', 'running', 'terminated', 1395),
+(952, 9522, '2015-05-04 11:48:56', NULL, 'init', 1395),
+(953, 9522, '2015-05-04 11:48:56', 'init', 'ready(ControlFlow)', 1395),
+(954, 9522, '2015-05-04 11:48:56', 'ready(ControlFlow)', 'ready', 1395),
+(955, 9522, '2015-05-04 11:48:56', 'ready', 'running', 1395),
+(956, 9522, '2015-05-04 11:48:57', 'running', 'terminated', 1395),
+(957, 9523, '2015-05-04 11:48:57', NULL, 'init', 1395),
+(958, 9523, '2015-05-04 11:48:57', 'init', 'ready(ControlFlow)', 1395),
+(959, 9523, '2015-05-04 11:48:57', 'ready(ControlFlow)', 'ready', 1395),
+(960, 9524, '2015-05-04 11:49:45', NULL, 'init', 1396),
+(961, 9524, '2015-05-04 11:49:45', 'init', 'ready(ControlFlow)', 1396),
+(962, 9524, '2015-05-04 11:49:45', 'ready(ControlFlow)', 'ready', 1396),
+(963, 9524, '2015-05-04 11:49:45', 'ready', 'running', 1396),
+(964, 9524, '2015-05-04 11:49:45', 'running', 'terminated', 1396),
+(965, 9525, '2015-05-04 11:49:45', NULL, 'init', 1396),
+(966, 9525, '2015-05-04 11:49:45', 'init', 'ready(ControlFlow)', 1396),
+(967, 9525, '2015-05-04 11:49:45', 'ready(ControlFlow)', 'ready', 1396),
+(968, 9525, '2015-05-04 11:49:45', 'ready', 'running', 1396),
+(969, 9525, '2015-05-04 11:49:46', 'running', 'terminated', 1396),
+(970, 9526, '2015-05-04 11:49:46', NULL, 'init', 1396),
+(971, 9526, '2015-05-04 11:49:46', 'init', 'ready(ControlFlow)', 1396),
+(972, 9526, '2015-05-04 11:49:46', 'ready(ControlFlow)', 'ready', 1396),
+(973, 9527, '2015-05-04 11:55:59', NULL, 'init', 1397),
+(974, 9527, '2015-05-04 11:55:59', 'init', 'ready(ControlFlow)', 1397),
+(975, 9527, '2015-05-04 11:55:59', 'ready(ControlFlow)', 'ready', 1397),
+(976, 9527, '2015-05-04 11:55:59', 'ready', 'running', 1397),
+(977, 9527, '2015-05-04 11:55:59', 'running', 'terminated', 1397),
+(978, 9528, '2015-05-04 11:55:59', NULL, 'init', 1397),
+(979, 9528, '2015-05-04 11:55:59', 'init', 'ready(ControlFlow)', 1397),
+(980, 9528, '2015-05-04 11:55:59', 'ready(ControlFlow)', 'ready', 1397),
+(981, 9528, '2015-05-04 11:55:59', 'ready', 'running', 1397),
+(982, 9528, '2015-05-04 11:56:00', 'running', 'terminated', 1397),
+(983, 9529, '2015-05-04 11:56:00', NULL, 'init', 1397),
+(984, 9529, '2015-05-04 11:56:00', 'init', 'ready(ControlFlow)', 1397),
+(985, 9529, '2015-05-04 11:56:00', 'ready(ControlFlow)', 'ready', 1397),
+(986, 9530, '2015-05-04 11:56:19', NULL, 'init', 1398),
+(987, 9530, '2015-05-04 11:56:19', 'init', 'ready(ControlFlow)', 1398),
+(988, 9530, '2015-05-04 11:56:19', 'ready(ControlFlow)', 'ready', 1398),
+(989, 9530, '2015-05-04 11:56:19', 'ready', 'running', 1398),
+(990, 9530, '2015-05-04 11:56:19', 'running', 'terminated', 1398),
+(991, 9531, '2015-05-04 11:56:19', NULL, 'init', 1398),
+(992, 9531, '2015-05-04 11:56:19', 'init', 'ready(ControlFlow)', 1398),
+(993, 9531, '2015-05-04 11:56:19', 'ready(ControlFlow)', 'ready', 1398),
+(994, 9531, '2015-05-04 11:56:19', 'ready', 'running', 1398),
+(995, 9531, '2015-05-04 11:56:20', 'running', 'terminated', 1398),
+(996, 9532, '2015-05-04 11:56:20', NULL, 'init', 1398),
+(997, 9532, '2015-05-04 11:56:20', 'init', 'ready(ControlFlow)', 1398),
+(998, 9532, '2015-05-04 11:56:20', 'ready(ControlFlow)', 'ready', 1398),
+(999, 9533, '2015-05-04 11:56:54', NULL, 'init', 1399),
+(1000, 9533, '2015-05-04 11:56:54', 'init', 'ready(ControlFlow)', 1399),
+(1001, 9533, '2015-05-04 11:56:54', 'ready(ControlFlow)', 'ready', 1399),
+(1002, 9533, '2015-05-04 11:56:54', 'ready', 'running', 1399),
+(1003, 9533, '2015-05-04 11:56:54', 'running', 'terminated', 1399),
+(1004, 9534, '2015-05-04 11:56:54', NULL, 'init', 1399),
+(1005, 9534, '2015-05-04 11:56:54', 'init', 'ready(ControlFlow)', 1399),
+(1006, 9534, '2015-05-04 11:56:54', 'ready(ControlFlow)', 'ready', 1399),
+(1007, 9534, '2015-05-04 11:56:54', 'ready', 'running', 1399),
+(1008, 9535, '2015-05-04 12:03:20', NULL, 'init', 1400),
+(1009, 9535, '2015-05-04 12:03:20', 'init', 'ready(ControlFlow)', 1400),
+(1010, 9535, '2015-05-04 12:03:20', 'ready(ControlFlow)', 'ready', 1400),
+(1011, 9535, '2015-05-04 12:03:20', 'ready', 'running', 1400),
+(1012, 9535, '2015-05-04 12:03:20', 'running', 'terminated', 1400),
+(1013, 9536, '2015-05-04 12:03:20', NULL, 'init', 1400),
+(1014, 9536, '2015-05-04 12:03:20', 'init', 'ready(ControlFlow)', 1400),
+(1015, 9536, '2015-05-04 12:03:20', 'ready(ControlFlow)', 'ready', 1400),
+(1016, 9536, '2015-05-04 12:03:20', 'ready', 'running', 1400),
+(1017, 9536, '2015-05-04 12:03:35', 'running', 'terminated', 1400),
+(1018, 9537, '2015-05-04 12:03:35', NULL, 'init', 1400),
+(1019, 9537, '2015-05-04 12:03:35', 'init', 'ready(ControlFlow)', 1400),
+(1020, 9537, '2015-05-04 12:03:35', 'ready(ControlFlow)', 'ready', 1400),
+(1021, 9538, '2015-05-04 12:05:51', NULL, 'init', 1402),
+(1022, 9538, '2015-05-04 12:05:51', 'init', 'ready(ControlFlow)', 1402),
+(1023, 9538, '2015-05-04 12:05:51', 'ready(ControlFlow)', 'ready', 1402),
+(1024, 9538, '2015-05-04 12:05:51', 'ready', 'running', 1402),
+(1025, 9538, '2015-05-04 12:05:51', 'running', 'terminated', 1402),
+(1026, 9539, '2015-05-04 12:05:51', NULL, 'init', 1402),
+(1027, 9539, '2015-05-04 12:05:51', 'init', 'ready(ControlFlow)', 1402),
+(1028, 9539, '2015-05-04 12:05:51', 'ready(ControlFlow)', 'ready', 1402),
+(1029, 9539, '2015-05-04 12:05:51', 'ready', 'running', 1402),
+(1030, 9539, '2015-05-04 12:05:52', 'running', 'terminated', 1402),
+(1031, 9540, '2015-05-04 12:05:52', NULL, 'init', 1402),
+(1032, 9540, '2015-05-04 12:05:52', 'init', 'ready(ControlFlow)', 1402),
+(1033, 9540, '2015-05-04 12:05:52', 'ready(ControlFlow)', 'ready', 1402),
+(1034, 9541, '2015-05-04 12:06:36', NULL, 'init', 1404),
+(1035, 9541, '2015-05-04 12:06:36', 'init', 'ready(ControlFlow)', 1404),
+(1036, 9541, '2015-05-04 12:06:36', 'ready(ControlFlow)', 'ready', 1404),
+(1037, 9541, '2015-05-04 12:06:36', 'ready', 'running', 1404),
+(1038, 9541, '2015-05-04 12:06:36', 'running', 'terminated', 1404),
+(1039, 9542, '2015-05-04 12:06:36', NULL, 'init', 1404),
+(1040, 9542, '2015-05-04 12:06:36', 'init', 'ready(ControlFlow)', 1404),
+(1041, 9542, '2015-05-04 12:06:36', 'ready(ControlFlow)', 'ready', 1404),
+(1042, 9542, '2015-05-04 12:06:36', 'ready', 'running', 1404),
+(1043, 9542, '2015-05-04 12:06:36', 'running', 'terminated', 1404),
+(1044, 9543, '2015-05-04 12:06:36', NULL, 'init', 1404),
+(1045, 9543, '2015-05-04 12:06:36', 'init', 'ready(ControlFlow)', 1404),
+(1046, 9543, '2015-05-04 12:06:36', 'ready(ControlFlow)', 'ready', 1404);
 
 -- --------------------------------------------------------
 
@@ -29182,7 +29367,7 @@ CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
   `newvalue` varchar(256) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=155 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=174 ;
 
 --
 -- Daten für Tabelle `historydataattributeinstance`
@@ -29342,7 +29527,26 @@ INSERT INTO `historydataattributeinstance` (`id`, `dataattributeinstance_id`, `o
 (151, 280, NULL, '', '2015-05-04 11:25:19', 1394),
 (152, 281, NULL, '', '2015-05-04 11:25:19', 1394),
 (153, 278, '', '1394', '2015-05-04 11:25:19', 1393),
-(154, 279, '', 'http://localhost:9998/interface/v2/scenario/156/instance/1394', '2015-05-04 11:25:19', 1393);
+(154, 279, '', 'http://localhost:9998/interface/v2/scenario/156/instance/1394', '2015-05-04 11:25:19', 1393),
+(155, 282, NULL, '', '2015-05-04 11:48:56', 1395),
+(156, 283, NULL, '', '2015-05-04 11:48:56', 1395),
+(157, 284, NULL, '', '2015-05-04 11:49:45', 1396),
+(158, 285, NULL, '', '2015-05-04 11:49:45', 1396),
+(159, 286, NULL, '', '2015-05-04 11:55:59', 1397),
+(160, 287, NULL, '', '2015-05-04 11:55:59', 1397),
+(161, 288, NULL, '', '2015-05-04 11:56:19', 1398),
+(162, 289, NULL, '', '2015-05-04 11:56:19', 1398),
+(163, 290, NULL, '', '2015-05-04 11:56:54', 1399),
+(164, 291, NULL, '', '2015-05-04 11:56:54', 1399),
+(165, 292, NULL, '', '2015-05-04 12:03:20', 1400),
+(166, 293, NULL, 'new Instance', '2015-05-04 12:03:20', 1400),
+(167, 292, '', '1401', '2015-05-04 12:03:34', 1400),
+(168, 294, NULL, '', '2015-05-04 12:05:51', 1402),
+(169, 295, NULL, 'new Instance', '2015-05-04 12:05:51', 1402),
+(170, 294, '', '1403', '2015-05-04 12:05:52', 1402),
+(171, 296, NULL, '', '2015-05-04 12:06:35', 1404),
+(172, 297, NULL, 'new Instance', '2015-05-04 12:06:35', 1404),
+(173, 296, '', '1405', '2015-05-04 12:06:36', 1404);
 
 -- --------------------------------------------------------
 
@@ -29357,7 +29561,7 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `dataobjectinstance_id` int(11) NOT NULL,
   `oldstate_id` int(11) DEFAULT NULL,
   `newstate_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=137 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=145 ;
 
 --
 -- Daten für Tabelle `historydataobjectinstance`
@@ -29499,7 +29703,15 @@ INSERT INTO `historydataobjectinstance` (`id`, `scenarioinstance_id`, `timestamp
 (133, 1391, '2015-05-04 11:24:53', 1172, NULL, 151),
 (134, 1392, '2015-05-04 11:25:18', 1173, NULL, 151),
 (135, 1393, '2015-05-04 11:25:19', 1174, NULL, 152),
-(136, 1394, '2015-05-04 11:25:19', 1175, NULL, 151);
+(136, 1394, '2015-05-04 11:25:19', 1175, NULL, 151),
+(137, 1395, '2015-05-04 11:48:56', 1176, NULL, 153),
+(138, 1396, '2015-05-04 11:49:45', 1177, NULL, 153),
+(139, 1397, '2015-05-04 11:55:59', 1178, NULL, 153),
+(140, 1398, '2015-05-04 11:56:19', 1179, NULL, 153),
+(141, 1399, '2015-05-04 11:56:54', 1180, NULL, 153),
+(142, 1400, '2015-05-04 12:03:20', 1181, NULL, 153),
+(143, 1402, '2015-05-04 12:05:51', 1182, NULL, 153),
+(144, 1404, '2015-05-04 12:06:35', 1183, NULL, 153);
 
 -- --------------------------------------------------------
 
@@ -29640,7 +29852,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
   `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1395 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1406 ;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -30993,7 +31205,18 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 (1391, 'ServiceTaskSzenarioGET', 0, 156),
 (1392, 'ServiceTaskSzenarioGET', 0, 156),
 (1393, 'ServiceTaskSzenarioPOST', 0, 157),
-(1394, 'ServiceTaskSzenarioGET', 0, 156);
+(1394, 'ServiceTaskSzenarioGET', 0, 156),
+(1395, 'ServiceTaskSzenarioPUT', 0, 158),
+(1396, 'ServiceTaskSzenarioPUT', 0, 158),
+(1397, 'ServiceTaskSzenarioPUT', 0, 158),
+(1398, 'ServiceTaskSzenarioPUT', 0, 158),
+(1399, 'ServiceTaskSzenarioPUT', 0, 158),
+(1400, 'ServiceTaskSzenarioPUT', 0, 158),
+(1401, 'new Instance', 0, 156),
+(1402, 'ServiceTaskSzenarioPUT', 0, 158),
+(1403, 'new Instance', 0, 156),
+(1404, 'ServiceTaskSzenarioPUT', 0, 158),
+(1405, 'new Instance', 0, 156);
 
 -- --------------------------------------------------------
 
@@ -31257,6 +31480,7 @@ INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute
 (1, 523, 12, 'ids'),
 (1, 523, 13, 'activities'),
 (1, 527, 14, 'id'),
+(1, 531, 16, 'id'),
 (2, 523, 13, '0'),
 (2, 527, 15, 'link'),
 (3, 523, 13, 'label');
@@ -31279,7 +31503,8 @@ CREATE TABLE IF NOT EXISTS `webservicetasklink` (
 
 INSERT INTO `webservicetasklink` (`controlnode_id`, `link`, `method`) VALUES
 (523, 'http://localhost:9998/interface/v2/scenario/155/instance/1360/activity?state=terminated', 'GET'),
-(527, 'http://localhost:9998/interface/v2/scenario/156/instance', 'POST');
+(527, 'http://localhost:9998/interface/v2/scenario/156/instance', 'POST'),
+(531, 'http://localhost:9998/interface/v2/scenario/156/instance', 'PUT');
 
 -- --------------------------------------------------------
 
@@ -31291,6 +31516,13 @@ CREATE TABLE IF NOT EXISTS `webservicetaskpost` (
   `controlnode_id` int(11) NOT NULL,
   `post` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `webservicetaskpost`
+--
+
+INSERT INTO `webservicetaskpost` (`controlnode_id`, `post`) VALUES
+(531, '{"name" :"#DO.Attribut2"}');
 
 -- --------------------------------------------------------
 
@@ -31566,7 +31798,7 @@ ALTER TABLE `workitemstate`
 -- AUTO_INCREMENT for table `activityinstance`
 --
 ALTER TABLE `activityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9521;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9544;
 --
 -- AUTO_INCREMENT for table `configuration`
 --
@@ -31581,7 +31813,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=540;
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
 ALTER TABLE `controlnodeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9521;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9544;
 --
 -- AUTO_INCREMENT for table `dataattribute`
 --
@@ -31591,7 +31823,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 -- AUTO_INCREMENT for table `dataattributeinstance`
 --
 ALTER TABLE `dataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=282;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=298;
 --
 -- AUTO_INCREMENT for table `dataclass`
 --
@@ -31611,7 +31843,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
 ALTER TABLE `dataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1176;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1184;
 --
 -- AUTO_INCREMENT for table `dataset`
 --
@@ -31641,22 +31873,22 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=195;
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
 ALTER TABLE `fragmentinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5651;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5666;
 --
 -- AUTO_INCREMENT for table `historyactivityinstance`
 --
 ALTER TABLE `historyactivityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=947;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1047;
 --
 -- AUTO_INCREMENT for table `historydataattributeinstance`
 --
 ALTER TABLE `historydataattributeinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=155;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=174;
 --
 -- AUTO_INCREMENT for table `historydataobjectinstance`
 --
 ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=137;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=145;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -31676,7 +31908,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=160;
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
 ALTER TABLE `scenarioinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1395;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1406;
 --
 -- AUTO_INCREMENT for table `state`
 --
