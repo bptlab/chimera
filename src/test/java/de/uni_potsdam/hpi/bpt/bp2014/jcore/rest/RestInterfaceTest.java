@@ -883,8 +883,8 @@ public class RestInterfaceTest extends AbstractTest {
         response = base.path("scenario/135/instance/808/activity/4518")
                 .request()
                 .put(Entity.json("{\"id\":1,\"value\":\"Test\"}"));
-        assertEquals("The Response code of setDataAttribute was not 200",
-                200, response.getStatus());
+        assertEquals("The Response code of setDataAttribute was not 202",
+                202, response.getStatus());
         response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "terminate").request()
                 .post(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));

@@ -287,9 +287,12 @@
                   <br>
                   <form name="myForm" ng-submit="instanceCtrl.submitAttributeForm()">
                   <div ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
-                      {{attributeConfiguration['name']}} <input type="text" name="{{attributeConfiguration['name']}}" [ng-value="attributeConfiguration['value']"]>><br>
+                      {{instanceCtrl.changeAttributObject[''+attributeConfiguration['id']] = attributeConfiguration['value']}}
+                     <!-- {{attributeConfiguration['name']}} <input type="text" name="{{attributeConfiguration['name']}}" [ng-value="attributeConfiguration['value']"]></input><br>-->
+                      {{attributeConfiguration['name']}} <input type="text" ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
+                      <span ng-show="form.name.$pending.username">tipping...</span>
                   </div>
-                  <button type="submit" class="btn btn-default">Submit</button></form>
+                  <!--<button type="submit" class="btn btn-default">Submit</button></form>-->
                   <hr>
               </div>
           </div>
