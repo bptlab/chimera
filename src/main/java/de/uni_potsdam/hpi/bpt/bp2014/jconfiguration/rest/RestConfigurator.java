@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -188,8 +189,6 @@ public class RestConfigurator {
     public Response getAllWebserviceTasks(
             @PathParam("scenarioID") int scenarioID,
             @QueryParam("filter") String filterString) {
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        ArrayList<HashMap<String, Object>> webServiceTaskIDs = dbWebServiceTask.getAllWebServiceTaskAttributeFancy();
         DbScenario scenario = new DbScenario();
         if (!scenario.existScenario(scenarioID)) {
             return Response
@@ -198,7 +197,9 @@ public class RestConfigurator {
                     .entity("{\"error\":\"scenario ID is not existing\"}")
                     .build();
         }
-        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(webServiceTaskIDs);
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        LinkedList<Integer> webServiceTaskIDs = dbWebServiceTask.getWebServiceTasks(scenarioID);
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(webServiceTaskIDs);
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -219,19 +220,32 @@ public class RestConfigurator {
     }
 
     @PUT
-    @Path("webservice/{webserviceID}/")
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateWebserviceConfiguration(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
-            final RestConfigurator.WebserviceConfigJaxBean input) {
+            final String input) {
+        //input: {link, method}
+        JSONObject jsonObject = new JSONObject(input);
+        if (jsonObject.has("method") & jsonObject.has("link")){
+            //TODO: Fehler
+        }
+        String link = jsonObject.get("link").toString();
+        String method = jsonObject.get("method").toString();
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if(dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)){
+            dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
+        } else {
+            dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID,link, method);
+        }
+        //dbWebServiceTask.
         //TODO: set Webservice details
         //DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         //int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
          //       input.test);
-        int result = 1;
         return Response.status(
-                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
+                Response.Status.ACCEPTED)
                 .build();
     }
 
