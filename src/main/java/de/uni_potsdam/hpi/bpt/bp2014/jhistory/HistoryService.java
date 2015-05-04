@@ -78,8 +78,14 @@ public class HistoryService {
         DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
         return dbHistoryActivityInstance.getterminatedLogEntriesForScenarioInstance(scenarioInstance_id);
     }
-    public Map<Integer, Map<String, Object>> getDataAtttributeInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
+    public Map<Integer, Map<String, Object>> getDataAttributeInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
         DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance = new DbHistoryDataAttributeInstance();
         return dbHistoryDataAttributeInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
+    }
+
+    public static void main(String args[]){
+        HistoryService h  = new HistoryService();
+        System.out.print(h.getDataAttributeInstanceLogEntriesForScenarioInstance(1330).toString());
+
     }
 }

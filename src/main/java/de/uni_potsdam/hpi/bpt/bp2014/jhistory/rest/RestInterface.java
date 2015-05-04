@@ -101,7 +101,7 @@ public class RestInterface {
             }
 
             Map<Integer, Map<String, Object>> attributeLog;
-            attributeLog = historyService.getDataAtttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+            attributeLog = historyService.getDataAttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
             return Response
                     .ok()
                     .type(MediaType.APPLICATION_JSON)
