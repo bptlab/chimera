@@ -79,7 +79,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testGetActivitiesLogStatusCode404() {
-        Response response = base.path("scenario/9999/instance/9999/activities")
+        Response response = base.path("scenario/0/instance/0/activities")
                 .request().get();
         assertEquals("The Response code of getActivitiesLog was not 404",
                 404, response.getStatus());
