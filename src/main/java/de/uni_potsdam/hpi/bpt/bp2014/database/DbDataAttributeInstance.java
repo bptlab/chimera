@@ -51,9 +51,9 @@ public class DbDataAttributeInstance extends DbObject{
      * @param value This is the value the DataAttributeinstance should have after executing setValue.
      */
     public void setValue(int dataAttributeInstance_id, Object value){
-        String sql = "UPDATE dataattributeinstance SET value = '" + value + "' WHERE id = " + dataAttributeInstance_id;
-        executeUpdateStatement(sql);
         Log log = new Log();
         log.newDataAttributeInstanceValue(dataAttributeInstance_id, value);
+        String sql = "UPDATE dataattributeinstance SET value = '" + value + "' WHERE id = " + dataAttributeInstance_id;
+        executeUpdateStatement(sql);
     }
 }
