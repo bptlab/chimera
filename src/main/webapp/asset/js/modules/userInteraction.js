@@ -353,6 +353,9 @@
             };
 
             this.getOutputAndOutputsets = function(activityID) {
+                if(!instanceCtrl.scenario['outputsets']){
+                    instanceCtrl.scenario['outputsets'] = {};
+                }
                 //retrieving the output for each retrieved referenced Activity
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
                     success(function(data2) {
