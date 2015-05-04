@@ -1054,8 +1054,7 @@ public class RestInterface {
     public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID,
-                                        @QueryParam("state") String state,
-                                        final String dataObjects) {
+                                        @QueryParam("state") String state) {
 
         boolean result;
         if (state == null) {

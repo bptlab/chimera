@@ -294,7 +294,7 @@
             // begins an activity
 			this.beginActivity = function(activityId) {
 				var dataObject  = "";
-				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activity/"+ activityId + "?state=begin", dataObject).
 					success(function(data) {
@@ -314,7 +314,7 @@
 			// terminates an activity
 			this.terminateActivity = function(activityId) {
 				var dataObject = "";
-				$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+				$http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
 					"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
 					"/activity/"+ activityId + "?state=terminate", dataObject).
 					success(function(data) {
