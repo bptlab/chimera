@@ -54,7 +54,7 @@ public class DbWebServiceTask extends DbObject {
                 "FROM fragment, controlnode " +
                 "WHERE fragment.id = controlnode.fragment_id " +
                 "AND fragment.scenario_id = " + scenarioID + " " +
-                "AND controlnode.type = WebServiceTask";
+                "AND controlnode.type = 'WebServiceTask'";
         return executeStatementReturnsListInt(sql, "controlnode.id");
     }
 
