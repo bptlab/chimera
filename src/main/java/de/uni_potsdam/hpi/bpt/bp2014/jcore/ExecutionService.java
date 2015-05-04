@@ -549,13 +549,15 @@ public class ExecutionService {
      * @param activityInstanceID  The id of the activity instance.
      * @param values              A Map with the data attribute instance id as key and the value of the data attribute as value.
      */
-    public void setDataAttributeValues(int scenarioInstance_id, int activityInstanceID, Map<Integer, String> values) {
+    public boolean setDataAttributeValues(int scenarioInstance_id, int activityInstanceID, Map<Integer, String> values) {
         ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
         for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
             if (nodeInstance.getControlNodeInstance_id() == activityInstanceID) {
                 ((ActivityInstance) nodeInstance).setDataAttributeValues(values);
+                return true;
             }
         }
+        return false;
     }
 
     /**
