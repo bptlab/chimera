@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
 import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
@@ -11,6 +12,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -105,8 +110,6 @@ public class RestConfigurator {
                 .build();
     }
 
-
-
     /**
      * This method provides information about all email Tasks inside
      * a given scenario.
@@ -188,9 +191,9 @@ public class RestConfigurator {
     public Response getAllWebserviceTasks(
             @PathParam("scenarioID") int scenarioID,
             @QueryParam("filter") String filterString) {
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        LinkedList<Integer> webServiceTaskIDs = dbWebServiceTask.getWebServiceTasks(scenarioID);
         DbScenario scenario = new DbScenario();
-        //TODO: get all webservice tasks for one scenario ID
-        //DbEmailConfiguration mail = new DbEmailConfiguration();
         if (!scenario.existScenario(scenarioID)) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -198,9 +201,7 @@ public class RestConfigurator {
                     .entity("{}")
                     .build();
         }
-        //TODO: wrap them to json
-        //String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
-        String jsonRepresentation = "";
+        String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(webServiceTaskIDs);
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -210,27 +211,16 @@ public class RestConfigurator {
     public Response getSpecificWebserviceTask(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID) {
-        DbScenario scenario = new DbScenario();
-        DbEmailConfiguration mail = new DbEmailConfiguration();
-
-        //TODO: get details for a specific webservice task
-        //EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
-        //mailConfig.receiver = mail.getReceiverEmailAddress(mailTaskID);
-
-        /*TODO: check if return value is empty
-        if (!scenario.existScenario(scenarioID) || mailConfig.receiver.equals("")) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
-        */
-        //TODO: wrap them to json
-        //mailConfig.message = mail.getMessage(mailTaskID);
-        //mailConfig.subject = mail.getSubject(mailTaskID);
-        String jsonRepresentation = "";
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+        DbWebServiceTask webService = new DbWebServiceTask();
+        String link = webService.getLinkForControlNode(webserviceID);
+        String method = webService.getMethod(webserviceID);
+        HashMap<Integer, List<String>> attributes = webService.getComplexAttributeMap(webserviceID);
+        WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
+        webserviceConfigJaxBean.link = link;
+        webserviceConfigJaxBean.method = method;
+        webserviceConfigJaxBean.attributes = attributes;
+        //TODO: check if return value is empty
+        return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
     }
 
     @PUT
@@ -241,8 +231,8 @@ public class RestConfigurator {
             @PathParam("webserviceID") int webserviceID,
             final RestConfigurator.WebserviceConfigJaxBean input) {
         //TODO: set Webservice details
-        //DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        //int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
+        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
+        int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
          //       input.test);
         int result = 1;
         return Response.status(
@@ -273,7 +263,10 @@ public class RestConfigurator {
     @XmlRootElement
     public static class WebserviceConfigJaxBean {
 
-        public String test;
+        public String link;
+        public String method;
+        // Map <AttributeID, List<key> >
+        public HashMap<Integer, List<String>> attributes;
 
     }
 }
