@@ -65,21 +65,9 @@ public class DbWebServiceTask extends DbObject {
         return executeStatementReturnsHashMap(sql);
     }
 
-    public ArrayList<HashMap<String, Object>> getSpecificWebServiceTaskAttributeFancy(int controlnode_id) {
+    public ArrayList<HashMap<String, Object>> getComplexAttributeMap(int controlnode_id) {
         String sql = "SELECT *  FROM webservicetaskattribute WHERE controlnode_id = "  +controlnode_id ;
         return executeStatementReturnsHashMap(sql);
-    }
-
-    public HashMap<Integer, List<String>> getComplexAttributeMap(int controlNode_id){
-
-        HashMap<Integer, List<String>> result = new HashMap<>();
-        LinkedList<Integer> attributes = getAttributeIdsForControlNode(controlNode_id);
-        for (int attr : attributes) {
-            String sql = "SELECT webservicetaskattribute.key FROM webservicetaskattribute WHERE dataattribute_id = " + attr + " ORDER BY webservicetaskattribute.order ASC";
-            List<String> keys = executeStatementReturnsListString(sql, "key");
-            result.put(attr, keys);
-        }
-        return result;
     }
 
     public String getMethod(int controlNode_id){
