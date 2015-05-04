@@ -1,11 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by jaspar.mang on 30.04.15.
- */
 public class DbWebServiceTask extends DbObject {
 
 
@@ -60,14 +58,16 @@ public class DbWebServiceTask extends DbObject {
         return executeStatementReturnsListInt(sql, "controlnode.id");
     }
 
-    public LinkedList<Integer> getOrderForWebServiceTask(int controlNode_id){
-        String sql = "SELECT order FROM webservicetaskattribute WHERE `controlnode_id` = " + controlNode_id;
-        return this.executeStatementReturnsListInt(sql, "order");
-    }
+    public HashMap<Integer, List<String>> getComplexAttributeMap(int controlNode_id){
 
-    public LinkedList<String> getKeysForWebServiceTask(int controlNode_id){
-        String sql = "SELECT key FROM webservicetaskattribute WHERE `controlnode_id` = " + controlNode_id;
-        return this.executeStatementReturnsListString(sql, "key");
+        HashMap<Integer, List<String>> result = new HashMap<>();
+        LinkedList<Integer> attributes = getAttributeIdsForControlNode(controlNode_id);
+        for (int attr : attributes) {
+            String sql = "SELECT webservicetaskattribute.key FROM webservicetaskattribute WHERE dataattribute_id = " + attr + " ORDER BY webservicetaskattribute.order ASC";
+            List<String> keys = executeStatementReturnsListString(sql, "key");
+            result.put(attr, keys);
+        }
+        return result;
     }
 
     public String getMethod(int controlNode_id){

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
 
 /**
@@ -12,6 +13,7 @@ public class Log {
      */
     private DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
     private DbHistoryDataObjectInstance dbHistoryDataObjectInstance = new DbHistoryDataObjectInstance();
+    private DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance = new DbHistoryDataAttributeInstance();
     /**
      * This method delegates a log entry containing an activity state transition being saved into the database.
      *
@@ -45,5 +47,24 @@ public class Log {
      */
     public void newDataObjectInstance(int id){
         dbHistoryDataObjectInstance.createNewDataObjectInstanceEntry(id);
+    }
+
+    /**
+     * This method delegates a log entry containing a DataAttributeInstance value change being saved into the database.
+     *
+     * @param dataattributeinstance_id the ID of the DataAttributeInstance that is changed.
+     * @param value the new value of the DataAttributeInstance.
+     */
+    public void newDataAttributeInstanceValue(int dataattributeinstance_id, Object value){
+        dbHistoryDataAttributeInstance.createEntry(dataattributeinstance_id,value);
+    }
+
+    /**
+     * This method delegates a log entry of a newly created DataAttributeInstance being saved into the database.
+     *
+     * @param dataattributeinstance_id the ID of the DataAttributeInstance that is created.
+     */
+    public void newDataAttributeInstance(int dataattributeinstance_id){
+        dbHistoryDataAttributeInstance.createNewDataAttributeInstanceEntry(dataattributeinstance_id);
     }
 }

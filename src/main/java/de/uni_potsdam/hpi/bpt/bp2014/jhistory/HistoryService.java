@@ -1,9 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,5 +77,9 @@ public class HistoryService {
     public Map<Integer, Map<String, Object>> getSelectedActivityInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
         DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
         return dbHistoryActivityInstance.getterminatedLogEntriesForScenarioInstance(scenarioInstance_id);
+    }
+    public Map<Integer, Map<String, Object>> getDataAtttributeInstanceLogEntriesForScenarioInstance(int scenarioInstance_id){
+        DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance = new DbHistoryDataAttributeInstance();
+        return dbHistoryDataAttributeInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 }
