@@ -103,10 +103,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                 if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
                     if (isJSONArray) {
                         dataAttributeInstance.setValue(jsonArray.get(new Integer(keys.get(i))));
-                        System.out.println(jsonArray.get(new Integer(keys.get(i))));
+                        //System.out.println(jsonArray.get(new Integer(keys.get(i))));
                     } else {
                         dataAttributeInstance.setValue(jsonContent.get(keys.get(i)));
-                        System.out.println(jsonContent.get(keys.get(i)));
+                        //System.out.println(jsonContent.get(keys.get(i)));
                     }
                 }
             }
