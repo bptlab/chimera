@@ -19,7 +19,6 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
 
-    //TODO: tabelle leer
     @Override
     public void execute() {
         String link = dbWebServiceTask.getLinkForControlNode(controlNodeInstance.getControlNode_id());
@@ -50,14 +49,14 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                 for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
                     post = post.replace(
                             "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
-                                    + "." +  dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                                    + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
                 }
                 response = invocationBuilder.put(Entity.json(post));
                 break;
             default:
-               response = invocationBuilder.get();
+                response = invocationBuilder.get();
         }
-        if (response.getStatus() == 200) {
+        if (response.getStatus() >= 200 && response.getStatus() <= 226) {
             this.writeDataAttributes(response.readEntity(String.class));
         }
         this.setCanTerminate(true);
@@ -81,17 +80,17 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                     jsonContent = jsonContent.getJSONObject(keys.get(i));
                     jsonArray = null;
                     isJSONArray = false;
-                } catch(Exception e1) {
+                } catch (Exception e1) {
                     try {
                         jsonContent = jsonArray.getJSONObject(new Integer(keys.get(i)));
                         jsonArray = null;
                         isJSONArray = false;
                     } catch (Exception e2) {
-                        try{
+                        try {
                             jsonArray = jsonContent.getJSONArray(keys.get(i));
                             jsonContent = null;
                             isJSONArray = true;
-                        }catch (Exception e3){
+                        } catch (Exception e3) {
                             jsonArray = jsonArray.getJSONArray(new Integer(keys.get(i)));
                             jsonContent = null;
                             isJSONArray = true;
@@ -104,10 +103,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                 if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
                     if (isJSONArray) {
                         dataAttributeInstance.setValue(jsonArray.get(new Integer(keys.get(i))));
-                        //System.out.println(jsonArray.get(new Integer(keys.get(i))));
+                        System.out.println(jsonArray.get(new Integer(keys.get(i))));
                     } else {
                         dataAttributeInstance.setValue(jsonContent.get(keys.get(i)));
-                        //System.out.println(jsonContent.get(keys.get(i)));
+                        System.out.println(jsonContent.get(keys.get(i)));
                     }
                 }
             }
