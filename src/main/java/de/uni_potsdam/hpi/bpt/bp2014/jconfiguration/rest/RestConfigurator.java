@@ -214,6 +214,7 @@ public class RestConfigurator {
     @PUT
     @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateWebserviceLink(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
@@ -223,8 +224,6 @@ public class RestConfigurator {
         if (jsonObject.has("method") & jsonObject.has("link")){
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
                     .build();
         }
         String link = jsonObject.get("link").toString();
@@ -241,8 +240,9 @@ public class RestConfigurator {
     }
 
     @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}") //<-- ganz böse
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateWebserviceAttribute(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
@@ -302,6 +302,7 @@ public class RestConfigurator {
     @PUT
     @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateWebservicePost(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
@@ -368,18 +369,17 @@ public class RestConfigurator {
 
     @XmlRootElement
     public static class WebserviceConfigJaxBean {
+
         /**
          *
          */
         public String link;
+
         /**
          *
          */
         public String method;
-        /**
-         *
-         */
-        public String attributeDetails;
+
         /**
          *
          */

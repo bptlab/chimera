@@ -129,13 +129,13 @@
                 }
 
                 //get all infos for popup
-                this.getDetails = function(id){
-                    webserviceC.getDetailsForWebserviceID(id);
-                    webserviceC.workingID = id;
+                this.getDetails = function(webserviceID, scenarioID){
+                    webserviceC.getDetailsForWebserviceID(webserviceID, scenarioID);
+                    webserviceC.workingID = webserviceID;
                 };
 
                 // Got all webservices with the given Id
-                this.getAllMailtaskForScenarioID = function(id){
+                this.getAllWebservicetaskForScenarioID = function(id){
                     $http.get(JEngine_Server_URL+"/" + JConfig_REST_Interface + "/scenario/" + id + "/webservice/").
                         success(function(data) {
                             webserviceC.webserviceIDs = data['ids'];
@@ -145,23 +145,19 @@
                         });
                 };
                 // Got to the instance with the given Id
-                this.getDetailsForWebserviceID = function(id){
+                this.getDetailsForWebserviceID = function(webserviceID, scenarioID){
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
-                    "/scenario/1/webservice/" + id + "/?").
+                    "/scenario/"+scenarioID+"/webservice/"+webserviceID+"/?").
                         success(function(data) {
                             webserviceC.detailsForID = data;
                             $scope.form = {
-                                //TODO: to be adapted to exact json layout
-                                receiver: data['attributes']['entry'],
-                                subject: data['subject'],
-                                message: data['message']
+                                method: data['method'],
+                                link: data['link'],
+                                attributes: data['attributes']
                             };
                         });
                 };
 
-                this.loadData = function(){
-                    webserviceC.getDetailsForWebserviceID(webserviceC.workingID);
-                };
             }]
     );
 

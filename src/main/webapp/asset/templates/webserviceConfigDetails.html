@@ -1,7 +1,7 @@
 <h2>webserviceConfig</h2>
 
 <!-- filtering scenarios  -->
-Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenarioIDs" ng-model="selectedScenario" data-ng-change="webserviceC.getDetailsForWebserviceID(selectedScenario)"></select>
+Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenarioIDs" ng-model="selectedScenario" data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)"></select>
 
 <li ng-if="selectedScenario > 0">
     <div class="table-responsive">
@@ -40,12 +40,12 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
             <div class="modal-body">
                 <!-- TODO: to be adapted to exact json layout -->
                 <form name="myForm" ng-submit="webserviceC.submitMyForm()">
-                    Receiver:
-                    <input type="text" ng-model="form.receiver"  /><br>
-                    Subject:
-                    <input type="text" ng-model="form.subject"  /><br>
-                    Message:
-                    <input type="text" ng-model="form.message" /><br>
+                    Method:
+                    <input type="text" ng-model="form.method"  /><br>
+                    Link:
+                    <input type="text" ng-model="form.link"  /><br>
+                    Attributes:
+                    <input type="text" ng-model="form.attributes" /><br>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>

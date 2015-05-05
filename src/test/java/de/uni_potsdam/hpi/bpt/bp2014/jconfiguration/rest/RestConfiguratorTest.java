@@ -5,7 +5,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +13,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -196,9 +194,9 @@ public class RestConfiguratorTest extends AbstractTest {
 
     /*************************** WEB SERVICE TASKS **********************************/
 
-    //@Test
-    public void testGetAllWebserviceConfiguration() {
-        Response response = base.path("scenario/142/emailtask/353").request().get();
+    @Test
+    public void testGetSpecificWebserviceTask() {
+        Response response = base.path("scenario/156/emailtask/523").request().get();
         assertThat("Get mail Task configuration returns not an valid JSON object",
                 "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
@@ -211,6 +209,8 @@ public class RestConfiguratorTest extends AbstractTest {
                 202, response.getStatus());
     }
 
+
+    /* TO BE DELETED */
     @Test
     public void testGetWebserviceTaskPostReturnsCorrectJSON() {
         Response response = base.path("scenario/145/webservice/390/post").request().get();
