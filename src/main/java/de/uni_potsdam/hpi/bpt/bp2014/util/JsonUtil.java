@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.util;
 
 import com.google.gson.Gson;
-import com.google.gson.*;
 import org.json.JSONArray;
 
 import java.util.*;
@@ -39,6 +38,12 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
+    public static String JsonWrapperString(String value) {
+        Gson gson = new Gson();
+        JsonString json = new JsonString(value);
+        return gson.toJson(json);
+    }
+
     /**
      * @param content contains a LinkedList.
      * @param labels  contains a String.
@@ -61,6 +66,7 @@ public class JsonUtil {
         JsonHashMapMultipleIntegerString json = new JsonHashMapMultipleIntegerString(content, labels, states);
         return gson.toJson(json);
     }
+
     /**
      * This class is a JSON HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
      */
@@ -91,6 +97,7 @@ public class JsonUtil {
             this.states = states;
         }
     }
+
     /**
      * This class handles the JSON representation of a list filled with database ID's.
      */
@@ -124,6 +131,22 @@ public class JsonUtil {
     }
 
     /**
+     * This class is the representation of a String as JSON.
+     */
+    public static class JsonString {
+        private String value;
+
+        /**
+         * constructor.
+         *
+         * @param value String Value.
+         */
+        public JsonString(String value) {
+            this.value = value;
+        }
+    }
+
+    /**
      * This class is the representation of a HashMap that maps a String to a String.
      */
     public static class JsonStringHashMap {
@@ -148,14 +171,5 @@ public class JsonUtil {
         Map jsonJavaRootObject = new Gson().fromJson(jsonLine, Map.class);
         return jsonJavaRootObject;
 
-        /*
-        JsonElement jelement = new JsonParser().parse(jsonLine);
-        JsonObject  jobject = jelement.getAsJsonObject();
-        jobject = jobject.getAsJsonObject("data");
-        JsonArray jarray = jobject.getAsJsonArray("translations");
-        jobject = jarray.get(0).getAsJsonObject();
-        String result = jobject.get("translatedText").toString();
-        return result;
-        */
     }
 }

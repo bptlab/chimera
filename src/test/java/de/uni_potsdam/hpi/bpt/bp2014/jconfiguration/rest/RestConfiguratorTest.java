@@ -43,7 +43,7 @@ public class RestConfiguratorTest extends AbstractTest {
      */
     private WebTarget base;
 
-    @AfterClass
+    //@AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
@@ -59,6 +59,8 @@ public class RestConfiguratorTest extends AbstractTest {
     public void setUpBase() {
         base = target("config/v2");
     }
+
+    /*************************** EMAIL SERVICE TASKS **********************************/
 
     /**
      * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)}
@@ -96,31 +98,6 @@ public class RestConfiguratorTest extends AbstractTest {
                 "{\"ids\":[362]}", jsonEquals(response.readEntity(String.class)));
     }
 
-    /**
-     * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
-     * the returned Status Code should be either 202 or 400
-     * depending of it was possible to delete te scenario or if
-     * dependencies failed like all instances are not terminated
-     */
-    @Test
-    public void testDeleteScenarioInvalid() {
-        Response response = base.path("scenario/1/").request().delete();
-        assertEquals("The Response code of deleting a scenario was not 404",
-                400, response.getStatus());
-    }
-
-    /**
-     * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
-     * the returned Status Code should be either 202 or 400
-     * depending of it was possible to delete te scenario or if
-     * dependencies failed like all instances are not terminated
-     */
-    @Test
-    public void testDeleteScenarioValid() {
-        Response response = base.path("scenario/152/").request().delete();
-        assertEquals("The Response code of deleting a scenario was not 200",
-                202, response.getStatus());
-    }
     /**
      * When you send a Get to {@link RestConfigurator#getAllEmailTasks(int, String)}
      * and the ScenarioID is invalid a 404 will be returned but the media type is still
@@ -186,6 +163,47 @@ public class RestConfiguratorTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
+    //TODO: test update email tasks
+
+    /*************************** Scenario **********************************/
+
+    /**
+     * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
+     * the returned Status Code should be either 202 or 400
+     * depending of it was possible to delete te scenario or if
+     * dependencies failed like all instances are not terminated
+     */
+    @Test
+    public void testDeleteScenarioInvalid() {
+        Response response = base.path("scenario/1/").request().delete();
+        assertEquals("The Response code of deleting a scenario was not 404",
+                400, response.getStatus());
+    }
+
+    /**
+     * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
+     * the returned Status Code should be either 202 or 400
+     * depending of it was possible to delete te scenario or if
+     * dependencies failed like all instances are not terminated
+     */
+    @Test
+    public void testDeleteScenarioValid() {
+        Response response = base.path("scenario/152/").request().delete();
+        assertEquals("The Response code of deleting a scenario was not 200",
+                202, response.getStatus());
+    }
+
+
+    /*************************** WEB SERVICE TASKS **********************************/
+
+    //@Test
+    public void testGetAllWebserviceConfiguration() {
+        Response response = base.path("scenario/142/emailtask/353").request().get();
+        assertThat("Get mail Task configuration returns not an valid JSON object",
+                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
     @Test
     public void testUpdateWebserviceLink() {
         Response response = base.path("scenario/145/webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
@@ -193,5 +211,24 @@ public class RestConfiguratorTest extends AbstractTest {
                 202, response.getStatus());
     }
 
+    @Test
+    public void testGetWebserviceTaskPostReturnsCorrectJSON() {
+        Response response = base.path("scenario/145/webservice/390/post").request().get();
+        assertThat("Get webservice Task configuration returns not an valid JSON object",
+                "{\"value\":\"{\\\"value\\\":\\\"post\\\"}\"}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
 
+    @Test
+    public void testUpdateWebservicePost() {
+        Response response = base.path("scenario/145/webservice/390/post").request().put(Entity.json("{\"value\":\"GET\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 202",
+                202, response.getStatus());
+    }
+    @Test
+    public void testUpdateWebservicePostBadRequest() {
+        Response response = base.path("scenario/145/webservice/390/post").request().put(Entity.json("{\"method\":\"GET\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 400",
+                400, response.getStatus());
+    }
 }

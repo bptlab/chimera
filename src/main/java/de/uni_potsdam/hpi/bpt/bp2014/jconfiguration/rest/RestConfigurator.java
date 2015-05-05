@@ -1,10 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
 import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,9 +11,10 @@ import org.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -71,34 +71,10 @@ public class RestConfigurator {
      * @return A Response 202 (ACCEPTED) if the update was successful.
      * A 404 (NOT_FOUND) if the mail task could not be found.
      */
-    @PUT //would be PATCH if only selected fields are updated
+    @PUT
     @Path("emailtask/{emailtaskID}/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
-            @PathParam("emailtaskID") int emailTaskID,
-            final RestConfigurator.EmailConfigJaxBean input) {
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
-                input.receiver, input.subject, input.message);
-        return Response.status(
-                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
-                .build();
-    }
-
-    /**
-     * Updates the email configuration for a specified task.
-     * The Task is specified by the email Task ID and the new
-     * configuration will submitted as a JSON-Object.
-     *
-     * @param emailTaskID The ControlNode id of the email task.
-     * @param input       The new configuration.
-     * @return A Response 202 (ACCEPTED) if the update was successful.
-     * A 404 (NOT_FOUND) if the mail task could not be found.
-     */
-    @POST //TODO: twice to PUT? should we take out the POST ?
-    @Path("emailtask/{emailtaskID}/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEmailConfiguration2(
             @PathParam("emailtaskID") int emailTaskID,
             final RestConfigurator.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
@@ -174,16 +150,15 @@ public class RestConfigurator {
         return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
 
-    /**
-     * This is a data class for the email configuration.
-     * It is used by Jersey to deserialize JSON.
-     * Also it can be used for tests to provide the correct contents.
-     * This class in particular is used by the POST for the email configuration.
-     * See the {@link #updateEmailConfiguration(int, EmailConfigJaxBean)}
-     * updateEmailConfiguration} method for more information.
-     */
+
     /*************************** WEB SERVICE TASKS **********************************/
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param filterString
+     * @return
+     */
     @GET
     @Path("scenario/{scenarioID}/webservice")
     @Produces(MediaType.APPLICATION_JSON)
@@ -204,6 +179,12 @@ public class RestConfigurator {
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID
+     * @return
+     */
     @GET
     @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -215,11 +196,19 @@ public class RestConfigurator {
         webserviceConfigJaxBean.link = webService.getLinkForControlNode(webserviceID);
         webserviceConfigJaxBean.method = webService.getMethod(webserviceID);
         webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
-        //TODO: check if return value is empty
-        //String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(attributes);
+
+        //webserviceConfigJaxBean.attributeDetails  = JsonUtil.JsonWrapperArrayListHashMap(webService.getComplexAttributeMap(webserviceID));
+
         return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID
+     * @param input       The new configuration.
+     * @return
+     */
     @PUT
     @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -230,7 +219,11 @@ public class RestConfigurator {
         //input: {link, method}
         JSONObject jsonObject = new JSONObject(input);
         if (jsonObject.has("method") & jsonObject.has("link")){
-            //TODO: Fehler
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
         }
         String link = jsonObject.get("link").toString();
         String method = jsonObject.get("method").toString();
@@ -273,7 +266,82 @@ public class RestConfigurator {
                 .build();
     }
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID The ID of the webservice tasks
+     * @return
+     */
+    @GET
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPOSTForWebserviceTask(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID) {
+        DbScenario scenario = new DbScenario();
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        String jsonRepresentation = JsonUtil.JsonWrapperString(dbWebServiceTask.getPOST(webserviceID));
+        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID The ID of the webservice tasks
+     * @return
+     */
+    @PUT
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateWebservicePost(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID,
+            final String input) {
+        DbScenario scenario = new DbScenario();
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        JSONObject jsonObject = new JSONObject(input);
+        if (!jsonObject.has("value")){
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        String value = jsonObject.get("value").toString();
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if(dbWebServiceTask.existWebServiceTaskIDinPost(webserviceID)){
+            dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
+        } else {
+            dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);
+        }
+        return Response.status(
+                Response.Status.ACCEPTED)
+                .build();
+    }
+
     /*************************** HELPER **********************************/
+
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link #updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * updateEmailConfiguration} method for more information.
+     */
     @XmlRootElement
     public static class EmailConfigJaxBean {
         /**
@@ -298,6 +366,7 @@ public class RestConfigurator {
 
         public String link;
         public String method;
+        public String attributeDetails;
         public ArrayList<HashMap<String, Object>> attributes;
 
     }

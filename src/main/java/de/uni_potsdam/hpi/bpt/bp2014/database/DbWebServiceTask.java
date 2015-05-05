@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 public class DbWebServiceTask extends DbObject {
 
@@ -35,8 +34,20 @@ public class DbWebServiceTask extends DbObject {
         executeUpdateStatement(sql);
     }
 
+    public void insertWebServiceTaskPOSTIntoDatabase(int controlNodeID, String post) {
+        String sql = "INSERT INTO webservicetaskpost VALUES " +
+                "("+ controlNodeID + ", '" + post + "')";
+        executeUpdateStatement(sql);
+    }
+
+
     public void updateWebServiceTaskLink (int controlNodeID, String link, String method) {
         String sql = "UPDATE webservicetasklink SET link = '" + link + "', method = '" + method + "' WHERE controlnode_id = " + controlNodeID;
+        executeUpdateStatement(sql);
+    }
+
+    public void updateWebServiceTaskPOST (int controlNodeID, String post) {
+        String sql = "UPDATE webservicetaskpost SET post = '" + post + "' WHERE controlnode_id = " + controlNodeID;
         executeUpdateStatement(sql);
     }
 
@@ -82,6 +93,11 @@ public class DbWebServiceTask extends DbObject {
 
     public boolean existWebServiceTaskIDinLink(int controlNode_id){
         String sql = "Select controlnode_id from webservicetasklink WHERE controlnode_id = " + controlNode_id;
+        return executeExistStatement(sql);
+    }
+
+    public boolean existWebServiceTaskIDinPost(int controlNode_id){
+        String sql = "Select controlnode_id from webservicetaskpost WHERE controlnode_id = " + controlNode_id;
         return executeExistStatement(sql);
     }
 }
