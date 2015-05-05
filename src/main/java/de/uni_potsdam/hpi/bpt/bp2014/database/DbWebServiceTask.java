@@ -77,7 +77,7 @@ public class DbWebServiceTask extends DbObject {
     }
 
     public ArrayList<HashMap<String, Object>> getComplexAttributeMap(int controlnode_id) {
-        String sql = "SELECT *  FROM webservicetaskattribute WHERE controlnode_id = "  +controlnode_id ;
+        String sql = "SELECT *  FROM webservicetaskattribute WHERE controlnode_id = "  + controlnode_id ;
         return executeStatementReturnsHashMap(sql);
     }
 
