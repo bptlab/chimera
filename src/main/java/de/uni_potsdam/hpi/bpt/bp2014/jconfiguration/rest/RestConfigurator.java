@@ -156,7 +156,8 @@ public class RestConfigurator {
     /**
      *
      * @param scenarioID The ID of the scenario model.
-     * @param filterString
+     * @param filterString A Filter String, only web service tasks with a label containing
+     *                     this filter String will be returned.
      * @return
      */
     @GET
@@ -182,7 +183,7 @@ public class RestConfigurator {
     /**
      *
      * @param scenarioID The ID of the scenario model.
-     * @param webserviceID
+     * @param webserviceID The ID of the webservice tasks
      * @return
      */
     @GET
@@ -192,20 +193,21 @@ public class RestConfigurator {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID) {
         DbWebServiceTask webService = new DbWebServiceTask();
-        WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
-        webserviceConfigJaxBean.link = webService.getLinkForControlNode(webserviceID);
-        webserviceConfigJaxBean.method = webService.getMethod(webserviceID);
-        webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
+        ArrayList<HashMap<String, Object>> list = webService.getComplexAttributeMap(webserviceID);
 
-        //webserviceConfigJaxBean.attributeDetails  = JsonUtil.JsonWrapperArrayListHashMap(webService.getComplexAttributeMap(webserviceID));
+        HashMap response = new HashMap();
+        response.put("attributes", list);
+        response.put("method", webService.getMethod(webserviceID));
+        response.put("link", webService.getLinkForControlNode(webserviceID));
 
-        return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
+        String jsonResponse = JsonUtil.JsonWrapperHashMapOnly(response);
+        return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     }
 
     /**
      *
      * @param scenarioID The ID of the scenario model.
-     * @param webserviceID
+     * @param webserviceID The ID of the webservice tasks
      * @param input       The new configuration.
      * @return
      */
@@ -345,16 +347,19 @@ public class RestConfigurator {
      */
     @XmlRootElement
     public static class EmailConfigJaxBean {
+
         /**
          * The receiver of the email.
          * coded as an valid email address (as String)
          */
         public String receiver;
+
         /**
          * The subject of the email.
          * Could be any String but null.
          */
         public String subject;
+
         /**
          * The content of the email.
          * Could be any String but null.
@@ -364,10 +369,21 @@ public class RestConfigurator {
 
     @XmlRootElement
     public static class WebserviceConfigJaxBean {
-
+        /**
+         *
+         */
         public String link;
+        /**
+         *
+         */
         public String method;
+        /**
+         *
+         */
         public String attributeDetails;
+        /**
+         *
+         */
         public ArrayList<HashMap<String, Object>> attributes;
 
     }
