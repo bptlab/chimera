@@ -21282,6 +21282,15 @@ CREATE TABLE IF NOT EXISTS `webservicetaskattribute` (
   `key` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `webservicetaskattribute`
+--
+
+INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute_id`, `key`) VALUES
+(1, 390, 12, 'ids'),
+(1, 390, 13, 'activities'),
+(2, 390, 13, '0'),
+(3, 390, 13, 'label');
 -- --------------------------------------------------------
 
 --
@@ -21294,6 +21303,12 @@ CREATE TABLE IF NOT EXISTS `webservicetasklink` (
   `method` varchar(64) NOT NULL DEFAULT 'GET'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `webservicetasklink`
+--
+
+INSERT INTO `webservicetasklink` (`controlnode_id`, `link`, `method`) VALUES
+(390, 'http://localhost:9998/interface/v2/scenario/155/', 'GET');
 -- --------------------------------------------------------
 
 --

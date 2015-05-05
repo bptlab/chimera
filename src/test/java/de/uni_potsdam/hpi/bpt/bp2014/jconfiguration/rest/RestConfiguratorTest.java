@@ -194,15 +194,6 @@ public class RestConfiguratorTest extends AbstractTest {
 
 
     /*************************** WEB SERVICE TASKS **********************************/
-
-    @Test
-    public void testGetSpecificWebserviceTask() {
-        Response response = base.path("scenario/156/emailtask/523").request().get();
-        assertThat("Get mail Task configuration returns not an valid JSON object",
-                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
-    }
-
     @Test
     public void testUpdateWebserviceLink() {
         Response response = base.path("scenario/145/webservice/390/link").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
@@ -232,4 +223,12 @@ public class RestConfiguratorTest extends AbstractTest {
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 400",
                 400, response.getStatus());
     }
+    //@Test
+    public void testGetSpecificWebserviceTask() {
+        Response response = base.path("scenario/145/webservice/390/").request().get();
+        assertThat("Get webservice Task details returns not a valid JSON object",
+                "{\"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[\"{\"order\"=\"1\",\"controlnode_id\"=\"523\",\"key\"=\"ids\",\"dataattribute_id\"=\"12\"}\",\"{\"order\"=\"1\",\"controlnode_id\"=\"523\",\"key\"=\"activities\",\"dataattribute_id\"=\"13\"}\",\"{\"order\"=\"2\",\"controlnode_id\"=\"523\",\"key\"=\"0\",\"dataattribute_id\"=\"13\"}\"]}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
 }
