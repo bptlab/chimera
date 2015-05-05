@@ -25,7 +25,7 @@ public abstract class AbstractTest extends JerseyTest {
      * @throws IOException  An Error while reading the SQL-File occurred.
      * @throws SQLException An Error while executing the SQL-Script occurred.
      */
-    //@Before
+    @Before
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);

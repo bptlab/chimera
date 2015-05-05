@@ -43,7 +43,7 @@ public class RestConfiguratorTest extends AbstractTest {
      */
     private WebTarget base;
 
-    //@AfterClass
+    @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
