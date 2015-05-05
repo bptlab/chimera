@@ -221,7 +221,7 @@ public class RestConfigurator {
             final String input) {
         //input: {link, method}
         JSONObject jsonObject = new JSONObject(input);
-        if (!jsonObject.has("method") && !jsonObject.has("link")){
+        if (!jsonObject.has("method") || !jsonObject.has("link")){
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .build();
@@ -247,7 +247,7 @@ public class RestConfigurator {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
             final String input) {
-        //input: {attributeID, value:[order, key]}
+        //input: {attributeID, value:[{order,key}]}
         JSONObject jsonObject = new JSONObject(input);
         if (!jsonObject.has("attributeID") || !jsonObject.has("value")){
             return Response.status(
@@ -257,6 +257,7 @@ public class RestConfigurator {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         int attributeID = jsonObject.getInt("attributeID");
         JSONArray values = jsonObject.getJSONArray("value");
+        dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, attributeID);
         for (int i = 0; i < values.length(); i++) {
             JSONObject entry = values.getJSONObject(i);
             int order = entry.getInt("order");

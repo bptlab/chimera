@@ -195,9 +195,17 @@ public class RestConfiguratorTest extends AbstractTest {
 
     /*************************** WEB SERVICE TASKS **********************************/
     @Test
+    public void testGetAllWebserviceTasks() {
+        Response response = base.path("scenario/145/webservice").request().get();
+        assertThat("Get all webservice tasks returns something wrong",
+                "{\"ids\":[390]}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
     public void testGetSpecificWebserviceTask() {
-        Response response = base.path("scenario/145/webservice/390/").request().get();
-        assertThat("Get webservice Task details returns not a valid JSON object",
+        Response response = base.path("scenario/145/webservice/390").request().get();
+        assertThat("Get webservice Task details returns something wrong",
                 "{\"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"ids\",\"dataattribute_id\":12},{\"order\":1,\"controlnode_id\":390,\"key\":\"activities\",\"dataattribute_id\":13},{\"order\":2,\"controlnode_id\":390,\"key\":\"0\",\"dataattribute_id\":13}]}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -209,6 +217,12 @@ public class RestConfiguratorTest extends AbstractTest {
                 202, response.getStatus());
     }
 
+    @Test
+    public void testUpdateWebserviceAttribute() {
+        Response response = base.path("scenario/145/webservice/390/attribute").request().put(Entity.json("{\"attributeID\":14,\"value\":[{\"order\":1,\"key\":\"neu\"},{\"order\":88,\"key\":\"bliebla\"}]}"));
+        assertEquals("The Response code of updating the attributes of a webServiceTask was not 202",
+                202, response.getStatus());
+    }
 
     /* TO BE DELETED */
     @Test
