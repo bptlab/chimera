@@ -194,9 +194,10 @@ public class RestConfigurator {
         WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
         webserviceConfigJaxBean.link = webService.getLinkForControlNode(webserviceID);
         webserviceConfigJaxBean.method = webService.getMethod(webserviceID);
-        //webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
-        webserviceConfigJaxBean.attributeDetails  = JsonUtil.JsonWrapperArrayListHashMap(webService.getComplexAttributeMap(webserviceID));
-        //String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(attributes);
+        webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
+
+        //webserviceConfigJaxBean.attributeDetails  = JsonUtil.JsonWrapperArrayListHashMap(webService.getComplexAttributeMap(webserviceID));
+
         return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
     }
 
