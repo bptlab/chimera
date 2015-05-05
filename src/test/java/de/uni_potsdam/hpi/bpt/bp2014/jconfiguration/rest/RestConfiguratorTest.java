@@ -186,7 +186,17 @@ public class RestConfiguratorTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    @Test
+    //TODO: test update email tasks
+
+    //@Test
+    public void testGetAllWebserviceConfiguration() {
+        Response response = base.path("scenario/142/emailtask/353").request().get();
+        assertThat("Get mail Task configuration returns not an valid JSON object",
+                "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+   // @Test
     public void testUpdateWebserviceConfiguration() {
         Response response = base.path("scenario/145/webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",

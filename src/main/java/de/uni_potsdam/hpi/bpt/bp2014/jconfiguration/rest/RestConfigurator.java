@@ -1,19 +1,19 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
 import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -74,30 +74,6 @@ public class RestConfigurator {
     @Path("emailtask/{emailtaskID}/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
-            @PathParam("emailtaskID") int emailTaskID,
-            final RestConfigurator.EmailConfigJaxBean input) {
-        DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID,
-                input.receiver, input.subject, input.message);
-        return Response.status(
-                result > 0 ? Response.Status.ACCEPTED : Response.Status.NOT_ACCEPTABLE)
-                .build();
-    }
-
-    /**
-     * Updates the email configuration for a specified task.
-     * The Task is specified by the email Task ID and the new
-     * configuration will submitted as a JSON-Object.
-     *
-     * @param emailTaskID The ControlNode id of the email task.
-     * @param input       The new configuration.
-     * @return A Response 202 (ACCEPTED) if the update was successful.
-     * A 404 (NOT_FOUND) if the mail task could not be found.
-     */
-    @POST //TODO: twice to PUT? should we take out the POST ?
-    @Path("emailtask/{emailtaskID}/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEmailConfiguration2(
             @PathParam("emailtaskID") int emailTaskID,
             final RestConfigurator.EmailConfigJaxBean input) {
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
