@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
 import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -213,7 +214,7 @@ public class RestConfigurator {
     @PUT
     @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateWebserviceConfiguration(
+    public Response updateWebserviceLink(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
             final String input) {
@@ -234,11 +235,34 @@ public class RestConfigurator {
         } else {
             dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID,link, method);
         }
-        //dbWebServiceTask.
-        //TODO: set Webservice details
-        //DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-        //int result = dbEmailConfiguration.setEmailConfiguration(webserviceID,
-         //       input.test);
+        return Response.status(
+                Response.Status.ACCEPTED)
+                .build();
+    }
+
+    @PUT
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateWebserviceAttribute(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID,
+            final String input) {
+        //input: {attributeID, value:[order, key]}
+        JSONObject jsonObject = new JSONObject(input);
+        if (!jsonObject.has("attributeID") || !jsonObject.has("value")){
+            return Response.status(
+                    Response.Status.NOT_ACCEPTABLE)
+                    .build();
+        }
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        int attributeID = jsonObject.getInt("attributeID");
+        JSONArray values = jsonObject.getJSONArray("value");
+        for (int i = 0; i < values.length(); i++) {
+            JSONObject entry = values.getJSONObject(i);
+            int order = entry.getInt("order");
+            String key = entry.getString("key");
+            dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
+        }
         return Response.status(
                 Response.Status.ACCEPTED)
                 .build();
