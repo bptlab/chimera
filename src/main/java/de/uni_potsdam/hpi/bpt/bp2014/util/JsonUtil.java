@@ -39,6 +39,12 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
+    public static String JsonWrapperString(String value) {
+        Gson gson = new Gson();
+        JsonString json = new JsonString(value);
+        return gson.toJson(json);
+    }
+
     /**
      * @param content contains a LinkedList.
      * @param labels  contains a String.
@@ -120,6 +126,22 @@ public class JsonUtil {
          */
         public JsonInteger(Integer id) {
             this.id = id;
+        }
+    }
+
+    /**
+     * This class is the representation of a String as JSON.
+     */
+    public static class JsonString {
+        private String value;
+
+        /**
+         * constructor.
+         *
+         * @param value String Value.
+         */
+        public JsonString(String value) {
+            this.value = value;
         }
     }
 

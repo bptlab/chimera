@@ -12,11 +12,6 @@ public class DbWebServiceTask extends DbObject {
         return this.executeStatementReturnsString(sql, "link");
     }
 
-    public String getPOSTForControlNode(int controlNode_id){
-        String sql = "SELECT post FROM webservicetaskpost WHERE controlnode_id = " + controlNode_id;
-        return this.executeStatementReturnsString(sql, "post");
-    }
-
     public LinkedList<Integer> getAttributeIdsForControlNode(int controlNode_id){
         String sql = "SELECT DISTINCT dataattribute_id FROM `webservicetaskattribute` WHERE `controlnode_id` = " + controlNode_id;
         return this.executeStatementReturnsListInt(sql, "dataattribute_id");
