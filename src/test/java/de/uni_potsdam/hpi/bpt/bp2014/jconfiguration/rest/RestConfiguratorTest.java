@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
