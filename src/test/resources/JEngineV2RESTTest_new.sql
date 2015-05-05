@@ -2,8 +2,8 @@
 -- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Erstellungszeit: 05. Mai 2015 um 09:49
+-- Host: 127.0.0.1
+-- Erstellungszeit: 05. Mai 2015 um 13:19
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Datenbank: `JEngineV2`
+-- Datenbank: `jenginev2`
 --
 
 -- --------------------------------------------------------
@@ -13248,7 +13248,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 --
 
 INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobjectinstance_id`) VALUES
-(1, '250?', 1, 675);
+(1, '250', 1, 675);
 
 -- --------------------------------------------------------
 

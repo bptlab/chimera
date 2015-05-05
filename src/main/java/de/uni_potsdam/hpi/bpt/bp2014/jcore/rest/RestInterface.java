@@ -949,7 +949,6 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        DataObjectJaxBean dataObject = new DataObjectJaxBean();
         if(executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID) == null ||
                 executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID).length == 0){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
@@ -959,6 +958,7 @@ public class RestInterface {
                 .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
+            DataObjectJaxBean dataObject = new DataObjectJaxBean();
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
@@ -994,7 +994,6 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        DataObjectJaxBean dataObject = new DataObjectJaxBean();
         if(executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
                 executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
@@ -1004,6 +1003,7 @@ public class RestInterface {
                 .getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
+            DataObjectJaxBean dataObject = new DataObjectJaxBean();
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
@@ -1021,10 +1021,10 @@ public class RestInterface {
      */
     private DataAttributeJaxBean[] getDataAttributes(DataObjectInstance dataObjectInstance) {
         DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
-        DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
         int i = 0;
         LinkedList<DataAttributeInstance> dataAttributeInstances = dataObjectInstance.getDataAttributeInstances();
         for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
+            DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
             dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
             dataAttribute.name = dataAttributeInstance.getName();
             dataAttribute.type = dataAttributeInstance.getType();

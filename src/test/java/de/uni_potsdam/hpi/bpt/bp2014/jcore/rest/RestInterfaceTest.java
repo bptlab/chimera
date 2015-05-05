@@ -778,7 +778,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
@@ -815,7 +815,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
@@ -835,7 +835,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -864,7 +864,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -1084,7 +1084,7 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]")
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250\"}]}]")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
@@ -1138,7 +1138,7 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250€\"}]}]")
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250\"}]}]")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
