@@ -212,7 +212,7 @@ public class RestConfigurator {
      * @return
      */
     @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/link")
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateWebserviceLink(
@@ -221,7 +221,7 @@ public class RestConfigurator {
             final String input) {
         //input: {link, method}
         JSONObject jsonObject = new JSONObject(input);
-        if (!jsonObject.has("method") && !jsonObject.has("link")){
+        if (jsonObject.has("method") & jsonObject.has("link")){
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .build();
@@ -240,23 +240,7 @@ public class RestConfigurator {
     }
 
     @PUT
-                    .build();
-        }
-        String link = jsonObject.get("link").toString();
-        String method = jsonObject.get("method").toString();
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if(dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)){
-            dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
-        } else {
-            dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID,link, method);
-        }
-        return Response.status(
-                Response.Status.ACCEPTED)
-                .build();
-    }
-
-    @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/attribute")
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}") //<-- ganz böse
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateWebserviceAttribute(
