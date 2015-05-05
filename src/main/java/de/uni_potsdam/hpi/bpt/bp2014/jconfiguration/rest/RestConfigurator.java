@@ -217,7 +217,11 @@ public class RestConfigurator {
         //input: {link, method}
         JSONObject jsonObject = new JSONObject(input);
         if (jsonObject.has("method") & jsonObject.has("link")){
-            //TODO: Fehler
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
         }
         String link = jsonObject.get("link").toString();
         String method = jsonObject.get("method").toString();
@@ -260,6 +264,47 @@ public class RestConfigurator {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         String jsonRepresentation = JsonUtil.JsonWrapperString(dbWebServiceTask.getPOST(webserviceID));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID The ID of the webservice tasks
+     * @return
+     */
+    @PUT
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateWebservicePost(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID,
+            final String input) {
+        DbScenario scenario = new DbScenario();
+        if (!scenario.existScenario(scenarioID)) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        JSONObject jsonObject = new JSONObject(input);
+        if (jsonObject.has("value")){
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+        String value = jsonObject.get("value").toString();
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if(dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)){
+            dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
+        } else {
+            dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);
+        }
+        return Response.status(
+                Response.Status.ACCEPTED)
+                .build();
     }
 
     /*************************** HELPER **********************************/
