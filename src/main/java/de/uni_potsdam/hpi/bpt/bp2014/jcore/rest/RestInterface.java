@@ -664,8 +664,11 @@ public class RestInterface {
     }
 
     /**
-     * @param instances
-     * @param uriInfo
+     * @param instances The Map containing information about the activity instances.
+     *                  We Assume that the key is a the id and the value is a Map
+     *                  from String to Object with the properties of the instance.
+     * @param uriInfo Specifies the context. For example the uri
+     *                of the request.
      * @return
      */
     private JSONObject buildJSONObjectForReferencedActivities(
@@ -769,13 +772,13 @@ public class RestInterface {
     }
 
     /**
-     *
+     * This method implements the REST call for retrieving reference information for a specific activity
      *
      * @param uriInfo  A UriInfo object, which holds the server context.
-     * @param scenarioID
-     * @param scenarioInstanceID
-     * @param activityID
-     * @return
+     * @param scenarioID  The databaseID of a scenario.
+     * @param scenarioInstanceID The databaseID of a scenarioInstance.
+     * @param activityID The databaseID of an activityInstance.
+     * @return a json object containing the referenced activities
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references")
@@ -792,8 +795,6 @@ public class RestInterface {
         return Response
                 .ok(result.toString(), MediaType.APPLICATION_JSON)
                 .build();
-        //String referencedActivitiesJSON = JsonUtil.JsonWrapperCollection(referencedActivities);
-        // return Response.ok(referencedActivitiesJSON, MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -1093,11 +1094,11 @@ public class RestInterface {
     }
 
     /**
-     *
+     *  This method updates the data attributes of a specific activity defined via its activityID
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @return
+     * @return Status code with regard to its success / failure 
      */
     @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
@@ -1329,6 +1330,7 @@ public class RestInterface {
         public String name;
     }
 
+    //TODO: what is this? do we still need it? git blame?
     /*
     @POST
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/outputset/{outputsetID}")

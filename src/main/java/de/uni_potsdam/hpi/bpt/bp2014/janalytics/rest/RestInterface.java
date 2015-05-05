@@ -18,10 +18,38 @@ import javax.ws.rs.core.Response;
 public class RestInterface {
     private AnalyticsService analyticsService = new AnalyticsService();
 
+    /**
+    * This method returns the result set of a specific algorithm as REST call
+    */
     @GET
     @Path("algorithm/{algorithmID}/instance/{instanceID}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAnalyticsResult(@PathParam("algorithmID") int algorithmID,
+                                       @PathParam("instanceID") int instanceID) {
+        switch (algorithmID) {
+            case 1:
+                Boolean result = analyticsService.getAnalysisResultForInstance(instanceID);
+                break;
+            default:
+                return Response.status(Response.Status.NOT_FOUND)
+                        .type(MediaType.APPLICATION_JSON)
+                        .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
+                        .build();
+        }
+        return Response
+                .ok()
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new JSONObject("").toString())
+                .build();
+    }
+
+    /**
+    * This method triggers the execution of the defined algorithm for analytic purposes
+    */
+    @POST
+    @Path("algorithm/{algorithmID}/instance/{instanceID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response postAnalyticsResult(@PathParam("algorithmID") int algorithmID,
                                        @PathParam("instanceID") int instanceID) {
         switch (algorithmID) {
             case 1:

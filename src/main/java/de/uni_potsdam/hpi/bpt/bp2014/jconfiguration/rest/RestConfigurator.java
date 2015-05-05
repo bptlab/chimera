@@ -59,7 +59,7 @@ public class RestConfigurator {
         }
     }
 
-    /*************************** EMAIL SERVICE TASKS **********************************/
+    // ************************** EMAIL SERVICE TASKS **********************************/
 
     /**
      * Updates the email configuration for a specified task.
@@ -151,7 +151,7 @@ public class RestConfigurator {
     }
 
 
-    /*************************** WEB SERVICE TASKS **********************************/
+    // ************************** WEB SERVICE TASKS **********************************/
 
     /**
      *
@@ -336,7 +336,7 @@ public class RestConfigurator {
                 .build();
     }
 
-    /*************************** HELPER **********************************/
+    // ************************** HELPER **********************************/
 
     /**
      * This is a data class for the email configuration.

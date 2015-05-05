@@ -59,7 +59,7 @@ public class RestConfiguratorTest extends AbstractTest {
         base = target("config/v2");
     }
 
-    /*************************** EMAIL SERVICE TASKS **********************************/
+    // ************************** EMAIL SERVICE TASKS **********************************/
 
     /**
      * When you send a GET to {@link RestConfigurator#getAllEmailTasks(int, String)}
@@ -164,7 +164,7 @@ public class RestConfiguratorTest extends AbstractTest {
 
     //TODO: test update email tasks
 
-    /*************************** Scenario **********************************/
+    // ************************** Scenario **********************************/
 
     /**
      * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
@@ -193,7 +193,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
 
-    /*************************** WEB SERVICE TASKS **********************************/
+    // ************************** WEB SERVICE TASKS **********************************/
     @Test
     public void testGetAllWebserviceTasks() {
         Response response = base.path("scenario/145/webservice").request().get();

@@ -14,7 +14,7 @@ public class JsonUtil {
     /**
      *
      * @param content is an ArrayList<HashMap<String,Object>>
-     * @return
+     * @return JSON Object as String
      */
     public static String JsonWrapperArrayListHashMap(ArrayList<HashMap<String,Object>> content) {
         Gson gson = new Gson();
@@ -32,12 +32,18 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
+    /**
+    *
+    */
     public static String JsonWrapperCollection(Collection content) {
         Gson gson = new Gson();
         String json = gson.toJson(content);
         return gson.toJson(json);
     }
 
+    /**
+     * This class is a JSON containing a String.
+     */
     public static String JsonWrapperString(String value) {
         Gson gson = new Gson();
         JsonString json = new JsonString(value);
@@ -54,6 +60,7 @@ public class JsonUtil {
         JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels);
         return gson.toJson(json);
     }
+
 
     public static String JsonWrapperHashMapOnly(HashMap content) {
         Gson gson = new Gson();
@@ -91,6 +98,9 @@ public class JsonUtil {
         }
     }
 
+    /**
+    * This class is a JSON Multi (!) HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
+    */
     public static class JsonHashMapMultipleIntegerString {
         private HashMap<Integer, String> states;
         private LinkedList<Integer> ids;
