@@ -21289,8 +21289,7 @@ CREATE TABLE IF NOT EXISTS `webservicetaskattribute` (
 INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute_id`, `key`) VALUES
 (1, 390, 12, 'ids'),
 (1, 390, 13, 'activities'),
-(2, 390, 13, '0'),
-(3, 390, 13, 'label');
+(2, 390, 13, '0');
 -- --------------------------------------------------------
 
 --

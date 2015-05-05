@@ -195,6 +195,14 @@ public class RestConfiguratorTest extends AbstractTest {
 
     /*************************** WEB SERVICE TASKS **********************************/
     @Test
+    public void testGetSpecificWebserviceTask() {
+        Response response = base.path("scenario/145/webservice/390/").request().get();
+        assertThat("Get webservice Task details returns not a valid JSON object",
+                "{\"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"ids\",\"dataattribute_id\":12},{\"order\":1,\"controlnode_id\":390,\"key\":\"activities\",\"dataattribute_id\":13},{\"order\":2,\"controlnode_id\":390,\"key\":\"0\",\"dataattribute_id\":13}]}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
     public void testUpdateWebserviceLink() {
         Response response = base.path("scenario/145/webservice/390/link").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",
@@ -223,12 +231,4 @@ public class RestConfiguratorTest extends AbstractTest {
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 400",
                 400, response.getStatus());
     }
-    //@Test
-    public void testGetSpecificWebserviceTask() {
-        Response response = base.path("scenario/145/webservice/390/").request().get();
-        assertThat("Get webservice Task details returns not a valid JSON object",
-                "{\"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[\"{\"order\"=\"1\",\"controlnode_id\"=\"523\",\"key\"=\"ids\",\"dataattribute_id\"=\"12\"}\",\"{\"order\"=\"1\",\"controlnode_id\"=\"523\",\"key\"=\"activities\",\"dataattribute_id\"=\"13\"}\",\"{\"order\"=\"2\",\"controlnode_id\"=\"523\",\"key\"=\"0\",\"dataattribute_id\"=\"13\"}\"]}",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
-    }
-
 }
