@@ -72,12 +72,8 @@ We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-respon
 ## Features
 
 This JEngine does execute
-* sequential
-* AND gateways
-* XOR gateways
-
-* usertasks
-* email services tasks
-
+* AND, XOR gateways
+* user tasks
+* email- , webservices tasks
 * data objects
 * termination condition for scenarios
