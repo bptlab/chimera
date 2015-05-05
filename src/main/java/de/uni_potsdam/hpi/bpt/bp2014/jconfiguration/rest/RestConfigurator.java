@@ -192,14 +192,15 @@ public class RestConfigurator {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID) {
         DbWebServiceTask webService = new DbWebServiceTask();
-        WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
-        webserviceConfigJaxBean.link = webService.getLinkForControlNode(webserviceID);
-        webserviceConfigJaxBean.method = webService.getMethod(webserviceID);
-        webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
+        ArrayList<HashMap<String, Object>> list = webService.getComplexAttributeMap(webserviceID);
 
-        //webserviceConfigJaxBean.attributeDetails  = JsonUtil.JsonWrapperArrayListHashMap(webService.getComplexAttributeMap(webserviceID));
+        HashMap response = new HashMap();
+        response.put("attributes", list);
+        response.put("method", webService.getMethod(webserviceID));
+        response.put("link", webService.getLinkForControlNode(webserviceID));
 
-        return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
+        String jsonResponse = JsonUtil.JsonWrapperHashMapOnly(response);
+        return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -356,7 +357,7 @@ public class RestConfigurator {
          */
         public String attributeDetails;
         /**
-         * 
+         *
          */
         public ArrayList<HashMap<String, Object>> attributes;
 

@@ -55,6 +55,11 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
+    public static String JsonWrapperHashMapOnly(HashMap content) {
+        Gson gson = new Gson();
+        return gson.toJson(content);
+    }
+
     /**
      * @param content contains a LinkedList
      * @param labels  contains a String
