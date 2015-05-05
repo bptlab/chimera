@@ -70,7 +70,7 @@ public class RestConfigurator {
      * @return A Response 202 (ACCEPTED) if the update was successful.
      * A 404 (NOT_FOUND) if the mail task could not be found.
      */
-    @PUT //would be PATCH if only selected fields are updated
+    @PUT
     @Path("emailtask/{emailtaskID}/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEmailConfiguration(
@@ -149,16 +149,15 @@ public class RestConfigurator {
         return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
 
-    /**
-     * This is a data class for the email configuration.
-     * It is used by Jersey to deserialize JSON.
-     * Also it can be used for tests to provide the correct contents.
-     * This class in particular is used by the POST for the email configuration.
-     * See the {@link #updateEmailConfiguration(int, EmailConfigJaxBean)}
-     * updateEmailConfiguration} method for more information.
-     */
+
     /*************************** WEB SERVICE TASKS **********************************/
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param filterString
+     * @return
+     */
     @GET
     @Path("scenario/{scenarioID}/webservice")
     @Produces(MediaType.APPLICATION_JSON)
@@ -179,6 +178,12 @@ public class RestConfigurator {
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID
+     * @return
+     */
     @GET
     @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -189,12 +194,19 @@ public class RestConfigurator {
         WebserviceConfigJaxBean webserviceConfigJaxBean = new WebserviceConfigJaxBean();
         webserviceConfigJaxBean.link = webService.getLinkForControlNode(webserviceID);
         webserviceConfigJaxBean.method = webService.getMethod(webserviceID);
-        webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
-        //TODO: check if return value is empty
+        //webserviceConfigJaxBean.attributes = webService.getComplexAttributeMap(webserviceID);
+        webserviceConfigJaxBean.attributeDetails  = JsonUtil.JsonWrapperArrayListHashMap(webService.getComplexAttributeMap(webserviceID));
         //String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(attributes);
         return Response.ok(webserviceConfigJaxBean, MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID
+     * @param input       The new configuration.
+     * @return
+     */
     @PUT
     @Path("scenario/{scenarioID}/webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -225,6 +237,12 @@ public class RestConfigurator {
                 .build();
     }
 
+    /**
+     *
+     * @param scenarioID The ID of the scenario model.
+     * @param webserviceID The ID of the webservice tasks
+     * @return
+     */
     @GET
     @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
     @Produces(MediaType.APPLICATION_JSON)
@@ -245,6 +263,15 @@ public class RestConfigurator {
     }
 
     /*************************** HELPER **********************************/
+
+    /**
+     * This is a data class for the email configuration.
+     * It is used by Jersey to deserialize JSON.
+     * Also it can be used for tests to provide the correct contents.
+     * This class in particular is used by the POST for the email configuration.
+     * See the {@link #updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * updateEmailConfiguration} method for more information.
+     */
     @XmlRootElement
     public static class EmailConfigJaxBean {
         /**
@@ -269,6 +296,7 @@ public class RestConfigurator {
 
         public String link;
         public String method;
+        public String attributeDetails;
         public ArrayList<HashMap<String, Object>> attributes;
 
     }
