@@ -273,7 +273,7 @@ public class RestConfigurator {
      * @return
      */
     @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}")
+    @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateWebservicePost(
             @PathParam("scenarioID") int scenarioID,
@@ -288,7 +288,7 @@ public class RestConfigurator {
                     .build();
         }
         JSONObject jsonObject = new JSONObject(input);
-        if (jsonObject.has("value")){
+        if (!jsonObject.has("value")){
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
@@ -297,7 +297,7 @@ public class RestConfigurator {
         }
         String value = jsonObject.get("value").toString();
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if(dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)){
+        if(dbWebServiceTask.existWebServiceTaskIDinPost(webserviceID)){
             dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
         } else {
             dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);

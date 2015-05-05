@@ -43,7 +43,7 @@ public class RestConfiguratorTest extends AbstractTest {
      */
     private WebTarget base;
 
-    @AfterClass
+    //@AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
@@ -217,5 +217,18 @@ public class RestConfiguratorTest extends AbstractTest {
         assertThat("Get webservice Task configuration returns not an valid JSON object",
                 "{\"value\":\"{\\\"value\\\":\\\"post\\\"}\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
+    public void testUpdateWebservicePost() {
+        Response response = base.path("scenario/145/webservice/390/post").request().put(Entity.json("{\"value\":\"GET\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 202",
+                202, response.getStatus());
+    }
+    @Test
+    public void testUpdateWebservicePostBadRequest() {
+        Response response = base.path("scenario/145/webservice/390/post").request().put(Entity.json("{\"method\":\"GET\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 400",
+                400, response.getStatus());
     }
 }

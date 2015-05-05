@@ -35,7 +35,7 @@ public class DbWebServiceTask extends DbObject {
     }
 
     public void insertWebServiceTaskPOSTIntoDatabase(int controlNodeID, String post) {
-        String sql = "INSERT INTO webservicetasklink VALUES " +
+        String sql = "INSERT INTO webservicetaskpost VALUES " +
                 "("+ controlNodeID + ", '" + post + "')";
         executeUpdateStatement(sql);
     }
@@ -47,7 +47,7 @@ public class DbWebServiceTask extends DbObject {
     }
 
     public void updateWebServiceTaskPOST (int controlNodeID, String post) {
-        String sql = "UPDATE webservicetasklink SET post = '" + post + "' WHERE controlnode_id = " + controlNodeID;
+        String sql = "UPDATE webservicetaskpost SET post = '" + post + "' WHERE controlnode_id = " + controlNodeID;
         executeUpdateStatement(sql);
     }
 
@@ -93,6 +93,11 @@ public class DbWebServiceTask extends DbObject {
 
     public boolean existWebServiceTaskIDinLink(int controlNode_id){
         String sql = "Select controlnode_id from webservicetasklink WHERE controlnode_id = " + controlNode_id;
+        return executeExistStatement(sql);
+    }
+
+    public boolean existWebServiceTaskIDinPost(int controlNode_id){
+        String sql = "Select controlnode_id from webservicetaskpost WHERE controlnode_id = " + controlNode_id;
         return executeExistStatement(sql);
     }
 }
