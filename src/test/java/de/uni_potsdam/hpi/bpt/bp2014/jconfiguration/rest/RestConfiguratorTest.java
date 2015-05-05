@@ -214,7 +214,6 @@ public class RestConfiguratorTest extends AbstractTest {
     @Test
     public void testGetWebserviceTaskPostReturnsCorrectJSON() {
         Response response = base.path("scenario/145/webservice/390/post").request().get();
-        System.out.print("");
         assertThat("Get webservice Task configuration returns not an valid JSON object",
                 "{\"value\":\"{\\\"value\\\":\\\"post\\\"}\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
