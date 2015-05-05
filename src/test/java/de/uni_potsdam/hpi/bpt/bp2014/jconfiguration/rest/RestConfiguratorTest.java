@@ -41,7 +41,7 @@ public class RestConfiguratorTest extends AbstractTest {
      */
     private WebTarget base;
 
-    //@AfterClass
+    @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
@@ -204,7 +204,7 @@ public class RestConfiguratorTest extends AbstractTest {
 
     @Test
     public void testUpdateWebserviceLink() {
-        Response response = base.path("scenario/145/webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
+        Response response = base.path("scenario/145/webservice/390/link").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",
                 202, response.getStatus());
     }
