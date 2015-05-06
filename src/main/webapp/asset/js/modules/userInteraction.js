@@ -343,6 +343,27 @@
                     });
 			};
 
+            this.terminateActivityWithOutputset = function(activityId, outputset) {
+                var dataObject = "";
+                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
+                "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+                "/activity/"+ activityId + "?state=terminate&=outputset"+outputset, dataObject).
+                    success(function(data) {
+                        instanceCtrl.instanceDetails.activities = {};
+                        //reloading content so the dashboard is uptodate
+                        instanceCtrl.initializeActivityInstances();
+                        instanceCtrl.initializeDataobjectInstances();
+                        instanceCtrl.initializeActivitylogInstances();
+                        instanceCtrl.initializeDataobjectlogInstances();
+                        instanceCtrl.initializeDataobjectAttributelogInstances();
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            };
+
+
+
             this.getTerminationConditionOfScenario = function(id) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
                     success(function(data) {
@@ -387,6 +408,9 @@
                 if(!instanceCtrl.scenario['outputsets']){
                     instanceCtrl.scenario['outputsets'] = {};
                 }
+                if(!instanceCtrl.scenario['outputsetsLength']){
+                    instanceCtrl.scenario['outputsetsLength'] = 0;
+                }
                 //retrieving the output for each retrieved referenced Activity
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
                     success(function(data2) {
@@ -398,6 +422,7 @@
                                 success(function(data3) {
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
+                                    instanceCtrl.scenario['outputsetsLength'] = instanceCtrl.scenario['outputsetsLength'] +1;
                                 }).
                                 error(function() {
                                     console.log('request failed');

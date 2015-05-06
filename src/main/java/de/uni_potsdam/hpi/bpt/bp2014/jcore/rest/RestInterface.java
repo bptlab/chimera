@@ -1055,7 +1055,8 @@ public class RestInterface {
     public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID,
-                                        @QueryParam("state") String state) {
+                                        @QueryParam("state") String state,
+                                        @DefaultValue("-1") @QueryParam("outputset") int outputset) {
 
         boolean result;
         if (state == null) {
@@ -1071,7 +1072,11 @@ public class RestInterface {
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
                 break;
             case "terminate":
-                result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
+                if(outputset != -1){
+                    result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputset);
+                } else {
+                    result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
+                }
                 break;
             default:
                 return Response.status(Response.Status.BAD_REQUEST)
