@@ -5,15 +5,16 @@ import java.lang.reflect.Method;
 
 public class AnalyticsService {
     private ExampleAlgorithm exampleAlgorithm = new ExampleAlgorithm();
+    private AnalyticsModel analyticsModel = new AnalyticsModel();
 
 	/**
 	*   This method returns the actual result of a specific algorithm
 	*/
     public Object getAnalysisResultForInstance(int scenarioInstance_id, String algorithmID) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String algorithmName = "exampleAlgorithm" + algorithmID;
-        Method method = ExampleAlgorithm.class.getDeclaredMethod(algorithmName, Integer.TYPE);
+        Method method = AnalyticsModel.class.getDeclaredMethod(algorithmName, Integer.TYPE);
 
-        return method.invoke(exampleAlgorithm, scenarioInstance_id);
+        return method.invoke(analyticsModel, scenarioInstance_id);
     }
 
 	/**
