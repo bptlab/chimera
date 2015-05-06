@@ -237,14 +237,4 @@ public class RestConfiguratorTest extends AbstractTest {
         assertEquals("The Response code of updating the WebserviceConfiguration was not 400",
                 400, response.getStatus());
     }
-
-
-    /* TO BE DELETED */
-    @Test
-    public void testGetWebserviceTaskPostReturnsCorrectJSON() {
-        Response response = base.path("scenario/145/webservice/390/post").request().get();
-        assertThat("Get webservice Task configuration returns not an valid JSON object",
-                "{\"value\":\"{\\\"value\\\":\\\"post\\\"}\"}",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
-    }
 }

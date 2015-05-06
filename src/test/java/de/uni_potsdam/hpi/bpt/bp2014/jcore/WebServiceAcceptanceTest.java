@@ -14,9 +14,6 @@ import java.util.LinkedList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by jaspar.mang on 04.05.15.
- */
 public class WebServiceAcceptanceTest extends JerseyTest{
 
     @Override

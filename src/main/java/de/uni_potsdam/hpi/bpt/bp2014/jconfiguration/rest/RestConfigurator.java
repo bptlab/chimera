@@ -154,6 +154,8 @@ public class RestConfigurator {
     // ************************** WEB SERVICE TASKS **********************************/
 
     /**
+     * Get a list of all webservices for a specific scenario
+     *
      * @param scenarioID   The ID of the scenario model.
      * @param filterString A Filter String, only web service tasks with a label containing
      *                     this filter String will be returned.
@@ -180,6 +182,8 @@ public class RestConfigurator {
     }
 
     /**
+     * Get all details for a specific webservice ID
+     *
      * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
@@ -205,6 +209,8 @@ public class RestConfigurator {
 
 
     /**
+     * Update details for a specific webserviceID
+     *
      * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
