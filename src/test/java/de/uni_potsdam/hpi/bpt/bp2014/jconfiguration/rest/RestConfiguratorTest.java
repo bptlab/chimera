@@ -219,7 +219,8 @@ public class RestConfiguratorTest extends AbstractTest {
 
     @Test
     public void testUpdateWebserviceAttribute() {
-        Response response = base.path("webservice/390").request().put(Entity.json("{\"attributeID\":14,\"value\":[{\"order\":1,\"key\":\"neu\"},{\"order\":88,\"key\":\"bliebla\"}]}"));
+        System.out.print("");
+        Response response = base.path("webservice/390").request().put(Entity.json("{\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"id2\",\"dataattribute_id\":16},{\"order\":2,\"controlnode_id\":390,\"key\":\"id3\",\"dataattribute_id\":16},{\"order\":1,\"controlnode_id\":390,\"key\":\"id22\",\"dataattribute_id\":17}]}"));
         assertEquals("The Response code of updating the attributes of a webServiceTask was not 202",
                 202, response.getStatus());
     }

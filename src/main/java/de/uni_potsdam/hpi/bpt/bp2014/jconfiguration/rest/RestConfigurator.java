@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -261,13 +262,20 @@ public class RestConfigurator {
 
     private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if (jsonObject.has("attributeID") && jsonObject.has("value")) {
-            int attributeID = jsonObject.getInt("attributeID");
-            JSONArray values = jsonObject.getJSONArray("value");
-            if (values.length() > 0) {
-                dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, attributeID);
-                for (int i = 0; i < values.length(); i++) {
-                    JSONObject entry = values.getJSONObject(i);
+        if (jsonObject.has("attributes")) {
+            JSONArray jsonArray = jsonObject.getJSONArray("attributes");
+            if (jsonArray.length() > 0) {
+                HashSet<Integer> ids = new HashSet<>();
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject o = jsonArray.getJSONObject(i);
+                    ids.add(o.getInt("dataattribute_id"));
+                }
+                for(int id : ids){
+                    dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, id);
+                }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject entry = jsonArray.getJSONObject(i);
+                    int attributeID = entry.getInt("dataattribute_id");
                     int order = entry.getInt("order");
                     String key = entry.getString("key");
                     dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
