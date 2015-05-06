@@ -194,11 +194,13 @@ public class RestConfigurator {
             @PathParam("webserviceID") int webserviceID) {
         DbWebServiceTask webService = new DbWebServiceTask();
         ArrayList<HashMap<String, Object>> list = webService.getComplexAttributeMap(webserviceID);
+        ArrayList<HashMap<String, Object>> body = webService.getPOST(webserviceID);
 
         HashMap response = new HashMap();
         response.put("attributes", list);
         response.put("method", webService.getMethod(webserviceID));
         response.put("link", webService.getLinkForControlNode(webserviceID));
+        response.put("body", webService.getPOST(webserviceID));
 
         String jsonResponse = JsonUtil.JsonWrapperHashMapOnly(response);
         return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
