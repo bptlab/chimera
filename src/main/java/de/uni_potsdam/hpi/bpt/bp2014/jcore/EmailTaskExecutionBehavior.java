@@ -5,8 +5,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.apache.log4j.Logger;
 
 public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
+    static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class.getName());
     private final int controlNode_id;
     private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
     private int port;
@@ -84,7 +86,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
             email.addTo(receiverMail);
             email.send();
         } catch (EmailException e) {
-            e.printStackTrace();
+            log.error("Error by sending e-Mail:", e);
         }
     }
 }

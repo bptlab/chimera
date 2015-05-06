@@ -99,7 +99,7 @@ public class FileUpload extends HttpServlet {
             out.println("</table><br><br>");
             out.println("<center><h4>Processing your data</h4><br><img src=\"loading.gif\" alt=\"loading\"> </center>");
         } catch (FileUploadException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
 
         // Calling the postprocessing asynchronously

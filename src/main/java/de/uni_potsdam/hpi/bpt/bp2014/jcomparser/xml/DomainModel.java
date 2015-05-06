@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import org.apache.log4j.Logger;
 import org.w3c.dom.*;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -25,6 +26,8 @@ import java.util.Map;
  * Created by Ihdefix on 04.03.2015.
  */
 public class DomainModel implements IDeserialisable, IPersistable {
+    static Logger log = Logger.getLogger(DomainModel.class.getName());
+
     /**
      * The url of the process Editor.
      */
@@ -113,7 +116,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
                 this.aggregations.add(currentAggregation);
             }
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -136,7 +139,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
                 this.dataClasses.put(currentClass.getDataClassModelID(), currentClass);
             }
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -151,7 +154,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.domainModelXML));
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -176,7 +179,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
                 }
                 versionNumber = maxID;
             } catch (XPathExpressionException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         }
     }
@@ -201,7 +204,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
             Document doc = db.parse(is);
             return doc.getDocumentElement();
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }

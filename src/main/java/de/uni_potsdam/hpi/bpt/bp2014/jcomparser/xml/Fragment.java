@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -27,7 +28,7 @@ import java.util.*;
  * which allows to save the Object to the Database.
  */
 public class Fragment implements IDeserialisable, IPersistable {
-
+    static Logger log = Logger.getLogger(Fragment.class.getName());
     /**
      * The url of the process Editor.
      */
@@ -124,7 +125,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                 }
                 versionNumber = maxID;
             } catch (XPathExpressionException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         }
     }
@@ -148,7 +149,7 @@ public class Fragment implements IDeserialisable, IPersistable {
             Document doc = db.parse(is);
             return doc.getDocumentElement();
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -165,7 +166,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.fragmentXML));
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -231,7 +232,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                 this.edges.add(currentEdge);
             }
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -255,7 +256,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                 this.controlNodes.put(currentNode.getId(), currentNode);
             }
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -272,7 +273,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.fragmentXML);
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 

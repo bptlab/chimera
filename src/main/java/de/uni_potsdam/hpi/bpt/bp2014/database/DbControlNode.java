@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,6 +33,8 @@ import java.sql.Statement;
  * Moreover it is possible to check if two controlNodes have the same output.
  */
 public class DbControlNode extends DbObject {
+    static Logger log = Logger.getLogger(DbControlNode.class.getName());
+
     /**
      * This method returns the database Id of a startEvent in the context of a fragment.
      *
@@ -112,7 +116,7 @@ public class DbControlNode extends DbObject {
 
         } catch (SQLException se) {
             //Handle errors for JDBC
-            se.printStackTrace();
+            log.error("SQL Error!: ", se);
         } finally {
             //finally block used to close resources
             try {
@@ -120,14 +124,14 @@ public class DbControlNode extends DbObject {
                     stmt.close();
                 }
             } catch (SQLException se2) {
-                se2.printStackTrace();
+                log.error("SQL Error!: ", se2);
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException se) {
-                se.printStackTrace();
+                log.error("SQL Error!: ", se);
             }
         }
         return false;

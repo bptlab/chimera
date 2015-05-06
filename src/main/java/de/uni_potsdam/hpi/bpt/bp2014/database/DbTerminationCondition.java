@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +15,8 @@ import java.util.Map;
  * This class creates and executes sql statements to get the terminationCondition for a scenario.
  */
 public class DbTerminationCondition extends DbObject {
+    static Logger log = Logger.getLogger(DbTerminationCondition.class.getName());
+
     /**
      * Creates a list of Conditions which shall terminate the scenario if they are fulfilled.
      *
@@ -87,7 +91,7 @@ public class DbTerminationCondition extends DbObject {
             rs.close();
         } catch (SQLException se) {
             //Handle errors for JDBC
-            se.printStackTrace();
+            log.error("SQL Error!: ", se);
         } finally {
             //finally block used to close resources
             try {
@@ -95,14 +99,14 @@ public class DbTerminationCondition extends DbObject {
                     stmt.close();
                 }
             } catch (SQLException se2) {
-                se2.printStackTrace();
+                log.error("SQL Error!: ", se2);
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException se) {
-                se.printStackTrace();
+                log.error("SQL Error!: ", se);
             }
         }
         return results;
@@ -126,17 +130,17 @@ public class DbTerminationCondition extends DbObject {
                 conditionSets.get(conditionSetId).add(condition);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("SQL Error!: ", e);
         } finally {
             try {
                 conn.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("SQL Error!: ", e);
             }
             try {
                 results.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("SQL Error!: ", e);
             }
         }
         return conditionSets;

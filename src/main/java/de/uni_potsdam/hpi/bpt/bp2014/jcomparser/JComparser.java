@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -44,7 +45,7 @@ import java.util.List;
  * Every functionality can be used by using this class.
  */
 public class JComparser {
-
+    static Logger log = Logger.getLogger(JComparser.class.getName());
     /**
      * A main-method which should be used for Debug only.
      *
@@ -175,7 +176,7 @@ public class JComparser {
             doc.getDocumentElement().normalize();
             return doc;
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -223,14 +224,14 @@ public class JComparser {
                 String processeditorServerUrl = (String) FileUtils.readLines(file).get(23);
                 return processeditorServerUrl;
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         } else if (requestedConfig.equals("jcomparserServerUrl")) {
             try {
                 String jcomparserServerUrl = (String) FileUtils.readLines(file).get(26);
                 return jcomparserServerUrl;
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         }
         System.err.print("ERROR within the getServerSpecs; String requestedConfig not correct defined");

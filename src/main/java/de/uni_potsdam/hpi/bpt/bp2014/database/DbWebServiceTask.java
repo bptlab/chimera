@@ -41,8 +41,13 @@ public class DbWebServiceTask extends DbObject {
     }
 
 
-    public void updateWebServiceTaskLink (int controlNodeID, String link, String method) {
-        String sql = "UPDATE webservicetasklink SET link = '" + link + "', method = '" + method + "' WHERE controlnode_id = " + controlNodeID;
+    public void updateWebServiceTaskLink (int controlNodeID, String link) {
+        String sql = "UPDATE webservicetasklink SET link = '" + link + "' WHERE controlnode_id = " + controlNodeID;
+        executeUpdateStatement(sql);
+    }
+
+    public void updateWebServiceTaskMethod (int controlNodeID, String method) {
+        String sql = "UPDATE webservicetasklink SET method = '" + method + "' WHERE controlnode_id = " + controlNodeID;
         executeUpdateStatement(sql);
     }
 
@@ -58,9 +63,9 @@ public class DbWebServiceTask extends DbObject {
     }
 
     /**
-     * Get all WebServiceTasks for one scenario
-     * @param scenarioID The databaseID of the scenario
-     * @return controlnodeIDs of WebServiceTasks that belong to the scenario
+     * Get all WebServiceTasks for one scenario.
+     * @param scenarioID The databaseID of the scenario.
+     * @return controlNodeIDs of WebServiceTasks that belong to the scenario.
      */
     public LinkedList<Integer> getWebServiceTasks (int scenarioID) {
         String sql = "SELECT controlnode.id " +
@@ -91,11 +96,20 @@ public class DbWebServiceTask extends DbObject {
         return this.executeStatementReturnsString(sql, "post");
     }
 
+    /**
+     * Checks if there are entries in the table WebServiceTaskLink in the database.
+     * @param controlNode_id The id of the webservice task.
+     * @return true if there is entry. false if not.
+     */
     public boolean existWebServiceTaskIDinLink(int controlNode_id){
         String sql = "Select controlnode_id from webservicetasklink WHERE controlnode_id = " + controlNode_id;
         return executeExistStatement(sql);
     }
-
+    /**
+     * Checks if there are entries in the table WebServiceTaskPost in the database.
+     * @param controlNode_id The id of the webservice task.
+     * @return true if there is entry. false if not.
+     */
     public boolean existWebServiceTaskIDinPost(int controlNode_id){
         String sql = "Select controlnode_id from webservicetaskpost WHERE controlnode_id = " + controlNode_id;
         return executeExistStatement(sql);

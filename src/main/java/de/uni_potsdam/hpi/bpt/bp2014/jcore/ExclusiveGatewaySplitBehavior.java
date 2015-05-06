@@ -4,6 +4,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
+import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 
 public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
+    static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class.getName());
     /**
      * List of IDs of following control nodes.
      */
@@ -224,18 +226,24 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
             right = right.replace(
                     "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
         }
-        switch (comparison) {
-            case "=":
-                return left.equals(right);
-            case "<":
-                return Float.parseFloat(left) < Float.parseFloat(right);
-            case "<=":
-                return Float.parseFloat(left) <= Float.parseFloat(right);
-            case ">":
-                return Float.parseFloat(left) > Float.parseFloat(right);
-            case ">=":
-                return Float.parseFloat(left) >= Float.parseFloat(right);
+        try {
 
+
+            switch (comparison) {
+                case "=":
+                    return left.equals(right);
+                case "<":
+                    return Float.parseFloat(left) < Float.parseFloat(right);
+                case "<=":
+                    return Float.parseFloat(left) <= Float.parseFloat(right);
+                case ">":
+                    return Float.parseFloat(left) > Float.parseFloat(right);
+                case ">=":
+                    return Float.parseFloat(left) >= Float.parseFloat(right);
+
+            }
+        }catch(NumberFormatException e){
+            log.error("Error can't convert String to Float:", e);
         }
         return false;
     }
