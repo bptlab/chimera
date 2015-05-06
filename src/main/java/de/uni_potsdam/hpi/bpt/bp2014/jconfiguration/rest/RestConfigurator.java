@@ -35,7 +35,7 @@ public class RestConfigurator {
      * internally realizes via a flag.
      *
      * @param scenarioID The ID of the scenario which is supposed to be deleted
-     * @return           The status code if the operation was successful or not
+     * @return The status code if the operation was successful or not
      * @throws Exception
      */
     @DELETE
@@ -154,8 +154,7 @@ public class RestConfigurator {
     // ************************** WEB SERVICE TASKS **********************************/
 
     /**
-     *
-     * @param scenarioID The ID of the scenario model.
+     * @param scenarioID   The ID of the scenario model.
      * @param filterString A Filter String, only web service tasks with a label containing
      *                     this filter String will be returned.
      * @return
@@ -181,8 +180,7 @@ public class RestConfigurator {
     }
 
     /**
-     *
-     * @param scenarioID The ID of the scenario model.
+     * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
      */
@@ -204,74 +202,10 @@ public class RestConfigurator {
         return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     }
 
-    /**
-     *
-     * @param scenarioID The ID of the scenario model.
-     * @param webserviceID The ID of the webservice tasks
-     * @param input       The new configuration.
-     * @return
-     */
-    @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/link")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateWebserviceLink(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("webserviceID") int webserviceID,
-            final String input) {
-        //input: {link, method}
-        JSONObject jsonObject = new JSONObject(input);
-        if (!jsonObject.has("method") || !jsonObject.has("link")){
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .build();
-        }
-        String link = jsonObject.get("link").toString();
-        String method = jsonObject.get("method").toString();
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if(dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)){
-            dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
-        } else {
-            dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID,link, method);
-        }
-        return Response.status(
-                Response.Status.ACCEPTED)
-                .build();
-    }
 
-    @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/attribute")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateWebserviceAttribute(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("webserviceID") int webserviceID,
-            final String input) {
-        //input: {attributeID, value:[{order,key}]}
-        JSONObject jsonObject = new JSONObject(input);
-        if (!jsonObject.has("attributeID") || !jsonObject.has("value")){
-            return Response.status(
-                    Response.Status.NOT_ACCEPTABLE)
-                    .build();
-        }
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        int attributeID = jsonObject.getInt("attributeID");
-        JSONArray values = jsonObject.getJSONArray("value");
-        dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, attributeID);
-        for (int i = 0; i < values.length(); i++) {
-            JSONObject entry = values.getJSONObject(i);
-            int order = entry.getInt("order");
-            String key = entry.getString("key");
-            dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
-        }
-        return Response.status(
-                Response.Status.ACCEPTED)
-                .build();
-    }
 
     /**
-     *
-     * @param scenarioID The ID of the scenario model.
+     * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
      */
@@ -295,48 +229,91 @@ public class RestConfigurator {
     }
 
     /**
-     *
-     * @param scenarioID The ID of the scenario model.
+     * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
      */
     @PUT
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
+    @Path("webservice/{webserviceID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateWebservicePost(
+    public Response updateWebservice(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("webserviceID") int webserviceID,
             final String input) {
-        DbScenario scenario = new DbScenario();
-        if (!scenario.existScenario(scenarioID)) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
+        //input: {method, link, attributeID, value:[{order,key}], body}
         JSONObject jsonObject = new JSONObject(input);
-        if (!jsonObject.has("value")){
+        boolean con1 = setWebServiceTaskAttributes(jsonObject, webserviceID);
+        boolean con2 = setWebServiceTaskLink(jsonObject, webserviceID);
+        boolean con3 = setWebServiceTaskPostBody(jsonObject, webserviceID);
+        if (con1 || con2 || con3) {
+            return Response.status(
+                    Response.Status.ACCEPTED)
+                    .build();
+        } else {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{}")
                     .build();
         }
-        String value = jsonObject.get("value").toString();
+    }
+
+    private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if(dbWebServiceTask.existWebServiceTaskIDinPost(webserviceID)){
-            dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
-        } else {
-            dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);
+        if (jsonObject.has("attributeID") && jsonObject.has("value")) {
+            int attributeID = jsonObject.getInt("attributeID");
+            JSONArray values = jsonObject.getJSONArray("value");
+            if (values.length() > 0) {
+                dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, attributeID);
+                for (int i = 0; i < values.length(); i++) {
+                    JSONObject entry = values.getJSONObject(i);
+                    int order = entry.getInt("order");
+                    String key = entry.getString("key");
+                    dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
+                }
+                return true;
+            }
         }
-        return Response.status(
-                Response.Status.ACCEPTED)
-                .build();
+        return false;
+    }
+
+    private boolean setWebServiceTaskLink(JSONObject jsonObject, int webserviceID) {
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if (jsonObject.has("method") && jsonObject.has("link")) {
+            String link = jsonObject.get("link").toString();
+            String method = jsonObject.get("method").toString();
+            if (!method.isEmpty() && !link.isEmpty()) {
+                if (dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)) {
+                    dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
+                } else {
+                    dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID, link, method);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean setWebServiceTaskPostBody(JSONObject jsonObject, int webserviceID) {
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if (jsonObject.has("body")) {
+            String value = jsonObject.get("body").toString();
+            if (!value.isEmpty()) {
+                if (dbWebServiceTask.existWebServiceTaskIDinPost(webserviceID)) {
+                    dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
+                } else {
+                    dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     // ************************** HELPER **********************************/
+
+
 
     /**
      * This is a data class for the email configuration.
@@ -386,85 +363,5 @@ public class RestConfigurator {
          */
         public ArrayList<HashMap<String, Object>> attributes;
 
-    }
-
-    @PUT
-    @Path("webservice/{webserviceID}/attribute")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateWebservice(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("webserviceID") int webserviceID,
-            final String input) {
-        //input: {method, link, attributeID, value:[{order,key}], body}
-        JSONObject jsonObject = new JSONObject(input);
-        if(setWebServiceTaskAttributes(jsonObject, webserviceID) ||
-                setWebServiceTaskLink(jsonObject, webserviceID) ||
-                setWebServiceTaskPostBody(jsonObject, webserviceID)){
-
-            return Response.status(
-                    Response.Status.ACCEPTED)
-                    .build();
-
-        } else {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
-    }
-
-    private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID){
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if (jsonObject.has("attributeID") && jsonObject.has("value")) {
-            if (!jsonObject.getString("attributeID").isEmpty()) {
-                int attributeID = jsonObject.getInt("attributeID");
-                JSONArray values = jsonObject.getJSONArray("value");
-                if(values.length() > 0) {
-                    dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, attributeID);
-                    for (int i = 0; i < values.length(); i++) {
-                        JSONObject entry = values.getJSONObject(i);
-                        int order = entry.getInt("order");
-                        String key = entry.getString("key");
-                        dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean setWebServiceTaskLink(JSONObject jsonObject, int webserviceID){
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if (jsonObject.has("method") && jsonObject.has("link")) {
-            String link = jsonObject.get("link").toString();
-            String method = jsonObject.get("method").toString();
-            if(!method.isEmpty() && !link.isEmpty()) {
-                if (dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)) {
-                    dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
-                } else {
-                    dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID, link, method);
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean setWebServiceTaskPostBody(JSONObject jsonObject, int webserviceID){
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if (jsonObject.has("body")) {
-            String value = jsonObject.get("value").toString();
-            if (!value.isEmpty()) {
-                if (dbWebServiceTask.existWebServiceTaskIDinPost(webserviceID)) {
-                    dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
-                } else {
-                    dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);
-                }
-                return true;
-            }
-        }
-        return false;
     }
 }
