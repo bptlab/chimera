@@ -206,7 +206,7 @@ public class RestConfiguratorTest extends AbstractTest {
     public void testGetSpecificWebserviceTask() {
         Response response = base.path("scenario/145/webservice/390").request().get();
         assertThat("Get webservice Task details returns something wrong",
-                "{\"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"ids\",\"dataattribute_id\":12},{\"order\":1,\"controlnode_id\":390,\"key\":\"activities\",\"dataattribute_id\":13},{\"order\":2,\"controlnode_id\":390,\"key\":\"0\",\"dataattribute_id\":13}]}",
+                "{\"body\":\"{\\\"value\\\":\\\"post\\\"}\", \"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"ids\",\"dataattribute_id\":12},{\"order\":1,\"controlnode_id\":390,\"key\":\"activities\",\"dataattribute_id\":13},{\"order\":2,\"controlnode_id\":390,\"key\":\"0\",\"dataattribute_id\":13}]}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
