@@ -86,7 +86,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
             email.addTo(receiverMail);
             email.send();
         } catch (EmailException e) {
-            log.error("Error:", e);
+            log.error("Error by sending e-Mail:", e);
         }
     }
 }
