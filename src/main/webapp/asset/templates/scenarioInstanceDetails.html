@@ -216,10 +216,11 @@
         <h4 class="modal-title">Begin activity?</h4>
       </div>
       <div class="modal-body">
-          <div ng-show="!instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+          <div ng-hide="instanceCtrl.scenario['refLength']">
                 <p>Do you want to start Activity "{{value['label']}}"?</p>
           </div>
-          <div ng-hide="!instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+          <div ng-show="instanceCtrl.scenario['refLength']">
+
               <div class="responsive-table pull-left">
                   <table class="table table-striped">
                       <thead>
@@ -262,7 +263,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <div ng-hide="instanceCtrl.scenario['activity'][value['id']]['references']['ids'].length">
+          <div ng-hide="instanceCtrl.scenario['refLength']">
               <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal" class="btn btn-primary">Begin</button>
           </div>
       </div>

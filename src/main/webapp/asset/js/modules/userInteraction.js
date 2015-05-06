@@ -291,6 +291,18 @@
                 instanceCtrl.changeAttributObject[''+id] = value;
             };
 
+            //not needed any more
+            this.checkArrayLength = function(id) {
+                if(!instanceCtrl.scenario['activity']){
+                    instanceCtrl.scenario['activity'] = {};
+                }
+                if(instanceCtrl.scenario['activity'][id]['references']['ids'].length>1) {
+                    return true;
+                }else {
+                    return false;
+                }
+            };
+
             // begins an activity
 			this.beginActivity = function(activityId) {
 				var dataObject  = "";
@@ -398,14 +410,24 @@
             };
 
             this.handleReferencedActivities = function(activityID) {
-                instanceCtrl.scenario['outputsets'] = {};
-                instanceCtrl.scenario['activity'] = {};
+                if(!instanceCtrl.scenario['outputsets']){
+                    instanceCtrl.scenario['outputsets'] = {};
+                }
+                if(!instanceCtrl.scenario['refLength']){
+                    instanceCtrl.scenario['refLength'] = 0;
+                }
+                if(!instanceCtrl.scenario['activity']){
+                    instanceCtrl.scenario['activity'] = {};
+                }
+                //instanceCtrl.scenario['outputsets'] = {};
+                //instanceCtrl.scenario['activity'] = {};
                 instanceCtrl.scenario['activity'][activityID] = {};
                 //retrieve referenced Activities for this activityID
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/references").
                     success(function(data) {
                         instanceCtrl.scenario['activity'][activityID]['references'] = data;
                         var activityArray = data['ids'];
+                        instanceCtrl.scenario['refLength'] = data['ids'].length;
                         activityArray.push(activityID);
                         //check if there are any referenced Activities
                         if(instanceCtrl.scenario['activity'][activityID]['references']['ids'].length > 0){
