@@ -212,17 +212,32 @@ public class RestConfiguratorTest extends AbstractTest {
 
     @Test
     public void testUpdateWebserviceLink() {
-        Response response = base.path("scenario/145/webservice/390/link").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
+        Response response = base.path("webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",
                 202, response.getStatus());
     }
 
     @Test
     public void testUpdateWebserviceAttribute() {
-        Response response = base.path("scenario/145/webservice/390/attribute").request().put(Entity.json("{\"attributeID\":14,\"value\":[{\"order\":1,\"key\":\"neu\"},{\"order\":88,\"key\":\"bliebla\"}]}"));
+        Response response = base.path("webservice/390").request().put(Entity.json("{\"attributeID\":14,\"value\":[{\"order\":1,\"key\":\"neu\"},{\"order\":88,\"key\":\"bliebla\"}]}"));
         assertEquals("The Response code of updating the attributes of a webServiceTask was not 202",
                 202, response.getStatus());
     }
+
+
+    @Test
+    public void testUpdateWebservicePost() {
+        Response response = base.path("webservice/390").request().put(Entity.json("{\"body\":\"GET\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 202",
+                202, response.getStatus());
+    }
+    @Test
+    public void testUpdateWebservicePostBadRequest() {
+        Response response = base.path("webservice/390").request().put(Entity.json("{\"method\":\"GET\"}"));
+        assertEquals("The Response code of updating the WebserviceConfiguration was not 400",
+                400, response.getStatus());
+    }
+
 
     /* TO BE DELETED */
     @Test
@@ -231,18 +246,5 @@ public class RestConfiguratorTest extends AbstractTest {
         assertThat("Get webservice Task configuration returns not an valid JSON object",
                 "{\"value\":\"{\\\"value\\\":\\\"post\\\"}\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testUpdateWebservicePost() {
-        Response response = base.path("scenario/145/webservice/390/post").request().put(Entity.json("{\"value\":\"GET\"}"));
-        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 202",
-                202, response.getStatus());
-    }
-    @Test
-    public void testUpdateWebservicePostBadRequest() {
-        Response response = base.path("scenario/145/webservice/390/post").request().put(Entity.json("{\"method\":\"GET\"}"));
-        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 400",
-                400, response.getStatus());
     }
 }
