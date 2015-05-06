@@ -192,7 +192,6 @@ public class RestConfigurator {
             @PathParam("webserviceID") int webserviceID) {
         DbWebServiceTask webService = new DbWebServiceTask();
         ArrayList<HashMap<String, Object>> list = webService.getComplexAttributeMap(webserviceID);
-        ArrayList<HashMap<String, Object>> body = webService.getPOST(webserviceID);
 
         HashMap response = new HashMap();
         response.put("attributes", list);
@@ -204,31 +203,6 @@ public class RestConfigurator {
         return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     }
 
-
-
-    /**
-     * @param scenarioID   The ID of the scenario model.
-     * @param webserviceID The ID of the webservice tasks
-     * @return
-     */
-    @GET
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPOSTForWebserviceTask(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("webserviceID") int webserviceID) {
-        DbScenario scenario = new DbScenario();
-        if (!scenario.existScenario(scenarioID)) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        String jsonRepresentation = JsonUtil.JsonWrapperString(dbWebServiceTask.getPOST(webserviceID));
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-    }
 
     /**
      * @param scenarioID   The ID of the scenario model.
