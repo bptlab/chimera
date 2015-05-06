@@ -38,14 +38,11 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                 <h4 class="modal-title">Edit Webservice Config of {{webserviceC.workingID}}</h4>
             </div>
             <div class="modal-body">
-                <!-- TODO: to be adapted to exact json layout -->
                 <form name="myForm" ng-submit="webserviceC.submitMyForm()">
                     Method:
                     <input type="text" ng-model="form.method"  /><br>
                     Link:
                     <input type="text" ng-model="form.link"  /><br>
-
-
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -55,26 +52,26 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                             </tr>
                             </thead>
                             <tbody>
-                            <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes">
+                            <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes track by $index">
                                 <td>{{attribute_key}}</td>
                                 <td>
-                                    <input type="text" ng-name="attribute_key" ng-model-options='{ debounce: 1000 }' ng-model="form.attributes[attribute_key]['key']"><br>
+                                    <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] "><br>
                                     <span ng-show="form.attribute_key.$pending">tipping...</span>
                                 </td>
                             </tr>
-                            </a>
                             </tbody>
                         </table>
                     </div>
+                    <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(webserviceC.workingID, selectedScenario)">Add Attribute</a>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" ng-click="webserviceC.loadData();" class="btn btn-primary">Refresh!</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
 
 
