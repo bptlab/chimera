@@ -347,7 +347,7 @@
                 var dataObject = "";
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                 "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                "/activity/"+ activityId + "?state=terminate&=outputset"+outputset, dataObject).
+                "/activity/"+ activityId + "?state=terminate&outputset="+outputset, dataObject).
                     success(function(data) {
                         instanceCtrl.instanceDetails.activities = {};
                         //reloading content so the dashboard is uptodate
