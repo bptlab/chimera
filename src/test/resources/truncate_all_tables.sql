@@ -22,7 +22,6 @@ TRUNCATE `fragmentinstance`;
 TRUNCATE `gatewayandeventstate`;
 TRUNCATE `gatewayinstance`;
 TRUNCATE `historyactivityinstance`;
-TRUNCATE `historycontrolflow`;
 TRUNCATE `reference`;
 TRUNCATE `right`;
 TRUNCATE `role`;

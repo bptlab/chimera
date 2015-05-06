@@ -84,13 +84,12 @@
    <edges />
    <properties>
       <property name="author" value="" />
-      <property name="Termination State" value="[end]" />
+      <property name="Termination condition" value="SubDO[end],DO[state1];SubDO[init];" />
       <property name="#folder" value="/" />
       <property name="name" value="Scenario" />
       <property name="#uri" value="/models/358512/versions/0" />
       <property name="comment" value="" />
       <property name="#creationDate" value="March 23, 2015 2:11:36 PM CET" />
-      <property name="Termination Data Object" value="SubDO" />
       <property name="domainModelURI" value="http://localhost:1205/models/790983467.pm" />
    </properties>
 </model>

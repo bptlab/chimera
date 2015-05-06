@@ -110,12 +110,11 @@
    <edges />
    <properties>
       <property name="author" value="" />
-      <property name="Termination State" value="[]" />
+      <property name="Termination condition" value="" />
       <property name="#folder" value="/" />
       <property name="name" value="NeuesSzenario" />
       <property name="#uri" value="/models/1442712096/versions/0" />
       <property name="comment" value="" />
       <property name="#creationDate" value="March 12, 2015 10:57:43 AM CET" />
-      <property name="Termination Data Object" value="" />
    </properties>
 </model>
