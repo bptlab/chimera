@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.json.JSONArray;
 
 import java.util.*;
@@ -29,6 +30,12 @@ public class JsonUtil {
     public static String JsonWrapperLinkedList(LinkedList<Integer> content) {
         Gson gson = new Gson();
         JsonIntegerList json = new JsonIntegerList(content);
+        return gson.toJson(json);
+    }
+
+    public static String JsonWrapperObject(Object content) {
+        Gson gson = new Gson();
+        JsonObject json = new JsonObject(); //TODO: to be adapted to needs here
         return gson.toJson(json);
     }
 
