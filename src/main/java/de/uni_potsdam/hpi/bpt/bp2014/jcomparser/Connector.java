@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +41,7 @@ import java.util.Map;
  * Therefore it uses the database.Connection class.
  */
 public class Connector extends DbDataObject {
-
+    static Logger log = Logger.getLogger(Connector.class.getName());
     /**
      * A method to write a scenario to the database.
      * The parameter are all the information needed to
@@ -371,7 +372,7 @@ public class Connector extends DbDataObject {
         } catch (SQLException se) {
             System.err.println("Error occured executing the statement:");
             System.err.println(statement);
-            se.printStackTrace();
+            log.error("Error:", se);
         } finally {
             // Close used resources (Statement/Connection)
             try {
@@ -408,7 +409,7 @@ public class Connector extends DbDataObject {
         } catch (SQLException se) {
             System.err.println("Error occured executing the statement:");
             System.err.println(statement);
-            se.printStackTrace();
+            log.error("Error:", se);
         } finally {
             // Close used resources (Statement/Connection)
             try {

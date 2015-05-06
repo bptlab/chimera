@@ -299,15 +299,9 @@ public class  ScenarioTest extends TestSetUp {
         PowerMock.replay(scenarioWTermination);
         scenarioWTermination.initializeInstanceFromXML(bikeScenario);
         DataObject expectedDataObject = scenarioWTermination.getDataObjects().get("bike");
-        de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node expectedDataNode = null;
-        for (de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node currentNode : expectedDataObject.getDataNodes()) {
-            if (currentNode.getState().equals("assembled")) {
-                expectedDataNode = currentNode;
-                break;
-            }
-        }
-        Assert.assertEquals(expectedDataObject, scenarioWTermination.getTerminatingDataObject());
-        Assert.assertEquals(expectedDataNode, scenarioWTermination.getTerminatingDataNode());
+         Assert.assertEquals("Termination Condition not set correctly", 1, scenarioWTermination.getTerminationCondition().size());
+        Assert.assertEquals("Termination Condition not set correctly", 1, scenarioWTermination.getTerminationCondition().get(0).size());
+        Assert.assertEquals("Termination Condition not set correctly", "assembled", scenarioWTermination.getTerminationCondition().get(0).get(expectedDataObject));
         PowerMock.verify(scenarioWTermination);
     }
 

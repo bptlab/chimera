@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -24,7 +25,7 @@ import java.util.*;
  * It can be parsed from an XML and written to a Database.
  */
 public class Scenario implements IDeserialisable, IPersistable {
-
+    static Logger log = Logger.getLogger(Scenario.class.getName());
     /**
      * The Name of the Scenario.
      */
@@ -54,15 +55,6 @@ public class Scenario implements IDeserialisable, IPersistable {
      * A Map of the names of dataObjects and the objects themselves.
      */
     private Map<String, DataObject> dataObjects;
-    /**
-     * The DataNode which is part of the termination Condition.
-     */
-    private Node terminatingDataNode;
-    /**
-     * terminatingDataObject is a dataObject.
-     * It is part of the termination condition.
-     */
-    private DataObject terminatingDataObject;
     /**
      * The version of the current Scenario.
      */
@@ -100,6 +92,10 @@ public class Scenario implements IDeserialisable, IPersistable {
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
      */
     private List<Fragment> newFragments;
+    /**
+     * List<TCSets<Do, state>>
+     */
+    private List<Map<DataObject, String>> terminationCondition;
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -177,7 +173,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Document doc = db.parse(is);
             return doc.getDocumentElement();
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -196,7 +192,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length-1];
             domainModelURI = domainModelURI.split("\\.")[0];
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -323,7 +319,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                 }
                 versionNumber = maxID;
             } catch (XPathExpressionException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         }
     }
@@ -350,7 +346,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             Document doc = db.parse(is);
             return doc.getDocumentElement();
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -360,63 +356,36 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Corresponding values will be saved to the corresponding fields.
      */
     private void setTerminationCondition() {
-        String objectName = getTerminatingObjectName();
-        String objectState = getTerminatingObjectState();
-        if (objectName.equals("") || objectState.equals("[]")) {
+        terminationCondition = new LinkedList<>();
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String xPathQuery = "/model/properties/property" +
+                "[@name='Termination condition']/@value";
+        String tcs = "";
+        try {
+            tcs = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
+        } catch (XPathExpressionException e) {
+            log.error("Error:", e);
+        }
+        if(tcs.isEmpty()) {
+            terminationCondition = null;
             return;
         }
-
-        for (Map.Entry<String, DataObject> dataObject
-                : dataObjects.entrySet()) {
-            if (dataObject.getKey().equals(objectName)) {
-                for (Node dataNode : dataObject.getValue().getDataNodes()) {
-                    // TODO: state in terminationCondition in Scenario-XML and in Node of Fragment-XML should not differ in the usage of "[]"
-                    if (objectState.equals("[" + dataNode.getState() + "]")) {
-                        terminatingDataNode = dataNode;
-                    }
+        String[] terminationConditions = tcs.split(";");
+        for (String set : terminationConditions) {
+            if (set.isEmpty())
+                continue;
+            Map<DataObject, String> setMap = new HashMap<>();
+            for (String setEntry : set.split(",")) {
+                String dataObject = setEntry.replaceAll("\\[[a-zA-Z0-9]+\\]", "");
+                String state = setEntry.replaceAll("[a-zA-Z0-9]+\\[", "").replaceAll("\\]","");
+                if(dataObject != "" && state != "") {
+                    setMap.put(dataObjects.get(dataObject), state);
                 }
-                terminatingDataObject = dataObject.getValue();
             }
+            if (setMap.size()>0)
+                terminationCondition.add(setMap);
         }
     }
-
-    /**
-     * Gets the state which is part of the termination Condition from the xml.
-     *
-     * @return returns the state if possible else null.
-     */
-    private String getTerminatingObjectState() {
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        String xPathQuery = "/model/properties/property" +
-                "[@name='Termination State']/@value";
-        try {
-            return xPath.compile(xPathQuery).evaluate(this.scenarioXML);
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Extracts the data name of the DataObject from the termination condition.
-     * It plays a role in the termination Condition from the xml.
-     *
-     * @return null if extraction failed, else the name.
-     */
-    private String getTerminatingObjectName() {
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        String xPathQuery = "/model/properties/property" +
-                "[@name = 'Termination Data Object']/@value";
-        try {
-            return xPath
-                    .compile(xPathQuery)
-                    .evaluate(this.scenarioXML);
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     /**
      * Extracts and saves Scenario ID from the ModelXML.
      */
@@ -428,7 +397,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML));
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -445,7 +414,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             domainModel.save();
             saveDataObjects();
             saveConsistsOf();
-            if (terminatingDataObject != null && terminatingDataNode != null) {
+            if (terminationCondition != null && terminationCondition.size() > 0) {
                 saveTerminationCondition();
             }
             saveReferences();
@@ -552,11 +521,15 @@ public class Scenario implements IDeserialisable, IPersistable {
         Connector conn = new Connector();
         // first parameter currently irrelevant,
         // due to the restriction of the terminationCondition
-        conn.insertTerminationConditionIntoDatabase(1,
-                terminatingDataObject.getDatabaseId(),
-                terminatingDataObject.getStates().get(
-                        terminatingDataNode.getState()),
-                databaseID);
+        for (int i = 0; i < terminationCondition.size(); i++) {
+            for (Map.Entry<DataObject, String> entry : terminationCondition.get(i).entrySet()) {
+                int stateID = entry.getKey().getStates().get(entry.getValue());
+                conn.insertTerminationConditionIntoDatabase(i+1,
+                        entry.getKey().getDatabaseId(),
+                        stateID,
+                        databaseID);
+            }
+        }
     }
 
     /**
@@ -672,7 +645,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                 this.fragments.add(createAndInitializeFragment(currentNodeID));
             }
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -709,7 +682,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             doc.getDocumentElement().normalize();
             return doc;
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -727,7 +700,7 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML);
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
     }
 
@@ -801,24 +774,6 @@ public class Scenario implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Returns the DataNode, which is part of the TerminationCondition.
-     *
-     * @return the dataNode of the TerminationCondition.
-     */
-    public Node getTerminatingDataNode() {
-        return terminatingDataNode;
-    }
-
-    /**
-     * Returns the DataObject, which is represented by the TerminatingDataNode.
-     *
-     * @return the DataObject which is part of the TerminationCondition.
-     */
-    public DataObject getTerminatingDataObject() {
-        return terminatingDataObject;
-    }
-
-    /**
      * Returns an integer Representing the version of the Scenario.
      *
      * @return the Version of the Scenario.
@@ -849,4 +804,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         return domainModel;
     }
 
+    public List<Map<DataObject, String>> getTerminationCondition() {
+        return terminationCondition;
+    }
 }

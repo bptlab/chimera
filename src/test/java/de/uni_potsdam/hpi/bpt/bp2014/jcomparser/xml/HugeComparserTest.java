@@ -317,6 +317,31 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    private class DbTerminationCondition {
+        int conditionset_id;
+        int dataobject_id;
+        int state_id;
+        int scenario_id;
+
+        public DbTerminationCondition(int conditionset_id, int dataobject_id, int state_id, int scenario_id) {
+            this.conditionset_id = conditionset_id;
+            this.dataobject_id = dataobject_id;
+            this.state_id = state_id;
+            this.scenario_id = scenario_id;
+        }
+
+        @Override
+        public boolean equals (Object object) {
+            DbTerminationCondition tc = (DbTerminationCondition) object;
+            if (tc.conditionset_id == conditionset_id &&
+                    tc.dataobject_id == dataobject_id &&
+                    tc.state_id == state_id &&
+                    tc.scenario_id == scenario_id)
+                return true;
+            return false;
+        }
+    }
+
     private static java.sql.Connection conn;
     private static Statement stmt = null;
     private List<DbScenario> scenarios;
@@ -331,6 +356,7 @@ public class HugeComparserTest extends TestSetUp {
     private List<DbDataSetAndFlow> sets;
     private List<DbControlFlow> controlFlows;
     private List<DbReference> references;
+    private List<DbTerminationCondition> terminationCondition;
 
     @Before
     public void setUp() throws Exception {
@@ -363,6 +389,7 @@ public class HugeComparserTest extends TestSetUp {
         sets = new LinkedList<>();
         controlFlows = new LinkedList<>();
         references = new LinkedList<>();
+        terminationCondition = new LinkedList<>();
     }
 
     @Test
@@ -646,17 +673,27 @@ public class HugeComparserTest extends TestSetUp {
 
     private void testTerminationCondition() throws Exception {
         ResultSet terminationCondition = getDbEntries("terminationcondition");
-        terminationCondition.next();
-        DbState terminatingState = null;
-        for (DbState state : states) {
-            if (state.name.equals("end"))
-                terminatingState = state;
+        while (terminationCondition.next()) {
+            DbTerminationCondition tc = new DbTerminationCondition(
+                    terminationCondition.getInt("conditionset_id"),
+                    terminationCondition.getInt("dataobject_id"),
+                    terminationCondition.getInt("state_id"),
+                    terminationCondition.getInt("scenario_id"));
+            this.terminationCondition.add(tc);
         }
-        Assert.assertEquals("ConditionsetID in table 'terminationcondition' not inserted correctly", 1, terminationCondition.getInt("conditionset_id"));
-        Assert.assertEquals("DataobjectID in table 'terminationcondition' not inserted correctly", dataObjects.get("SubDO").id, terminationCondition.getInt("dataobject_id"));
-        Assert.assertEquals("StateID in table 'terminationcondition' not inserted correctly", terminatingState.id, terminationCondition.getInt("state_id"));
-        Assert.assertEquals("ScenarioID in table 'terminationcondition' not inserted correctly", scenarios.get(0).id, terminationCondition.getInt("scenario_id"));
-        Assert.assertFalse("Too many entries in table 'terminationcondition'", terminationCondition.next());
+        int end = 0, state1 = 0, initSubDO = 0;
+        for (DbState state : states) {
+            if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubDO").id)
+                initSubDO = state.id;
+            else if (state.name.equals("end") && state.dataClassID == dataClasses.get("SubDO").id)
+                end = state.id;
+            else if (state.name.equals("state1") && state.dataClassID == dataClasses.get("DO").id)
+                state1 = state.id;
+        }
+        Assert.assertEquals("TerminationCondition is not set correctly", 3, this.terminationCondition.size());
+        Assert.assertTrue("TerminationCondition is not set correctly", this.terminationCondition.contains(new DbTerminationCondition(1, dataObjects.get("SubDO").id, end, scenarios.get(0).id)));Assert.assertTrue("TerminationCondition is not set correctly", this.terminationCondition.contains(new DbTerminationCondition(1, dataObjects.get("DO").id, state1, scenarios.get(0).id)));
+        Assert.assertTrue("TerminationCondition is not set correctly", this.terminationCondition.contains(new DbTerminationCondition(1, dataObjects.get("SubDO").id, end, scenarios.get(0).id)));Assert.assertTrue("TerminationCondition is not set correctly", this.terminationCondition.contains(new DbTerminationCondition(1, dataObjects.get("SubDO").id, end, scenarios.get(0).id)));
+        Assert.assertTrue("TerminationCondition is not set correctly", this.terminationCondition.contains(new DbTerminationCondition(1, dataObjects.get("SubDO").id, end, scenarios.get(0).id)));Assert.assertTrue("TerminationCondition is not set correctly", this.terminationCondition.contains(new DbTerminationCondition(2, dataObjects.get("SubDO").id, initSubDO, scenarios.get(0).id)));
         terminationCondition.close();
     }
 

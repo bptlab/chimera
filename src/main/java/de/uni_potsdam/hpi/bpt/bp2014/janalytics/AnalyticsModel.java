@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AnalyticsModel {
+    static Logger log = Logger.getLogger(Connection.class.getName());
 
     /**
      *
@@ -72,7 +74,7 @@ public class AnalyticsModel {
             return Rows;
         } catch (SQLException se) {
             //Handle errors for JDBC
-            se.printStackTrace();
+            log.error("SQL Error!: ", se);
         } finally {
             //finally block used to close resources
             try {
@@ -80,14 +82,14 @@ public class AnalyticsModel {
                     stmt.close();
                 }
             } catch (SQLException se2) {
-                se2.printStackTrace();
+                log.error("SQL Error!: ", se2);
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException se) {
-                se.printStackTrace();
+                log.error("SQL Error!: ", se);
             }
         }
         return null;

@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 import com.google.gson.Gson;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.ws.rs.*;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 
 @Path("jcomparser")
 public class REST {
+    static Logger log = Logger.getLogger(REST.class.getName());
     /**
      * The URL to the ProcessEditor Model repository.
      */
@@ -88,7 +90,7 @@ public class REST {
         try {
             scenarioIDs = comparser.getScenarioNamesAndIDs(PROCESS_SERVER_URI);
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
         }
 
         if (scenarioIDs.size() == 0) {

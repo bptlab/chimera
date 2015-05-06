@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -51,6 +52,7 @@ import java.util.*;
  */
 @Path("interface/v2")
 public class RestInterface {
+    static Logger log = Logger.getLogger(RestInterface.class.getName());
     /**
      * This method allows to give an overview of all scenarios.
      * The response will return a JSON-Array containing the basic
@@ -439,7 +441,7 @@ public class RestInterface {
                         .seeOther(new URI("interface/v2/scenario/" + scenarioID + "/instance/" + instanceID))
                         .build();
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         }
         JSONObject result = new JSONObject(instance.getInstanceMap(instanceID));
@@ -493,7 +495,7 @@ public class RestInterface {
                         executionService.getScenarioIDForScenarioInstance(instanceID) +
                         "/instance/" + instanceID + "/activity")).build();
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                log.error("Error:", e);
             }
         }
         if ((filterString == null || filterString.isEmpty()) && (state == null || state.isEmpty())) {
