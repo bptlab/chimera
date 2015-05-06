@@ -128,21 +128,12 @@
                     $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
                 }
 
-                this.addAttribute=function(value, selectedScenario){
+                this.addAttribute=function(){
                     webserviceC.newAttribute = {};
-                    //webserviceC.newAttribute = $scope.form.attributes[$scope.form.attributes.length-1];
                     angular.copy($scope.form.attributes[$scope.form.attributes.length-1], webserviceC.newAttribute);
-                    console.log($scope.form.attributes);
-                    console.log(webserviceC.newAttribute);
-
                     webserviceC.newAttribute['order'] = webserviceC.newAttribute['order'] +1;
                     webserviceC.newAttribute['key'] = " ";
-
-                    console.log(webserviceC.newAttribute);
-                    //$scope.form.attributes[$scope.form.attributes.length] = webserviceC.newAttribute;
                     $scope.form.attributes.push(webserviceC.newAttribute);
-                    //webserviceC.getDetails(value, selectedScenario);
-                    //$scope.$apply();
                 }
 
                 //get all infos for popup
