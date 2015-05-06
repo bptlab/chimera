@@ -103,7 +103,7 @@
 	);
 
     // Create a Controller for mail config
-    adminCon.controller('webserviceC', ['$routeParams', '$location', '$http', '$scope',
+    adminCon.controller('webserviceConfig', ['$routeParams', '$location', '$http', '$scope',
             function($routeParams, $location, $http, $scope){
                 var webserviceC = this;
 
