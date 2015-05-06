@@ -155,6 +155,8 @@ public class RestConfigurator {
     // ************************** WEB SERVICE TASKS **********************************/
 
     /**
+     * Get a list of all webservices for a specific scenario
+     *
      * @param scenarioID   The ID of the scenario model.
      * @param filterString A Filter String, only web service tasks with a label containing
      *                     this filter String will be returned.
@@ -181,6 +183,8 @@ public class RestConfigurator {
     }
 
     /**
+     * Get all details for a specific webservice ID
+     *
      * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
@@ -198,38 +202,16 @@ public class RestConfigurator {
         response.put("attributes", list);
         response.put("method", webService.getMethod(webserviceID));
         response.put("link", webService.getLinkForControlNode(webserviceID));
+        response.put("body", webService.getPOST(webserviceID));
 
         String jsonResponse = JsonUtil.JsonWrapperHashMapOnly(response);
         return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     }
 
 
-
     /**
-     * @param scenarioID   The ID of the scenario model.
-     * @param webserviceID The ID of the webservice tasks
-     * @return
-     */
-    @GET
-    @Path("scenario/{scenarioID}/webservice/{webserviceID}/post")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPOSTForWebserviceTask(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("webserviceID") int webserviceID) {
-        DbScenario scenario = new DbScenario();
-        if (!scenario.existScenario(scenarioID)) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
-        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        String jsonRepresentation = JsonUtil.JsonWrapperString(dbWebServiceTask.getPOST(webserviceID));
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-    }
-
-    /**
+     * Update details for a specific webserviceID
+     *
      * @param scenarioID   The ID of the scenario model.
      * @param webserviceID The ID of the webservice tasks
      * @return
