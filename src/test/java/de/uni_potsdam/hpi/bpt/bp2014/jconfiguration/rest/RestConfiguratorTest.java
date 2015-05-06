@@ -234,7 +234,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
     @Test
     public void testUpdateWebservicePostBadRequest() {
-        Response response = base.path("webservice/390").request().put(Entity.json("{\"method\":\"GET\"}"));
+        Response response = base.path("webservice/390").request().put(Entity.json("{\"method2222\":\"GET\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration was not 400",
                 400, response.getStatus());
     }
