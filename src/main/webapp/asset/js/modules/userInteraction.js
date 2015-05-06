@@ -146,7 +146,6 @@
             //post update for webservice tasks
             this.submitAttributeForm=function(){
                 var data=$scope.form;
-                //TODO: edit path
                 $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
             }
 
@@ -219,9 +218,8 @@
                         console.log('request failed');
                     });
             }
+
             // if necessary initialize the specified Scenario
-
-
             this.initialize = function(){
                 if ($routeParams.instanceId) {
                     // initialize if necessary the specified instance
@@ -284,7 +282,6 @@
                 "/activity/"+ activityId, data);
 
                 instanceCtrl.changeAttributObject[''+id] = value;
-                //instanceCtrl.getOutputAndOutputsets(activityId);
             };
 
             this.setCurrentAttributeObject = function(id, value) {
@@ -363,7 +360,6 @@
             };
 
 
-
             this.getTerminationConditionOfScenario = function(id) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
                     success(function(data) {
@@ -423,7 +419,6 @@
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
                                     instanceCtrl.scenario['outputsetsLength'].push(outputset['id']);
-                                    console.log(instanceCtrl.scenario['outputsetsLength']);
                                 }).
                                 error(function() {
                                     console.log('request failed');
@@ -445,8 +440,6 @@
                 if(!instanceCtrl.scenario['activity']){
                     instanceCtrl.scenario['activity'] = {};
                 }
-                //instanceCtrl.scenario['outputsets'] = {};
-                //instanceCtrl.scenario['activity'] = {};
                 instanceCtrl.scenario['activity'][activityID] = {};
                 //retrieve referenced Activities for this activityID
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/references").

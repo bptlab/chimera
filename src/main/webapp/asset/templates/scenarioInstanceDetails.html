@@ -151,7 +151,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--"h.scenarioinstance_id":1329,"da.name":"Attribut1","h.timestamp":"2015-05-04 11:32:08.0","h.id":3,"h.dataattributeinstance_id":150,"h.newvalue":"[9281]","h.oldvalue":"[9281]","do.name":"DO"}-->
                     <div class="animate-switch" ng-switch-when="attributes">
                         <div class="list-item-container">
                             <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
@@ -182,14 +181,12 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <!--<th>ID</th>-->
                             <th>Condition</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         <tr ng-repeat="(key, value) in instanceCtrl.scenario['terminationcondition']['conditions'] track by $index">
-                            <!--<td>{{key}}</td>-->
                             <td>
                                 <div ng-repeat="(key, value2) in value track by $index">
                                 The dataobject "{{value2['data_object']}}" is in state "{{value2['state']}}".<br>
@@ -280,20 +277,15 @@
         <h4 class="modal-title">Terminate activity?</h4>
       </div>
       <div class="modal-body">
-          <!--value['id'] = {{value['id']}}<br>-->
-          <!--instanceCtrl.activityOutput[{{value['id']}}] = {{instanceCtrl.activityOutput[value['id']]}}<br>-->
           <div ng-repeat="(key, output) in instanceCtrl.activityOutput[value['id']] track by $index">
               <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
                   <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
                   <br>
-                 <!-- <form name="myForm" ng-submit="instanceCtrl.submitAttributeForm()">-->
                   <div ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
                       {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'], attributeConfiguration['value'])}}
-                     <!-- {{attributeConfiguration['name']}} <input type="text" name="{{attributeConfiguration['name']}}" [ng-value="attributeConfiguration['value']"]></input><br>-->
-                      {{attributeConfiguration['name']}} <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }' ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
+                     {{attributeConfiguration['name']}} <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }' ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
                       <span ng-show="form.key3.$pending">tipping...</span>
                   </div>
-                  <!--<button type="submit" class="btn btn-default">Submit</button></form>-->
                   <hr>
               </div>
           </div>
