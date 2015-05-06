@@ -272,21 +272,32 @@ public class RestConfigurator {
 
     private boolean setWebServiceTaskLink(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-        if (jsonObject.has("method") && jsonObject.has("link")) {
+        boolean back = false;
+        if (jsonObject.has("link")) {
             String link = jsonObject.get("link").toString();
-            String method = jsonObject.get("method").toString();
-            if (!method.isEmpty() && !link.isEmpty()) {
+            if (!link.isEmpty()) {
                 if (dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)) {
-                    dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
+                    dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link);
                 } else {
-                    dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID, link, method);
+                    dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID, link, "");
                 }
-                return true;
+                back = true;
             }
         }
-        return false;
+        if(jsonObject.has("method")){
+            String method = jsonObject.get("method").toString();
+            if (!method.isEmpty()) {
+                if (dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)) {
+                    dbWebServiceTask.updateWebServiceTaskMethod(webserviceID, method);
+                } else {
+                    dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID, "", method);
+                }
+                back = true;
+            }
+        }
+        return back;
     }
-    
+
     private boolean setWebServiceTaskPostBody(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         if (jsonObject.has("body")) {
