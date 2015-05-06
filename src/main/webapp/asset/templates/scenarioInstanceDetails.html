@@ -301,13 +301,12 @@
         <p>Do you really want to terminate Activity "{{value['label']}}"?</p>
       </div>
       <div class="modal-footer">
-          {{instanceCtrl.scenario['outputsetsLength']}}
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <div ng-show="instanceCtrl.scenario['outputsetsLength']">
+          <div ng-hide="instanceCtrl.scenario['outputsetsLength'].length">
               <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
           </div>
-          <div ng-hide="instanceCtrl.scenario['outputsetsLength']">
-              <select ng-model="terminateSelection" ng-options="item for item in ['open','completed']"></select>
+          <div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
+              <select ng-model="terminateSelection" ng-options="item for item in instanceCtrl.scenario['outputsetsLength']"></select>
           <button type="button" ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], terminateSelection);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
       </div>
       </div>

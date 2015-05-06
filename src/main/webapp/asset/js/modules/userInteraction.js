@@ -408,9 +408,9 @@
                 if(!instanceCtrl.scenario['outputsets']){
                     instanceCtrl.scenario['outputsets'] = {};
                 }
-                if(!instanceCtrl.scenario['outputsetsLength']){
-                    instanceCtrl.scenario['outputsetsLength'] = 0;
-                }
+
+                instanceCtrl.scenario['outputsetsLength'] = [];
+
                 //retrieving the output for each retrieved referenced Activity
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
                     success(function(data2) {
@@ -422,7 +422,8 @@
                                 success(function(data3) {
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
-                                    instanceCtrl.scenario['outputsetsLength'] = instanceCtrl.scenario['outputsetsLength'] +1;
+                                    instanceCtrl.scenario['outputsetsLength'].push(outputset['id']);
+                                    console.log(instanceCtrl.scenario['outputsetsLength']);
                                 }).
                                 error(function() {
                                     console.log('request failed');
