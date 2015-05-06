@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.janalytics.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.janalytics.AnalyticsService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -17,6 +18,7 @@ import java.util.HashMap;
  */
 @Path("analytics/v2/")
 public class RestInterface {
+    static Logger log = Logger.getLogger(RestInterface.class.getName());
     private AnalyticsService analyticsService = new AnalyticsService();
 
     /**
@@ -36,19 +38,19 @@ public class RestInterface {
         try {
             result = analyticsService.getAnalysisResultForInstance(instanceID, algorithmID);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
                     .build();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
                     .build();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
@@ -74,19 +76,19 @@ public class RestInterface {
         try {
             result = (Boolean) analyticsService.executeAnalysisResultForInstance(instanceID, algorithmID);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
                     .build();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
                     .build();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("Error:", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")

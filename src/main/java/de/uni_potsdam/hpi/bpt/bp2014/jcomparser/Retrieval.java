@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
+import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
@@ -34,6 +35,7 @@ import java.awt.image.BufferedImage;
  * of XML docus from a source URL like the repository of the Processeditor.
  */
 public class Retrieval {
+    static Logger log = Logger.getLogger(Retrieval.class.getName());
 
     /**
      * The pattern for setting name and password for the authentication.
@@ -75,7 +77,7 @@ public class Retrieval {
             return stringBuilder.toString();
         } catch (IOException e) {
             System.err.println("Request failed.");
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -105,7 +107,7 @@ public class Retrieval {
             //return Response.ok(new ByteArrayInputStream(imageData)).build();
         } catch (IOException e) {
             System.err.println("Request failed.");
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }
@@ -146,7 +148,7 @@ public class Retrieval {
             return inputStream;
         } catch (IOException e) {
             System.err.println("Request failed.");
-            e.printStackTrace();
+            log.error("Error:", e);
         }
         return null;
     }

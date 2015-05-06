@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 
 
 public class Seed {
+    static Logger log = Logger.getLogger(Seed.class.getName());
 
     public void getDBcontent() {
     }
@@ -69,7 +72,7 @@ public class Seed {
 
         } catch (SQLException se) {
             //Handle errors for JDBC
-            se.printStackTrace();
+            log.error("SQL Error!:", se);
         } finally {
             //finally block used to close resources
             try {
@@ -81,7 +84,7 @@ public class Seed {
                 if (conn != null)
                     conn.close();
             } catch (SQLException se) {
-                se.printStackTrace();
+                log.error("SQL Error!:", se);
             }
         }
 

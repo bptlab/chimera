@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,6 +32,7 @@ import java.util.HashMap;
  */
 
 public class debugClass {
+    static Logger log = Logger.getLogger(debugClass.class.getName());
     public static String selectScenario() {
 
         System.out.print("Select Scenario: ");
@@ -54,7 +57,7 @@ public class debugClass {
             back = br.readLine();
         } catch (IOException e) {
             System.out.print("ERROR: " + e);
-            e.printStackTrace();
+            log.error("Error:", e);
         }
 
         return back;
