@@ -387,4 +387,84 @@ public class RestConfigurator {
         public ArrayList<HashMap<String, Object>> attributes;
 
     }
+
+    @PUT
+    @Path("webservice/{webserviceID}/attribute")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateWebservice(
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("webserviceID") int webserviceID,
+            final String input) {
+        //input: {method, link, attributeID, value:[{order,key}], body}
+        JSONObject jsonObject = new JSONObject(input);
+        if(setWebServiceTaskAttributes(jsonObject, webserviceID) ||
+                setWebServiceTaskLink(jsonObject, webserviceID) ||
+                setWebServiceTaskPostBody(jsonObject, webserviceID)){
+
+            return Response.status(
+                    Response.Status.ACCEPTED)
+                    .build();
+
+        } else {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{}")
+                    .build();
+        }
+    }
+
+    private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID){
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if (jsonObject.has("attributeID") && jsonObject.has("value")) {
+            if (!jsonObject.getString("attributeID").isEmpty()) {
+                int attributeID = jsonObject.getInt("attributeID");
+                JSONArray values = jsonObject.getJSONArray("value");
+                if(values.length() > 0) {
+                    dbWebServiceTask.deleteWebServiceTaskAtribute(webserviceID, attributeID);
+                    for (int i = 0; i < values.length(); i++) {
+                        JSONObject entry = values.getJSONObject(i);
+                        int order = entry.getInt("order");
+                        String key = entry.getString("key");
+                        dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean setWebServiceTaskLink(JSONObject jsonObject, int webserviceID){
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if (jsonObject.has("method") && jsonObject.has("link")) {
+            String link = jsonObject.get("link").toString();
+            String method = jsonObject.get("method").toString();
+            if(!method.isEmpty() && !link.isEmpty()) {
+                if (dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)) {
+                    dbWebServiceTask.updateWebServiceTaskLink(webserviceID, link, method);
+                } else {
+                    dbWebServiceTask.insertWebServiceTaskLinkIntoDatabase(webserviceID, link, method);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean setWebServiceTaskPostBody(JSONObject jsonObject, int webserviceID){
+        DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+        if (jsonObject.has("body")) {
+            String value = jsonObject.get("value").toString();
+            if (!value.isEmpty()) {
+                if (dbWebServiceTask.existWebServiceTaskIDinPost(webserviceID)) {
+                    dbWebServiceTask.updateWebServiceTaskPOST(webserviceID, value);
+                } else {
+                    dbWebServiceTask.insertWebServiceTaskPOSTIntoDatabase(webserviceID, value);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 }
