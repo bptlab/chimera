@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 04. Mai 2015 um 14:07
+-- Erstellungszeit: 07. Mai 2015 um 09:24
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -8560,7 +8560,12 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (535, 534, ''),
 (536, 533, ''),
 (537, 538, ''),
-(538, 539, '');
+(538, 539, ''),
+(541, 543, ''),
+(542, 541, ''),
+(543, 540, ''),
+(544, 545, ''),
+(545, 546, '');
 
 -- --------------------------------------------------------
 
@@ -8574,7 +8579,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL,
   `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=540 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=547 ;
 
 --
 -- Daten für Tabelle `controlnode`
@@ -9041,7 +9046,14 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 (536, 'Bestelllung bearbeiten', 'Activity', 193, 865492219),
 (537, 'Bestellung eingegenagen', 'Startevent', 194, 2044369314),
 (538, 'Bestelllung bearbeiten', 'Activity', 194, 865492219),
-(539, 'Bestellung bearbeitet', 'Endevent', 194, 913759475);
+(539, 'Bestellung bearbeitet', 'Endevent', 194, 913759475),
+(540, 'Bestelung bearbeitet', 'Endevent', 195, 1061516502),
+(541, 'Bestellung pruefen', 'Activity', 195, 2142899662),
+(542, 'Bestellung eingegangen', 'Startevent', 195, 957839514),
+(543, 'Bestelllung bearbeiten', 'Activity', 195, 865492219),
+(544, 'Bestellung eingegenagen', 'Startevent', 196, 2044369314),
+(545, 'Bestelllung bearbeiten', 'Activity', 196, 865492219),
+(546, 'Bestellung bearbeitet', 'Endevent', 196, 913759475);
 
 -- --------------------------------------------------------
 
@@ -18547,7 +18559,7 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
   `type` varchar(256) NOT NULL,
   `default` varchar(1024) NOT NULL,
   `dataclass_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 --
 -- Daten für Tabelle `dataattribute`
@@ -18572,7 +18584,9 @@ INSERT INTO `dataattribute` (`id`, `name`, `type`, `default`, `dataclass_id`) VA
 (16, 'Attribut1', '', '', 60),
 (17, 'Attribut2', '', 'new Instance', 60),
 (18, 'Preis', '', '', 61),
-(19, 'Artikel', '', '', 61);
+(19, 'Artikel', '', '', 61),
+(20, 'Preis', '', '', 62),
+(21, 'Artikel', '', '', 62);
 
 -- --------------------------------------------------------
 
@@ -18900,7 +18914,7 @@ CREATE TABLE IF NOT EXISTS `dataclass` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `rootnode` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=62 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
 
 --
 -- Daten für Tabelle `dataclass`
@@ -18966,7 +18980,8 @@ INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
 (58, 'DO', 0),
 (59, 'DO', 0),
 (60, 'DO', 0),
-(61, 'Bestellung', 1);
+(61, 'Bestellung', 1),
+(62, 'Bestellung', 1);
 
 -- --------------------------------------------------------
 
@@ -19189,7 +19204,14 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 (536, 201, 1),
 (536, 203, 0),
 (538, 204, 1),
-(538, 205, 0);
+(538, 205, 0),
+(541, 206, 1),
+(541, 208, 0),
+(541, 209, 0),
+(543, 207, 1),
+(543, 210, 0),
+(545, 211, 1),
+(545, 212, 0);
 
 -- --------------------------------------------------------
 
@@ -19204,7 +19226,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=166 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=172 ;
 
 --
 -- Daten für Tabelle `datanode`
@@ -19375,7 +19397,13 @@ INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataob
 (162, 159, 155, 61, 38, 323639590),
 (163, 159, 156, 61, 38, 577245590),
 (164, 159, 154, 61, 38, 431076123),
-(165, 159, 156, 61, 38, 1958125441);
+(165, 159, 156, 61, 38, 1958125441),
+(166, 160, 157, 62, 39, 1813214452),
+(167, 160, 158, 62, 39, 1816751888),
+(168, 160, 159, 62, 39, 323639590),
+(169, 160, 160, 62, 39, 577245590),
+(170, 160, 158, 62, 39, 431076123),
+(171, 160, 160, 62, 39, 1958125441);
 
 -- --------------------------------------------------------
 
@@ -19389,7 +19417,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
   `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
   `start_state_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
 
 --
 -- Daten für Tabelle `dataobject`
@@ -19433,7 +19461,8 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 (35, 'DO', 58, 156, 151),
 (36, 'DO', 59, 157, 152),
 (37, 'DO', 60, 158, 153),
-(38, 'Bestellung', 61, 159, 156);
+(38, 'Bestellung', 61, 159, 156),
+(39, 'Bestellung', 62, 160, 160);
 
 -- --------------------------------------------------------
 
@@ -20641,7 +20670,7 @@ INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `data
 CREATE TABLE IF NOT EXISTS `dataset` (
 `id` int(11) NOT NULL,
   `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=206 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=213 ;
 
 --
 -- Daten für Tabelle `dataset`
@@ -20852,7 +20881,14 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 (202, 0),
 (203, 0),
 (204, 1),
-(205, 0);
+(205, 0),
+(206, 1),
+(207, 1),
+(208, 0),
+(209, 0),
+(210, 0),
+(211, 1),
+(212, 0);
 
 -- --------------------------------------------------------
 
@@ -21063,7 +21099,14 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 (202, 162),
 (203, 161),
 (204, 165),
-(205, 164);
+(205, 164),
+(206, 169),
+(207, 168),
+(208, 166),
+(209, 168),
+(210, 167),
+(211, 171),
+(212, 170);
 
 -- --------------------------------------------------------
 
@@ -21099,7 +21142,7 @@ INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`
 (12, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 448),
 (13, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 467),
 (14, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 486),
-(15, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Lieber Kunde #Gehlat.Vorname #Gehlat.Nachname, Sie bekommen am #Gehlat.Datum #Gehlat.Gehalt überwiesen. #Test lol test', 492),
+(15, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Lieber Kunde #Gehlat.Vorname #Gehlat.Nachname, Sie bekommen am #Gehlat.Datum #Gehlat.Gehalt ?berwiesen. #Test lol test', 492),
 (16, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 523),
 (17, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 527),
 (18, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 531);
@@ -21140,7 +21183,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
   `scenario_id` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=195 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=197 ;
 
 --
 -- Daten für Tabelle `fragment`
@@ -21246,7 +21289,9 @@ INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) 
 (191, 'ServiceTaskFragment', 157, 89666159, 0),
 (192, 'ServiceTaskFragment', 158, 89666159, 0),
 (193, 'Bestellung pruefen & bearbeiten', 159, 470868746, 2),
-(194, 'Bestellung bearbeiten', 159, 1586681475, 1);
+(194, 'Bestellung bearbeiten', 159, 1586681475, 1),
+(195, 'Bestellung pruefen & bearbeiten', 160, 470868746, 3),
+(196, 'Bestellung bearbeiten', 160, 1586681475, 1);
 
 -- --------------------------------------------------------
 
@@ -29746,7 +29791,9 @@ INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
 (451, 460),
 (460, 451),
 (536, 538),
-(538, 536);
+(538, 536),
+(543, 545),
+(545, 543);
 
 -- --------------------------------------------------------
 
@@ -29795,7 +29842,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   `datamodelid` bigint(11) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=160 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=161 ;
 
 --
 -- Daten für Tabelle `scenario`
@@ -29839,7 +29886,8 @@ INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `dat
 (156, 'ServiceTaskSzenarioGET', 0, 1302055923, 0, 1856945235, 0),
 (157, 'ServiceTaskSzenarioPOST', 0, 1302055923, 0, 1856945235, 0),
 (158, 'ServiceTaskSzenarioPUT', 0, 1302055923, 0, 1856945235, 0),
-(159, 'Versandhaus', 0, 1747933626, 4, 921289617, 0);
+(159, 'Versandhaus', 0, 1747933626, 4, 921289617, 0),
+(160, 'Versandhaus', 0, 1747933626, 5, 921289617, 0);
 
 -- --------------------------------------------------------
 
@@ -31228,7 +31276,7 @@ CREATE TABLE IF NOT EXISTS `state` (
 `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `olc_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=157 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=169 ;
 
 --
 -- Daten für Tabelle `state`
@@ -31389,7 +31437,19 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 (153, 'init', 60),
 (154, 'bearbeitet', 61),
 (155, 'geprueft', 61),
-(156, 'init', 61);
+(156, 'init', 61),
+(157, 'abgelehnt', 62),
+(158, 'bearbeitet', 62),
+(159, 'geprueft', 62),
+(160, 'init', 62),
+(161, 'abgelehnt', -1),
+(162, 'bearbeitet', -1),
+(163, 'geprueft', -1),
+(164, 'init', -1),
+(165, 'abgelehnt', -1),
+(166, 'bearbeitet', -1),
+(167, 'geprueft', -1),
+(168, 'init', -1);
 
 -- --------------------------------------------------------
 
@@ -31808,7 +31868,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `controlnode`
 --
 ALTER TABLE `controlnode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=540;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=547;
 --
 -- AUTO_INCREMENT for table `controlnodeinstance`
 --
@@ -31818,7 +31878,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9544;
 -- AUTO_INCREMENT for table `dataattribute`
 --
 ALTER TABLE `dataattribute`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `dataattributeinstance`
 --
@@ -31828,17 +31888,17 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=298;
 -- AUTO_INCREMENT for table `dataclass`
 --
 ALTER TABLE `dataclass`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=62;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=63;
 --
 -- AUTO_INCREMENT for table `datanode`
 --
 ALTER TABLE `datanode`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=166;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=172;
 --
 -- AUTO_INCREMENT for table `dataobject`
 --
 ALTER TABLE `dataobject`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `dataobjectinstance`
 --
@@ -31848,7 +31908,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1184;
 -- AUTO_INCREMENT for table `dataset`
 --
 ALTER TABLE `dataset`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=206;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=213;
 --
 -- AUTO_INCREMENT for table `emailconfiguration`
 --
@@ -31868,7 +31928,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fragment`
 --
 ALTER TABLE `fragment`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=195;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=197;
 --
 -- AUTO_INCREMENT for table `fragmentinstance`
 --
@@ -31903,7 +31963,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `scenario`
 --
 ALTER TABLE `scenario`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=160;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=161;
 --
 -- AUTO_INCREMENT for table `scenarioinstance`
 --
@@ -31913,7 +31973,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1406;
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=157;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=169;
 --
 -- AUTO_INCREMENT for table `user`
 --

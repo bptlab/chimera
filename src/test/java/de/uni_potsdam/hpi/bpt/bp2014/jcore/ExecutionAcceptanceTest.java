@@ -727,5 +727,72 @@ public class ExecutionAcceptanceTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
+    //test scenario 160, outputsets test 1
+    @Test
+    public void testScenario160() {
+        ExecutionService executionService = new ExecutionService();
+        int scenarioID = 160;
+        int scenarioInstance = executionService.startNewScenarioInstance(scenarioID);
+        int activity541 = 541;
+        int activity545 = 545;
+        System.out.println("Start Scenario "+scenarioID);
+
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity541, activity545}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+
+        //do activity 541
+        System.out.println("do activity " + activity541);
+        executionService.beginActivity(scenarioInstance, activity541);
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
+        executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
+        executionService.terminateActivity(scenarioInstance, activity541, 208);
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        LinkedList<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataObjectInstances();
+        boolean loopCheck = false;
+        for(DataObjectInstance d : doI){
+           if (d.getState_id() == 157) {
+               loopCheck = true;
+               break;
+           }
+        }
+        assertTrue("DataObject has the wrong state",loopCheck);
+    }
+
+    //test scenario 160, outputsets test 2
+    @Test
+    public void testScenario160_2() {
+        ExecutionService executionService = new ExecutionService();
+        int scenarioID = 160;
+        int scenarioInstance = executionService.startNewScenarioInstance(scenarioID);
+        int activity541 = 541;
+        int activity545 = 545;
+        int activity543 = 543;
+        System.out.println("Start Scenario "+scenarioID);
+
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity541, activity545}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+
+        //do activity 541
+        System.out.println("do activity " + activity541);
+        executionService.beginActivity(scenarioInstance, activity541);
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
+        executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
+        executionService.terminateActivity(scenarioInstance, activity541, 209);
+        assertArrayEquals(new Integer[]{activity543}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        LinkedList<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataObjectInstances();
+        boolean loopCheck = false;
+        for(DataObjectInstance d : doI){
+            if (d.getState_id() == 159) {
+                loopCheck = true;
+                break;
+            }
+        }
+        assertTrue("DataObject has the wrong state",loopCheck);
+    }
+
 }
 

@@ -227,8 +227,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
                     "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
         }
         try {
-
-
             switch (comparison) {
                 case "=":
                     return left.equals(right);
@@ -242,8 +240,10 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
                     return Float.parseFloat(left) >= Float.parseFloat(right);
 
             }
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             log.error("Error can't convert String to Float:", e);
+        } catch (NullPointerException e) {
+            log.error("Error can't convert String to Float, String is null:", e);
         }
         return false;
     }

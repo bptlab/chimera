@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -99,9 +101,18 @@ public class debugClass {
             for (ActivityInstance activityInstance : acts) {
                 System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
             }
+            Map<Integer, Map<String, String>> outputs = executionService.getOutputSetsForActivityInstance(read);
+            for(int key : outputs.keySet()){
+                System.out.println("---OUTPUTSET " + key + " ---");
+                for (String k : outputs.get(key).keySet()){
+                    System.out.println(k + "  " + outputs.get(key).get(k));
+                }
+                System.out.println("");
+            }
             //readLine();
+            int read2 = new Integer(readLine());
             System.out.println("---------terminate activity------------");
-            if (!executionService.terminateActivityInstance(scenarioInstanceID, read)) {
+            if (!executionService.terminateActivityInstance(scenarioInstanceID, read, read2)) {
                 System.out.println("nicht terminiert");
             }
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
