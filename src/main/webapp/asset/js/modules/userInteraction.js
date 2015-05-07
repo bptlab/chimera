@@ -35,7 +35,13 @@
 
             this.submitNewInstanceNameForm=function(){
                 var data=$scope.form;
-                $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/?", data);
+                $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/?", data).
+                    success(function(response) {
+                        $location.path("/scenario/" + $routeParams.id + "/instance/" + response['id']);
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
             }
 
             this.getTerminationConditionOfScenario = function(id) {
