@@ -11,7 +11,7 @@
 
 	// Create a Controller for the Scenario Information
 	userIn.controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
-		function($routeParams, $location, $http){
+		function($routeParams, $location, $http,$scope){
 			var controller = this;
 			
 			// initialize an empty list of scenario Ids
@@ -32,6 +32,11 @@
                         console.log('request failed');
                     });
             };
+
+            this.submitNewInstanceNameForm=function(){
+                var data=$scope.form;
+                $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/?", data);
+            }
 
             this.getTerminationConditionOfScenario = function(id) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
@@ -130,7 +135,7 @@
 	);
 	
 	userIn.controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
-		function($routeParams, $location, $http){
+		function($routeParams, $location, $http, $scope){
 			// For accessing data from inside the $http context
 			var instanceCtrl = this;
 			
@@ -147,11 +152,6 @@
             this.submitAttributeForm=function(){
                 var data=$scope.form;
                 $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
-            }
-
-            this.submitNewInstanceNameForm=function(){
-                var data=$scope.formInstance;
-                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/?", data);
             }
 
 			/* ____ BEGIN_INITIALIZATION ____ */
