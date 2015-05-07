@@ -284,11 +284,24 @@
               <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][instanceCtrl.activityOutput[value['id']][0]['id']] track by $index">
                    <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
                   <br>
-                  <div ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
+                  <table class="table table-striped">
+                      <thead>
+                      <tr>
+                          <th>Field</th>
+                          <th>Content</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                  <tr ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
                       {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'], attributeConfiguration['value'])}}
-                     {{attributeConfiguration['name']}} <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }' ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
-                      <span ng-show="form.key3.$pending">tipping...</span>
-                  </div>
+                          <td>{{attributeConfiguration['name']}}</td>
+                          <td>
+                              <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }' ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
+                               <span ng-show="form.key3.$pending">tipping...</span>
+                            </td>
+                      </tr>
+                  </tbody>
+                  </table>
                   <!--<hr>-->
               </div>
           <!--</div>-->
