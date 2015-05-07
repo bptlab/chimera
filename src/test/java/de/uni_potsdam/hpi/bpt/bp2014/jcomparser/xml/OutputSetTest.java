@@ -103,7 +103,7 @@ public class OutputSetTest {
     }
 
     @Test
-    public void testSaveTwoOutputSets() {
+    public void testTwoOutputSets() {
         dataNodes.get(0).setText("DO");
         dataNodes.get(1).setText("DO");
         setUpOutputSet();
