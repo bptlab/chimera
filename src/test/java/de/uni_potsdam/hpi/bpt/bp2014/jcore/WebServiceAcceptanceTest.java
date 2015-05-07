@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+// TODO: add documentation : why do you use JerseyTest
 public class WebServiceAcceptanceTest extends JerseyTest{
 
     @Override
