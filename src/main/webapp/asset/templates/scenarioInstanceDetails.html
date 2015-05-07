@@ -302,23 +302,21 @@
                       <tr>
                           <th>#</th>
                           <th>Name</th>
-                          <th>Characteristic</th>
+                          <th>State</th>
                           <th>Action</th>
                       </tr>
                       </thead>
                       <tbody>
-              <div ng-repeat="(key, output_terminate) in instanceCtrl.activityOutput[value['id']] track by $index">
-                      <tr ng-repeat="(key2, outputset_terminate) in instanceCtrl.scenario['outputsets'][output_terminate['id']] track by $index">
-                          <td>{{outputset_terminate['id']}}</td>
-                          <td>{{outputset_terminate['label']}}</td>
-                          <td>{{outputset_terminate['state']}}</td>
-                          <td><button type="button" ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], outputset_terminate['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
-                          </td>
-                      </tr>
-               </div>
-              </tbody>
-          </table>
-         </div>
+                        <tr ng-repeat="(key4, output_terminate) in instanceCtrl.activityOutput[value['id']] track by $index">
+                              <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['id']}}</td>
+                              <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['label']}}</td>
+                              <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['state']}}</td>
+                              <td><button type="button" ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
+                              </td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
       </div>
       <div class="modal-footer">
