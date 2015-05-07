@@ -156,8 +156,9 @@
                             <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
                                 <div class="list-item">
                                     <h3 class="no-margins text-success">{{value['da.name']}}</h3>
-                                    <small>{{value['h.oldvalue']}} -> {{value['h.newvalue']}}</small>
-                                    <div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>
+                                    <!--<small>{{value['h.oldvalue']}} -> {{value['h.newvalue']}}</small>-->
+                                    {{value['h.oldvalue']}} -> {{value['h.newvalue']}}
+                                    <!--<div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>-->
                                 </div>
                             </div>
                         </div>
