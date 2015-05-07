@@ -161,6 +161,7 @@
                             $scope.form = {
                                 method: data['method'],
                                 link: data['link'],
+                                body: data['body'],
                                 attributes: data['attributes']
                             };
                         });
