@@ -228,7 +228,7 @@ public class EmailAcceptanceTest {
         List<Message> inbox = Mailbox.get(receiver);
         assertTrue(inbox.size() == 1);
         assertEquals("Test", inbox.get(0).getSubject());
-        assertEquals("Lieber Kunde Stephan Karphen, Sie bekommen am 2015 12500 überwiesen. #Test lol test", inbox.get(0).getContent());
+        assertEquals("Lieber Kunde Stephan Karphen, Sie bekommen am 2015 12500 ueberwiesen. #Test lol test", inbox.get(0).getContent());
 
     }
 }
