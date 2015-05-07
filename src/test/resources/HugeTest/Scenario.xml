@@ -84,7 +84,7 @@
    <edges />
    <properties>
       <property name="author" value="" />
-      <property name="Termination condition" value="SubDO[end],DO[state1];SubDO[init];" />
+      <property name="Termination condition" value="SubDO[end],DO[state1]; SubDO[init]; " />
       <property name="#folder" value="/" />
       <property name="name" value="Scenario" />
       <property name="#uri" value="/models/358512/versions/0" />
