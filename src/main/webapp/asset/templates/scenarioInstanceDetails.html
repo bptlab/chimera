@@ -279,9 +279,10 @@
         <h4 class="modal-title">Terminate activity?</h4>
       </div>
       <div class="modal-body">
-          <div ng-repeat="(key, output) in instanceCtrl.activityOutput[value['id']] track by $index">
-              <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
-                  <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
+          <!--<div ng-repeat="(key, output) in instanceCtrl.activityOutput[value['id']] track by $index">
+              <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">-->
+              <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][instanceCtrl.activityOutput[value['id']][0]['id']] track by $index">
+                   <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
                   <br>
                   <div ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
                       {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'], attributeConfiguration['value'])}}
@@ -290,7 +291,7 @@
                   </div>
                   <hr>
               </div>
-          </div>
+          <!--</div>-->
           <br><br><br>
         <p>Do you really want to terminate Activity "{{value['label']}}"?</p>
       </div>
