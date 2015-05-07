@@ -38,18 +38,34 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="webserviceC.submitMyForm()">
-                    Method:
-                    <!--<input type="text" ng-model="form.method" size="5" /><br>-->
-                    <select ng-model="form.method" ng-options="item for item in ['GET','POST','PUT']"></select> <br>
-                    <div ng-if="form.method.null?">
-                        <font color="red"><i>please be sure to set a correct HTTP method</i></font>
-                    </div>
-                    Link:
-                    <input type="text" ng-model="form.link" size="50" /><br>
-                    Body:
-                    <input type="text" ng-model="form.body" size="50" /><br>
-                    Please choose a dataattribute ID:
-                    <!-- TODO: filter out all duplicate items in the DataAttributeArray -->
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Contant</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Method</td>
+                            <td>
+                                <select ng-model="form.method" ng-options="item for item in ['GET','POST','PUT']"></select> <br>
+                                <div ng-if="form.method.null?">
+                                    <font color="red"><i>please be sure to set a correct HTTP method</i></font>
+                                </div>
+                                <!--<input type="text" ng-model="form.method" size="5" /><br>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Link</td>
+                            <td><input type="text" ng-model="form.link" size="50" /></td>
+                        </tr>
+                        <tr>
+                            <td>Request Body</td>
+                            <td><input type="text" ng-model="form.body" size="50" /></td>
+                        </tr>
+                        </tbody>
+                    </table>
                    <!-- <select ng-model="searchText" ng-options="item for item in webserviceC.DataAttributeArray | unique: 'item' "></select><br>-->
                     <select ng-model="searchText" ng-options="item for item in webserviceC.DataAttributeArray "></select><br>
                     <div ng-show="searchText">
