@@ -3,14 +3,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.janalytics.rest;
 import de.uni_potsdam.hpi.bpt.bp2014.janalytics.AnalyticsService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -22,10 +19,10 @@ public class RestInterface {
     private AnalyticsService analyticsService = new AnalyticsService();
 
     /**
-    * This method returns the result set of a specific algorithm as REST call
-    *
+     * This method returns the result set of a specific algorithm as REST call
+     *
      * @param algorithmID
-     * @param instanceID The scenario Instance ID.
+     * @param instanceID  The scenario Instance ID.
      * @return
      */
     @GET
@@ -64,14 +61,14 @@ public class RestInterface {
      * This method triggers the execution of the defined algorithm for analytic purposes
      *
      * @param algorithmID
-     * @param instanceID The scenario Instance ID.
+     * @param instanceID  The scenario Instance ID.
      * @return
      */
     @POST
     @Path("algorithm/{algorithmID}/instance/{instanceID}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response postAnalyticsResult(@PathParam("algorithmID") String algorithmID,
-                                       @PathParam("instanceID") int instanceID) {
+                                        @PathParam("instanceID") int instanceID) {
         Boolean result = null;
         try {
             result = (Boolean) analyticsService.executeAnalysisResultForInstance(instanceID, algorithmID);
