@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -9,20 +8,22 @@ import org.junit.Test;
 import javax.ws.rs.core.Application;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class WebServiceAcceptanceTest extends JerseyTest{
+//This class extends JerseyTest, because it's need the Rest Interface to check the Webservice Task functions.
+//The GET, PUT and POST Requests are send to the Rest Interface.
+public class WebServiceAcceptanceTest extends JerseyTest {
 
+    //Sets the Rest Interface as Jersey Test class.
     @Override
     protected Application configure() {
         return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface.class);
     }
 
     @Test
-    public void testGet(){
+    public void testGet() {
         System.out.println("\n ------------------ test Scenario 156 ------------------\n");
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(156);
@@ -45,10 +46,10 @@ public class WebServiceAcceptanceTest extends JerseyTest{
         Collection<DataAttributeInstance> dataAttributeInstances = executionService.getScenarioInstance(scenarioInstance).getDataAttributeInstances().values();
         String value12 = "";
         String value13 = "";
-        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances){
-            if (dataAttributeInstance.getDataAttribute_id() == 12){
+        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
+            if (dataAttributeInstance.getDataAttribute_id() == 12) {
                 value12 = dataAttributeInstance.getValue().toString();
-            }else if (dataAttributeInstance.getDataAttribute_id() == 13){
+            } else if (dataAttributeInstance.getDataAttribute_id() == 13) {
                 value13 = dataAttributeInstance.getValue().toString();
             }
         }
@@ -57,7 +58,7 @@ public class WebServiceAcceptanceTest extends JerseyTest{
     }
 
     @Test
-    public void testPOST(){
+    public void testPOST() {
         System.out.println("\n ------------------ test Scenario 157 ------------------\n");
         ExecutionService executionService = new ExecutionService();
         int scenarioInstance = executionService.startNewScenarioInstance(157);
@@ -79,8 +80,8 @@ public class WebServiceAcceptanceTest extends JerseyTest{
 
         Collection<DataAttributeInstance> dataAttributeInstances = executionService.getScenarioInstance(scenarioInstance).getDataAttributeInstances().values();
         String value14 = "";
-        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances){
-            if (dataAttributeInstance.getDataAttribute_id() == 14){
+        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
+            if (dataAttributeInstance.getDataAttribute_id() == 14) {
                 value14 = dataAttributeInstance.getValue().toString();
             }
         }
@@ -118,6 +119,6 @@ public class WebServiceAcceptanceTest extends JerseyTest{
         }
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertEquals(dbScenarioInstance.getScenarioInstances(156).getLast().toString(), value16);
-        assertEquals("new Instance",dbScenarioInstance.getInstanceMap(new Integer(value16)).get("name"));
+        assertEquals("new Instance", dbScenarioInstance.getInstanceMap(new Integer(value16)).get("name"));
     }
 }
