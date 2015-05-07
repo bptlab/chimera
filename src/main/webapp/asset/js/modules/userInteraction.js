@@ -279,9 +279,15 @@
 
                 $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
                 "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                "/activity/"+ activityId, data);
-
-                instanceCtrl.changeAttributObject[''+id] = value;
+                "/activity/"+ activityId, data).
+                    success(function(data) {
+                        instanceCtrl.initializeDataobjectAttributelogInstances();
+                        instanceCtrl.changeAttributObject[''+id] = value;
+                        instanceCtrl.getOutputAndOutputsets(activityId);
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
             };
 
             this.setCurrentAttributeObject = function(id, value) {
