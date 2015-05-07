@@ -40,7 +40,11 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
             <div class="modal-body">
                 <form name="myForm" ng-submit="webserviceC.submitMyForm()">
                     Method:
-                    <input type="text" ng-model="form.method" size="5" /><br>
+                    <!--<input type="text" ng-model="form.method" size="5" /><br>-->
+                    <select ng-model="form.method" ng-options="items for item in ['GET','POST','PUT']"   ></select> <br>
+                    <div ng-if="form.method.empty?">
+                        <font color="red"><i>please be sure to set a correct HTTP method</i></font>
+                    </div>
                     Link:
                     <input type="text" ng-model="form.link" size="50" /><br>
                     Body:
