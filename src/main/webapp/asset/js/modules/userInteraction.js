@@ -412,6 +412,7 @@
                 }
 
                 instanceCtrl.scenario['outputsetsLength'] = [];
+                instanceCtrl.scenario['outputsetsNameAndStateArray'] = [];
 
                 //retrieving the output for each retrieved referenced Activity
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
@@ -425,6 +426,8 @@
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
                                     instanceCtrl.scenario['outputsetsLength'].push(outputset['id']);
+                                    //var description = data3['label'] + " in state " + data3['state'];
+                                    //instanceCtrl.scenario['outputsetsNameAndStateArray'].push(description);
                                 }).
                                 error(function() {
                                     console.log('request failed');

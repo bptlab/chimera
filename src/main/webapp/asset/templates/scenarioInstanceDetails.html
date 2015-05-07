@@ -289,21 +289,47 @@
                      {{attributeConfiguration['name']}} <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }' ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"  ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
                       <span ng-show="form.key3.$pending">tipping...</span>
                   </div>
-                  <hr>
+                  <!--<hr>-->
               </div>
           <!--</div>-->
           <br><br><br>
-        <p>Do you really want to terminate Activity "{{value['label']}}"?</p>
+        <!--<p>Do you really want to terminate Activity "{{value['label']}}"?</p>-->
+          <div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
+              <hr>
+              <div class="responsive-table pull-left">
+                  <table class="table table-striped">
+                      <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Characteristic</th>
+                          <th>Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+              <div ng-repeat="(key, output_terminate) in instanceCtrl.activityOutput[value['id']] track by $index">
+                      <tr ng-repeat="(key2, outputset_terminate) in instanceCtrl.scenario['outputsets'][output_terminate['id']] track by $index">
+                          <td>{{outputset_terminate['id']}}</td>
+                          <td>{{outputset_terminate['label']}}</td>
+                          <td>{{outputset_terminate['state']}}</td>
+                          <td><button type="button" ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], outputset_terminate['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
+                          </td>
+                      </tr>
+               </div>
+              </tbody>
+          </table>
+         </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <div ng-hide="instanceCtrl.scenario['outputsetsLength'].length">
               <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
           </div>
-          <div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
+          <!--<div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
               <select ng-model="terminateSelection" ng-options="item for item in instanceCtrl.scenario['outputsetsLength']"></select>
               <button type="button" ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], terminateSelection);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
-          </div>
+          </div>-->
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
