@@ -149,6 +149,11 @@
                 $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
             }
 
+            this.submitNewInstanceNameForm=function(){
+                var data=$scope.formInstance;
+                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/?", data);
+            }
+
 			/* ____ BEGIN_INITIALIZATION ____ */
 			this.initializeActivityInstances = function(){
 				instanceCtrl.instanceDetails.activities = {};

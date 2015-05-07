@@ -66,7 +66,12 @@
 			</div>
 			<div class="modal-body">
 				<p>Do you really want to start a new instance of scenario "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
-			</div>
+                <form name="myForm" ng-submit="webserviceC.submitNewInstanceNameForm()">
+                    <input type="text" ng-model="formInstance.name">
+                    <span ng-show="form.attribute_key.$pending">tipping...</span>
+                    <button type="submit" class="btn btn-default">Name it!</button>
+                </form>
+            </div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				<button type="button" ng-click="scenarioCtrl.createInstance(scenarioCtrl.currentScenario['id']);" data-dismiss="modal" class="btn btn-primary">Start Instance</button>
