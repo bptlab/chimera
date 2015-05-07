@@ -829,7 +829,6 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
         if(!testActivityInstanceExists(activityID)){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
@@ -842,6 +841,7 @@ public class RestInterface {
         int j = 0;
         DataObjectSetsJaxBean[] inputSets = new DataObjectSetsJaxBean[inputSetMap.keySet().size()];
         for (Integer i : inputSetMap.keySet()) {
+            DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
             inputSet.id = i;
             inputSet.dataObjects = inputSetMap.get(i);
             String[] path = uriInfo.getAbsolutePath().toString().split("/");
@@ -899,7 +899,6 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
         if(!testActivityInstanceExists(activityID)){
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
@@ -912,6 +911,7 @@ public class RestInterface {
         int j = 0;
         DataObjectSetsJaxBean[] outputSets = new DataObjectSetsJaxBean[outputSetMap.keySet().size()];
         for (Integer i : outputSetMap.keySet()) {
+            DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
             outputSet.id = i;
             outputSet.dataObjects = outputSetMap.get(i);
             String[] path = uriInfo.getAbsolutePath().toString().split("/");
