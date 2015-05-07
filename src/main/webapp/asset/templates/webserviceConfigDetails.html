@@ -61,7 +61,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                             <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes track by $index">
                                 <td>{{attribute_key}}</td>
                                 <td>
-                                    <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] "><button ng-click="form.attributes.splice($index, 1)" aria-label="Remove">X</button><br>
+                                    <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] "><button ng-click="form.attributes.splice($index, 1)" aria-label="Remove" class="btn btn-danger"></button><br>
                                     <span ng-show="form.attribute_key.$pending">tipping...</span>
                                 </td>
                             </tr>
