@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 
+import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
