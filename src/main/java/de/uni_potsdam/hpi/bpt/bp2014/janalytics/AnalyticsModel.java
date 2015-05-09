@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyticsModel extends MetaAnalyticsModel {
-    static Logger log = Logger.getLogger(Connection.class.getName());
+    static Logger log = Logger.getLogger(AnalyticsModel.class.getName());
 
     /**
      * @param scenarioInstance_id
