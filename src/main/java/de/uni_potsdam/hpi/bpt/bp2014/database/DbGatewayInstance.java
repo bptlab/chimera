@@ -53,8 +53,8 @@ public class DbGatewayInstance extends DbObject {
      * This method creates and saves a new gateway instance to the database.
      *
      * @param controlNodeInstance_id This is the database ID of a controlNode instance.
-     * @param type This is the desirable type of the gateway instance.
-     * @param state This is the desirable state of the gateway instance.
+     * @param type                   This is the desirable type of the gateway instance.
+     * @param state                  This is the desirable state of the gateway instance.
      */
     public void createNewGatewayInstance(int controlNodeInstance_id, String type, String state) {
         String sql = "INSERT INTO gatewayinstance (id, gatewayinstance.type, gateway_state) VALUES (" + controlNodeInstance_id + ", '" + type + "', '" + state + "')";
@@ -62,9 +62,9 @@ public class DbGatewayInstance extends DbObject {
     }
 
     /**
-     *This method sets the state of a gateway to a desirable one.
+     * This method sets the state of a gateway to a desirable one.
      *
-     * @param id This is the database ID of a gateway instance.
+     * @param id    This is the database ID of a gateway instance.
      * @param state this is the desirable state of the gateway instance.
      */
     public void setState(int id, String state) {

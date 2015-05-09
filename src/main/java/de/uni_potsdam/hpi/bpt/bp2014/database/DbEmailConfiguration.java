@@ -53,13 +53,13 @@ public class DbEmailConfiguration extends DbObject {
 
     public int setEmailConfiguration(int id, String receiver, String subject, String message) {
         String sql = "UPDATE emailconfiguration SET message = '" +
-                     message + "', subject  = '" + subject +
-                     "', receivermailaddress = '" + receiver +
-                     "'WHERE controlnode_id = " + id;
+                message + "', subject  = '" + subject +
+                "', receivermailaddress = '" + receiver +
+                "'WHERE controlnode_id = " + id;
         return this.executeUpdateStatement(sql);
     }
 
-    public LinkedList<Integer> getAllEmailTasksForScenario(int scenario_id){
+    public LinkedList<Integer> getAllEmailTasksForScenario(int scenario_id) {
         String sql = "SELECT id FROM `controlnode` WHERE type = 'EmailTask' AND fragment_id IN (Select id FROM fragment WHERE scenario_id = " + scenario_id + ")";
         return this.executeStatementReturnsListInt(sql, "id");
     }

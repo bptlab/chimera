@@ -114,11 +114,11 @@ public class DataObject implements IPersistable {
             return -1;
         }
         Connector connector = new Connector();
-        for(Integer state : states.values()) {
+        for (Integer state : states.values()) {
             connector.updateStates(state, dataClass.getDataClassID());
         }
         // We assume, that every DataObject starts with the state "init"
-        for(Integer state : states.values()) {
+        for (Integer state : states.values()) {
             connector.updateStates(state, dataClass.getDataClassID());
         }
         initState = states.get("init");
@@ -208,18 +208,18 @@ public class DataObject implements IPersistable {
      */
     public void setDataClass(Map<Long, DataClass> dataClasses) {
         long dataClassModelID = -1;
-        if(dataNodes.get(0).getDataClassURI() != null && dataNodes.get(0).getDataClassURI() != "") {
+        if (dataNodes.get(0).getDataClassURI() != null && dataNodes.get(0).getDataClassURI() != "") {
             //regex fun to get only the ID from the URI.
             String[] modelID = dataNodes.get(0).getDataClassURI().split("\\/");
-            String[] mID = modelID[modelID.length-1].split("\\.");
+            String[] mID = modelID[modelID.length - 1].split("\\.");
             dataClassModelID = new Long(mID[0]);
         }
-        for(Long i : dataClasses.keySet()) {
-            if(dataClassModelID != -1){
-                if(dataClassModelID == dataClasses.get(i).getDataClassModelID()){
+        for (Long i : dataClasses.keySet()) {
+            if (dataClassModelID != -1) {
+                if (dataClassModelID == dataClasses.get(i).getDataClassModelID()) {
                     this.dataClass = dataClasses.get(i);
                 }
-            }else {
+            } else {
                 if (dataNodes.get(0).getText().equals(dataClasses.get(i).getDataClassName())) {
                     dataClass = dataClasses.get(i);
                 }

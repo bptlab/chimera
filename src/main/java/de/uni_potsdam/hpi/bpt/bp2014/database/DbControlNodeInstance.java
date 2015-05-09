@@ -32,7 +32,7 @@ public class DbControlNodeInstance extends DbObject {
     /**
      * This method checks if a controlNode instance is existing in the database belonging to a controlNode and a fragment instance.
      *
-     * @param controlNode_id This is the database ID of a controlNode.
+     * @param controlNode_id      This is the database ID of a controlNode.
      * @param fragmentInstance_id This is the database ID of a fragment instance.
      * @return true if the controlNode instance exists els false.
      */
@@ -40,6 +40,7 @@ public class DbControlNodeInstance extends DbObject {
         String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id + " AND fragmentinstance_id = " + fragmentInstance_id;
         return executeExistStatement(sql);
     }
+
     public Boolean existControlNodeInstance(int controlNodeInstance_id) {
         String sql = "SELECT id FROM controlnodeinstance WHERE id = " + controlNodeInstance_id;
         return executeExistStatement(sql);
@@ -48,8 +49,8 @@ public class DbControlNodeInstance extends DbObject {
     /**
      * This method creates and saves a new controlNode instance to the database in the context of a fragment instance.
      *
-     * @param controlNode_id This is the database ID of a controlNode.
-     * @param controlNodeType This is the desirable type of the new controlNode instance.
+     * @param controlNode_id      This is the database ID of a controlNode.
+     * @param controlNodeType     This is the desirable type of the new controlNode instance.
      * @param fragmentInstance_id This is the database ID of a fragment instance.
      * @return -1 if something went wrong else the database ID of the newly created controlNode instance.
      */
@@ -61,7 +62,7 @@ public class DbControlNodeInstance extends DbObject {
     /**
      * This method returns the database ID of a controlNode instance belonging to a controlNode and fragment instance.
      *
-     * @param controlNode_id This is the database ID of a controlNode.
+     * @param controlNode_id      This is the database ID of a controlNode.
      * @param fragmentInstance_id This is the database ID of a fragment instance.
      * @return -1 if something went wrong else the database ID of a controlNode instance.
      */

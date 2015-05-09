@@ -9,7 +9,7 @@ public class DbHistoryActivityInstance extends DbObject {
     /**
      * This method saves a log entry containing an activity state transition into the database.
      *
-     * @param id the ID of the ActivityInstance that is changed.
+     * @param id    the ID of the ActivityInstance that is changed.
      * @param state the new state of the ActivityInstance.
      * @return the generated key for the insert statement.
      */
@@ -22,8 +22,10 @@ public class DbHistoryActivityInstance extends DbObject {
 
         return this.executeInsertStatement(sql);
     }
+
     /**
      * This method saves a log entry of a newly created ActivityInstance into the database.
+     *
      * @param id the ID of the ActivityInstance that is created.
      * @return the generated key for the insert statement.
      */
@@ -36,24 +38,24 @@ public class DbHistoryActivityInstance extends DbObject {
 
         return this.executeInsertStatement(sql);
     }
+
     /**
-     *This method returns the Activity log entries for a ScenarioInstance.
+     * This method returns the Activity log entries for a ScenarioInstance.
      *
      * @param scenarioInstanceId ID of the ScenarioInstance for which the activity log entries shall be returned.
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
-    public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id  ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id","h.scenarioinstance_id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
+    public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(int scenarioInstanceId) {
+        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = " + scenarioInstanceId + "  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id  ORDER BY timestamp DESC";
+        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.scenarioinstance_id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 
     /**
-     *
      * @param scenarioInstanceId
      * @return
      */
-    public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId){
-        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = "+scenarioInstanceId+"  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id AND h.newstate = 'terminated' ORDER BY timestamp DESC";
+    public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId) {
+        String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = " + scenarioInstanceId + "  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id AND h.newstate = 'terminated' ORDER BY timestamp DESC";
         return this.executeStatementReturnsMapWithMapWithKeys(sql, "cn.label", "h.scenarioinstance_id", "h.id", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 }

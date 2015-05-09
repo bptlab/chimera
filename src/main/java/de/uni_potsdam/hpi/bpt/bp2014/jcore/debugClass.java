@@ -35,6 +35,7 @@ import java.util.Map;
 
 public class debugClass {
     static Logger log = Logger.getLogger(debugClass.class.getName());
+
     public static String selectScenario() {
 
         System.out.print("Select Scenario: ");
@@ -102,9 +103,9 @@ public class debugClass {
                 System.out.println(activityInstance.getControlNodeInstance_id() + ", " + activityInstance.getLabel());
             }
             Map<Integer, Map<String, String>> outputs = executionService.getOutputSetsForActivityInstance(read);
-            for(int key : outputs.keySet()){
+            for (int key : outputs.keySet()) {
                 System.out.println("---OUTPUTSET " + key + " ---");
-                for (String k : outputs.get(key).keySet()){
+                for (String k : outputs.get(key).keySet()) {
                     System.out.println(k + "  " + outputs.get(key).get(k));
                 }
                 System.out.println("");

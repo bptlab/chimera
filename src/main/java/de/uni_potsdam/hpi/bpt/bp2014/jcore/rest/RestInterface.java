@@ -53,6 +53,7 @@ import java.util.*;
 @Path("interface/v2")
 public class RestInterface {
     static Logger log = Logger.getLogger(RestInterface.class.getName());
+
     /**
      * This method allows to give an overview of all scenarios.
      * The response will return a JSON-Array containing the basic
@@ -669,8 +670,8 @@ public class RestInterface {
      * @param instances The Map containing information about the activity instances.
      *                  We Assume that the key is a the id and the value is a Map
      *                  from String to Object with the properties of the instance.
-     * @param uriInfo Specifies the context. For example the uri
-     *                of the request.
+     * @param uriInfo   Specifies the context. For example the uri
+     *                  of the request.
      * @return
      */
     private JSONObject buildJSONObjectForReferencedActivities(
@@ -735,10 +736,10 @@ public class RestInterface {
      * This method is used to get all the information for an activity.
      * This means the label, id and a link for the input-/outputSets.
      *
-     * @param uriInfo A UriInfo object, which holds the server context.
-     * @param scenarioID The databaseID of a scenario.
+     * @param uriInfo            A UriInfo object, which holds the server context.
+     * @param scenarioID         The databaseID of a scenario.
      * @param scenarioInstanceID The databaseID of a scenarioInstance.
-     * @param activityID The databaseID of an activityInstance.
+     * @param activityID         The databaseID of an activityInstance.
      * @return a response Object with the status code:
      * 200 if everything was correct and holds the information about the activityInstance.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
@@ -755,7 +756,7 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if(!testActivityInstanceExists(activityID)){
+        if (!testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
@@ -776,10 +777,10 @@ public class RestInterface {
     /**
      * This method implements the REST call for retrieving reference information for a specific activity
      *
-     * @param uriInfo  A UriInfo object, which holds the server context.
-     * @param scenarioID  The databaseID of a scenario.
+     * @param uriInfo            A UriInfo object, which holds the server context.
+     * @param scenarioID         The databaseID of a scenario.
      * @param scenarioInstanceID The databaseID of a scenarioInstance.
-     * @param activityID The databaseID of an activityInstance.
+     * @param activityID         The databaseID of an activityInstance.
      * @return a json object containing the referenced activities
      */
     @GET
@@ -805,17 +806,17 @@ public class RestInterface {
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * The result is determined by:
      *
-     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
-     * @param scenarioID The databaseID of the scenario.
+     * @param uriInfo            A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID         The databaseID of the scenario.
      * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
-     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @param activityID         The databaseID of the activityInstance belonging to this scenarioInstance.
      * @return a response consisting of:
      * array of inputSets containing the inputSetDatabaseID, the name of the dataObject and their state as a Map &
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * a response status code:
-     *  A 200 if everything was correct.
-     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
-     *  if the activity has no inputSet & with an error message instead of the array.
+     * A 200 if everything was correct.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     * if the activity has no inputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
@@ -829,11 +830,11 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if(!testActivityInstanceExists(activityID)){
+        if (!testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
-        if(executionService.getInputSetsForActivityInstance(activityID) == null || executionService.getInputSetsForActivityInstance(activityID).size() == 0){
+        if (executionService.getInputSetsForActivityInstance(activityID) == null || executionService.getInputSetsForActivityInstance(activityID).size() == 0) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no inputSet for this activity instance.\"}").build();
         }
@@ -875,17 +876,17 @@ public class RestInterface {
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * The result is determined by:
      *
-     * @param uriInfo  A UriInfo object, which holds the server context used for the link.
-     * @param scenarioID The databaseID of the scenario.
+     * @param uriInfo            A UriInfo object, which holds the server context used for the link.
+     * @param scenarioID         The databaseID of the scenario.
      * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the aforementioned scenario.
-     * @param activityID The databaseID of the activityInstance belonging to this scenarioInstance.
+     * @param activityID         The databaseID of the activityInstance belonging to this scenarioInstance.
      * @return a response consisting of:
      * array of outputSets containing the outputSetDatabaseID, the name of the dataObject and their state as a Map &
-     *  a link to get the dataObjectInstances with their dataAttributesInstances.
+     * a link to get the dataObjectInstances with their dataAttributesInstances.
      * a response status code:
-     *  A 200 if everything was correct.
-     *  A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
-     *  if the activity has no outputSet & with an error message instead of the array.
+     * A 200 if everything was correct.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
+     * if the activity has no outputSet & with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
@@ -899,11 +900,11 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if(!testActivityInstanceExists(activityID)){
+        if (!testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
-        if(executionService.getOutputSetsForActivityInstance(activityID) == null || executionService.getOutputSetsForActivityInstance(activityID).size() == 0){
+        if (executionService.getOutputSetsForActivityInstance(activityID) == null || executionService.getOutputSetsForActivityInstance(activityID).size() == 0) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no outputSet for this activity instance.\"}").build();
         }
@@ -931,15 +932,15 @@ public class RestInterface {
      * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an inputSet.
      * The outcome is specified by:
      *
-     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioID         This is the databaseID of the scenario.
      * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
-     * @param inputsetID This is the databaseID of an inputSet belonging to this scenarioInstance.
+     * @param inputsetID         This is the databaseID of an inputSet belonging to this scenarioInstance.
      * @return a response consisting of:
      * an array of dataObjectsInstances with their dataAttributeInstances [also as an array].
      * a response status code:
-     *  A 200 if everything is correct.
-     *  A 404 Not Found is returned if the scenario/scenarioInstance/inputSetInstance is non-existing &
-     *  with an error message instead of the array.
+     * A 200 if everything is correct.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/inputSetInstance is non-existing &
+     * with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}")
@@ -952,8 +953,8 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if(executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID) == null ||
-                executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID).length == 0){
+        if (executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID).length == 0) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such inputSet instance.\"}").build();
         }
@@ -976,15 +977,15 @@ public class RestInterface {
      * by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.
      * The outcome is specified by:
      *
-     * @param scenarioID This is the databaseID of the scenario.
+     * @param scenarioID         This is the databaseID of the scenario.
      * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the aforementioned scenario.
-     * @param outputsetID This is the databaseID of an outputSet belonging to this scenarioInstance.
+     * @param outputsetID        This is the databaseID of an outputSet belonging to this scenarioInstance.
      * @return a response consisting of:
      * an array of dataObjectsInstances with their dataAttributeInstances also as an array.
      * a response status code:
-     *  A 200 if everything is correct.
-     *  A 404 Not Found is returned if the scenario/scenarioInstance/outputSetInstance is non-existing
-     *  with an error message instead of the array.
+     * A 200 if everything is correct.
+     * A 404 Not Found is returned if the scenario/scenarioInstance/outputSetInstance is non-existing
+     * with an error message instead of the array.
      */
     @GET
     @Path("scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}")
@@ -997,8 +998,8 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if(executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
-                executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0){
+        if (executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
+                executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such outputSet instance.\"}").build();
         }
@@ -1074,7 +1075,7 @@ public class RestInterface {
                 result = executionService.beginActivityInstance(scenarioInstanceID, activityID);
                 break;
             case "terminate":
-                if(outputset != -1){
+                if (outputset != -1) {
                     result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputset);
                 } else {
                     result = executionService.terminateActivityInstance(scenarioInstanceID, activityID);
@@ -1101,18 +1102,19 @@ public class RestInterface {
     }
 
     /**
-     *  This method updates the data attributes of a specific activity defined via its activityID
+     * This method updates the data attributes of a specific activity defined via its activityID
+     *
      * @param scenarioID         The id of a scenario model.
      * @param scenarioInstanceID the id of an scenario instance.
      * @param activityID         the control node id of the activity.
-     * @return Status code with regard to its success / failure 
+     * @return Status code with regard to its success / failure
      */
     @PUT
     @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
     public Response setDataAttribute(@PathParam("scenarioID") int scenarioID,
-                                        @PathParam("instanceID") int scenarioInstanceID,
-                                        @PathParam("activityID") int activityID,
-                                        final DataAttributeUpdateJaxBean input) {
+                                     @PathParam("instanceID") int scenarioInstanceID,
+                                     @PathParam("activityID") int activityID,
+                                     final DataAttributeUpdateJaxBean input) {
         ExecutionService executionService = new ExecutionService();
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
 

@@ -79,6 +79,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * Sets the processeditorServerUrl which is needed for connecting to the server
      * in order to get the XML-files for the fragments.
+     *
      * @param serverURL URL of the processEditorServer
      */
     public Fragment(String serverURL) {
@@ -132,6 +133,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     /**
      * Get the XML which contains all the versions of the current scenario from the processEditorServer.
+     *
      * @return XML containing versions
      */
     private Element fetchVersionXML() {
@@ -317,6 +319,7 @@ public class Fragment implements IDeserialisable, IPersistable {
             set.save();
         }
     }
+
     /**
      * Migrate fragmentinstances.
      *
@@ -333,6 +336,7 @@ public class Fragment implements IDeserialisable, IPersistable {
             }
         }
     }
+
     /**
      * Returns the list of edges.
      * This is a Composition, if you change the list

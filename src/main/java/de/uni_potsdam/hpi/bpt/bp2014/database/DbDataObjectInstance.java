@@ -34,7 +34,7 @@ public class DbDataObjectInstance extends DbObject {
      * This method checks if the instance of a dataObject is existing.
      *
      * @param scenarioInstance_id This is the database ID of a scenario instance.
-     * @param dataObject_id This is the database ID of a dataObject.
+     * @param dataObject_id       This is the database ID of a dataObject.
      * @return true if DataObject is existing else false.
      */
     public Boolean existDataObjectInstance(int scenarioInstance_id, int dataObject_id) {
@@ -45,7 +45,7 @@ public class DbDataObjectInstance extends DbObject {
     /**
      * This method sets the state of a dataObject instance to a desirable one and saves a log entry into the database.
      *
-     * @param id This is the database ID of a dataObject instance.
+     * @param id    This is the database ID of a dataObject instance.
      * @param state This is the desirable state of a dataObject instance.
      */
     public void setState(int id, int state) {
@@ -59,8 +59,8 @@ public class DbDataObjectInstance extends DbObject {
      * This method creates and saves a dataObject instance to the database and saves a log entry into the database.
      *
      * @param scenarioInstance_id This is the database ID of a scenario instance.
-     * @param state_id This is the initial state of a dataObject instance.
-     * @param dataObject_id This is the database ID of a dataObject.
+     * @param state_id            This is the initial state of a dataObject instance.
+     * @param dataObject_id       This is the database ID of a dataObject.
      * @return -1 if something went wrong else return the database ID of the newly created dataObject instance.
      */
     public int createNewDataObjectInstance(int scenarioInstance_id, int state_id, int dataObject_id) {
@@ -75,7 +75,7 @@ public class DbDataObjectInstance extends DbObject {
      * This method returns the dataObject instance ID of a corresponding dataObject.
      *
      * @param scenarioInstance_id This is the database ID of a scenario instance.
-     * @param dataObject_id This is the database ID of a dataObject.
+     * @param dataObject_id       This is the database ID of a dataObject.
      * @return -1 if something went wrong else the database ID of a dataObject instance.
      */
     public int getDataObjectInstanceID(int scenarioInstance_id, int dataObject_id) {
@@ -108,7 +108,7 @@ public class DbDataObjectInstance extends DbObject {
     /**
      * This method sets the dataObject instance to a modified state so that no other activity can work with it.
      *
-     * @param id This is the database ID of a dataObject instance.
+     * @param id       This is the database ID of a dataObject instance.
      * @param onChange This is the flag set to indicate if the dataObject instance is being modified or not.
      */
     public void setOnChange(int id, Boolean onChange) {

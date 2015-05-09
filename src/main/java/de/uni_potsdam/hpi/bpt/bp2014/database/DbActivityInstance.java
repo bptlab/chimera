@@ -93,7 +93,7 @@ public class DbActivityInstance extends DbObject {
         return this.executeStatementReturnsListInt(sql, "controlnode_id");
     }
 
-    public boolean getAutomaticExecution(int id){
+    public boolean getAutomaticExecution(int id) {
         String sql = "SELECT automaticexecution FROM activityinstance WHERE id = " + id;
         return this.executeStatementReturnsBoolean(sql, "automaticexecution");
     }
@@ -159,8 +159,7 @@ public class DbActivityInstance extends DbObject {
     }
 
 
-
-    public boolean getCanTerminate(int id){
+    public boolean getCanTerminate(int id) {
         String sql = "SELECT canTerminate FROM activityinstance WHERE id = " + id;
         return this.executeStatementReturnsBoolean(sql, "canTerminate");
     }

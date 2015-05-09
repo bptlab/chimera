@@ -197,6 +197,7 @@ public class Node implements IDeserialisable, IPersistable {
         }
         return databaseID;
     }
+
     /**
      * Migrate datanode- or controlnodeInstances.
      *
@@ -228,6 +229,7 @@ public class Node implements IDeserialisable, IPersistable {
     public String getDataClassURI() {
         return dataClassURI;
     }
+
     /**
      * Returns the ID of the node.
      * It is the id used inside the XML.
@@ -301,6 +303,7 @@ public class Node implements IDeserialisable, IPersistable {
     public String getStereotype() {
         return stereotype;
     }
+
     /**
      * Sets the fragment id.
      *

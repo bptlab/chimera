@@ -15,7 +15,6 @@ public class AnalyticsModel extends MetaAnalyticsModel {
     static Logger log = Logger.getLogger(Connection.class.getName());
 
     /**
-     *
      * @param scenarioInstance_id
      * @return
      */

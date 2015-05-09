@@ -7,9 +7,9 @@ public class AnalyticsService {
     private ExampleAlgorithm exampleAlgorithm = new ExampleAlgorithm();
     private AnalyticsModel analyticsModel = new AnalyticsModel();
 
-	/**
-	*   This method returns the actual result of a specific algorithm
-	*/
+    /**
+     * This method returns the actual result of a specific algorithm
+     */
     public Object getAnalysisResultForInstance(int scenarioInstance_id, String algorithmID) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String algorithmName = "exampleAlgorithm" + algorithmID;
         Method method = AnalyticsModel.class.getDeclaredMethod(algorithmName, Integer.TYPE);
@@ -17,9 +17,9 @@ public class AnalyticsService {
         return method.invoke(analyticsModel, scenarioInstance_id);
     }
 
-	/**
-	*   This method executes the giving algorithm identified by its id and returns its success / failure
-	*/
+    /**
+     * This method executes the giving algorithm identified by its id and returns its success / failure
+     */
     public Object executeAnalysisResultForInstance(int scenarioInstance_id, String algorithmID) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String algorithmName = "exampleAlgorithm" + algorithmID;
         Method method = ExampleAlgorithm.class.getDeclaredMethod(algorithmName, Integer.TYPE);

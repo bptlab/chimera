@@ -10,8 +10,8 @@ public class DataObject {
     /**
      * Initializes the DataObject.
      *
-     * @param id   This is the database ID of a data object.
-     * @param stateID       This is the database ID of a state.
+     * @param id      This is the database ID of a data object.
+     * @param stateID This is the database ID of a state.
      */
     public DataObject(int id, int stateID) {
         this.id = id;

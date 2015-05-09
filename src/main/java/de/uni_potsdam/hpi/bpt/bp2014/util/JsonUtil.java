@@ -13,11 +13,10 @@ import java.util.*;
 public class JsonUtil {
 
     /**
-     *
      * @param content is an ArrayList<HashMap<String,Object>>
      * @return JSON Object as String
      */
-    public static String JsonWrapperArrayListHashMap(ArrayList<HashMap<String,Object>> content) {
+    public static String JsonWrapperArrayListHashMap(ArrayList<HashMap<String, Object>> content) {
         Gson gson = new Gson();
         JSONArray json = new JSONArray(content);
         return gson.toJson(json);
@@ -40,8 +39,8 @@ public class JsonUtil {
     }
 
     /**
-    *
-    */
+     *
+     */
     public static String JsonWrapperCollection(Collection content) {
         Gson gson = new Gson();
         String json = gson.toJson(content);
@@ -96,7 +95,7 @@ public class JsonUtil {
         /**
          * constructor.
          *
-         * @param ids This are the database ID's for the given Objects in the HashMap.
+         * @param ids    This are the database ID's for the given Objects in the HashMap.
          * @param labels This is a HashMap of database ID's and the corresponding labels as a String.
          */
         public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels) {
@@ -106,8 +105,8 @@ public class JsonUtil {
     }
 
     /**
-    * This class is a JSON Multi (!) HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
-    */
+     * This class is a JSON Multi (!) HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
+     */
     public static class JsonHashMapMultipleIntegerString {
         private HashMap<Integer, String> states;
         private LinkedList<Integer> ids;
@@ -185,7 +184,6 @@ public class JsonUtil {
     }
 
     /**
-     *
      * @param jsonLine
      * @return parsed json string
      */

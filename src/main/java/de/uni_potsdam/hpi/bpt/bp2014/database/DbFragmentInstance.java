@@ -30,7 +30,7 @@ public class DbFragmentInstance extends DbObject {
     /**
      * This method checks if a fragment is present in the database.
      *
-     * @param fragment_id This is the database ID of a fragment.
+     * @param fragment_id         This is the database ID of a fragment.
      * @param scenarioInstance_id This is the database ID of a scenario instance.
      * @return true if the fragment exists else false.
      */
@@ -42,7 +42,7 @@ public class DbFragmentInstance extends DbObject {
     /**
      * This method creates and saves a new fragment instance to the database.
      *
-     * @param fragment_id This is the database ID of a fragment.
+     * @param fragment_id         This is the database ID of a fragment.
      * @param scenarioInstance_id This is the database ID of a scenario instance.
      * @return -1 if something went wrong else the database ID of the newly created fragment instance.
      */
@@ -54,7 +54,7 @@ public class DbFragmentInstance extends DbObject {
     /**
      * This method gives you the fragment instance ID of a fragment from a specific scenario instance.
      *
-     * @param fragment_id This is the database ID of a fragment.
+     * @param fragment_id         This is the database ID of a fragment.
      * @param scenarioInstance_id This is the database ID of a scenario instance.
      * @return the database ID of the fragment instance if existing else -1.
      */
