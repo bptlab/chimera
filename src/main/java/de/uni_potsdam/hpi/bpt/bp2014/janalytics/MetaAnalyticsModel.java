@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MetaAnalyticsModel {
-
+    static Logger log = Logger.getLogger(DbObject.class.getName());
 
     // **************************** DB Execution Statements ********************************************************
 
