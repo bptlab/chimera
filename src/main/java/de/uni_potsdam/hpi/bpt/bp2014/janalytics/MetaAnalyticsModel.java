@@ -23,9 +23,9 @@ public class MetaAnalyticsModel {
      * @param scenarioInstanceId ID of the ScenarioInstance for which the activity log entries shall be returned.
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
-    public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstanceWithinActivity(int scenarioInstanceId) {
+    public static Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstanceWithinActivity(int scenarioInstanceId) {
         String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = " + scenarioInstanceId + "  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id  ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.scenarioinstance_id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
+        return executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.scenarioinstance_id", "cn.label", "h.activityinstance_id", "h.oldstate", "h.newstate", "h.timestamp");
     }
 
     /**
@@ -34,9 +34,9 @@ public class MetaAnalyticsModel {
      * @param scenarioInstanceId ID of the ScenarioInstance for which the DataAttributeInstance log entries shall be returned.
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
-    public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstanceWithinDataAttribute(int scenarioInstanceId) {
+    public static Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstanceWithinDataAttribute(int scenarioInstanceId) {
         String sql = "SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldvalue, h.newvalue, h.dataattributeinstance_id, da.name, do.name FROM historydataattributeinstance AS h, dataattributeinstance AS dai, dataattribute AS da, dataobjectinstance AS doi, dataobject AS do WHERE h.scenarioinstance_id = " + scenarioInstanceId + " AND h.dataattributeinstance_id = dai.id AND dai.dataattribute_id = da.id AND dai.dataobjectinstance_id = doi.id AND doi.dataobject_id = do.id ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.scenarioinstance_id", "da.name", "h.timestamp", "h.oldvalue", "h.newvalue", "h.dataattributeinstance_id", "do.name");
+        return executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.scenarioinstance_id", "da.name", "h.timestamp", "h.oldvalue", "h.newvalue", "h.dataattributeinstance_id", "do.name");
     }
 
     /**
@@ -45,9 +45,9 @@ public class MetaAnalyticsModel {
      * @param scenarioInstanceId ID of the ScenarioInstance for which the DataObjectInstance log entries shall be returned.
      * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
-    public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstanceWithinDataObject(int scenarioInstanceId) {
+    public static Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstanceWithinDataObject(int scenarioInstanceId) {
         String sql = "SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldstate_id, h.newstate_id, h.dataobjectinstance_id, do.name, ns.name AS newstate_name, os.name AS oldstate_name FROM historydataobjectinstance AS h, dataobjectinstance AS doi, dataobject AS do, state AS ns, state AS os WHERE h.scenarioinstance_id = " + scenarioInstanceId + " AND ns.id = h.newstate_id AND os.id = h.oldstate_id ORDER BY timestamp DESC";
-        return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id", "h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp", "h.dataobjectinstance_id", "oldstate_name", "newstate_name");
+        return executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id", "h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp", "h.dataobjectinstance_id", "oldstate_name", "newstate_name");
     }
 
     // **************************** HELPER ********************************************************
@@ -57,7 +57,7 @@ public class MetaAnalyticsModel {
      * @param keys
      * @return
      */
-    public Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
+    public static Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
         java.sql.Connection conn = Connection.getInstance().connect();
         ResultSet results = null;
         Map<Integer, Map<String, Object>> keysValues = new HashMap<>();

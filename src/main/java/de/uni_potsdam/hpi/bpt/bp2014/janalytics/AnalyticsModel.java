@@ -21,9 +21,9 @@ public class AnalyticsModel extends MetaAnalyticsModel {
     public static ArrayList<Map<Integer, Map<String, Object>>> exampleAlgorithm1(int scenarioInstance_id) {
         ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<Map<Integer, Map<String, Object>>>();
 
-        Map<Integer, Map<String, Object>> ActivityLog = this.getLogEntriesForScenarioInstanceWithinActivity(scenarioInstance_id);
-        Map<Integer, Map<String, Object>> DataAttributeLog = this.getLogEntriesForScenarioInstanceWithinDataAttribute(scenarioInstance_id);
-        Map<Integer, Map<String, Object>> DataObjectLog = this.getLogEntriesForScenarioInstanceWithinDataObject(scenarioInstance_id);
+        Map<Integer, Map<String, Object>> ActivityLog = getLogEntriesForScenarioInstanceWithinActivity(scenarioInstance_id);
+        Map<Integer, Map<String, Object>> DataAttributeLog = getLogEntriesForScenarioInstanceWithinDataAttribute(scenarioInstance_id);
+        Map<Integer, Map<String, Object>> DataObjectLog = getLogEntriesForScenarioInstanceWithinDataObject(scenarioInstance_id);
         result.add(ActivityLog);
         result.add(DataAttributeLog);
         result.add(DataObjectLog);
