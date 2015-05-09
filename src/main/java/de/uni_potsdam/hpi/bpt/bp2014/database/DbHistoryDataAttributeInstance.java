@@ -2,9 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import java.util.Map;
 
-/**
- * Created by Jan Selke on 21.04.2015.
- */
+
 public class DbHistoryDataAttributeInstance extends DbObject {
 
     /**
