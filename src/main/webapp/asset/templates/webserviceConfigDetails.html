@@ -50,7 +50,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                             <td>Method</td>
                             <td>
                                 <select ng-model="form.method" ng-options="item for item in ['GET','POST','PUT']"></select> <br>
-                                <div ng-if="form.method.null?">
+                                <div ng-if="form.method.null">
                                     <font color="red"><i>please be sure to set a correct HTTP method</i></font>
                                 </div>
                                 <!--<input type="text" ng-model="form.method" size="5" /><br>-->
@@ -73,7 +73,10 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                         </tr>
                         </tbody>
                     </table>
-                   <div ng-show="searchText">
+                    <div ng-hide="webserviceC.NgRepeatAttributeArray.length">
+                        <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(1337)">Add Attribute</a>
+                    </div>
+                    <div ng-show="searchText">
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <thead>
@@ -84,12 +87,12 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes | filter:searchText" >
+                                <tr style="cursor: pointer" ng-repeat="attribute in webserviceC.NgRepeatAttributeArray | filter:searchText" >
                               <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
-                                    {{attribute_value}}
-                                    <td>{{attribute_key}}</td>
+                                    <td>{{attribute['array_key']}}</td>
                                     <td>
-                                        <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] ">
+                                       <!-- <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key']">-->
+                                        <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute['array_key']]['key']">
                                         <span ng-show="form.attribute_key.$pending">tipping...</span>
                                     </td>
                                     <td>
