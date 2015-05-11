@@ -1,99 +1,60 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.janalytics.AnalyticsService;
-import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+
+import de.uni_potsdam.hpi.bpt.bp2014.janalytics.ServiceManager;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 
 /**
  * This class implements the REST interface of the JEngine analytics.
  */
-@Path("analytics/v2/")
+@Path("analytics/v3/")
 public class RestInterface {
     static Logger log = Logger.getLogger(RestInterface.class.getName());
-    private AnalyticsService analyticsService = new AnalyticsService();
+    private ServiceManager serviceManager = new ServiceManager();
 
-    /**
-     * This method returns the result set of a specific algorithm as REST call
-     *
-     * @param algorithmID
-     * @param instanceID  The scenario Instance ID.
-     * @return
-     */
+
     @GET
-    @Path("algorithm/{algorithmID}/instance/{instanceID}")
+    @Path("services")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAnalyticsResult(@PathParam("algorithmID") String algorithmID,
-                                       @PathParam("instanceID") int instanceID) {
-
-        Object result = null;
-        try {
-            result = analyticsService.getAnalysisResultForInstance(instanceID, algorithmID);
-        } catch (NoSuchMethodException e) {
-            log.error("Error:", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
-                    .build();
-        } catch (InvocationTargetException e) {
-            log.error("Error:", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
-                    .build();
-        } catch (IllegalAccessException e) {
-            log.error("Error:", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
-                    .build();
-        }
-        String jsonRepresentation = JsonUtil.JsonWrapperObject(result);
-        return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
+    public Response getServices() {
+        java.util.Set<String> services = serviceManager.getServices();
+        return Response.ok((new JSONArray(services)).toString(), MediaType.APPLICATION_JSON).build();
     }
 
-    /**
-     * This method triggers the execution of the defined algorithm for analytic purposes
-     *
-     * @param algorithmID
-     * @param instanceID  The scenario Instance ID.
-     * @return
-     */
-    @POST
-    @Path("algorithm/{algorithmID}/instance/{instanceID}")
+    @GET
+    @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postAnalyticsResult(@PathParam("algorithmID") String algorithmID,
-                                        @PathParam("instanceID") int instanceID) {
-        Boolean result = null;
-        try {
-            result = (Boolean) analyticsService.executeAnalysisResultForInstance(instanceID, algorithmID);
-        } catch (NoSuchMethodException e) {
-            log.error("Error:", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
-                    .build();
-        } catch (InvocationTargetException e) {
-            log.error("Error:", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
-                    .build();
-        } catch (IllegalAccessException e) {
-            log.error("Error:", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The algorithm is not supported: " + algorithmID + "\"}")
-                    .build();
-        }
+    public Response getServiceResults(@PathParam("service") String service) {
+        JSONObject jsonObject = serviceManager.getResultForService(service);
+        return Response.ok(jsonObject.toString(), MediaType.APPLICATION_JSON).build();
+    }
 
-        return Response
-                .ok()
-                .build();
+    @POST
+    @Path("services/{service}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response calculateServiceResults(@PathParam("service") String service, String json) {
+        if (json.equals("")) {
+            serviceManager.calculateResultForService(service, new String[0]);
+        } else {
+            JSONObject jsonObject = new JSONObject(json);
+            ArrayList<String> list = new ArrayList<String>();
+            JSONArray jsonArray = jsonObject.getJSONArray("args");
+            if (jsonArray != null) {
+                int len = jsonArray.length();
+                for (int i = 0; i < len; i++) {
+                    list.add(jsonArray.get(i).toString());
+                }
+            }
+            serviceManager.calculateResultForService(service, (String[]) list.toArray());
+        }
+        return Response.ok(MediaType.APPLICATION_JSON).build();
     }
 }
