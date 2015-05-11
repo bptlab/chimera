@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class DbWebServiceTask extends DbObject {
 
@@ -117,5 +118,19 @@ public class DbWebServiceTask extends DbObject {
     public boolean existWebServiceTaskIDinPost(int controlNode_id) {
         String sql = "Select controlnode_id from webservicetaskpost WHERE controlnode_id = " + controlNode_id;
         return executeExistStatement(sql);
+    }
+
+    /**
+     * Return a list of all dataattributeIDs and its names that are accessable in any dataobject of the outputset of the webserviceTask
+     *
+     * @param webserviceID The controlnode_id of the webservice task.
+     * @return A map of all dataattributeIDs and its names
+     */
+    public Map<Integer, String> getOutputAttributesForWebservice(int webserviceID) {
+        String sql = "SELECT name, id  FROM dataattribute WHERE dataclass_id IN" +
+                        "(SELECT DISTINCT dataclass_id FROM datanode WHERE id IN" +
+                            "(SELECT DISTINCT datanode_id FROM datasetconsistsofdatanode WHERE dataset_id IN " +
+                                "(SELECT DISTINCT dataset_id FROM dataflow WHERE input = 0 AND controlnode_id = " + webserviceID + " )))";
+        return executeStatementReturnsMap(sql, "id", "name");
     }
 }
