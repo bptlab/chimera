@@ -120,7 +120,7 @@ public class ExecutionAcceptanceTest {
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
-        executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
+        //executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity6, activity4, activity2}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
