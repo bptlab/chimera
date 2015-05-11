@@ -1,8 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -38,6 +41,26 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         DbDataFlow dbDataFlow = new DbDataFlow();
         if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()) {
             this.setCanTerminate(true);
+        } else {
+            LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id());
+            int outputSet = outputSets.getFirst();
+            DbDataNode dbDataNode = new DbDataNode();
+            LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
+            boolean hasAttribute = false;
+            for (DataObject dataObject : dataObjects) {
+                for(DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()){
+                    if(dataAttributeInstance.getDataObjectInstance().getDataObject_id() == dataObject.getId()){
+                        hasAttribute = true;
+                        break;
+                    }
+                }
+                if(hasAttribute){
+                    break;
+                }
+            }
+            if (hasAttribute){
+                this.setCanTerminate(true);
+            }
         }
     }
 
