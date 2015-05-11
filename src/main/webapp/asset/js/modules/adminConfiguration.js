@@ -148,12 +148,40 @@
                 }
 
                 this.addAttribute=function(dataattribute_id){
+                    //initialising new Attribute object
                     webserviceC.newAttribute = {};
+                    //cloning last entry of the attribute array
                     angular.copy($scope.form.attributes[$scope.form.attributes.length-1], webserviceC.newAttribute);
-                    webserviceC.newAttribute['order'] = webserviceC.newAttribute['order'] +1;
+                    //setting controlnode id from working Webservice task ID
+                    webserviceC.newAttribute['controlnode_id'] = webserviceC.workingID;
+                    //increasing order id if null set 0
+                    if(webserviceC.newAttribute['order'] == null) {
+                        webserviceC.newAttribute['order'] = 0
+                    } else {
+                        webserviceC.newAttribute['order'] = webserviceC.newAttribute['order'] +1;
+                    }
+                    //setting key to blank
                     webserviceC.newAttribute['key'] = "";
+                    //setting dataattribute ID
                     webserviceC.newAttribute['dataattribute_id'] = dataattribute_id;
+                    console.log(webserviceC.newAttribute);
+                    //pushing new Attribute into old attribute array
                     $scope.form.attributes.push(webserviceC.newAttribute);
+                    //
+
+                    var array_key = webserviceC.NgRepeatAttributeArray[webserviceC.NgRepeatAttributeArray.length-1];
+                    webserviceC.newAttribute['array_key'] = array_key['array_key'] + 1;
+                    webserviceC.NgRepeatAttributeArray.push(webserviceC.newAttribute);
+                    
+                    /*
+                    webserviceC.NgRepeatAttributeArray = $scope.form.attributes;
+
+                    angular.forEach(webserviceC.NgRepeatAttributeArray, function(value, key) {
+                        value.array_key = key;
+                        webserviceC.NgRepeatAttributeArray[key] = value;
+                    });
+                    */
+                    console.log(webserviceC.NgRepeatAttributeArray);
                 }
 
                 //get all infos for popup
@@ -172,6 +200,7 @@
                             console.log('request failed');
                         });
                 };
+
                 // Got to the instance with the given Id
                 this.getDetailsForWebserviceID = function(webserviceID, scenarioID){
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
