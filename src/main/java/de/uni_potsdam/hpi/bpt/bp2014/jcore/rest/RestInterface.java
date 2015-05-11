@@ -965,7 +965,7 @@ public class RestInterface {
             DataObjectJaxBean dataObject = new DataObjectJaxBean();
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
-            dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
+            dataObject.state = executionService.getStateNameForDataObjectInstanceInput(dataObjectInstances[i]);
             dataObject.attributeConfiguration = getDataAttributes(dataObjectInstances[i]);
             dataObjects[i] = dataObject;
         }
@@ -1010,7 +1010,7 @@ public class RestInterface {
             DataObjectJaxBean dataObject = new DataObjectJaxBean();
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
-            dataObject.state = executionService.getStateNameForDataObjectInstance(dataObjectInstances[i]);
+            dataObject.state = executionService.getStateNameForDataObjectInstanceOutput(dataObjectInstances[i], outputsetID);
             dataObject.attributeConfiguration = getDataAttributes(dataObjectInstances[i]);
             dataObjects[i] = dataObject;
         }

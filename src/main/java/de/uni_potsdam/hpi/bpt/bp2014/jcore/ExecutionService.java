@@ -641,9 +641,27 @@ public class ExecutionService {
      * @param dataObjectInstance This is an object of the DataObjectInstance class.
      * @return the name of the state of the dataObjectInstance as a String.
      */
-    public String getStateNameForDataObjectInstance(DataObjectInstance dataObjectInstance) {
+    public String getStateNameForDataObjectInstanceInput(DataObjectInstance dataObjectInstance) {
         DbState dbState = new DbState();
         return dbState.getStateName(dataObjectInstance.getState_id());
+    }
+
+    /**
+     * This method is used to get the stateName corresponding to a dataObjectInstance.
+     *
+     * @param dataObjectInstance This is an object of the DataObjectInstance class.
+     * @return the name of the state of the dataObjectInstance as a String.
+     */
+    public String getStateNameForDataObjectInstanceOutput(DataObjectInstance dataObjectInstance, int setID) {
+        DbState dbState = new DbState();
+        DbDataNode dbDataNode= new DbDataNode();
+        LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
+        for(DataObject dataObject : dataObjects){
+            if(dataObject.getId() == dataObjectInstance.getDataObject_id()){
+                return dbState.getStateName(dataObject.getStateID());
+            }
+        }
+        return "";
     }
 
     /**
