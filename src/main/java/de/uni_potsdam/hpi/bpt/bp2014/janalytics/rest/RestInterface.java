@@ -21,6 +21,10 @@ public class RestInterface {
     private ServiceManager serviceManager = new ServiceManager();
 
 
+    /**
+     * Get all services in a JSONArray.
+     * @return JSONArray with all services
+     */
     @GET
     @Path("services")
     @Produces(MediaType.APPLICATION_JSON)
@@ -29,6 +33,11 @@ public class RestInterface {
         return Response.ok((new JSONArray(services)).toString(), MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     * Returns the result of an service.
+     * @param service the specific service.
+     * @return JSON with the result.
+     */
     @GET
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -37,6 +46,12 @@ public class RestInterface {
         return Response.ok(jsonObject.toString(), MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     * Starts a service with optional json.
+     * @param service the specific service.
+     * @param json optional json with arguments.
+     * @return
+     */
     @POST
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
