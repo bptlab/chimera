@@ -1,7 +1,7 @@
 (function(){
 	var adminCon = angular.module('adminConfiguration', []);
 
-    app.filter('unique', function() {
+    adminCon.filter('unique', function() {
         return function(collection, keyname) {
             var output = [],
                 keys = [];
@@ -177,6 +177,11 @@
                     "/scenario/"+scenarioID+"/webservice/"+webserviceID+"/?").
                         success(function(data) {
                             webserviceC.detailsForID = data;
+                            //$scope.form.attributes.$destroy();
+                            //reset attributes otherwise we have duplicates
+                            if($scope.form != null){
+                                $scope.form.attributes = null;
+                            }
                             $scope.form = {
                                 method: data['method'],
                                 link: data['link'],
@@ -190,7 +195,13 @@
                 this.getDifferentDataattributes = function(){
                     angular.forEach($scope.form.attributes, function(value, key) {
                         //console.log(value);
-                        webserviceC.DataAttributeArray.push(value['dataattribute_id']);
+                        if (webserviceC.DataAttributeArray.indexOf(value['dataattribute_id']) != -1){
+                             webserviceC.DataAttributeArray.push(value['dataattribute_id']);
+                            console.log("not found adding");
+                            console.log(value['dataattribute_id']);
+                        } else {
+                            console.log("duplicated item in  webserviceC.DataAttributeArray");
+                        }
                     });
                 };
 
