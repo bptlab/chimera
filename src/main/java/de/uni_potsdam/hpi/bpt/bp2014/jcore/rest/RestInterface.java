@@ -963,6 +963,7 @@ public class RestInterface {
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
             DataObjectJaxBean dataObject = new DataObjectJaxBean();
+            dataObject.set_id = inputsetID;
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstanceInput(dataObjectInstances[i]);
@@ -1008,6 +1009,7 @@ public class RestInterface {
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
             DataObjectJaxBean dataObject = new DataObjectJaxBean();
+            dataObject.set_id = outputsetID;
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstanceOutput(dataObjectInstances[i], outputsetID);
@@ -1441,6 +1443,10 @@ public class RestInterface {
          * Each attribute has an id, name, type and value.
          */
         public DataAttributeJaxBean[] attributeConfiguration;
+        /**
+         *
+         */
+        public int set_id;
     }
 
     /**
