@@ -632,7 +632,8 @@ public class RestInterfaceTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+                        .when(Option.IGNORING_ARRAY_ORDER)
+                        .when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     /**
@@ -686,7 +687,9 @@ public class RestInterfaceTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+                        .when(Option.IGNORING_ARRAY_ORDER)
+                        .when(Option.IGNORING_ARRAY_ORDER));
+        ;
     }
 
 
@@ -1084,7 +1087,7 @@ public class RestInterfaceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"Ziel festgelegt\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250\"}]}]")
+                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"Ziel festgelegt\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"value\":\"250\"}]}]")
                         .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
     /**

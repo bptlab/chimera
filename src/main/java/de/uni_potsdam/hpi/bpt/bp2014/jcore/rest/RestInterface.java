@@ -1248,6 +1248,7 @@ public class RestInterface {
                     .build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        dataObject.set_id = 0;
         dataObject.id = dataObjectID;
         dataObject.label = labels.get(new Integer(dataObjectID));
         dataObject.state = states.get(new Integer(dataObjectID));
