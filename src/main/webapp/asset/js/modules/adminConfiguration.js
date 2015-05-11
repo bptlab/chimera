@@ -1,7 +1,24 @@
 (function(){
 	var adminCon = angular.module('adminConfiguration', []);
-	
-	// Create a Controller for jcomparser admin dashboard
+
+    app.filter('unique', function() {
+        return function(collection, keyname) {
+            var output = [],
+                keys = [];
+
+            angular.forEach(collection, function(item) {
+                var key = item[keyname];
+                if(keys.indexOf(key) === -1) {
+                    keys.push(key);
+                    output.push(item);
+                }
+            });
+            return output;
+        };
+    });
+
+
+    // Create a Controller for jcomparser admin dashboard
 	adminCon.controller('jcomparserMainView', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http){
 			var controller = this;
