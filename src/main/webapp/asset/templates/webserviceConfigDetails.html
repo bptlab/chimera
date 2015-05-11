@@ -6,7 +6,6 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
 <li ng-if="selectedScenario > 0">
     <div class="table-responsive">
         <table class="table table-striped table-hover">
-
             <caption>webserviceConfig currently available</caption>
             <thead>
             <tr>
@@ -39,30 +38,69 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="webserviceC.submitMyForm()">
-                    Method:
-                    <input type="text" ng-model="form.method" size="5" /><br>
-                    Link:
-                    <input type="text" ng-model="form.link" size="50" /><br>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Key</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes track by $index">
-                                <td>{{attribute_key}}</td>
-                                <td>
-                                    <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] "><br>
-                                    <span ng-show="form.attribute_key.$pending">tipping...</span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Contant</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Method</td>
+                            <td>
+                                <select ng-model="form.method" ng-options="item for item in ['GET','POST','PUT']"></select> <br>
+                                <div ng-if="form.method.null?">
+                                    <font color="red"><i>please be sure to set a correct HTTP method</i></font>
+                                </div>
+                                <!--<input type="text" ng-model="form.method" size="5" /><br>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Link</td>
+                            <td><input type="text" ng-model="form.link" size="50" /></td>
+                        </tr>
+                        <tr>
+                            <td>Request Body</td>
+                            <td><input type="text" ng-model="form.body" size="50" /></td>
+                        </tr>
+                        <tr>
+                            <td>Please select a DataAttributeID</td>
+                            <td>
+                                <!-- <select ng-model="searchText" ng-options="item for item in webserviceC.DataAttributeArray | unique: 'item' "></select><br>-->
+                                <select ng-model="searchText" ng-options="item for item in webserviceC.DataAttributeArray "></select><br>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                   <div ng-show="searchText">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Key</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes | filter:searchText" >
+                              <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
+                                    <td>{{attribute_key}}</td>
+                                    <td>
+                                        <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] ">
+                                        <span ng-show="form.attribute_key.$pending">tipping...</span>
+                                    </td>
+                                    <td>
+                                        <a ng-click="form.attributes.splice($index, 1)" class="btn btn-danger">-</a>
+                                        <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(searchText)">+</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
-                    <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute()">Add Attribute</a>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>

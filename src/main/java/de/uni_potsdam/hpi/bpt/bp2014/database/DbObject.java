@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -10,12 +11,12 @@ import java.util.*;
 
 public class DbObject {
     static Logger log = Logger.getLogger(DbObject.class.getName());
+
     /**
-     *
      * @param sql
      * @return
      */
-    public static ArrayList<HashMap<String,Object>> executeStatementReturnsHashMap(String sql) {
+    public static ArrayList<HashMap<String, Object>> executeStatementReturnsHashMap(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         try {
@@ -28,7 +29,7 @@ public class DbObject {
             if (Returning_Rows)
                 Result = stmt.getResultSet();
             else
-                return new ArrayList<HashMap<String,Object>>();
+                return new ArrayList<HashMap<String, Object>>();
 
             //get metadata
             ResultSetMetaData Meta = null;
@@ -37,18 +38,18 @@ public class DbObject {
             //get column names
             int Col_Count = Meta.getColumnCount();
             ArrayList<String> Cols = new ArrayList<String>();
-            for (int Index=1; Index<=Col_Count; Index++)
+            for (int Index = 1; Index <= Col_Count; Index++)
                 Cols.add(Meta.getColumnName(Index));
 
             //fetch out rows
-            ArrayList<HashMap<String,Object>> Rows =
-                    new ArrayList<HashMap<String,Object>>();
+            ArrayList<HashMap<String, Object>> Rows =
+                    new ArrayList<HashMap<String, Object>>();
 
             while (Result.next()) {
-                HashMap<String,Object> Row = new HashMap<String,Object>();
-                for (String Col_Name:Cols) {
+                HashMap<String, Object> Row = new HashMap<String, Object>();
+                for (String Col_Name : Cols) {
                     Object Val = Result.getObject(Col_Name);
-                    Row.put(Col_Name,Val);
+                    Row.put(Col_Name, Val);
                 }
                 Rows.add(Row);
             }
@@ -555,8 +556,8 @@ public class DbObject {
      * This method makes a sql Query and returns the keys and values in a Map.
      * We assume that every key is an integer.
      *
-     * @param sql The query string to be executed
-     * @param key The column name which will be key of the map
+     * @param sql   The query string to be executed
+     * @param key   The column name which will be key of the map
      * @param value The column name which will be the value of the map
      * @return A Map from the key Column to the Value Column
      */
@@ -628,7 +629,6 @@ public class DbObject {
         }
         return keysValues;
     }
-
 
 
     /**

@@ -36,7 +36,7 @@ public class RestInterface {
         }
 
         Map<Integer, Map<String, Object>> activityLog;
-        if(state == null) {
+        if (state == null) {
             state = "";
         }
         switch (state) {
@@ -93,19 +93,19 @@ public class RestInterface {
     public Response getDataAttributeLog(
             @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
             @DefaultValue("0") @PathParam("scenarioInstanceID") int scenarioInstanceID) {
-            if (scenarioInstanceID == 0 || scenarioID == 0) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The instance or scenario ID is incorrect\"}")
-                        .build();
-            }
-
-            Map<Integer, Map<String, Object>> attributeLog;
-            attributeLog = historyService.getDataAttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
-            return Response
-                    .ok()
+        if (scenarioInstanceID == 0 || scenarioID == 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity(new JSONObject(attributeLog).toString())
+                    .entity("{\"error\":\"The instance or scenario ID is incorrect\"}")
                     .build();
+        }
+
+        Map<Integer, Map<String, Object>> attributeLog;
+        attributeLog = historyService.getDataAttributeInstanceLogEntriesForScenarioInstance(scenarioInstanceID);
+        return Response
+                .ok()
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new JSONObject(attributeLog).toString())
+                .build();
     }
 }

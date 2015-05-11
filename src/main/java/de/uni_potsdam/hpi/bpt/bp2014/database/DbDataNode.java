@@ -62,6 +62,7 @@ public class DbDataNode extends DbObject {
 
     /**
      * This method returns all database data objects a dataSet can have.
+     *
      * @param dataSet_id This is the database ID of a dataSet.
      * @return a list of all instances from DataObject.
      */

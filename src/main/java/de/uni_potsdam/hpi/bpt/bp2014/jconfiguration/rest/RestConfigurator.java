@@ -284,7 +284,7 @@ public class RestConfigurator {
                 back = true;
             }
         }
-        if(jsonObject.has("method")){
+        if (jsonObject.has("method")) {
             String method = jsonObject.get("method").toString();
             if (!method.isEmpty()) {
                 if (dbWebServiceTask.existWebServiceTaskIDinLink(webserviceID)) {

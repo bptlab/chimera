@@ -67,7 +67,7 @@ public class DbControlFlow extends DbObject {
      * @param controlNode_id This is the database ID of a controlNode.
      * @return a map of database ID's of controlNodes and conditions which precede the given controlNode.
      */
-    public Map<Integer, String> getConditions(int controlNode_id){
+    public Map<Integer, String> getConditions(int controlNode_id) {
         String sql = "SELECT controlnode_id2, controlflow.condition FROM controlflow WHERE controlnode_id1 = " + controlNode_id;
         return this.executeStatementReturnsMap(sql, "controlnode_id2", "condition");
     }

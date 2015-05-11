@@ -19,8 +19,8 @@ public class InputSet extends Set implements IPersistable {
      * @return The newly created InputSets or null if no ingoing (DataFlow)-Associations were found.
      */
     public static List<InputSet> createInputSetForTaskAndEdges(
-        final Node task,
-        final List<Edge> edges) {
+            final Node task,
+            final List<Edge> edges) {
         List<Edge> associations = new LinkedList<>();
         for (Edge edge : edges) {
             if (edge.getTargetNodeId() == task.getId()
@@ -38,14 +38,13 @@ public class InputSet extends Set implements IPersistable {
                 java.util.Set<Edge> value = new java.util.HashSet<>();
                 value.add(edge);
                 orderedAssociations.put(sourceNodeLabel, value);
-            }
-            else {
+            } else {
                 orderedAssociations.get(sourceNodeLabel).add(edge);
             }
         }
         // convert orderedAssociations to appropriate form for calculating the cartesian product (convert Map<String, Set> to List<Set>)
         List<java.util.Set<Edge>> convertedAssociations = new LinkedList<>();
-        for(java.util.Set<Edge> coll : orderedAssociations.values()) {
+        for (java.util.Set<Edge> coll : orderedAssociations.values()) {
             java.util.Set<Edge> hashSet = new HashSet<>();
             hashSet.addAll(coll);
             convertedAssociations.add(hashSet);

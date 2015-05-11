@@ -69,7 +69,7 @@ public class DbScenarioInstance extends DbObject {
      * Creates a new scenario instance from a scenario.
      * The given name will be assigned.
      *
-     * @param id The id of the scenario.
+     * @param id   The id of the scenario.
      * @param name The name, which has to be assigned to the instance.
      * @return -1 if something went wrong else it returns the database ID of the newly created scenario instance.
      */

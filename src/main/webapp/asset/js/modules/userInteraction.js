@@ -11,7 +11,7 @@
 
 	// Create a Controller for the Scenario Information
 	userIn.controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
-		function($routeParams, $location, $http){
+		function($routeParams, $location, $http,$scope){
 			var controller = this;
 			
 			// initialize an empty list of scenario Ids
@@ -32,6 +32,17 @@
                         console.log('request failed');
                     });
             };
+
+            this.submitNewInstanceNameForm=function(){
+                var data=$scope.form;
+                $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/"+ $routeParams.id + "/instance/?", data).
+                    success(function(response) {
+                        $location.path("/scenario/" + $routeParams.id + "/instance/" + response['id']);
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
+            }
 
             this.getTerminationConditionOfScenario = function(id) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
@@ -130,7 +141,7 @@
 	);
 	
 	userIn.controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
-		function($routeParams, $location, $http){
+		function($routeParams, $location, $http, $scope){
 			// For accessing data from inside the $http context
 			var instanceCtrl = this;
 			
@@ -279,9 +290,15 @@
 
                 $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
                 "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                "/activity/"+ activityId, data);
-
-                instanceCtrl.changeAttributObject[''+id] = value;
+                "/activity/"+ activityId, data).
+                    success(function(data) {
+                        instanceCtrl.initializeDataobjectAttributelogInstances();
+                        instanceCtrl.changeAttributObject[''+id] = value;
+                        instanceCtrl.getOutputAndOutputsets(activityId);
+                    }).
+                    error(function() {
+                        console.log('request failed');
+                    });
             };
 
             this.setCurrentAttributeObject = function(id, value) {
@@ -406,6 +423,7 @@
                 }
 
                 instanceCtrl.scenario['outputsetsLength'] = [];
+                instanceCtrl.scenario['outputsetsNameAndStateArray'] = [];
 
                 //retrieving the output for each retrieved referenced Activity
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
@@ -419,6 +437,8 @@
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
                                     instanceCtrl.scenario['outputsetsLength'].push(outputset['id']);
+                                    //var description = data3['label'] + " in state " + data3['state'];
+                                    //instanceCtrl.scenario['outputsetsNameAndStateArray'].push(description);
                                 }).
                                 error(function() {
                                     console.log('request failed');

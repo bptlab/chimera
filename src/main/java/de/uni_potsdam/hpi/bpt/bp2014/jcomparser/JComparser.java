@@ -46,6 +46,7 @@ import java.util.List;
  */
 public class JComparser {
     static Logger log = Logger.getLogger(JComparser.class.getName());
+
     /**
      * A main-method which should be used for Debug only.
      *

@@ -58,7 +58,7 @@
    <edges/>
    <properties>
       <property name="author" value=""/>
-      <property name="Termination condition" value="bike[assembled];"/>
+      <property name="Termination condition" value="bike[assembled]; "/>
       <property name="#folder" value="/"/>
       <property name="name" value="bikeScenario"/>
       <property name="#uri" value="/models/514683112/versions/0"/>

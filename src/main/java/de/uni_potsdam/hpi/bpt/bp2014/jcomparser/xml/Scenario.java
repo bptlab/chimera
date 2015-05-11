@@ -86,7 +86,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private Element domainModelXML;
     /**
      * This is the domainModel Object belonging to this scenario.
-      */
+     */
     private DomainModel domainModel;
     /**
      * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
@@ -146,7 +146,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      * @return the domainModel or null if there was no XML given.
      */
     private DomainModel createAndInitializeDomainModel() {
-        if(domainModelXML != null){
+        if (domainModelXML != null) {
             domainModel = new DomainModel(processeditorServerUrl);
             domainModel.initializeInstanceFromXML(domainModelXML);
             return domainModel;
@@ -189,7 +189,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         try {
             domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
             //This is used to make sure we only get the domainModelModelID
-            domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length-1];
+            domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length - 1];
             domainModelURI = domainModelURI.split("\\.")[0];
         } catch (XPathExpressionException e) {
             log.error("Error:", e);
@@ -260,7 +260,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
         checkDomainModelVersion(oldScenarioDbID);
         // in case old scenario is deleted...
-        if(!needsToBeSaved) {
+        if (!needsToBeSaved) {
             int oldScenarioDeleted = connector.isScenarioDeleted(oldScenarioDbID);
             if (oldScenarioDeleted == 1) {
                 needsToBeSaved = true;
@@ -268,6 +268,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         }
 
     }
+
     /**
      * Checks the version of the domainModel in the database and compares it with the version of this scenario.
      * If the version in the database older as this one, migration won't be initiated.
@@ -281,8 +282,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         if (domainModel.getVersionNumber() > oldDataModelVersion) {
             migrationNecessary = false;
             needsToBeSaved = true;
-        }
-        else {
+        } else {
             // case 2: There is another domainModel now
             long oldDataModelID = connector.getDataModelID(oldScenarioDbID);
             if (oldDataModelID != domainModel.getDomainModelModelID()) {
@@ -366,26 +366,27 @@ public class Scenario implements IDeserialisable, IPersistable {
         } catch (XPathExpressionException e) {
             log.error("Error:", e);
         }
-        if(tcs.isEmpty()) {
+        if (tcs.isEmpty()) {
             terminationCondition = null;
             return;
         }
-        String[] terminationConditions = tcs.split(";");
+        String[] terminationConditions = tcs.split("; ");
         for (String set : terminationConditions) {
             if (set.isEmpty())
                 continue;
             Map<DataObject, String> setMap = new HashMap<>();
             for (String setEntry : set.split(",")) {
                 String dataObject = setEntry.replaceAll("\\[[a-zA-Z0-9]+\\]", "");
-                String state = setEntry.replaceAll("[a-zA-Z0-9]+\\[", "").replaceAll("\\]","");
-                if(dataObject != "" && state != "") {
+                String state = setEntry.replaceAll("[a-zA-Z0-9]+\\[", "").replaceAll("\\]", "");
+                if (dataObject != "" && state != "") {
                     setMap.put(dataObjects.get(dataObject), state);
                 }
             }
-            if (setMap.size()>0)
+            if (setMap.size() > 0)
                 terminationCondition.add(setMap);
         }
     }
+
     /**
      * Extracts and saves Scenario ID from the ModelXML.
      */
@@ -445,6 +446,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         migrateDataObjects();
         //domainModel.migrate(migratingScenarioDbID);
     }
+
     /**
      * Migrate all dataObjectInstances of all scenarioInstances that are migrated.
      */
@@ -524,7 +526,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         for (int i = 0; i < terminationCondition.size(); i++) {
             for (Map.Entry<DataObject, String> entry : terminationCondition.get(i).entrySet()) {
                 int stateID = entry.getKey().getStates().get(entry.getValue());
-                conn.insertTerminationConditionIntoDatabase(i+1,
+                conn.insertTerminationConditionIntoDatabase(i + 1,
                         entry.getKey().getDatabaseId(),
                         stateID,
                         databaseID);

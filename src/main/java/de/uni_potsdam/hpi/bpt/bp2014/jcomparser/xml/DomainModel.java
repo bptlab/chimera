@@ -47,7 +47,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
     /**
      * A Mao of modelID's and corresponding dataClasses belonging to this domainModel.
      */
-    private Map<Long,DataClass> dataClasses;
+    private Map<Long, DataClass> dataClasses;
     /**
      * A List of all aggregation between the dataClasses belonging to this domainModel.
      */
@@ -69,7 +69,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
     /**
      * The constructor.
      */
-    public DomainModel(){
+    public DomainModel() {
 
     }
 
@@ -222,7 +222,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
                 this.versionNumber,
                 this.scenarioID
         );
-        for (DataClass dataClass : dataClasses.values()){
+        for (DataClass dataClass : dataClasses.values()) {
             dataClass.save();
         }
         for (Aggregation aggregation : aggregations) {

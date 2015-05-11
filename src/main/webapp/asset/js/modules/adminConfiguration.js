@@ -112,6 +112,7 @@
                 this.webserviceIDs = [];
                 this.scenarioIDs = [];
                 this.detailsForID = [];
+                this.DataAttributeArray = [];
 
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function(data){
@@ -128,11 +129,12 @@
                     $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
                 }
 
-                this.addAttribute=function(){
+                this.addAttribute=function(dataattribute_id){
                     webserviceC.newAttribute = {};
                     angular.copy($scope.form.attributes[$scope.form.attributes.length-1], webserviceC.newAttribute);
                     webserviceC.newAttribute['order'] = webserviceC.newAttribute['order'] +1;
                     webserviceC.newAttribute['key'] = " ";
+                    webserviceC.newAttribute['dataattribute_id'] = dataattribute_id;
                     $scope.form.attributes.push(webserviceC.newAttribute);
                 }
 
@@ -161,9 +163,18 @@
                             $scope.form = {
                                 method: data['method'],
                                 link: data['link'],
+                                body: data['body'],
                                 attributes: data['attributes']
                             };
+                            webserviceC.getDifferentDataattributes()
                         });
+                };
+
+                this.getDifferentDataattributes = function(){
+                    angular.forEach($scope.form.attributes, function(value, key) {
+                        //console.log(value);
+                        webserviceC.DataAttributeArray.push(value['dataattribute_id']);
+                    });
                 };
 
             }]
@@ -319,7 +330,6 @@
                             console.log('request failed');
                         });
                 };
-
 
             }]
     );

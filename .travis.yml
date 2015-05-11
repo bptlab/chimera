@@ -16,3 +16,6 @@ script:
  
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
+  
+notifications:
+  hipchat: 062eec142640c35ba3c3a3cac1052b@1093154

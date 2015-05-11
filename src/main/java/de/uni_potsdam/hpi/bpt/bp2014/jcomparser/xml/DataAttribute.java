@@ -63,6 +63,7 @@ public class DataAttribute implements IPersistable {
                 this.dataAttributeType);
         return dataAttributeID;
     }
+
     public int getDataClassID() {
         return dataClassID;
     }
