@@ -151,7 +151,7 @@
                     webserviceC.newAttribute = {};
                     angular.copy($scope.form.attributes[$scope.form.attributes.length-1], webserviceC.newAttribute);
                     webserviceC.newAttribute['order'] = webserviceC.newAttribute['order'] +1;
-                    webserviceC.newAttribute['key'] = " ";
+                    webserviceC.newAttribute['key'] = "";
                     webserviceC.newAttribute['dataattribute_id'] = dataattribute_id;
                     $scope.form.attributes.push(webserviceC.newAttribute);
                 }
@@ -191,13 +191,8 @@
                             };
                             webserviceC.NgRepeatAttributeArray = data['attributes'];
                             angular.forEach(webserviceC.NgRepeatAttributeArray, function(value, key) {
-                                console.log("old");
-                                console.log(webserviceC.NgRepeatAttributeArray);
                                 value.array_key = key;
                                 webserviceC.NgRepeatAttributeArray[key] = value;
-                                console.log("new");
-                                console.log(webserviceC.NgRepeatAttributeArray);
-                                console.log("-----------------------------");
                             });
 
                             webserviceC.getDifferentDataattributes()
