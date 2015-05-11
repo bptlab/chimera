@@ -630,7 +630,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"set_id\":0,\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
                         .when(Option.IGNORING_EXTRA_FIELDS));
@@ -685,10 +685,10 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"set_id\":0,\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                        .when(Option.IGNORING_EXTRA_FIELDS));
         ;
     }
 
