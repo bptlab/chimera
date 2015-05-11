@@ -632,7 +632,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     /**
@@ -686,7 +686,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"label\":\"object1\",\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
 
 
