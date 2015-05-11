@@ -12,10 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -197,12 +194,14 @@ public class RestConfigurator {
             @PathParam("webserviceID") int webserviceID) {
         DbWebServiceTask webService = new DbWebServiceTask();
         ArrayList<HashMap<String, Object>> list = webService.getComplexAttributeMap(webserviceID);
+        Map<Integer, String> attributes = webService.getOutputAttributesForWebservice(webserviceID);
 
         HashMap response = new HashMap();
         response.put("attributes", list);
         response.put("method", webService.getMethod(webserviceID));
         response.put("link", webService.getLinkForControlNode(webserviceID));
         response.put("body", webService.getPOST(webserviceID));
+        response.put("allAttributes", attributes);
 
         String jsonResponse = JsonUtil.JsonWrapperHashMapOnly(response);
         return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
