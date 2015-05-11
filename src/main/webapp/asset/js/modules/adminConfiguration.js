@@ -130,6 +130,7 @@
                 this.scenarioIDs = [];
                 this.detailsForID = [];
                 this.DataAttributeArray = [];
+                this.NgRepeatAttributeArray = [];
 
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function(data){
@@ -188,6 +189,17 @@
                                 body: data['body'],
                                 attributes: data['attributes']
                             };
+                            webserviceC.NgRepeatAttributeArray = data['attributes'];
+                            angular.forEach(webserviceC.NgRepeatAttributeArray, function(value, key) {
+                                console.log("old");
+                                console.log(webserviceC.NgRepeatAttributeArray);
+                                value.array_key = key;
+                                webserviceC.NgRepeatAttributeArray[key] = value;
+                                console.log("new");
+                                console.log(webserviceC.NgRepeatAttributeArray);
+                                console.log("-----------------------------");
+                            });
+
                             webserviceC.getDifferentDataattributes()
                         });
                 };
@@ -195,12 +207,8 @@
                 this.getDifferentDataattributes = function(){
                     angular.forEach($scope.form.attributes, function(value, key) {
                         //console.log(value);
-                        if (webserviceC.DataAttributeArray.indexOf(value['dataattribute_id']) != -1){
+                        if (webserviceC.DataAttributeArray.indexOf(value['dataattribute_id']) == -1){
                              webserviceC.DataAttributeArray.push(value['dataattribute_id']);
-                            console.log("not found adding");
-                            console.log(value['dataattribute_id']);
-                        } else {
-                            console.log("duplicated item in  webserviceC.DataAttributeArray");
                         }
                     });
                 };

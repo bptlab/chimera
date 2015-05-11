@@ -84,12 +84,12 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr style="cursor: pointer" ng-repeat="(attribute_key, attribute_value) in form.attributes | filter:searchText" >
+                                <tr style="cursor: pointer" ng-repeat="attribute in webserviceC.NgRepeatAttributeArray | filter:searchText" >
                               <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
-                                    {{attribute_value}}
-                                    <td>{{attribute_key}}</td>
+                                    <td>{{attribute['array_key']}}</td>
                                     <td>
-                                        <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key'] ">
+                                       <!-- <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key']">-->
+                                        <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute['array_key']]['key']">
                                         <span ng-show="form.attribute_key.$pending">tipping...</span>
                                     </td>
                                     <td>
