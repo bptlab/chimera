@@ -22,6 +22,11 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
     @Override
     public void execute() {
         String link = dbWebServiceTask.getLinkForControlNode(controlNodeInstance.getControlNode_id());
+        for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+            link = link.replace(
+                    "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                            + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+        }
         Client client = ClientBuilder.newClient();
         String[] url = link.split("\\?");
         WebTarget webResource = client.target(url[0]);
