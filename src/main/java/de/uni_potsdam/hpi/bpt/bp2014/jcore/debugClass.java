@@ -111,6 +111,7 @@ public class debugClass {
                 System.out.println("");
             }
             //readLine();
+            System.out.println("Select outPutSet, -1 for nothing");
             int read2 = new Integer(readLine());
             System.out.println("---------terminate activity------------");
             if (!executionService.terminateActivityInstance(scenarioInstanceID, read, read2)) {
