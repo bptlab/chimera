@@ -1,7 +1,8 @@
 <h2>webserviceConfig</h2>
 
 <!-- filtering scenarios  -->
-Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenarioIDs" ng-model="selectedScenario" data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)"></select>
+Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenarioIDs" ng-model="selectedScenario"
+                         data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)"></select>
 
 <li ng-if="selectedScenario > 0">
     <div class="table-responsive">
@@ -18,7 +19,9 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
             <tr style="cursor: pointer" ng-repeat="(key, value) in webserviceC.webserviceIDs">
                 <td>{{value}}</td>
                 <td>{{value}}</td>
-                <td><a type="button" class="btn btn-default" data-toggle="modal" data-target="{{'#editWebserviceConfig' + id}}" data-ng-click="webserviceC.getDetails(value, selectedScenario)">Show Details</a>
+                <td><a type="button" class="btn btn-default" data-toggle="modal"
+                       data-target="{{'#editWebserviceConfig' + id}}"
+                       data-ng-click="webserviceC.getDetails(value, selectedScenario)">Show Details</a>
 
                 </td>
             </tr>
@@ -33,7 +36,8 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit Webservice Task Config of {{webserviceC.workingID}}</h4>
             </div>
             <div class="modal-body">
@@ -49,7 +53,9 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                         <tr>
                             <td>Method</td>
                             <td>
-                                <select ng-model="form.method" ng-options="item for item in ['GET','POST','PUT']"></select> <br>
+                                <select ng-model="form.method"
+                                        ng-options="item for item in ['GET','POST','PUT']"></select> <br>
+
                                 <div ng-if="form.method.null">
                                     <font color="red"><i>please be sure to set a correct HTTP method</i></font>
                                 </div>
@@ -59,61 +65,67 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                         </tr>
                         <tr>
                             <td>Link</td>
-                            <td><input type="text" ng-model="form.link" size="50" /></td>
+                            <td><input type="text" ng-model="form.link" size="50"/></td>
                         </tr>
                         <tr>
                             <td>Request Body</td>
-                            <td><input type="text" ng-model="form.body" size="50" /></td>
+                            <td><input type="text" ng-model="form.body" size="50"/></td>
                         </tr>
                         <tr>
                             <td>Dataobject</td>
                             <td>
-                                <select ng-model="Newdataattribute" ng-options="k as v for (k, v) in webserviceC.detailsForID['allAttributes']">
+                                <select ng-model="Newdataattribute"
+                                        ng-options="k as v for (k, v) in webserviceC.detailsForID['allAttributes']">
                                     <option value="">Select Type</option>
                                 </select>
-                                <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(Newdataattribute)">Add Attribute</a>
+                                <a type="button" class="btn btn-success"
+                                   ng-click="webserviceC.addAttribute(Newdataattribute)">Add Attribute</a>
                             </td>
                         </tr>
                         <div ng-show="NgRepeatAttributeArray.length">
-                        <tr>
-                            <td>Please select a DataAttributeID</td>
-                            <td>
-                                <select ng-model="searchAttribute" ng-options="item for item in webserviceC.DataAttributeArray"></select><br>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>Please select a DataAttributeID</td>
+                                <td>
+                                    <select ng-model="searchAttribute"
+                                            ng-options="item for item in webserviceC.DataAttributeArray"></select><br>
+                                </td>
+                            </tr>
                         </div>
                         </tbody>
                     </table>
                     <div ng-show="NgRepeatAttributeArray.length">
-                    <div ng-show="searchAttribute">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Key</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr style="cursor: pointer" ng-repeat="attribute in NgRepeatAttributeArray  | filter:searchAttribute track by $index" >
-                              <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
-                                    <td>{{attribute['array_key']}}</td>
-                                    <td>
-                                       <!-- <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key']">-->
-                                        <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute['array_key']]['key']">
-                                        <span ng-show="form.attribute_key.$pending">tipping...</span>
-                                    </td>
-                                    <td>
-                                        <!-- we decided to not allow the user to delete single array items alias keys -->
-                                        <!--<a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>-->
-                                        <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(searchAttribute)">+</a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div ng-show="searchAttribute">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Key</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr style="cursor: pointer"
+                                        ng-repeat="attribute in NgRepeatAttributeArray  | filter:searchAttribute track by $index">
+                                        <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
+                                        <td>{{attribute['array_key']}}</td>
+                                        <td>
+                                            <!-- <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key']">-->
+                                            <input type="text" ng-name="attribute_key"
+                                                   ng-model="form.attributes[attribute['array_key']]['key']">
+                                            <span ng-show="form.attribute_key.$pending">tipping...</span>
+                                        </td>
+                                        <td>
+                                            <!-- we decided to not allow the user to delete single array items alias keys -->
+                                            <!--<a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>-->
+                                            <a type="button" class="btn btn-success"
+                                               ng-click="webserviceC.addAttribute(searchAttribute)">+</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
@@ -121,8 +133,10 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 

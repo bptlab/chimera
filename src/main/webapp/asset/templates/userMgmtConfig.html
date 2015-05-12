@@ -17,7 +17,8 @@
             </div>
             <div class="panel-body list">
                 <div class="pull-right">
-                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole(); userMgmtC.unsetWorkingID();" data-target="#modalcreateRole"  class="btn btn-default">
+                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole(); userMgmtC.unsetWorkingID();"
+                       data-target="#modalcreateRole" class="btn btn-default">
                         Create New Role
                     </a>
                 </div>
@@ -34,12 +35,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']" ng-show="!searchText || value['rolename'].indexOf(searchText) > -1">
+                        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['role']"
+                            ng-show="!searchText || value['rolename'].indexOf(searchText) > -1">
                             <td>{{value['rolename']}}</td>
                             <td>{{value['description']}}</td>
                             <td>{{value['admin_id']}}</td>
-                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteRole' + value['id']}}"><i class="fa fa-trash-o"></i></a>
-                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForRoleId(value['id']); userMgmtC.setTypeRole();" data-toggle="modal" data-target="{{'#modalUpdateRole' + value['id']}}"><i class="fa fa-paste"></i></a>
+                            <td><a type="button" class="btn btn-danger" data-toggle="modal"
+                                   data-target="{{'#modalDeleteRole' + value['id']}}"><i class="fa fa-trash-o"></i></a>
+                                <a type="button" class="btn btn-info"
+                                   ng-click="userMgmtC.getDetailsForRoleId(value['id']); userMgmtC.setTypeRole();"
+                                   data-toggle="modal" data-target="{{'#modalUpdateRole' + value['id']}}"><i
+                                        class="fa fa-paste"></i></a>
                         </tr>
                         </a>
                         </tbody>
@@ -60,7 +66,8 @@
             </div>
             <div class="panel-body list">
                 <div class="pull-right">
-                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeUser(); userMgmtC.unsetWorkingID();" data-target="#modalcreateUser"  class="btn btn-default">
+                    <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeUser(); userMgmtC.unsetWorkingID();"
+                       data-target="#modalcreateUser" class="btn btn-default">
                         Create New User
                     </a>
                 </div>
@@ -77,12 +84,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']" ng-show="!searchText || value['username'].indexOf(searchText) > -1">
+                        <tr style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']"
+                            ng-show="!searchText || value['username'].indexOf(searchText) > -1">
                             <td>{{value['username']}}</td>
                             <td>{{value['description']}}</td>
                             <td>{{value['role_id']}}</td>
-                            <td><a type="button" class="btn btn-danger" data-toggle="modal" data-target="{{'#modalDeleteUser' + value['id']}}"><i class="fa fa-trash-o"></i></a>
-                                <a type="button" class="btn btn-info" ng-click="userMgmtC.getDetailsForUserId(value['id']); userMgmtC.setTypeUser();" data-toggle="modal" data-target="{{'#modalUpdateUser' + value['id']}}"><i class="fa fa-paste"></i></a>
+                            <td><a type="button" class="btn btn-danger" data-toggle="modal"
+                                   data-target="{{'#modalDeleteUser' + value['id']}}"><i class="fa fa-trash-o"></i></a>
+                                <a type="button" class="btn btn-info"
+                                   ng-click="userMgmtC.getDetailsForUserId(value['id']); userMgmtC.setTypeUser();"
+                                   data-toggle="modal" data-target="{{'#modalUpdateUser' + value['id']}}"><i
+                                        class="fa fa-paste"></i></a>
                         </tr>
                         </a>
                         </tbody>
@@ -95,16 +107,14 @@
 </div>
 
 
-
-
-
 <!--___________________________________ MODALS ___________________________________-->
 <!-- modal for deleting role-->
 <div ng-repeat="(key, value) in userMgmtC.Details['role']" id="{{'modalDeleteRole' + value['id']}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Delete Role?</h4>
             </div>
             <div class="modal-body">
@@ -112,10 +122,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" ng-click="userMgmtC.deleteRole(value['id']);" data-dismiss="modal" class="btn btn-primary">Delete</button>
+                <button type="button" ng-click="userMgmtC.deleteRole(value['id']);" data-dismiss="modal"
+                        class="btn btn-primary">Delete
+                </button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- modal for updating role-->
@@ -123,26 +137,29 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Update Role?</h4>
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
-                    <input type="hidden" ng-model="form.id" ng-value="{{value['id']}}"  /><br>
+                    <input type="hidden" ng-model="form.id" ng-value="{{value['id']}}"/><br>
                     name:
-                    <input type="text" ng-model="form.name"  /><br>
+                    <input type="text" ng-model="form.name"/><br>
                     description:
-                    <input type="text" ng-model="form.description"  /><br>
+                    <input type="text" ng-model="form.description"/><br>
                     admin_id:
-                    <input type="text" ng-model="form.admin_id" /><br>
-                    <button type="submit"  class="btn btn-default">Submit</button>
+                    <input type="text" ng-model="form.admin_id"/><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- modal for creating new role-->
@@ -150,26 +167,29 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Create New Role</h4>
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
-                    <input type="hidden" ng-model="form.id" value="0"  /><br>
+                    <input type="hidden" ng-model="form.id" value="0"/><br>
                     name:
-                    <input type="text" ng-model="form.name"  /><br>
+                    <input type="text" ng-model="form.name"/><br>
                     description:
-                    <input type="text" ng-model="form.description"  /><br>
+                    <input type="text" ng-model="form.description"/><br>
                     admin_id:
-                    <input type="text" ng-model="form.admin_id" /><br>
-                    <button type="submit"  class="btn btn-default">Submit</button>
+                    <input type="text" ng-model="form.admin_id"/><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- modal for deleting user-->
@@ -177,7 +197,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Delete User?</h4>
             </div>
             <div class="modal-body">
@@ -185,10 +206,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" ng-click="userMgmtC.deleteUser(value['id']);" data-dismiss="modal" class="btn btn-primary">Delete</button>
+                <button type="button" ng-click="userMgmtC.deleteUser(value['id']);" data-dismiss="modal"
+                        class="btn btn-primary">Delete
+                </button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- modal for updating user-->
@@ -196,26 +221,29 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Update User?</h4>
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
-                    <input type="hidden" ng-model="form.id" ng-value="{{value['id']}}"  /><br>
+                    <input type="hidden" ng-model="form.id" ng-value="{{value['id']}}"/><br>
                     name:
-                    <input type="text" ng-model="form.name"  /><br>
+                    <input type="text" ng-model="form.name"/><br>
                     description:
-                    <input type="text" ng-model="form.description"  /><br>
+                    <input type="text" ng-model="form.description"/><br>
                     role_id:
-                    <input type="text" ng-model="form.role_id" /><br>
-                    <button type="submit"  class="btn btn-default">Submit</button>
+                    <input type="text" ng-model="form.role_id"/><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- modal for creating new user-->
@@ -223,24 +251,27 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Create New User</h4>
             </div>
             <div class="modal-body">
                 <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
-                    <input type="hidden" ng-model="form.id" value="0"  /><br>
+                    <input type="hidden" ng-model="form.id" value="0"/><br>
                     name:
-                    <input type="text" ng-model="form.name"  /><br>
+                    <input type="text" ng-model="form.name"/><br>
                     description:
-                    <input type="text" ng-model="form.description"  /><br>
+                    <input type="text" ng-model="form.description"/><br>
                     role_id:
-                    <input type="text" ng-model="form.role_id" /><br>
-                    <button type="submit"  class="btn btn-default">Submit</button>
+                    <input type="text" ng-model="form.role_id"/><br>
+                    <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->

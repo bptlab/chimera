@@ -6,24 +6,34 @@
     </div>
 </div>
 <div class="row">
-    <div style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']" ng-show="!searchText || value['username'].indexOf(searchText) > -1">
+    <div style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']"
+         ng-show="!searchText || value['username'].indexOf(searchText) > -1">
         <div style="animation-delay: 0.2s;" class="col-lg-3 animated-panel zoomIn">
             <div class="hpanel hgreen contact-panel">
                 <div class="panel-body">
                     <span class="label label-success pull-right">NEW</span>
                     <img alt="avatar" class="img-circle m-b" src="asset/images/profile.jpg">
+
                     <h3><a href=""> {{value['username']}} </a></h3>
+
                     <div class="text-muted font-bold m-b-xs">{{value['description']}}</div>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan.<br>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices
+                        accumsan.<br>
                         Role Id: {{value['role_id']}}
                     </p>
                 </div>
                 <div class="panel-footer contact-footer">
                     <div class="row">
-                        <div style="animation-delay: 0.3s;" class="col-md-4 border-right animated-panel zoomIn"> <div class="contact-stat"><span>Projects: </span> <strong>200</strong></div> </div>
-                        <div style="animation-delay: 0.4s;" class="col-md-4 border-right animated-panel zoomIn"> <div class="contact-stat"><span>Messages: </span> <strong>300</strong></div> </div>
-                        <div style="animation-delay: 0.5s;" class="col-md-4 animated-panel zoomIn"> <div class="contact-stat"><span>Views: </span> <strong>400</strong></div> </div>
+                        <div style="animation-delay: 0.3s;" class="col-md-4 border-right animated-panel zoomIn">
+                            <div class="contact-stat"><span>Projects: </span> <strong>200</strong></div>
+                        </div>
+                        <div style="animation-delay: 0.4s;" class="col-md-4 border-right animated-panel zoomIn">
+                            <div class="contact-stat"><span>Messages: </span> <strong>300</strong></div>
+                        </div>
+                        <div style="animation-delay: 0.5s;" class="col-md-4 animated-panel zoomIn">
+                            <div class="contact-stat"><span>Views: </span> <strong>400</strong></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,20 +1,22 @@
 <h3>Instances of {{scenarioCtrl.currentScenario['details']['name']}}</h3>
 <div class="table-responsive">
-	<table class="table table-striped table-hover">
-		<caption>Instances of {{instanceCtrl.currentScenario['details']['name']}} currently running</caption>
-		Filter <input ng-model="searchText">
-		<thead>
-			<tr>
-				<th>Instance #</th>
-				<th>Process name</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr style="cursor: pointer" ng-repeat="(key, value) in instanceCtrl.scenario['instances']['labels'] track by $index"  ng-show="!searchText || value.indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);">
-				<td>{{key}}</td>
-				<td>{{value}}</td>
-			</tr>
-			</a>
-		</tbody>
-	</table>
+    <table class="table table-striped table-hover">
+        <caption>Instances of {{instanceCtrl.currentScenario['details']['name']}} currently running</caption>
+        Filter <input ng-model="searchText">
+        <thead>
+        <tr>
+            <th>Instance #</th>
+            <th>Process name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="cursor: pointer"
+            ng-repeat="(key, value) in instanceCtrl.scenario['instances']['labels'] track by $index"
+            ng-show="!searchText || value.indexOf(searchText) > -1" ng-click="instanceCtrl.goToDetailsFrom(key);">
+            <td>{{key}}</td>
+            <td>{{value}}</td>
+        </tr>
+        </a>
+        </tbody>
+    </table>
 </div>
