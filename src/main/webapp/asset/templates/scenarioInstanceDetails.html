@@ -314,9 +314,13 @@
                             attributeConfiguration['value'])}}
                             <td>{{attributeConfiguration['name']}}</td>
                             <td>
-                                <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
+                               <!-- <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"
                                        ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
+                                <span ng-show="form.key3.$pending">tipping...</span>-->
+                                <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
+                                       ng-model="attributeConfiguration['value']"
+                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"><br>
                                 <span ng-show="form.key3.$pending">tipping...</span>
                             </td>
                         </tr>

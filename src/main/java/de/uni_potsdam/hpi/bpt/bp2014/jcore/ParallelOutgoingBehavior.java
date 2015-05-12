@@ -3,7 +3,24 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import java.util.LinkedList;
 
 /**
- * Created by jaspar.mang on 17.02.15.
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
  */
 public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
     /**
@@ -26,7 +43,7 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
      */
     protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id) {
+            if (controlNode_id == controlNodeInstance.controlNode_id && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
                 return controlNodeInstance;
             }
         }

@@ -13,6 +13,26 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.*;
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -242,6 +262,12 @@ public class RestConfigurator {
         }
     }
 
+    /**
+     *
+     * @param jsonObject
+     * @param webserviceID
+     * @return
+     */
     private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         if (jsonObject.has("attributes")) {
@@ -268,6 +294,9 @@ public class RestConfigurator {
         return false;
     }
 
+    /**
+     *
+     */
     private boolean setWebServiceTaskLink(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         boolean back = false;
@@ -296,6 +325,9 @@ public class RestConfigurator {
         return back;
     }
 
+    /**
+     *
+     */
     private boolean setWebServiceTaskPostBody(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         if (jsonObject.has("body")) {

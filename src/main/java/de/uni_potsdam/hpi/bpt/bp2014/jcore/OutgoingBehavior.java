@@ -52,6 +52,12 @@ public abstract class OutgoingBehavior {
         scenarioInstance.startAutomaticControlNodes();
     }
 
+    /**
+     *
+     * @param type
+     * @param id
+     * @return
+     */
     protected ControlNodeInstance createControlNode(String type, int id) {
         ControlNodeInstance controlNodeInstance = null;
         //TODO: type
@@ -59,7 +65,7 @@ public abstract class OutgoingBehavior {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
-                controlNodeInstance = new ActivityInstance(id, fragmentInstance_id, scenarioInstance);
+                controlNodeInstance = new ActivityInstance(id, fragmentInstance_id, scenarioInstance, false);
                 break;
             case "Endevent":
                 controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");

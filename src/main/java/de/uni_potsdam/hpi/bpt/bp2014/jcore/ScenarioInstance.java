@@ -427,62 +427,117 @@ public class ScenarioInstance {
         }
         return null;
     }
-    /*
-     * Getter
-     */
+    // ************************************************ Getter ***********************************************//
 
+
+    /**
+     *
+     * @return
+     */
     public int getScenarioInstance_id() {
         return scenarioInstance_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScenario_id() {
         return scenario_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getControlNodeInstances() {
         return controlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getEnabledControlNodeInstances() {
         return enabledControlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
         return controlFlowEnabledControlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getDataEnabledControlNodeInstances() {
         return dataEnabledControlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getRunningControlNodeInstances() {
         return runningControlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getTerminatedControlNodeInstances() {
         return terminatedControlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<DataObjectInstance> getDataObjectInstances() {
         return dataObjectInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<DataObjectInstance> getDataObjectInstancesOnChange() {
         return dataObjectInstancesOnChange;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<ControlNodeInstance> getReferentialRunningControlNodeInstances() {
         return referentialRunningControlNodeInstances;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<GatewayInstance> getExecutingGateways() {
         return executingGateways;
     }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<Integer, DataAttributeInstance> getDataAttributeInstances() {
         return dataAttributeInstances;
     }

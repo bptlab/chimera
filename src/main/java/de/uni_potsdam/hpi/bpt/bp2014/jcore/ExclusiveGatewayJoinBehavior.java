@@ -53,6 +53,7 @@ public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
             ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).execute();
         } else {
             ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).evaluateConditions();
+            controlNodeInstance.terminate();
         }
 
     }

@@ -5,9 +5,36 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
+/**
+ *
+ */
 public class XORGrammarCompiler {
-
+    /**
+     *
+     * @param expression
+     * @return
+     */
     public CommonTree compile(String expression) {
         try {
             //lexer splits input into tokens
@@ -27,10 +54,19 @@ public class XORGrammarCompiler {
         }
     }
 
+    /**
+     *
+     * @param ast
+     */
     private void printTree(CommonTree ast) {
         print(ast, 0);
     }
 
+    /**
+     *
+     * @param tree
+     * @param level
+     */
     private void print(CommonTree tree, int level) {
         //indent level
         for (int i = 0; i < level; i++)

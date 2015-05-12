@@ -54,7 +54,6 @@ public class GatewayStateMachine extends StateMachine {
      * Executes the gateway instance.
      * Sets the state for the gateway instance in the database to executing.
      */
-
     public void execute() {
         state = "executing";
         dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);

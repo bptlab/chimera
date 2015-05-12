@@ -185,7 +185,8 @@ public class Node implements IDeserialisable, IPersistable {
                         peTypeToDbType.get(stereotype),
                         fragmentId,
                         id);
-                connector.createEMailTemplate(databaseID);
+                if (stereotype.equals("SEND"))
+                    connector.createEMailTemplate(databaseID);
 
             } else {
                 // DataNodes will be done in DataObject

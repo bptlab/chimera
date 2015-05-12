@@ -102,7 +102,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     @Override
     protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id) {
+            if (controlNode_id == controlNodeInstance.controlNode_id  && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
                 return controlNodeInstance;
             }
         }
@@ -208,6 +208,12 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         }
     }
 
+    /**
+     *
+     * @param ast
+     * @param i
+     * @return
+     */
     private boolean checkCondition(Tree ast, int i) {
         String left = ast.getChild(i).toStringTree();
         String comparison = ast.getChild(i + 1).toStringTree();

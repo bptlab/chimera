@@ -61,18 +61,18 @@ public class ActivityInstance extends ControlNodeInstance {
      * @param fragmentInstance_id This is the database id from the fragment instance.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      */
-    public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
+    public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance, boolean init) {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
         this.label = dbControlNode.getLabel(controlNode_id);
         this.references = dbReference.getReferenceActivitiesForActivity(controlNode_id);
         scenarioInstance.getControlNodeInstances().add(this);
-
-        if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id)) {
+        boolean check = init || !dbActivityInstance.getState(dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id)).equals("terminated");
+        if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id) && check) {
             //creates an existing Activity Instance using the database information
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
-            this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
+                this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
         } else {
             //creates a new Activity Instance also in database
             this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
@@ -201,39 +201,70 @@ public class ActivityInstance extends ControlNodeInstance {
         return stateMachine.skip();
     }
 
+    // ************************************** Getter & Setter *************************//
+
     /**
-     * Getter & Setter
+     *
+     * @return
      */
     public TaskExecutionBehavior getTaskExecutionBehavior() {
         return taskExecutionBehavior;
     }
 
+    /**
+     *
+     * @return
+     */
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLabel() {
         return label;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Integer> getReferences() {
         return references;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getIsAutomaticTask() {
         return isAutomaticTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAutomaticExecution() {
 
         return automaticExecution;
     }
 
+    /**
+     *
+     * @param automaticExecution
+     */
     public void setAutomaticExecution(boolean automaticExecution) {
         this.automaticExecution = automaticExecution;
         this.dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, automaticExecution);
     }
 
+    /**
+     *
+     * @param canTerminate
+     */
     public void setCanTerminate(boolean canTerminate) {
         this.canTerminate = canTerminate;
         this.dbActivityInstance.setCanTerminate(controlNodeInstance_id, canTerminate);

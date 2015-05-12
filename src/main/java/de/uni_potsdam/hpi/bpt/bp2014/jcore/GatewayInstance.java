@@ -59,7 +59,7 @@ public class GatewayInstance extends ControlNodeInstance {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
-        scenarioInstance.getControlNodeInstances().add(this);
+        //scenarioInstance.getControlNodeInstances().add(this);
         switch (dbControlNode.getType(controlNode_id)) {
             case "AND":
                 this.isAND = true;
@@ -118,26 +118,45 @@ public class GatewayInstance extends ControlNodeInstance {
         return stateMachine.skip();
     }
 
-    /*
-     * Getter & Setter
-     */
+    // ******************************* Getter & Setter ***************************//
 
+
+    /**
+     *
+     * @return
+     */
     public Boolean getIsXOR() {
         return isXOR;
     }
 
+    /**
+     *
+     * @return
+     */
     public Boolean getIsAND() {
         return isAND;
     }
 
+    /**
+     *
+     * @return
+     */
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAutomaticExecution() {
         return automaticExecution;
     }
 
+    /**
+     *
+     * @param automaticExecution
+     */
     public void setAutomaticExecution(boolean automaticExecution) {
         this.automaticExecution = automaticExecution;
     }

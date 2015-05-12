@@ -62,26 +62,50 @@ public class HistoryService {
         return labels;
     }
 
+    /**
+     *
+     * @param scenarioInstance_id
+     * @return
+     */
     public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(int scenarioInstance_id) {
         DbHistoryDataObjectInstance dbHistoryDataObjectInstance = new DbHistoryDataObjectInstance();
         return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 
+    /**
+     *
+     * @param scenarioInstance_id
+     * @return
+     */
     public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(int scenarioInstance_id) {
         DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
         return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 
+    /**
+     *
+     * @param scenarioInstance_id
+     * @return
+     */
     public Map<Integer, Map<String, Object>> getSelectedActivityInstanceLogEntriesForScenarioInstance(int scenarioInstance_id) {
         DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
         return dbHistoryActivityInstance.getterminatedLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 
+    /**
+     *
+     * @param scenarioInstance_id
+     * @return
+     */
     public Map<Integer, Map<String, Object>> getDataAttributeInstanceLogEntriesForScenarioInstance(int scenarioInstance_id) {
         DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance = new DbHistoryDataAttributeInstance();
         return dbHistoryDataAttributeInstance.getLogEntriesForScenarioInstance(scenarioInstance_id);
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
         HistoryService h = new HistoryService();
         System.out.print(h.getDataAttributeInstanceLogEntriesForScenarioInstance(1330).toString());

@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
-
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 
 import org.apache.log4j.Logger;
@@ -12,6 +11,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 public class MetaAnalyticsModel {
     static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
@@ -62,6 +82,11 @@ public class MetaAnalyticsModel {
         return executeStatementReturnsMapWithMapWithKeys(sql,"start_timestamp", "end_timestamp");
     }
 
+    /**
+     *
+     * @param scenario_id
+     * @return
+     */
     public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id){
         String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.terminated = 1 AND scenarioinstance.scenario_id = "+scenario_id;
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -90,32 +115,6 @@ public class MetaAnalyticsModel {
 
         return scenarioInstances;
     }
-
-    public static ResultSet getResultSetForStatement(String sql) {
-
-
-        java.sql.Connection conn = Connection.getInstance().connect();
-        ResultSet results = null;
-        try {
-            results = conn.prepareStatement(sql).executeQuery();
-
-        } catch (SQLException e) {
-            log.error("SQL Error!: ", e);
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                log.error("SQL Error!: ", e);
-            }
-            try {
-                results.close();
-            } catch (SQLException e) {
-                log.error("SQL Error!: ", e);
-            }
-        }
-        return results;
-    }
-
 
 
     // **************************** HELPER ********************************************************
