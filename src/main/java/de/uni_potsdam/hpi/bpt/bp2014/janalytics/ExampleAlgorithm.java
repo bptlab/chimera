@@ -57,8 +57,8 @@ public class ExampleAlgorithm implements AnalyticsService{
 
                 continue;
             }
-                    sumDuration = sumDuration + duration;
-                    numberOfScenarioInstances++;
+            sumDuration = sumDuration + duration;
+            numberOfScenarioInstances++;
         }
 
         if (!scenarioInstances.isEmpty()){
@@ -95,12 +95,12 @@ public class ExampleAlgorithm implements AnalyticsService{
             if(endDate == null || startDate == null){
                 return (-1);
             }
-           return (endDate.getTime() - startDate.getTime());
+            return (endDate.getTime() - startDate.getTime());
         }
 
         public void initiallizeTimestamps() {
 
-        String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioInstanceID+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";
+            String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioInstanceID+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";
             java.sql.Connection conn = Connection.getInstance().connect();
             ResultSet results = null;
             try {
@@ -127,10 +127,6 @@ public class ExampleAlgorithm implements AnalyticsService{
         }
 
     }
-<<<<<<< HEAD
 
 
 }
-=======
-}
->>>>>>> 1a734aded7551fe0786a269e15956ded952e5f6e

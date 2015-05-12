@@ -45,5 +45,6 @@ public class ServiceManager {
 
     private void registerServices(){
         addService(new ExampleAService());
+        addService(new ExampleAlgorithm());
     }
 }
