@@ -9,7 +9,28 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Created by Ihdefix on 12.03.2015.
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
+
+/**
+ *
  */
 public class DataAttributeTest {
     private Document document = new DocumentImpl(null);
@@ -25,6 +46,12 @@ public class DataAttributeTest {
         dataClass.appendChild(createProperty("stereotype", "root_instance"));
     }
 
+    /**
+     *
+     * @param name
+     * @param value
+     * @return
+     */
     private Element createProperty(String name, String value) {
         if (null == document) {
             return null;

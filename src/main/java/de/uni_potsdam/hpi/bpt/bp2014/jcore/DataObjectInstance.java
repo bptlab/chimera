@@ -119,30 +119,58 @@ public class DataObjectInstance {
         return scenarioInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScenarioInstance_id() {
         return scenarioInstance_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScenario_id() {
         return scenario_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getDataObject_id() {
         return dataObject_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getDataObjectInstance_id() {
         return dataObjectInstance_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getState_id() {
         return state_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<DataAttributeInstance> getDataAttributeInstances() {
         return dataAttributeInstances;
     }

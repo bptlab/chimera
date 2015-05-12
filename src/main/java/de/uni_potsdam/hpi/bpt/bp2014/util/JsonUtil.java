@@ -5,6 +5,26 @@ import com.google.gson.JsonObject;
 import org.json.JSONArray;
 
 import java.util.*;
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
 
 /**
@@ -32,6 +52,11 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
+    /**
+     *
+     * @param content
+     * @return
+     */
     public static String JsonWrapperObject(Object content) {
         Gson gson = new Gson();
         JsonObject json = new JsonObject(); //TODO: to be adapted to needs here
@@ -67,7 +92,11 @@ public class JsonUtil {
         return gson.toJson(json);
     }
 
-
+    /**
+     *
+     * @param content
+     * @return
+     */
     public static String JsonWrapperHashMapOnly(HashMap content) {
         Gson gson = new Gson();
         return gson.toJson(content);
