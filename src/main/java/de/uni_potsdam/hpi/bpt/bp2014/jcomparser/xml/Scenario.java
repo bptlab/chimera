@@ -377,8 +377,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                 continue;
             Map<DataObject, String> setMap = new HashMap<>();
             for (String setEntry : set.split(",")) {
-                String dataObject = setEntry.replaceAll("\\[[a-zA-Z0-9]+\\]", "");
-                String state = setEntry.replaceAll("[a-zA-Z0-9]+\\[", "").replaceAll("\\]", "");
+                String dataObject = setEntry.replaceAll("\\[[a-zA-Z0-9_.]+\\]", "");
+                String state = setEntry.replaceAll("[a-zA-Z0-9_.]+\\[", "").replaceAll("\\]", "");
                 if (dataObject != "" && state != "") {
                     setMap.put(dataObjects.get(dataObject), state);
                 }

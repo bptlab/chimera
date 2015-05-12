@@ -52,6 +52,12 @@ public abstract class OutgoingBehavior {
         scenarioInstance.startAutomaticControlNodes();
     }
 
+    /**
+     *
+     * @param type
+     * @param id
+     * @return
+     */
     protected ControlNodeInstance createControlNode(String type, int id) {
         ControlNodeInstance controlNodeInstance = null;
         //TODO: type

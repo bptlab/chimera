@@ -208,6 +208,12 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         }
     }
 
+    /**
+     *
+     * @param ast
+     * @param i
+     * @return
+     */
     private boolean checkCondition(Tree ast, int i) {
         String left = ast.getChild(i).toStringTree();
         String comparison = ast.getChild(i + 1).toStringTree();

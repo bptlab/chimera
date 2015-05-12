@@ -201,39 +201,70 @@ public class ActivityInstance extends ControlNodeInstance {
         return stateMachine.skip();
     }
 
+    // ************************************** Getter & Setter *************************//
+
     /**
-     * Getter & Setter
+     *
+     * @return
      */
     public TaskExecutionBehavior getTaskExecutionBehavior() {
         return taskExecutionBehavior;
     }
 
+    /**
+     *
+     * @return
+     */
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLabel() {
         return label;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Integer> getReferences() {
         return references;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getIsAutomaticTask() {
         return isAutomaticTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAutomaticExecution() {
 
         return automaticExecution;
     }
 
+    /**
+     *
+     * @param automaticExecution
+     */
     public void setAutomaticExecution(boolean automaticExecution) {
         this.automaticExecution = automaticExecution;
         this.dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, automaticExecution);
     }
 
+    /**
+     *
+     * @param canTerminate
+     */
     public void setCanTerminate(boolean canTerminate) {
         this.canTerminate = canTerminate;
         this.dbActivityInstance.setCanTerminate(controlNodeInstance_id, canTerminate);

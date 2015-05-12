@@ -51,6 +51,10 @@ public class EventIncomingControlFlowBehavior extends IncomingBehavior {
      * Getter
      */
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return type;
     }

@@ -11,11 +11,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
+/**
+ *
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Scenario.class, Fragment.class, DomainModel.class})
 public class HugeComparserTest extends TestSetUp {
-
+    /**
+     *
+     */
     private class DbScenario {
         int id;
         String name;
@@ -25,6 +50,16 @@ public class HugeComparserTest extends TestSetUp {
         int datamodelversion;
         short deleted;
 
+        /**
+         *
+         * @param id
+         * @param name
+         * @param modelID
+         * @param modelversion
+         * @param datamodelID
+         * @param datamodelversion
+         * @param deleted
+         */
         public DbScenario(int id, String name, long modelID, int modelversion, long datamodelID, int datamodelversion, short deleted) {
             this.id = id;
             this.name = name;
@@ -49,6 +84,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbFragment {
         int id;
         String name;
@@ -76,6 +114,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbDataClass {
         int id;
         String name;
@@ -96,6 +137,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbDataAttribute {
         int id;
         String name;
@@ -122,6 +166,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbAggregation {
         int dataClassID1;
         int dataClassID2;
@@ -144,6 +191,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbState {
         int id;
         String name;
@@ -164,6 +214,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbDataObject {
         int id;
         String name;
@@ -190,6 +243,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbControlNode {
         int id;
         String name;
@@ -217,6 +273,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbDataNode {
         int id;
         int scenarioID;
@@ -246,6 +305,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbDataSetAndFlow {
         int dataSetID;
         // table dataflow
@@ -276,6 +338,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbControlFlow {
         int id1;
         int id2;
@@ -298,6 +363,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbReference {
         int id1;
         int id2;
@@ -317,6 +385,9 @@ public class HugeComparserTest extends TestSetUp {
         }
     }
 
+    /**
+     *
+     */
     private class DbTerminationCondition {
         int conditionset_id;
         int dataobject_id;
@@ -409,6 +480,11 @@ public class HugeComparserTest extends TestSetUp {
         testTerminationCondition();
 
     }
+
+    /**
+     *
+     * @throws Exception
+     */
     private void testScenario() throws Exception {
         ResultSet scenarios = getDbEntries("scenario");
         while (scenarios.next()) {
@@ -428,6 +504,10 @@ public class HugeComparserTest extends TestSetUp {
         scenarios.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testFragments() throws Exception {
         ResultSet fragments = getDbEntries("fragment");
         while (fragments.next()) {
@@ -446,6 +526,10 @@ public class HugeComparserTest extends TestSetUp {
         fragments.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testDataClass() throws Exception {
         ResultSet dataClasses = getDbEntries("dataclass");
         while (dataClasses.next()) {
@@ -462,6 +546,10 @@ public class HugeComparserTest extends TestSetUp {
         dataClasses.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testDataAttributes() throws Exception {
         ResultSet dataAttributes = getDbEntries("dataattribute");
         while (dataAttributes.next()) {
@@ -481,6 +569,10 @@ public class HugeComparserTest extends TestSetUp {
         dataAttributes.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testAggregation() throws Exception {
         ResultSet aggregations = getDbEntries("aggregation");
         while (aggregations.next()) {
@@ -495,6 +587,10 @@ public class HugeComparserTest extends TestSetUp {
         aggregations.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testStates() throws Exception {
         ResultSet states = getDbEntries("state");
         while (states.next()) {
@@ -513,6 +609,10 @@ public class HugeComparserTest extends TestSetUp {
         states.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testDataObjects() throws Exception {
         ResultSet dataObjects = getDbEntries("dataobject");
         while (dataObjects.next()) {
@@ -538,6 +638,10 @@ public class HugeComparserTest extends TestSetUp {
         dataObjects.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testDataNodes() throws Exception {
         ResultSet dataNodes = getDbEntries("datanode");
         while (dataNodes.next()) {
@@ -572,6 +676,10 @@ public class HugeComparserTest extends TestSetUp {
         dataNodes.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testControlNodes() throws Exception {
         ResultSet controlNodes = getDbEntries("controlnode");
         while (controlNodes.next()) {
@@ -608,6 +716,10 @@ public class HugeComparserTest extends TestSetUp {
         controlNodes.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testDataSetAndDataFlow() throws Exception {
         ResultSet dataSets = getDataSetJoins();
         while (dataSets.next()) {
@@ -631,6 +743,10 @@ public class HugeComparserTest extends TestSetUp {
         dataSets.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testControlFlow() throws Exception {
         ResultSet controlFlows = getDbEntries("controlflow");
         while (controlFlows.next()) {
@@ -657,6 +773,10 @@ public class HugeComparserTest extends TestSetUp {
         controlFlows.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testReferences() throws Exception {
         ResultSet references = getDbEntries("reference");
         while (references.next()) {
@@ -671,6 +791,10 @@ public class HugeComparserTest extends TestSetUp {
         references.close();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void testTerminationCondition() throws Exception {
         ResultSet terminationCondition = getDbEntries("terminationcondition");
         while (terminationCondition.next()) {
@@ -697,6 +821,11 @@ public class HugeComparserTest extends TestSetUp {
         terminationCondition.close();
     }
 
+    /**
+     *
+     * @param tablename
+     * @return
+     */
     private ResultSet getDbEntries (String tablename) {
         String select = "SELECT * " +
                 "FROM " + tablename;
@@ -716,6 +845,10 @@ public class HugeComparserTest extends TestSetUp {
         return rs;
     }
 
+    /**
+     *
+     * @return
+     */
     private ResultSet getDataSetJoins () {
         String select = "SELECT * " +
                 "FROM dataflow, dataset, datasetconsistsofdatanode " +

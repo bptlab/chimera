@@ -46,30 +46,52 @@ public abstract class ControlNodeInstance {
      * @return true if the skip success. false if not.
      */
     public abstract boolean terminate();
-    /*
-     * Getter
-     */
+    // *************************************** Getter ***************************************//
 
+    /**
+     *
+     * @return
+     */
     public OutgoingBehavior getOutgoingBehavior() {
         return outgoingBehavior;
     }
 
+    /**
+     *
+     * @return
+     */
     public IncomingBehavior getIncomingBehavior() {
         return incomingBehavior;
     }
 
+    /**
+     *
+     * @return
+     */
     public StateMachine getStateMachine() {
         return stateMachine;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getFragmentInstance_id() {
         return fragmentInstance_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getControlNodeInstance_id() {
         return controlNodeInstance_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getControlNode_id() {
         return controlNode_id;
     }

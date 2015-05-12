@@ -119,22 +119,36 @@ public class FragmentInstance {
         dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
     }
 
-    /*
-     * Getter
-     */
+    // ****************************** Getter **********************************
 
+    /**
+     *
+     * @return
+     */
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getFragment_id() {
         return fragment_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getFragmentInstance_id() {
         return fragmentInstance_id;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScenarioInstance_id() {
         return scenarioInstance_id;
     }

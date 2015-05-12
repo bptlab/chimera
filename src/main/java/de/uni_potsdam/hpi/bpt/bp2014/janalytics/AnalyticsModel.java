@@ -11,7 +11,30 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+/**
+ * ********************************************************************************
+ * <p/>
+ * _________ _______  _        _______ _________ _        _______
+ * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
+ * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
+ * |  |  | (__    |   \ | || |         | |   |   \ | || (__
+ * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
+ * |  |  | (      | | \   || | \_  )   | |   | | \   || (
+ * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
+ * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
+ * <p/>
+ * ******************************************************************
+ * <p/>
+ * Copyright © All Rights Reserved 2014 - 2015
+ * <p/>
+ * Please be aware of the License. You may found it in the root directory.
+ * <p/>
+ * **********************************************************************************
+ */
 
+/**
+ *
+ */
 public class AnalyticsModel extends MetaAnalyticsModel {
     static Logger log = Logger.getLogger(AnalyticsModel.class.getName());
 
@@ -33,7 +56,11 @@ public class AnalyticsModel extends MetaAnalyticsModel {
     }
 
 
-
+    /**
+     *
+     * @param scenarioInstance_id
+     * @return
+     */
     public static ArrayList<Map<Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(int scenarioInstance_id){
         ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<Map<Integer, Map<String, Object>>>();
 

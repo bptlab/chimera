@@ -118,26 +118,45 @@ public class GatewayInstance extends ControlNodeInstance {
         return stateMachine.skip();
     }
 
-    /*
-     * Getter & Setter
-     */
+    // ******************************* Getter & Setter ***************************//
 
+
+    /**
+     *
+     * @return
+     */
     public Boolean getIsXOR() {
         return isXOR;
     }
 
+    /**
+     *
+     * @return
+     */
     public Boolean getIsAND() {
         return isAND;
     }
 
+    /**
+     *
+     * @return
+     */
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAutomaticExecution() {
         return automaticExecution;
     }
 
+    /**
+     *
+     * @param automaticExecution
+     */
     public void setAutomaticExecution(boolean automaticExecution) {
         this.automaticExecution = automaticExecution;
     }

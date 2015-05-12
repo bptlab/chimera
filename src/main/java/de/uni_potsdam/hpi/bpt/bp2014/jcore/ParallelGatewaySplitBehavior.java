@@ -61,6 +61,11 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
         return controlNodeInstance;
     }
 
+    /**
+     *
+     * @param type
+     * @param controlNodeInstance
+     */
     private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance) {
         //TODO: type
         switch (type) {
