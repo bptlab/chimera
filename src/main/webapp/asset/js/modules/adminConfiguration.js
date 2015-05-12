@@ -152,6 +152,7 @@
                     webserviceC.newAttribute = {};
                     //cloning last entry of the attribute array
                     angular.copy($scope.form.attributes[$scope.form.attributes.length-1], webserviceC.newAttribute);
+                    console.log(webserviceC.newAttribute);
                     //setting controlnode id from working Webservice task ID
                     webserviceC.newAttribute['controlnode_id'] = webserviceC.workingID;
                     //increasing order id if null set 0
@@ -174,7 +175,9 @@
                     } else {
                         webserviceC.newAttribute['array_key'] = array_key['array_key'] + 1;
                     }
-                    webserviceC.NgRepeatAttributeArray.push(webserviceC.newAttribute);
+                    //webserviceC.NgRepeatAttributeArray.push(webserviceC.newAttribute);
+
+                    webserviceC.getDifferentDataattributes();
                 }
 
                 //get all infos for popup

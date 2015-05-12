@@ -82,6 +82,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                         <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(Newdataattribute)">Add Attribute</a>
                     </div>
                     <div ng-show="webserviceC.NgRepeatAttributeArray.length">
+                        {{webserviceC.NgRepeatAttributeArray}}
                     <div ng-show="searchText">
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
@@ -93,7 +94,8 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr style="cursor: pointer" ng-repeat="attribute in webserviceC.NgRepeatAttributeArray | filter:searchText" >
+
+                                <tr style="cursor: pointer" ng-repeat="attribute in webserviceC.NgRepeatAttributeArray track by $index | filter:searchText" >
                               <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
                                     <td>{{attribute['array_key']}}</td>
                                     <td>
