@@ -290,10 +290,10 @@ public class RestConfigurator {
                     String key = entry.getString("key");
                     dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
                 }
-                return true;
             } else {
-                return dbWebServiceTask.deleteAllAttributes(webserviceID);
+                dbWebServiceTask.deleteAllAttributes(webserviceID);
             }
+            return true;
         }
         return false;
     }
