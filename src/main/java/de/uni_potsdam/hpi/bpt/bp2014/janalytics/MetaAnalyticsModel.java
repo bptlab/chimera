@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MetaAnalyticsModel {
@@ -61,9 +62,58 @@ public class MetaAnalyticsModel {
         return executeStatementReturnsMapWithMapWithKeys(sql,"start_timestamp", "end_timestamp");
     }
 
-    public static Map<Integer, Map<String, Object>> getScenarioInstancesForScenario(int scenario_id){
-        String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.scenario_id = "+scenario_id;
-        return executeStatementReturnsMapWithMapWithKeys(sql,"scenarioinstance.id");
+    public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id){
+        String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.terminated = 1 AND scenarioinstance.scenario_id = "+scenario_id;
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> scenarioInstances = new ArrayList<>();
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+            while (results.next()){
+                scenarioInstances.add(new ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps(results.getInt("scenarioinstance.id")));
+            }
+
+        } catch (SQLException e) {
+            log.error("SQL Error!: ", e);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+        }
+
+        return scenarioInstances;
+    }
+
+    public static ResultSet getResultSetForStatement(String sql) {
+
+
+        java.sql.Connection conn = Connection.getInstance().connect();
+        ResultSet results = null;
+        try {
+            results = conn.prepareStatement(sql).executeQuery();
+
+        } catch (SQLException e) {
+            log.error("SQL Error!: ", e);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+            try {
+                results.close();
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+        }
+        return results;
     }
 
 

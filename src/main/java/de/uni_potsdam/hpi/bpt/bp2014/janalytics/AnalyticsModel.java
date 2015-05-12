@@ -32,14 +32,7 @@ public class AnalyticsModel extends MetaAnalyticsModel {
         return result;
     }
 
-    public static ArrayList<Map<Integer, Map<String, Object>>> calculateMeanScenarioInstanceRunTime(int scenario_id){
-        ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<Map<Integer, Map<String, Object>>>();
 
-        Map<Integer, Map<String, Object>> scenarioInstancesForScenario = getScenarioInstancesForScenario(scenario_id);
-        result.add (scenarioInstancesForScenario);
-
-        return result;
-    }
 
     public static ArrayList<Map<Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(int scenarioInstance_id){
         ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<Map<Integer, Map<String, Object>>>();
