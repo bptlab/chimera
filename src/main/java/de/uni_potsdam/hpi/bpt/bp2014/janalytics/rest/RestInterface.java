@@ -40,6 +40,12 @@ public class RestInterface {
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getServiceResults(@PathParam("service") String service) {
+        if (!serviceManager.existService(service)){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no service " + service + "\"}")
+                    .build();
+        }
         JSONObject jsonObject = serviceManager.getResultForService(service);
         return Response.ok(jsonObject.toString(), MediaType.APPLICATION_JSON).build();
     }
@@ -80,7 +86,7 @@ public class RestInterface {
                     list.add(jsonArray.get(i).toString());
                 }
             }
-            serviceManager.calculateResultForService(service, (String[]) list.toArray());
+            serviceManager.calculateResultForService(service, list.toArray(new String[list.size()]));
         }
         return Response.ok(MediaType.APPLICATION_JSON).build();
     }

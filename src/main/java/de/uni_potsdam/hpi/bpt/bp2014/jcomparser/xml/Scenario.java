@@ -370,7 +370,8 @@ public class Scenario implements IDeserialisable, IPersistable {
             terminationCondition = null;
             return;
         }
-        String[] terminationConditions = tcs.split("; ");
+        tcs = tcs.replaceAll("; ", ";");
+        String[] terminationConditions = tcs.split(";");
         for (String set : terminationConditions) {
             if (set.isEmpty())
                 continue;
