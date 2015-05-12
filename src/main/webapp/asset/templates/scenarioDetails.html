@@ -108,7 +108,6 @@
             <div class="modal-body">
                     <table class="table table-striped">
                         <tr ng-repeat="(key, value) in scenarioCtrl.currentScenario['terminationcondition']['conditions'] track by $index">
-                            <!--<td>{{key}}</td>-->
                             <td>
                                 <div ng-repeat="(key, value2) in value track by $index">
                                     The dataobject "{{value2['data_object']}}" is in state "{{value2['state']}}".<br>

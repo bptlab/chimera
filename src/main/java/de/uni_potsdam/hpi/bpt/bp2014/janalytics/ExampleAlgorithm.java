@@ -127,6 +127,10 @@ public class ExampleAlgorithm implements AnalyticsService{
         }
 
     }
+<<<<<<< HEAD
 
 
 }
+=======
+}
+>>>>>>> 1a734aded7551fe0786a269e15956ded952e5f6e
