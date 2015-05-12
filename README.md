@@ -72,11 +72,11 @@ We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-respon
 
 Class View
 
-![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/619e5e6276e04605be3cf188e08ef496100f3b48/docu/img/class_view_organic.png)
+![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/img/class_view_organic.png)
 
 Package View
 
-![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/619e5e6276e04605be3cf188e08ef496100f3b48/docu/img/package_view_organic.png)
+![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/img/package_view_organic.png)
 
 ## Features
 
