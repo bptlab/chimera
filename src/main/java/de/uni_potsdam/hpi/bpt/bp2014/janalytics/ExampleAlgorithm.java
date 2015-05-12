@@ -19,25 +19,8 @@ import java.util.Map;
 public class ExampleAlgorithm implements AnalyticsService{
     static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
-    public Object exampleAlgorithm1(int scenarioInstance_id) {
-        ArrayList<Map<Integer, Map<String, Object>>> model = AnalyticsModel.exampleAlgorithm1(scenarioInstance_id);
-
-        //TODO: do some fancy calculations
-        Object result = new Object();
-        return result;
-    }
-
     public JSONObject calculateResult(String[] args){
         int scenarioId = new Integer (args[0]);
-        return exampleAlgorithm2(scenarioId);
-    }
-
-    public static void main(String[] args){
-
-        exampleAlgorithm2(105);
-    }
-
-    public static JSONObject exampleAlgorithm2(int scenario_id) {
 
         // MeanScenarioInstanceRunTime
 
@@ -45,7 +28,7 @@ public class ExampleAlgorithm implements AnalyticsService{
         long sumDuration = 0L;
         int numberOfScenarioInstances = 0;
         //get instances for scenario
-        List<DbScenarioInstanceIDsAndTimestamps> scenarioInstances = MetaAnalyticsModel.getScenarioInstancesForScenario(scenario_id);
+        List<DbScenarioInstanceIDsAndTimestamps> scenarioInstances = MetaAnalyticsModel.getScenarioInstancesForScenario(scenarioId);
 
         for (DbScenarioInstanceIDsAndTimestamps scenarioInstance : scenarioInstances) {
 
@@ -64,15 +47,14 @@ public class ExampleAlgorithm implements AnalyticsService{
         if (!scenarioInstances.isEmpty()){
             avgDuration = sumDuration / numberOfScenarioInstances;
         }
-        System.out.println(avgDuration);
+
         long second = (avgDuration / 1000) % 60;
         long minute = (avgDuration / (1000 * 60)) % 60;
         long hour = (avgDuration / (1000 * 60 * 60)) % 24;
         long day = (avgDuration / (1000 * 60 * 60 * 24)) % 365;
 
         String time = String.format("%02d:%02d:%02d:%02d", day, hour, minute, second);
-        System.out.println(time);
-        String json = "{\"scenarioId\":" + scenario_id + ",\"meanScenarioInstanceRuntime\":\"" + time + "\"}";
+        String json = "{\"scenarioId\":" + scenarioId + ",\"meanScenarioInstanceRuntime\":\"" + time + "\"}";
         JSONObject result = new JSONObject(json);
         return result;
     }
