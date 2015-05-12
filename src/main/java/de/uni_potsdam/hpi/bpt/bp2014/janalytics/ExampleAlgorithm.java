@@ -51,7 +51,7 @@ public class ExampleAlgorithm implements AnalyticsService{
         List<DbScenarioInstanceIDsAndTimestamps> scenarioInstances = MetaAnalyticsModel.getScenarioInstancesForScenario(scenarioId);
         for (DbScenarioInstanceIDsAndTimestamps scenarioInstance : scenarioInstances) {
             // retrieve timestamps for start and end of a terminated scenarioinstance
-            scenarioInstance.initiallizeTimestamps();
+            scenarioInstance.initializeTimestamps();
             // calculate runtime for single instance
             long duration =  scenarioInstance.getDuration();
             if(duration < 0){
@@ -111,7 +111,7 @@ public class ExampleAlgorithm implements AnalyticsService{
         /**
          * This method accesses the database to retrieve the start and end timestamps for the given scenarioinstanceID attribute
          */
-        public void initiallizeTimestamps() {
+        public void initializeTimestamps() {
 
             String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioInstanceID+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";
             java.sql.Connection conn = Connection.getInstance().connect();
