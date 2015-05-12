@@ -1,7 +1,8 @@
 (function(){
+    // defining module within MVC pattern. here, we primary realize the controller action for the user interaction with all compontens of the Jengine
 	var userIn = angular.module('userInteraction', []);
 	
-	// Create a directive for Scenarios Menu Entry
+	// Create a directive for scenarios menu entry
 	userIn.directive('scenarioMenuEntry', function(){
 		return {
 			restrict: 'A',
@@ -9,10 +10,11 @@
 		};
 	});
 
-	// Create a Controller for the Scenario Information
+	// Create a controller for the scenario information
 	userIn.controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
 		function($routeParams, $location, $http,$scope){
-			var controller = this;
+			// For accessing data from inside the $http context
+            var controller = this;
 			
 			// initialize an empty list of scenario Ids
             this.currentScenario = {};
@@ -132,7 +134,7 @@
 
             /* ____ BEGIN_INITIALIZATION ____ */
             this.initialize = function(){
-                console.log('initializing...');
+                console.info('initializing...'); // not really needed but for some debug purposes always good.
             }
 
             this.initialize();
@@ -149,13 +151,12 @@
 			this.instances = {};
             this.instanceDetails = {};
 			this.scenario = {};
-
             this.activityOutput = {};
-
             this.changeAttributObject = {};
 
             //post update for webservice tasks
             this.submitAttributeForm=function(){
+                //using the put
                 var data=$scope.form;
                 $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
             }

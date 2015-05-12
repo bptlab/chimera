@@ -156,10 +156,8 @@
                             <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
                                 <div class="list-item">
                                     <h3 class="no-margins text-success">{{value['da.name']}}</h3>
-                                    <!--<small>{{value['h.oldvalue']}} -> {{value['h.newvalue']}}</small>-->
                                     <i>Value updated</i><br>
                                     <big>"{{value['h.oldvalue']}}" -> "{{value['h.newvalue']}}"</big>
-                                    <!--<div class="pull-right font-bold">{{value['h.timestamp']}}<i class="fa fa-level-up text-success"></i></div>-->
                                 </div>
                             </div>
                         </div>
@@ -219,8 +217,6 @@
                 <p>Do you want to start Activity "{{value['label']}}"?</p>
           </div>
           <div ng-show="instanceCtrl.scenario['refLength']">
-              <!--TODO: improve visualisation -->
-              <!--<div class="responsive-table pull-left">-->
                   <table class="table table-striped">
                       <thead>
                       <tr>
@@ -257,7 +253,6 @@
                       </tr>
                       </tbody>
                   </table>
-              <!--</div>-->
         </div>
       </div>
       <div class="modal-footer">
@@ -279,8 +274,6 @@
         <h4 class="modal-title">Terminate activity?</h4>
       </div>
       <div class="modal-body">
-          <!--<div ng-repeat="(key, output) in instanceCtrl.activityOutput[value['id']] track by $index">
-              <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">-->
               <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][instanceCtrl.activityOutput[value['id']][0]['id']] track by $index">
                    <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
                   <br>
@@ -302,16 +295,12 @@
                       </tr>
                   </tbody>
                   </table>
-                  <!--<hr>-->
               </div>
-          <!--</div>-->
           <br><br><br>
 
-        <!--<p>Do you really want to terminate Activity "{{value['label']}}"?</p>-->
           <div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
               <hr>
               <b>Please choose one of the following outputset</b>
-              <!--<div class="responsive-table pull-left">-->
                   <table class="table table-striped">
                       <thead>
                       <tr>
@@ -331,7 +320,6 @@
                           </tr>
                     </tbody>
                 </table>
-            <!--</div>-->
         </div>
       </div>
       <div class="modal-footer">
@@ -339,10 +327,6 @@
           <div ng-hide="instanceCtrl.scenario['outputsetsLength'].length">
               <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
           </div>
-          <!--<div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
-              <select ng-model="terminateSelection" ng-options="item for item in instanceCtrl.scenario['outputsetsLength']"></select>
-              <button type="button" ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], terminateSelection);" data-dismiss="modal" class="btn btn-danger">Terminate</button>
-          </div>-->
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
