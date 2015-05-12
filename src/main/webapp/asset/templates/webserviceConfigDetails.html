@@ -96,8 +96,6 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                 </tr>
                                 </thead>
                                 <tbody>
-                                NgRepeatAttributeArray = {{NgRepeatAttributeArray}} <br>
-                                form.attributes = {{form.attributes}} <br>
                                 <tr style="cursor: pointer" ng-repeat="attribute in NgRepeatAttributeArray  | filter:searchAttribute track by $index" >
                               <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
                                     <td>{{attribute['array_key']}}</td>
@@ -107,7 +105,8 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                         <span ng-show="form.attribute_key.$pending">tipping...</span>
                                     </td>
                                     <td>
-                                        <a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>
+                                        <!-- we decided to not allow the user to delete single array items alias keys -->
+                                        <!--<a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>-->
                                         <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(searchAttribute)">+</a>
                                     </td>
                                 </tr>
