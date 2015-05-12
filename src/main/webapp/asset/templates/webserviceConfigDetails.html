@@ -72,17 +72,17 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                             <td><input type="text" ng-model="form.body" size="50"/></td>
                         </tr>
                         <tr>
-                            <td>Dataobject</td>
+                            <td>Data Attribute</td>
                             <td>
-                                <select ng-model="Newdataattribute"
+                                <select ng-model="searchAttribute"
                                         ng-options="k as v for (k, v) in webserviceC.detailsForID['allAttributes']">
                                     <option value="">Select Type</option>
                                 </select>
                                 <a type="button" class="btn btn-success"
-                                   ng-click="webserviceC.addAttribute(Newdataattribute)">Add Attribute</a>
+                                   ng-click="webserviceC.addAttribute(searchAttribute)">Add Attribute</a>
                             </td>
                         </tr>
-                        <div ng-show="NgRepeatAttributeArray.length">
+                        <!--<div ng-show="NgRepeatAttributeArray.length">
                             <tr>
                                 <td>Please select a DataAttributeID</td>
                                 <td>
@@ -90,7 +90,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                             ng-options="item for item in webserviceC.DataAttributeArray"></select><br>
                                 </td>
                             </tr>
-                        </div>
+                        </div>-->
                         </tbody>
                     </table>
                     <div ng-show="NgRepeatAttributeArray.length">
