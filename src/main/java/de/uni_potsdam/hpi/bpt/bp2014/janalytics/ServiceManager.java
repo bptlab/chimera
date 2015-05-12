@@ -26,6 +26,10 @@ public class ServiceManager {
         dbObject.executeUpdateStatement("UPDATE janalyticsresults SET json = '" + jsonObject.toString() + "' WHERE service = '" + services.get(service).getClass().getName() +"'");
     }
 
+    public boolean existService(String service){
+        return services.containsKey(service);
+    }
+
     public JSONObject getResultForService(String service){
         String json = dbObject.executeStatementReturnsString("SELECT json FROM janalyticsresults WHERE service = '" + services.get(service).getClass().getName() +"'", "json");
         return new JSONObject(json);
