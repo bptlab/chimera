@@ -133,4 +133,9 @@ public class DbWebServiceTask extends DbObject {
                                 "(SELECT DISTINCT dataset_id FROM dataflow WHERE input = 0 AND controlnode_id = " + webserviceID + " )))";
         return executeStatementReturnsMap(sql, "id", "name");
     }
+
+    public boolean deleteAllAttributes(int webserviceID) {
+        String sql = "DELETE FROM webservicetaskattribute WHERE controlnode_id = " + webserviceID;
+        return executeExistStatement(sql);
+    }
 }
