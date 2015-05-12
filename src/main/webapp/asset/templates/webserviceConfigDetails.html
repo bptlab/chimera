@@ -74,7 +74,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                 <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(Newdataattribute)">Add Attribute</a>
                             </td>
                         </tr>
-                        <div ng-show="webserviceC.NgRepeatAttributeArray.length">
+                        <div ng-show="NgRepeatAttributeArray.length">
                         <tr>
                             <td>Please select a DataAttributeID</td>
                             <td>
@@ -84,7 +84,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                         </div>
                         </tbody>
                     </table>
-                    <div ng-show="webserviceC.NgRepeatAttributeArray.length">
+                    <div ng-show="NgRepeatAttributeArray.length">
                     <div ng-show="searchAttribute">
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
@@ -96,9 +96,9 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                 </tr>
                                 </thead>
                                 <tbody>
-                                webserviceC.NgRepeatAttributeArray = {{webserviceC.NgRepeatAttributeArray}} <br>
+                                NgRepeatAttributeArray = {{NgRepeatAttributeArray}} <br>
                                 form.attributes = {{form.attributes}} <br>
-                                <tr style="cursor: pointer" ng-repeat="attribute in webserviceC.NgRepeatAttributeArray  | filter:searchAttribute track by $index" >
+                                <tr style="cursor: pointer" ng-repeat="attribute in NgRepeatAttributeArray  | filter:searchAttribute track by $index" >
                               <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
                                     <td>{{attribute['array_key']}}</td>
                                     <td>
@@ -107,7 +107,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                         <span ng-show="form.attribute_key.$pending">tipping...</span>
                                     </td>
                                     <td>
-                                        <a ng-click="form.attributes.splice(attribute['array_key'], 1); webserviceC.NgRepeatAttributeArray.$apply(); $scope.$apply();" class="btn btn-danger">-</a>
+                                        <a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>
                                         <a type="button" class="btn btn-success"  ng-click="webserviceC.addAttribute(searchAttribute)">+</a>
                                     </td>
                                 </tr>

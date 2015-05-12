@@ -1,6 +1,7 @@
 (function(){
 	var adminCon = angular.module('adminConfiguration', []);
 
+    //introducing an custom filter for checking unique entries within an array
     adminCon.filter('unique', function() {
         return function(collection, keyname) {
             var output = [],
@@ -27,7 +28,8 @@
 			this.scenarioIds = [];
 			this.scenarios = {};
 			this.scenarioDetails = {};
-			
+
+            //requesting initially all available scenarios
 			$http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
 				success(function(data){
 				    controller.scenarioDetails = data['ids'];
@@ -36,6 +38,7 @@
                     console.log('request failed');
                 });
 
+            //fetching the images from the jcomparser for better UIX within scenario import
 			this.getImageForScenario = function(id){
 				return	JEngine_Server_URL + "/" + JComparser_REST_Interface + 
 					"/scenarios/" + id + "/image/";
@@ -61,12 +64,13 @@
 		function($routeParams, $location, $http, $scope){
 			var controller = this;
 			
-			// initialize an empty list of scenario Ids
+			// initialize an empty list of scenario Ids, details for each Id and email tasks id array
 			this.Details = [];
 			this.emailtaskIDs = [];
 			this.scenarioIDs = [];
 			this.detailsForID = [];
 
+            //requesting initially all available scenarios
 			$http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
 				success(function(data){
 				    controller.scenarioIDs = data['ids'];
@@ -78,14 +82,16 @@
 
 			//post update for email tasks
 			this.submitMyForm=function(){
+                //using the data set in the form as request content
 				var data=$scope.form;
-                //TODO: change post to put
 				$http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/"+ controller.workingID + "/?", data);
 		   	 }
 
 			//get all infos for popup
 			this.getDetails = function(id){
+                //retrieving all details for a specific email task ID
 				controller.getDetailsForMailtaskID(id);
+                // we are setting our workingID so we can access it more easy and dont have to grind it over the URL
 				controller.workingID = id;
 			};
 
@@ -104,7 +110,9 @@
 				$http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
 					"/scenario/1/emailtask/" + id + "/?").
 					success(function(data) {
+                        // we are storing the data duplicated for faster access, once in the detailsForID array
 						controller.detailsForID = data;
+                        // again in the form so the user can edit them directly
 						$scope.form = { 
 								receiver: data['receiver'],
 								subject: data['subject'],
@@ -112,7 +120,8 @@
 								};
 					});
 			};
-			
+
+            //reloading data for better UIX
 			this.loadData = function(){
 				controller.getDetailsForMailtaskID(controller.workingID);
 			};
@@ -130,8 +139,9 @@
                 this.scenarioIDs = [];
                 this.detailsForID = [];
                 this.DataAttributeArray = [];
-                this.NgRepeatAttributeArray = [];
+                //this.NgRepeatAttributeArray = [];
 
+                //requesting initially all available scenarios
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function(data){
                         webserviceC.scenarioIDs = data['ids'];
@@ -143,6 +153,7 @@
 
                 //post update for webservice tasks
                 this.submitMyForm=function(){
+                    //using the data set in the form as request content
                     var data=$scope.form;
                     $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/"+ webserviceC.workingID + "/?", data);
                 }
@@ -167,7 +178,7 @@
                     //pushing new Attribute into old attribute array
                     $scope.form.attributes.push(webserviceC.newAttribute);
 
-                    var array_key = webserviceC.NgRepeatAttributeArray[webserviceC.NgRepeatAttributeArray.length-1];
+                    var array_key = $scope.NgRepeatAttributeArray[$scope.NgRepeatAttributeArray.length-1];
                     if(webserviceC.newAttribute['array_key']==null){
                         webserviceC.newAttribute['array_key'] = 0;
                     } else {
@@ -184,7 +195,7 @@
                     webserviceC.workingID = webserviceID;
                 };
 
-                // Got all webservices with the given Id
+                // Got all webservices for the given  webservice Id
                 this.getAllWebservicetaskForScenarioID = function(id){
                     $http.get(JEngine_Server_URL+"/" + JConfig_REST_Interface + "/scenario/" + id + "/webservice/").
                         success(function(data) {
@@ -212,12 +223,12 @@
                                 body: data['body'],
                                 attributes: data['attributes']
                             };
-                            webserviceC.NgRepeatAttributeArray = data['attributes'];
-                            if(webserviceC.NgRepeatAttributeArray != [])
+                            $scope.NgRepeatAttributeArray = data['attributes'];
+                            if($scope.NgRepeatAttributeArray != [])
                             {
-                                angular.forEach(webserviceC.NgRepeatAttributeArray, function (value, key) {
+                                angular.forEach($scope.NgRepeatAttributeArray, function (value, key) {
                                     value.array_key = key;
-                                    webserviceC.NgRepeatAttributeArray[key] = value;
+                                    $scope.NgRepeatAttributeArray[key] = value;
                                 });
                             }
 
@@ -227,8 +238,10 @@
 
                 this.getDifferentDataattributes = function(){
                     angular.forEach($scope.form.attributes, function(value, key) {
-                        //console.log(value);
+                        //if the DataAttributeArray doesnt contain the item already, we add it
+                        // so we are able to remove duplicates within the array
                         if (webserviceC.DataAttributeArray.indexOf(value['dataattribute_id']) == -1){
+                            //if they are unique then we are adding them as item to the array
                              webserviceC.DataAttributeArray.push(value['dataattribute_id']);
                         }
                     });
@@ -247,7 +260,7 @@
                     $http.delete(JEngine_Server_URL + "/" + JConfig_REST_Interface +
                     "/scenario/" + id + "/?").
                         success(function(data) {
-                            console.log("deleting scenario was successful..");
+                            console.info("deleting scenario was successful..");
                         }).
                         error(function() {
                             console.log('request failed');
@@ -267,6 +280,7 @@
                 this.type = "";
                 this.Details = {};
 
+                //requesting initially all users from the JUserManagement
                 $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/user").
                         success(function(data) {
                         userMgmtC.Details['user'] = data;
@@ -275,6 +289,7 @@
                         console.log('request failed');
                     });
 
+                //requesting initially all roles from the JUserManagement
                 $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/role").
                     success(function(data) {
                         userMgmtC.Details['role'] = data;
@@ -283,28 +298,34 @@
                         console.log('request failed');
                     });
 
+                //setting the working ID for faster acecss
                 this.setWorkingID = function(id){
                     userMgmtC.workingID = id;
                 };
 
+                //if the user unfocus a content we also have to unset the working it
                 this.unsetWorkingID = function(){
                     userMgmtC.workingID = "";
                 };
 
+                //for REST calls, we are setting the type we want to work with; in this case role
                 this.setTypeRole = function(){
                     userMgmtC.type = "role";
                 };
 
+                //for REST calls, we are setting the type we want to work with; in this case user
                 this.setTypeUser = function(){
                     userMgmtC.type = "user";
                 };
 
+                //retrieving all details for a role giving by its id and providing it to the user via form values
                 this.getDetailsForRoleId = function(id){
                     $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
                     "/role/" + id + "/?").
                         success(function(data) {
                             var value = {};
                             value = data[0];
+                            //transmit specific value content to related form fields, so the user can edit them directly
                             $scope.form = {
                                 name: value['rolename'],
                                 description: value['description'],
@@ -312,15 +333,18 @@
                                 id: value['id']
                             };
                         });
+                    //always keep in mind to set the working ID
                     userMgmtC.setWorkingID(id);
                 };
 
+                //retrieving all details for a role giving by its id and providing it to the role via form values
                 this.getDetailsForUserId = function(id){
                     $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
                     "/user/" + id + "/?").
                         success(function(data) {
                             var value = {};
                             value = data[0];
+                            //transmit specific value content to related form fields, so the user can edit them directly
                             $scope.form = {
                                 name: value['username'],
                                 description: value['description'],
@@ -334,9 +358,11 @@
 
                 //post update for user or role data
                 this.submitMyForm=function(){
+                    //using the data set in the form as request content
                     var data=$scope.form;
                     $http.put(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/" + userMgmtC.type + "/" + userMgmtC.workingID, data).
                         success(function(data) {
+                            //if REST call was successfull, update the content
                             userMgmtC.refreshContent();
                         });
                 }
@@ -346,11 +372,13 @@
                     $http.delete(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
                     "/user/" + id + "/?").
                         success(function(data) {
+                            //if REST call was successfull, update the content
                             userMgmtC.refreshContent();
                         }).
                         error(function() {
                             console.log('request failed');
                         });
+                    // we want to redirect the user to the overview after deleting a user
                     $location.path("/admin/userMgmt/");
                 };
 
@@ -359,6 +387,7 @@
                     $http.delete(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface +
                     "/role/" + id + "/?").
                         success(function(data) {
+                            //if REST call was successfull, update the content
                             userMgmtC.refreshContent();
                         }).
                         error(function() {
@@ -370,6 +399,7 @@
                     $location.path("/admin/userMgmt/");
                 };
 
+                //if we executed a REST call successful, we want to update the content accordingly
                 this.refreshContent = function(){
                     $http.get(JUserManagement_Server_URL + "/" + JUserManagement_REST_Interface + "/user").
                         success(function(data) {

@@ -419,10 +419,11 @@
             };
 
             this.getOutputAndOutputsets = function(activityID) {
+                //if outputsets is already defined, we dont touch them
                 if(!instanceCtrl.scenario['outputsets']){
                     instanceCtrl.scenario['outputsets'] = {};
                 }
-
+                // initializing outputsetsLength and outputsetsNameAndStateArray
                 instanceCtrl.scenario['outputsetsLength'] = [];
                 instanceCtrl.scenario['outputsetsNameAndStateArray'] = [];
 
@@ -437,9 +438,8 @@
                                 success(function(data3) {
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = {};
                                     instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
+                                    //we are storing some information duplicated in order to access them quicker and more easy afterwards
                                     instanceCtrl.scenario['outputsetsLength'].push(outputset['id']);
-                                    //var description = data3['label'] + " in state " + data3['state'];
-                                    //instanceCtrl.scenario['outputsetsNameAndStateArray'].push(description);
                                 }).
                                 error(function() {
                                     console.log('request failed');
@@ -452,12 +452,15 @@
             };
 
             this.handleReferencedActivities = function(activityID) {
+                //if outputsets is already defined, we dont touch them
                 if(!instanceCtrl.scenario['outputsets']){
                     instanceCtrl.scenario['outputsets'] = {};
                 }
+                //if "refLength" as length of the references array is already defined, we dont touch them
                 if(!instanceCtrl.scenario['refLength']){
                     instanceCtrl.scenario['refLength'] = 0;
                 }
+                //if activity is already defined, we dont touch them
                 if(!instanceCtrl.scenario['activity']){
                     instanceCtrl.scenario['activity'] = {};
                 }
