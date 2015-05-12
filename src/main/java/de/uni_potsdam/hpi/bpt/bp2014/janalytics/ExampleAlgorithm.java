@@ -2,18 +2,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ********************************************************************************
@@ -36,33 +29,32 @@ import java.util.Map;
  * **********************************************************************************
  */
 
+
+
+
 public class ExampleAlgorithm implements AnalyticsService{
     static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
     /**
+     * This Method calculates the mean runtime for all terminated instances of a scenario
      *
-     * @param args
-     * @return
+     * @param args used to specify the ScenarioID for which the mean Instance-Runtime is calculated
+     * @return a JSONObject containing the scenarioID and the mean Instance-Runtime
      */
     public JSONObject calculateResult(String[] args){
+        // calculate MeanScenarioInstanceRunTime
         int scenarioId = new Integer (args[0]);
-
-        // MeanScenarioInstanceRunTime
-
         long avgDuration = 0L;
         long sumDuration = 0L;
         int numberOfScenarioInstances = 0;
         //get instances for scenario
         List<DbScenarioInstanceIDsAndTimestamps> scenarioInstances = MetaAnalyticsModel.getScenarioInstancesForScenario(scenarioId);
-
         for (DbScenarioInstanceIDsAndTimestamps scenarioInstance : scenarioInstances) {
-
-
-
+            // retrieve timestamps for start and end of a terminated scenarioinstance
             scenarioInstance.initiallizeTimestamps();
+            // calculate runtime for single instance
             long duration =  scenarioInstance.getDuration();
             if(duration < 0){
-
                 continue;
             }
             sumDuration = sumDuration + duration;
@@ -85,6 +77,7 @@ public class ExampleAlgorithm implements AnalyticsService{
     }
 
     /**
+     * This class is used to provide objects which hold information about the start and end dates of a scenarioinstance
      *
      */
     public static class DbScenarioInstanceIDsAndTimestamps{
@@ -93,25 +86,20 @@ public class ExampleAlgorithm implements AnalyticsService{
         private Date startDate;
         private Date endDate;
 
-        /**
-         *
-         * @param scenarioInstanceID
-         */
+
         public DbScenarioInstanceIDsAndTimestamps(int scenarioInstanceID) {
             this.scenarioInstanceID = scenarioInstanceID;
         }
 
-        /**
-         *
-         * @param scenarioinstanceID
-         */
+
         public void setScenarioInstanceID(int scenarioinstanceID) {
             this.scenarioInstanceID = scenarioinstanceID;
         }
 
         /**
+         * This method is used to calculate the time difference between the start and end date in milliseconds
          *
-         * @return
+         * @return duration in milliseconds
          */
         public long getDuration(){
             if(endDate == null || startDate == null){
@@ -121,7 +109,7 @@ public class ExampleAlgorithm implements AnalyticsService{
         }
 
         /**
-         *
+         * This method accesses the database to retrieve the start and end timestamps for the given scenarioinstanceID attribute
          */
         public void initiallizeTimestamps() {
 
