@@ -59,7 +59,7 @@ public class GatewayInstance extends ControlNodeInstance {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
-        scenarioInstance.getControlNodeInstances().add(this);
+        //scenarioInstance.getControlNodeInstances().add(this);
         switch (dbControlNode.getType(controlNode_id)) {
             case "AND":
                 this.isAND = true;

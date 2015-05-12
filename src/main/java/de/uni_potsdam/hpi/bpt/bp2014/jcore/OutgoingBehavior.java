@@ -59,7 +59,7 @@ public abstract class OutgoingBehavior {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
-                controlNodeInstance = new ActivityInstance(id, fragmentInstance_id, scenarioInstance);
+                controlNodeInstance = new ActivityInstance(id, fragmentInstance_id, scenarioInstance, false);
                 break;
             case "Endevent":
                 controlNodeInstance = new EventInstance(fragmentInstance_id, scenarioInstance, "Endevent");
