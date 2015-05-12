@@ -242,12 +242,11 @@ public class RestConfigurator {
         }
     }
 
-
     private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID) {
         DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
         if (jsonObject.has("attributes")) {
             JSONArray jsonArray = jsonObject.getJSONArray("attributes");
-            if (jsonArray.length() > 0) {
+            //if (jsonArray.length() > 0) {
                 HashSet<Integer> ids = new HashSet<>();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject o = jsonArray.getJSONObject(i);
@@ -264,7 +263,7 @@ public class RestConfigurator {
                     dbWebServiceTask.insertWebServiceTaskAttributeIntoDatabase(order, webserviceID, attributeID, key);
                 }
                 return true;
-            }
+            //}
         }
         return false;
     }
