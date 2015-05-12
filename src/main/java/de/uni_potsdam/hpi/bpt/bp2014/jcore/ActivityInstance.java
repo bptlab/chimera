@@ -61,21 +61,32 @@ public class ActivityInstance extends ControlNodeInstance {
      * @param fragmentInstance_id This is the database id from the fragment instance.
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      */
-    public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance, boolean init) {
+    public ActivityInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance, int instance_id) {
         this.scenarioInstance = scenarioInstance;
         this.controlNode_id = controlNode_id;
         this.fragmentInstance_id = fragmentInstance_id;
         this.label = dbControlNode.getLabel(controlNode_id);
         this.references = dbReference.getReferenceActivitiesForActivity(controlNode_id);
         scenarioInstance.getControlNodeInstances().add(this);
-        boolean check = init || !dbActivityInstance.getState(dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id)).equals("terminated");
+        LinkedList<Integer> instance_ids = dbControlNodeInstance.getControlNodeInstanceIDs(controlNode_id,fragmentInstance_id);
+        boolean check;
+        if (instance_id == -1) {
+            check = !dbActivityInstance.getState(dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id)).equals("terminated");
+        } else {
+            check = true;
+        }
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id) && check) {
             //creates an existing Activity Instance using the database information
+            if(instance_id == -1) {
             controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+            } else {
+                this.controlNodeInstance_id = instance_id;
+            }
                 this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
         } else {
             //creates a new Activity Instance also in database
-            this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
+
+                this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
 
             switch (dbControlNode.getType(controlNode_id)) {
                 case "EmailTask":

@@ -71,6 +71,11 @@ public class DbControlNodeInstance extends DbObject {
         return this.executeStatementReturnsInt(sql, "id");
     }
 
+    public LinkedList<Integer> getControlNodeInstanceIDs(int controlNode_id, int fragmentInstance_id) {
+        String sql = "SELECT id FROM controlnodeinstance WHERE controlnode_id = " + controlNode_id + " AND fragmentinstance_id = " + fragmentInstance_id;
+        return this.executeStatementReturnsListInt(sql, "id");
+    }
+
     /**
      * This method returns all database ID's of all activities belonging to a fragment instance.
      *
@@ -80,6 +85,11 @@ public class DbControlNodeInstance extends DbObject {
     public LinkedList<Integer> getActivitiesForFragmentInstanceID(int fragmentInstance_id) {
         String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE controlnodeinstance.Type = 'Activity' AND fragmentinstance_id = " + fragmentInstance_id;
         return this.executeStatementReturnsListInt(sql, "controlnode_id");
+    }
+
+    public LinkedList<Integer> getActivitiesInstanceForFragmentInstanceID(int fragmentInstance_id) {
+        String sql = "SELECT id FROM controlnodeinstance WHERE controlnodeinstance.Type = 'Activity' AND fragmentinstance_id = " + fragmentInstance_id;
+        return this.executeStatementReturnsListInt(sql, "id");
     }
 
     /**

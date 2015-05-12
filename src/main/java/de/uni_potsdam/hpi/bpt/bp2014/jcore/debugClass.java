@@ -119,9 +119,9 @@ public class debugClass {
             }
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
                 System.out.println("Scenario ist terminiert");
-            /*executionService = null;
+            executionService = null;
             executionService = new ExecutionService();
-            executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);*/
+            executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         }
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));
