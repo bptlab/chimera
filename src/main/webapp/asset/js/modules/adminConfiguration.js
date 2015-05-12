@@ -152,7 +152,6 @@
                     webserviceC.newAttribute = {};
                     //cloning last entry of the attribute array
                     angular.copy($scope.form.attributes[$scope.form.attributes.length-1], webserviceC.newAttribute);
-                    console.log(webserviceC.newAttribute);
                     //setting controlnode id from working Webservice task ID
                     webserviceC.newAttribute['controlnode_id'] = webserviceC.workingID;
                     //increasing order id if null set 0
@@ -165,7 +164,6 @@
                     webserviceC.newAttribute['key'] = "";
                     //setting dataattribute ID
                     webserviceC.newAttribute['dataattribute_id'] = dataattribute_id;
-                    console.log(webserviceC.newAttribute);
                     //pushing new Attribute into old attribute array
                     $scope.form.attributes.push(webserviceC.newAttribute);
 
