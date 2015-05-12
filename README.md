@@ -68,6 +68,15 @@ Now, you may access the jFrontend via
 
 We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-responsive-admin-theme-WB055J451); please be sure to download the [AngularJS libs](https://docs.angularjs.org/misc/downloading)
    
+## UML
+
+Class View
+
+![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/619e5e6276e04605be3cf188e08ef496100f3b48/docu/img/class_view_organic.png)
+
+Package View
+
+![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/619e5e6276e04605be3cf188e08ef496100f3b48/docu/img/package_view_organic.png)
 
 ## Features
 
