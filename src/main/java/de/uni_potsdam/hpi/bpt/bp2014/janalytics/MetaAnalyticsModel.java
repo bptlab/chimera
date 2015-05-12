@@ -62,6 +62,11 @@ public class MetaAnalyticsModel {
         return executeStatementReturnsMapWithMapWithKeys(sql,"start_timestamp", "end_timestamp");
     }
 
+    /**
+     *
+     * @param scenario_id
+     * @return
+     */
     public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id){
         String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.terminated = 1 AND scenarioinstance.scenario_id = "+scenario_id;
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -91,9 +96,12 @@ public class MetaAnalyticsModel {
         return scenarioInstances;
     }
 
+    /**
+     *
+     * @param sql
+     * @return
+     */
     public static ResultSet getResultSetForStatement(String sql) {
-
-
         java.sql.Connection conn = Connection.getInstance().connect();
         ResultSet results = null;
         try {

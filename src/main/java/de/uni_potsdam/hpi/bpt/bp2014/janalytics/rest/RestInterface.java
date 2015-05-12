@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * This class implements the REST interface of the JEngine analytics.
  */
-@Path("analytics/v3/")
+@Path("analytics/v2/")
 public class RestInterface {
     private ServiceManager serviceManager = new ServiceManager();
 

@@ -19,6 +19,11 @@ import java.util.Map;
 public class ExampleAlgorithm implements AnalyticsService{
     static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     public JSONObject calculateResult(String[] args){
         int scenarioId = new Integer (args[0]);
 
@@ -59,20 +64,35 @@ public class ExampleAlgorithm implements AnalyticsService{
         return result;
     }
 
+    /**
+     *
+     */
     public static class DbScenarioInstanceIDsAndTimestamps{
 
         private int scenarioInstanceID;
         private Date startDate;
         private Date endDate;
 
+        /**
+         *
+         * @param scenarioInstanceID
+         */
         public DbScenarioInstanceIDsAndTimestamps(int scenarioInstanceID) {
             this.scenarioInstanceID = scenarioInstanceID;
         }
 
+        /**
+         *
+         * @param scenarioinstanceID
+         */
         public void setScenarioInstanceID(int scenarioinstanceID) {
             this.scenarioInstanceID = scenarioinstanceID;
         }
 
+        /**
+         *
+         * @return
+         */
         public long getDuration(){
             if(endDate == null || startDate == null){
                 return (-1);
@@ -80,6 +100,9 @@ public class ExampleAlgorithm implements AnalyticsService{
             return (endDate.getTime() - startDate.getTime());
         }
 
+        /**
+         *
+         */
         public void initiallizeTimestamps() {
 
             String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioInstanceID+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";

@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ */
 public class AnalyticsModel extends MetaAnalyticsModel {
     static Logger log = Logger.getLogger(AnalyticsModel.class.getName());
 
@@ -33,7 +36,11 @@ public class AnalyticsModel extends MetaAnalyticsModel {
     }
 
 
-
+    /**
+     *
+     * @param scenarioInstance_id
+     * @return
+     */
     public static ArrayList<Map<Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(int scenarioInstance_id){
         ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<Map<Integer, Map<String, Object>>>();
 
