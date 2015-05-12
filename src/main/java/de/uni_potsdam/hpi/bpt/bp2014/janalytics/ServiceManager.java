@@ -35,7 +35,7 @@ public class ServiceManager {
         String serviceName = service.getClass().getName();
         services.put(serviceName, service);
         if(!dbObject.executeExistStatement("SELECT * FROM janalyticsresults WHERE service = '"+ serviceName +"'")){
-            dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service) VALUES ('"+ serviceName +"')");
+            dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service, json) VALUES ('"+ serviceName +"', '{}')");
         }
     }
 

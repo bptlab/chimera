@@ -50,6 +50,24 @@ public class MetaAnalyticsModel {
         return executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id", "h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp", "h.dataobjectinstance_id", "oldstate_name", "newstate_name");
     }
 
+    /**
+     * This method returns the timestamps of the start and end of a scenario instance.
+     *
+     * @param scenarioinstance_id ID of the ScenarioInstance for which the start and end timestamps shall be returned.
+     * @return a Map with a Map of the start and end log entries timestamp as keys and their respective dates as values.
+     */
+    public static Map<Integer, Map<String, Object>> getLogTimestampsForScenarioInstance(int scenarioinstance_id){
+        String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioinstance_id+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";
+        return executeStatementReturnsMapWithMapWithKeys(sql,"start_timestamp", "end_timestamp");
+    }
+
+    public static Map<Integer, Map<String, Object>> getScenarioInstancesForScenario(int scenario_id){
+        String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.scenario_id = "+scenario_id;
+        return executeStatementReturnsMapWithMapWithKeys(sql,"scenarioinstance.id");
+    }
+
+
+
     // **************************** HELPER ********************************************************
 
     /**

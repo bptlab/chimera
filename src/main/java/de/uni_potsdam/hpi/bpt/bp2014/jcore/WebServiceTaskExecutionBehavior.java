@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,6 +14,8 @@ import java.util.LinkedList;
  * Created by jaspar.mang on 29.04.15.
  */
 public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
+    static Logger log = Logger.getLogger(WebServiceTaskExecutionBehavior.class.getName());
+
     DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 
     public WebServiceTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
@@ -39,30 +42,34 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         }
         Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
         Response response;
-        switch (dbWebServiceTask.getMethod(controlNodeInstance.getControlNode_id())) {
-            case "POST":
-                String post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
-                for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
-                    post = post.replace(
-                            "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
-                                    + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
-                }
-                response = invocationBuilder.post(Entity.json(post));
-                break;
-            case "PUT":
-                post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
-                for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
-                    post = post.replace(
-                            "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
-                                    + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
-                }
-                response = invocationBuilder.put(Entity.json(post));
-                break;
-            default:
-                response = invocationBuilder.get();
-        }
-        if (response.getStatus() >= 200 && response.getStatus() <= 226) {
-            this.writeDataAttributes(response.readEntity(String.class));
+        try {
+            switch (dbWebServiceTask.getMethod(controlNodeInstance.getControlNode_id())) {
+                case "POST":
+                    String post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
+                    for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+                        post = post.replace(
+                                "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                                        + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                    }
+                    response = invocationBuilder.post(Entity.json(post));
+                    break;
+                case "PUT":
+                    post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
+                    for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+                        post = post.replace(
+                                "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                                        + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+                    }
+                    response = invocationBuilder.put(Entity.json(post));
+                    break;
+                default:
+                    response = invocationBuilder.get();
+            }
+            if (response.getStatus() >= 200 && response.getStatus() <= 226) {
+                this.writeDataAttributes(response.readEntity(String.class));
+            }
+        } catch (Exception e) {
+            log.error("Error by getting URL", e);
         }
         this.setCanTerminate(true);
     }
