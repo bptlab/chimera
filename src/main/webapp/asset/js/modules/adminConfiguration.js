@@ -164,24 +164,18 @@
                     webserviceC.newAttribute['key'] = "";
                     //setting dataattribute ID
                     webserviceC.newAttribute['dataattribute_id'] = dataattribute_id;
-                    console.log(webserviceC.newAttribute);
                     //pushing new Attribute into old attribute array
                     $scope.form.attributes.push(webserviceC.newAttribute);
-                    //
 
                     var array_key = webserviceC.NgRepeatAttributeArray[webserviceC.NgRepeatAttributeArray.length-1];
-                    webserviceC.newAttribute['array_key'] = array_key['array_key'] + 1;
-                    webserviceC.NgRepeatAttributeArray.push(webserviceC.newAttribute);
-                    
-                    /*
-                    webserviceC.NgRepeatAttributeArray = $scope.form.attributes;
+                    if(webserviceC.newAttribute['array_key']==null){
+                        webserviceC.newAttribute['array_key'] = 0;
+                    } else {
+                        webserviceC.newAttribute['array_key'] = array_key['array_key'] + 1;
+                    }
+                    //webserviceC.NgRepeatAttributeArray.push(webserviceC.newAttribute);
 
-                    angular.forEach(webserviceC.NgRepeatAttributeArray, function(value, key) {
-                        value.array_key = key;
-                        webserviceC.NgRepeatAttributeArray[key] = value;
-                    });
-                    */
-                    console.log(webserviceC.NgRepeatAttributeArray);
+                    webserviceC.getDifferentDataattributes();
                 }
 
                 //get all infos for popup
@@ -219,12 +213,15 @@
                                 attributes: data['attributes']
                             };
                             webserviceC.NgRepeatAttributeArray = data['attributes'];
-                            angular.forEach(webserviceC.NgRepeatAttributeArray, function(value, key) {
-                                value.array_key = key;
-                                webserviceC.NgRepeatAttributeArray[key] = value;
-                            });
+                            if(webserviceC.NgRepeatAttributeArray != [])
+                            {
+                                angular.forEach(webserviceC.NgRepeatAttributeArray, function (value, key) {
+                                    value.array_key = key;
+                                    webserviceC.NgRepeatAttributeArray[key] = value;
+                                });
+                            }
 
-                            webserviceC.getDifferentDataattributes()
+                            webserviceC.getDifferentDataattributes();
                         });
                 };
 
