@@ -72,8 +72,7 @@ public class ExampleAlgorithm implements AnalyticsService{
 
         String time = String.format("%02d:%02d:%02d:%02d", day, hour, minute, second);
         String json = "{\"scenarioId\":" + scenarioId + ",\"meanScenarioInstanceRuntime\":\"" + time + "\"}";
-        JSONObject result = new JSONObject(json);
-        return result;
+        return new JSONObject(json);
     }
 
     /**

@@ -79,7 +79,9 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                     <option value="">Select Type</option>
                                 </select>
                                 <a type="button" class="btn btn-success"
-                                   ng-click="webserviceC.addAttribute(searchAttribute)">Add Attribute</a>
+                                   ng-click="webserviceC.addAttribute(searchAttribute)">Add</a>
+                                <a ng-click="form.attributes.length = 0; form.attributes = []; $scope.$apply();" class="btn btn-danger">Empty</a>
+
                             </td>
                         </tr>
                         <!--<div ng-show="NgRepeatAttributeArray.length">
