@@ -86,7 +86,7 @@ public class RestInterface {
                     list.add(jsonArray.get(i).toString());
                 }
             }
-            serviceManager.calculateResultForService(service, (String[]) list.toArray());
+            serviceManager.calculateResultForService(service, list.toArray(new String[list.size()]));
         }
         return Response.ok(MediaType.APPLICATION_JSON).build();
     }
