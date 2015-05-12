@@ -116,35 +116,6 @@ public class MetaAnalyticsModel {
         return scenarioInstances;
     }
 
-    /**
-     *
-     * @param sql
-     * @return
-     */
-    public static ResultSet getResultSetForStatement(String sql) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        ResultSet results = null;
-        try {
-            results = conn.prepareStatement(sql).executeQuery();
-
-        } catch (SQLException e) {
-            log.error("SQL Error!: ", e);
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                log.error("SQL Error!: ", e);
-            }
-            try {
-                results.close();
-            } catch (SQLException e) {
-                log.error("SQL Error!: ", e);
-            }
-        }
-        return results;
-    }
-
-
 
     // **************************** HELPER ********************************************************
 
