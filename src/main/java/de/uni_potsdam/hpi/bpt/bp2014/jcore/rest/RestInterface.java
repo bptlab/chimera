@@ -754,7 +754,7 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if (!testActivityInstanceExists(activityID)) {
+        if (!executionService.testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
@@ -812,6 +812,7 @@ public class RestInterface {
      * array of inputSets containing the inputSetDatabaseID, the name of the dataObject and their state as a Map &
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * a response status code:
+     *
      * A 200 if everything was correct.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
      * if the activity has no inputSet & with an error message instead of the array.
@@ -828,7 +829,7 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if (!testActivityInstanceExists(activityID)) {
+        if (!executionService.testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
@@ -856,19 +857,6 @@ public class RestInterface {
     }
 
     /**
-     * This method is used to test the existence of an activity instance in a given scenarioInstance.
-     *
-     * @param activityID The databaseID of the activityInstance which is to be checked.
-     * @return a boolean. True == activity is existing/ False == activity does not exist.
-     */
-    private boolean testActivityInstanceExists(int activityID) {
-        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        boolean activityExists = dbControlNodeInstance.existControlNodeInstance(activityID);
-
-        return activityExists;
-    }
-
-    /**
      * This method responds to a GET request by returning an array of outputSets.
      * Each contains the outputSetDatabaseID, the name of the dataObject and their state as a Map &
      * a link to get the dataObjectInstances with their dataAttributesInstances.
@@ -882,6 +870,7 @@ public class RestInterface {
      * array of outputSets containing the outputSetDatabaseID, the name of the dataObject and their state as a Map &
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * a response status code:
+     *
      * A 200 if everything was correct.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
      * if the activity has no outputSet & with an error message instead of the array.
@@ -898,7 +887,7 @@ public class RestInterface {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if (!testActivityInstanceExists(activityID)) {
+        if (!executionService.testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such activity instance.\"}").build();
         }
@@ -965,7 +954,7 @@ public class RestInterface {
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstanceInput(dataObjectInstances[i]);
-            dataObject.attributeConfiguration = getDataAttributes(dataObjectInstances[i]);
+            dataObject.attributeConfiguration = executionService.getDataAttributesForDataObjectInstance(dataObjectInstances[i]);
             dataObjects[i] = dataObject;
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
@@ -1011,32 +1000,10 @@ public class RestInterface {
             dataObject.id = dataObjectInstances[i].getDataObjectInstance_id();
             dataObject.label = dataObjectInstances[i].getName();
             dataObject.state = executionService.getStateNameForDataObjectInstanceOutput(dataObjectInstances[i], outputsetID);
-            dataObject.attributeConfiguration = getDataAttributes(dataObjectInstances[i]);
+            dataObject.attributeConfiguration = executionService.getDataAttributesForDataObjectInstance(dataObjectInstances[i]);
             dataObjects[i] = dataObject;
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
-    }
-
-    /**
-     * This method is used to generate an array of all dataAttributes belonging to the given dataObjectInstance.
-     *
-     * @param dataObjectInstance This is the dataObjectInstance.
-     * @return an array of DataAttributeJaxBean belonging to this dataObjectInstance.
-     */
-    private DataAttributeJaxBean[] getDataAttributes(DataObjectInstance dataObjectInstance) {
-        DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
-        int i = 0;
-        LinkedList<DataAttributeInstance> dataAttributeInstances = dataObjectInstance.getDataAttributeInstances();
-        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
-            DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
-            dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
-            dataAttribute.name = dataAttributeInstance.getName();
-            dataAttribute.type = dataAttributeInstance.getType();
-            dataAttribute.value = dataAttributeInstance.getValue().toString();
-            dataAttributes[i] = dataAttribute;
-            i++;
-        }
-        return dataAttributes;
     }
 
     /**
@@ -1308,7 +1275,7 @@ public class RestInterface {
      * It is used by Jersey to deserialize JSON.
      * Also it can be used for tests to provide the correct contents.
      * This class in particular is used by the POST for the email configuration.
-     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator#updateEmailConfiguration(int, EmailConfigJaxBean)}
+     * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator#updateEmailConfiguration(int, de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.EmailConfigJaxBean)}
      * updateEmailConfiguration} method for more information.
      */
     @XmlRootElement
