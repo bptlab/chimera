@@ -46,7 +46,7 @@ import static org.junit.Assert.*;
  */
 public class ExecutionAcceptanceTest extends AbstractTest {
 
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
     /**
      * Sets up the seed file for the test database.
      */
