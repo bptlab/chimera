@@ -74,7 +74,7 @@ public class TestSetUp {
     /**
      * The sql-file for setting up the database.
      */
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
 
     /**
      * Initialize a fragment by configuring the mock.
