@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -689,5 +690,40 @@ public class ExecutionService {
         }
         return allInputSets;
 
+    }
+
+    /**
+     * This method is used to generate an array of all dataAttributes belonging to the given dataObjectInstance.
+     *
+     * @param dataObjectInstance This is the dataObjectInstance.
+     * @return an array of DataAttributeJaxBean belonging to this dataObjectInstance.
+     */
+    public RestInterface.DataAttributeJaxBean[] getDataAttributesForDataObjectInstance(DataObjectInstance dataObjectInstance) {
+        RestInterface.DataAttributeJaxBean[] dataAttributes = new RestInterface.DataAttributeJaxBean[dataObjectInstance.getDataAttributeInstances().size()];
+        int i = 0;
+        LinkedList<DataAttributeInstance> dataAttributeInstances = dataObjectInstance.getDataAttributeInstances();
+        for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
+            RestInterface.DataAttributeJaxBean dataAttribute = new RestInterface.DataAttributeJaxBean();
+            dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
+            dataAttribute.name = dataAttributeInstance.getName();
+            dataAttribute.type = dataAttributeInstance.getType();
+            dataAttribute.value = dataAttributeInstance.getValue().toString();
+            dataAttributes[i] = dataAttribute;
+            i++;
+        }
+        return dataAttributes;
+    }
+
+    /**
+     * This method is used to test the existence of an activity instance in a given scenarioInstance.
+     *
+     * @param activityID The databaseID of the activityInstance which is to be checked.
+     * @return a boolean. True == activity is existing/ False == activity does not exist.
+     */
+    public boolean testActivityInstanceExists(int activityID) {
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        boolean activityExists = dbControlNodeInstance.existControlNodeInstance(activityID);
+
+        return activityExists;
     }
 }
