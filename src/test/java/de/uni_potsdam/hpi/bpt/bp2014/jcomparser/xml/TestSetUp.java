@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.easymock.IAnswer;
 import org.junit.AfterClass;
@@ -75,7 +74,7 @@ public class TestSetUp {
     /**
      * The sql-file for setting up the database.
      */
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
 
     /**
      * Initialize a fragment by configuring the mock.
