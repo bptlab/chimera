@@ -32,7 +32,6 @@ import java.util.Map;
 
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
     /**
-     *
      * @param activityInstance_id
      * @param scenarioInstance
      * @param controlNodeInstance
@@ -56,7 +55,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
             LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
             boolean hasAttribute = false;
             for (DataObject dataObject : dataObjects) {
-                if(this.dataObjectHasAttributes(dataObject)){
+                if (this.dataObjectHasAttributes(dataObject)) {
                     hasAttribute = true;
                     break;
                 }
@@ -67,7 +66,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
         }
     }
 
-    private boolean dataObjectHasAttributes(DataObject dataObject){
+    private boolean dataObjectHasAttributes(DataObject dataObject) {
         for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
             if (dataAttributeInstance.getDataObjectInstance().getDataObject_id() == dataObject.getId()) {
                 return true;

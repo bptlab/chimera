@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -85,6 +84,7 @@ public class MetaAnalyticsModel {
 
     /**
      * @param scenario_id The ID of the scenario.
+     * @param scenario_id
      * @return
      */
     public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id) {
@@ -120,7 +120,7 @@ public class MetaAnalyticsModel {
     // **************************** HELPER ********************************************************
 
     /**
-     * @param sql the sql statement which is supposed to be executed
+     * @param sql  the sql statement which is supposed to be executed
      * @param keys
      * @return a map of maps with keys
      */
@@ -166,29 +166,29 @@ public class MetaAnalyticsModel {
             stmt = conn.createStatement();
 
             //query
-            ResultSet Result = null;
+            ResultSet Result;
             boolean Returning_Rows = stmt.execute(sql);
             if (Returning_Rows)
                 Result = stmt.getResultSet();
             else
-                return new ArrayList<HashMap<String, Object>>();
+                return new ArrayList<>();
 
             //get metadata
-            ResultSetMetaData Meta = null;
+            ResultSetMetaData Meta;
             Meta = Result.getMetaData();
 
             //get column names
             int Col_Count = Meta.getColumnCount();
-            ArrayList<String> Cols = new ArrayList<String>();
+            ArrayList<String> Cols = new ArrayList<>();
             for (int Index = 1; Index <= Col_Count; Index++)
                 Cols.add(Meta.getColumnName(Index));
 
             //fetch out rows
             ArrayList<HashMap<String, Object>> Rows =
-                    new ArrayList<HashMap<String, Object>>();
+                    new ArrayList<>();
 
             while (Result.next()) {
-                HashMap<String, Object> Row = new HashMap<String, Object>();
+                HashMap<String, Object> Row = new HashMap<>();
                 for (String Col_Name : Cols) {
                     Object Val = Result.getObject(Col_Name);
                     Row.put(Col_Name, Val);

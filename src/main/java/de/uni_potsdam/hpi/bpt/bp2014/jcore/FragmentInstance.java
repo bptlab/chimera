@@ -123,7 +123,6 @@ public class FragmentInstance {
     // ****************************** Getter **********************************
 
     /**
-     *
      * @return
      */
     public ScenarioInstance getScenarioInstance() {
@@ -131,7 +130,6 @@ public class FragmentInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getFragment_id() {
@@ -139,7 +137,6 @@ public class FragmentInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getFragmentInstance_id() {
@@ -147,7 +144,6 @@ public class FragmentInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getScenarioInstance_id() {

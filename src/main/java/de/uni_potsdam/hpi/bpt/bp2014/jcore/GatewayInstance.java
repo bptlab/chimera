@@ -122,7 +122,6 @@ public class GatewayInstance extends ControlNodeInstance {
 
 
     /**
-     *
      * @return
      */
     public Boolean getIsXOR() {
@@ -130,7 +129,6 @@ public class GatewayInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public Boolean getIsAND() {
@@ -138,7 +136,6 @@ public class GatewayInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public ScenarioInstance getScenarioInstance() {
@@ -146,7 +143,6 @@ public class GatewayInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public boolean isAutomaticExecution() {
@@ -154,7 +150,6 @@ public class GatewayInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @param automaticExecution
      */
     public void setAutomaticExecution(boolean automaticExecution) {
