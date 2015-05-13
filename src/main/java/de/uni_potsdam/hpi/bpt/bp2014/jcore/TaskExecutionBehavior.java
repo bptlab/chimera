@@ -52,7 +52,6 @@ public class TaskExecutionBehavior {
     }
 
     /**
-     *
      * @param canTerminate
      */
     protected void setCanTerminate(boolean canTerminate) {
@@ -60,7 +59,6 @@ public class TaskExecutionBehavior {
     }
 
     /**
-     *
      * @param values
      */
     public void setDataAttributeValues(Map<Integer, String> values) {

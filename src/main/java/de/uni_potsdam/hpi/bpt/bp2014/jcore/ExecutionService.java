@@ -654,10 +654,10 @@ public class ExecutionService {
      */
     public String getStateNameForDataObjectInstanceOutput(DataObjectInstance dataObjectInstance, int setID) {
         DbState dbState = new DbState();
-        DbDataNode dbDataNode= new DbDataNode();
+        DbDataNode dbDataNode = new DbDataNode();
         LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
-        for(DataObject dataObject : dataObjects){
-            if(dataObject.getId() == dataObjectInstance.getDataObject_id()){
+        for (DataObject dataObject : dataObjects) {
+            if (dataObject.getId() == dataObjectInstance.getDataObject_id()) {
                 return dbState.getStateName(dataObject.getStateID());
             }
         }

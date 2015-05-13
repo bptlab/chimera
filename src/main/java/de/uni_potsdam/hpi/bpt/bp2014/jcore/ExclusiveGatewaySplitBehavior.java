@@ -102,7 +102,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     @Override
     protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id  && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
+            if (controlNode_id == controlNodeInstance.controlNode_id && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
                 return controlNodeInstance;
             }
         }
@@ -209,7 +209,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
     /**
-     *
      * @param ast
      * @param i
      * @return
