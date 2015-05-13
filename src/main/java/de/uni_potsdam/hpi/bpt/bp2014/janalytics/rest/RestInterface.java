@@ -35,7 +35,7 @@ import java.util.ArrayList;
  */
 @Path("analytics/v2/")
 public class RestInterface {
-    private ServiceManager serviceManager = ServiceManager.getInstance();
+    private ServiceManager serviceManager = new ServiceManager();
 
 
     /**
