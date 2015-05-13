@@ -1,11 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,9 +31,7 @@ import java.util.List;
  */
 
 
-
-
-public class ExampleAlgorithm implements AnalyticsService{
+public class ExampleAlgorithm implements AnalyticsService {
     static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
     /**
@@ -41,9 +40,9 @@ public class ExampleAlgorithm implements AnalyticsService{
      * @param args used to specify the ScenarioID for which the mean Instance-Runtime is calculated
      * @return a JSONObject containing the scenarioID and the mean Instance-Runtime
      */
-    public JSONObject calculateResult(String[] args){
+    public JSONObject calculateResult(String[] args) {
         // calculate MeanScenarioInstanceRunTime
-        int scenarioId = new Integer (args[0]);
+        int scenarioId = new Integer(args[0]);
         long avgDuration = 0L;
         long sumDuration = 0L;
         int numberOfScenarioInstances = 0;
@@ -53,16 +52,17 @@ public class ExampleAlgorithm implements AnalyticsService{
             // retrieve timestamps for start and end of a terminated scenarioinstance
             scenarioInstance.initializeTimestamps();
             // calculate runtime for single instance
-            long duration =  scenarioInstance.getDuration();
-            if(duration < 0){
-                continue;
+            long duration = scenarioInstance.getDuration();
+            if (duration >= 0) {
+                sumDuration = sumDuration + duration;
+                numberOfScenarioInstances++;
             }
-            sumDuration = sumDuration + duration;
-            numberOfScenarioInstances++;
         }
 
-        if (!scenarioInstances.isEmpty()){
+        if (!scenarioInstances.isEmpty() && numberOfScenarioInstances != 0) {
             avgDuration = sumDuration / numberOfScenarioInstances;
+        } else if (numberOfScenarioInstances == 0) {
+            return new JSONObject("{\"scenarioId\":" + scenarioId + ",\"meanScenarioInstanceRuntime\":\"No terminated instances.\"}");
         }
 
         long second = (avgDuration / 1000) % 60;
@@ -77,9 +77,8 @@ public class ExampleAlgorithm implements AnalyticsService{
 
     /**
      * This class is used to provide objects which hold information about the start and end dates of a scenarioinstance
-     *
      */
-    public static class DbScenarioInstanceIDsAndTimestamps{
+    public static class DbScenarioInstanceIDsAndTimestamps {
 
         private int scenarioInstanceID;
         private Date startDate;
@@ -100,8 +99,8 @@ public class ExampleAlgorithm implements AnalyticsService{
          *
          * @return duration in milliseconds
          */
-        public long getDuration(){
-            if(endDate == null || startDate == null){
+        public long getDuration() {
+            if (endDate == null || startDate == null) {
                 return (-1);
             }
             return (endDate.getTime() - startDate.getTime());
@@ -112,14 +111,15 @@ public class ExampleAlgorithm implements AnalyticsService{
          */
         public void initializeTimestamps() {
 
-            String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioInstanceID+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";
+            String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = " + scenarioInstanceID + " AND h.scenarioinstance_id = s.id AND s.terminated = 1";
             java.sql.Connection conn = Connection.getInstance().connect();
             ResultSet results = null;
             try {
                 results = conn.prepareStatement(sql).executeQuery();
-                results.next();
-                startDate = results.getTimestamp("start_timestamp");
-                endDate = results.getTimestamp("end_timestamp");
+                if (results.next()) {
+                    startDate = results.getTimestamp("start_timestamp");
+                    endDate = results.getTimestamp("end_timestamp");
+                }
 
             } catch (SQLException e) {
                 log.error("SQL Error!: ", e);
