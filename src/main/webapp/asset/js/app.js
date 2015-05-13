@@ -4,6 +4,7 @@ var JUserManagement_Server_URL = window.location.origin;
 var JCore_REST_Interface = "JEngine/api/interface/v2";
 var JConfig_REST_Interface = "JEngine/api/config/v2";
 var JHistory_REST_Interface = "JEngine/api/history/v2";
+var JAnalytics_REST_Interface = "JEngine/api/analytics/v2";
 var JComparser_REST_Interface = "JEngine/api/jcomparser";
 var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 
