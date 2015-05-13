@@ -120,7 +120,7 @@ public class MetaAnalyticsModel {
     // **************************** HELPER ********************************************************
 
     /**
-     * @param sql the sql statement which is supposed to be executed
+     * @param sql  the sql statement which is supposed to be executed
      * @param keys
      * @return a map of maps with keys
      */
