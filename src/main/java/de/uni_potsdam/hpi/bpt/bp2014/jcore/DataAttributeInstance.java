@@ -58,8 +58,8 @@ public class DataAttributeInstance {
     }
 
     /**
-     *
-     * @param value
+     * Sets the value of the data attribute instance. It get also written in the database.
+     * @param value to set.
      */
     public void setValue(Object value) {
         this.value = value;
