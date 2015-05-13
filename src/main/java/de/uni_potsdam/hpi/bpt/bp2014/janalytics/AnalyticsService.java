@@ -27,7 +27,6 @@ import org.json.JSONObject;
  */
 public interface AnalyticsService {
     /**
-     * This the interface for the analytic algorithm. It have to calculate something an return the result as JSON.
      *
      * @param args the arguments the algorithm gets.
      * @return a json with result of the calculation.

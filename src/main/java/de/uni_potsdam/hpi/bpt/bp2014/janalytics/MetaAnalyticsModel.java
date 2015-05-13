@@ -83,6 +83,7 @@ public class MetaAnalyticsModel {
     }
 
     /**
+     * @param scenario_id The ID of the scenario.
      * @param scenario_id
      * @return
      */
@@ -119,9 +120,9 @@ public class MetaAnalyticsModel {
     // **************************** HELPER ********************************************************
 
     /**
-     * @param sql
+     * @param sql the sql statement which is supposed to be executed
      * @param keys
-     * @return
+     * @return a map of maps with keys
      */
     public static Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -154,8 +155,8 @@ public class MetaAnalyticsModel {
 
 
     /**
-     * @param sql
-     * @return
+     * @param sql the sql statement which is supposed to be executed
+     * @return a hashmap
      */
     public static ArrayList<HashMap<String, Object>> executeStatementReturnsHashMap(String sql) {
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();

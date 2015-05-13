@@ -40,7 +40,6 @@ public class RestInterface {
 
     /**
      * Get all services in a JSONArray.
-     *
      * @return JSONArray with all services
      */
     @GET
@@ -53,7 +52,6 @@ public class RestInterface {
 
     /**
      * Returns the result of an service.
-     *
      * @param service the specific service.
      * @return JSON with the result.
      */
@@ -61,7 +59,7 @@ public class RestInterface {
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getServiceResults(@PathParam("service") String service) {
-        if (!serviceManager.existService(service)) {
+        if (!serviceManager.existService(service)){
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no service " + service + "\"}")
@@ -73,16 +71,15 @@ public class RestInterface {
 
     /**
      * Starts a service with optional json.
-     *
      * @param service the specific service.
      * @param json    optional json with arguments.
-     * @return
+     * @return JSON with the result.
      */
     @POST
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response calculateServiceResults(@PathParam("service") String service, String json) {
-        if (!serviceManager.existService(service)) {
+        if (!serviceManager.existService(service)){
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no service " + service + "\"}")
@@ -96,7 +93,7 @@ public class RestInterface {
             try {
                 JSONObject jsonObject = new JSONObject(json);
                 jsonArray = jsonObject.getJSONArray("args");
-            } catch (Exception e) {
+            }catch(Exception e){
                 return Response.status(Response.Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON)
                         .entity("{\"error\":\"Not correct json syntax!\"}")
