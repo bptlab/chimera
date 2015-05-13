@@ -37,7 +37,7 @@ public abstract class AbstractTest extends JerseyTest {
     /**
      * The Database Seed file.
      */
-    public static String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    public static String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
 
     /**
      * Sets up the database for RestTests.

@@ -4,6 +4,7 @@
 Select Scenario: <select data-ng-options="id as id for id in mailC.scenarioIDs" ng-model="selectedScenario"
                          data-ng-change="mailC.getAllMailtaskForScenarioID(selectedScenario)"></select>
 
+<!-- if a scenario is selected -> display all available mail tasks within it -->
 <li ng-if="selectedScenario > 0">
     <div class="table-responsive">
         <table class="table table-striped table-hover">
@@ -17,6 +18,7 @@ Select Scenario: <select data-ng-options="id as id for id in mailC.scenarioIDs" 
             </tr>
             </thead>
             <tbody>
+            <!-- iterate over all email tasks ids and display its content -->
             <tr style="cursor: pointer" ng-repeat="(key, value) in mailC.emailtaskIDs">
                 <td>{{value}}</td>
                 <td>{{value}}</td>
@@ -33,6 +35,8 @@ Select Scenario: <select data-ng-options="id as id for id in mailC.scenarioIDs" 
 </li>
 
 <!-- ___________________________ modals ___________________________ -->
+
+<!-- 1. modal for editing a mail tasks -->
 <div id="{{'editMailConfig' + id}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
