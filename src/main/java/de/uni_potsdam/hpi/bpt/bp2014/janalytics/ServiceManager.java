@@ -30,14 +30,22 @@ import java.util.Set;
  *
  */
 public class ServiceManager {
+    private static ServiceManager instance;
     HashMap<String, AnalyticsService> services = new HashMap<>();
     DbObject dbObject = new DbObject();
 
     /**
      *
      */
-    public ServiceManager(){
+    private ServiceManager(){
         registerServices();
+    }
+
+    public static synchronized ServiceManager getInstance() {
+        if (ServiceManager.instance == null) {
+            ServiceManager.instance = new ServiceManager();
+        }
+        return ServiceManager.instance;
     }
 
     /**
