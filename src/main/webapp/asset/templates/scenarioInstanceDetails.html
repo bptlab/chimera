@@ -1,8 +1,10 @@
 <h3>Scenario Instance {{instanceCtrl.instanceDetails['id']}}</h3>
 
 <div class="row">
+    <!-- Panel for Dataobjects -->
     <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
         <div class="hpanel stats">
+            <!-- Header of the Panel -->
             <div class="panel-heading">
                 <div class="panel-tools">
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
@@ -10,6 +12,7 @@
                 </div>
                 Dataobjects
             </div>
+            <!-- Body of the Panel -->
             <div class="panel-body list">
                 <div class="responsive-table pull-left">
                     <table class="table table-striped">
@@ -29,12 +32,15 @@
                     </table>
                 </div>
             </div>
+            <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
         </div>
     </div>
 
+    <!-- Panel for running activities (ToDos) -->
     <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
+            <!-- Header of the Panel -->
             <div class="panel-heading">
                 <div class="panel-tools">
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
@@ -42,8 +48,10 @@
                 </div>
                 ToDos
             </div>
+            <!-- Body of the Panel -->
             <div class="panel-body list">
                 <div class="animate-switch-container" ng-switch on="todoSelection">
+                    <!-- depending of the option of the dropdown: here display running activities also as default -->
                     <div class="animate-switch" ng-switch-default>
                         <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 0.5s;">
                             <div class="responsive-table project-list">
@@ -69,6 +77,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- depending of the option of the dropdown: here display terminated activities -->
                     <div class="animate-switch" ng-switch-when="completed">
                         <div class="responsive-table project-list">
                             <table class="table table-striped">
@@ -90,13 +99,18 @@
                     </div>
                 </div>
             </div>
+            <!-- Footer of the Panel -->
             <div class="panel-footer">
+                <!-- let the user decided on the content of the ToDo list (terminated or running activities) -->
                 <select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
             </div>
         </div>
     </div>
+
+    <!-- Panel for enabled activities (unassigned Tasks) -->
     <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
+            <!-- Header of the Panel -->
             <div class="panel-heading">
                 <div class="panel-tools">
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
@@ -104,6 +118,7 @@
                 </div>
                 Unassigned Tasks
             </div>
+            <!-- Body of the Panel -->
             <div class="panel-body list">
                 <ul aria-labelledby="enabledActivitiesMenu">
                     <li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']"
@@ -113,13 +128,17 @@
                     </li>
                 </ul>
             </div>
+            <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
         </div>
     </div>
 </div>
+
 <div class="row">
+    <!-- Panel for all Logs via dropdown -->
     <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
+            <!-- Header of the Panel -->
             <div class="panel-heading">
                 <div class="panel-tools">
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
@@ -127,14 +146,18 @@
                 </div>
                 Document Activity
             </div>
+            <!-- Body of the Panel -->
             <div class="panel-body list">
                 <div class="pull-right">
+                    <!-- let the user decided on the log content -->
                     <select ng-model="logSelection"
                             ng-options="item for item in ['activity','dataobject','attributes']"></select>
                 </div>
                 <div class="panel-title">Last Activity</div>
-                <small class="fo">This is simple example</small>
+                <small class="fo">Here you may find the log of this instance.</small>
+
                 <div class="animate-switch-container" ng-switch on="logSelection">
+                    <!-- depending of the option of the dropdown: here display activity log -->
                     <div class="animate-switch" ng-switch-default>
                         <div class="list-item-container">
                             <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
@@ -147,6 +170,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- depending of the option of the dropdown: here display dataobject log -->
                     <div class="animate-switch" ng-switch-when="dataobject">
                         <div class="list-item-container">
                             <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
@@ -159,6 +183,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- depending of the option of the dropdown: here display attribute log -->
                     <div class="animate-switch" ng-switch-when="attributes">
                         <div class="list-item-container">
                             <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
@@ -172,11 +197,15 @@
                     </div>
                 </div>
             </div>
+            <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
         </div>
     </div>
+
+    <!-- Panel for termination condition -->
     <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
         <div class="hpanel stats">
+            <!-- Header of the Panel -->
             <div class="panel-heading">
                 <div class="panel-tools">
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
@@ -184,6 +213,7 @@
                 </div>
                 Termination
             </div>
+            <!-- Body of the Panel -->
             <div class="panel-body list">
                 <div class="responsive-table pull-left">
                     <table class="table table-striped">
@@ -193,7 +223,7 @@
                         </tr>
                         </thead>
                         <tbody>
-
+                        <!-- displaying the termination conditions -->
                         <tr ng-repeat="(key, value) in instanceCtrl.scenario['terminationcondition']['conditions'] track by $index">
                             <td>
                                 <div ng-repeat="(key, value2) in value track by $index">
@@ -206,26 +236,31 @@
                     </table>
                 </div>
             </div>
+            <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
         </div>
     </div>
 </div>
 
 <!--___________________________________ MODALS ___________________________________-->
-<!-- modal for beginning an Activity-->
+<!-- modal for beginning an activity -->
 <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']"
      id="{{'modal' + value['id']}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
+            <!-- Header of the Modal -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Begin activity?</h4>
             </div>
+            <!-- Body of the Modal -->
             <div class="modal-body">
+                <!-- if there are not referenced tasks just let the user begin the activity -->
                 <div ng-hide="instanceCtrl.scenario['refLength']">
                     <p>Do you want to start Activity "{{value['label']}}"?</p>
                 </div>
+                <!-- if there are referenced tasks  let the user choose between them for beginning the activity -->
                 <div ng-show="instanceCtrl.scenario['refLength']">
                     <table class="table table-striped">
                         <thead>
@@ -241,6 +276,7 @@
                             <td>{{value['id']}}</td>
                             <td>{{value['label']}}</td>
                             <td>
+                                <!-- display the activity itself -->
                                 <div ng-repeat="(key2, output) in instanceCtrl.activityOutput[value['id']] track by $index">
                                     <div ng-repeat="(key3, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
                                         "{{outputset['label']}}" in state "{{outputset['state']}}" <br>
@@ -253,11 +289,14 @@
                                 </button>
                             </td>
                         </tr>
+                        <!-- display all referenced activity by looking up the referenced array -->
                         <tr ng-repeat="(key, refActivity) in instanceCtrl.scenario['activity'][value['id']]['references']['activities'] track by $index">
                             <td>{{refActivity['id']}}</td>
                             <td>{{refActivity['label']}}</td>
                             <td>
+                                <!-- retrieving all output for each referenced activity -->
                                 <div ng-repeat="(key4, output2) in instanceCtrl.activityOutput[refActivity['id']] track by $index">
+                                    <!-- retrieving all outputset for each output -->
                                     <div ng-repeat="(key5, outputset2) in instanceCtrl.scenario['outputsets'][output2['id']] track by $index">
                                         "{{outputset2['label']}}" in state "{{outputset2['state']}}"<br>
                                     </div>
@@ -273,6 +312,7 @@
                     </table>
                 </div>
             </div>
+            <!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <div ng-hide="instanceCtrl.scenario['refLength']">
@@ -287,17 +327,20 @@
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- A model as a Dialog for terminating an Activity -->
-<div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index"
+<!-- A model as a dialog for terminating an activity -->
+<div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities'] track by $index"
      id="{{'modalTerminate' + value['id']}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
+            <!-- Header of the Modal -->
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Terminate activity?</h4>
             </div>
+            <!-- Body of the Modal -->
             <div class="modal-body">
+                <!-- display all attributes and let the user edit them -->
                 <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][instanceCtrl.activityOutput[value['id']][0]['id']] track by $index">
                     <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
                     <br>
@@ -310,14 +353,12 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
+                            <!-- here we are setting the current attribute which we are editing for handling the submit option -->
                             {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'],
                             attributeConfiguration['value'])}}
                             <td>{{attributeConfiguration['name']}}</td>
                             <td>
-                               <!-- <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
-                                       ng-model="instanceCtrl.changeAttributObject[''+attributeConfiguration['id']]"
-                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], instanceCtrl.changeAttributObject[''+attributeConfiguration['id']], value['id'])"><br>
-                                <span ng-show="form.key3.$pending">tipping...</span>-->
+                                <!-- within the input every 1000 ms the content will be submitted if ng-change applies -->
                                 <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="attributeConfiguration['value']"
                                        ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"><br>
@@ -328,7 +369,7 @@
                     </table>
                 </div>
                 <br><br><br>
-
+                <!-- if outputsets are present display them with the option for termination -->
                 <div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
                     <hr>
                     <b>Please choose one of the following outputset</b>
@@ -357,6 +398,7 @@
                     </table>
                 </div>
             </div>
+            <!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <div ng-hide="instanceCtrl.scenario['outputsetsLength'].length">

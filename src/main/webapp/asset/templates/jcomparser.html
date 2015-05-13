@@ -11,9 +11,11 @@
         </tr>
         </thead>
         <tbody>
+        <!-- iterate over all available scenarios within the jcomparser and offer the option of importing them -->
         <tr style="cursor: pointer" ng-repeat="(key, value) in jcomparserMV.scenarioDetails">
             <td>{{key}}</td>
             <td>{{value}}</td>
+            <!-- for better UX display a small preview of the scenario for better distinct between scenarios -->
             <td><a ng-href="{{jcomparserMV.getImageForScenario(key)}}"><img
                     ng-src="{{jcomparserMV.getImageForScenario(key)}}" width="40%"></img></a></td>
             <td>
