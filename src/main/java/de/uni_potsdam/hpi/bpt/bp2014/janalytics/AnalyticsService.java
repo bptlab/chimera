@@ -23,12 +23,13 @@ import org.json.JSONObject;
  */
 
 /**
- *
+ * Interface for all analytic algorithms.
  */
 public interface AnalyticsService {
     /**
-     * @param args
-     * @return
+     *
+     * @param args the arguments the algorithm gets.
+     * @return a json with result of the calculation.
      */
     public JSONObject calculateResult(String[] args);
 }
