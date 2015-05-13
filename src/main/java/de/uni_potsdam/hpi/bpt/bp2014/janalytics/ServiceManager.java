@@ -41,7 +41,7 @@ public class ServiceManager {
     }
 
     /**
-     * Gives all registered services.
+     * Gives all registered services. 
      *
      * @return a Set with all registered services.
      */
