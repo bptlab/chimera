@@ -134,8 +134,8 @@ public class DbWebServiceTask extends DbObject {
         return executeStatementReturnsMap(sql, "id", "name");
     }
 
-    public boolean deleteAllAttributes(int webserviceID) {
+    public void deleteAllAttributes(int webserviceID) {
         String sql = "DELETE FROM webservicetaskattribute WHERE controlnode_id = " + webserviceID;
-        return executeExistStatement(sql);
+        executeUpdateStatement(sql);
     }
 }

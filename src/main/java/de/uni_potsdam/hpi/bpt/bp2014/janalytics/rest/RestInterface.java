@@ -35,7 +35,7 @@ import java.util.ArrayList;
  */
 @Path("analytics/v2/")
 public class RestInterface {
-    private ServiceManager serviceManager = new ServiceManager();
+    private ServiceManager serviceManager = ServiceManager.getInstance();
 
 
     /**
@@ -107,6 +107,6 @@ public class RestInterface {
             }
             serviceManager.calculateResultForService(service, list.toArray(new String[list.size()]));
         }
-        return Response.ok(MediaType.APPLICATION_JSON).build();
+        return Response.ok("{}", MediaType.APPLICATION_JSON).build();
     }
 }
