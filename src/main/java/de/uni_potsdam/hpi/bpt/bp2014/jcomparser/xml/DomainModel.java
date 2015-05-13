@@ -22,9 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Ihdefix on 04.03.2015.
- */
 public class DomainModel implements IDeserialisable, IPersistable {
     static Logger log = Logger.getLogger(DomainModel.class.getName());
 
