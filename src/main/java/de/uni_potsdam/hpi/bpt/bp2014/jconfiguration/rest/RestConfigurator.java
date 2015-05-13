@@ -266,8 +266,8 @@ public class RestConfigurator {
 
     /**
      *
-     * @param jsonObject
-     * @param webserviceID
+     * @param jsonObject a jsonObject..
+     * @param webserviceID The ID of the webservice tasks
      * @return
      */
     private boolean setWebServiceTaskAttributes(JSONObject jsonObject, int webserviceID) {

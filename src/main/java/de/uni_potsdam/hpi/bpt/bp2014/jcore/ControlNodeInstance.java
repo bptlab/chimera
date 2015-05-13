@@ -49,7 +49,6 @@ public abstract class ControlNodeInstance {
     // *************************************** Getter ***************************************//
 
     /**
-     *
      * @return
      */
     public OutgoingBehavior getOutgoingBehavior() {
@@ -57,7 +56,6 @@ public abstract class ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public IncomingBehavior getIncomingBehavior() {
@@ -65,7 +63,6 @@ public abstract class ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public StateMachine getStateMachine() {
@@ -73,7 +70,6 @@ public abstract class ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getFragmentInstance_id() {
@@ -81,7 +77,6 @@ public abstract class ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getControlNodeInstance_id() {
@@ -89,7 +84,6 @@ public abstract class ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getControlNode_id() {

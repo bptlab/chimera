@@ -31,7 +31,6 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class XORGrammarCompiler {
     /**
-     *
      * @param expression
      * @return
      */
@@ -55,7 +54,6 @@ public class XORGrammarCompiler {
     }
 
     /**
-     *
      * @param ast
      */
     private void printTree(CommonTree ast) {
@@ -63,7 +61,6 @@ public class XORGrammarCompiler {
     }
 
     /**
-     *
      * @param tree
      * @param level
      */

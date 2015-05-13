@@ -32,7 +32,6 @@ import java.util.Map;
 
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
     /**
-     *
      * @param activityInstance_id
      * @param scenarioInstance
      * @param controlNodeInstance
@@ -44,6 +43,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
     @Override
     public void execute() {
         DbDataFlow dbDataFlow = new DbDataFlow();
+        //allow an activity to terminate if it has no data attributes in output.
         if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id()).isEmpty()) {
             this.setCanTerminate(true);
         } else if (scenarioInstance.getDataAttributeInstances().isEmpty()) {
@@ -55,20 +55,24 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
             LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
             boolean hasAttribute = false;
             for (DataObject dataObject : dataObjects) {
-                for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
-                    if (dataAttributeInstance.getDataObjectInstance().getDataObject_id() == dataObject.getId()) {
-                        hasAttribute = true;
-                        break;
-                    }
-                }
-                if (hasAttribute) {
+                if (this.dataObjectHasAttributes(dataObject)) {
+                    hasAttribute = true;
                     break;
                 }
             }
-            if (hasAttribute) {
+            if (!hasAttribute) {
                 this.setCanTerminate(true);
             }
         }
+    }
+
+    private boolean dataObjectHasAttributes(DataObject dataObject) {
+        for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
+            if (dataAttributeInstance.getDataObjectInstance().getDataObject_id() == dataObject.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

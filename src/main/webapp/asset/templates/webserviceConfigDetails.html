@@ -46,7 +46,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                         <thead>
                         <tr>
                             <th>Field</th>
-                            <th>Contant</th>
+                            <th>Content</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -103,7 +103,7 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                     <tr>
                                         <th>#</th>
                                         <th>Key</th>
-                                        <th>Action</th>
+                                       <!-- <th>Action</th>-->
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -117,12 +117,12 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
                                                    ng-model="form.attributes[attribute['array_key']]['key']">
                                             <span ng-show="form.attribute_key.$pending">tipping...</span>
                                         </td>
-                                        <td>
+                                        <!--<td>-->
                                             <!-- we decided to not allow the user to delete single array items alias keys -->
                                             <!--<a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>-->
-                                            <a type="button" class="btn btn-success"
+                                          <!--  <a type="button" class="btn btn-success"
                                                ng-click="webserviceC.addAttribute(searchAttribute)">+</a>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                     </tbody>
                                 </table>

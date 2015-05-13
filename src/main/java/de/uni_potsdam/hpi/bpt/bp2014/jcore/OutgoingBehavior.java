@@ -53,7 +53,6 @@ public abstract class OutgoingBehavior {
     }
 
     /**
-     *
      * @param type
      * @param id
      * @return

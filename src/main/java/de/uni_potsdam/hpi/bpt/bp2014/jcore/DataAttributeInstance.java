@@ -36,7 +36,6 @@ public class DataAttributeInstance {
     DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
     /**
-     *
      * @param dataAttribute_id
      * @param dataObjectInstance_id
      * @param dataObjectInstance
@@ -58,26 +57,15 @@ public class DataAttributeInstance {
     }
 
     /**
-     *
-     * @param value
-     */
-    public void setValue(Object value) {
-        this.value = value;
-        dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
-    }
-
-    // ****************************************** Getter *********************************//
-
-    /**
-     *
      * @return
      */
     public String getType() {
         return type;
     }
 
+    // ****************************************** Getter *********************************//
+
     /**
-     *
      * @return
      */
     public Object getValue() {
@@ -85,7 +73,16 @@ public class DataAttributeInstance {
     }
 
     /**
+     * Sets the value of the data attribute instance. It get also written in the database.
      *
+     * @param value to set.
+     */
+    public void setValue(Object value) {
+        this.value = value;
+        dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
+    }
+
+    /**
      * @return
      */
     public int getDataAttributeInstance_id() {
@@ -93,7 +90,6 @@ public class DataAttributeInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getDataAttribute_id() {
@@ -101,7 +97,6 @@ public class DataAttributeInstance {
     }
 
     /**
-     *
      * @return
      */
     public String getName() {
@@ -109,7 +104,6 @@ public class DataAttributeInstance {
     }
 
     /**
-     *
      * @return
      */
     public DataObjectInstance getDataObjectInstance() {

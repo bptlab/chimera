@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;

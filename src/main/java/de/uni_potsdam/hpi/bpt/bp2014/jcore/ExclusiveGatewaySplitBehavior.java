@@ -102,7 +102,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     @Override
     protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-            if (controlNode_id == controlNodeInstance.controlNode_id  && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
+            if (controlNode_id == controlNodeInstance.controlNode_id && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
                 return controlNodeInstance;
             }
         }
@@ -209,7 +209,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
     /**
-     *
      * @param ast
      * @param i
      * @return
@@ -220,17 +219,17 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         String right = ast.getChild(i + 2).toStringTree();
         for (DataAttributeInstance dataAttributeInstance : scenarioInstance.getDataAttributeInstances().values()) {
             left = left.replace(
-                    "$" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                    "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
             right = right.replace(
-                    "$" + (dataAttributeInstance.getDataObjectInstance()).getName()
+                    "#" + (dataAttributeInstance.getDataObjectInstance()).getName()
                             + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
         }
         for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
             left = left.replace(
-                    "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
+                    "#" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
             right = right.replace(
-                    "$" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
+                    "#" + dataObjectInstance.getName(), dbState.getStateName(dataObjectInstance.getState_id()));
         }
         try {
             switch (comparison) {

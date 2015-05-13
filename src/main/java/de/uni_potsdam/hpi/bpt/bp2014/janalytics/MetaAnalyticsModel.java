@@ -1,8 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-
 import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -77,24 +77,24 @@ public class MetaAnalyticsModel {
      * @param scenarioinstance_id ID of the ScenarioInstance for which the start and end timestamps shall be returned.
      * @return a Map with a Map of the start and end log entries timestamp as keys and their respective dates as values.
      */
-    public static Map<Integer, Map<String, Object>> getLogTimestampsForScenarioInstance(int scenarioinstance_id){
-        String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "+scenarioinstance_id+" AND h.scenarioinstance_id = s.id AND s.terminated = 1";
-        return executeStatementReturnsMapWithMapWithKeys(sql,"start_timestamp", "end_timestamp");
+    public static Map<Integer, Map<String, Object>> getLogTimestampsForScenarioInstance(int scenarioinstance_id) {
+        String sql = "SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = " + scenarioinstance_id + " AND h.scenarioinstance_id = s.id AND s.terminated = 1";
+        return executeStatementReturnsMapWithMapWithKeys(sql, "start_timestamp", "end_timestamp");
     }
 
     /**
-     *
+     * @param scenario_id The ID of the scenario.
      * @param scenario_id
      * @return
      */
-    public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id){
-        String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.terminated = 1 AND scenarioinstance.scenario_id = "+scenario_id;
+    public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id) {
+        String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.terminated = 1 AND scenarioinstance.scenario_id = " + scenario_id;
         java.sql.Connection conn = Connection.getInstance().connect();
         ResultSet results = null;
         List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> scenarioInstances = new ArrayList<>();
         try {
             results = conn.prepareStatement(sql).executeQuery();
-            while (results.next()){
+            while (results.next()) {
                 scenarioInstances.add(new ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps(results.getInt("scenarioinstance.id")));
             }
 
@@ -120,9 +120,9 @@ public class MetaAnalyticsModel {
     // **************************** HELPER ********************************************************
 
     /**
-     * @param sql
+     * @param sql  the sql statement which is supposed to be executed
      * @param keys
-     * @return
+     * @return a map of maps with keys
      */
     public static Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
         java.sql.Connection conn = Connection.getInstance().connect();
@@ -155,8 +155,8 @@ public class MetaAnalyticsModel {
 
 
     /**
-     * @param sql
-     * @return
+     * @param sql the sql statement which is supposed to be executed
+     * @return a hashmap
      */
     public static ArrayList<HashMap<String, Object>> executeStatementReturnsHashMap(String sql) {
         java.sql.Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
@@ -166,29 +166,29 @@ public class MetaAnalyticsModel {
             stmt = conn.createStatement();
 
             //query
-            ResultSet Result = null;
+            ResultSet Result;
             boolean Returning_Rows = stmt.execute(sql);
             if (Returning_Rows)
                 Result = stmt.getResultSet();
             else
-                return new ArrayList<HashMap<String, Object>>();
+                return new ArrayList<>();
 
             //get metadata
-            ResultSetMetaData Meta = null;
+            ResultSetMetaData Meta;
             Meta = Result.getMetaData();
 
             //get column names
             int Col_Count = Meta.getColumnCount();
-            ArrayList<String> Cols = new ArrayList<String>();
+            ArrayList<String> Cols = new ArrayList<>();
             for (int Index = 1; Index <= Col_Count; Index++)
                 Cols.add(Meta.getColumnName(Index));
 
             //fetch out rows
             ArrayList<HashMap<String, Object>> Rows =
-                    new ArrayList<HashMap<String, Object>>();
+                    new ArrayList<>();
 
             while (Result.next()) {
-                HashMap<String, Object> Row = new HashMap<String, Object>();
+                HashMap<String, Object> Row = new HashMap<>();
                 for (String Col_Name : Cols) {
                     Object Val = Result.getObject(Col_Name);
                     Row.put(Col_Name, Val);

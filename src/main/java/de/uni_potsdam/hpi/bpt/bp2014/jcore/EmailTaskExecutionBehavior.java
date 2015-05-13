@@ -6,6 +6,7 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.log4j.Logger;
+
 /**
  * ********************************************************************************
  * <p/>

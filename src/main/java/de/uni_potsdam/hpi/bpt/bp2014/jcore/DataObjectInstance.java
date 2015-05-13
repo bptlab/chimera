@@ -120,7 +120,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getScenarioInstance_id() {
@@ -128,7 +127,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getScenario_id() {
@@ -136,7 +134,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getDataObject_id() {
@@ -144,7 +141,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getDataObjectInstance_id() {
@@ -152,7 +148,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getState_id() {
@@ -160,7 +155,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public String getName() {
@@ -168,7 +162,6 @@ public class DataObjectInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<DataAttributeInstance> getDataAttributeInstances() {

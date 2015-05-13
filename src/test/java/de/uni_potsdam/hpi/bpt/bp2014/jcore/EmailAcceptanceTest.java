@@ -1,13 +1,22 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.apache.commons.mail.EmailException;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -34,13 +43,38 @@ import static org.junit.Assert.assertArrayEquals;
  * **********************************************************************************
  */
 
-public class EmailAcceptanceTest {
+public class EmailAcceptanceTest extends AbstractTest {
+
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    /**
+     * Sets up the seed file for the test database.
+     */
+    static {
+        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    }
+    /**
+     * The base url of the jcore rest interface.
+     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
+     */
+    private WebTarget base;
+
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
+
+    @Override
+    protected Application configure() {
+        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface.class);
+    }
+
     String receiver = "bp2014w1@byom.de";
     @Before
     public void setUp() {
         //clear Mock JavaMail box
         Mailbox.clearAll();
-
     }
     //Email Test Scenario 142
     @Test
