@@ -30,7 +30,7 @@ import java.util.Set;
  *
  */
 public class ServiceManager {
-    HashMap<String, AnalyticsService> services = new HashMap<>();
+    final HashMap<String, AnalyticsService> services = new HashMap<>();
     DbObject dbObject = new DbObject();
 
     /**

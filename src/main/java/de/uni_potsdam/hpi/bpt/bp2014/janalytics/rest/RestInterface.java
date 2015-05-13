@@ -35,7 +35,7 @@ import java.util.ArrayList;
  */
 @Path("analytics/v2/")
 public class RestInterface {
-    private ServiceManager serviceManager = new ServiceManager();
+    private final ServiceManager serviceManager = new ServiceManager();
 
 
     /**
@@ -91,7 +91,7 @@ public class RestInterface {
         if (json.equals("")) {
             serviceManager.calculateResultForService(service, new String[0]);
         } else {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             JSONArray jsonArray;
             try {
                 JSONObject jsonObject = new JSONObject(json);
