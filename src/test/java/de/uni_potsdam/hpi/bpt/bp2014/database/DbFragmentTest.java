@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by jaspar.mang on 12.01.15.
+ *
  */
 public class DbFragmentTest {
     @Test

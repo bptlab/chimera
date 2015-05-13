@@ -1,6 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.easymock.IAnswer;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +15,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.ws.rs.client.WebTarget;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * ********************************************************************************
@@ -43,7 +50,7 @@ import java.io.IOException;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DomainModel.class})
-public class DomainModelTest {
+public class DomainModelTest extends AbstractTest {
     /**
      * This Method fetches the version from the PE-Server.
      */
@@ -53,6 +60,25 @@ public class DomainModelTest {
      * This is the domainModel used for testing.
      */
     private DomainModel domainModel;
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+    /**
+     * Sets up the seed file for the test database.
+     */
+    static {
+        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    }
+    /**
+     * The base url of the jcore rest interface.
+     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
+     */
+    private WebTarget base;
+
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
 
     /**
      * This mocks the domainModel needed for the tests.
