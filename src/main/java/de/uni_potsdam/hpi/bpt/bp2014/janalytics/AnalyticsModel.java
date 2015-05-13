@@ -39,7 +39,7 @@ public class AnalyticsModel extends MetaAnalyticsModel {
     static Logger log = Logger.getLogger(AnalyticsModel.class.getName());
 
     /**
-     * @param scenarioInstance_id
+     * @param scenarioInstance_id The ID of the scenario instance.
      * @return
      */
     public static ArrayList<Map<Integer, Map<String, Object>>> exampleAlgorithm1(int scenarioInstance_id) {
@@ -57,15 +57,14 @@ public class AnalyticsModel extends MetaAnalyticsModel {
 
 
     /**
-     *
-     * @param scenarioInstance_id
+     * @param scenarioInstance_id The ID of the scenario instance.
      * @return
      */
-    public static ArrayList<Map<Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(int scenarioInstance_id){
+    public static ArrayList<Map<Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(int scenarioInstance_id) {
         ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<Map<Integer, Map<String, Object>>>();
 
         Map<Integer, Map<String, Object>> timestampsForScenarioInstance = getLogTimestampsForScenarioInstance(scenarioInstance_id);
-        result.add (timestampsForScenarioInstance);
+        result.add(timestampsForScenarioInstance);
 
         return result;
     }

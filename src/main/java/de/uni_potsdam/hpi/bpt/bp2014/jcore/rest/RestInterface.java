@@ -116,8 +116,7 @@ public class RestInterface {
                                 @PathParam("scenarioID") int scenarioID) {
         DbScenario dbScenario = new DbScenario();
         Map<String, Object> data = dbScenario.getScenarioDetails(scenarioID);
-        //TODO: add links to detail REST calls for scenarioInstance overview
-        //TODO: add link to detail REST call to create new scenarioInstance
+
         if (data.isEmpty()) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -1303,6 +1302,8 @@ public class RestInterface {
         return result;
     }
 
+    // ************************* RootElement ********************************************/
+
     /**
      * This is a data class for the email configuration.
      * It is used by Jersey to deserialize JSON.
@@ -1341,33 +1342,6 @@ public class RestInterface {
          */
         public String name;
     }
-
-    //TODO: what is this? do we still need it? git blame?
-    /*
-    @POST
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/outputset/{outputsetID}")
-    public Response updateActivityState(@PathParam("scenarioID") int scenarioID,
-                                        @PathParam("instanceID") int scenarioInstanceID,
-                                        @PathParam("activityID") int activityID,
-                                        @PathParam("outputsetID") int outputsetID) {
-
-        boolean result;
-        ExecutionService executionService = new ExecutionService();
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-        result = executionService.terminateActivityInstance(scenarioInstanceID, activityID, outputsetID);
-        if (result) {
-            return Response.status(Response.Status.ACCEPTED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"activity state changed.\"}")
-                    .build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"impossible to \"}")
-                    .build();
-        }
-    }
-    */
 
     /**
      *
@@ -1411,11 +1385,6 @@ public class RestInterface {
         Map<String, String> dataObjects;
 
     }
-
-
-    /*
-     * Helper
-     */
 
     /**
      * A JAX bean which is used for dataobject data.

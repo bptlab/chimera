@@ -27,7 +27,6 @@ import org.json.JSONObject;
  */
 public interface AnalyticsService {
     /**
-     *
      * @param args
      * @return
      */
