@@ -65,7 +65,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
                     break;
                 }
             }
-            if (hasAttribute) {
+            if (!hasAttribute) {
                 this.setCanTerminate(true);
             }
         }
