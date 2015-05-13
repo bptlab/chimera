@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 12. Mai 2015 um 09:53
+-- Erstellungszeit: 13. Mai 2015 um 13:35
 -- Server Version: 5.6.20
 -- PHP-Version: 5.5.15
 
@@ -8607,17 +8607,17 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (495, 497, ''),
 (496, 494, ''),
 (498, 495, ''),
-(499, 498, '$DO.B<5'),
-(499, 500, '$DO.A=1 | $DO.A=2'),
+(499, 498, '#DO.B<5'),
+(499, 500, '#DO.A=1 | #DO.A=2'),
 (500, 495, ''),
 (501, 503, ''),
-(502, 501, '$A=b'),
+(502, 501, '#A=b'),
 (502, 504, 'DEFAULT'),
 (503, 506, ''),
 (504, 503, ''),
 (505, 502, ''),
 (507, 509, ''),
-(508, 507, '$A=b'),
+(508, 507, '#A=b'),
 (508, 510, 'DEFAULT'),
 (509, 512, ''),
 (510, 509, ''),
@@ -8626,8 +8626,8 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (514, 519, ''),
 (515, 519, ''),
 (516, 514, 'DEFAULT'),
-(516, 515, '$Fenster.Schmutzgrad>10 & $Wischeimer.Fuellstand>5'),
-(516, 520, '$Fenster.Schmutzgrad<10'),
+(516, 515, '#Fenster.Schmutzgrad>10 & #Wischeimer.Fuellstand>5'),
+(516, 520, '#Fenster.Schmutzgrad<10'),
 (518, 513, ''),
 (519, 517, ''),
 (520, 519, ''),
@@ -8653,7 +8653,7 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (547, 548, ''),
 (548, 549, ''),
 (550, 552, 'DEFAULT'),
-(550, 554, '$Reiseziel.Wetterprognose=Rain'),
+(550, 554, '#Reiseziel.Wetterprognose=Rain'),
 (551, 553, ''),
 (552, 556, ''),
 (553, 550, ''),
@@ -8662,7 +8662,7 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (557, 559, ''),
 (559, 558, ''),
 (560, 557, 'DEFAULT'),
-(560, 559, '$Reiseziel.Wetterprognose=Rain'),
+(560, 559, '#Reiseziel.Wetterprognose=Rain'),
 (561, 560, '');
 
 -- --------------------------------------------------------
