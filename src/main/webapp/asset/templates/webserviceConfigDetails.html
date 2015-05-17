@@ -52,6 +52,7 @@
                                  <span ng-show="webserviceC.webserviceIDs.length"> 
                                      <!-- display details for the webservice tasks with the possibility to update them -->
                                         <form name="myForm" ng-submit="webserviceC.submitMyForm()">
+                                           <div class="responsive-table pull-left">
                                             <table class="table table-striped">
                                                 <thead>
                                                 <tr>
@@ -96,17 +97,9 @@
 
                                                     </td>
                                                 </tr>
-                                                <!--<div ng-show="NgRepeatAttributeArray.length">
-                                                    <tr>
-                                                        <td>Please select a DataAttributeID</td>
-                                                        <td>
-                                                            <select ng-model="searchAttribute"
-                                                                    ng-options="item for item in webserviceC.DataAttributeArray"></select><br>
-                                                        </td>
-                                                    </tr>
-                                                </div>-->
                                                 </tbody>
                                             </table>
+                                          </div> <!-- END: class="responsive-table pull-left" -->
                                             <!-- if attribute array contain items -> display them -->
                                             NgRepeatAttributeArray= {{NgRepeatAttributeArray}}
                                             <div ng-show="NgRepeatAttributeArray.length">
@@ -117,26 +110,17 @@
                                                             <tr>
                                                                 <th>#</th>
                                                                 <th>Key</th>
-                                                               <!-- <th>Action</th>-->
                                                             </tr>
                                                             </thead>
                                                             <tbody>
                                                             <tr style="cursor: pointer"
                                                                 ng-repeat="attribute in NgRepeatAttributeArray | filter:searchAttribute track by $index">
-                                                                <!--  <div  ng-repeat="(attribute_key, attribute_value) in attribute" >-->
                                                                 <td>{{attribute['array_key']}}</td>
                                                                 <td>
-                                                                    <!-- <input type="text" ng-name="attribute_key" ng-model="form.attributes[attribute_key]['key']">-->
                                                                     <input type="text" ng-name="attribute_key"
                                                                            ng-model="form.attributes[attribute['array_key']]['key']">
                                                                     <span ng-show="form.attribute_key.$pending">tipping...</span>
                                                                 </td>
-                                                                <!--<td>-->
-                                                                    <!-- we decided to not allow the user to delete single array items alias keys -->
-                                                                    <!--<a ng-click="form.attributes.splice(attribute['array_key'], 1); $scope.$apply();" class="btn btn-danger">-</a>-->
-                                                                  <!--  <a type="button" class="btn btn-success"
-                                                                       ng-click="webserviceC.addAttribute(searchAttribute)">+</a>
-                                                                </td>-->
                                                             </tr>
                                                             </tbody>
                                                         </table>
