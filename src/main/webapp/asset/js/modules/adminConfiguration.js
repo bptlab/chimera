@@ -214,7 +214,7 @@
                             webserviceC.webserviceIDs = data['ids'];
                             //if the emailtaskIDs array is not empty, prefetch the first item details
                             if(webserviceC.webserviceIDs.length > 0){
-                               webserviceC.getDetailsForWebserviceID(webserviceC.webserviceIDs[0], id);
+                               webserviceC.getDetails(webserviceC.webserviceIDs[0], id);
                             }
                         }).
                         error(function () {
@@ -246,7 +246,6 @@
                                     $scope.NgRepeatAttributeArray[key] = value;
                                 });
                             }
-                            console.log($scope.NgRepeatAttributeArray);
                             webserviceC.getDifferentDataattributes();
                         });
                 };
