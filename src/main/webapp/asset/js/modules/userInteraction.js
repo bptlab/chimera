@@ -265,6 +265,7 @@
                     "/scenario/" + $routeParams.id + "/instance/" +
                     id + "/"
                 ).success(function (data) {
+                        instanceCtrl.instanceDetails['instance_name'] = data['name'];
                         instanceCtrl.instanceDetails['scenario_id'] = $routeParams.id;
                         instanceCtrl.instanceDetails['id'] = id;
                         if ($routeParams.instanceId) {

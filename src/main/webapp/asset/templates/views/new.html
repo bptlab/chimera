@@ -79,7 +79,6 @@
                                       <td>{{value['id']}}</td>
                                       <td>{{value['label']}}</td>
                                   </tr>
-                                  </a>
                                   </tbody>
                               </table>
                            </div>
@@ -114,7 +113,6 @@
                    ng-click="instanceCtrl.handleReferencedActivities(value['id']);" tabindex="-1"></ins></div></label></div>
                             </td>
                         </tr>
-                        </a>
                         </tbody>
                     </table>
                  </div>
@@ -127,7 +125,7 @@
 
 <div class="row">
     <!-- Panel for all Logs via dropdown -->
-    <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
+    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
             <!-- Header of the Panel -->
             <div class="panel-heading">
@@ -139,13 +137,13 @@
             </div>
             <!-- Body of the Panel -->
             <div class="panel-body list">
+                <div class="panel-title">Last Activity</div>
+                <small class="fo">Here you may find the log of this instance.</small><br>
                 <div class="pull-right">
                     <!-- let the user decided on the log content -->
                     <select ng-model="logSelection"
                             ng-options="item for item in ['activity','dataobject','attributes']"></select>
                 </div>
-                <div class="panel-title">Last Activity</div>
-                <small class="fo">Here you may find the log of this instance.</small>
 
                 <div class="animate-switch-container" ng-switch on="logSelection">
                     <!-- depending of the option of the dropdown: here display activity log -->
@@ -220,7 +218,6 @@
                                 </div>
                             </td>
                         </tr>
-                        </a>
                         </tbody>
                     </table>
                 </div>
