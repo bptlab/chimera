@@ -108,6 +108,7 @@
                                                 </tbody>
                                             </table>
                                             <!-- if attribute array contain items -> display them -->
+                                            NgRepeatAttributeArray= {{NgRepeatAttributeArray}}
                                             <div ng-show="NgRepeatAttributeArray.length">
                                                 <div ng-show="searchAttribute">
                                                     <div class="table-responsive">
@@ -144,13 +145,13 @@
                                             </div>
                                             <button type="submit" class="btn btn-default">Submit</button>
                                         </form>
-                                 </span>
+                                 </span> <!-- END: ng-show="webserviceC.webserviceIDs.length"  -->
                                  <span ng-show="!webserviceC.webserviceIDs.length"> 
                                       There are not any Web Service Tasks within this scenario.
                                  </span>
                             </div> <!-- END: tab-content -->
                         </div> <!-- END: tabs-left -->
-                    </div> 
+                    </div>  <!-- END:  ng-if="selectedScenario" -->
                     <div ng-if="!selectedScenario"> 
                         Please select a scenario in the upper right corner.
                     </div>
@@ -159,9 +160,6 @@
             </div> <!-- END: hpanel -->
         </div> <!-- END: col-lg-12 -->
         
-        
-
-
 </div> <!-- END: row -->
 
 <!-- ___________________________ modals ___________________________ -->
