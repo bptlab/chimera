@@ -14,7 +14,7 @@
                         <a href="index.html#/scenario">Scenarios</a></li>
                     </li>
                     <li>
-                        <a ng-href="index.html#/scenario/{{$routeParams.id}}/instance">Instances</a></li>
+                        <a ng-href="index.html#/scenario/{{instanceCtrl.scenario['id']}}/instance">Instances</a></li>
                     </li>
                     <li class="active">
                         <span>Case {{instanceCtrl.instanceDetails['id']}}</span>
@@ -22,9 +22,9 @@
                 </ol>
             </div>
             <h2 class="font-light m-b-xs">
-                Case {{instanceCtrl.instanceDetails['id']}}
+                Case {{$routeParams.instanceId}} - {{instanceCtrl.scenario['instances']['labels'][$routeParams.instanceId]}}
             </h2>
-        
+       
             <!--<small>List of algorithms</small>-->
             Select a view: 
             <a type="checkbox" ng-click="new_view = true" class="btn btn-info btn-xs"> New </a>

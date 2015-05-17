@@ -69,12 +69,12 @@ Select Scenario: <select data-ng-options="id as id for id in mailC.scenarioIDs" 
                         </tr>
                         </tbody>
                     </table>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" ng-click="mailC.loadData();" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" ng-click="mailC.loadData();" class="btn btn-primary">Refresh!</button>
+                <!--<button type="button" ng-click="mailC.loadData();" class="btn btn-primary">Refresh!</button>-->
             </div>
         </div>
         <!-- /.modal-content -->

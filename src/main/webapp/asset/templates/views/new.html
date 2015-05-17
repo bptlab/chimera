@@ -1,28 +1,4 @@
 <div class="row">
-    <!-- Panel for Dataobjects -->
-    <div style="animation-delay: 0.8s;" class="col-lg-6 animated-panel zoomIn">
-        <div class="hpanel">
-            <div class="tabs-left">
-            <ul class="nav nav-tabs">
-                <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
-                    <li class=""><a data-toggle="tab" ng-href="#/scenario/{{$routeParams.id}}/instance/{{$routeParams.instanceId}}/#tab-{{$index + 1}}">{{value['label']}}</a></li>
-                </div>                
-            </ul>
-            <div class="tab-content ">
-                <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
-                    <div id="tab-{{$index + 1}}" class="tab-pane">
-                    <div class="panel-body">
-                        <strong>Data Object: {{value['label']}}</strong>
-                        <p>The data object {{value['label']}} is currently in state "{{value['state']}}"</p>
-                    </div>
-                </div>
-                </div>
-            </div>
-
-            </div>
-
-        </div>
-    </div>
     <!-- old Panel for Dataobjects -->
     <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
         <div class="hpanel stats">
@@ -56,80 +32,66 @@
             </div>
             <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
-        </div>
-    </div>
-
-    <!-- Panel for running activities (ToDos) -->
-    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
-        <div class="hpanel stats">
-            <!-- Header of the Panel -->
-            <div class="panel-heading">
+          </div> <!-- END: hpanel -->
+      </div> <!-- END: col-lg-6 -->
+      
+    <!--  Panel for ToDos -->
+    <div style="animation-delay: 0.6s;" class="col-lg-6 animated-panel zoomIn" ng-init="terminated = false">
+          <div class="hpanel">
+             <div class="panel-heading">
                 <div class="panel-tools">
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
                     <a class="closebox"><i class="fa fa-times"></i></a>
                 </div>
-                ToDos
+              <ul class="nav nav-tabs">
+                  <li class="active"><a aria-expanded="true" data-toggle="tab" ng-click="todo_terminated = false">Open Tasks</a></li>
+                  <li class=""><a aria-expanded="false" data-toggle="tab" ng-click="todo_terminated = true">Completed Task</a></li>
+              </ul> 
             </div>
-            <!-- Body of the Panel -->
             <div class="panel-body list">
-                <div class="animate-switch-container" ng-switch on="todoSelection">
-                    <!-- depending of the option of the dropdown: here display running activities also as default -->
-                    <div class="animate-switch" ng-switch-default>
-                        <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 0.5s;">
-                            <div class="responsive-table project-list">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
-                                        <td>{{value['label']}}</td>
-                                        <td><a type="button" data-toggle="modal"
-                                               ng-click="instanceCtrl.getOutputAndOutputsets(value['id'])"
-                                               data-target="{{'#modalTerminate' + value['id']}}"><i
-                                                class="fa fa-check text-navy"></i></a></td>
+                <div class="tab-content">
+                    <div ng-if="!todo_terminated">
+                       <table class="table table-striped">
+                            <tbody>
+                            <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
+                                <td>{{value['label']}}</td>
+                                <td><a type="button" data-toggle="modal"
+                                       ng-click="instanceCtrl.getOutputAndOutputsets(value['id'])"
+                                       data-target="{{'#modalTerminate' + value['id']}}"><i
+                                        class="fa fa-check text-navy"></i></a></td>
 
-                                    </tr>
-                                    </a>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                            </tr>
+                            </a>
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- depending of the option of the dropdown: here display terminated activities -->
-                    <div class="animate-switch" ng-switch-when="completed">
-                        <div class="responsive-table project-list">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
-                                    <td>{{value['id']}}</td>
-                                    <td>{{value['label']}}</td>
-                                </tr>
-                                </a>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div ng-if="todo_terminated">
+                      <div class="responsive-table pull-left">
+                        <table class="table table-striped">
+                                  <thead>
+                                  <tr>
+                                      <th>#</th>
+                                      <th>Name</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['terminated']['activities'] track by $index">
+                                      <td>{{value['id']}}</td>
+                                      <td>{{value['label']}}</td>
+                                  </tr>
+                                  </a>
+                                  </tbody>
+                              </table>
+                           </div>
                     </div>
                 </div>
-            </div>
-            <!-- Footer of the Panel -->
-            <div class="panel-footer">
-                <!-- let the user decided on the content of the ToDo list (terminated or running activities) -->
-                <select ng-model="todoSelection" ng-options="item for item in ['open','completed']"></select>
-            </div>
-        </div>
-    </div>
+             </div> <!-- END: body -->
+             <!-- Footer of the Panel -->
+            <div class="panel-footer"></div>
+          </div> <!-- END: hpanel -->
+      </div> <!-- END: col-lg-6 -->
 
-    <!-- Panel for enabled activities (unassigned Tasks) -->
+    <!-- Panel for unassigned Tasks -->
     <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
             <!-- Header of the Panel -->
@@ -142,19 +104,26 @@
             </div>
             <!-- Body of the Panel -->
             <div class="panel-body list">
-                <ul aria-labelledby="enabledActivitiesMenu">
-                    <li ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']"
-                        role="presentation">
-                        <a data-toggle="modal" data-target="{{'#modal' + value['id']}}"
-                           ng-click="instanceCtrl.handleReferencedActivities(value['id']);" tabindex="-1">{{value['label']}}</a>
-                    </li>
-                </ul>
+                <div class="responsive-table pull-left">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']">
+                            <td>{{value['label']}}</td>
+                            <td>
+                              <div class="checkbox"><label class=""> <div style="position: relative;" class="icheckbox_square-green"><input style="position: absolute; opacity: 0;" class="i-checks" type="checkbox"><ins style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 0px none; opacity: 0;" class="iCheck-helper" data-toggle="modal" data-target="{{'#modal' + value['id']}}"
+                   ng-click="instanceCtrl.handleReferencedActivities(value['id']);" tabindex="-1"></ins></div></label></div>
+                            </td>
+                        </tr>
+                        </a>
+                        </tbody>
+                    </table>
+                 </div>
             </div>
             <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
-        </div>
-    </div>
-</div>
+        </div> <!-- END: hpanel -->
+    </div> <!-- END: col-lg-6 -->
+</div> <!-- END: row -->
 
 <div class="row">
     <!-- Panel for all Logs via dropdown -->
@@ -221,11 +190,11 @@
             </div>
             <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
-        </div>
-    </div>
+        </div> <!-- END: hpanel -->
+    </div> <!-- END: col-lg-6 -->
 
     <!-- Panel for termination condition -->
-    <div class="col-lg-3 animated-panel zoomIn" style="animation-delay: 0.5s;">
+    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 0.5s;">
         <div class="hpanel stats">
             <!-- Header of the Panel -->
             <div class="panel-heading">
@@ -233,20 +202,18 @@
                     <a class="showhide"><i class="fa fa-chevron-up"></i></a>
                     <a class="closebox"><i class="fa fa-times"></i></a>
                 </div>
-                Termination
+                Termination Condition
             </div>
             <!-- Body of the Panel -->
             <div class="panel-body list">
                 <div class="responsive-table pull-left">
                     <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Condition</th>
-                        </tr>
-                        </thead>
                         <tbody>
                         <!-- displaying the termination conditions -->
                         <tr ng-repeat="(key, value) in instanceCtrl.scenario['terminationcondition']['conditions'] track by $index">
+                            <td>
+                                Condition {{$index+1}}
+                            </td>
                             <td>
                                 <div ng-repeat="(key, value2) in value track by $index">
                                     The dataobject "{{value2['data_object']}}" is in state "{{value2['state']}}".<br>
@@ -260,9 +227,9 @@
             </div>
             <!-- Footer of the Panel -->
             <div class="panel-footer"></div>
-        </div>
-    </div>
-</div>
+       </div> <!-- END: hpanel -->
+  </div> <!-- END: col-lg-6 -->
+</div> <!-- END: row -->
 
 <!--___________________________________ MODALS ___________________________________-->
 <!-- modal for beginning an activity -->
@@ -283,7 +250,12 @@
                 <!-- if there are not referenced tasks just let the user begin the activity -->
                 <div ng-hide="instanceCtrl.scenario['refLength']">
                     <p>Do you want to start Activity "{{value['label']}}"?</p>
-                    <div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>
+                    <div style="display: block;" class="icon success animate"> 
+                        <span class="line tip animateSuccessTip"></span> 
+                        <span class="line long animateSuccessLong"></span> 
+                        <div class="placeholder"></div> 
+                        <div class="fix"></div> 
+                    </div>
                 </div>
                 <!-- if there are referenced tasks  let the user choose between them for beginning the activity -->
                 <div ng-show="instanceCtrl.scenario['refLength']">
@@ -329,7 +301,7 @@
                             </td>
                             <td>
                                 <button type="button" ng-click="instanceCtrl.beginActivity(refActivity['id']);"
-                                        data-dismiss="modal" class="btn btn-primary">Begin
+                                        data-dismiss="modal" class="taskassign btn btn-primary">Begin
                                 </button>
                             </td>
                         </tr>
@@ -342,7 +314,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <span ng-hide="instanceCtrl.scenario['refLength']">
                       <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal"
-                              class="btn btn-primary">Begin
+                              class="taskassign btn btn-primary">Begin
                       </button>
                 </span>
             </div>
@@ -417,7 +389,7 @@
                             <td>
                                 <button type="button"
                                         ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['set_id']);"
-                                        data-dismiss="modal" class="btn btn-danger">Terminate
+                                        data-dismiss="modal" class="taskcompleted btn btn-danger">Terminate
                                 </button>
                             </td>
                         </tr>
@@ -428,14 +400,48 @@
             <!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <div ng-hide="instanceCtrl.scenario['outputsetsLength'].length">
+                <span ng-hide="instanceCtrl.scenario['outputsetsLength'].length">
                     <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal"
-                            class="btn btn-danger">Terminate
+                            class="taskcompleted btn btn-danger">Terminate
                     </button>
-                </div>
+                </span>
             </div>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- Vendor scripts -->
+<script src="vendor/jquery/dist/jquery.min.js"></script>
+<script src="vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="vendor/metisMenu/dist/metisMenu.min.js"></script>
+<script src="vendor/iCheck/icheck.min.js"></script>
+<script src="vendor/sparkline/index.js"></script>
+<script src="vendor/bootstrap-star-rating/js/star-rating.min.js"></script>
+
+<!-- App scripts -->
+<script src="scripts/homer.js"></script>
+
+<script>
+  // Toastr options
+        toastr.options = {
+            "debug": false,
+            "newestOnTop": false,
+            "positionClass": "toast-top-center",
+            "closeButton": true,
+            "debug": false,
+            "toastClass": "animated fadeInDown",
+        };
+
+        $('.taskcompleted').click(function (){
+            toastr.info('Success - The Task was completed successfully');
+        });
+        
+        $('.taskassign').click(function (){
+            toastr.info('Success - The Task was assigned successfully');
+        });
+
+</script>
