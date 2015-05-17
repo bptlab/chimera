@@ -125,28 +125,27 @@
 
 <div class="row">
     <!-- Panel for all Logs via dropdown -->
-    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
+    <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;" ng-init="logSelection = 'activities'">
         <div class="hpanel stats">
             <!-- Header of the Panel -->
             <div class="panel-heading">
                   <div class="pull-right">
-                      <a type="button" ng-click="logSelection = 'activity'" class="btn btn-default btn-xs">
-                          activity
+                      <a type="button" ng-click="logSelection = 'activities'" class="btn btn-default btn-xs">
+                          Activities
                       </a>
                       <a type="button" ng-click="logSelection = 'dataobject'" class="btn btn-default btn-xs">
-                          dataobject
+                          Dataobjects
                       </a>
                       <a type="button" ng-click="logSelection = 'attributes'" class="btn btn-default btn-xs">
-                          attributes
+                          Attributes
                       </a>
                   </div>
-                  Document Activity
+                  Activity Log
               </div>
              
             <!-- Body of the Panel -->
             <div class="panel-body list">
-                <div class="panel-title">Last Activity</div>
-                <small class="fo">Here you may find the log of this instance.</small><br>
+                <small class="fo">Here you find the log of {{logSelection}} for this instance.</small><br>
                 <div class="animate-switch-container" ng-switch on="logSelection">
                     <!-- depending of the option of the dropdown: here display activity log -->
                     <div class="animate-switch" ng-switch-default>

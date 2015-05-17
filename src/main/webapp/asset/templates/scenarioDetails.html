@@ -9,9 +9,11 @@
 
             <div id="hbreadcrumb" class="pull-right m-t-lg">
                 <ol class="hbreadcrumb breadcrumb">
-                    <li><a href="index.html#/">Dashboard</a></li>
                     <li>
-                        <a href="index.html#/scenario">Scenarios</a></li>
+                        <a href="index.html#/">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <span>Scenario {{scenarioCtrl.currentScenario['id']}} - {{scenarioCtrl.currentScenario['details']['name']}}</span>
                     </li>
                 </ol>
             </div>

@@ -9,12 +9,9 @@
 
             <div id="hbreadcrumb" class="pull-right m-t-lg">
                 <ol class="hbreadcrumb breadcrumb">
-                    <li><a href="index.html#/">Dashboard</a></li>
+                    <li><a href="index.html#/scenario">Dashboard</a></li>
                     <li>
-                        <a href="index.html#/scenario">Scenarios</a></li>
-                    </li>
-                    <li>
-                        <a ng-href="index.html#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}/instance">Instances</a></li>
+                        <a ng-href="index.html#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}/instance">Scenario</a></li>
                     </li>
                     <li class="active">
                         <span>Case {{instanceCtrl.instanceDetails['id']}}</span>
@@ -27,8 +24,8 @@
        
             <!--<small>List of algorithms</small>-->
             Select a view: 
-            <a type="checkbox" ng-click="new_view = true" class="btn btn-info btn-xs"> New </a>
-            <a type="checkbox" ng-click="new_view = false" class="btn btn-info btn-xs"> Old </a>
+            <a type="checkbox" ng-click="new_view = true" class="btn btn-default btn-xs"> New </a>
+            <a type="checkbox" ng-click="new_view = false" class="btn btn-default btn-xs"> Old </a>
         </div>
     </div>
 </div> <!-- END: normalheader -->
