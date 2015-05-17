@@ -108,7 +108,10 @@
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").
                         success(function (data) {
                             controller.emailtaskIDs = data['ids'];
-                            controller.getDetails(mailC.emailtaskIDs[0], id);
+                            //if the emailtaskIDs array is not empty, prefetch the first item details
+                            if(controller.emailtaskIDs.length > 0){
+                               controller.getDetails(controller.emailtaskIDs[0], id);
+                            }
                         }).
                         error(function () {
                             console.log('request failed');
