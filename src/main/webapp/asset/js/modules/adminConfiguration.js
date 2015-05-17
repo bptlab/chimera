@@ -74,7 +74,7 @@
                 //requesting initially all available scenarios
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function (data) {
-                        controller.scenarioIDs = data['ids'];
+                        controller.scenarioIDs = data['labels'];
 
                     }).
                     error(function () {
@@ -156,7 +156,7 @@
                 //requesting initially all available scenarios
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function (data) {
-                        webserviceC.scenarioIDs = data['ids'];
+                        webserviceC.scenarioIDs = data['labels'];
 
                     }).
                     error(function () {

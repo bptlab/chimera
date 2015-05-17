@@ -33,8 +33,10 @@
             <div class="hpanel">
               <div class="panel-heading hbuilt">
                   <div class="pull-right">
-                      <select class="form-control m-b" data-ng-options="id as id for id in mailC.scenarioIDs" ng-model="selectedScenario"
-                         data-ng-change="mailC.getAllMailtaskForScenarioID(selectedScenario)"></select>
+                      <select class="form-control m-b" data-ng-options="k as v for (k, v) in mailC.scenarioIDs" ng-model="selectedScenario"
+                         data-ng-change="mailC.getAllMailtaskForScenarioID(selectedScenario)">
+                            <option value="">Select Scenario</option>
+                      </select>
                       </span>
                   </div>
                   eMail Tasks
