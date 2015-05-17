@@ -212,6 +212,10 @@
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/webservice/").
                         success(function (data) {
                             webserviceC.webserviceIDs = data['ids'];
+                            //if the emailtaskIDs array is not empty, prefetch the first item details
+                            if(webserviceC.webserviceIDs.length > 0){
+                               webserviceC.getDetails(webserviceC.webserviceIDs[0], id);
+                            }
                         }).
                         error(function () {
                             console.log('request failed');
