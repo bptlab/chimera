@@ -1,4 +1,4 @@
-<div class="normalheader transition animated fadeIn" ng-init="new_view = true">
+<div class="normalheader transition animated fadeIn" ng-init="new_view = true; instanceCtrl.getInstanceName(instanceCtrl.instanceDetails['id']);">
     <div class="hpanel">
         <div class="panel-body">
             <a class="small-header-action" href="">
@@ -14,7 +14,7 @@
                         <a href="index.html#/scenario">Scenarios</a></li>
                     </li>
                     <li>
-                        <a ng-href="index.html#/scenario/{{instanceCtrl.scenario['id']}}/instance">Instances</a></li>
+                        <a ng-href="index.html#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}/instance">Instances</a></li>
                     </li>
                     <li class="active">
                         <span>Case {{instanceCtrl.instanceDetails['id']}}</span>
@@ -22,7 +22,7 @@
                 </ol>
             </div>
             <h2 class="font-light m-b-xs">
-                Case {{$routeParams.instanceId}} - {{instanceCtrl.scenario['instances']['labels'][$routeParams.instanceId]}}
+                Case {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}} 
             </h2>
        
             <!--<small>List of algorithms</small>-->

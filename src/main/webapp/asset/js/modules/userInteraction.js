@@ -265,6 +265,7 @@
                     "/scenario/" + $routeParams.id + "/instance/" +
                     id + "/"
                 ).success(function (data) {
+                        instanceCtrl.instanceDetails['scenario_id'] = $routeParams.id;
                         instanceCtrl.instanceDetails['id'] = id;
                         if ($routeParams.instanceId) {
                             instanceCtrl.initializeActivityInstances();
@@ -292,6 +293,16 @@
             this.getCurrentInstance = function () {
                 instanceCtrl.instanceDetails['id'] = $routeParams.instanceId;
             };
+            
+            this.getInstanceName = function (instanceID) {
+               $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + instanceID).
+                        success(function (data) {
+                            //return data['name'];
+                            instanceCtrl.instanceDetails['instance_name'] = data['name'];
+                        }).error(function () {
+                            console.log('request failed');
+                        });
+            }
 
             this.setAttribute = function (id, value, activityId) {
                 var data = {};
