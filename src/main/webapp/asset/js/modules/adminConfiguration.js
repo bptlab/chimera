@@ -85,7 +85,14 @@
                 this.submitMyForm = function () {
                     //using the data set in the form as request content
                     var data = $scope.form;
-                    $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data);
+                    $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data).
+                        success(function (data) {
+                                controller.loadData();
+                            }).
+                            error(function () {
+                                console.log('request failed');
+                            });
+                    
                 }
 
                 //get all infos for popup
@@ -101,6 +108,7 @@
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").
                         success(function (data) {
                             controller.emailtaskIDs = data['ids'];
+                            controller.getDetails(mailC.emailtaskIDs[0], id);
                         }).
                         error(function () {
                             console.log('request failed');
