@@ -42,21 +42,6 @@ import static org.junit.Assert.*;
  */
 public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
 
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
-    /**
-     * Sets up the seed file for the test database.
-     */
-    static {
-        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
-    }
-
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
-
     /**
      * This test run scenario 2 from the database. It checks AND gateways and consistency.
      */
