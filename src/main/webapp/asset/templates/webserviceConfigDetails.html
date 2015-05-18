@@ -17,13 +17,16 @@
                     </li>
                 </ol>
             </div>
+            <!-- /. id="hbreadcrumb" -->
             <h2 class="font-light m-b-xs">
                 Web Service Task Configuration
             </h2>
 
         </div>
+        <!-- /. panel body -->
     </div>
-</div> <!-- END: normalheader -->
+    <!-- /. hpanel -->
+</div> <!-- /. normalheader -->
 
 <div class="content animate-panel">
 
@@ -42,7 +45,7 @@
                     </div>
                     Web Service Tasks
                 </div>
-                <!-- END: panel-heading hbuilt-->
+                <!-- /.  panel-heading hbuilt-->
 
                 <div class="panel-body">
                     <!-- if a scenario is selected -> display all available mail tasks within it -->
@@ -54,6 +57,7 @@
                                         {{value}}</a>
                                 </li>
                             </ul>
+                            <!-- /.  nav tabs options -->
                             <div class="tab-content ">
                                  <span ng-show="webserviceC.webserviceIDs.length"> 
                                   <h3>Web Service Task - {{webserviceC.workingID}}</h3>
@@ -135,36 +139,36 @@
                                                     </table>
                                                     <!--  </div>-->
                                                 </div>
-                                                <!-- END: ng-show="searchAttribute"-->
+                                                <!-- /.  ng-show="searchAttribute"-->
                                             </div>
-                                            <!-- END: ng-show="NgRepeatAttributeArray.length" -->
+                                            <!-- /.  ng-show="NgRepeatAttributeArray.length" -->
                                             <button type="submit" data-toggle="modal" data-target="#update-success"
                                                     class="btn btn-default">Update Settings
                                             </button>
                                         </form>
-                                 </span> <!-- END: ng-show="webserviceC.webserviceIDs.length"  -->
+                                 </span> <!-- /.  ng-show="webserviceC.webserviceIDs.length"  -->
                                  <span ng-show="!webserviceC.webserviceIDs.length"> 
                                       There are no Web Service Tasks within this scenario.
                                  </span>
                             </div>
-                            <!-- END: tab-content -->
+                            <!-- /.  tab-content -->
                         </div>
-                        <!-- END: tabs-left -->
+                        <!-- /.  tabs-left -->
                     </div>
-                    <!-- END:  ng-if="selectedScenario" -->
+                    <!-- /.   ng-if="selectedScenario" -->
                     <div ng-if="!selectedScenario">
                         Please select a scenario in the upper right corner.
                     </div>
                 </div>
-                <!-- END: panel body -->
+                <!-- /.  panel body -->
                 <div class="panel-footer"></div>
             </div>
-            <!-- END: hpanel -->
+            <!-- /.  hpanel -->
         </div>
-        <!-- END: col-lg-12 -->
+        <!-- /.  col-lg-12 -->
 
     </div>
-    <!-- END: row -->
+    <!-- /.  row -->
 
     <!-- ___________________________ modals ___________________________ -->
 
@@ -271,8 +275,11 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- /. class="table-responsive" -->
                             </div>
+                            <!-- /. ng-show="searchAttribute" -->
                         </div>
+                        <!-- /. ng-show="NgRepeatAttributeArray.length" -->
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
                 </div>
@@ -296,6 +303,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Successful</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <div style="display: block;" class="icon success animate"><span
                             class="line tip animateSuccessTip"></span> <span
@@ -307,10 +315,12 @@
                     The Web Service Task {{webserviceC.workingID}} was updated successfully. <br>
                     <button class="btn btn-success btn-circle" type="button"><i class="fa fa-check"></i></button>
                 </div>
+                <!-- /.  modal body -->
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+                <!-- /. modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>

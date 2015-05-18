@@ -22,8 +22,11 @@
             </h2>
 
         </div>
+        <!-- /. panel body -->
     </div>
-</div> <!-- END: normalheader -->
+    <!-- /. hpanel -->
+</div>
+<!-- /. normalheader -->
 
 <div class="content animate-panel">
 
@@ -32,6 +35,8 @@
             <input ng-model="searchText" placeholder="SearchTerm">
         </div>
     </div>
+    <!-- /. row -->
+
     <div class="row">
         <div style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']"
              ng-show="!searchText || value['username'].indexOf(searchText) > -1">
@@ -51,6 +56,7 @@
                             Role Id: {{value['role_id']}}
                         </p>
                     </div>
+                    <!-- /. panel body -->
                     <div class="panel-footer contact-footer">
                         <div class="row">
                             <div style="animation-delay: 0.3s;" class="col-md-4 border-right animated-panel zoomIn">
@@ -64,7 +70,12 @@
                             </div>
                         </div>
                     </div>
+                    <!-- /. panel footer -->
                 </div>
+                <!-- /.class="col-lg-3 animated-panel zoomIn" -->
             </div>
+            <!-- /. hpanel -->
         </div>
+        <!-- /. ng-repeat -->
     </div>
+    <!-- /. row -->

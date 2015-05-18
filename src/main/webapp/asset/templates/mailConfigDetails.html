@@ -17,13 +17,15 @@
                     </li>
                 </ol>
             </div>
+            <!-- /.  id="hbreadcrumb" -->
             <h2 class="font-light m-b-xs">
                 eMail Task Configuration
             </h2>
 
         </div>
+        <!-- /. panel body -->
     </div>
-</div> <!-- END: normalheader -->
+</div> <!-- /. normalheader -->
 
 <div class="content animate-panel">
 
@@ -39,10 +41,11 @@
                             <option value="">Select Scenario</option>
                         </select>
                         </span>
+                        <!-- /. data-ng-options="k as v for (k, v) in mailC.scenarioIDs" -->
                     </div>
                     eMail Tasks
                 </div>
-                <!-- END: panel-heading hbuilt-->
+                <!-- /. panel-heading hbuilt-->
                 <div class="panel-body">
                     <!-- if a scenario is selected -> display all available mail tasks within it -->
                     <div ng-if="selectedScenario">
@@ -53,6 +56,7 @@
                                         {{value}}</a>
                                 </li>
                             </ul>
+                            <!-- /. nav tabs options -->
                             <div class="tab-content ">
                                 <span ng-show="mailC.emailtaskIDs.length"> 
                                   <h3>eMail Task - {{mailC.workingID}}</h3>
@@ -94,27 +98,28 @@
 
                                    </form>
                                  </span>
-                                 <span ng-show="!mailC.emailtaskIDs.length"> 
-                                      There are not any eMail Tasks within this scenario.
-                                 </span>
-                            </div>
-                            <!-- END: tab-content -->
+                                <!-- /.  ng-show="mailC.emailtaskIDs.length" -->
+                                <span ng-show="!mailC.emailtaskIDs.length">
+                                     There are not any eMail Tasks within this scenario.
+                                </span>
+                           </div>
+                            <!-- /. tab-content -->
                         </div>
-                        <!-- END: tabs-left -->
+                        <!-- /. tabs-left -->
                     </div>
                     <div ng-if="!selectedScenario">
                         Please select a scenario in the upper right corner.
                     </div>
                 </div>
-                <!-- END: panel body -->
+                <!-- /. panel body -->
                 <div class="panel-footer"></div>
             </div>
-            <!-- END: hpanel -->
+            <!-- /. hpanel -->
         </div>
-        <!-- END: col-lg-12 -->
+        <!-- /. col-lg-12 -->
 
     </div>
-    <!-- END: row -->
+    <!-- /. row -->
 
 
     <!-- ___________________________ modals ___________________________ -->
@@ -128,6 +133,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Edit Mail Config of {{mailC.workingID}}</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <form name="myForm" ng-submit="mailC.submitMyForm()">
                         <table class="table table-striped">
@@ -155,6 +161,7 @@
                         <button type="submit" class="btn btn-default demo2">Submit</button>
                     </form>
                 </div>
+                <!-- /.modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -174,6 +181,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Successful</h4>
                 </div>
+                <!-- /.modal header -->
                 <div class="modal-body">
                     <div style="display: block;" class="icon success animate"><span
                             class="line tip animateSuccessTip"></span> <span
@@ -201,7 +209,7 @@
             $('.demo2').click(function () {
                 swal({
                     title: "Good job!",
-                    text: "You clicked the button!",
+                    text: "The update was successful!",
                     type: "success"
                 });
             });

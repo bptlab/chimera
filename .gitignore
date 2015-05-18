@@ -4,6 +4,7 @@
 JEngine.iml
 resources/database_connection
 target/*
+*~
 src/main/webapp/asset/views/
 src/main/webapp/asset/favicon.ico
 src/main/webapp/asset/js/angular-route.min.js

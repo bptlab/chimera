@@ -17,16 +17,19 @@
                     </li>
                 </ol>
             </div>
+            <!-- /. id="hbreadcrumb" -->
             <h2 class="font-light m-b-xs">
                 JUserManagement Control Panel
             </h2>
 
         </div>
+        <!-- /. panel body -->
     </div>
-</div> <!-- END: normalheader -->
+    <!-- /. hpanel -->
+</div>
+<!-- /. normalheader -->
 
 <div class="content animate-panel">
-
 
     <div class="row">
         <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
@@ -40,9 +43,9 @@
                             <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
                         </div>
                     </div>
-                    <!-- END: row -->
+                    <!-- /.  row -->
                 </div>
-                <!-- END: panel heading -->
+                <!-- /.  panel heading -->
 
                 <div class="panel-body list">
                     <div class="pull-right">
@@ -81,10 +84,14 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- /. class="table-responsive" -->
                 </div>
+                <!-- /. panel body -->
                 <div class="panel-footer"></div>
             </div>
+            <!-- /. hpanel -->
         </div>
+        <!-- /. row -->
         <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
             <div class="hpanel stats">
                 <div class="panel-heading hbuilt">
@@ -96,9 +103,9 @@
                             <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
                         </div>
                     </div>
-                    <!-- END: row -->
+                    <!-- /.  row -->
                 </div>
-                <!-- END: panel heading -->
+                <!-- /.  panel heading -->
                 <div class="panel-body list">
                     <div class="pull-right">
                         <a type="button" data-toggle="modal"
@@ -137,14 +144,17 @@
                         </table>
                     </div>
                 </div>
+
                 <div class="panel-footer"></div>
             </div>
+            <!-- /. hpanel -->
         </div>
+        <!-- /. class="col-lg-6 animated-panel zoomIn" -->
     </div>
-
+    <!-- /. row -->
 
     <!--___________________________________ MODALS ___________________________________-->
-    <!-- modal for deleting role-->
+    <!-- modal for deleting role -->
     <div ng-repeat="(key, value) in userMgmtC.Details['role']" id="{{'modalDeleteRole' + value['id']}}"
          class="modal fade">
         <div class="modal-dialog">
@@ -154,15 +164,18 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Delete Role?</h4>
                 </div>
+                <!-- /.modal header -->
                 <div class="modal-body">
                     <p>Do you want to delete the role "{{value['rolename']}}"?</p>
                 </div>
+                <!-- /. modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" ng-click="userMgmtC.deleteRole(value['id']);" data-dismiss="modal"
                             class="btn btn-primary">Delete
                     </button>
                 </div>
+                <!-- /.modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -180,6 +193,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Update Role?</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
                         <input type="hidden" ng-model="form.id" ng-value="{{value['id']}}"/><br>
@@ -192,9 +206,11 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
                 </div>
+                <!-- /.modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+                <!-- /. modal footer-->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -211,6 +227,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Create New Role</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
                         <input type="hidden" ng-model="form.id" value="0"/><br>
@@ -223,9 +240,11 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
                 </div>
+                <!-- /. modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+                <!-- /. modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -243,15 +262,18 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Delete User?</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <p>Do you want to delete the role "{{value['username']}}"?</p>
                 </div>
+                <!-- /. modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" ng-click="userMgmtC.deleteUser(value['id']);" data-dismiss="modal"
                             class="btn btn-primary">Delete
                     </button>
                 </div>
+                <!-- /. modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -269,6 +291,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Update User?</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
                         <input type="hidden" ng-model="form.id" ng-value="{{value['id']}}"/><br>
@@ -281,9 +304,11 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
                 </div>
+                <!-- /. modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+                <!-- /. modal footer-->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -300,6 +325,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Create New User</h4>
                 </div>
+                <!-- /. modal header -->
                 <div class="modal-body">
                     <form name="myForm" ng-submit="userMgmtC.submitMyForm()">
                         <input type="hidden" ng-model="form.id" value="0"/><br>
@@ -312,9 +338,11 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
                 </div>
+                <!-- /. modal body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+                <!-- /. modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>

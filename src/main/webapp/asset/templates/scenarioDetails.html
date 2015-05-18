@@ -22,8 +22,10 @@
             </h2>
 
         </div>
+        <!-- /.panel body -->
     </div>
-</div> <!-- END: normalheader -->
+    <!-- /.hpanel -->
+</div> <!-- /. normalheader -->
 
 <div class="content animate-panel">
 
@@ -48,6 +50,7 @@
                     </div>
                     Scenario Details
                 </div>
+                <!-- /. class="panel-heading hbuilt" -->
                 <div class="panel-body">
                     <!-- display Meta information about this scenario -->
                     <div class="responsive-table pull-left">
@@ -79,10 +82,14 @@
                             </tr>
                         </table>
                     </div>
+                    <!-- /. class="responsive-table pull-left" -->
                 </div>
+                <!-- /. panel body -->
                 <div class="panel-footer"></div>
             </div>
+            <!-- /. hpanel -->
         </div>
+        <!-- /. class="col-lg-6 animated-panel zoomIn" -->
 
         <!-- display a list of instances for this scenario -->
         <div style="animation-delay: 0.2s;" class="col-lg-6 animated-panel zoomIn">
@@ -96,9 +103,9 @@
                             <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
                         </div>
                     </div>
-                    <!-- END: row -->
+                    <!-- /. row -->
                 </div>
-                <!-- END: panel heading -->
+                <!-- /. panel heading -->
 
                 <div class="panel-body">
                     <div class="table-responsive" ng-controller="ScenarioInstanceController as instanceCtrl">
@@ -126,16 +133,16 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- END: div table responsive -->
+                    <!-- /. div table responsive -->
                 </div>
-                <!-- END: panel body -->
+                <!-- /. panel body -->
                 <div class="panel-footer"></div>
             </div>
-            <!-- END: hpanel -->
+            <!-- /. hpanel -->
         </div>
-        <!-- END: col-lg-12 -->
+        <!-- /. col-lg-12 -->
     </div>
-    <!-- END: row -->
+    <!-- /. row -->
 
     <!--___________________________________ MODALS ___________________________________-->
     <!-- modal for creating a new instance  -->
@@ -148,15 +155,16 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Start instance?</h4>
                 </div>
+                <!-- /. modal header -->
                 <!-- Body of the Modal -->
                 <div class="modal-body">
                     <p>Do you really want to start a new instance of scenario
                         "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
                     <!-- give the user the possibility to name the new instance  -->
-                    <!-- @TODO: this has to be improved for UIX -->
                     Name: <input type="text" ng-model="instanceName">
 
                 </div>
+                <!-- /. modal body -->
                 <!-- Footer of the Modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -164,6 +172,7 @@
                             data-dismiss="modal" class="btn btn-primary">Start Instance
                     </button>
                 </div>
+                <!-- /. modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -181,11 +190,13 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Delete Scenario?</h4>
                 </div>
+                <!-- /. modal header -->
                 <!-- Body of the Modal -->
                 <div class="modal-body">
                     <p>Do you really want to delete the scenario
                         "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
                 </div>
+                <!-- /.modal body -->
                 <!-- Footer of the Modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -193,6 +204,7 @@
                             data-dismiss="modal" class="btn btn-danger">Delete Scenario
                     </button>
                 </div>
+                <!-- /. modal footer-->
             </div>
             <!-- /.modal-content -->
         </div>
@@ -210,6 +222,7 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Termination Condition</h4>
                 </div>
+                <!-- /. modal header -->
                 <!-- Body of the Modal -->
                 <div class="modal-body">
                     <table class="table table-striped">
@@ -226,10 +239,12 @@
                         </tr>
                     </table>
                 </div>
+                <!-- /.modal body -->
                 <!-- Footer of the Modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+                <!-- /. modal footer -->
             </div>
             <!-- /.modal-content -->
         </div>
