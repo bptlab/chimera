@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import org.junit.AfterClass;
 import org.junit.Before;
 
 import java.io.FileReader;
@@ -12,11 +13,20 @@ import java.sql.Statement;
 /**
  * Created by jaspar.mang on 18.05.15.
  */
-public class AbstractDatabaseDependendTest {
+public class AbstractDatabaseDependentTest {
     /**
      * The Database Seed file.
      */
-    public static String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+    public static String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
 
     /**
      * Sets up the database for RestTests.

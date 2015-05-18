@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import static org.junit.Assert.*;
 
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ import java.util.LinkedList;
 /**
  *
  */
-public class DbScenarioTest extends AbstractDatabaseDependendTest {
+public class DbScenarioTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testGetScenarioIDs() {

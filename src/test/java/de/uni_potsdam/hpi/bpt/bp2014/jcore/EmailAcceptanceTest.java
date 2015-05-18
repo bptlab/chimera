@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.apache.commons.mail.EmailException;
 import org.junit.AfterClass;
@@ -41,7 +41,7 @@ import static org.junit.Assert.assertArrayEquals;
  * **********************************************************************************
  */
 
-public class EmailAcceptanceTest extends AbstractDatabaseDependendTest {
+public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
 

@@ -3,14 +3,14 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import static org.junit.Assert.*;
 
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 import java.util.LinkedList;
 
 /**
  *
  */
-public class DbScenarioInstanceTest extends AbstractDatabaseDependendTest {
+public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     @Test
     public void testExistScenario(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
