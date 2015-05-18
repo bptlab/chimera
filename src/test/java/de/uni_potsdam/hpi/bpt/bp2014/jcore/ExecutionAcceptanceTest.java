@@ -53,12 +53,7 @@ public class ExecutionAcceptanceTest extends AbstractTest {
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     }
-    /**
-     * The base url of the jcore rest interface.
-     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
-     */
-    private WebTarget base;
-
+    
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();

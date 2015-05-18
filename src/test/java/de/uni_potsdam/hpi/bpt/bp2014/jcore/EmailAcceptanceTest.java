@@ -12,7 +12,6 @@ import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
+
 /**
  * ********************************************************************************
  * <p/>
@@ -46,17 +46,13 @@ import static org.junit.Assert.assertArrayEquals;
 public class EmailAcceptanceTest extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+
     /**
      * Sets up the seed file for the test database.
      */
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     }
-    /**
-     * The base url of the jcore rest interface.
-     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
-     */
-    private WebTarget base;
 
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
@@ -71,11 +67,13 @@ public class EmailAcceptanceTest extends AbstractTest {
     }
 
     String receiver = "bp2014w1@byom.de";
+
     @Before
     public void setUp() {
         //clear Mock JavaMail box
         Mailbox.clearAll();
     }
+
     //Email Test Scenario 142
     @Test
     public void testScenario142() throws MessagingException, IOException, EmailException {
