@@ -3,12 +3,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import static org.junit.Assert.*;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
 import org.junit.Test;
 
 /**
  *
  */
-public class DbActivityInstanceTest {
+public class DbActivityInstanceTest extends AbstractAcceptanceTest {
 
     @Test
     public void testGetState(){

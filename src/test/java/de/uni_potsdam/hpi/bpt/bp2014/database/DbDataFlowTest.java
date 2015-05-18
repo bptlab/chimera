@@ -3,12 +3,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import static org.junit.Assert.*;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
 import org.junit.Test;
 
 /**
  *
  */
-public class DbDataFlowTest {
+public class DbDataFlowTest extends AbstractAcceptanceTest {
 
     @Test
     public void testGetInputSetsForControlNode(){

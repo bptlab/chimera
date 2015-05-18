@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DbFragmentTest {
+public class DbFragmentTest extends AbstractAcceptanceTest {
     @Test
     public void testGetFragmentsForScenario(){
         DbFragment dbFragment = new DbFragment();
