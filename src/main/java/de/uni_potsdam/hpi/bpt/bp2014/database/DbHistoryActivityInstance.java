@@ -51,8 +51,10 @@ public class DbHistoryActivityInstance extends DbObject {
     }
 
     /**
-     * @param scenarioInstanceId
-     * @return
+     * This method returns the terminated Activity log entries for a ScenarioInstance.
+     *
+     * @param scenarioInstanceId ID of the ScenarioInstance for which the activity log entries shall be returned.
+     * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
      */
     public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(int scenarioInstanceId) {
         String sql = "SELECT h.id, h.scenarioinstance_id, cn.label, h.activityinstance_id, h.oldstate, h.newstate, h.timestamp FROM historyactivityinstance AS h, controlnode AS cn, controlnodeinstance AS cni WHERE h.scenarioinstance_id = " + scenarioInstanceId + "  AND h.activityinstance_id = cni.id AND cni.controlnode_id = cn.id AND h.newstate = 'terminated' ORDER BY timestamp DESC";
