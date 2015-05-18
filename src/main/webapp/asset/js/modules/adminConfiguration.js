@@ -50,15 +50,15 @@
                     $http.post(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/launch/" + id).
                         success(function (data) {
                             if (data) {
-				//applying update also to database so we display the new scenarios
-				$http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
-				    success(function (data) {
-					controller.scenarioDetails = data['ids'];
-				    }).
-				    error(function () {
-					console.log('request failed');
-				    });
-				//return the new 
+                                //applying update also to database so we display the new scenarios
+                                $http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
+                                    success(function (data) {
+                                        controller.scenarioDetails = data['ids'];
+                                    }).
+                                    error(function () {
+                                        console.log('request failed');
+                                    });
+                                //return the new
                                 return data;
                             }
                         }).
@@ -67,25 +67,25 @@
                         });
                 };
 
-		this.isEmpty = function (obj) {
+                this.isEmpty = function (obj) {
 
-		    // null and undefined are "empty"
-		    if (obj == null) return true;
+                    // null and undefined are "empty"
+                    if (obj == null) return true;
 
-		    // Assume if it has a length property with a non-zero value
-		    // that that property is correct.
-		    if (obj.length > 0)    return false;
-		    if (obj.length === 0)  return true;
+                    // Assume if it has a length property with a non-zero value
+                    // that that property is correct.
+                    if (obj.length > 0)    return false;
+                    if (obj.length === 0)  return true;
 
-		    // Otherwise, does it have any properties of its own?
-		    // Note that this doesn't handle
-		    // toString and valueOf enumeration bugs in IE < 9
-		    for (var key in obj) {
-			if (hasOwnProperty.call(obj, key)) return false;
-		    }
+                    // Otherwise, does it have any properties of its own?
+                    // Note that this doesn't handle
+                    // toString and valueOf enumeration bugs in IE < 9
+                    for (var key in obj) {
+                        if (hasOwnProperty.call(obj, key)) return false;
+                    }
 
-		    return true;
-		}
+                    return true;
+                }
             }]
     );
 
@@ -116,12 +116,12 @@
                     var data = $scope.form;
                     $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data).
                         success(function (data) {
-                                controller.loadData();
-                            }).
-                            error(function () {
-                                console.log('request failed');
-                            });
-                    
+                            controller.loadData();
+                        }).
+                        error(function () {
+                            console.log('request failed');
+                        });
+
                 }
 
                 //get all infos for popup
@@ -138,8 +138,8 @@
                         success(function (data) {
                             controller.emailtaskIDs = data['ids'];
                             //if the emailtaskIDs array is not empty, prefetch the first item details
-                            if(controller.emailtaskIDs.length > 0){
-                               controller.getDetails(controller.emailtaskIDs[0], id);
+                            if (controller.emailtaskIDs.length > 0) {
+                                controller.getDetails(controller.emailtaskIDs[0], id);
                             }
                         }).
                         error(function () {
@@ -242,8 +242,8 @@
                         success(function (data) {
                             webserviceC.webserviceIDs = data['ids'];
                             //if the emailtaskIDs array is not empty, prefetch the first item details
-                            if(webserviceC.webserviceIDs.length > 0){
-                               webserviceC.getDetails(webserviceC.webserviceIDs[0], id);
+                            if (webserviceC.webserviceIDs.length > 0) {
+                                webserviceC.getDetails(webserviceC.webserviceIDs[0], id);
                             }
                         }).
                         error(function () {

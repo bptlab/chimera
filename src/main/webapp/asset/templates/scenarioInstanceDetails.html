@@ -11,7 +11,8 @@
                 <ol class="hbreadcrumb breadcrumb">
                     <li><a href="index.html#/scenario">Dashboard</a></li>
                     <li>
-                        <a ng-href="index.html#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}/instance">Scenario</a></li>
+                        <a ng-href="index.html#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}/instance">Scenario</a>
+                    </li>
                     </li>
                     <li class="active">
                         <span>Case {{instanceCtrl.instanceDetails['id']}}</span>
@@ -19,11 +20,11 @@
                 </ol>
             </div>
             <h2 class="font-light m-b-xs">
-                Case {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}} 
+                Case {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
             </h2>
-       
+
             <!--<small>List of algorithms</small>-->
-            Select a view: 
+            Select a view:
             <a type="checkbox" ng-click="new_view = true" class="btn btn-default btn-xs"> New </a>
             <a type="checkbox" ng-click="new_view = false" class="btn btn-default btn-xs"> Old </a>
         </div>
@@ -32,9 +33,9 @@
 
 <div class="content animate-panel">
 
-<div ng-show="new_view">
-  <ng-include src="'asset/templates/views/new.html'"></ng-include>
-</div>
-<div ng-hide="new_view">
-  <ng-include src="'asset/templates/views/old.html'"></ng-include>
-</div>
+    <div ng-show="new_view">
+        <ng-include src="'asset/templates/views/new.html'"></ng-include>
+    </div>
+    <div ng-hide="new_view">
+        <ng-include src="'asset/templates/views/old.html'"></ng-include>
+    </div>
