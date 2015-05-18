@@ -90,7 +90,7 @@
                                                         <!-- provide the possibility to select an data attribute for which new attributes are supposed to be created -->
                                                         <select class="form-control m-b" ng-model="searchAttribute"
                                                                 ng-options="k as v for (k, v) in webserviceC.detailsForID['allAttributes']">
-                                                            <option value="">Select Type</option>
+                                                            <option value="">Select Attribute</option>
                                                         </select>
                                                         <!-- provide the option to empty the array with attributes -->
                                                         <a type="button" class="btn btn-success btn-xs"
@@ -129,11 +129,11 @@
                                                   <!--  </div>-->
                                                 </div> <!-- END: ng-show="searchAttribute"-->
                                             </div> <!-- END: ng-show="NgRepeatAttributeArray.length" -->
-                                            <button type="submit" class="btn btn-default">Update Settings</button>
+                                            <button type="submit" data-toggle="modal" data-target="#update-success" class="btn btn-default">Update Settings</button>
                                         </form>
                                  </span> <!-- END: ng-show="webserviceC.webserviceIDs.length"  -->
                                  <span ng-show="!webserviceC.webserviceIDs.length"> 
-                                      There are not any Web Service Tasks within this scenario.
+                                      There are no Web Service Tasks within this scenario.
                                  </span>
                             </div> <!-- END: tab-content -->
                         </div> <!-- END: tabs-left -->
@@ -267,5 +267,40 @@
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- 2. modal for showing successful update -->
+<div id="update-success" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Successful</h4>
+            </div>
+            <div class="modal-body">
+                <div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>
+           		The Web Service Task {{webserviceC.workingID}} was updated successfully. <br><button class="btn btn-success btn-circle" type="button"><i class="fa fa-check"></i></button>
+	   </div>
+		
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    $(function () {
+        $('.demo2').click(function(){
+            swal({
+                title: "Good job!",
+                text: "You clicked the button!",
+                type: "success"
+            });
+        });
+
+    });
+</script>
 
 

@@ -36,7 +36,7 @@
       </div> <!-- END: col-lg-6 -->
       
     <!--  Panel for ToDos -->
-    <div style="animation-delay: 0.6s;" class="col-lg-6 animated-panel zoomIn" ng-init="terminated = false">
+    <div style="animation-delay: 0.6s;" class="col-lg-6 animated-panel zoomIn" ng-init="todo_terminated = false">
           <div class="hpanel">
              <div class="panel-heading">
                 <div class="panel-tools">
@@ -44,8 +44,8 @@
                     <a class="closebox"><i class="fa fa-times"></i></a>
                 </div>
               <ul class="nav nav-tabs">
-                  <li class="active"><a aria-expanded="true" data-toggle="tab" ng-click="todo_terminated = false">Open Tasks</a></li>
-                  <li class=""><a aria-expanded="false" data-toggle="tab" ng-click="todo_terminated = true">Completed Task</a></li>
+                  <li ng-class="{active: todo_terminated==false}"><a aria-expanded="true" data-toggle="tab" ng-click="todo_terminated = false">Open Tasks</a></li>
+                  <li ng-class="{active: todo_terminated==true}"><a aria-expanded="false" data-toggle="tab" ng-click="todo_terminated = true">Completed Task</a></li>
               </ul> 
             </div>
             <div class="panel-body list">
@@ -128,24 +128,22 @@
     <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;" ng-init="logSelection = 'activities'">
         <div class="hpanel stats">
             <!-- Header of the Panel -->
-            <div class="panel-heading">
-                  <div class="pull-right">
-                      <a type="button" ng-click="logSelection = 'activities'" class="btn btn-default btn-xs">
-                          Activities
-                      </a>
-                      <a type="button" ng-click="logSelection = 'dataobject'" class="btn btn-default btn-xs">
-                          Dataobjects
-                      </a>
-                      <a type="button" ng-click="logSelection = 'attributes'" class="btn btn-default btn-xs">
-                          Attributes
-                      </a>
-                  </div>
-                  Activity Log
-              </div>
-             
-            <!-- Body of the Panel -->
+	 	<div class="panel-heading">
+		        <div class="panel-tools">
+		            <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+		            <a class="closebox"><i class="fa fa-times"></i></a>
+		        </div>
+		      <ul class="nav nav-tabs">
+		          <li ng-class="{active: logSelection=='activities'}"><a aria-expanded="true" data-toggle="tab" ng-click="logSelection = 'activities'">Activities</a></li>
+			<li ng-class="{active: logSelection=='dataobject'}"><a aria-expanded="true" data-toggle="tab" ng-click="logSelection = 'dataobject'">Dataobjects</a></li>
+			<li ng-class="{active: logSelection=='attributes'}"><a aria-expanded="true" data-toggle="tab" ng-click="logSelection = 'attributes'">Attributes</a></li>
+		      </ul> 
+		 </div> <!-- END: heading -->
+		<!-- Body of the Panel -->
             <div class="panel-body list">
-                <small class="fo">Here you find the log of {{logSelection}} for this instance.</small><br>
+                <div class="tab-content">
+
+		<small class="fo">Here you find the log of {{logSelection}} for this instance.</small><br>
                 <div class="animate-switch-container" ng-switch on="logSelection">
                     <!-- depending of the option of the dropdown: here display activity log -->
                     <div class="animate-switch" ng-switch-default>
@@ -185,6 +183,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
             <!-- Footer of the Panel -->

@@ -56,12 +56,12 @@
                                    <form name="myForm" ng-submit="mailC.submitMyForm()">
                                       <div class="responsive-table pull-left">
                                         <table class="table table-striped">
-                                            <thead>
+                                            <!--<thead>
                                             <tr>
                                                 <th>Field</th>
                                                 <th>Content</th>
                                             </tr>
-                                            </thead>
+                                            </thead>-->
                                             <tbody>
                                             <tr>
                                                 <td>Receiver</td>
@@ -77,7 +77,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Action</td>
-                                                <td><button type="submit" class="btn btn-success btn-xs">Change eMail Settings</button></td>
+                                                <td><button type="submit" data-toggle="modal" data-target="#update-success" class="btn btn-success btn-xs demo2">Change eMail Settings</button></td>
                                             </tbody>
                                         </table>
                                       </div>
@@ -140,7 +140,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-default demo2">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -152,4 +152,38 @@
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- 2. modal for showing successful update -->
+<div id="update-success" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Successful</h4>
+            </div>
+            <div class="modal-body">
+                <div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>
+           		The Mail Task {{mailC.workingID}} was updated successfully.<br><button class="btn btn-success btn-circle" type="button"><i class="fa fa-check"></i></button>
+	   </div>
+		
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+<script>
+    $(function () {
+        $('.demo2').click(function(){
+            swal({
+                title: "Good job!",
+                text: "You clicked the button!",
+                type: "success"
+            });
+        });
+
+    });
+</script>
