@@ -1,78 +1,131 @@
-<h2>{{scenarioCtrl.currentScenario['details']['name']}}</h2>
-
-<br>
-<div class="row">
-    <div class="pull-right">
-        <input ng-model="searchText" placeholder="SearchTerm">
-        <a type="button" data-toggle="modal" data-target="#createInstance" class="btn btn-success">
-            Start Instance
-        </a>
-        <!-- only provide the deletion feature for scenarios if there are not any instances available -->
-        <div ng-hide="scenarioCtrl.currentScenario['instances']['ids'].length">
-            <a type="button" data-toggle="modal" data-target="#deleteScenario" class="btn btn-danger">
-                <i class="fa fa-trash-o"></i>Delete Scenario
+<div class="normalheader transition animated fadeIn">
+    <div class="hpanel">
+        <div class="panel-body">
+            <a class="small-header-action" href="">
+                <div class="clip-header">
+                    <i class="fa fa-arrow-up"></i>
+                </div>
             </a>
+
+            <div id="hbreadcrumb" class="pull-right m-t-lg">
+                <ol class="hbreadcrumb breadcrumb">
+                    <li>
+                        <a href="index.html#/">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <span>Scenario {{scenarioCtrl.currentScenario['id']}} - {{scenarioCtrl.currentScenario['details']['name']}}</span>
+                    </li>
+                </ol>
+            </div>
+            <h2 class="font-light m-b-xs">
+                Scenario {{scenarioCtrl.currentScenario['details']['name']}}
+            </h2>
+       
         </div>
     </div>
-</div>
+</div> <!-- END: normalheader -->
+
+<div class="content animate-panel">
+
 <div class="row">
-    <!-- display Meta information about this scenario -->
-    <table>
-        <tr>
-            <th>ScenarioID</th>
-            <th>{{"# " + scenarioCtrl.currentScenario['id']}}</th>
-        </tr>
-        <tr>
-            <th>ScenarioName</th>
-            <th>{{scenarioCtrl.currentScenario['details']['name']}}</th>
-        </tr>
-        <tr>
-            <th>Amount of active Instances&nbsp;&nbsp;</th>
-            <th>{{scenarioCtrl.currentScenario['instances']['ids'].length}}</th>
-        </tr>
-        <tr>
-            <th>Termination Condition</th>
-            <th>
-                <button class="btn btn-info" type="button" data-toggle="modal" data-target="#terminationCondition">
-                    Info
-                </button>
-            </th>
-        </tr>
-		<tr>
-            <th>Average Duration</th>
-            <th>{{scenarioCtrl.currentScenario['duration']}}</th>
-		</tr>
-    </table>
-</div>
-<hr><br>
-<div class="row">
+
+  <!-- scenario details -->
+  <div style="animation-delay: 1.4s;" class="col-lg-6 animated-panel zoomIn">
+          <div class="hpanel">
+              <div class="panel-heading hbuilt">
+                  <div class="pull-right">
+                      <a type="button" data-toggle="modal" data-target="#createInstance" class="btn btn-success btn-xs">
+                          Start Instance
+                      </a>
+                      <!-- only provide the deletion feature for scenarios if there are not any instances available -->
+                      <span ng-hide="scenarioCtrl.currentScenario['instances']['ids'].length">
+                          <a type="button" data-toggle="modal" data-target="#deleteScenario" class="btn btn-danger btn-xs">
+                              <i class="fa fa-trash-o"></i>Delete Scenario
+                          </a>
+                      </span>
+                  </div>
+                  Scenario Details
+              </div>
+              <div class="panel-body">
+                  <!-- display Meta information about this scenario -->
+                  <div class="responsive-table pull-left">
+                        <table class="table table-striped">
+                          <tr>
+                              <th>Scenario ID</th>
+                              <th>{{"# " + scenarioCtrl.currentScenario['id']}}</th>
+                          </tr>
+                          <tr>
+                              <th>Scenario Name</th>
+                              <th>{{scenarioCtrl.currentScenario['details']['name']}}</th>
+                          </tr>
+                          <tr>
+                              <th>Amount of active Cases</th>
+                              <th>{{scenarioCtrl.currentScenario['instances']['ids'].length}}</th>
+                          </tr>
+                          <tr>
+                              <th>Termination Condition</th>
+                              <th>
+                                  <button class="btn btn-info btn-xs" type="button" data-toggle="modal" data-target="#terminationCondition">
+                                      Info
+                                  </button>
+                              </th>
+                          </tr>
+		                  <tr>
+                              <th>Average Duration</th>
+                              <th>{{scenarioCtrl.currentScenario['duration']}}</th>
+		                  </tr>
+                      </table>
+                  </div>
+              </div>
+              <div class="panel-footer"></div>
+          </div>
+      </div>
+    
     <!-- display a list of instances for this scenario -->
-    <div class="table-responsive" ng-controller="ScenarioInstanceController as instanceCtrl">
-        <table class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th>Instance #</th>
-                <th>Process name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">
-                <tr style="cursor: pointer"
-                    ng-repeat="(key, value) in instanceCtrl.scenario['instances']['labels'] track by $index"
-                    ng-show="!searchText || value.indexOf(searchText) > -1"
-                    ng-click="instanceCtrl.goToDetailsFrom(key);">
-                    <td>{{key}}</td>
-                    <td>{{value}}</td>
-                </tr>
-            </div>
-            <!-- Notify the user if there are not any instances -->
-            <div ng-show="instanceCtrl.scenario['instances']['labels'].length">
-                No items found
-            </div>
-            </tbody>
-        </table>
-    </div>
-</div>
+    <div style="animation-delay: 0.2s;" class="col-lg-6 animated-panel zoomIn">
+            <div class="hpanel">
+                <div class="panel-heading hbuilt">
+                    <div class="row">
+                        <div style="animation-delay: 1.6s;" class="col-md-6 animated-panel zoomIn">
+                             Overview of Instances
+                        </div>
+                        <div style="animation-delay: 1.7s;" class="col-md-6 animated-panel zoomIn">
+                            <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
+                        </div>
+                     </div> <!-- END: row -->
+                </div> <!-- END: panel heading -->
+                 
+                <div class="panel-body">
+                  <div class="table-responsive" ng-controller="ScenarioInstanceController as instanceCtrl">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Case Number</th>
+                                <th>Case Name</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <div ng-hide="instanceCtrl.scenario['instances']['labels'].length">
+                                <tr style="cursor: pointer"
+                                    ng-repeat="(key, value) in instanceCtrl.scenario['instances']['labels'] track by $index"
+                                    ng-show="!searchText || value.indexOf(searchText) > -1"
+                                    ng-click="instanceCtrl.goToDetailsFrom(key);">
+                                    <td>{{key}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            </div>
+                            <!-- Notify the user if there are not any instances -->
+                            <div ng-show="instanceCtrl.scenario['instances']['labels'].length">
+                                No items found
+                            </div>
+                            </tbody>
+                        </table>
+                    </div> <!-- END: div table responsive -->
+                </div> <!-- END: panel body -->
+                <div class="panel-footer"></div>
+            </div> <!-- END: hpanel -->
+        </div> <!-- END: col-lg-12 -->
+</div> <!-- END: row -->
 
 <!--___________________________________ MODALS ___________________________________-->
 <!-- modal for creating a new instance  -->
@@ -91,11 +144,8 @@
                     "{{scenarioCtrl.currentScenario['details']['name']}}"?</p>
                 <!-- give the user the possibility to name the new instance  -->
                 <!-- @TODO: this has to be improved for UIX -->
-                <form name="myForm" ng-submit="scenarioCtrl.submitNewInstanceNameForm()">
-                    <input type="text" ng-model="form.name">
-                    <span ng-show="form.name.$pending">tipping...</span>
-                    <button type="submit" class="btn btn-default">Name it!</button>
-                </form>
+                Name: <input type="text" ng-model="instanceName">
+
             </div>
             <!-- Footer of the Modal -->
             <div class="modal-footer">
