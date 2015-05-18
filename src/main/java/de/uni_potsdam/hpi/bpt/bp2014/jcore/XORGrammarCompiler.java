@@ -45,9 +45,8 @@ public class XORGrammarCompiler {
             XORGrammarParser.expr_return ret = parser.expr();
 
             //acquire parse result
-            CommonTree ast = (CommonTree) ret.tree;
             //printTree(ast);
-            return ast;
+            return (CommonTree) ret.tree;
         } catch (RecognitionException e) {
             throw new IllegalStateException("Recognition exception is never thrown, only declared.");
         }
