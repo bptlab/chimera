@@ -3,10 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -309,7 +306,7 @@ public class ExecutionService {
             }
         }
         Collection<ActivityInstance> activities = new LinkedList<>();
-        Collection<ActivityInstance> enabledActivities = allEnabledActivities;
+        List<ActivityInstance> enabledActivities = new LinkedList<>(allEnabledActivities);
         for (ActivityInstance activityInstance : allEnabledActivities) {
             if (!activities.contains(activityInstance)) {
                 Collection<ActivityInstance> references = this.getReferentialEnabledActivities(scenarioInstanceId, activityInstance.getControlNodeInstance_id());
@@ -722,8 +719,6 @@ public class ExecutionService {
      */
     public boolean testActivityInstanceExists(int activityID) {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        boolean activityExists = dbControlNodeInstance.existControlNodeInstance(activityID);
-
-        return activityExists;
+        return dbControlNodeInstance.existControlNodeInstance(activityID);
     }
 }
