@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InputSetTest {
+public class InputSetTest  {
 
     private Document document = new DocumentImpl();
     private List<Element> dataFlows;
@@ -19,6 +19,7 @@ public class InputSetTest {
     private Node activity;
     private List<InputSet> inputSets;
     private List<Node> dataNodes;
+
 
     @Before
     public void setUp() {

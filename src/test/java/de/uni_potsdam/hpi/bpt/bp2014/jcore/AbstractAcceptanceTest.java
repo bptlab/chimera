@@ -1,39 +1,18 @@
-package de.uni_potsdam.hpi.bpt.bp2014;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
-/**
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
 
 /**
- * An Abstract class for Rest Tests
+ * Created by jaspar.mang on 18.05.15.
  */
-public abstract class AbstractTest extends JerseyTest {
+public class AbstractAcceptanceTest {
     /**
      * The Database Seed file.
      */
@@ -42,8 +21,8 @@ public abstract class AbstractTest extends JerseyTest {
     /**
      * Sets up the database for RestTests.
      *
-     * @throws IOException  An Error while reading the SQL-File occurred.
-     * @throws SQLException An Error while executing the SQL-Script occurred.
+     * @throws java.io.IOException  An Error while reading the SQL-File occurred.
+     * @throws java.sql.SQLException An Error while executing the SQL-Script occurred.
      */
     @Before
     public void setUpDatabase() throws IOException, SQLException {

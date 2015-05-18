@@ -68,7 +68,7 @@ public class ActivityInstance extends ControlNodeInstance {
         this.label = dbControlNode.getLabel(controlNode_id);
         this.references = dbReference.getReferenceActivitiesForActivity(controlNode_id);
         scenarioInstance.getControlNodeInstances().add(this);
-        LinkedList<Integer> instance_ids = dbControlNodeInstance.getControlNodeInstanceIDs(controlNode_id,fragmentInstance_id);
+        LinkedList<Integer> instance_ids = dbControlNodeInstance.getControlNodeInstanceIDs(controlNode_id, fragmentInstance_id);
         boolean check;
         if (instance_id == -1) {
             check = !dbActivityInstance.getState(dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id)).equals("terminated");
@@ -77,16 +77,16 @@ public class ActivityInstance extends ControlNodeInstance {
         }
         if (dbControlNodeInstance.existControlNodeInstance(controlNode_id, fragmentInstance_id) && check) {
             //creates an existing Activity Instance using the database information
-            if(instance_id == -1) {
-            controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
+            if (instance_id == -1) {
+                controlNodeInstance_id = dbControlNodeInstance.getControlNodeInstanceID(controlNode_id, fragmentInstance_id);
             } else {
                 this.controlNodeInstance_id = instance_id;
             }
-                this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
+            this.stateMachine = new ActivityStateMachine(controlNodeInstance_id, scenarioInstance, this);
         } else {
             //creates a new Activity Instance also in database
 
-                this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
+            this.controlNodeInstance_id = dbControlNodeInstance.createNewControlNodeInstance(controlNode_id, "Activity", fragmentInstance_id);
 
             switch (dbControlNode.getType(controlNode_id)) {
                 case "EmailTask":
@@ -215,7 +215,6 @@ public class ActivityInstance extends ControlNodeInstance {
     // ************************************** Getter & Setter *************************//
 
     /**
-     *
      * @return
      */
     public TaskExecutionBehavior getTaskExecutionBehavior() {
@@ -223,7 +222,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public ScenarioInstance getScenarioInstance() {
@@ -231,7 +229,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public String getLabel() {
@@ -239,7 +236,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<Integer> getReferences() {
@@ -247,7 +243,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public boolean getIsAutomaticTask() {
@@ -255,7 +250,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @return
      */
     public boolean isAutomaticExecution() {
@@ -264,7 +258,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @param automaticExecution
      */
     public void setAutomaticExecution(boolean automaticExecution) {
@@ -273,7 +266,6 @@ public class ActivityInstance extends ControlNodeInstance {
     }
 
     /**
-     *
      * @param canTerminate
      */
     public void setCanTerminate(boolean canTerminate) {

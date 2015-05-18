@@ -6,7 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import org.junit.Test;
 
 /**
- * Created by jaspar.mang on 12.01.15.
+ *
  */
 public class DbDataFlowTest {
 

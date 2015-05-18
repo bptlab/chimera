@@ -26,13 +26,14 @@
                     });
 
                 this.getInstancesOfScenario = function (id) {
+                    var algorithm = "de.uni_potsdam.hpi.bpt.bp2014.janalytics.ExampleAlgorithm";
                     $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
                         success(function (data) {
                             controller.currentScenario['instances'] = data;
 							// ************** TODO: Make this pretty! **************//
-							$http.post(JEngine_Server_URL + '/JEngine/api/analytics/v2' + 					"/services/de.uni_potsdam.hpi.bpt.bp2014.janalytics.ExampleAlgorithm", {"args":[id]})
+							$http.post(JEngine_Server_URL + "/" + JAnalytics_REST_Interface + "/services/" + algorithm, {"args":[id]})
 								.success(function (data) {
-									$http.get(JEngine_Server_URL + '/JEngine/api/analytics/v2' + "/services/de.uni_potsdam.hpi.bpt.bp2014.janalytics.ExampleAlgorithm")
+									$http.get(JEngine_Server_URL + JAnalytics_REST_Interface + "/services/"+ algorithm)
 										.success(function (data) {
 											controller.currentScenario['duration'] = data['meanScenarioInstanceRuntime'];
 									})

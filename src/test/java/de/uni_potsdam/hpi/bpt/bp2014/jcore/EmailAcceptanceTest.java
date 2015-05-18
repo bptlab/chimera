@@ -1,18 +1,27 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.apache.commons.mail.EmailException;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.ws.rs.core.Application;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
+
 /**
  * ********************************************************************************
  * <p/>
@@ -34,14 +43,32 @@ import static org.junit.Assert.assertArrayEquals;
  * **********************************************************************************
  */
 
-public class EmailAcceptanceTest {
+public class EmailAcceptanceTest extends AbstractAcceptanceTest {
+
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+
+    /**
+     * Sets up the seed file for the test database.
+     */
+    static {
+        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    }
+
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
+
     String receiver = "bp2014w1@byom.de";
+
     @Before
     public void setUp() {
         //clear Mock JavaMail box
         Mailbox.clearAll();
-
     }
+
     //Email Test Scenario 142
     @Test
     public void testScenario142() throws MessagingException, IOException, EmailException {

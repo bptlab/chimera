@@ -52,7 +52,6 @@ public class EventIncomingControlFlowBehavior extends IncomingBehavior {
      */
 
     /**
-     *
      * @return
      */
     public String getType() {

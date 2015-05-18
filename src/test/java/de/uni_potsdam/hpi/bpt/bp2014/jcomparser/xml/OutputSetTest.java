@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class OutputSetTest {
+public class OutputSetTest{
 
     private Document document = new DocumentImpl();
     private List<Element> dataFlows;

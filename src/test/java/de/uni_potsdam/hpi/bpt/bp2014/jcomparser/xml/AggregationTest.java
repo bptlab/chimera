@@ -41,6 +41,7 @@ public class AggregationTest {
     private Element sourceDataClass;
     private Element targetDataClass;
 
+
     @Before
     public void setupAggregation(){
         aggregation = document.createElement("edge");

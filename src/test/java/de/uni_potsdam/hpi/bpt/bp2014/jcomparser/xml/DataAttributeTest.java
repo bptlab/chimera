@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 /**
  *
  */
-public class DataAttributeTest {
+public class DataAttributeTest  {
     private Document document = new DocumentImpl(null);
     private Element dataClass;
 

@@ -7,10 +7,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * Created by Ihdefix on 16.03.2015.
- */
-public class DataClassTest {
+
+public class DataClassTest  {
     private Document document = new DocumentImpl(null);
     private Element rootDataClass;
     private Element normalDataClass;

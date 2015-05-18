@@ -38,9 +38,9 @@ import java.sql.SQLException;
 public class RestTest extends AbstractTest {
     String serverURL = Settings.jcomparserServerUrl;
 
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2.sql";
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
     static {
-        String TEST_SQL_SEED_FILE = "src/main/resources/JEngineV2RESTTest.sql";
+        String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
     }
 
     @AfterClass

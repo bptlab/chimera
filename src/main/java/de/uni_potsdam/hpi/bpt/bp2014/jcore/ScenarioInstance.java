@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
 import java.util.HashMap;
@@ -431,7 +430,6 @@ public class ScenarioInstance {
 
 
     /**
-     *
      * @return
      */
     public int getScenarioInstance_id() {
@@ -439,7 +437,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public int getScenario_id() {
@@ -447,7 +444,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public String getName() {
@@ -455,7 +451,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getControlNodeInstances() {
@@ -463,7 +458,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getEnabledControlNodeInstances() {
@@ -471,7 +465,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
@@ -479,7 +472,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getDataEnabledControlNodeInstances() {
@@ -487,7 +479,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getRunningControlNodeInstances() {
@@ -495,7 +486,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getTerminatedControlNodeInstances() {
@@ -503,7 +493,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<DataObjectInstance> getDataObjectInstances() {
@@ -511,7 +500,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<DataObjectInstance> getDataObjectInstancesOnChange() {
@@ -519,7 +507,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<ControlNodeInstance> getReferentialRunningControlNodeInstances() {
@@ -527,7 +514,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public LinkedList<GatewayInstance> getExecutingGateways() {
@@ -535,7 +521,6 @@ public class ScenarioInstance {
     }
 
     /**
-     *
      * @return
      */
     public HashMap<Integer, DataAttributeInstance> getDataAttributeInstances() {

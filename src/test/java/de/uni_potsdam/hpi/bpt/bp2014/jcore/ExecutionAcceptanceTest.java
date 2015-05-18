@@ -1,9 +1,20 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -33,7 +44,22 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class ExecutionAcceptanceTest {
+public class ExecutionAcceptanceTest extends AbstractAcceptanceTest {
+
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+    /**
+     * Sets up the seed file for the test database.
+     */
+    static {
+        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    }
+
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    }
 
     /**
      * This test run scenario 2 from the database. It checks AND gateways and consistency.

@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.LinkedList;
 
 /**
- * Created by jaspar.mang on 12.01.15.
+ *
  */
 public class DbScenarioInstanceTest {
     @Test

@@ -43,7 +43,7 @@ import java.io.IOException;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DomainModel.class})
-public class DomainModelTest {
+public class DomainModelTest  {
     /**
      * This Method fetches the version from the PE-Server.
      */

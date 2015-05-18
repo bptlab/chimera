@@ -32,7 +32,7 @@ import java.util.List;
 
 
 public class ExampleAlgorithm implements AnalyticsService {
-    static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
+    static final Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
     /**
      * This Method calculates the mean runtime for all terminated instances of a scenario
