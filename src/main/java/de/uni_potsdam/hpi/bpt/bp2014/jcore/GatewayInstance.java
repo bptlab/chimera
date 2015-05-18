@@ -47,7 +47,7 @@ public class GatewayInstance extends ControlNodeInstance {
      */
     public GatewayInstance(int controlNode_id, int fragmentInstance_id, ScenarioInstance scenarioInstance) {
         //looks if the Gateway Instance has already been initialized
-        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
+        for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlFlowEnabledControlNodeInstances()) {
             if (controlNodeInstance.fragmentInstance_id == controlNodeInstance_id && controlNodeInstance.controlNode_id == controlNode_id) {
                 //if it exist, only checks the control flow
                 controlNodeInstance.incomingBehavior.enableControlFlow();
