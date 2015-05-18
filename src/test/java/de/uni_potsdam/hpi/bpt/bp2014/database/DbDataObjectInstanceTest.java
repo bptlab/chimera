@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,7 +10,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DbDataObjectInstanceTest extends AbstractAcceptanceTest  {
+public class DbDataObjectInstanceTest extends AbstractDatabaseDependendTest {
     @Test
     public void testExistDataObjectInstance(){
         DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();

@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
@@ -12,7 +12,7 @@ import java.sql.Statement;
 /**
  * Created by jaspar.mang on 18.05.15.
  */
-public class AbstractAcceptanceTest {
+public class AbstractDatabaseDependendTest {
     /**
      * The Database Seed file.
      */

@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +8,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DbControlNodeInstanceTest extends AbstractAcceptanceTest {
+public class DbControlNodeInstanceTest extends AbstractDatabaseDependendTest {
     @Test
     public void testExistControlNodeInstance(){
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();

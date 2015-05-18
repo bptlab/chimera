@@ -4,13 +4,12 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
  *
  */
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class DbGatewayInstanceTest extends AbstractAcceptanceTest {
+public class DbGatewayInstanceTest extends AbstractDatabaseDependendTest {
     @Test
     public void testGetType(){
         DbGatewayInstance gatewayInstance = new DbGatewayInstance();

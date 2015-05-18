@@ -2,14 +2,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import static org.junit.Assert.*;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
 import org.junit.Test;
 
 /**
  *
  */
-public class DbDataFlowTest extends AbstractAcceptanceTest {
+public class DbDataFlowTest extends AbstractDatabaseDependendTest {
 
     @Test
     public void testGetInputSetsForControlNode(){

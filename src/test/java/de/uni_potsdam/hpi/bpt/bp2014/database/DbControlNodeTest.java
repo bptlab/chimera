@@ -1,14 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractAcceptanceTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependendTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
  */
-public class DbControlNodeTest extends AbstractAcceptanceTest {
+public class DbControlNodeTest extends AbstractDatabaseDependendTest {
     @Test
     public void testGetStartEventID(){
         DbControlNode dbControlNode = new DbControlNode();
