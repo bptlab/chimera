@@ -77,14 +77,15 @@ public class FragmentInstance {
     private void initializeExistingNodeInstanceForFragment() {
         //initializes all Activity Instances in the database
         LinkedList<Integer> activities = dbControlNodeInstance.getActivitiesForFragmentInstanceID(fragmentInstance_id);
-        LinkedList<Integer> activityInstances = dbControlNodeInstance.getActivitiesInstanceForFragmentInstanceID(fragmentInstance_id);
+        LinkedList<Integer> activityInstances = dbControlNodeInstance.getActivityInstancesForFragmentInstanceID(fragmentInstance_id);
         for (int i = 0; activities.size() > i; i++) {
-            ActivityInstance activityInstance = new ActivityInstance(activities.get(i), fragmentInstance_id, scenarioInstance, activityInstances.get(i));
+            new ActivityInstance(activities.get(i), fragmentInstance_id, scenarioInstance, activityInstances.get(i));
         }
         //initializes all Gateway Instances in the database
         LinkedList<Integer> gateways = dbControlNodeInstance.getGatewaysForFragmentInstanceID(fragmentInstance_id);
-        for (int gateway : gateways) {
-            GatewayInstance gatewayInstance = new GatewayInstance(gateway, fragmentInstance_id, scenarioInstance);
+        LinkedList<Integer> gatewayInstances = dbControlNodeInstance.getGatewayInstancesForFragmentInstanceID(fragmentInstance_id);
+        for (int i = 0; gateways.size() > i; i++) {
+            new GatewayInstance(gateways.get(i), fragmentInstance_id, scenarioInstance, gatewayInstances.get(i));
         }
     }
 
@@ -103,7 +104,7 @@ public class FragmentInstance {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
-                controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance, -1);
+                controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
                 break;
             case "AND":
             case "XOR":

@@ -87,7 +87,7 @@ public class DbControlNodeInstance extends DbObject {
         return this.executeStatementReturnsListInt(sql, "controlnode_id");
     }
 
-    public LinkedList<Integer> getActivitiesInstanceForFragmentInstanceID(int fragmentInstance_id) {
+    public LinkedList<Integer> getActivityInstancesForFragmentInstanceID(int fragmentInstance_id) {
         String sql = "SELECT id FROM controlnodeinstance WHERE controlnodeinstance.Type = 'Activity' AND fragmentinstance_id = " + fragmentInstance_id;
         return this.executeStatementReturnsListInt(sql, "id");
     }
@@ -112,5 +112,10 @@ public class DbControlNodeInstance extends DbObject {
     public int getControlNodeID(int controlNodeInstanceID) {
         String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE id = " + controlNodeInstanceID;
         return this.executeStatementReturnsInt(sql, "controlnode_id");
+    }
+
+    public LinkedList<Integer> getGatewayInstancesForFragmentInstanceID(int fragmentInstance_id) {
+        String sql = "SELECT id FROM controlnodeinstance WHERE (controlnodeinstance.Type = 'AND' OR controlnodeinstance.Type = 'XOR') AND fragmentinstance_id = " + fragmentInstance_id;
+        return this.executeStatementReturnsListInt(sql, "id");
     }
 }

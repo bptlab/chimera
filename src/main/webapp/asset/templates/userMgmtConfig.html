@@ -1,20 +1,48 @@
-<h2>User Management</h2>
+<div class="normalheader transition animated fadeIn">
+    <div class="hpanel">
+        <div class="panel-body">
+            <a class="small-header-action" href="">
+                <div class="clip-header">
+                    <i class="fa fa-arrow-up"></i>
+                </div>
+            </a>
 
-<div class="row">
-    <div class="pull-right">
-        <input ng-model="searchText" placeholder="SearchTerm">
+            <div id="hbreadcrumb" class="pull-right m-t-lg">
+                <ol class="hbreadcrumb breadcrumb">
+                    <li>
+                        <a href="index.html#/">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <span>JUserManagement Control Panel</span>
+                    </li>
+                </ol>
+            </div>
+            <h2 class="font-light m-b-xs">
+                JUserManagement Control Panel
+            </h2>
+       
+        </div>
     </div>
-</div>
+</div> <!-- END: normalheader -->
+
+<div class="content animate-panel">
+
+
+
 <div class="row">
     <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
-            <div class="panel-heading">
-                <div class="panel-tools">
-                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                    <a class="closebox"><i class="fa fa-times"></i></a>
-                </div>
-                Role Management
-            </div>
+             <div class="panel-heading hbuilt">
+                    <div class="row">
+                        <div style="animation-delay: 1.6s;" class="col-md-6 animated-panel zoomIn">
+                              Role Management
+                        </div>
+                        <div style="animation-delay: 1.7s;" class="col-md-6 animated-panel zoomIn">
+                            <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
+                        </div>
+                     </div> <!-- END: row -->
+                </div> <!-- END: panel heading -->
+                
             <div class="panel-body list">
                 <div class="pull-right">
                     <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeRole(); userMgmtC.unsetWorkingID();"
@@ -57,13 +85,16 @@
     </div>
     <div class="col-lg-6 animated-panel zoomIn" style="animation-delay: 1.5s;">
         <div class="hpanel stats">
-            <div class="panel-heading">
-                <div class="panel-tools">
-                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                    <a class="closebox"><i class="fa fa-times"></i></a>
-                </div>
-                User Management
-            </div>
+              <div class="panel-heading hbuilt">
+                    <div class="row">
+                        <div style="animation-delay: 1.6s;" class="col-md-6 animated-panel zoomIn">
+                              User Management
+                        </div>
+                        <div style="animation-delay: 1.7s;" class="col-md-6 animated-panel zoomIn">
+                            <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
+                        </div>
+                     </div> <!-- END: row -->
+                </div> <!-- END: panel heading -->
             <div class="panel-body list">
                 <div class="pull-right">
                     <a type="button" data-toggle="modal" ng-click="userMgmtC.setTypeUser(); userMgmtC.unsetWorkingID();"

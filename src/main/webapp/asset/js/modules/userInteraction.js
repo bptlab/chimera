@@ -44,17 +44,6 @@
                         });
                 };
 
-                this.submitNewInstanceNameForm = function () {
-                    var data = $scope.form;
-                    $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/?", data).
-                        success(function (response) {
-                            $location.path("/scenario/" + $routeParams.id + "/instance/" + response['id']);
-                        }).
-                        error(function () {
-                            console.log('request failed');
-                        });
-                }
-
                 this.getTerminationConditionOfScenario = function (id) {
                     $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
                         success(function (data) {
@@ -132,13 +121,27 @@
 
                 // Creates a new instance of the scenario with the given Id
                 this.createInstance = function (id) {
-                    $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
-                        success(function (data) {
-                            $location.path("/scenario/" + id + "/instance/" + data['id']);
-                        }).
-                        error(function () {
-                            console.log('request failed');
-                        });
+	 	    //if name was set we are using the PUT call
+		    if($scope.instanceName){
+		            var data = "{\"name\":\""+$scope.instanceName+"\"}";
+				
+		            $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/", data).
+		                success(function (response) {
+		                    $location.path("/scenario/" + id + "/instance/" + response['id']);
+		                }).
+		                error(function () {
+		                    console.log('request failed');
+		                });
+		    // otherwise use the post with default name
+		    } else {
+		            $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
+		                success(function (data) {
+		                    $location.path("/scenario/" + id + "/instance/" + data['id']);
+		                }).
+		                error(function () {
+		                    console.log('request failed');
+		                });
+	 	     	     }
                 };
 
                 /* ____ BEGIN_INITIALIZATION ____ */
@@ -265,6 +268,8 @@
                     "/scenario/" + $routeParams.id + "/instance/" +
                     id + "/"
                 ).success(function (data) {
+                        instanceCtrl.instanceDetails['instance_name'] = data['name'];
+                        instanceCtrl.instanceDetails['scenario_id'] = $routeParams.id;
                         instanceCtrl.instanceDetails['id'] = id;
                         if ($routeParams.instanceId) {
                             instanceCtrl.initializeActivityInstances();
@@ -292,6 +297,16 @@
             this.getCurrentInstance = function () {
                 instanceCtrl.instanceDetails['id'] = $routeParams.instanceId;
             };
+            
+            this.getInstanceName = function (instanceID) {
+               $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + instanceID).
+                        success(function (data) {
+                            //return data['name'];
+                            instanceCtrl.instanceDetails['instance_name'] = data['name'];
+                        }).error(function () {
+                            console.log('request failed');
+                        });
+            }
 
             this.setAttribute = function (id, value, activityId) {
                 var data = {};

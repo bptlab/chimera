@@ -1,36 +1,152 @@
-<h2>webserviceConfig</h2>
-
-<!-- filtering scenarios  -->
-Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenarioIDs" ng-model="selectedScenario"
-                         data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)"></select>
-
-<!-- if a scenario is selected -> display all available webservice tasks within it -->
-<li ng-if="selectedScenario > 0">
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <caption>The following webservice tasks are currently available</caption>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Activity Name</th>
-                <th>Edit</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr style="cursor: pointer" ng-repeat="(key, value) in webserviceC.webserviceIDs">
-                <td>{{value}}</td>
-                <td>{{value}}</td>
-                <td><a type="button" class="btn btn-default" data-toggle="modal"
-                       data-target="{{'#editWebserviceConfig' + id}}"
-                       data-ng-click="webserviceC.getDetails(value, selectedScenario)">Show Details</a>
-
-                </td>
-            </tr>
+<div class="normalheader transition animated fadeIn">
+    <div class="hpanel">
+        <div class="panel-body">
+            <a class="small-header-action" href="">
+                <div class="clip-header">
+                    <i class="fa fa-arrow-up"></i>
+                </div>
             </a>
-            </tbody>
-        </table>
+
+            <div id="hbreadcrumb" class="pull-right m-t-lg">
+                <ol class="hbreadcrumb breadcrumb">
+                    <li>
+                        <a href="index.html#/">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <span>Web Service Task Configuration</span>
+                    </li>
+                </ol>
+            </div>
+            <h2 class="font-light m-b-xs">
+                Web Service Task Configuration
+            </h2>
+       
+        </div>
     </div>
-</li>
+</div> <!-- END: normalheader -->
+
+<div class="content animate-panel">
+
+<div class="row">
+<!-- filtering scenarios  -->
+    <div style="animation-delay: 0.2s;" class="col-lg-12 animated-panel zoomIn">
+            <div class="hpanel">
+              <div class="panel-heading hbuilt">
+                  <div class="pull-right">
+                      <select class="form-control m-b" data-ng-options="k as v for (k, v) in webserviceC.scenarioIDs" ng-model="selectedScenario"
+                         data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)">
+                          <option value="">Select Scenario</option>
+                         </select>
+                      </span>
+                  </div>
+                  Web Service Tasks
+              </div> <!-- END: panel-heading hbuilt-->
+              
+              <div class="panel-body">
+              <!-- if a scenario is selected -> display all available mail tasks within it -->
+                 <div ng-if="selectedScenario">     
+                      <div class="tabs-left">
+                            <ul class="nav nav-tabs">
+                                <li class="active" ng-repeat="(key, value) in webserviceC.webserviceIDs">
+                                    <a data-toggle="tab" ng-click="webserviceC.getDetails(value, selectedScenario)"> {{value}}</a>
+                                </li>          
+                            </ul>
+                            <div class="tab-content ">
+                                 <span ng-show="webserviceC.webserviceIDs.length"> 
+                                  <h3>Web Service Task - {{webserviceC.workingID}}</h3>
+                                     <!-- display details for the webservice tasks with the possibility to update them -->
+                                        <form name="myForm" ng-submit="webserviceC.submitMyForm()">
+                                           <!--<div class="responsive-table pull-left">-->
+                                            <table class="table table-striped" style="width:50%" >
+                                                <thead>
+                                                <tr>
+                                                    <th>Field</th>
+                                                    <th>Content</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>Method</td>
+                                                    <td>
+                                                        <select ng-model="form.method"
+                                                                ng-options="item for item in ['GET','POST','PUT']"></select> <br>
+
+                                                        <div ng-if="form.method.null">
+                                                            <font color="red"><i>please be sure to set a correct HTTP method</i></font>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Link</td>
+                                                    <td><input type="text" ng-model="form.link" size="50"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Request Body</td>
+                                                    <td><input type="text" ng-model="form.body" size="50"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Data Attribute</td>
+                                                    <td>
+                                                        <!-- provide the possibility to select an data attribute for which new attributes are supposed to be created -->
+                                                        <select class="form-control m-b" ng-model="searchAttribute"
+                                                                ng-options="k as v for (k, v) in webserviceC.detailsForID['allAttributes']">
+                                                            <option value="">Select Attribute</option>
+                                                        </select>
+                                                        <!-- provide the option to empty the array with attributes -->
+                                                        <a type="button" class="btn btn-success btn-xs"
+                                                           ng-click="webserviceC.addAttribute(searchAttribute)">Add</a>
+                                                        <a ng-click="form.attributes.length = 0; form.attributes = []; $scope.$apply();" class="btn btn-danger btn-xs">Empty</a>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                         <!-- </div> --><!-- END: class="responsive-table pull-left" -->
+                                            <!-- if attribute array contain items -> display them -->
+                                            <div ng-show="NgRepeatAttributeArray.length">
+                                             <h4>JSON Attributes</h4>
+                                                <div ng-show="searchAttribute">
+                                                    <!--<div class="table-responsive">-->
+                                                        <table class="table table-striped table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Key</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr style="cursor: pointer"
+                                                                ng-repeat="attribute in NgRepeatAttributeArray | filter:searchAttribute track by $index">
+                                                                <td>{{attribute['array_key']}}</td>
+                                                                <td>
+                                                                    <input type="text" ng-name="attribute_key"
+                                                                           ng-model="form.attributes[attribute['array_key']]['key']">
+                                                                    <span ng-show="form.attribute_key.$pending">tipping...</span>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                  <!--  </div>-->
+                                                </div> <!-- END: ng-show="searchAttribute"-->
+                                            </div> <!-- END: ng-show="NgRepeatAttributeArray.length" -->
+                                            <button type="submit" data-toggle="modal" data-target="#update-success" class="btn btn-default">Update Settings</button>
+                                        </form>
+                                 </span> <!-- END: ng-show="webserviceC.webserviceIDs.length"  -->
+                                 <span ng-show="!webserviceC.webserviceIDs.length"> 
+                                      There are no Web Service Tasks within this scenario.
+                                 </span>
+                            </div> <!-- END: tab-content -->
+                        </div> <!-- END: tabs-left -->
+                    </div>  <!-- END:  ng-if="selectedScenario" -->
+                    <div ng-if="!selectedScenario"> 
+                        Please select a scenario in the upper right corner.
+                    </div>
+                </div> <!-- END: panel body -->
+                <div class="panel-footer"></div>
+            </div> <!-- END: hpanel -->
+        </div> <!-- END: col-lg-12 -->
+        
+</div> <!-- END: row -->
 
 <!-- ___________________________ modals ___________________________ -->
 
@@ -151,5 +267,40 @@ Select Scenario: <select data-ng-options="id as id for id in webserviceC.scenari
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- 2. modal for showing successful update -->
+<div id="update-success" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Successful</h4>
+            </div>
+            <div class="modal-body">
+                <div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>
+           		The Web Service Task {{webserviceC.workingID}} was updated successfully. <br><button class="btn btn-success btn-circle" type="button"><i class="fa fa-check"></i></button>
+	   </div>
+		
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    $(function () {
+        $('.demo2').click(function(){
+            swal({
+                title: "Good job!",
+                text: "You clicked the button!",
+                type: "success"
+            });
+        });
+
+    });
+</script>
 
 

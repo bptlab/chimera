@@ -57,6 +57,26 @@
                             console.log('request failed');
                         });
                 };
+
+		this.isEmpty = function (obj) {
+
+		    // null and undefined are "empty"
+		    if (obj == null) return true;
+
+		    // Assume if it has a length property with a non-zero value
+		    // that that property is correct.
+		    if (obj.length > 0)    return false;
+		    if (obj.length === 0)  return true;
+
+		    // Otherwise, does it have any properties of its own?
+		    // Note that this doesn't handle
+		    // toString and valueOf enumeration bugs in IE < 9
+		    for (var key in obj) {
+			if (hasOwnProperty.call(obj, key)) return false;
+		    }
+
+		    return true;
+		}
             }]
     );
 
@@ -74,7 +94,7 @@
                 //requesting initially all available scenarios
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function (data) {
-                        controller.scenarioIDs = data['ids'];
+                        controller.scenarioIDs = data['labels'];
 
                     }).
                     error(function () {
@@ -85,7 +105,14 @@
                 this.submitMyForm = function () {
                     //using the data set in the form as request content
                     var data = $scope.form;
-                    $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data);
+                    $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data).
+                        success(function (data) {
+                                controller.loadData();
+                            }).
+                            error(function () {
+                                console.log('request failed');
+                            });
+                    
                 }
 
                 //get all infos for popup
@@ -101,6 +128,10 @@
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").
                         success(function (data) {
                             controller.emailtaskIDs = data['ids'];
+                            //if the emailtaskIDs array is not empty, prefetch the first item details
+                            if(controller.emailtaskIDs.length > 0){
+                               controller.getDetails(controller.emailtaskIDs[0], id);
+                            }
                         }).
                         error(function () {
                             console.log('request failed');
@@ -145,7 +176,7 @@
                 //requesting initially all available scenarios
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
                     success(function (data) {
-                        webserviceC.scenarioIDs = data['ids'];
+                        webserviceC.scenarioIDs = data['labels'];
 
                     }).
                     error(function () {
@@ -201,6 +232,10 @@
                     $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/webservice/").
                         success(function (data) {
                             webserviceC.webserviceIDs = data['ids'];
+                            //if the emailtaskIDs array is not empty, prefetch the first item details
+                            if(webserviceC.webserviceIDs.length > 0){
+                               webserviceC.getDetails(webserviceC.webserviceIDs[0], id);
+                            }
                         }).
                         error(function () {
                             console.log('request failed');
@@ -231,7 +266,6 @@
                                     $scope.NgRepeatAttributeArray[key] = value;
                                 });
                             }
-
                             webserviceC.getDifferentDataattributes();
                         });
                 };
