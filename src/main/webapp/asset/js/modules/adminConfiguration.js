@@ -50,6 +50,15 @@
                     $http.post(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/launch/" + id).
                         success(function (data) {
                             if (data) {
+				//applying update also to database so we display the new scenarios
+				$http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
+				    success(function (data) {
+					controller.scenarioDetails = data['ids'];
+				    }).
+				    error(function () {
+					console.log('request failed');
+				    });
+				//return the new 
                                 return data;
                             }
                         }).
