@@ -43,7 +43,7 @@ import static org.junit.Assert.assertArrayEquals;
  * **********************************************************************************
  */
 
-public class EmailAcceptanceTest extends AbstractTest {
+public class EmailAcceptanceTest extends AbstractAcceptanceTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
 
@@ -59,11 +59,6 @@ public class EmailAcceptanceTest extends AbstractTest {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
-
-    @Override
-    protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface.class);
     }
 
     String receiver = "bp2014w1@byom.de";
