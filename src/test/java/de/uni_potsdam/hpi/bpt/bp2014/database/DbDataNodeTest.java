@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DbDataNodeTest {
+public class DbDataNodeTest extends AbstractDatabaseDependentTest {
     @Test
     public void testGetDataObjectIdsForDataSets(){
         DbDataNode dbDataNode = new DbDataNode();
