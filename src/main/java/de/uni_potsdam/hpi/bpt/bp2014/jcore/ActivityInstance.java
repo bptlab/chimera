@@ -110,6 +110,9 @@ public class ActivityInstance extends ControlNodeInstance {
         this.initActivityInstance();
     }
 
+    /**
+     * Initialize other information for the instance.
+     */
     private void initActivityInstance(){
         this.canTerminate = dbActivityInstance.getCanTerminate(controlNodeInstance_id);
         this.automaticExecution = dbActivityInstance.getAutomaticExecution(controlNodeInstance_id);
