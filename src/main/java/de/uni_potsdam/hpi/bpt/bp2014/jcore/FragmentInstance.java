@@ -103,7 +103,7 @@ public class FragmentInstance {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
-                controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance, -1);
+                controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
                 break;
             case "AND":
             case "XOR":
