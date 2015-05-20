@@ -33,6 +33,9 @@ import java.util.Map;
  * **********************************************************************************
  */
 
+/**
+ *
+ */
 public class MetaAnalyticsModel {
     static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
@@ -84,8 +87,7 @@ public class MetaAnalyticsModel {
 
     /**
      * @param scenario_id The ID of the scenario.
-     * @param scenario_id
-     * @return
+     * @return a List
      */
     public static List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps> getScenarioInstancesForScenario(int scenario_id) {
         String sql = "SELECT scenarioinstance.id FROM scenarioinstance WHERE scenarioinstance.terminated = 1 AND scenarioinstance.scenario_id = " + scenario_id;
@@ -121,7 +123,7 @@ public class MetaAnalyticsModel {
 
     /**
      * @param sql  the sql statement which is supposed to be executed
-     * @param keys
+     * @param keys for select statement
      * @return a map of maps with keys
      */
     public static Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {

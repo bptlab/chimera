@@ -1,19 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * ********************************************************************************
@@ -41,6 +28,9 @@ import java.util.List;
 As a part of the JComparser we need to provide a manual XML File upload.
  */
 
+/**
+ * TODO: do we want to delete this?
+ */
 public class FileUpload extends HttpServlet {
 
  /*

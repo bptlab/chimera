@@ -23,7 +23,7 @@ import org.json.JSONObject;
  */
 
 /**
- * Interface for all analytic algorithms.
+ * Interface for all analytic algorithms as controller
  */
 public interface AnalyticsService {
     /**

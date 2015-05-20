@@ -24,7 +24,7 @@ import java.util.Map;
  */
 
 /**
- *
+ * This class represents the Model within the analytics framework
  */
 public class AnalyticsModel extends MetaAnalyticsModel {
 

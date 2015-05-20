@@ -40,6 +40,8 @@ import java.util.HashMap;
  * As a part of the JComparser we need to provide a REST API.
  * The REST API provides an Interface to to manage changes
  * or updates in the JEngine Database.
+ *
+ * TODO: why doesnt the jcomparser REST have a version in the path?
  */
 
 @Path("jcomparser")
