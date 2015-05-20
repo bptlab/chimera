@@ -7,17 +7,32 @@ import java.util.Map;
 
 public class DbWebServiceTask extends DbObject {
 
-
+    /**
+     * Returns the Link for the webservice task
+     * @param controlNode_id The controlnode_id of the webservice task.
+     * @return a String with the url.
+     */
     public String getLinkForControlNode(int controlNode_id) {
         String sql = "SELECT link FROM webservicetasklink WHERE controlnode_id = " + controlNode_id;
         return this.executeStatementReturnsString(sql, "link");
     }
 
+    /**
+     * Get a List with all ids from the attributes which get changed by the webservice task.
+     * @param controlNode_id The controlnode_id of the webservice task.
+     * @return a List with all Attribute ids for the webservice task.
+     */
     public LinkedList<Integer> getAttributeIdsForControlNode(int controlNode_id) {
         String sql = "SELECT DISTINCT dataattribute_id FROM `webservicetaskattribute` WHERE `controlnode_id` = " + controlNode_id;
         return this.executeStatementReturnsListInt(sql, "dataattribute_id");
     }
 
+    /**
+     * Get the keys for the JSON for a webservice task and a data attribute.
+     * @param controlNode_id The controlnode_id of the webservice task.
+     * @param dataattribute_id The id of the data attribute.
+     * @return a List of the keys for the JSON
+     */
     public LinkedList<String> getKeys(int controlNode_id, int dataattribute_id) {
         String sql = "SELECT `key` FROM `webservicetaskattribute` WHERE `controlnode_id` = " + controlNode_id + " AND `dataattribute_id` = " + dataattribute_id + " ORDER BY `order` ASC";
         return this.executeStatementReturnsListString(sql, "key");
@@ -88,11 +103,21 @@ public class DbWebServiceTask extends DbObject {
         return executeStatementReturnsHashMap(sql);
     }
 
+    /**
+     * Get the method GET/PUT/POST.
+     * @param controlNode_id The controlnode_id of the webservice task.
+     * @return a String whith GET/PUT/POST.
+     */
     public String getMethod(int controlNode_id) {
         String sql = "SELECT method FROM webservicetasklink WHERE `controlnode_id` = " + controlNode_id;
         return this.executeStatementReturnsString(sql, "method");
     }
 
+    /**
+     * Returns the JSON String for the POST/PUT.
+     * @param controlNode_id The controlnode_id of the webservice task.
+     * @return The JSON String for the POST/PUT.
+     */
     public String getPOST(int controlNode_id) {
         String sql = "SELECT post FROM webservicetaskpost WHERE `controlnode_id` = " + controlNode_id;
         return this.executeStatementReturnsString(sql, "post");
@@ -134,6 +159,10 @@ public class DbWebServiceTask extends DbObject {
         return executeStatementReturnsMap(sql, "id", "name");
     }
 
+    /**
+     * Deletes all Attribute entries for the webservice Task.
+     * @param webserviceID The controlnode_id of the webservice task.
+     */
     public void deleteAllAttributes(int webserviceID) {
         String sql = "DELETE FROM webservicetaskattribute WHERE controlnode_id = " + webserviceID;
         executeUpdateStatement(sql);
