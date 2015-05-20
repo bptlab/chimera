@@ -1,19 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.apache.commons.mail.EmailException;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -41,6 +36,9 @@ import static org.junit.Assert.assertArrayEquals;
  * **********************************************************************************
  */
 
+/**
+ * TODO: comments are missing!!
+ */
 public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
 
     String receiver = "bp2014w1@byom.de";

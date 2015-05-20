@@ -20,6 +20,10 @@ import static org.junit.Assert.assertEquals;
 
 //This class extends JerseyTest, because it's need the Rest Interface to check the Webservice Task functions.
 //The GET, PUT and POST Requests are send to the Rest Interface.
+
+/**
+ * TODO: comments are missing!!
+ */
 public class WebServiceAcceptanceTest extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";

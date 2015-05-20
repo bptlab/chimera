@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  */
 
 /**
- *
+ * TODO: comments are missing!!
  */
 public class NodeTest {
     private Document document = new DocumentImpl(null);
@@ -43,7 +43,9 @@ public class NodeTest {
     private Element andNode;
 
 
-
+    /**
+     *
+     */
     @Before
     public void setUpDataObject() {
         dataNode = document.createElement("node");
@@ -54,6 +56,9 @@ public class NodeTest {
         dataNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpGlobalTask() {
         activityGlobalNode = document.createElement("node");
@@ -64,6 +69,9 @@ public class NodeTest {
         activityGlobalNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpLocalTask() {
         activityLocalNode = document.createElement("node");
@@ -74,6 +82,9 @@ public class NodeTest {
         activityLocalNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpSendTask(){
         activitySendNode = document.createElement("node");
@@ -84,6 +95,9 @@ public class NodeTest {
         activitySendNode.appendChild(createProperty("stereotype", "SEND"));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpServiceTask(){
         serviceTask = document.createElement("node");
@@ -94,6 +108,9 @@ public class NodeTest {
         serviceTask.appendChild(createProperty("stereotype", "SERVICE"));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpStartEventNode() {
         startEventNode = document.createElement("node");
@@ -103,6 +120,9 @@ public class NodeTest {
         startEventNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpEndEventNode() {
         endEventNode = document.createElement("node");
@@ -112,6 +132,9 @@ public class NodeTest {
         endEventNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpXorNode() {
         xorNode = document.createElement("node");
@@ -121,6 +144,9 @@ public class NodeTest {
         xorNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     */
     @Before
     public void setUpAndNode() {
         andNode = document.createElement("node");
@@ -130,6 +156,12 @@ public class NodeTest {
         andNode.appendChild(createProperty("stereotype", ""));
     }
 
+    /**
+     *
+     * @param name
+     * @param value
+     * @return
+     */
     private Element createProperty(String name, String value) {
         if (null == document) {
             return null;
@@ -140,6 +172,9 @@ public class NodeTest {
         return property;
     }
 
+    /**
+     *
+     */
     @Test
     public void testGlobalActivityDeserialization() {
         Node activity = new Node();
@@ -153,6 +188,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "", activity.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testLocalActivityDeserialization() {
         Node activity = new Node();
@@ -166,6 +204,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "", activity.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testSendActivityDeserialization() {
         Node activity = new Node();
@@ -179,6 +220,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "SEND", activity.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testServiceTaskDeserialization() {
         Node activity = new Node();
@@ -192,6 +236,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "SERVICE", activity.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testStartEventyDeserialization() {
         Node startEvent = new Node();
@@ -204,6 +251,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "", startEvent.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testEndEventDeserialization() {
         Node endEvent = new Node();
@@ -216,6 +266,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "", endEvent.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testXorDeserialization() {
         Node xor = new Node();
@@ -228,6 +281,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "", xor.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testAndDeserialization() {
         Node and = new Node();
@@ -240,6 +296,9 @@ public class NodeTest {
         Assert.assertEquals("The stereotype is not set correctly", "", and.getStereotype());
     }
 
+    /**
+     *
+     */
     @Test
     public void testDataObject() {
         Node data = new Node();

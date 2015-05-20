@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Created by jaspar.mang on 18.05.15.
+ *
  */
 public class AbstractDatabaseDependentTest {
     /**

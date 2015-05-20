@@ -5,20 +5,31 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * TODO: comments are missing!!
  */
 public class DbControlNodeTest extends AbstractDatabaseDependentTest {
+    /**
+     *
+     */
     @Test
     public void testGetStartEventID(){
         DbControlNode dbControlNode = new DbControlNode();
         assertEquals(1, dbControlNode.getStartEventID(1));
     }
+
+    /**
+     *
+     */
     @Test
      public void testGetType(){
         DbControlNode dbControlNode = new DbControlNode();
         assertEquals("Startevent", dbControlNode.getType(1));
         assertEquals("Activity", dbControlNode.getType(2));
     }
+
+    /**
+     *
+     */
     @Test
     public void testGetLabel(){
         DbControlNode dbControlNode = new DbControlNode();

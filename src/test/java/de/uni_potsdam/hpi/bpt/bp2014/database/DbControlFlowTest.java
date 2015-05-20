@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 /**
- *
+ * TODO: comments are missing!!
  */
 public class DbControlFlowTest extends AbstractDatabaseDependentTest {
     @Test

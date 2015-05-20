@@ -6,9 +6,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * TODO: comments are missing!!
  */
 public class DbControlNodeInstanceTest extends AbstractDatabaseDependentTest {
+    /**
+     *
+     */
     @Test
     public void testExistControlNodeInstance(){
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
@@ -18,11 +21,19 @@ public class DbControlNodeInstanceTest extends AbstractDatabaseDependentTest {
         assertFalse(dbControlNodeInstance.existControlNodeInstance(3, 999));
         assertFalse(dbControlNodeInstance.existControlNodeInstance(999, 999));
     }
+
+    /**
+     *
+     */
     @Test
     public void testGetControlNodeInstanceID() {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         assertEquals(178, dbControlNodeInstance.getControlNodeInstanceID(4, 168));
     }
+
+    /**
+     *
+     */
     @Test
     public void testGetActivitiesForFragmentInstanceID() {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();

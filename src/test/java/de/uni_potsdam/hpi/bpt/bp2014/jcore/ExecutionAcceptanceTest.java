@@ -1,17 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import org.junit.AfterClass;
 import org.junit.Test;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 

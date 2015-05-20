@@ -35,6 +35,9 @@ import java.sql.SQLException;
  * **********************************************************************************
  */
 
+/**
+ * TODO: delete?
+ */
 public class RestTest extends AbstractTest {
     String serverURL = Settings.jcomparserServerUrl;
 

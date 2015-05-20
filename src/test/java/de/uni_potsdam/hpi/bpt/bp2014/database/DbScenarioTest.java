@@ -1,17 +1,19 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import static org.junit.Assert.*;
-
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 
 import java.util.LinkedList;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- *
+ * TODO: comments are missing!!
  */
 public class DbScenarioTest extends AbstractDatabaseDependentTest {
-
+    /**
+     *
+     */
     @Test
     public void testGetScenarioIDs() {
         DbScenario dbScenario = new DbScenario();

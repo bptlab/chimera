@@ -133,6 +133,7 @@ public class DomainModelTest  {
             e.printStackTrace();
         }
     }
+
     /**
      * This method checks if the version has been set correctly.
      */

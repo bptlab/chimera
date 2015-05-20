@@ -42,7 +42,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 /**
- *
+ * TODO: delete?
  */
 //@RunWith(PowerMockRunner.class)
 @PrepareForTest(JComparser.class)

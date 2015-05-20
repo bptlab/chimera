@@ -1,20 +1,26 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import static org.junit.Assert.*;
-
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- *
+ * TODO: comments are missing!!
  */
 public class DbActivityInstanceTest extends AbstractDatabaseDependentTest {
-
+    /**
+     *
+     */
     @Test
     public void testGetState(){
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
         assertEquals("ready", dbActivityInstance.getState(77));
     }
+
+    /**
+     *
+     */
     @Test
     public void testSetState() {
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
@@ -22,6 +28,9 @@ public class DbActivityInstanceTest extends AbstractDatabaseDependentTest {
         assertEquals("terminated", dbActivityInstance.getState(91));
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetTerminatedActivitiesForScenarioInstance(){
         DbActivityInstance dbActivityInstance = new DbActivityInstance();

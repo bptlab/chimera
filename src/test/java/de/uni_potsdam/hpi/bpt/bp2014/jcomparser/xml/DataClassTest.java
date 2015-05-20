@@ -7,7 +7,9 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
+/**
+ *  TODO: comments are missing!!
+ */
 public class DataClassTest  {
     private Document document = new DocumentImpl(null);
     private Element rootDataClass;

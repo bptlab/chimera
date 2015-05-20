@@ -32,7 +32,7 @@ import java.util.Map;
  */
 
 /**
- *
+ *   TODO: comments are missing!!
  */
 public class AggregationTest {
     private Document document = new DocumentImpl(null);

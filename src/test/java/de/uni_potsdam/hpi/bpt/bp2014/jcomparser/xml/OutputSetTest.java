@@ -11,8 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * TODO: comments are missing!!
+ */
 public class OutputSetTest{
-
+    /**
+     *
+     */
     private Document document = new DocumentImpl();
     private List<Element> dataFlows;
     private List<Edge> dataFlowEdges;
@@ -20,6 +25,9 @@ public class OutputSetTest{
     private List<OutputSet> outputSets;
     private List<Node> dataNodes;
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         setUpDataFlows();
@@ -27,6 +35,9 @@ public class OutputSetTest{
         setUpNodes();
     }
 
+    /**
+     *
+     */
     private void setUpDataFlows() {
         dataFlows = new ArrayList<>();
         Element dataFlow = document.createElement("edge");
@@ -45,6 +56,9 @@ public class OutputSetTest{
         dataFlows.add(dataFlow);
     }
 
+    /**
+     *
+     */
     public void setUpEdges() {
         dataFlowEdges = new ArrayList<Edge>();
         for (Element dataFlow : dataFlows) {
@@ -54,6 +68,9 @@ public class OutputSetTest{
         }
     }
 
+    /**
+     *
+     */
     public void setUpNodes() {
         HashMap<Long, Node> nodes = new HashMap<Long, Node>();
         dataNodes = new ArrayList<>();
@@ -79,10 +96,16 @@ public class OutputSetTest{
         }
     }
 
+    /**
+     *
+     */
     public void setUpOutputSet() {
         outputSets = OutputSet.createOutputSetForTaskAndEdges(activity, dataFlowEdges);
     }
 
+    /**
+     *
+     */
     @Test
     public void testOneOutputSet() {
         dataNodes.get(0).setText("DO");
@@ -102,6 +125,9 @@ public class OutputSetTest{
         Assert.assertTrue("Something went wrong saving the outputset", outputSets.get(0).save() > 0);
     }
 
+    /**
+     *
+     */
     @Test
     public void testTwoOutputSets() {
         dataNodes.get(0).setText("DO");
@@ -133,6 +159,12 @@ public class OutputSetTest{
         Assert.assertTrue("Something went wrong saving the outputset", outputSets.get(1).save() > 0);
     }
 
+    /**
+     *
+     * @param name
+     * @param value
+     * @return
+     */
     private Element createProperty(String name, String value) {
         if (null == document) {
             return null;
