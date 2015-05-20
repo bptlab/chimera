@@ -107,7 +107,6 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
                             jsonContent = null;
                             isJSONArray = true;
                         }
-
                     }
                 }
             }

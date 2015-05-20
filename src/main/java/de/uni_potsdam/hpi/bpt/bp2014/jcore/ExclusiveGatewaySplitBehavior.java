@@ -113,7 +113,6 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     }
 
     private void setAutomaticExecutionToFalse(String type, ControlNodeInstance controlNodeInstance) {
-        //TODO type
         switch (type) {
             case "Activity":
             case "EmailTask":
