@@ -35,7 +35,6 @@
                         success(function (data) {
                             // "persisting" data within stable environment
                             controller.currentScenario['instances'] = data;
-                            // ************** TODO: Make this pretty! **************//
                             // initializing execution of specified algorithm
                             $http.post(JEngine_Server_URL + "/" + JAnalytics_REST_Interface + "/services/" + algorithm, {"args": [id]})
                                 .success(function (data) {
