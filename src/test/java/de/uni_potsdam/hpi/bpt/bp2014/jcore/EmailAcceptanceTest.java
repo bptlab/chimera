@@ -37,10 +37,12 @@ import static org.junit.Assert.assertArrayEquals;
  */
 
 /**
- * TODO: comments are missing!!
+ * Test the function of the email tasks.
  */
 public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
-
+    /**
+     * Receiver of the emails.
+     */
     String receiver = "bp2014w1@byom.de";
 
     @Before
@@ -49,7 +51,9 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         Mailbox.clearAll();
     }
 
-    //Email Test Scenario 142
+    /**
+     * Email Test Scenario 142.
+     */
     @Test
     public void testScenario142() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
@@ -83,7 +87,13 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Test Message", inbox.get(1).getContent());
     }
 
-    //Email Test Scenario 141
+    /**
+     * Email Test Scenario 141.
+     *
+     * @throws MessagingException
+     * @throws IOException
+     * @throws EmailException
+     */
     @Test
     public void testScenario141() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
@@ -122,7 +132,13 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Test Message", inbox.get(3).getContent());
     }
 
-    //Email Test Scenario 145, XOR e-mail test
+    /**
+     * Email Test Scenario 145, XOR e-mail test.
+     *
+     * @throws MessagingException
+     * @throws IOException
+     * @throws EmailException
+     */
     @Test
     public void testScenario145() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
@@ -174,7 +190,13 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Test Message", inbox.get(0).getContent());
     }
 
-    //Email Test Scenario 146, XOR e-mail test
+    /**
+     * Email Test Scenario 146, XOR e-mail test.
+     *
+     * @throws MessagingException
+     * @throws IOException
+     * @throws EmailException
+     */
     @Test
     public void testScenario146() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();
@@ -230,7 +252,13 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
 
     }
 
-    //Email Test Scenario 151
+    /**
+     * Email Test Scenario 151.
+     *
+     * @throws MessagingException
+     * @throws IOException
+     * @throws EmailException
+     */
     @Test
     public void testScenario151() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = new ExecutionService();

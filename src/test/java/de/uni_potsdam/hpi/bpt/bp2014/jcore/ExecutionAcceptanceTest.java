@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
  */
 
 /**
- *
+ * Acceptance tests for the jcore.
  */
 public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
 
@@ -472,7 +472,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    //Email Test Scenario 145, XOR test
+    /**
+     * Email Test Scenario 145, XOR test
+     */
     @Test
     public void testScenario145() {
         ExecutionService executionService = new ExecutionService();
@@ -618,7 +620,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    //test scenario 144, xor test
+    /**
+     * Test scenario 144, xor test
+     */
     @Test
     public void testScenario144() {
         ExecutionService executionService = new ExecutionService();
@@ -660,7 +664,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    //test scenario 144_2, xor test
+    /**
+     * test scenario 144_2, xor test
+     */
     @Test
     public void testScenario144_2() {
         ExecutionService executionService = new ExecutionService();
@@ -702,7 +708,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    //test scenario 154, complex xor test, test data object state and default
+    /**
+     * test scenario 154, complex xor test, test data object state and default
+     */
     @Test
     public void testScenario154() {
         ExecutionService executionService = new ExecutionService();
@@ -726,7 +734,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    //test scenario 155, complex xor test, test data object state and default
+    /**
+     * test scenario 155, complex xor test, test data object state and default
+     */
     @Test
     public void testScenario155() {
         ExecutionService executionService = new ExecutionService();
@@ -750,7 +760,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    //test scenario 160, outputsets test 1
+    /**
+     * test scenario 160, outputsets test 1
+     */
     @Test
     public void testScenario160() {
         ExecutionService executionService = new ExecutionService();
@@ -783,7 +795,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         assertTrue("DataObject has the wrong state",loopCheck);
     }
 
-    //test scenario 160, outputsets test 2
+    /**
+     * test scenario 160, outputsets test 2
+     */
     @Test
     public void testScenario160_2() {
         ExecutionService executionService = new ExecutionService();
@@ -817,7 +831,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         assertTrue("DataObject has the wrong state",loopCheck);
     }
 
-    //test scenario 155, complex xor test
+    /**
+     * test scenario 155, complex xor test
+     */
     @Test
     public void testScenario162() {
         ExecutionService executionService = new ExecutionService();
