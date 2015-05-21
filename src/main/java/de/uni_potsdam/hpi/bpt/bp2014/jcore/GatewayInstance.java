@@ -152,28 +152,28 @@ public class GatewayInstance extends ControlNodeInstance {
 
 
     /**
-     * @return
+     * @return boolean isXOR.
      */
     public Boolean getIsXOR() {
         return isXOR;
     }
 
     /**
-     * @return
+     * @return boolean isAND.
      */
     public Boolean getIsAND() {
         return isAND;
     }
 
     /**
-     * @return
+     * @return ScenarioInstance.
      */
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
     }
 
     /**
-     * @return
+     * @return boolean isAutomaticExecution.
      */
     public boolean isAutomaticExecution() {
         return automaticExecution;
