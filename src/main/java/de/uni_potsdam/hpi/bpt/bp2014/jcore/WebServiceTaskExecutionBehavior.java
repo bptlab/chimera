@@ -13,11 +13,25 @@ import java.util.LinkedList;
 /**
  * Created by jaspar.mang on 29.04.15.
  */
+
+/**
+ * This is the execution behavior for webservice tasks
+ */
 public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
     static Logger log = Logger.getLogger(WebServiceTaskExecutionBehavior.class.getName());
 
+    /**
+     * DB Connection class.
+     */
     DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 
+    /**
+     * Initializes the webservice task.
+     *
+     * @param activityInstance_id The id of the webservice task.
+     * @param scenarioInstance    The instance of the ScenarioInstance.
+     * @param controlNodeInstance The instance of the ControlNodeInstance (ActivityInstance).
+     */
     public WebServiceTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
         super(activityInstance_id, scenarioInstance, controlNodeInstance);
     }
