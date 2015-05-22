@@ -129,7 +129,6 @@ public class Scenario implements IDeserialisable, IPersistable {
         setTerminationCondition();
         setVersionNumber();
         checkIfVersionAlreadyInDatabase();
-
     }
 
     /**
@@ -266,7 +265,6 @@ public class Scenario implements IDeserialisable, IPersistable {
                 needsToBeSaved = true;
             }
         }
-
     }
 
     /**
