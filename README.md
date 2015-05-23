@@ -86,3 +86,7 @@ This JEngine does execute
 * email- , webservices tasks
 * data objects
 * termination condition for scenarios
+
+## Addendum
+
+For further details we kindly refer to the [projekt site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
