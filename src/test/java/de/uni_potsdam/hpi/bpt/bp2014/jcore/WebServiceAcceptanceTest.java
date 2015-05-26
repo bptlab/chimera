@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 //The GET, PUT and POST Requests are send to the Rest Interface.
 
 /**
- * TODO: comments are missing!!
+ *
  */
 public class WebServiceAcceptanceTest extends AbstractTest {
 

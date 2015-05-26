@@ -51,7 +51,7 @@ import static org.junit.Assert.assertThat;
  * database will be set up before and after the execution.
  * Define the database Properties inside the database_connection file.
  *
- * TODO: comments are missing for individual tests!!
+ *
  */
 public class RestInterfaceTest extends AbstractTest {
 

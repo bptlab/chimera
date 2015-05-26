@@ -41,7 +41,7 @@ public class Aggregation implements IDeserialisable, IPersistable {
             case "#targetNode":
                 setTargetNode(value);
                 break;
-            case "sourceMultiplicity": //TODO check for correctness!!
+            case "sourceMultiplicity":
                 setMultiplicity(value);
                 break;
             default:

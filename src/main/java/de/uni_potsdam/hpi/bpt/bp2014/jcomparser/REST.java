@@ -41,7 +41,6 @@ import java.util.HashMap;
  * The REST API provides an Interface to to manage changes
  * or updates in the JEngine Database.
  *
- * TODO: why doesnt the jcomparser REST have a version in the path?
  */
 
 @Path("jcomparser")
@@ -71,11 +70,9 @@ public class REST {
             throws IOException, SAXException, ParserConfigurationException {
         JComparser comparser = new JComparser();
         String scenarioURL = PCM_URL + scenarioID + ".pm";
-        //TODO: create a db record with the status of the import & return its value with REST call link for further informations
         return comparser.fetchAndParseScenarioFromServer(scenarioURL, PROCESS_SERVER_URI);
     }
 
-    //TODO: implement GET call to get status of scenario import
 
     /**
      * Fetches a List of all Scenarios and their IDs from the PE-Server.

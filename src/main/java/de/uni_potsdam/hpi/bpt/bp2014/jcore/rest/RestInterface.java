@@ -152,7 +152,6 @@ public class RestInterface {
             @QueryParam("filter") String filterString) {
         DbScenario scenario = new DbScenario();
         DbEmailConfiguration mail = new DbEmailConfiguration();
-        //TODO: add links to detail REST calls for each emailtask
         if (!scenario.existScenario(scenarioID)) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -347,7 +346,6 @@ public class RestInterface {
             return startNewInstance(uriInfo, scenarioID);
         }
         ExecutionService executionService = new ExecutionService();
-        //TODO: add link to detail REST call for more information about new scenarioinstanceID
         if (executionService.existScenario(scenarioID)) {
             DbScenarioInstance instance = new DbScenarioInstance();
             int instanceId = instance.createNewScenarioInstance(scenarioID, name.name);
@@ -427,7 +425,6 @@ public class RestInterface {
             @PathParam("instanceID") int instanceID) {
         ExecutionService executionService = new ExecutionService();
         DbScenarioInstance instance = new DbScenarioInstance();
-        //TODO: add links to detail REST calls for more information about each activity instance
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"There is no instance with the id " + instanceID + "\"}")
@@ -1128,7 +1125,6 @@ public class RestInterface {
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString) {
         ExecutionService executionService = new ExecutionService();
-        //TODO: add link to detail REST call for more information about each dataobject
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)

@@ -921,8 +921,6 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    //TODO: write test for update attributeUpdate
-
     /**
      * Given is the Rest API
      * When you send a POST to {@link RestInterface#terminateScenarioInstance(int, int)}

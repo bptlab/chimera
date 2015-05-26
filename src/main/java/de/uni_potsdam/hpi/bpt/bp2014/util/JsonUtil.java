@@ -59,7 +59,7 @@ public class JsonUtil {
      */
     public static String JsonWrapperObject(Object content) {
         Gson gson = new Gson();
-        JsonObject json = new JsonObject(); //TODO: to be adapted to needs here
+        JsonObject json = new JsonObject();
         return gson.toJson(json);
     }
 

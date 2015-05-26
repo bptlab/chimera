@@ -182,8 +182,6 @@ public class RestConfiguratorTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    //TODO: test update email tasks
-
     // ************************** Scenario **********************************/
 
     /**

@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 /**
- * TODO: comments are missing!!
+ *
  */
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;

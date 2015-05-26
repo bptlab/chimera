@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  */
 
 /**
- * TODO: comments are missing!!
+ *
  */
 public class NodeTest {
     private Document document = new DocumentImpl(null);

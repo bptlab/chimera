@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 
 /**
- * TODO: comments are missing!!
+ *
  */
 public class Seed {
     static Logger log = Logger.getLogger(Seed.class.getName());
@@ -42,8 +42,8 @@ public class Seed {
     }
 
     /**
-     * @param id some id..
-     * @return
+     * @param id some some id.
+     * @return Array list
      */
     public ArrayList<Integer> getAllActivityIDByFragmentID(int id) {
 

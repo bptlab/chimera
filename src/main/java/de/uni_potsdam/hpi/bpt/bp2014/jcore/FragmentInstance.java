@@ -98,7 +98,6 @@ public class FragmentInstance {
         int startEvent = dbControlNode.getStartEventID(fragment_id);
         int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
         String controlNodeType = dbControlNode.getType(controlNode);
-        //TODO: type
         ControlNodeInstance controlNodeInstance = null;
         switch (controlNodeType) {
             case "Activity":

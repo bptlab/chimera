@@ -59,7 +59,6 @@ public abstract class OutgoingBehavior {
      */
     protected ControlNodeInstance createControlNode(String type, int id) {
         ControlNodeInstance controlNodeInstance = null;
-        //TODO: type
         switch (type) {
             case "Activity":
             case "EmailTask":

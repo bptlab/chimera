@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import static org.junit.Assert.assertEquals;
 
 /**
- * TODO: comments are missing!!
+ *
  */
 public class DbScenarioTest extends AbstractDatabaseDependentTest {
     /**

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * TODO: comments are missing!!
+ *
  */
 public class DbActivityInstanceTest extends AbstractDatabaseDependentTest {
     /**

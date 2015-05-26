@@ -84,7 +84,6 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
                 scenarioInstance.setDataObjectInstanceToNotOnChange(dataObject.getId());
             }
         }
-        //TODO: Output Set
         if (outputSets.size() != 0) {
             int outputSet = outputSets.get(0);
             if (outputSets.size() > 1) {

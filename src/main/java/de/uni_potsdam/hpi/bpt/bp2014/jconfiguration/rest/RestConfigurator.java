@@ -235,8 +235,6 @@ public class RestConfigurator {
      * @param webserviceID The ID of the webservice tasks
      * @param input        The new webservice task configuration
      * @return
-     *
-     * TODO: Make pretty name variables
      */
     @PUT
     @Path("webservice/{webserviceID}")

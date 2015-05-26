@@ -109,7 +109,6 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
      */
     public void setDataObjectInstancesOnChange() {
         LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.controlNode_id);
-        //TODO: Output Set
         for (int outputSet : outputSets) {
             LinkedList<Integer> dataObjects = dbDataNode.getDataObjectIdsForDataSets(outputSet);
             for (int dataObject : dataObjects) {
