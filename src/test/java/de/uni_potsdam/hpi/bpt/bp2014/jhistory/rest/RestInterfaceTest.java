@@ -86,7 +86,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if the GET for the ActivitiesLog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetActivitiesLog() {
@@ -97,7 +97,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 404 when call fails
      */
     @Test
     public void testGetActivitiesLogStatusCode404() {
@@ -114,7 +114,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 200 when call was successful
      */
     @Test
     public void testGetActivitiesLogStatusCode200() {
@@ -127,7 +127,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if the GET for the terminated entries in ActivitiesLog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetActivitiesLogWithState() {
@@ -138,7 +138,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
     
     /**
-     *
+     * tests if the GET for the DataObjectlog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetDataObjectsLog() {
@@ -149,7 +149,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 404 when call fails
      */
     @Test
     public void testGetDataObjectsLogStatusCode404() {
@@ -166,7 +166,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 200 when call was successful
      */
     @Test
     public void testGetDataObjectsLogStatusCode200() {
@@ -179,7 +179,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if the GET for the DataAttributesLog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetDataAttributesLog() {
@@ -190,7 +190,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 404 when call fails
      */
     @Test
     public void testGetDataAttributesLogStatusCode404() {
@@ -207,7 +207,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 200 when call was successful
      */
     @Test
     public void testGetDataAttributesLogStatusCode200() {

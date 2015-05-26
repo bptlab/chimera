@@ -95,9 +95,10 @@ public class ServiceManager {
     }
 
     /**
-     * Register new Services with addService(new ExampleAlgorithm()).
+     * Register new Services with addService(new classNameOfAlgorithm).
      */
     private void registerServices() {
         addService(new ExampleAlgorithm());
+        // add further Algorithms here
     }
 }
