@@ -19,9 +19,6 @@ import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Ihdefix on 04.03.2015.
- */
 public class DataClass implements IDeserialisable, IPersistable {
     /**
      * This is the modelID of the dataClass.

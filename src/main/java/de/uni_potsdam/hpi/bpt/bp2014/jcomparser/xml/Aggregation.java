@@ -6,9 +6,6 @@ import org.w3c.dom.Node;
 
 import java.util.Map;
 
-/**
- * Created by Ihdefix on 04.03.2015.
- */
 public class Aggregation implements IDeserialisable, IPersistable {
     private DataClass source;
     private DataClass target;

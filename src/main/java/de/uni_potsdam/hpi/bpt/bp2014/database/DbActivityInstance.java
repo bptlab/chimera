@@ -6,25 +6,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
 import java.util.LinkedList;
 import java.util.Map;
 
-/***********************************************************************************
- *
- *   _________ _______  _        _______ _________ _        _______
- *   \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- *      )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- *      |  |  | (__    |   \ | || |         | |   |   \ | || (__
- *      |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- *      |  |  | (      | | \   || | \_  )   | |   | | \   || (
- *   |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- *   (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- *
- *******************************************************************
- *
- *   Copyright © All Rights Reserved 2014 - 2015
- *
- *   Please be aware of the License. You may found it in the root directory.
- *
- ************************************************************************************/
-
 /**
  * Represents the activity instance of the database.
  * Methods are mostly used by the HistoryService so you can get all terminated activities or start new ones.

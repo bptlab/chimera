@@ -8,9 +8,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-/**
- * Created by Ihdefix on 04.03.2015.
- */
 public class DataAttribute implements IPersistable {
     /**
      * This is the databaseID of the dataClass belonging to this attribute.
