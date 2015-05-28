@@ -9,11 +9,11 @@ The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## Architecture
 
-![alt Architecture](https://github.com/BP2014W1/JEngine/tree/dev/docu/general/img/fmc-architecture-v2_4.png)
+![alt Architecture](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/fmc-architecture-v2_4.png)
 
 ## RESTful
 
-See the [documentation](https://github.com/BP2014W1/JEngine/tree/dev/docu/rest/JEngine_REST_Specs.pdf) inside the doc folder.
+See the [documentation](https://github.com/BP2014W1/JEngine/raw/dev/docu/rest/JEngine_REST_Specs.pdf) inside the doc folder.
 
 ## Setup
 
