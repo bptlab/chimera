@@ -9,11 +9,11 @@ The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## Architecture
 
-![alt Architecture](https://github.com/BP2014W1/JEngine/blob/dev/docu/img/fmc-architecture-v2_4.png)
+![alt Architecture](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/fmc-architecture-v2_4.png)
 
 ## RESTful
 
-See the [documentation](https://github.com/BP2014W1/JEngine/blob/dev/docu/JEngine_REST_Specs.pdf) inside the doc folder.
+See the [documentation](https://github.com/BP2014W1/JEngine/raw/dev/docu/rest/JEngine_REST_Specs.pdf) inside the doc folder.
 
 ## Setup
 
@@ -72,11 +72,11 @@ We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-respon
 
 Class View
 
-![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/img/class_view_organic.png)
+![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/class_view_organic.png)
 
 Package View
 
-![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/img/package_view_organic.png)
+![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/package_view_organic.png)
 
 ## Features
 
@@ -89,4 +89,4 @@ This JEngine does execute
 
 ## Addendum
 
-For further details we kindly refer to the [projekt site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
+For further details we kindly refer to the [project site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
