@@ -89,4 +89,4 @@ This JEngine does execute
 
 ## Addendum
 
-For further details we kindly refer to the [projekt site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
+For further details we kindly refer to the [project site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
