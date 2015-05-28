@@ -31,7 +31,7 @@ Cloning of this repo
 
 Further an MySQL Database should be created named as "JEngineV2" & import SQL file from 
 
-    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2.sql
+    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2_schema.sql
 
 Please be aware of the database settings inside the web.xml . For the tests you may want to adapt also the database_connection in
 
