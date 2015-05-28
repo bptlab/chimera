@@ -1,0 +1,186 @@
+
+%
+%
+\section{Processeditor}
+
+%
+%
+\section{PCM modelling using the Processeditor}
+\label{pcm-modelling-using-the-processeditor}
+This document explains how to use the Processeditor to create PCM models. A PCM-Process can be described by many PCM fragments and one PCM scenario.
+
+%
+%
+\subsection{Preparations}
+\label{preparations}
+Currently you need both, the Processeditor Workbench and the Processeditor Server to model and Save PCM. You will use the Workbench for modelling and the Server as a global repository.
+
+%
+%
+\subsection{PCM Fragments}
+\label{pcm-fragments}
+PCM Fragments are small Business Process models. They can be modelled using a subset of the BPMN-Notation:
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Tasks
+\item
+  Events ** Blanko Start-Event ** Blanko End-Event
+\item
+  Gateways ** Parallel Gateway ** Exclusive Gateway
+\item
+  Data Objects
+\item
+  Sequence Flow
+\item
+  Data Flow
+\end{itemize}
+
+All these elements are offered by the model type PCM Fragment.
+
+\subsubsection{E-Mail Tasks}
+\label{pe:email}
+The engine supports the execution of E-Mail Tasks. For the modelling you need to open the relevant fragment and add a normal (unspecified) task. In the properties-editor (you can open it with a right-click on the task and then choosing \textit{Properties...}) you simply set the stereotype to \textit{SEND}.\\
+For configurating the E-Mail-Task and the execution in the engine, see section \ref{jCore:MailTask}.
+
+%
+%
+\subsubsection{Marking a Task as Global}
+\label{marking-a-task-as-global}
+PCM allows to use the same task in more than one fragment. To do so
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  model the Task (in one scenario)
+\item
+  Save the model to the repository
+\item
+  Right click on the Task and choose \emph{Properties}
+\item
+  Set the \emph{global flag}
+\end{enumerate}
+
+%
+%
+\subsubsection{Copy and Refer an existing Task}
+\label{copy-and-refer-an-existing-task}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  In another Fragment right click on any node
+\item
+  Choose ``Copy and Refer Task''
+\item
+  Connect to the server if necessary
+\item
+  Choose the Model and the Task you want to refer
+\item
+  Click on Ok
+\end{enumerate}
+
+%
+%
+\subsection{PCM Scenario}
+\label{pcm-scenario}
+A Scenario defines which PCM Fragments are part of one Process. All PCM
+Fragments have to be saved on the Server. You can alter the Scenario
+only by moving the nodes and adding/removing PCM Fragments.
+
+%
+%
+\subsubsection{Defining a PCM Scenario}
+\label{defining-a-pcm-scenario}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Create a new PCM Scenario Model.
+\item
+  Right Click on one of the two nodes
+\item
+  Choose Add Fragments
+\item
+  Mark all Models you want to add in the left List (CTRL for multi
+  select)
+\item
+  click on add than on ok
+\end{enumerate}
+
+Now there should be entries for all the fragments (inside green node)
+and for all their data objects (inside white node).
+
+%
+%
+\subsubsection{Removing a Fragment From an Scenario}
+\label{removing-a-fragment-from-an-scenario}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Right Click on one of the two nodes
+\item
+  Choose \emph{Add Fragments}
+\item
+  Select all the models you want to remove from the right list
+\item
+  Click on \emph{Remove} than click \emph{Ok}
+\end{enumerate}
+
+%
+%
+\subsubsection{Set a Termination Condition}
+\label{set-a-termination-condition}
+
+If a termination condition is full filled the process is terminated.
+Currently only one termination condition consisting of one Data Object
+in one specific state is possible.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Open your Scenario
+\item
+  Right Click on the canvas (not the Nodes)
+\item
+  Choose \emph{Properties}
+\item
+  Fill out the \emph{Termination Data Object} and \emph{Termination
+  State} fields
+\end{enumerate}
+
+%
+%
+\subsubsection{Copy and Alter a Complete Fragment}
+\label{copy-and-alter-a-complete-fragment}
+
+You can create a variation of an existing PCM Fragment using the Plug-in
+\emph{Create Variant}.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  First click on \emph{Plug-Ins}
+\item
+  Choose \emph{Create Variant}
+\item
+  Choose your Fragment and click on \emph{Ok}
+\end{enumerate}
+
+
+%
+%
+%\subsection{Processeditor Server}
+
+
+%
+%
+%\subsection{Processeditor Client}

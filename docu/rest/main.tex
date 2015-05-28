@@ -1,0 +1,84 @@
+\documentclass[paper=a4]{scrartcl}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{morefloats}
+\usepackage[section] {placeins}
+\usepackage{caption}
+\usepackage{todonotes} %todo notes
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Configuration %%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+    basicstyle=\footnotesize,
+    tabsize=2
+}
+\DeclareCaptionType{json}[Example][List of JSON Examples]
+%\newenvironment{json}{}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%% Header %%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%opening
+\title{JEngine REST API Specification v2.0}
+\author{BP2014W1 - Team}
+
+\begin{document}
+
+\maketitle
+
+%\listoftodos %displaying open todos
+\setcounter{totalnumber}{5}
+%%%%%%%%%%%%%%%%%%%%%%%%%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%
+%%
+\begin{abstract}
+	One goal of the JEngine was to provide a flexible API.
+	Developers can use this API to build an UI or to control/use the engine from within another application.
+	There are methods to configure, control and monitor processes and their instances.
+	This document will provide a specification/documentation of the Rest-Interface, by providing the information about the allowed methods and examples .
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Overall API Structure %%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%
+%%
+\section{Structure}
+    \begin{centering}
+		\label{tbl:structure}
+		\centering
+		\begin{tabular}{r|r}
+			\texttt{http://domain:port/jengine/api/}&\texttt{interface/\{version\}}\\
+			&\texttt{config/\{version}\}\\
+			&\texttt{jcomparser/\{version\}}\\
+			&\texttt{history/\{version\}}\\
+			&\texttt{analytics/\{version\}}
+		\end{tabular}
+		\captionof{table}{API Core Path}
+	\end{centering}
+	The API is divided into four parts (Table \ref{tbl:structure}):
+	\begin{enumerate}
+		\item \textbf{Interface.}
+			  The interface provides methods for creating and controlling instances of scenarios.
+			  More information can be found in Chapter \ref{subsec:Interface}.
+		\item \textbf{Config.}
+			  This API can be used to configure a process model.
+			  Currently the configuration is restricted to email tasks.
+			  More information and examples can be found in Chapter \ref{subsec:Config}.
+		\item \textbf{Comparser.}
+			  The JEngine can be used to execute Production Case Management (PCM) models created with the \href{BP2014W1 processeditor.html}{JEDItor}\footnote{\url{BP2014W1 processeditor.html}}.
+			  The JComparser is an interface between the core of the engine and the model repository provided by the JEDItor.
+			  The JComparser provides and interface to view and load models from the repository.
+			  More information and examples can be found in chapter \ref{subsec:Comparser}.
+		\item \textbf{History.}
+			  Detailed information about state changes of data object and activities of running and terminated scenario instances can be accessed via the history interface.
+			  Chapter \ref{subsec:History} provides examples and detailed information.
+	    \item \textbf{Analytics.}
+			  to be explained. (framework for implementing analytic algorithms for analysing the PCM execution logs)
+	\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Functions %%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%
+%%
+\input{functions.tex}
+	 
+%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%% 		
+\end{document}
