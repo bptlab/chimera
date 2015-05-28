@@ -33,9 +33,13 @@ Further an MySQL Database should be created named as "JEngineV2" & import SQL fi
 
     mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2_schema.sql
 
-Please be aware of the database settings inside the web.xml . For the tests you may want to adapt also the database_connection in
+Please be aware of the database settings inside the web.xml in
 
-    JEngine/blob/dev/src/main/resources/database_connection
+    JEngine/src/main/resources/webapp/WEB-INF/web.xml
+
+For the tests you may want to adapt also the database_connection in
+
+    JEngine/src/main/resources/database_connection
 
 After changing server ips you may want to update the Config.java in the config package.
 
