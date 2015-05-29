@@ -552,7 +552,6 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void saveDataObjects() {
         for (DataObject dataObject : dataObjects.values()) {
-            dataObject.setDataClass(domainModel.getDataClasses());
             dataObject.setScenarioId(databaseID);
             dataObject.save();
         }
@@ -609,17 +608,82 @@ public class Scenario implements IDeserialisable, IPersistable {
      * Fragments (with Control Nodes) have to be created and saved first.
      */
     private void createDataObjects() {
+        Map<String, String> dataObjectNodes = getAllDataObjectNodes();
         dataObjects = new HashMap<String, DataObject>();
         for (Fragment fragment : fragments) {
             for (Node node : fragment.getControlNodes().values()) {
                 if (node.isDataNode()) {
                     if (null == dataObjects.get(node.getText())) {
-                        dataObjects.put(node.getText(), new DataObject());
+                        if (domainModel == null) {
+                            dataObjects.put(node.getText(), new DataObject());
+                            break;
+                        }
+                        String link = dataObjectNodes.get(node.getText());
+                        // if there is no reference to the dataClass, we match over the name
+                        if (link.equals("")) {
+                            boolean dataClassFound = false;
+                            for (DataClass dC : domainModel.getDataClasses().values()) {
+                                if (dC.getDataClassName().equals(node.getText())) {
+                                    dataObjects.put(node.getText(), new DataObject(dC));
+                                    dataClassFound = true;
+                                    break;
+                                }
+                            }
+                            if (!dataClassFound) {
+                                dataObjects.put(node.getText(), new DataObject());
+                            }
+                        }
+                        else {
+                            String[] slashSplit = link.split("\\/");
+                            String dataClassModelID = slashSplit[slashSplit.length - 1].split("#")[0];
+                            String dataClassNodeID = slashSplit[slashSplit.length - 1].split("#")[1];
+                            if (Long.parseLong(dataClassModelID) != domainModel.getDomainModelModelID()) {
+                                log.error("Error: The referenced domainModel of a dataObject-Node " +
+                                        "in the scenario is not existing");
+                                dataObjects.put(node.getText(), new DataObject());
+                                return;
+                            }
+                            else if (domainModel.getDataClasses().get(Long.parseLong(dataClassNodeID)) == null)
+                                dataObjects.put(node.getText(), new DataObject());
+                            dataObjects.put(node.getText(), new DataObject(domainModel.getDataClasses().get(Long.parseLong(dataClassNodeID))));
+                        }
                     }
                     dataObjects.get(node.getText()).addDataNode(node);
                 }
             }
         }
+    }
+
+    /**
+     * Get the link of the dataClass for each dataObject that the scenario contains.
+     * @return A Map of the name of the dataObject to the link of its dataClass
+     */
+    private Map<String, String> getAllDataObjectNodes() {
+        Map<String, String> dataObjectNodes = new HashMap<>();
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        String xPathQuery =
+                "/model/nodes/node[property[@name = '#type' and " +
+                        "@value = 'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode']]";
+        try {
+            NodeList nodes = (NodeList) xPath
+                    .compile(xPathQuery)
+                    .evaluate(this.scenarioXML, XPathConstants.NODESET);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                // get the name of the current node
+                xPathQuery = "property[@name = 'text']/@value";
+                String name = xPath
+                        .compile(xPathQuery)
+                        .evaluate(nodes.item(i));
+                xPathQuery = "property[@name = 'Data class']/@value";
+                String dataClassLink = xPath
+                        .compile(xPathQuery)
+                        .evaluate(nodes.item(i));
+                dataObjectNodes.put(name, dataClassLink);
+            }
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+        return dataObjectNodes;
     }
 
     /**

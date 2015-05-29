@@ -44,39 +44,23 @@ public class DataObject implements IPersistable {
     private DataClass dataClass;
 
     /**
-     * Creates a new DataObject.
-     * The set of states and the set of nodes is empty.
+     * Creates a new DataObject with a given dataClass.
+     *
+     * @param dataClass The dataClass the dataObject belongs to
      */
-    public DataObject() {
+    public DataObject(final DataClass dataClass) {
         dataNodes = new LinkedList<Node>();
+        this.dataClass = dataClass;
         states = new HashMap<String, Integer>();
     }
 
     /**
-     * Creates a new DataObject with a given set of nodes.
-     * The states will be extracted and added automatically.
+     * Creates a new DataObject without a given dataClass.
      *
-     * @param newDataNodes the initial set of nodes.
-     *                     All nodes may have the type DataObject.
      */
-    public DataObject(final List<Node> newDataNodes) {
-        this.dataNodes = new LinkedList<Node>(newDataNodes);
-        initializeStates();
-    }
-
-    /**
-     * This method extracts all the dataStates from the added DataNodes.
-     */
-    private void initializeStates() {
-        Connector connector = new Connector();
-        for (Node dataNode : dataNodes) {
-            if (!states.containsKey(dataNode.getState())) {
-                int stateId = connector.insertStateIntoDatabase(
-                        dataNode.getState(),
-                        classId);
-                states.put(dataNode.getState(), stateId);
-            }
-        }
+    public DataObject() {
+        dataNodes = new LinkedList<Node>();
+        states = new HashMap<String, Integer>();
     }
 
     /**
@@ -198,32 +182,5 @@ public class DataObject implements IPersistable {
      */
     public Map<String, Integer> getStates() {
         return states;
-    }
-
-
-    /**
-     * This method is used to set the dataClass corresponding to the dataObject.
-     *
-     * @param dataClasses This is a Map containing all dataClasses of the scenario.
-     */
-    public void setDataClass(Map<Long, DataClass> dataClasses) {
-        long dataClassModelID = -1;
-        if (dataNodes.get(0).getDataClassURI() != null && dataNodes.get(0).getDataClassURI() != "") {
-            //regex fun to get only the ID from the URI.
-            String[] modelID = dataNodes.get(0).getDataClassURI().split("\\/");
-            String[] mID = modelID[modelID.length - 1].split("\\.");
-            dataClassModelID = new Long(mID[0]);
-        }
-        for (Long i : dataClasses.keySet()) {
-            if (dataClassModelID != -1) {
-                if (dataClassModelID == dataClasses.get(i).getDataClassModelID()) {
-                    this.dataClass = dataClasses.get(i);
-                }
-            } else {
-                if (dataNodes.get(0).getText().equals(dataClasses.get(i).getDataClassName())) {
-                    dataClass = dataClasses.get(i);
-                }
-            }
-        }
     }
 }

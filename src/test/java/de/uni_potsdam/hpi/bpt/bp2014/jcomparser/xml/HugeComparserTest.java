@@ -541,7 +541,7 @@ public class HugeComparserTest extends TestSetUp {
             Assert.assertTrue("DataClassID smaller than 1", dataClass.id > 0);
         }
         Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(1, "DO", (short) 1)));
-        Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(2, "SubDO", (short) 0)));
+        Assert.assertTrue("DataClass not inserted correctly", this.dataClasses.values().contains(new DbDataClass(2, "SubD", (short) 0)));
         Assert.assertTrue("Too many dataClasses inserted", this.dataClasses.size() == 2);
         dataClasses.close();
     }
@@ -564,7 +564,7 @@ public class HugeComparserTest extends TestSetUp {
         }
         Assert.assertTrue("DataAttributes not inserted correctly", this.dataAttributes.contains(new DbDataAttribute(1, "Attr1", "", "", dataClasses.get("DO").id)));
         Assert.assertTrue("DataAttributes not inserted correctly", this.dataAttributes.contains(new DbDataAttribute(2, "Attr2", "", "", dataClasses.get("DO").id)));
-        Assert.assertTrue("DataAttributes not inserted correctly", this.dataAttributes.contains(new DbDataAttribute(3, "Attr3", "", "", dataClasses.get("SubDO").id)));
+        Assert.assertTrue("DataAttributes not inserted correctly", this.dataAttributes.contains(new DbDataAttribute(3, "Attr3", "", "", dataClasses.get("SubD").id)));
         Assert.assertTrue("Too many dataAttributes have been inserted", this.dataAttributes.size() == 3);
         dataAttributes.close();
     }
@@ -582,7 +582,7 @@ public class HugeComparserTest extends TestSetUp {
                     aggregations.getInt("multiplicity"));
             this.aggregations.add(aggregation);
         }
-        Assert.assertTrue("Aggregations not inserted correctly", this.aggregations.contains(new DbAggregation(dataClasses.get("DO").id, dataClasses.get("SubDO").id, Integer.MAX_VALUE)));
+        Assert.assertTrue("Aggregations not inserted correctly", this.aggregations.contains(new DbAggregation(dataClasses.get("DO").id, dataClasses.get("SubD").id, Integer.MAX_VALUE)));
         Assert.assertTrue("Too many Aggregations have been inserted", this.aggregations.size() == 1);
         aggregations.close();
     }
@@ -603,8 +603,8 @@ public class HugeComparserTest extends TestSetUp {
         }
         Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(1, "state1", dataClasses.get("DO").id)));
         Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(2, "init", dataClasses.get("DO").id)));
-        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(3, "end", dataClasses.get("SubDO").id)));
-        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(4, "init", dataClasses.get("SubDO").id)));
+        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(3, "end", dataClasses.get("SubD").id)));
+        Assert.assertTrue("State in table 'state' not inserted correctly", this.states.contains(new DbState(4, "init", dataClasses.get("SubD").id)));
         Assert.assertTrue("Too many states have been inserted", this.states.size() == 4);
         states.close();
     }
@@ -629,10 +629,10 @@ public class HugeComparserTest extends TestSetUp {
         for (DbState state : states) {
             if (state.name.equals("init") && state.dataClassID == dataClasses.get("DO").id)
                 initDO = state.id;
-            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubDO").id)
+            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubD").id)
                 initSubDO = state.id;
         }
-        Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(1, "SubDO", dataClasses.get("SubDO").id, scenarios.get(0).id, initSubDO)));
+        Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(1, "SubDO", dataClasses.get("SubD").id, scenarios.get(0).id, initSubDO)));
         Assert.assertTrue("DataObject in table 'dataobject' not inserted correctly", this.dataObjects.values().contains(new DbDataObject(2, "DO", dataClasses.get("DO").id, scenarios.get(0).id, initDO)));
         Assert.assertTrue("Too many dataObjects have been inserted", this.dataObjects.size() == 2);
         dataObjects.close();
@@ -659,15 +659,15 @@ public class HugeComparserTest extends TestSetUp {
         for (DbState state : states) {
             if (state.name.equals("end"))
                 endSubDO = state.id;
-            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubDO").id)
+            else if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubD").id)
                 initSubDO = state.id;
             else if (state.name.equals("init") && state.dataClassID == dataClasses.get("DO").id)
                 initDO = state.id;
             else if (state.name.equals("state1"))
                 state1DO = state.id;
         }
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(1, scenarios.get(0).id, endSubDO, dataClasses.get("SubDO").id, dataObjects.get("SubDO").id, 1517694277L)));
-        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(2, scenarios.get(0).id, initSubDO, dataClasses.get("SubDO").id, dataObjects.get("SubDO").id, 1368161079L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(1, scenarios.get(0).id, endSubDO, dataClasses.get("SubD").id, dataObjects.get("SubDO").id, 1517694277L)));
+        Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(2, scenarios.get(0).id, initSubDO, dataClasses.get("SubD").id, dataObjects.get("SubDO").id, 1368161079L)));
         Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(3, scenarios.get(0).id, state1DO, dataClasses.get("DO").id, dataObjects.get("DO").id, 650069438L)));
         Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(4, scenarios.get(0).id, initDO, dataClasses.get("DO").id, dataObjects.get("DO").id, 135409402L)));
         Assert.assertTrue("DataNode in table 'datanode' not inserted correctly", this.dataNodes.values().contains(new DbDataNode(5, scenarios.get(0).id, initDO, dataClasses.get("DO").id, dataObjects.get("DO").id, 155099451L)));
@@ -807,9 +807,9 @@ public class HugeComparserTest extends TestSetUp {
         }
         int end = 0, state1 = 0, initSubDO = 0;
         for (DbState state : states) {
-            if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubDO").id)
+            if (state.name.equals("init") && state.dataClassID == dataClasses.get("SubD").id)
                 initSubDO = state.id;
-            else if (state.name.equals("end") && state.dataClassID == dataClasses.get("SubDO").id)
+            else if (state.name.equals("end") && state.dataClassID == dataClasses.get("SubD").id)
                 end = state.id;
             else if (state.name.equals("state1") && state.dataClassID == dataClasses.get("DO").id)
                 state1 = state.id;
