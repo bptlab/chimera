@@ -242,6 +242,16 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
                     return Float.parseFloat(left) > Float.parseFloat(right);
                 case ">=":
                     return Float.parseFloat(left) >= Float.parseFloat(right);
+                case "!=":
+                    return !left.equals(right);
+                case "!<":
+                    return !(Float.parseFloat(left) < Float.parseFloat(right));
+                case "!<=":
+                    return !(Float.parseFloat(left) <= Float.parseFloat(right));
+                case "!>":
+                    return !(Float.parseFloat(left) > Float.parseFloat(right));
+                case "!>=":
+                    return !(Float.parseFloat(left) >= Float.parseFloat(right));
 
             }
         } catch (NumberFormatException e) {

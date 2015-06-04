@@ -18,11 +18,10 @@ import java.util.HashMap;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-//This class extends JerseyTest, because it's need the Rest Interface to check the Webservice Task functions.
-//The GET, PUT and POST Requests are send to the Rest Interface.
 
 /**
- * TODO: comments are missing!!
+ * This class extends JerseyTest, because it's need the Rest Interface to check the Webservice Task functions.
+ * The GET, PUT and POST Requests are send to the Rest Interface.
  */
 public class WebServiceAcceptanceTest extends AbstractTest {
 
