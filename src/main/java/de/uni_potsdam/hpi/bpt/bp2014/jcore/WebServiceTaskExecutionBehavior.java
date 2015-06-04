@@ -10,9 +10,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 
-/**
- * Created by jaspar.mang on 29.04.15.
- */
 
 /**
  * This is the execution behavior for webservice tasks

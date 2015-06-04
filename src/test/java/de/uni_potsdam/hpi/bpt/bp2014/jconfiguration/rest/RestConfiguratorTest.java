@@ -21,26 +21,7 @@ import java.sql.SQLException;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-/**
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
+
 
 /**
  * This class is the test for {@link RestConfigurator}.
@@ -181,8 +162,6 @@ public class RestConfiguratorTest extends AbstractTest {
                 "{\"receiver\":\"bp2014w1@byom.de\",\"subject\":\"Test\",\"message\":\"Test Message\"}",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
-
-    //TODO: test update email tasks
 
     // ************************** Scenario **********************************/
 

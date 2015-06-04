@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import static org.junit.Assert.*;
 
 /**
- * TODO: comments are missing!!
+ *
  */
 public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     /**

@@ -14,34 +14,12 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.HashMap;
 
-/**
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
-
 
 /**
  * As a part of the JComparser we need to provide a REST API.
  * The REST API provides an Interface to to manage changes
  * or updates in the JEngine Database.
  *
- * TODO: why doesnt the jcomparser REST have a version in the path?
  */
 
 @Path("jcomparser")
@@ -71,11 +49,9 @@ public class REST {
             throws IOException, SAXException, ParserConfigurationException {
         JComparser comparser = new JComparser();
         String scenarioURL = PCM_URL + scenarioID + ".pm";
-        //TODO: create a db record with the status of the import & return its value with REST call link for further informations
         return comparser.fetchAndParseScenarioFromServer(scenarioURL, PROCESS_SERVER_URI);
     }
 
-    //TODO: implement GET call to get status of scenario import
 
     /**
      * Fetches a List of all Scenarios and their IDs from the PE-Server.

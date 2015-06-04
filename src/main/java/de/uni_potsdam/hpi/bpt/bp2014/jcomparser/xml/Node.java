@@ -6,26 +6,6 @@ import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
 
-/*
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
 
 /**
  * A Class which represents a Node, (ControlNode and DataNodes) of thh model.
@@ -71,10 +51,6 @@ public class Node implements IDeserialisable, IPersistable {
      * It will only be set, if and only if the node is a data node.
      */
     private String state;
-    /**
-     * A String which holds the URI for the dataClasses.
-     */
-    private String dataClassURI;
     /**
      * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
      */
@@ -159,8 +135,6 @@ public class Node implements IDeserialisable, IPersistable {
             case "stereotype":
                 stereotype = value;
                 break;
-            case "Data class":
-                dataClassURI = value;
             default:
                 // Property will not be handled
                 break;
@@ -220,15 +194,6 @@ public class Node implements IDeserialisable, IPersistable {
      */
     public String getType() {
         return type;
-    }
-
-    /**
-     * Returns the URI of the datClass.
-     *
-     * @return the dataClassURI
-     */
-    public String getDataClassURI() {
-        return dataClassURI;
     }
 
     /**

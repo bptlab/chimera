@@ -23,7 +23,7 @@
          <property name="x" value="447" />
          <property name="width" value="100" />
          <property name="y" value="324" />
-         <property name="text" value="SubDO" />
+         <property name="text" value="SubD" />
          <property name="stereotype" value="" />
          <property name="#id" value="395565279" />
          <property name="#type" value="net.frapu.code.visualization.domainModel.DomainClass" />

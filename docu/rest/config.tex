@@ -1,0 +1,141 @@
+%
+%%
+\subsection{JConfiguration alias Config}  %status = done   GET(4/4) PUT(2/2) DELETE (1/1)
+\label{subsec:Config}
+
+	%
+    %%
+	\subsubsection{Service eMail Tasks}
+	
+
+	\textbf{Get all available email tasks}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{config/\{version\}/scenario/148/emailtask/}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "ids":
+        [
+            448
+        ]
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all available email tasks}
+		\end{flushleft}
+	
+	
+	 	\textbf{Get details for a specific email task}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{config/\{version\}/scenario/1/emailtask/448/?}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "receiver":"bp2014w1@byom.de",
+    "subject":"Test",
+    "message":"Test Message"
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all available email tasks}
+		\end{flushleft}
+
+
+	\textbf{PUT changes for an email task}\\
+			\begin{tabular}{lll}
+				http & PUT & \texttt{config/\{version\}/emailtask/448/?}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "receiver":"bp2014w1@byom.de",
+    "subject":"Test",
+    "message":"Test Message"
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of PUT request to change an email task}
+		\end{flushleft}
+
+	 
+	%
+    %%
+	\subsubsection{Scenarios}
+	
+	
+	\textbf{Delete an scenario}\\
+			\begin{tabular}{lll}
+				http & DELETE & \texttt{config/\{version\}/scenario/156/?}
+			\end{tabular}\\
+
+
+	%
+    %%
+	\subsubsection{Webservice Tasks}
+	
+		\textbf{GET all webservice tasks}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{config/\{version\}/scenario/1/webservice?}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "ids":[527]
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all webservice tasks for a specific scenario}
+		\end{flushleft}
+
+	
+		\textbf{GET specific webservice task}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{config/\{version\}/scenario/1/webservice/253?}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "body":"",
+    "link":"http://localhost:9998/interface/v2/scenario/156/instance",
+    "method":"POST",
+    "attributes":
+        [
+            {
+                "order":1,
+                "controlnode_id":527,
+                "key":"id",
+                "dataattribute_id":14
+            }
+        ]
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get specific webservice tasks for a specific scenario}
+		\end{flushleft}
+		
+		
+		\textbf{PUT specific webservice task}\\
+			\begin{tabular}{lll}
+				http & PUT & \texttt{config/\{version\}/webservice/253?}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+"method":"POST",
+"link":"http://localhost:9998/interface/v2/scenario/156/instance",
+"attributes":
+    [
+        {
+            "order":1,
+            "controlnode_id":527,
+            "key":"id",
+            "dataattribute_id":14
+        },
+        {
+            "order":2,
+            "controlnode_id":527,
+            "key":"link",
+            "dataattribute_id":15
+        }
+    ]
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get specific webservice tasks for a specific scenario}
+		\end{flushleft}

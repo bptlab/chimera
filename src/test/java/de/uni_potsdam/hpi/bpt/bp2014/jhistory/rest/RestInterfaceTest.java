@@ -20,26 +20,7 @@ import java.sql.SQLException;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-/**
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
+
 
 /**
  * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
@@ -51,7 +32,7 @@ import static org.junit.Assert.assertThat;
  * database will be set up before and after the execution.
  * Define the database Properties inside the database_connection file.
  *
- * TODO: comments are missing for individual tests!!
+ *
  */
 public class RestInterfaceTest extends AbstractTest {
 
@@ -86,7 +67,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if the GET for the ActivitiesLog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetActivitiesLog() {
@@ -97,7 +78,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 404 when call fails
      */
     @Test
     public void testGetActivitiesLogStatusCode404() {
@@ -114,7 +95,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 200 when call was successful
      */
     @Test
     public void testGetActivitiesLogStatusCode200() {
@@ -127,7 +108,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if the GET for the terminated entries in ActivitiesLog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetActivitiesLogWithState() {
@@ -138,7 +119,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
     
     /**
-     *
+     * tests if the GET for the DataObjectlog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetDataObjectsLog() {
@@ -149,7 +130,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 404 when call fails
      */
     @Test
     public void testGetDataObjectsLogStatusCode404() {
@@ -166,7 +147,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 200 when call was successful
      */
     @Test
     public void testGetDataObjectsLogStatusCode200() {
@@ -179,7 +160,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if the GET for the DataAttributesLog returns correct values for a given scenarioInstance
      */
     @Test
     public void testGetDataAttributesLog() {
@@ -190,7 +171,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 404 when call fails
      */
     @Test
     public void testGetDataAttributesLogStatusCode404() {
@@ -207,7 +188,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     *
+     * tests if status Code is 200 when call was successful
      */
     @Test
     public void testGetDataAttributesLogStatusCode200() {

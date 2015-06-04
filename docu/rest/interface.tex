@@ -1,0 +1,397 @@
+\subsection{Interface}
+\label{subsec:Interface}
+
+	The interface provides methods mainly used by the UI.
+	It offers functions for viewing and controlling scenarios and their instances.
+	
+	%
+    %%
+	\subsubsection{Scenarios}
+	
+	%%%----------
+	\textbf{Get all Scenarios}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+	"ids":[140,141,142,143],
+	"links":{
+		"140":"http://domain:port/jengine/api/interface/v2/scenario/140",
+		"141":"http://domain:port/jengine/api/interface/v2/scenario/141",
+		"142":"http://domain:port/jengine/api/interface/v2/scenario/142",
+		"143":"http://domain:port/jengine/api/interface/v2/scenario/143"
+	},
+	"labels":{
+		"140":"TestScenario",
+		"141":"CoffeeScenario",
+		"142":"BookingScenario",
+		"143":"BoschScenario"
+	}
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all Scenarios request}
+		\end{flushleft}
+	%%%----------
+	\textbf{Get all Scenarios with filter condition}\\
+    		\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario?filter=Coffee}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+	"ids":[141],
+	"links":{
+		"141":"http://domain:port/jengine/api/interface/v2/scenario/141"
+	},
+	"labels":{
+		"141":"CoffeeScenario"
+	}
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all Scenarios request with filter condition}
+		\end{flushleft}
+	%%%----------
+	\textbf{Get detailed information about a Scenario}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+	"modelid":0,
+	"instances":"http://domain:port/jengine/api/interface/v2/scenario/1/instance",
+	"name":"HELLOWORLD",
+	"id":1,
+	"modelversion":0
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get a specific scenario}
+		\end{flushleft}
+	%
+	%%
+	\subsubsection{Scenario Instances}
+	%%%----------
+	\textbf{Get all scenario instances}
+	    Scenario instances, that are in state terminated will not be listed.\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance}
+    		\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+	"ids":[47,48,49],
+	"links":{
+		"47":"http://domain:port/jengine/api/interface/v2/scenario/1/instance/47",
+		"48":"http://domain:port/jengine/api/interface/v2/scenario/1/instance/48",
+		"49":"http://domain:port/jengine/api/interface/v2/scenario/1/instance/49"
+	},
+	"labels":{
+		"47":"Berlin-Istanbul",
+		"48":"Herr Meyer Reise",
+		"49":"Sommerurlaub"
+	}
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all scenario instances}
+		\end{flushleft}
+	%%%----------
+	\textbf{Get all scenario instances with filter condition}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance?filter=Herr}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+	"ids":[47,48,49],
+	"links":{
+		"48":"http://domain:port/jengine/api/interface/v2/scenario/1/instance/48"
+	},
+	"labels":{
+		"48":"Herr Meyer Reise"
+	}
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all scenario instances with condition}
+		\end{flushleft}
+	%%%----------
+	\textbf{Start a new instance}\\
+	    A new instance can be started by performing a PUT or POST. The PUT provides the possibility to name the new instance.\\
+			\begin{tabular}{lll}
+				http & PUT & \texttt{interface/\{version\}/scenario/1/instance}\\
+				http & POST & \texttt{interface/\{version\}/scenario/1/instance}
+			\end{tabular}\\
+	    \textbf{If you want to name the scenario instance you have to provide a body (Figure \ref{fig:body}):}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+	"name":"This is the new instance"
+}
+			\end{lstlisting}
+			\captionof{json}{Body of the PUT request to create a new named instance}
+		    \label{fig:body}
+		\end{flushleft}
+	%%%----------
+    \textbf{Get detailed information about a scenario instance}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/48}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "name":"Herr Meyer Reise",
+    "id":48,
+    "terminated":false,
+    "scenario_id":1,
+    "activities":"http://domain:port/jengine/api/interface/v2/scenario/1/instance/
+                                                                        48/activity"
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get a single scenario instance}
+		\end{flushleft}
+	\subsubsection{Activity Instances}
+	\textbf{List all activity instances}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/48/activity}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "activities":{
+        "189":{
+            "link":"http://domain:port/jengine/interface/v2/scenario/1/instance/
+                                                                48/activity/189",
+            "id":189,
+            "label":"Book journey",
+            "state":"ready"},
+        "6686":{
+            "link":"http://domain:port/jengine/interface/v2/scenario/1/instance/
+                                                               48/activity/6686",
+            "id":6686,
+            "label":"Cancel journey",
+            "state":"ready"
+        },
+        "ids":[189,6686]
+}
+    		\end{lstlisting}
+    		\captionof{json}{Example of get all activities}
+        \end{flushleft}
+    \textbf{Get Activities with State}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/48/
+				                                              activity?state=ready}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "activities":{
+        "189":{
+            "link":"http://domain:port/jengine/interface/v2/scenario/1/instance/
+                                                                 48/activity/189",
+            "id":189,
+            "label":"Book journey",
+            "state":"ready"},
+        "6686":{
+            "link":"http://domain:port/jengine/interface/v2/scenario/1/instance/
+                                                                48/activity/6686",
+            "id":6686,
+            "label":"Cancel journey",
+            "state":"ready"
+        },
+        "ids":[189,6686]
+}
+    		\end{lstlisting}
+    		\captionof{json}{Example of get all activities with an specific state}
+        \end{flushleft}
+    \textbf{Get Activities with Filter}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/48/activity?filter=Cancel}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "activities":{
+        "6686":{
+            "link":"http://domain:port/jengine/interface/v2/scenario/1/instance/
+                                                                48/activity/6686",
+            "id":6686,
+            "label":"Cancel journey",
+            "state":"ready"
+        },
+        "ids":[6686]
+}
+    		\end{lstlisting}
+    		\captionof{json}{Example of get all activities with an specific filter condition}
+        \end{flushleft}
+        \begin{centering}
+        \centering
+            \begin{tabular}{|l|l|}
+                \hline
+                Parameter & Options\\
+                \hline
+                state & ready, running, termianted  \\
+                \hline
+                filter & a String \\
+                \hline
+            \end{tabular}
+        \captionof{table}{Query Parameters and their options}
+        \label{tab:options_states}
+        \end{centering}
+    \begin{flushleft}
+        % why is this stil centered?
+        \textbf{Change the state of an activity instance}\\
+    \end{flushleft}
+			\begin{tabular}{lll}
+				http & PUT & \texttt{interface/\{version\}/scenario/1/instance/48/activity?state=begin}
+			\end{tabular}
+        \begin{centering}
+        \centering
+            \begin{tabular}{|l|l|}
+                \hline
+                Parameter & Options\\
+                \hline
+                state & begin, terminate  \\
+                \hline
+            \end{tabular}
+        \captionof{table}{Query Parameters and their options}
+        \label{tab:options_statechanges}
+        \end{centering}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "message":"activity state changed."
+}
+		\end{lstlisting}
+    		\captionof{json}{Example output of begin activity}
+       \end{flushleft}
+       
+    \subsubsection{Data objects}
+    
+    This path provides methods to get information about Data Object instance used inside an scenario instance.\\
+    \textbf{Get all Data Objects of an instance}\\
+        	\begin{tabular}{lll}
+        		http & GET & \texttt{interface/\{version\}/scenario/1/instance/48/
+        		                                              dataobject}
+        	\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+  "ids":[1,2],
+  "results":{
+      "1":{
+        "link":"http://server:port/interface/v2/scenario/1/instance/72/dataobject/1",
+        "id":1,
+        "label":"Flight",
+        "state":"payed"
+      },
+      "2":{
+          "link":"http://server:port/interface/v2/scenario/1/instance/72/dataobject/2",
+          "id":2,
+          "label":"Reservation",
+          "state":"init"
+      }
+  }
+}
+		\end{lstlisting}
+    		\captionof{json}{Example output of get all Dataobjects}
+       \end{flushleft}
+    \textbf{Get detailed information about a Data Objects instance}\\
+        	\begin{tabular}{lll}
+        		http & GET & \texttt{interface/\{version\}/scenario/1/instance/48/
+        		                                              dataobject/1}
+        	\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "id":1,
+    "label":"object1",
+    "state":"Flight"
+}
+		\end{lstlisting}
+    		\captionof{json}{Example output of get all Dataobjects}
+       \end{flushleft}
+       
+    \textbf{Terminations Bedingungen}\\
+			\begin{tabular}{lll}
+				http & PUT & \texttt{interface/\{version\}/scenario/1/instance/48/
+				                                              activity?state=begin}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+  "conditions":{
+  "1":[{"data_object":"Flight","set_id":1,"state":"payed"},
+      {"data_object":"Reservation","set_id":1,"state":"payed"}]
+  "2":[{"data_object":"Flight","set_id":2,"state":"canceled"},
+      {"data_object":"Reservation","set_id":2,"state":"canceled"}]
+  },
+  "setIDs":[1,2]
+}
+		\end{lstlisting}
+    		\captionof{json}{Example output of get all Dataobjects}
+       \end{flushleft}
+       
+           \textbf{Get Output}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/2/activity/8587/output}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+[
+    {
+        "id":209,
+        "linkDataObject":"http://172.16.64.113:8080/JEngine/api/interface/v2/scenario/160/instance
+        /1406/outputset/209"
+    }
+]
+		\end{lstlisting}
+    		\captionof{json}{Example output of get output for activities}
+       \end{flushleft}
+       
+        \textbf{Get References}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/2/activity/8587/references}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "ids":[],
+    "activities":[]
+}
+		\end{lstlisting}
+    		\captionof{json}{Example output of get references for activities}
+       \end{flushleft}
+       
+       
+        \textbf{Get Outputset}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{interface/\{version\}/scenario/1/instance/2/activity/outputset/209}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+[
+    {
+        "label":"Bestellung",
+        "id":1184,
+        "state":"init",
+        "attributeConfiguration":
+            [
+                {
+                    "id":298,
+                    "name":"Preis",
+                    "type":"",
+                    "value":""
+                },
+                {
+                    "id":299,
+                    "name":"Artikel",
+                    "type":"",
+                    "value":""
+                }
+            ]
+    }
+]
+		\end{lstlisting}
+    		\captionof{json}{Example output of get outputset}
+       \end{flushleft}

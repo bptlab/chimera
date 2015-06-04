@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * TODO: comments are missing!!
+ * T
  */
 public class DbDataObjectTest extends AbstractDatabaseDependentTest {
 

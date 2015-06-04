@@ -14,26 +14,7 @@ import java.io.StringReader;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-/**
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
+
 
 public class ExecutionTest {
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";

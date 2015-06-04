@@ -1,0 +1,85 @@
+%
+%%
+\subsection{JHistory alias History} %status = done   GET(3/3)
+\label{subsec:History}
+
+	%
+    %%
+	\subsubsection{Activities}
+	
+	\textbf{Get activities log}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{history/\{version\}/scenario/149/instance/1085/activities/}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "881":
+        {
+            "activityinstance_id":7871,
+            "timestamp":"2015-03-17 16:26:29.0",
+            "scenarioinstance_id":1085,
+            "label":"Kaffeestand pruefen",
+            "newstate":"init"
+        },
+    [..]
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get activies log}
+		\end{flushleft}
+
+	%
+    %%
+	\subsubsection{Data Objects}
+	
+	 	\textbf{Get dataobjects log}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{history/\{version\}/scenario/149/instance/1085/dataobjects/}
+			\end{tabular}\\
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "68":
+        {
+            "timestamp":"2015-03-17 16:26:56.0",
+            "scenarioinstance_id":1085,
+            "dataobjectinstance_id":879,
+            "new_state_name":"fertig",
+            "name":"Kaffee",
+            "old_state_id":120,
+            "old_state_name":"gekocht",
+            "new_state_id":119
+        },
+    [..]
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get dataobjects log}
+		\end{flushleft}
+		%	\caption{Example output of get dataobjects log}
+		%\end{figure}\\
+	 %%%----------
+	 
+	 	%
+    %%
+	\subsubsection{Attributes}
+	
+	\textbf{Get attribute log}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{history/\{version\}/scenario/149/instance/1085/attributes/}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "1":
+        {
+            "h.scenarioinstance_id":1,
+            "da.name":"Preis",
+            "h.timestamp":"2015-05-07 09:43:33.0",
+            "h.id":1,
+            "h.dataattributeinstance_id":1,
+            "h.newvalue":"",
+            "do.name":"Bestellung"
+        },
+}			\end{lstlisting}
+			\captionof{json}{Example output of get activies log}
+		\end{flushleft}

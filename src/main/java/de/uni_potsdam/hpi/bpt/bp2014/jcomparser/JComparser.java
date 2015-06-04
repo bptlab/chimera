@@ -14,31 +14,9 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
-import java.util.List;
-
-
-/**
- * ********************************************************************************
- * <p/>
- * _________ _______  _        _______ _________ _        _______
- * \__    _/(  ____ \( (    /|(  ____ \\__   __/( (    /|(  ____ \
- * )  (  | (    \/|  \  ( || (    \/   ) (   |  \  ( || (    \/
- * |  |  | (__    |   \ | || |         | |   |   \ | || (__
- * |  |  |  __)   | (\ \) || | ____    | |   | (\ \) ||  __)
- * |  |  | (      | | \   || | \_  )   | |   | | \   || (
- * |\_)  )  | (____/\| )  \  || (___) |___) (___| )  \  || (____/\
- * (____/   (_______/|/    )_)(_______)\_______/|/    )_)(_______/
- * <p/>
- * ******************************************************************
- * <p/>
- * Copyright © All Rights Reserved 2014 - 2015
- * <p/>
- * Please be aware of the License. You may found it in the root directory.
- * <p/>
- * **********************************************************************************
- */
 
 /**
  * This class is the core class of the JComparser.
@@ -145,7 +123,6 @@ public class JComparser {
                     .evaluate(models, XPathConstants.NODESET);
 
             for (int i = 0; i < xmlModelURIs.getLength(); i++) {
-                //TODO: avoid string-replacement
                 String currentXmlUri = xmlModelURIs.item(i).getTextContent();
                 String[] splittedScenarioURI = currentXmlUri.split("/");
                 String currentScenarioID =
@@ -181,65 +158,4 @@ public class JComparser {
         }
         return null;
     }
-
-    /**
-     * TODO: do we want to delete this?
-     * @param pcm
-     */
-    public void handleFileUpload(List pcm) {
-/*
-        int pcm_size = pcm.size();
-        String pcm_item = "";
-
-        List<String> pcm_list = new ArrayList<String>();
-        Object xml_path_url = pcm.get(1);
-
-        for(int i=0; i < pcm_size; i++) {
-            pcm_item = (String) pcm.get(i);
-            xml_path_url = pcm_item;
-            InputStream xml_content;
-
-            try {
-                xml_content = new FileInputStream(xml_path_url);
-                pcm_list.add(xml_content);
-            } catch (IOException e) {
-                System.out.println("Error in Reading file ");
-                System.out.println(xml_path_url);
-            }
-        }
-
-        de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm);
-*/
-    }
-
-    public void handleFileRetrieval(String pcm) {
-/*
-        ArrayList<String> pcm_list = new ArrayList<String>();
-        pcm_list.add(pcm);
-
-        de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Parser.parsePCM(pcm_list);
-*/
-    }
-
-    // replacing with a settings.java file
-   /* private String getServerSpecs(String path, String requestedConfig) {
-        File file = new File(path);
-        if (requestedConfig.equals("processeditorServerUrl")) {
-            try {
-                String processeditorServerUrl = (String) FileUtils.readLines(file).get(23);
-                return processeditorServerUrl;
-            } catch (IOException e) {
-                log.error("Error:", e);
-            }
-        } else if (requestedConfig.equals("jcomparserServerUrl")) {
-            try {
-                String jcomparserServerUrl = (String) FileUtils.readLines(file).get(26);
-                return jcomparserServerUrl;
-            } catch (IOException e) {
-                log.error("Error:", e);
-            }
-        }
-        System.err.print("ERROR within the getServerSpecs; String requestedConfig not correct defined");
-        return "";
-    }*/
 }

@@ -1,0 +1,34 @@
+%
+%%
+\subsection{JAnalytics} %status = open   GET(0/1) POST(0/1)
+\label{subsec:JAnalytics}
+
+	%
+    %%
+	\subsubsection{Analytic Algorithms}
+	
+	\textbf{Get all services}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{analytics/\{version\}/services}
+			\end{tabular}
+	
+	\textbf{POST analysis}\\
+			\begin{tabular}{lll}
+				http & POST & \texttt{analytics/\{version\}/services/\{service\}}
+			\end{tabular}
+			You can add arguments in an JSONObject with an JSONArray for the key args.
+
+	%%%----------
+	\textbf{Get analysis results}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{analytics/\{version\}/services/\{service\}}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "message":"content not defined yet"
+}
+
+			\end{lstlisting}
+			\captionof{json}{Example output of get analysis results request}
+		\end{flushleft}

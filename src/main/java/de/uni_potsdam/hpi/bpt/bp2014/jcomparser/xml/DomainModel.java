@@ -3,8 +3,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import org.apache.log4j.Logger;
-import org.w3c.dom.*;
-import org.w3c.dom.Node;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -167,7 +168,6 @@ public class DomainModel implements IDeserialisable, IPersistable {
                 NodeList versions = (NodeList) xPath.compile(xPathQuery).evaluate(versionXML, XPathConstants.NODESET);
                 int maxID = 0;
                 // We assume that the version that needs to be saved is the newest one
-                //TODO: Do we want to save versions that are currently not in the Database?
                 for (int i = 0; i < versions.getLength(); i++) {
                     xPathQuery = "@id";
                     int currentID = Integer.parseInt((String) xPath.compile(xPathQuery).evaluate(versions.item(i), XPathConstants.STRING));

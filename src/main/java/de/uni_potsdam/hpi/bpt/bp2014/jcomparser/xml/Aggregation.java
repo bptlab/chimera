@@ -6,9 +6,6 @@ import org.w3c.dom.Node;
 
 import java.util.Map;
 
-/**
- * Created by Ihdefix on 04.03.2015.
- */
 public class Aggregation implements IDeserialisable, IPersistable {
     private DataClass source;
     private DataClass target;
@@ -41,7 +38,7 @@ public class Aggregation implements IDeserialisable, IPersistable {
             case "#targetNode":
                 setTargetNode(value);
                 break;
-            case "sourceMultiplicity": //TODO check for correctness!!
+            case "sourceMultiplicity":
                 setMultiplicity(value);
                 break;
             default:

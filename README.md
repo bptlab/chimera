@@ -9,11 +9,11 @@ The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
 ## Architecture
 
-![alt Architecture](https://github.com/BP2014W1/JEngine/blob/dev/docu/img/fmc-architecture-v2_4.png)
+![alt Architecture](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/fmc-architecture-v2_4.png)
 
 ## RESTful
 
-See the [documentation](https://github.com/BP2014W1/JEngine/blob/dev/docu/JEngine_REST_Specs.pdf) inside the doc folder.
+See the [documentation](https://github.com/BP2014W1/JEngine/raw/dev/docu/rest/JEngine_REST_Specs.pdf) inside the doc folder.
 
 ## Setup
 
@@ -31,11 +31,15 @@ Cloning of this repo
 
 Further an MySQL Database should be created named as "JEngineV2" & import SQL file from 
 
-    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2.sql
+    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2_schema.sql
 
-Please be aware of the database settings inside the web.xml . For the tests you may want to adapt also the database_connection in
+Please be aware of the database settings inside the web.xml in
 
-    JEngine/blob/dev/src/main/resources/database_connection
+    JEngine/src/main/resources/webapp/WEB-INF/web.xml
+
+For the tests you may want to adapt also the database_connection in
+
+    JEngine/src/main/resources/database_connection
 
 After changing server ips you may want to update the Config.java in the config package.
 
@@ -72,11 +76,11 @@ We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-respon
 
 Class View
 
-![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/img/class_view_organic.png)
+![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/class_view_organic.png)
 
 Package View
 
-![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/img/package_view_organic.png)
+![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/package_view_organic.png)
 
 ## Features
 
@@ -89,4 +93,4 @@ This JEngine does execute
 
 ## Addendum
 
-For further details we kindly refer to the [projekt site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
+For further details we kindly refer to the [project site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)

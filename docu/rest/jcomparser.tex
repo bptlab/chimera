@@ -1,0 +1,43 @@
+%
+%%
+\subsection{JComparser}  %status = done   GET(2/2) POST(1/1) 
+\label{subsec:Comparser}
+
+	%
+    %%
+	\subsubsection{Scenarios}
+	
+	\textbf{Get all available scenarios for import}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{jcomparser/scenarios}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+{
+    "ids":
+        {
+            "800682779972007735":"Coffee process",
+            "635432698":"Coffee process",
+            "932221086":"Kaffeeprozess"
+        }
+}
+			\end{lstlisting}
+			\captionof{json}{Example output of get all available scenarios from jcomparser}
+		\end{flushleft}
+
+	 	\textbf{Get image of scenario}\\
+			\begin{tabular}{lll}
+				http & GET & \texttt{jcomparser/scenarios/932221086/image/}
+			\end{tabular}
+		\begin{flushleft}
+			\begin{lstlisting}
+                \missingfigure{example scenario image}
+			\end{lstlisting}
+			\captionof{json}{Example output of get activies log}
+		\end{flushleft}
+
+
+	 	\textbf{POST launch import of scenario}\\
+			\begin{tabular}{lll}
+				http & POST & \texttt{jcomparser/scenarios/932221086/}
+			\end{tabular}
