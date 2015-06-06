@@ -391,10 +391,10 @@ public class ScenarioInstance {
     }
 
     /**
-     * Get the control node instance id for a given control node id.
+     * Get the control node instance for a given control node id.
      *
      * @param controlNode_id This is a id of a control node.
-     * @return the control instance id for the given control node id.
+     * @return the control instance for the given control node id.
      */
     public ControlNodeInstance getControlNodeInstanceForControlNodeId(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {
