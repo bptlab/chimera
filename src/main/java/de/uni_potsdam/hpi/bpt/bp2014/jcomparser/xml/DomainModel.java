@@ -189,7 +189,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
     private Element fetchVersionXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
-            String versionXML = jRetrieval.getHTMLwithAuth(
+            String versionXML = jRetrieval.getXMLWithAuth(
                     processeditorServerUrl,
                     processeditorServerUrl + "models/" + domainModelModelID + "/versions");
             InputSource is = new InputSource();

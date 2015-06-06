@@ -50,9 +50,9 @@ public class Fragment implements IDeserialisable, IPersistable {
      */
     private long fragmentID;
     /**
-     * A Map which maps Model-XML-Element-IDs to ControlNodes.
+     * A Map which maps Model-XML-Element-IDs to nodes (might be either controlNodes or dataNodes).
      */
-    private Map<Long, Node> controlNodes;
+    private Map<Long, Node> nodes;
     /**
      * The List of Edges created from the FragmentXML.
      */
@@ -98,7 +98,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         this.fragmentXML = element;
         setFragmentName();
         setFragmentID();
-        generateControlNodes();
+        generateNodes();
         generateEdges();
         generateSets();
         setVersionNumber();
@@ -139,7 +139,7 @@ public class Fragment implements IDeserialisable, IPersistable {
     private Element fetchVersionXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
-            String versionXML = jRetrieval.getHTMLwithAuth(
+            String versionXML = jRetrieval.getXMLWithAuth(
                     processeditorServerUrl,
                     processeditorServerUrl + "models/" + fragmentID + "/versions");
             InputSource is = new InputSource();
@@ -175,12 +175,12 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * generates Sets (I/O) for all Activities,
      * which are part of DataFlow inside the Fragment.
-     * Assert that first all ControlNodes have to be initialized.
+     * Assert that first all Control- and DataNodes have been initialized.
      */
     private void generateSets() {
         inputSets = new LinkedList<InputSet>();
         outputSets = new LinkedList<OutputSet>();
-        for (Node node : controlNodes.values()) {
+        for (Node node : nodes.values()) {
             if (node.isTask()) {
                 List<InputSet> iSets = InputSet.createInputSetForTaskAndEdges(node,
                         edges);
@@ -230,7 +230,7 @@ public class Fragment implements IDeserialisable, IPersistable {
             for (int i = 0; i < edgeNodes.getLength(); i++) {
                 Edge currentEdge = new Edge();
                 currentEdge.initializeInstanceFromXML(edgeNodes.item(i));
-                currentEdge.setControlNodes(controlNodes);
+                currentEdge.setControlNodes(nodes);
                 this.edges.add(currentEdge);
             }
         } catch (XPathExpressionException e) {
@@ -241,21 +241,21 @@ public class Fragment implements IDeserialisable, IPersistable {
     /**
      * Extracts all Nodes from the XML and creates Node objects.
      */
-    private void generateControlNodes() {
+    private void generateNodes() {
 
         try {
             //get all nodes from fragmentXML
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery = "/model/nodes/node";
-            NodeList nodes = (NodeList) xPath
+            NodeList xmlNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.fragmentXML, XPathConstants.NODESET);
-            this.controlNodes = new HashMap<Long, Node>(nodes.getLength());
+            this.nodes = new HashMap<Long, Node>(xmlNodes.getLength());
 
-            for (int i = 0; i < nodes.getLength(); i++) {
+            for (int i = 0; i < xmlNodes.getLength(); i++) {
                 Node currentNode = new Node();
-                currentNode.initializeInstanceFromXML(nodes.item(i));
-                this.controlNodes.put(currentNode.getId(), currentNode);
+                currentNode.initializeInstanceFromXML(xmlNodes.item(i));
+                this.nodes.put(currentNode.getId(), currentNode);
             }
         } catch (XPathExpressionException e) {
             log.error("Error:", e);
@@ -297,7 +297,7 @@ public class Fragment implements IDeserialisable, IPersistable {
                 this.scenarioID,
                 this.fragmentID,
                 this.versionNumber);
-        for (Node node : controlNodes.values()) {
+        for (Node node : nodes.values()) {
             node.setFragmentId(databaseID);
             node.save();
         }
@@ -330,7 +330,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         int oldFragmentID = connector.getFragmentID(scenarioDbID, fragmentID);
         connector.migrateFragmentInstance(oldFragmentID, databaseID);
         // migrate controlNodes
-        for (Map.Entry<Long, Node> node : controlNodes.entrySet()) {
+        for (Map.Entry<Long, Node> node : nodes.entrySet()) {
             if (node.getValue().isTask()) {
                 node.getValue().migrate(oldFragmentID);
             }
@@ -355,7 +355,7 @@ public class Fragment implements IDeserialisable, IPersistable {
      * @return Map<XML_ID, ControlNode>
      */
     public Map<Long, Node> getControlNodes() {
-        return controlNodes;
+        return nodes;
     }
 
     /**

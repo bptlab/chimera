@@ -39,7 +39,7 @@ public class JComparser {
                                                final String processServer)
             throws ParserConfigurationException, IOException, SAXException {
         Retrieval jRetrieval = new Retrieval();
-        String scenarioXML = jRetrieval.getHTMLwithAuth(processServer, pcmUrl);
+        String scenarioXML = jRetrieval.getXMLWithAuth(processServer, pcmUrl);
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(scenarioXML));
         DocumentBuilder db = DocumentBuilderFactory
@@ -62,7 +62,7 @@ public class JComparser {
     public HashMap<String, String> getScenarioNamesAndIDs(
             final String processeditorServerUrl)
             throws XPathExpressionException {
-        String modelXML = new Retrieval().getHTMLwithAuth(
+        String modelXML = new Retrieval().getXMLWithAuth(
                 processeditorServerUrl,
                 processeditorServerUrl + "models");
         Document modelDoc = stringToDocument(modelXML);
@@ -106,7 +106,7 @@ public class JComparser {
             throws XPathExpressionException {
 
         String modelXML = new Retrieval()
-                .getHTMLwithAuth(
+                .getXMLWithAuth(
                         processeditorServerUrl,
                         processeditorServerUrl + "models");
         Document models = stringToDocument(modelXML);
@@ -131,7 +131,7 @@ public class JComparser {
                         "models/" + currentScenarioID + ".pm";
                 Scenario scenario = new Scenario(processeditorServerUrl);
                 String currentScenarioXML = new Retrieval()
-                        .getHTMLwithAuth(processeditorServerUrl, newScenarioURI);
+                        .getXMLWithAuth(processeditorServerUrl, newScenarioURI);
                 scenario.initializeInstanceFromXML(
                         stringToDocument(currentScenarioXML).getFirstChild());
                 scenario.save();

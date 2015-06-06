@@ -161,7 +161,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private Element fetchDomainModelXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
-            String versionXML = jRetrieval.getHTMLwithAuth(
+            String versionXML = jRetrieval.getXMLWithAuth(
                     processeditorServerUrl,
                     processeditorServerUrl + "models/" + domainModelURI + ".pm");
             InputSource is = new InputSource();
@@ -332,7 +332,7 @@ public class Scenario implements IDeserialisable, IPersistable {
     private Element fetchVersionXML() {
         try {
             Retrieval jRetrieval = new Retrieval();
-            String versionXML = jRetrieval.getHTMLwithAuth(
+            String versionXML = jRetrieval.getXMLWithAuth(
                     processeditorServerUrl,
                     processeditorServerUrl + "models/" +
                             scenarioID + "/versions");
@@ -723,7 +723,7 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private Fragment createAndInitializeFragment(String fragmentID) {
         Retrieval retrieval = new Retrieval();
-        String fragmentXML = retrieval.getHTMLwithAuth(
+        String fragmentXML = retrieval.getXMLWithAuth(
                 this.processeditorServerUrl,
                 this.processeditorServerUrl +
                         "models/" + fragmentID + ".pm");

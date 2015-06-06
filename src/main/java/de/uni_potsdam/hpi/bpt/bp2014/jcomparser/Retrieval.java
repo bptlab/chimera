@@ -35,15 +35,16 @@ public class Retrieval {
     private String password = Settings.processeditorServerPassword;
 
     /**
-     * Get HTML from URL.
+     * Get the content from URL. In case of the JComparser, it is used to get the XML of a processModel. Therefore,
+     * the authentication for the ProcessEditor is used.
      *
      * @param hosturl   the basic hosturl (e.g. "http://localhost:1205/")
      * @param urlToRead contains the hosturl and additional path from which
-     *                  html should be retrieved
+     *                  the content should be retrieved
      *                  (e.g. "http://localhost:1205/models/")
      * @return the response as String from urlToRead
      */
-    public String getHTMLwithAuth(String hosturl, String urlToRead) {
+    public String getXMLWithAuth(String hosturl, String urlToRead) {
         try {
             InputStream inputStream = getInputStream(hosturl, urlToRead);
             BufferedReader reader = new BufferedReader(
