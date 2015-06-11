@@ -6,7 +6,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 import java.util.LinkedList;
 
 
-
 /**
  * Represents data object instances.
  */

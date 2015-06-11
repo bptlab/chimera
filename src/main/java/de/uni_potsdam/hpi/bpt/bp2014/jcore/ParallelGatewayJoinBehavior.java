@@ -6,8 +6,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import java.util.LinkedList;
 
 
-
-
 public class ParallelGatewayJoinBehavior extends IncomingBehavior {
     /**
      * Database Connection objects
