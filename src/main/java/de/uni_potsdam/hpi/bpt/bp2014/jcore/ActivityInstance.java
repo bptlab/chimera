@@ -99,15 +99,17 @@ public class ActivityInstance extends ControlNodeInstance {
         switch (dbControlNode.getType(controlNode_id)) {
             case "EmailTask":
                 this.taskExecutionBehavior = new EmailTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
-                this.isAutomaticTask = true;
                 break;
             case "WebServiceTask":
                 this.taskExecutionBehavior = new WebServiceTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
-                this.isAutomaticTask = true;
                 break;
             default:
                 this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
-                this.isAutomaticTask = false;
+        }
+        if(automaticExecution){
+            isAutomaticTask = true;
+        }else{
+            isAutomaticTask = false;
         }
     }
 
