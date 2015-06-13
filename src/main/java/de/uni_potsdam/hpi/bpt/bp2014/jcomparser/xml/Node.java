@@ -13,8 +13,6 @@ import java.util.HashMap;
  */
 public class Node implements IDeserialisable, IPersistable {
 
-
-    // Attributes from the XML
     /**
      * The type of the Node. It will be extracted from the XML File.
      */
@@ -28,14 +26,10 @@ public class Node implements IDeserialisable, IPersistable {
      */
     private String text;
     /**
-     * A flag which shows if a task is true or not.
+     * A flag which shows if a task is global or not.
      */
     private boolean global;
-    /**
-     * Saves the relation between the types used in the PE and database.
-     */
-    private HashMap<String, String> peTypeToDbType;
-    // Database specific Attributes
+
     /**
      * The database id of the node.
      * Will be set as soon as the node is written to the database.
@@ -56,35 +50,29 @@ public class Node implements IDeserialisable, IPersistable {
      */
     private String stereotype;
 
-
     /**
-     * Creates a not initialized node.
-     */
-    public Node() {
-        initializeTypeMap();
-    }
-
-    /**
-     * Initializes the map of Types.
      * Each supported type of the process editor is mapped to
      * a type inside the database.
+     * @param type The type of the process element from the xml
+     * @return the type as String that is written to the database
      */
-    private void initializeTypeMap() {
-        peTypeToDbType = new HashMap<String, String>();
-        peTypeToDbType.put("net.frapu.code.visualization.bpmn.Task",
-                "Activity");
-        peTypeToDbType.put("net.frapu.code.visualization.bpmn.EndEvent",
-                "Endevent");
-        peTypeToDbType.put("net.frapu.code.visualization.bpmn.StartEvent",
-                "Startevent");
-        peTypeToDbType.put("net.frapu.code.visualization.bpmn.ParallelGateway",
-                "AND");
-        peTypeToDbType.put("net.frapu.code.visualization.bpmn.ExclusiveGateway",
-                "XOR");
-        peTypeToDbType.put("SEND",
-                "EmailTask");
-        peTypeToDbType.put("SERVICE",
-                "WebServiceTask");
+    private String getDbTypeByPeType(String type) {
+        if (type.contains("Task"))
+            return "Activity";
+        if (type.contains("EndEvent"))
+            return "Endevent";
+        if (type.contains("StartEvent"))
+            return "Startevent";
+        if (type.contains("ParallelGateway"))
+            return "AND";
+        if (type.contains("ExclusiveGateway"))
+            return "XOR";
+        if (type.contains("SEND"))
+            return "EmailTask";
+        if (type.contains("SERVICE"))
+            return "WebServiceTask";
+        else
+            return "";
     }
 
 
@@ -156,7 +144,7 @@ public class Node implements IDeserialisable, IPersistable {
             if (!stereotype.isEmpty()) {
                 // we identify mailtasks that need to be marked in the database by their stereotype
                 databaseID = connector.insertControlNodeIntoDatabase(text,
-                        peTypeToDbType.get(stereotype),
+                        getDbTypeByPeType(stereotype),
                         fragmentId,
                         id);
                 if (stereotype.equals("SEND"))
@@ -165,7 +153,7 @@ public class Node implements IDeserialisable, IPersistable {
             } else {
                 // DataNodes will be done in DataObject
                 databaseID = connector.insertControlNodeIntoDatabase(text,
-                        peTypeToDbType.get(type),
+                        getDbTypeByPeType(type),
                         fragmentId,
                         id);
             }

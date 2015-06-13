@@ -1,4 +1,4 @@
-<model id="1084827857" name="FragmentA" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model id="1084827857" name="FragmentA" type="somePackage.PCMFragment" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0" />
@@ -10,7 +10,7 @@
          <property name="stereotype" value="" />
          <property name="non_interupting" value="0" />
          <property name="#id" value="1069345757" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.StartEvent" />
+         <property name="#type" value="somePackage.StartEvent" />
          <property name="height" value="30" />
       </node>
       <node>
@@ -22,7 +22,7 @@
          <property name="text" value="" />
          <property name="stereotype" value="" />
          <property name="#id" value="1569336784" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.ParallelGateway" />
+         <property name="#type" value="somePackage.ParallelGateway" />
          <property name="height" value="40" />
       </node>
       <node>
@@ -38,7 +38,7 @@
          <property name="text" value="Ref" />
          <property name="stereotype" value="" />
          <property name="#id" value="826790323" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.Task" />
+         <property name="#type" value="somePackage.Task" />
          <property name="height" value="60" />
       </node>
       <node>
@@ -78,7 +78,7 @@
          <property name="text" value="" />
          <property name="stereotype" value="" />
          <property name="#id" value="1914825610" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.EndEvent" />
+         <property name="#type" value="somePackage.EndEvent" />
          <property name="height" value="30" />
       </node>
       <node>
@@ -93,7 +93,7 @@
          <property name="stereotype" value="" />
          <property name="state" value="init" />
          <property name="#id" value="135409402" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.DataObject" />
+         <property name="#type" value="somePackage.DataObject" />
          <property name="height" value="60" />
       </node>
       <node>
@@ -122,7 +122,7 @@
          <property name="#label_offset" value="0.5" />
          <property name="label" value="" />
          <property name="#id" value="369834859" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.SequenceFlow" />
+         <property name="#type" value="somePackage.SequenceFlow" />
          <property name="#source_dockpoint" value="" />
          <property name="points" value="" />
       </edge>
@@ -199,7 +199,7 @@
          <property name="#label_offset" value="0.5" />
          <property name="label" value="" />
          <property name="#id" value="913118523" />
-         <property name="#type" value="net.frapu.code.visualization.bpmn.Association" />
+         <property name="#type" value="somePackage.Association" />
          <property name="#source_dockpoint" value="19,2" />
          <property name="points" value="423,85" />
          <property name="direction" value="TARGET" />
