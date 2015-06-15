@@ -54,10 +54,10 @@ public class InputSet extends Set implements IPersistable {
         for (List<Edge> edgeSet : cartProd) {
             InputSet instance = new InputSet();
             instance.associations = edgeSet;
-            instance.dataObjects = new LinkedList<>();
+            instance.dataNodes = new LinkedList<>();
             instance.node = task;
             for (Edge e : edgeSet) {
-                instance.dataObjects.add(e.getSource());
+                instance.dataNodes.add(e.getSource());
             }
             inputSets.add(instance);
         }

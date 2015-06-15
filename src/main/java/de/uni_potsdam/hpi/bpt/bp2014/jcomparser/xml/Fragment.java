@@ -201,21 +201,6 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     /**
-     * Checks if a specific node has an output set or not.
-     *
-     * @param node The node which will be checked
-     * @return true if an output set exists else false.
-     */
-    private boolean nodeHasOutputSet(final Node node) {
-        for (Edge edge : edges) {
-            if (edge.getSource() == node && edge.getTarget().isDataNode()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Extracts all Edges from the XML and creates Edge objects.
      */
     private void generateEdges() {

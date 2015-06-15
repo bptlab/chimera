@@ -12,9 +12,9 @@ public class Set {
      */
     public List<Edge> associations;
     /**
-     * All DataObject which are part of this Set
+     * All DataNodes which are part of this Set
      */
-    public List<Node> dataObjects;
+    public List<Node> dataNodes;
     /**
      * The Activity (Node) which has this set
      */
@@ -51,8 +51,8 @@ public class Set {
      *
      * @return the list of data nodes which are part of the InputSet
      */
-    public List<Node> getDataObjects() {
-        return dataObjects;
+    public List<Node> getDataNodes() {
+        return dataNodes;
     }
 
     public Node getNode() {

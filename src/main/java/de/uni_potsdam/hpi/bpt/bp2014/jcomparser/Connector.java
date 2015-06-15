@@ -18,7 +18,7 @@ import java.util.Map;
  * The Connector has methods to create entries inside the database.
  * Therefore it uses the database.Connection class.
  */
-public class Connector extends DbDataObject {
+public class Connector extends DbObject {
     static Logger log = Logger.getLogger(Connector.class.getName());
 
     /**

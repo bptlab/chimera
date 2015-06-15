@@ -36,7 +36,7 @@ public class DataClass implements IDeserialisable, IPersistable {
      * This boolean is used to identify the root element
      * of the domainModel which is used to get the caseDataObject.
      */
-    private boolean rootNode = false;
+    private boolean isRootNode = false;
     /**
      * This is a list containing all dataAttributes belonging to this dataClass.
      */
@@ -100,7 +100,7 @@ public class DataClass implements IDeserialisable, IPersistable {
                 dataClassModelID = Long.parseLong(value);
                 break;
             case "stereotype":
-                rootNode = value.equals("root_instance");
+                isRootNode = value.equals("root_instance");
                 break;
             default:
                 // Property will not be handled
@@ -116,7 +116,7 @@ public class DataClass implements IDeserialisable, IPersistable {
     @Override
     public int save() {
         Connector conn = new Connector();
-        int root = this.rootNode ? 1 : 0;
+        int root = this.isRootNode ? 1 : 0;
         this.dataClassID = conn.insertDataClassIntoDatabase(
                 this.dataClassName,
                 root);
@@ -170,7 +170,7 @@ public class DataClass implements IDeserialisable, IPersistable {
     }
 
     public boolean isRootNode() {
-        return rootNode;
+        return isRootNode;
     }
 
     public Node getDataClassXML() {

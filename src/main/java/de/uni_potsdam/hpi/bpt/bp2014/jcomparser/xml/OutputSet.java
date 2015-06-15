@@ -52,10 +52,10 @@ public class OutputSet extends Set implements IPersistable {
         for (List<Edge> edgeSet : cartProd) {
             OutputSet instance = new OutputSet();
             instance.associations = edgeSet;
-            instance.dataObjects = new LinkedList<>();
+            instance.dataNodes = new LinkedList<>();
             instance.node = task;
             for (Edge e : edgeSet) {
-                instance.dataObjects.add(e.getTarget());
+                instance.dataNodes.add(e.getTarget());
             }
             outputSets.add(instance);
         }

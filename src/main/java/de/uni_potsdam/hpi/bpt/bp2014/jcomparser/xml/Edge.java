@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Edge implements IDeserialisable, IPersistable {
     /**
-     * Maps the Model-Node-ID (from the XML) to the ControlNode Object.
+     * Maps the Node-Model-ID (from the XML) to the ControlNode Object.
      */
     private Map<Long, Node> controlNodes;
     /**
