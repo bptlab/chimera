@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 
-
-
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 
     public HumanTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {

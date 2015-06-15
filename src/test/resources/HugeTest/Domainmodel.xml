@@ -1,4 +1,4 @@
-<model id="790983467" name="Domainmodel" type="net.frapu.code.visualization.domainModel.DomainModel" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model id="790983467" name="Domainmodel" type="somePackage.DomainModel" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0" />
@@ -11,7 +11,7 @@
          <property name="text" value="DO" />
          <property name="stereotype" value="root_instance" />
          <property name="#id" value="2068589604" />
-         <property name="#type" value="net.frapu.code.visualization.domainModel.DomainClass" />
+         <property name="#type" value="somePackage.DomainClass" />
          <property name="key" value="" />
          <property name="height" value="80" />
       </node>
@@ -48,7 +48,7 @@
          <property name="sourceVisibility" value="" />
          <property name="sourceName" value="" />
          <property name="#id" value="1336965161" />
-         <property name="#type" value="net.frapu.code.visualization.domainModel.Aggregation" />
+         <property name="#type" value="somePackage.Aggregation" />
          <property name="#source_dockpoint" value="" />
          <property name="direction" value="NONE" />
       </edge>

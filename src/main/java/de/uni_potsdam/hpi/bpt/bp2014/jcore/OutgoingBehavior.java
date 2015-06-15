@@ -4,7 +4,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 
 
-
 public abstract class OutgoingBehavior {
     protected final DbControlFlow dbControlFlow = new DbControlFlow();
     protected final DbControlNode dbControlNode = new DbControlNode();

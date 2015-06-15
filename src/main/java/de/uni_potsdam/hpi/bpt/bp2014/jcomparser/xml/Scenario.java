@@ -663,7 +663,7 @@ public class Scenario implements IDeserialisable, IPersistable {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String xPathQuery =
                 "/model/nodes/node[property[@name = '#type' and " +
-                        "@value = 'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode']]";
+                        "@value[contains(.,'PCMDataObjectNode')]]]";
         try {
             NodeList nodes = (NodeList) xPath
                     .compile(xPathQuery)
@@ -695,7 +695,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             XPath xPath = XPathFactory.newInstance().newXPath();
             String xPathQuery =
                     "/model/nodes/node[property[@name = '#type' and " +
-                            "@value = 'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentNode']]";
+                            "@value[contains(.,'PCMFragmentNode')]]]";
             NodeList fragmentNodes = (NodeList) xPath
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML, XPathConstants.NODESET);

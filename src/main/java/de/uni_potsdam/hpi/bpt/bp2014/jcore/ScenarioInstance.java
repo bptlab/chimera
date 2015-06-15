@@ -151,86 +151,6 @@ public class ScenarioInstance {
         }
     }
 
-    /**
-     * Compares the given state for a data object with the state from the data object in the scenario.
-     *
-     * @param dataObject_id This is the database id from the data object.
-     * @param state_id      This is the database id from the state.
-     * @return true if the data object has the same state. false if not
-     */
-    public Boolean checkDataObjectState(int dataObject_id, int state_id) {
-        for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-            if (dataObjectInstance.getDataObject_id() == dataObject_id && dataObjectInstance.getState_id() == state_id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Change the state of the given data object.
-     *
-     * @param dataObject_id This is the database id from the data object.
-     * @param state_id      This is the database id from the state.
-     * @return true if the data object state could been changed. false if not
-     */
-    public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id) {
-        for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-            if (dataObjectInstance.getDataObject_id() == dataObject_id) {
-                dataObjectInstance.setState(state_id);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Sets the data object to on change.
-     * Write this into the database.
-     *
-     * @param dataObject_id This is the database id from the data object.
-     * @return true if the on change could been set. false if not.
-     */
-    public Boolean setDataObjectInstanceToOnChange(int dataObject_id) {
-        DataObjectInstance dataObjectInstanceOnChange = null;
-        for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-            if (dataObjectInstance.getDataObject_id() == dataObject_id) {
-                dataObjectInstanceOnChange = dataObjectInstance;
-                break;
-            }
-        }
-        if (dataObjectInstanceOnChange != null) {
-            dataObjectInstances.remove(dataObjectInstanceOnChange);
-            dataObjectInstancesOnChange.add(dataObjectInstanceOnChange);
-            dataObjectInstanceOnChange.setOnChange(true);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Sets the data object to not on change.
-     * Write this into the database.
-     *
-     * @param dataObject_id This is the database id from the data object.
-     * @return true if the on change could been set. false if not.
-     */
-    public Boolean setDataObjectInstanceToNotOnChange(int dataObject_id) {
-        DataObjectInstance dataObjectInstanceOnChange = null;
-        for (DataObjectInstance dataObjectInstance : dataObjectInstancesOnChange) {
-            if (dataObjectInstance.getDataObject_id() == dataObject_id) {
-                dataObjectInstanceOnChange = dataObjectInstance;
-                break;
-            }
-        }
-        if (dataObjectInstanceOnChange != null) {
-            dataObjectInstancesOnChange.remove(dataObjectInstanceOnChange);
-            dataObjectInstances.add(dataObjectInstanceOnChange);
-            dataObjectInstanceOnChange.setOnChange(false);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Checks if the control flow enabled control nodes can set to data flow enabled.
@@ -284,44 +204,6 @@ public class ScenarioInstance {
         return false;
     }
 
-    /**
-     * checks if the referenced controlNode can be started.
-     * The referenced controlNode have to be control flow enabled and (data flow enabled or must have the same data output)
-     *
-     * @param controlNode_id           This is the database id from a control node.
-     * @param referencedControlNode_id This is the database id from a control node.
-     */
-    public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id, int referencedControlNode_id) {
-        for (ControlNodeInstance controlNodeInstance : controlFlowEnabledControlNodeInstances) {
-            if (controlNodeInstance.controlNode_id == referencedControlNode_id) {
-                if (controlNodeInstance.getClass() == ActivityInstance.class) {
-                    DbControlNode dbControlNode = new DbControlNode();
-                    if (enabledControlNodeInstances.contains(controlNodeInstance) || dbControlNode.controlNodesHaveSameOutputs(controlNode_id, referencedControlNode_id)) {
-                        ((ActivityInstance) controlNodeInstance).referenceStarted();
-                        return;
-                    }
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Checks if the referenced controlNode can be terminated.
-     * The referenced controlNode have to be referential running.
-     *
-     * @param controlNode_id This is the database id from the control node.
-     */
-    public void terminateReferenceControlNodeInstanceForControlNodeInstanceID(int controlNode_id) {
-        for (ControlNodeInstance controlNodeInstance : referentialRunningControlNodeInstances) {
-            if (controlNodeInstance.controlNode_id == controlNode_id) {
-                if (controlNodeInstance.getClass() == ActivityInstance.class) {
-                    ((ActivityInstance) controlNodeInstance).referenceTerminated();
-                    return;
-                }
-            }
-        }
-    }
 
     /**
      * Check the termination condition.
@@ -391,10 +273,10 @@ public class ScenarioInstance {
     }
 
     /**
-     * Get the control node instance id for a given control node id.
+     * Get the control node instance for a given control node id.
      *
      * @param controlNode_id This is a id of a control node.
-     * @return the control instance id for the given control node id.
+     * @return the control instance for the given control node id.
      */
     public ControlNodeInstance getControlNodeInstanceForControlNodeId(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {

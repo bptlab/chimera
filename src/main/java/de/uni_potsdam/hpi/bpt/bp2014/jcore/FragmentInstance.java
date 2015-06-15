@@ -88,7 +88,7 @@ public class FragmentInstance {
                 controlNodeInstance = new GatewayInstance(controlNode, fragmentInstance_id, scenarioInstance);
                 break;
         }
-        (controlNodeInstance.getIncomingBehavior()).enableControlFlow();
+        controlNodeInstance.enableControlFlow();
     }
 
     /**

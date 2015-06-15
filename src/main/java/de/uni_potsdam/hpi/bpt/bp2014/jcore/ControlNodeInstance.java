@@ -12,6 +12,13 @@ public abstract class ControlNodeInstance {
     protected int controlNodeInstance_id;
     protected int controlNode_id;
 
+
+    /**
+     * Enables the control flow.
+     */
+    public void enableControlFlow(){
+        incomingBehavior.enableControlFlow();
+    }
     /**
      * Skips the control node.
      *

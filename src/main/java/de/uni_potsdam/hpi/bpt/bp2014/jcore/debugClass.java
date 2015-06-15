@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 public class debugClass {
     static Logger log = Logger.getLogger(debugClass.class.getName());
 

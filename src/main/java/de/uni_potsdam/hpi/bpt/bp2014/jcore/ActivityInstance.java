@@ -14,10 +14,8 @@ import java.util.Map;
  */
 
 public class ActivityInstance extends ControlNodeInstance {
-    private TaskExecutionBehavior taskExecutionBehavior;
     private final ScenarioInstance scenarioInstance;
     private final String label;
-    private boolean isAutomaticTask;
     /**
      * Database Connection objects.
      */
@@ -25,6 +23,8 @@ public class ActivityInstance extends ControlNodeInstance {
     private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
     private final DbControlNode dbControlNode = new DbControlNode();
     private final DbReference dbReference = new DbReference();
+    private TaskExecutionBehavior taskExecutionBehavior;
+    private boolean isAutomaticTask;
     private LinkedList<Integer> references;
     private boolean automaticExecution;
     private boolean canTerminate;
@@ -62,6 +62,7 @@ public class ActivityInstance extends ControlNodeInstance {
         ((ActivityStateMachine) stateMachine).enableControlFlow();
         this.initActivityInstance();
     }
+
     /**
      * Creates and initializes a new activity instance.
      * Reads the information for an existing activity instance from the database.
@@ -90,7 +91,7 @@ public class ActivityInstance extends ControlNodeInstance {
     /**
      * Initialize other information for the instance.
      */
-    private void initActivityInstance(){
+    private void initActivityInstance() {
         this.canTerminate = dbActivityInstance.getCanTerminate(controlNodeInstance_id);
         this.automaticExecution = dbActivityInstance.getAutomaticExecution(controlNodeInstance_id);
         this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance, stateMachine);

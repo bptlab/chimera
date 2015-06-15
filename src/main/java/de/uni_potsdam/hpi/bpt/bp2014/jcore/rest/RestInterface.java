@@ -1,7 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -789,7 +795,7 @@ public class RestInterface {
      * array of inputSets containing the inputSetDatabaseID, the name of the dataObject and their state as a Map &
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * a response status code:
-     *
+     * <p/>
      * A 200 if everything was correct.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
      * if the activity has no inputSet & with an error message instead of the array.
@@ -847,7 +853,7 @@ public class RestInterface {
      * array of outputSets containing the outputSetDatabaseID, the name of the dataObject and their state as a Map &
      * a link to get the dataObjectInstances with their dataAttributesInstances.
      * a response status code:
-     *
+     * <p/>
      * A 200 if everything was correct.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance is non-existing or
      * if the activity has no outputSet & with an error message instead of the array.
