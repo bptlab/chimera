@@ -30,7 +30,7 @@ public class GatewayInstance extends ControlNodeInstance {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlFlowEnabledControlNodeInstances()) {
             if (controlNodeInstance.fragmentInstance_id == controlNodeInstance_id && controlNodeInstance.controlNode_id == controlNode_id) {
                 //if it exist, only checks the control flow
-                controlNodeInstance.incomingBehavior.enableControlFlow();
+                controlNodeInstance.enableControlFlow();
                 return;
             }
         }

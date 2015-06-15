@@ -151,11 +151,11 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         if (defaultExecution) {
             if (defaultControlNode != -1) {
                 ControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(defaultControlNode);
-                controlNodeInstance.getIncomingBehavior().enableControlFlow();
+                controlNodeInstance.enableControlFlow();
             }
         } else {
             ControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(controlNode_id);
-            controlNodeInstance.getIncomingBehavior().enableControlFlow();
+            controlNodeInstance.enableControlFlow();
         }
 
     }

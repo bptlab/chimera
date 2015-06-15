@@ -11,7 +11,7 @@ public abstract class ParallelOutgoingBehavior extends OutgoingBehavior {
         for (int followingControlNode_id : followingControlNode_ids) {
             ControlNodeInstance followingControlNodeInstance = createFollowingNodeInstance(followingControlNode_id);
             //enable following instances
-            followingControlNodeInstance.incomingBehavior.enableControlFlow();
+            followingControlNodeInstance.enableControlFlow();
         }
     }
 
