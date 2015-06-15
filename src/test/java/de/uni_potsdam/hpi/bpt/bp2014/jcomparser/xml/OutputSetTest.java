@@ -114,9 +114,9 @@ public class OutputSetTest{
         Assert.assertEquals("There is actually just one outputSet", 1, outputSets.size());
         Assert.assertEquals("The producer-Node has not been set correctly", activity, outputSets.get(0).getNode());
 
-        Assert.assertEquals("The output-Nodes have not been set correctly", 2, outputSets.get(0).getDataObjects().size());
-        Assert.assertTrue("The output-Nodes have not been set correctly", outputSets.get(0).getDataObjects().contains(dataNodes.get(0)));
-        Assert.assertTrue("The output-Nodes have not been set correctly", outputSets.get(0).getDataObjects().contains(dataNodes.get(1)));
+        Assert.assertEquals("The output-Nodes have not been set correctly", 2, outputSets.get(0).getDataNodes().size());
+        Assert.assertTrue("The output-Nodes have not been set correctly", outputSets.get(0).getDataNodes().contains(dataNodes.get(0)));
+        Assert.assertTrue("The output-Nodes have not been set correctly", outputSets.get(0).getDataNodes().contains(dataNodes.get(1)));
 
         Assert.assertEquals("The associations have not been set correctly", 2, outputSets.get(0).getAssociations().size());
         Assert.assertTrue("The associations have not been set correctly", outputSets.get(0).getAssociations().contains(dataFlowEdges.get(0)));
@@ -138,12 +138,12 @@ public class OutputSetTest{
         Assert.assertEquals("The consumer-Node has not been set correctly", activity, outputSets.get(0).getNode());
         Assert.assertEquals("The consumer-Node has not been set correctly", activity, outputSets.get(1).getNode());
 
-        Assert.assertEquals("The output-Nodes have not been set correctly", 1, outputSets.get(0).getDataObjects().size());
-        Assert.assertEquals("The output-Nodes have not been set correctly", 1, outputSets.get(1).getDataObjects().size());
-        if (dataNodes.get(0) == outputSets.get(0).getDataObjects().get(0))
-            Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(1).getDataObjects().get(0));
-        else if (dataNodes.get(0) == outputSets.get(1).getDataObjects().get(0))
-            Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(0).getDataObjects().get(0));
+        Assert.assertEquals("The output-Nodes have not been set correctly", 1, outputSets.get(0).getDataNodes().size());
+        Assert.assertEquals("The output-Nodes have not been set correctly", 1, outputSets.get(1).getDataNodes().size());
+        if (dataNodes.get(0) == outputSets.get(0).getDataNodes().get(0))
+            Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(1).getDataNodes().get(0));
+        else if (dataNodes.get(0) == outputSets.get(1).getDataNodes().get(0))
+            Assert.assertEquals("The output-Nodes have not been set correctly", dataNodes.get(1), outputSets.get(0).getDataNodes().get(0));
         else
             Assert.fail("The output-Nodes have not been set correctly");
 
