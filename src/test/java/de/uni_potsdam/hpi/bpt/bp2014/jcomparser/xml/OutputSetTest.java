@@ -92,7 +92,7 @@ public class OutputSetTest{
         dataNodes.add(datanode);
 
         for (Edge edge : dataFlowEdges) {
-            edge.setControlNodes(nodes);
+            edge.setNodes(nodes);
         }
     }
 

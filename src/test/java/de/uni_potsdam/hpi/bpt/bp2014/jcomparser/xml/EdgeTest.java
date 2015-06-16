@@ -56,8 +56,8 @@ public class EdgeTest {
         source = new Node();
         source.setId(88478777L);
         nodes.put(88478777L, source);
-        dataFlowEdge.setControlNodes(nodes);
-        controlFlowEdge.setControlNodes(nodes);
+        dataFlowEdge.setNodes(nodes);
+        controlFlowEdge.setNodes(nodes);
     }
     // END: Set-Up
 

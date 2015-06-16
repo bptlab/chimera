@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class Edge implements IDeserialisable, IPersistable {
     /**
-     * Maps the Node-Model-ID (from the XML) to the ControlNode Object.
+     * Maps the Node-Model-ID (from the XML) to the Node Object (might be either controlNOde or dataNode).
      */
-    private Map<Long, Node> controlNodes;
+    private Map<Long, Node> nodes;
     /**
      * The Model-XML-ID of the Edge.
      */
@@ -59,21 +59,21 @@ public class Edge implements IDeserialisable, IPersistable {
 
     @Override
     public int save() {
-        int targetDatabaseId = controlNodes.get(targetNodeId).getDatabaseID();
-        int sourceDatabaseId = controlNodes.get(sourceNodeId).getDatabaseID();
+        int targetDatabaseId = nodes.get(targetNodeId).getDatabaseID();
+        int sourceDatabaseId = nodes.get(sourceNodeId).getDatabaseID();
         Connector connector = new Connector();
         if (type.contains("SequenceFlow")) {
             connector.insertControlFlowIntoDatabase(sourceDatabaseId,
                     targetDatabaseId,
                     label);
         } else if (type.contains("Association")) {
-            Node controlNode = (controlNodes.get(sourceNodeId).isDataNode())
-                    ? controlNodes.get(targetNodeId)
-                    : controlNodes.get(sourceNodeId);
+            Node controlNode = (nodes.get(sourceNodeId).isDataNode())
+                    ? nodes.get(targetNodeId)
+                    : nodes.get(sourceNodeId);
             connector.insertDataFlowIntoDatabase(
                     controlNode.getDatabaseID(),
                     setId,
-                    !controlNodes.get(targetNodeId).isDataNode());
+                    !nodes.get(targetNodeId).isDataNode());
         }
         return 0;
     }
@@ -120,13 +120,13 @@ public class Edge implements IDeserialisable, IPersistable {
     // BEGIN: Getter & SETTER
 
     /**
-     * Set the list of controlNodes inside the Edge.
+     * Set the list of nodes inside the Edge.
      * This will be used to get the database ID.
      *
-     * @param newControlNodes the map of new ControlNodes
+     * @param newNodes the map of new nodes
      */
-    public void setControlNodes(final Map<Long, Node> newControlNodes) {
-        this.controlNodes = newControlNodes;
+    public void setNodes(final Map<Long, Node> newNodes) {
+        this.nodes = newNodes;
     }
 
     /**
@@ -134,10 +134,10 @@ public class Edge implements IDeserialisable, IPersistable {
      * If you change the content of the Map,
      * you will change the state of the edge.
      *
-     * @return the new controlNode
+     * @return all nodes
      */
-    public Map<Long, Node> getControlNodes() {
-        return controlNodes;
+    public Map<Long, Node> getNodes() {
+        return nodes;
     }
 
     /**
@@ -194,7 +194,7 @@ public class Edge implements IDeserialisable, IPersistable {
      * @return the target of the edge.
      */
     public Node getTarget() {
-        return controlNodes.get(targetNodeId);
+        return nodes.get(targetNodeId);
     }
 
     /**
@@ -203,7 +203,7 @@ public class Edge implements IDeserialisable, IPersistable {
      * @return the source of the edge.
      */
     public Node getSource() {
-        return controlNodes.get(sourceNodeId);
+        return nodes.get(sourceNodeId);
     }
 
     /**

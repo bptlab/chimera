@@ -215,7 +215,7 @@ public class Fragment implements IDeserialisable, IPersistable {
             for (int i = 0; i < edgeNodes.getLength(); i++) {
                 Edge currentEdge = new Edge();
                 currentEdge.initializeInstanceFromXML(edgeNodes.item(i));
-                currentEdge.setControlNodes(nodes);
+                currentEdge.setNodes(nodes);
                 this.edges.add(currentEdge);
             }
         } catch (XPathExpressionException e) {

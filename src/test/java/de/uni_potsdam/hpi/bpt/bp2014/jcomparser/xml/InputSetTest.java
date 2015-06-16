@@ -80,7 +80,7 @@ public class InputSetTest  {
         dataNodes.add(datanode);
 
         for (Edge edge : dataFlowEdges) {
-            edge.setControlNodes(nodes);
+            edge.setNodes(nodes);
         }
     }
 
