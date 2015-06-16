@@ -78,7 +78,7 @@ public class DataObject implements IPersistable {
 
     /**
      * Adds a state to the list of states.
-     * If there is no class associated with the data Object,
+     * As there is no class associated with the DataObject,
      * a new "Dummy"-Class will be created
      *
      * @param state - The name of the state,
@@ -87,8 +87,7 @@ public class DataObject implements IPersistable {
     private void addState(final String state) {
         Connector connector = new Connector();
         if (!states.containsKey(state)) {
-            int stateId = connector.insertStateIntoDatabase(state, classId);
-            states.put(state, stateId);
+            states.put(state, -1);
         }
     }
 
@@ -98,12 +97,9 @@ public class DataObject implements IPersistable {
             return -1;
         }
         Connector connector = new Connector();
-        for (Integer state : states.values()) {
-            connector.updateStates(state, dataClass.getDataClassID());
-        }
-        // We assume, that every DataObject starts with the state "init"
-        for (Integer state : states.values()) {
-            connector.updateStates(state, dataClass.getDataClassID());
+        for (String state : states.keySet()) {
+            int stateID = connector.insertStateIntoDatabase(state, dataClass.getDataClassID());
+            states.put(state, stateID);
         }
         initState = states.get("init");
         String dataObjectName = dataNodes.get(0).getText();

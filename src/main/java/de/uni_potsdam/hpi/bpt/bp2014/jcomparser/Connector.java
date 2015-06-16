@@ -711,14 +711,6 @@ public class Connector extends DbObject {
         return dbDataObject.executeStatementReturnsListLong(select, "datamodelid").get(0);
     }
 
-    public void updateStates(Integer state_id, int dataClassID) {
-        DbDataObject dbDataObject = new DbDataObject();
-        String sql = "UPDATE state " +
-                "SET state.olc_id = " + dataClassID +
-                " WHERE state.id = " + state_id;
-        dbDataObject.executeUpdateStatement(sql);
-    }
-
     /**
      * Find out if the scenario in the database is marked a s deleted.
      *
