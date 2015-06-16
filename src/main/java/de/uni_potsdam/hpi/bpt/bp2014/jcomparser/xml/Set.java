@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
 import java.util.*;
 
-public class Set {
+public class Set implements IPersistable{
     /**
      * A List of all (DataFlow-) Edges.
      * The edges have any of the (Data-) Nodes of the
@@ -61,5 +61,13 @@ public class Set {
 
     public List<Edge> getAssociations() {
         return associations;
+    }
+
+    @Override
+    public int save() {
+        Connector connector = new Connector();
+        databaseId = connector.insertDataSetIntoDatabase(this.getClass().getName().equals("de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.InputSet"));
+        updateEdges();
+        return databaseId;
     }
 }

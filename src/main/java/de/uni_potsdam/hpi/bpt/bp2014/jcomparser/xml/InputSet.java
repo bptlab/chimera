@@ -63,12 +63,4 @@ public class InputSet extends Set implements IPersistable {
         }
         return inputSets;
     }
-
-    @Override
-    public int save() {
-        Connector connector = new Connector();
-        databaseId = connector.insertDataSetIntoDatabase(true);
-        updateEdges();
-        return databaseId;
-    }
 }

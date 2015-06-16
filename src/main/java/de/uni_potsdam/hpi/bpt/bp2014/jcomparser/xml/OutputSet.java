@@ -61,12 +61,4 @@ public class OutputSet extends Set implements IPersistable {
         }
         return outputSets;
     }
-
-    @Override
-    public int save() {
-        Connector connector = new Connector();
-        databaseId = connector.insertDataSetIntoDatabase(false);
-        updateEdges();
-        return databaseId;
-    }
 }
