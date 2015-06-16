@@ -344,7 +344,8 @@ public class Fragment implements IDeserialisable, IPersistable {
     }
 
     /**
-     * The list of inputSets. Changes will alter the state of the fragment.
+     * The list of InputSets. Changes will alter the state of the fragment.
+     * Used only for test cases.
      *
      * @return List of InputSets
      */
@@ -354,11 +355,24 @@ public class Fragment implements IDeserialisable, IPersistable {
 
     /**
      * The list of OutputSets. Changes will affect the state of the fragment.
+     * Used only for test cases.
      *
      * @return List of Output Sets
      */
     public List<OutputSet> getOutputSets() {
         return outputSets;
+    }
+
+    /**
+     * Get a list of all Input- and OutputSets.
+     *
+     * @return List of Sets
+     */
+    public List<Set> getSets() {
+        List<Set> sets = new LinkedList<>();
+        sets.addAll(outputSets);
+        sets.addAll(inputSets);
+        return sets;
     }
 
     /**

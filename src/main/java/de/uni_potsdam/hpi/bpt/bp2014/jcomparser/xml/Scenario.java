@@ -564,40 +564,22 @@ public class Scenario implements IDeserialisable, IPersistable {
      */
     private void saveConsistsOf() {
         for (Fragment frag : fragments) {
-            saveInputSetsConsistOf(frag);
-            saveOutputSetsConsistOf(frag);
+            saveDataSetConsistOf(frag);
         }
     }
 
     /**
-     * Saves the relation of a output set to data nodes.
+     * Saves the relation of a dataSet to its dataNodes.
      * Only the nodes of one Fragment will be represented.
      *
-     * @param frag The fragment which contains the Output set
+     * @param frag The fragment which contains the DataSet
      */
-    private void saveOutputSetsConsistOf(final Fragment frag) {
+    private void saveDataSetConsistOf(final Fragment frag) {
         Connector connector = new Connector();
-        for (OutputSet oSet : frag.getOutputSets()) {
-            for (Node dataNode : oSet.getDataNodes()) {
+        for (Set set : frag.getSets()) {
+            for (Node dataNode : set.getDataNodes()) {
                 connector.insertDataSetConsistOfDataNodeIntoDatabase(
-                        oSet.getDatabaseId(),
-                        dataNode.getDatabaseID());
-            }
-        }
-    }
-
-    /**
-     * Saves the relation of input sets to data nodes.
-     * Only one fragment will be taken into consideration.
-     *
-     * @param frag The fragment which contains the Input set
-     */
-    private void saveInputSetsConsistOf(final Fragment frag) {
-        Connector connector = new Connector();
-        for (InputSet iSet : frag.getInputSets()) {
-            for (Node dataNode : iSet.getDataNodes()) {
-                connector.insertDataSetConsistOfDataNodeIntoDatabase(
-                        iSet.getDatabaseId(),
+                        set.getDatabaseId(),
                         dataNode.getDatabaseID());
             }
         }
