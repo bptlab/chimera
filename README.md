@@ -6,6 +6,10 @@
 
 The JEngine is a ProcessEngine to execute Production Case Management (PCM).
 
+## License
+
+The source code of the JEngine is provided under [MIT License](license.md).
+Please notice, that the used [Antlr framework](https://github.com/antlr/antlr4) is published under the [BSD License](https://github.com/antlr/antlr4/blob/master/LICENSE.txt).
 
 ## Architecture
 
