@@ -522,6 +522,11 @@ public class  ScenarioTest extends TestSetUp {
         Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(733));
         Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(730));
         Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(732));
+
+        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("bike").getStates().get("init"), dbDataObjectInstance.getStateID(731));
+        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("bike").getStates().get("init"), dbDataObjectInstance.getStateID(733));
+        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("Flug").getStates().get("init"), dbDataObjectInstance.getStateID(730));
+        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("Flug").getStates().get("init"), dbDataObjectInstance.getStateID(732));
     }
 
     /**
