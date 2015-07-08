@@ -1,4 +1,4 @@
-<model id="1442712096" name="DeletedFragmentSzenario" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+<model id="358512" name="Scenario" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
    <nodes>
       <node>
          <property name="shadow" value="0" />
@@ -10,8 +10,8 @@
          <property name="y" value="500" />
          <property name="text" value="" />
          <property name="stereotype" value="" />
-         <property name="#id" value="1344494753" />
-         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentCollection" />
+         <property name="#id" value="72088939" />
+         <property name="#type" value="somePackage.PCMFragmentCollection" />
          <property name="height" value="500" />
       </node>
       <node>
@@ -24,20 +24,33 @@
          <property name="y" value="500" />
          <property name="text" value="" />
          <property name="stereotype" value="" />
-         <property name="#id" value="197026724" />
-         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectCollection" />
+         <property name="#id" value="538104329" />
+         <property name="#type" value="somePackage.PCMDataObjectCollection" />
          <property name="height" value="500" />
       </node>
       <node>
-         <property name="fragment mid" value="1946280459" />
+         <property name="fragment mid" value="1084827857" />
          <property name="shadow" value="0" />
          <property name="color_background" value="-1" />
          <property name="x" value="700" />
          <property name="width" value="100" />
          <property name="y" value="290" />
-         <property name="text" value="Fragment1" />
+         <property name="text" value="FragmentA" />
          <property name="stereotype" value="" />
-         <property name="#id" value="1338755082" />
+         <property name="#id" value="1899707170" />
+         <property name="#type" value="somePackage.PCMFragmentNode" />
+         <property name="height" value="20" />
+      </node>
+      <node>
+         <property name="fragment mid" value="894096069" />
+         <property name="shadow" value="0" />
+         <property name="color_background" value="-1" />
+         <property name="x" value="700" />
+         <property name="width" value="100" />
+         <property name="y" value="270" />
+         <property name="text" value="FragmentB" />
+         <property name="stereotype" value="" />
+         <property name="#id" value="463926493" />
          <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentNode" />
          <property name="height" value="20" />
       </node>
@@ -50,33 +63,33 @@
          <property name="y" value="270" />
          <property name="text" value="NeuesFragment" />
          <property name="stereotype" value="" />
-         <property name="#id" value="1556752816" />
+         <property name="#id" value="463926493" />
          <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMFragmentNode" />
          <property name="height" value="20" />
       </node>
       <node>
          <property name="shadow" value="0" />
          <property name="color_background" value="-1" />
-         <property name="Data class" value="" />
+         <property name="Data class" value="http://127.0.0.1:1205/models/790983467#2068589604" />
          <property name="x" value="500" />
          <property name="width" value="100" />
-         <property name="y" value="290" />
-         <property name="text" value="bike" />
+         <property name="y" value="370" />
+         <property name="text" value="DO" />
          <property name="stereotype" value="" />
-         <property name="#id" value="1728823343" />
+         <property name="#id" value="30460774" />
          <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode" />
          <property name="height" value="20" />
       </node>
       <node>
          <property name="shadow" value="0" />
          <property name="color_background" value="-1" />
-         <property name="Data class" value="" />
+         <property name="Data class" value="http://127.0.0.1:1205/models/790983467#395565279" />
          <property name="x" value="500" />
          <property name="width" value="100" />
-         <property name="y" value="270" />
-         <property name="text" value="Person" />
+         <property name="y" value="310" />
+         <property name="text" value="SubDO" />
          <property name="stereotype" value="" />
-         <property name="#id" value="1928710588" />
+         <property name="#id" value="2034242068" />
          <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMDataObjectNode" />
          <property name="height" value="20" />
       </node>
@@ -84,11 +97,12 @@
    <edges />
    <properties>
       <property name="author" value="" />
-      <property name="Termination condition" value="" />
+      <property name="Termination condition" value="SubDO[end],DO[state1]; SubDO[init]; " />
       <property name="#folder" value="/" />
-      <property name="name" value="DeletedFragmentSzenario" />
-      <property name="#uri" value="/models/1442712096/versions/0" />
+      <property name="name" value="Scenario" />
+      <property name="#uri" value="/models/358512/versions/0" />
       <property name="comment" value="" />
-      <property name="#creationDate" value="March 12, 2015 11:05:06 AM CET" />
+      <property name="#creationDate" value="March 23, 2015 2:11:36 PM CET" />
+      <property name="domainModelURI" value="http://localhost:1205/models/790983467.pm" />
    </properties>
 </model>
