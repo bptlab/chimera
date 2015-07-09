@@ -47,7 +47,7 @@ public class DomainModelTest  {
                     andAnswer(new IAnswer<org.w3c.dom.Element>() {
                         @Override
                         public org.w3c.dom.Element answer() throws Throwable {
-                            return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                            return getDocumentFromXmlFile(new File("src/test/resources/Version0.xml")).getDocumentElement();
                         }
                     });
             PowerMock.replay(domainModel);
@@ -103,7 +103,7 @@ public class DomainModelTest  {
                     andAnswer(new IAnswer<org.w3c.dom.Element>() {
                         @Override
                         public org.w3c.dom.Element answer() throws Throwable {
-                            return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                            return getDocumentFromXmlFile(new File("src/test/resources/Version0.xml")).getDocumentElement();
                         }
                     });
             PowerMock.replay(testDomainModel);

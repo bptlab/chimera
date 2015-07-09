@@ -79,12 +79,12 @@ public class  ScenarioTest extends TestSetUp {
     /**
      * File which contains insert-statements for the database which are needed for testing.
      */
-    private static final String INSERT_TESTDATA_FILE = "src/test/resources/MigrationTest/jenginev2_Migration.sql";
+    private static final String INSERT_TESTDATA_FILE = "src/test/resources/jenginev2_Migration.sql";
     /**
      * File which contains insert-statements for the database which are needed for testing (the difference to
      * INSERT_TESTDATA_FILE is that the scenario which is already in the database is marked as deleted).
      */
-    private static final String INSERT_TESTDATA2_FILE = "src/test/resources/MigrationTest/jenginev2_with_deleted_scenario.sql";
+    private static final String INSERT_TESTDATA2_FILE = "src/test/resources/jenginev2_with_deleted_scenario.sql";
 
     /**
      * Before each Test, create an empty Scenario and mock necessary methods.
@@ -211,7 +211,7 @@ public class  ScenarioTest extends TestSetUp {
                 .andAnswer(new IAnswer<Node>() {
                     @Override
                     public Node answer() throws Throwable {
-                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                        return getDocumentFromXmlFile(new File("src/test/resources/Version0.xml")).getDocumentElement();
                     }
                 });
         PowerMock.expectPrivate(scenarioWVersion, CREATE_DO_METHOD).andVoid();
@@ -244,7 +244,7 @@ public class  ScenarioTest extends TestSetUp {
                                 .andAnswer(new IAnswer<org.w3c.dom.Element>() {
                                     @Override
                                     public org.w3c.dom.Element answer() throws Throwable {
-                                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                                        return getDocumentFromXmlFile(new File("src/test/resources/Version0.xml")).getDocumentElement();
                                     }
                                 });
                         PowerMock.replay(fragment);
@@ -287,7 +287,7 @@ public class  ScenarioTest extends TestSetUp {
                                 .andAnswer(new IAnswer<org.w3c.dom.Element>() {
                                     @Override
                                     public org.w3c.dom.Element answer() throws Throwable {
-                                        return getDocumentFromXmlFile(new File("src/test/resources/Version.xml")).getDocumentElement();
+                                        return getDocumentFromXmlFile(new File("src/test/resources/Version0.xml")).getDocumentElement();
                                     }
                                 });
                         PowerMock.replay(fragment);
@@ -313,13 +313,13 @@ public class  ScenarioTest extends TestSetUp {
     public void testSaveCompleteScenario() throws Exception {
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
-        final Fragment fragment = initializeFragment("src/test/resources/Version.xml");
+        final Fragment fragment = initializeFragment("src/test/resources/Version0.xml");
         fragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/bikeFragment.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenarioComplete = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment), domainModel);
+        final Scenario scenarioComplete = initializeCompleteScenario("src/test/resources/Version0.xml", Arrays.asList(fragment), domainModel);
         scenarioComplete.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/BikeScenario.xml")));
         scenarioComplete.save();
@@ -333,18 +333,18 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testSameScenarioNotSavedTwice() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment1, fragment2), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version1.xml", Arrays.asList(fragmentA, fragmentB), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Testszenario.xml")));
+                new File("src/test/resources/Testscenario/Scenario.xml")));
         assertTrue("Even though the scenario is the same, it has been saved again", scenario.save() == -1);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
@@ -357,18 +357,18 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testSameScenarioNotDeletedSavedAgain() throws Exception {
         refillDatabase(INSERT_TESTDATA2_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment1, fragment2), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version1.xml", Arrays.asList(fragmentA, fragmentB), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Testszenario.xml")));
+                new File("src/test/resources/Testscenario/Scenario.xml")));
         assertTrue("Oh, scenario should have been saved!", scenario.save() > 0);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
@@ -381,18 +381,18 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testModificationInFragmentScenarioNewlySaved() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version_modified.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version1.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment1, fragment2), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version1.xml", Arrays.asList(fragmentA, fragmentB), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Testszenario.xml")));
+                new File("src/test/resources/Testscenario/Scenario.xml")));
         assertTrue("Scenario with modified fragment is not saved.", scenario.save() > 0);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
@@ -404,18 +404,18 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testModificationInScenarioScenarioNewlySaved() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version_modified.xml", Arrays.asList(fragment1, fragment2), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version2.xml", Arrays.asList(fragmentA, fragmentB), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Testszenario.xml")));
+                new File("src/test/resources/Testscenario/Scenario.xml")));
         assertTrue("Modified scenario is not saved.", scenario.save() > 0);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
     }
@@ -428,21 +428,21 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testNoMigrationWhenFragmentAddedAndModificationsExist() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version_modified.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        final Fragment neuesFragment = initializeFragment("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version1.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        final Fragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
         neuesFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/NeuesFragment.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+                new File("src/test/resources/Testscenario/NeuesFragment.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version_modified.xml", Arrays.asList(fragment1, fragment2, neuesFragment), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version2.xml", Arrays.asList(fragmentA, fragmentB, neuesFragment), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/SzenarioNeuesFragment.xml")));
+                new File("src/test/resources/Testscenario/SzenarioNeuesFragment.xml")));
         assertTrue("Scenario with modified fragment is not saved", scenario.save() > 0);
         assertTrue("Migration should not be initiated", !scenario.isMigrationNecessary());
     }
@@ -455,18 +455,18 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testNoMigrationWhenFragmentDeletedDespiteNewFragment() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment neuesFragment = initializeFragment("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
         neuesFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/NeuesFragment.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+                new File("src/test/resources/Testscenario/NeuesFragment.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version_modified.xml", Arrays.asList(fragment1, neuesFragment), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version2.xml", Arrays.asList(fragmentA, neuesFragment), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/EntferntesFragmentSzenario.xml")));
+                new File("src/test/resources/Testscenario/EntferntesFragmentSzenario.xml")));
 
         assertTrue("Scenario with deleted fragment is not saved", scenario.save() > 0);
         assertTrue("Migration should not be initiated when fragment deleted", !scenario.isMigrationNecessary());
@@ -485,43 +485,57 @@ public class  ScenarioTest extends TestSetUp {
         DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
+        DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
         // initialize the new scenario consisting of the old fragments and one new fragment
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        final Fragment neuesFragment = initializeFragment("src/test/resources/Version.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        final Fragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
         neuesFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/NeuesFragment.xml")));
-        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+                new File("src/test/resources/Testscenario/NeuesFragment.xml")));
+        final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version_modified.xml", Arrays.asList(fragment1, fragment2, neuesFragment), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        final Scenario scenario = initializeCompleteScenario("src/test/resources/Version2.xml", Arrays.asList(fragmentA, fragmentB, neuesFragment), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/SzenarioNeuesFragment.xml")));
+                new File("src/test/resources/Testscenario/SzenarioNeuesFragment.xml")));
         scenario.save();
 
-        Assert.assertEquals("Scenario not migrated properly", scenario.getDatabaseID(), dbScenarioInstance.getScenarioID(902));
-        Assert.assertEquals("Scenario not migrated properly", scenario.getDatabaseID(), dbScenarioInstance.getScenarioID(903));
+        Assert.assertEquals("Scenario not migrated properly", scenario.getDatabaseID(), dbScenarioInstance.getScenarioID(1));
 
-        Assert.assertEquals("Fragment not migrated properly", fragment1.getDatabaseID(), dbFragmentInstance.getFragmentID(4273));
-        Assert.assertEquals("Fragment not migrated properly", fragment1.getDatabaseID(), dbFragmentInstance.getFragmentID(4275));
-        Assert.assertEquals("Fragment not migrated properly", fragment2.getDatabaseID(), dbFragmentInstance.getFragmentID(4274));
-        Assert.assertEquals("Fragment not migrated properly", fragment2.getDatabaseID(), dbFragmentInstance.getFragmentID(4276));
+        Assert.assertEquals("Fragment not migrated properly", fragmentA.getDatabaseID(), dbFragmentInstance.getFragmentID(1));
+        Assert.assertEquals("Fragment not migrated properly", fragmentB.getDatabaseID(), dbFragmentInstance.getFragmentID(2));
 
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragment1.getControlNodes().get(214334952L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6304));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragment1.getControlNodes().get(214334952L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6306));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(826790323L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(2));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(517729148L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(3));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(1569336784L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(1));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(2081480666L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(4));
+        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentB.getControlNodes().get(826790323L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(5));
 
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragment2.getControlNodes().get(426160629L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6305));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragment2.getControlNodes().get(426160629L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(6307));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("SubDO").getDatabaseId(), dbDataObjectInstance.getDataObjectID(1));
+        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO").getDatabaseId(), dbDataObjectInstance.getDataObjectID(2));
+        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("SubDO").getStates().get("init"), dbDataObjectInstance.getStateID(1));
+        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("DO").getStates().get("state1"), dbDataObjectInstance.getStateID(2));
 
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(731));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("bike").getDatabaseId(), dbDataObjectInstance.getDataObjectID(733));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(730));
-        Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("Flug").getDatabaseId(), dbDataObjectInstance.getDataObjectID(732));
+        DataAttribute attr1 = null, attr2 = null, attr3 = null;
+        for (DataAttribute attr : scenario.getDomainModel().getDataClasses().get(2068589604L).getDataAttributes()) {
+            if (attr.getDataAttributeName().equals("Attr1"))
+                attr1 = attr;
+            else if (attr.getDataAttributeName().equals("Attr2"))
+                attr2 = attr;
+        }
+        for (DataAttribute attr : scenario.getDomainModel().getDataClasses().get(395565279L).getDataAttributes()) {
+            if (attr.getDataAttributeName().equals("Attr3"))
+                attr3 = attr;
+        }
+
+        Assert.assertEquals("DataAttributeInstance not migrated properly", attr1.getDataAttributeID(), dbDataAttributeInstance.getDataAttributeID(2));
+        Assert.assertEquals("DataAttributeInstance not migrated properly", attr2.getDataAttributeID(), dbDataAttributeInstance.getDataAttributeID(3));
+        Assert.assertEquals("DataAttributeInstance not migrated properly", attr3.getDataAttributeID(), dbDataAttributeInstance.getDataAttributeID(1));
     }
 
     /**
@@ -531,30 +545,20 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testDomainModelVersionImpactOnSaving() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragment1 = initializeFragment("src/test/resources/Version.xml");
-        fragment1.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment1.xml")));
-        final Fragment fragment2 = initializeFragment("src/test/resources/Version.xml");
-        fragment2.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Fragment2.xml")));
-        DomainModel domainModel = initializeDomainModel("src/test/resources/Version_modified.xml");
+        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentA.xml")));
+        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
+                new File("src/test/resources/Testscenario/FragmentB.xml")));
+        DomainModel domainModel = initializeDomainModel("src/test/resources/Version1.xml");
         domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise.xml")));
-        Scenario scenario = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment1, fragment2), domainModel);
+                new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        Scenario scenario = initializeCompleteScenario("src/test/resources/Version1.xml", Arrays.asList(fragmentA, fragmentB), domainModel);
         scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Testszenario.xml")));
+                new File("src/test/resources/Testscenario/Scenario.xml")));
         Assert.assertFalse("Even though the domainModel has been changed, the scenario isn't saved as a new one", scenario.save() == -1);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
-
-        domainModel = initializeDomainModel("src/test/resources/Version.xml");
-        domainModel.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/Domain_Reise_modifiedID.xml")));
-        scenario = initializeCompleteScenario("src/test/resources/Version.xml", Arrays.asList(fragment1, fragment2), domainModel);
-        scenario.initializeInstanceFromXML(getDocumentFromXmlFile(
-                new File("src/test/resources/MigrationTest/Testszenario.xml")));
-        Assert.assertFalse("Even though there is a new domainModel the scenario isn't saved as a new one", scenario.save() == -1);
-        assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
-
     }
     /**
      * Emptys the database and fills it from INSERT_TESTDATA_FILE afterwards.

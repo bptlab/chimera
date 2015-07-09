@@ -443,7 +443,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             }
         }
         migrateDataObjects();
-        //domainModel.migrate(migratingScenarioDbID);
+        domainModel.migrateDataAttributeInstances(migratingScenarioDbID);
     }
 
     /**

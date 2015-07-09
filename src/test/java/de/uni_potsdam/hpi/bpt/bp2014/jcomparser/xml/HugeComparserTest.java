@@ -433,20 +433,20 @@ public class HugeComparserTest extends TestSetUp {
     public void setUp() throws Exception {
         emptyDatabase();
         conn = Connection.getInstance().connect();
-        Fragment fragA = initializeFragment("src/test/resources/Version.xml");
-        Fragment fragB = initializeFragment("src/test/resources/Version.xml");
-        DomainModel domainModel = initializeDomainModel("src/test/resources/Version.xml");
+        Fragment fragA = initializeFragment("src/test/resources/Version0.xml");
+        Fragment fragB = initializeFragment("src/test/resources/Version0.xml");
+        DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         fragA.initializeInstanceFromXML(
-                getDocumentFromXmlFile(new File("src/test/resources/HugeTest/FragmentA.xml")));
+                getDocumentFromXmlFile(new File("src/test/resources/Testscenario/FragmentA.xml")));
         fragB.initializeInstanceFromXML(
-                getDocumentFromXmlFile(new File("src/test/resources/HugeTest/FragmentB.xml")));
+                getDocumentFromXmlFile(new File("src/test/resources/Testscenario/FragmentB.xml")));
         domainModel.initializeInstanceFromXML(
-                getDocumentFromXmlFile(new File("src/test/resources/HugeTest/Domainmodel.xml")));
-        Scenario scenario = initializeCompleteScenario("src/test/resources/Version_modified.xml",
+                getDocumentFromXmlFile(new File("src/test/resources/Testscenario/Domainmodel.xml")));
+        Scenario scenario = initializeCompleteScenario("src/test/resources/Version1.xml",
                 Arrays.asList(fragA, fragB),
                 domainModel);
         scenario.initializeInstanceFromXML(
-                getDocumentFromXmlFile(new File("src/test/resources/HugeTest/Scenario.xml")));
+                getDocumentFromXmlFile(new File("src/test/resources/Testscenario/Scenario.xml")));
         scenario.save();
         scenarios = new LinkedList<>();
         fragments = new HashMap<>();
@@ -870,7 +870,7 @@ public class HugeComparserTest extends TestSetUp {
         return rs;
     }
 
-    @AfterClass
+    //@AfterClass
     public static void closeConnections() {
         try {
             if (stmt != null) {

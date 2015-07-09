@@ -234,7 +234,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
      *
      * @param oldScenarioDbID DatabaseID of the old scenario whose dataAttributeInstances get migrated.
      */
-    public void migrate(int oldScenarioDbID) {
+    public void migrateDataAttributeInstances(int oldScenarioDbID) {
         Map<Integer, Integer> mappedDataClassIDs = mapDataClassIDs(oldScenarioDbID);
         Map<Integer, Integer> mappedDataAttributeIDs = new HashMap<>();
         Connector connector = new Connector();
