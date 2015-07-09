@@ -76,16 +76,6 @@ Now, you may access the jFrontend via
 
 We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-responsive-admin-theme-WB055J451); please be sure to download the [AngularJS libs](https://docs.angularjs.org/misc/downloading)
    
-## UML
-
-Class View
-
-![alt Class view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/class_view_organic.png)
-
-Package View
-
-![alt Package view](https://raw.githubusercontent.com/BP2014W1/JEngine/dev/docu/general/img/package_view_organic.png)
-
 ## Features
 
 This JEngine does execute
@@ -97,4 +87,4 @@ This JEngine does execute
 
 ## Addendum
 
-For further details we kindly refer to the [project site](https://bpt.hpi.uni-potsdam.de/Internal/BP2014Docu)
+For further details we kindly refer to the [project site](https://bpt.hpi.uni-potsdam.de/Public/JEngineDoc)
