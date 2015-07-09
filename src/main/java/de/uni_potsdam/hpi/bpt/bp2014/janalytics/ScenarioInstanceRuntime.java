@@ -26,13 +26,19 @@ public class ScenarioInstanceRuntime implements AnalyticsService {
     public JSONObject calculateResult(String[] args) {
         int scenarioInstanceId = Integer.parseInt(args[0]);
         long duration = 0L;
+        int millisecondsPerSecond = 1000;
+        int secondsPerMinute = 60;
+        int minutesPerHour = 60;
+        int hoursPerDay = 24;
+        int daysPerYear = 365;
         getStartTimestamp(scenarioInstanceId);
         duration = getDuration();
 
-        long second = (duration / 1000) % 60;
-        long minute = (duration / (1000 * 60)) % 60;
-        long hour = (duration / (1000 * 60 * 60)) % 24;
-        long day = (duration / (1000 * 60 * 60 * 24)) % 365;
+        // converting duration from milliseconds to human readable format days:hours:minutes:seconds
+        long second = (duration / millisecondsPerSecond) % secondsPerMinute;
+        long minute = (duration / (millisecondsPerSecond * secondsPerMinute)) % minutesPerHour;
+        long hour = (duration / (millisecondsPerSecond * secondsPerMinute * minutesPerHour)) % hoursPerDay;
+        long day = (duration / (millisecondsPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)) % daysPerYear;
 
         String time = String.format("%02d:%02d:%02d:%02d", day, hour, minute, second);
         String json = "{\"scenarioId\":" + scenarioInstanceId + ",\"ScenarioInstanceRuntime\":\"" + time + "\"}";
