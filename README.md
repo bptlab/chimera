@@ -33,7 +33,7 @@ Cloning of this repo
 
     git clone https://github.com/BP2014W1/JEngine
 
-Further an MySQL Database should be created named as "JEngineV2" & import SQL file from 
+Further a MySQL Database should be created named "JEngineV2" and the SQL file needs to be imported
 
     mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2_schema.sql
 
@@ -41,11 +41,11 @@ Please be aware of the database settings inside the web.xml in
 
     JEngine/src/main/resources/webapp/WEB-INF/web.xml
 
-For the tests you may want to adapt also the database_connection in
+For the tests you may want to adapt the database_connection in
 
     JEngine/src/main/resources/database_connection
 
-After changing server ips you may want to update the Config.java in the config package.
+After changing server IPs you may want to update the Config.java in the config package.
 
 ## Deployment
 
@@ -70,7 +70,7 @@ and start tomcat again
 
     service tomcat7 start
 
-Now, you may access the jFrontend via
+Now, you may access the JFrontend via
 
    http://localhost:8080/JEngine
 
@@ -78,12 +78,11 @@ We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-respon
    
 ## Features
 
-This JEngine does execute
-* AND, XOR gateways
-* user tasks
-* email- , webservices tasks
-* data objects
-* termination condition for scenarios
+This JEngine supports the execution of
+* email- ,
+* webservice- and
+* user-tasks
+within fragments of a scenario.
 
 ## Addendum
 
