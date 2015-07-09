@@ -6,8 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -64,7 +66,8 @@ public class RestInterface {
     @POST
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response calculateServiceResults(@PathParam("service") String service, String json) {
+    public Response calculateServiceResults(
+            @Context UriInfo uriInfo, @PathParam("service") String service, String json) {
         int resultId;
         if (!serviceManager.existService(service)) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -96,7 +99,7 @@ public class RestInterface {
         }
         //return Response.ok("{}", MediaType.APPLICATION_JSON).build();
         try {
-            return Response.seeOther(new URI("services/" + service + "/resultId/"+ resultId)).build();
+            return Response.seeOther(new URI(uriInfo.getAbsolutePath() + "/result/"+ resultId)).build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

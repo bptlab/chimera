@@ -24,7 +24,7 @@ public class ScenarioInstanceRuntime implements AnalyticsService {
      * @return a JSONObject containing the scenarioInstanceID and the Instance-Runtime
      */
     public JSONObject calculateResult(String[] args) {
-        int scenarioInstanceId = new Integer(args[0]);
+        int scenarioInstanceId = Integer.parseInt(args[0]);
         long duration = 0L;
         getStartTimestamp(scenarioInstanceId);
         duration = getDuration();
