@@ -9,10 +9,14 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * This class provides an Algorithm to calculate the mean ScenarioInstanceRuntime for all terminated ScenarioInstances
+ * of a Scenario
+ */
 public class ExampleAlgorithm implements AnalyticsService {
-    static final Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
+    static final Logger log = Logger.getLogger(ExampleAlgorithm.class.getName());
 
+    @Override
     /**
      * This Method calculates the mean runtime for all terminated instances of a scenario
      *

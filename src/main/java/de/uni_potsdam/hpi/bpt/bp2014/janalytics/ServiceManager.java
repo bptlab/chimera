@@ -34,10 +34,17 @@ public class ServiceManager {
      *
      * @param service the service.
      * @param args    arguments for the service.
+     * @return resultId representing  the calculated result of the service in the database
      */
-    public void calculateResultForService(String service, String[] args) {
+    public int calculateResultForService(String service, String[] args) {
+        int resultId = -1;
         JSONObject jsonObject = services.get(service).calculateResult(args);
-        dbObject.executeUpdateStatement("UPDATE janalyticsresults SET json = '" + jsonObject.toString() + "' WHERE service = '" + services.get(service).getClass().getName() + "'");
+        //dbObject.executeUpdateStatement("UPDATE janalyticsresults SET json = '" + jsonObject.toString() + "' WHERE service = '" + services.get(service).getClass().getName() + "'");
+        resultId = dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service, json) VALUES ('" + services.get(service).getClass().getName() + "', '" + jsonObject.toString() + "')");
+        /*if (!dbObject.executeExistStatement("SELECT * FROM janalyticsresults WHERE service = '" + services.get(service).getClass().getName() + "'")) {
+        *    dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service, json) VALUES ('" + services.get(service).getClass().getName() + "', '{}')");
+        }*/
+        return resultId;
     }
 
     /**
@@ -50,14 +57,16 @@ public class ServiceManager {
         return services.containsKey(service);
     }
 
+
     /**
-     * Gives the Result for a service. Returns it as json. The json could be empty if the service never calculated a result.
+     * Gives the Result for a service and ID. Returns it as json. The json could be empty if the service never calculated a result.
      *
      * @param service the service.
+     * @param resultId the id to identify the calculated result
      * @return a json with the result of the service.
      */
-    public JSONObject getResultForService(String service) {
-        String json = dbObject.executeStatementReturnsString("SELECT json FROM janalyticsresults WHERE service = '" + services.get(service).getClass().getName() + "'", "json");
+    public JSONObject getResultForServiceViaId(String service, int resultId) {
+        String json = dbObject.executeStatementReturnsString("SELECT json FROM janalyticsresults WHERE id = '" + resultId + "' AND service = '" + services.get(service).getClass().getName() + "'", "json");
         return new JSONObject(json);
     }
 
@@ -69,9 +78,7 @@ public class ServiceManager {
     private void addService(AnalyticsService service) {
         String serviceName = service.getClass().getName();
         services.put(serviceName, service);
-        if (!dbObject.executeExistStatement("SELECT * FROM janalyticsresults WHERE service = '" + serviceName + "'")) {
-            dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service, json) VALUES ('" + serviceName + "', '{}')");
-        }
+
     }
 
     /**
@@ -79,6 +86,7 @@ public class ServiceManager {
      */
     private void registerServices() {
         addService(new ExampleAlgorithm());
+        addService(new ScenarioInstanceRuntime());
         // add further Algorithms here
     }
 }

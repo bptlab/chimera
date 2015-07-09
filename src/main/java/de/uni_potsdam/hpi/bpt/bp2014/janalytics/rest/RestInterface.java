@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 
@@ -34,21 +36,21 @@ public class RestInterface {
 
     /**
      * Returns the result of an service.
-     *
+     * @param resultId represents the calculated result for a service in the database
      * @param service the specific service.
      * @return JSON with the result.
      */
     @GET
-    @Path("services/{service}")
+    @Path("services/{service}/result/{resultID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getServiceResults(@PathParam("service") String service) {
+    public Response getServiceResults(@PathParam("service") String service, @PathParam("resultID") int resultId) {
         if (!serviceManager.existService(service)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no service " + service + "\"}")
                     .build();
         }
-        JSONObject jsonObject = serviceManager.getResultForService(service);
+        JSONObject jsonObject = serviceManager.getResultForServiceViaId(service, resultId);
         return Response.ok(jsonObject.toString(), MediaType.APPLICATION_JSON).build();
     }
 
@@ -63,6 +65,7 @@ public class RestInterface {
     @Path("services/{service}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response calculateServiceResults(@PathParam("service") String service, String json) {
+        int resultId;
         if (!serviceManager.existService(service)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
@@ -70,7 +73,7 @@ public class RestInterface {
                     .build();
         }
         if (json.equals("")) {
-            serviceManager.calculateResultForService(service, new String[0]);
+           resultId = serviceManager.calculateResultForService(service, new String[0]);
         } else {
             ArrayList<String> list = new ArrayList<>();
             JSONArray jsonArray;
@@ -89,7 +92,13 @@ public class RestInterface {
                     list.add(jsonArray.get(i).toString());
                 }
             }
-            serviceManager.calculateResultForService(service, list.toArray(new String[list.size()]));
+            resultId = serviceManager.calculateResultForService(service, list.toArray(new String[list.size()]));
+        }
+        //return Response.ok("{}", MediaType.APPLICATION_JSON).build();
+        try {
+            return Response.seeOther(new URI("services/" + service + "/resultId/"+ resultId)).build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
         return Response.ok("{}", MediaType.APPLICATION_JSON).build();
     }
