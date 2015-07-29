@@ -39,10 +39,11 @@
                             $http.post(JEngine_Server_URL + "/" + JAnalytics_REST_Interface + "/services/" + algorithm, {"args": [id]})
                                 .success(function (data) {
                                     // retrieving results of algorithm as soon as POST is done successfully
-                                    $http.get(JEngine_Server_URL + JAnalytics_REST_Interface + "/services/" + algorithm)
+									controller.currentScenario['duration'] = data['meanScenarioInstanceRuntime'];
+                                    /*$http.get(JEngine_Server_URL + JAnalytics_REST_Interface + "/services/" + algorithm)
                                         .success(function (data) {
                                             controller.currentScenario['duration'] = data['meanScenarioInstanceRuntime'];
-                                        })
+                                        })*/
                                 })
                         }).
                         error(function () {
@@ -272,6 +273,17 @@
                         success(function (data) {
                             instanceCtrl.scenario['instances'] = data;
                             instanceCtrl.scenario['id'] = $routeParams.id;
+							angular.forEach(instanceCtrl.scenario['instances']['ids'], function(scenarioInstance, key) {
+								$http.post(JEngine_Server_URL + "/" + JAnalytics_REST_Interface 
+									+ "/services/de.uni_potsdam.hpi.bpt.bp2014.janalytics.ScenarioInstanceRuntime",
+									{"args":[scenarioInstance]}).success(function(data) {
+										if (!instanceCtrl.scenario['instances']['durations']) {
+											instanceCtrl.scenario['instances']['durations'] = {};
+										}
+										instanceCtrl.scenario['instances']['durations'][data['scenarioId']] = data['ScenarioInstanceRuntime'];
+										console.log(data);
+									})
+							})
                         }).error(function () {
                             console.log('request failed');
                         });
