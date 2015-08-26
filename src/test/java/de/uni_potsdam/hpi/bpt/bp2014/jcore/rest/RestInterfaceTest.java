@@ -1,9 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import com.ibatis.common.jdbc.ScriptRunner;
+
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import net.javacrumbs.jsonunit.core.Option;
+
+import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
 import org.junit.AfterClass;
@@ -16,6 +21,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,6 +40,7 @@ import static org.junit.Assert.*;
  * Define the database Properties inside the database_connection file.
  */
 public class RestInterfaceTest extends AbstractTest {
+    static Logger log = Logger.getLogger(RestInterfaceTest.class.getName());
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
     /**
@@ -1077,6 +1084,8 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testGetOutputSetDataAttributes() {
+        log.debug("Enter <<testGetOutputSetDataAttributes>>");
+    	ExecutionService.getInstance(135).reloadScenarioInstanceFromDatabase(135, 808);
         Response response = base.path("scenario/135/instance/808/outputset/140")
                 .request().get();
         assertEquals("The Response code of getOutputDataAttributes was not 200",
@@ -1087,6 +1096,7 @@ public class RestInterfaceTest extends AbstractTest {
                 response.readEntity(String.class),
                 jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"Ziel festgelegt\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"\",\"value\":\"250\"}]}]")
                         .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+        log.debug("Leave <<testGetOutputSetDataAttributes>>");
     }
     /**
      * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
@@ -1095,6 +1105,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testInvalidScenarioGetOutputSetDataAttributes() {
+        log.debug("Enter <<testInvalidScenarioGetOutputSetDataAttributes>>");
         Response response = base.path("scenario/9987/instance/1234/outputset/140")
                 .request().get();
         assertEquals("The Response code of getOutputDataObjects was not 404",

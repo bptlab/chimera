@@ -50,7 +50,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
     @Test
     public void testGet() {
         System.out.println("\n ------------------ test Scenario 156 ------------------\n");
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(156);
         int scenarioInstance = executionService.startNewScenarioInstance(156);
         int activity1 = 524;
 
@@ -85,7 +85,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
     @Test
     public void testPOST() {
         System.out.println("\n ------------------ test Scenario 157 ------------------\n");
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(157);
         int scenarioInstance = executionService.startNewScenarioInstance(157);
         int activity1 = 528;
 
@@ -117,7 +117,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
     @Test
     public void testPUT() {
         System.out.println("\n ------------------ test Scenario 158 ------------------\n");
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(158);
         int scenarioInstance = executionService.startNewScenarioInstance(158);
         int activity1 = 532;
 
