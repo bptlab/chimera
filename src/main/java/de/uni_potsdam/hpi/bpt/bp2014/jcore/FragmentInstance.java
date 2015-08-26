@@ -81,6 +81,7 @@ public class FragmentInstance {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
+            case "BusinessRuleTask":
                 controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id, scenarioInstance);
                 break;
             case "AND":

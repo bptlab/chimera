@@ -604,6 +604,58 @@ CREATE TABLE IF NOT EXISTS `workitemstate` (
   PRIMARY KEY (`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `decisiontable`
+--
+CREATE TABLE IF NOT EXISTS `decisiontable` (
+  `id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `hitPolicy` varchar(64) NOT NULL DEFAULT 'UNIQUE',
+  `aggregation` varchar(64) NOT NULL DEFAULT 'COLLECT',
+  `preferedOrientation` varchar(64) NOT NULL DEFAULT 'Rule-as-Row',
+  `isComplete` tinyint(1) NOT NULL DEFAULT '0',
+  `isConsistent` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ -- --------------------------------------------------------
+
+--
+-- Table structure for table `rule`
+--
+
+CREATE TABLE IF NOT EXISTS `rule` (
+  `id` int(11) NOT NULL,
+  `decisionTableId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rulecondition`
+--
+ 
+CREATE TABLE IF NOT EXISTS `rulecondition` (
+  `ruleID` int(11) NOT NULL,
+  `inputEntry` varchar(256) NOT NULL,
+  `inputExpression` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ 
+-- --------------------------------------------------------
+ 
+--
+-- Table structure for table `ruleconclusion`
+--
+ 
+CREATE TABLE IF NOT EXISTS `ruleconclusion` (
+  `ruleID` int(11) NOT NULL,
+  `outputEntry` varchar(256) NOT NULL,
+  `outputDefinition` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

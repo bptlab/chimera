@@ -2,10 +2,14 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
+import com.mysql.fabric.xmlrpc.base.Data;
+
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,6 +22,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
      * List of IDs of following control nodes.
      */
     private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<>();
+    
+    private boolean dependingOnDecisionTable = false;
 
     private DbState dbState = new DbState();
 
@@ -75,10 +81,47 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
      * Executes the XOR gateway and enable the following control nodes.
      */
     public void execute() {
-        enableFollowing();
+    	
+    	boolean decisionTakenBefore = false;
+    	DataObjectInstance decisionObject = null;
+    	for (DataObjectInstance dataObject : this.scenarioInstance.getDataObjectInstances()){
+    		if(dataObject.getName().equals("Decision")){
+    			decisionObject = dataObject;
+    			decisionTakenBefore = false;
+    			break;
+    		}
+    		
+    	}
+    	if(decisionTakenBefore){
+    		enableDecision(decisionObject);
+    	}else
+    		enableFollowing();
     }
 
-    @Override
+    private void enableDecision(DataObjectInstance decisionObject) {
+    	System.out.println("Decision enabled");
+    	String result= null;
+		for (DataAttributeInstance attribute : decisionObject.getDataAttributeInstances()){
+			if (attribute.getName().equals("Result")){
+				result = (String) attribute.getValue();
+			}
+		}
+		LinkedList<Integer> followingControlNode_ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
+	        for (int followingControlNode_id : followingControlNode_ids) {
+	        	String label = dbControlNode.getLabel(controlNode_id);
+	        	if (label.equals(result)){
+	        		 ControlNodeInstance followingControlNodeInstance = createFollowingNodeInstance(followingControlNode_id);
+	 	            //enable following instances
+	 	            followingControlNodeInstance.incomingBehavior.enableControlFlow();	
+	        	}
+	        
+	           
+	        }
+    	
+	}
+
+
+	@Override
     protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
         for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
             if (controlNode_id == controlNodeInstance.controlNode_id && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getStateMachine().state.equals("terminated")) {
@@ -96,6 +139,7 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
+            case "BusinessRuleTask":
                 ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 break;
             case "AND":

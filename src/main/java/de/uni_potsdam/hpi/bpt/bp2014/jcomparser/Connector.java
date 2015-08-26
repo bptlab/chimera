@@ -331,6 +331,42 @@ public class Connector extends DbDataObject {
                 "emailconfiguration WHERE id = -1";
         return performSQLInsertStatementWithAutoId(sql);
     }
+    
+	public int insertDecisionTableIntoDatabase(final String name,
+			final String hitPolicy, final String aggregation,
+			final String preferedOrientation, final boolean isComplete,
+			final boolean isConsistent) {
+		String sql = "INSERT INTO decisiontable (name, hitPolicy,"
+				+ " aggregation, preferedOrientation, isComplete, isConsistent)"
+				+ " VALUES (" + name + "," + hitPolicy + "," + aggregation
+				+ "," + preferedOrientation + "," + isComplete
+				+ "," + isConsistent + ")";
+
+		return performSQLInsertStatementWithAutoId(sql);
+	}
+	
+	public void insertRuleConclusionIntoDatabase(final int ruleID,
+			final String outputEntry, final String outputDefinition) {
+		String sql = "INSERT INTO ruleconclusion (ruleID, outputEntry, outputDefinition) "
+				+ "VALUES (" + ruleID + ","	+ outputEntry
+				+ "," + outputDefinition + ")";
+		performDefaultSQLInsertStatement(sql);
+
+	}
+	
+	public void insertRuleConditionIntoDatabase(final int ruleID,
+			final String inputEntry, final String inputExpression) {
+		String sql = "INSERT INTO rulecondition (ruleID, inputEntry, inputExpression) "
+				+ "VALUES (" + ruleID + ","	+ inputEntry
+				+ "," + inputExpression + ")";
+		performDefaultSQLInsertStatement(sql);
+
+	}
+	
+	public int insertRuleIntoDatabase(final int decisionTableID){
+		String sql = "INSERT INTO rule (decisionTableId) VALUES (" + decisionTableID +")";
+		return performSQLInsertStatementWithAutoId(sql);
+	}
 
     /**
      * Perform a insert statement for the database.

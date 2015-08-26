@@ -17,16 +17,31 @@ public class ExclusiveGatewayJoinBehavior extends IncomingBehavior {
         this.scenarioInstance = scenarioInstance;
         this.controlNodeInstance = gatewayInstance;
         this.stateMachine = stateMachine;
+        
     }
 
 
     @Override
     public void enableControlFlow() {
+    	System.out.println("XOR enabled");
         Collection conditions = dbControlFlow.getConditions(controlNodeInstance.getControlNode_id()).values();
         boolean condition = true;
         if (conditions.size() > 0 && !conditions.iterator().next().equals("")) {
             condition = false;
         }
+        
+    	for (DataObjectInstance dataObject : this.scenarioInstance.getDataObjectInstances()){
+    		if(dataObject.getName().equals("Decision")){
+    			for (DataAttributeInstance attribute : dataObject.getDataAttributeInstances()){
+    				if (attribute.getValue() == null ){
+    					condition = false;
+    				}
+    			}
+    			break;
+    		}
+    		
+    	}
+    		
         if (condition) {
             ((GatewayStateMachine) stateMachine).execute();
             ((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior()).execute();
