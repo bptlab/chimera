@@ -1,0 +1,31 @@
+<model id="1946280555" name="Kaffeeverhalten" type="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.dmn.DecisionTable" xsi:schemaLocation="http://frapu.net/xsd/ProcessEditor http://frapu.net/xsd/ProcessEditor.xsd">
+   <nodes>
+      <node>
+         <property name="inputEntry" value="Kaffee" />
+         <property name="inputExpression" value="&gt;10" />
+         <property name="outputEntry" value="Suechtig" />
+         <property name="outputDefinition" value="Klasse" />
+         <property name="#id" value="1" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.dmn.DecisionRule" />
+      </node>
+      <node>
+         <property name="inputEntry" value="Kaffee" />
+         <property name="inputExpression" value="&lt;=10" />
+         <property name="outputEntry" value="Nicht_Suechtig" />
+         <property name="outputDefinition" value="Klasse" />
+         <property name="#id" value="2" />
+         <property name="#type" value="de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.dmn.DecisionRule" />
+      </node>
+   </nodes>
+   <properties>
+      <property name="hitPolicy" value="UNIQUE" />
+      <property name="aggregation" value="COLLECT" />
+      <property name="preferedOrientation" value="Rule-as-Row" />
+      <property name="isComplete" value="0" />
+      <property name="isConsistent" value="0" />
+      <property name="#folder" value="/" />
+      <property name="#uri" value="/models/1946280555/versions/0" />
+      <property name="comment" value="" />
+      <property name="#creationDate" value="March 12, 2015 10:24:55 AM CET" />
+   </properties>
+</model>

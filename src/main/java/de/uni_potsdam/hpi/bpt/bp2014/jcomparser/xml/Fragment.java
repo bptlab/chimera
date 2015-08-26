@@ -101,7 +101,7 @@ public class Fragment implements IDeserialisable, IPersistable {
         generateNodes();
         generateEdges();
         generateSets();
-        setVersionNumber();
+        //setVersionNumber();
     }
 
     /**

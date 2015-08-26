@@ -55,6 +55,10 @@ public class ActivityInstance extends ControlNodeInstance {
                 dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "WebServiceTask", "init");
                 dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
                 break;
+            case "BusinessRuleTask":
+            	dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "BusinessRuleTask", "init");
+                dbActivityInstance.setAutomaticExecution(controlNodeInstance_id, true);
+                break;
             default:
                 dbActivityInstance.createNewActivityInstance(controlNodeInstance_id, "HumanTask", "init");
         }
@@ -105,6 +109,10 @@ public class ActivityInstance extends ControlNodeInstance {
                 this.taskExecutionBehavior = new WebServiceTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
                 this.isAutomaticTask = true;
                 break;
+            case "BusinessRuleTask":
+            	this.taskExecutionBehavior = new BusinessRuleTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
+        		this.isAutomaticTask = true;
+        		break;
             default:
                 this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
                 this.isAutomaticTask = false;

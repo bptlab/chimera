@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 
 /**
- * A Class which represents a Node, (ControlNode and DataNodes) of thh model.
+ * A Class which represents a Node, (ControlNode and DataNodes) of the model.
  * It can be created from an xml and saved to the database.
  */
 public class Node implements IDeserialisable, IPersistable {
@@ -49,6 +49,11 @@ public class Node implements IDeserialisable, IPersistable {
      * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
      */
     private String stereotype;
+    /**
+     * A string, which holds the link for the decisionTable referenced (only valid 
+     * for stereotype "Rule").
+     */
+    private String implementation;
 
     /**
      * Each supported type of the process editor is mapped to
@@ -56,6 +61,7 @@ public class Node implements IDeserialisable, IPersistable {
      * @param type The type of the process element from the xml
      * @return the type as String that is written to the database
      */
+
     private String getDbTypeByPeType(String type) {
         if (type.contains("Task"))
             return "Activity";
@@ -73,6 +79,26 @@ public class Node implements IDeserialisable, IPersistable {
             return "WebServiceTask";
         else
             return "";
+   }
+
+    private void initializeTypeMap() {
+        peTypeToDbType = new HashMap<String, String>();
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.Task",
+                "Activity");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.EndEvent",
+                "Endevent");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.StartEvent",
+                "Startevent");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.ParallelGateway",
+                "AND");
+        peTypeToDbType.put("net.frapu.code.visualization.bpmn.ExclusiveGateway",
+                "XOR");
+        peTypeToDbType.put("SEND",
+                "EmailTask");
+        peTypeToDbType.put("SERVICE",
+                "WebServiceTask");
+        peTypeToDbType.put("RULE",
+                "BusinessRuleTask");
     }
 
 
@@ -123,6 +149,12 @@ public class Node implements IDeserialisable, IPersistable {
             case "stereotype":
                 stereotype = value;
                 break;
+            case "Data class":
+                dataClassURI = value;
+                break;
+            case "implementation":
+            	implementation = value;
+            	break;
             default:
                 // Property will not be handled
                 break;
@@ -142,7 +174,7 @@ public class Node implements IDeserialisable, IPersistable {
         Connector connector = new Connector();
         if (!type.contains("DataObject")) {
             if (!stereotype.isEmpty()) {
-                // we identify mailtasks that need to be marked in the database by their stereotype
+                // we identify mailtasks and businessruletasks that need to be marked in the database by their stereotype
                 databaseID = connector.insertControlNodeIntoDatabase(text,
                         getDbTypeByPeType(stereotype),
                         fragmentId,

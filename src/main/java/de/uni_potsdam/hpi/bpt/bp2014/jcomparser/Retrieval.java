@@ -46,17 +46,18 @@ public class Retrieval {
      */
     public String getXMLWithAuth(String hosturl, String urlToRead) {
         try {
-            InputStream inputStream = getInputStream(hosturl, urlToRead);
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(inputStream));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append("\n");
-            }
-            inputStream.close();
-            return stringBuilder.toString();
+        	
+	            InputStream inputStream = getInputStream(hosturl, urlToRead);
+	            BufferedReader reader = new BufferedReader(
+	                    new InputStreamReader(inputStream));
+	            StringBuilder stringBuilder = new StringBuilder();
+	            String line;
+	            while ((line = reader.readLine()) != null) {
+	                stringBuilder.append(line);
+	                stringBuilder.append("\n");
+	            }
+	            inputStream.close();
+	            return stringBuilder.toString();
         } catch (IOException e) {
             System.err.println("Request failed.");
             log.error("Error:", e);

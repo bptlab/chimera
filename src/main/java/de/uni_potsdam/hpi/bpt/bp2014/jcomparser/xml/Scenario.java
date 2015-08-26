@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,6 +17,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -96,6 +98,8 @@ public class Scenario implements IDeserialisable, IPersistable {
      * List<TCSets<Do, state>>
      */
     private List<Map<DataObject, String>> terminationCondition;
+    
+    private List<DecisionTable> decisionTables;
 
     /**
      * Creates a new Scenario Object and saves the PE-ServerURL.
@@ -127,11 +131,63 @@ public class Scenario implements IDeserialisable, IPersistable {
         setDomainModel();
         createDataObjects();
         setTerminationCondition();
+        generateDecisonTableList();
         setVersionNumber();
         checkIfVersionAlreadyInDatabase();
     }
 
-    /**
+    private void generateDecisonTableList() {
+    	try {
+            //look for all decision tables in the scenarioXML and save their node
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String xPathQuery =
+                    "/model/nodes/node[property[@name = '#type' and " +
+                            "@value = 'net.frapu.code.visualization.bpmn.Task']]";
+            NodeList decisionTableNodes = (NodeList) xPath
+                    .compile(xPathQuery)
+                    .evaluate(this.scenarioXML, XPathConstants.NODESET);
+            this.decisionTables = new LinkedList<DecisionTable>();
+
+            
+            for (int i = 0; i < decisionTableNodes.getLength(); i++) {
+                // get the ID of the current node
+                xPathQuery = "property[@name = 'decision table mid']/@value";
+                String currentNodeID = xPath
+                        .compile(xPathQuery)
+                        .evaluate(decisionTableNodes.item(i));
+                this.decisionTables.add(createAndInitializeDecisionTable(currentNodeID));
+            }
+        } catch (XPathExpressionException e) {
+            log.error("Error:", e);
+        }
+    
+	}
+
+
+	private DecisionTable createAndInitializeDecisionTable(String decisionTableID) {
+		boolean localdebug = true;
+		String decisionTableXML;
+    	if(localdebug){
+    		Ausprobieren obj = new Ausprobieren();
+    		InputSource is = new InputSource();
+    		decisionTableXML = obj.getFileWithUtil("dtables/DecisionTable1.xml");
+	       
+    	}
+    	else{
+			Retrieval retrieval = new Retrieval();
+	        decisionTableXML = retrieval.getHTMLwithAuth(
+	                this.processeditorServerUrl,
+	                this.processeditorServerUrl +
+	                        "models/" + decisionTableID + ".pm");
+    	}
+	    DecisionTable decisionTable = new DecisionTable(processeditorServerUrl);	
+        
+		decisionTable.initializeInstanceFromXML(stringToDocument(decisionTableXML));
+        return decisionTable;
+	}
+
+
+	/**
      * This method calls 2 more methods which get the domainModelXML and set the domainModel.
      */
     private void setDomainModel() {
@@ -413,6 +469,7 @@ public class Scenario implements IDeserialisable, IPersistable {
             domainModel.setScenarioID(this.databaseID);
             domainModel.save();
             saveDataObjects();
+            saveDecisionTables();
             saveConsistsOf();
             if (terminationCondition != null && terminationCondition.size() > 0) {
                 saveTerminationCondition();
@@ -426,7 +483,16 @@ public class Scenario implements IDeserialisable, IPersistable {
         return -1;
     }
 
-    /**
+    private void saveDecisionTables() {
+    	for (DecisionTable table : decisionTables) {
+            table.setScenarioID(databaseID);
+            table.save();
+        }
+    
+	}
+
+
+	/**
      * Migrate running instances with the modelId of this scenario and with the migratingScenarioVersion.
      */
     private void migrateRunningInstances() {
@@ -704,13 +770,24 @@ public class Scenario implements IDeserialisable, IPersistable {
      * @return The newly created Fragment Object.
      */
     private Fragment createAndInitializeFragment(String fragmentID) {
+    	boolean localdebug = true;
+    	String fragmentXML;
+    	if(localdebug){
+    		Ausprobieren obj = new Ausprobieren();
+    		InputSource is = new InputSource();
+	        fragmentXML = obj.getFileWithUtil("dtables/Fragment1.xml");
+	       
+    	}
+    	else{
         Retrieval retrieval = new Retrieval();
-        String fragmentXML = retrieval.getXMLWithAuth(
+        fragmentXML = retrieval.getHTMLwithAuth(
                 this.processeditorServerUrl,
                 this.processeditorServerUrl +
                         "models/" + fragmentID + ".pm");
+    	}
         Fragment fragment = new Fragment(processeditorServerUrl);
-        fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
+        
+		fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
         return fragment;
     }
 

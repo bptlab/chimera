@@ -48,6 +48,7 @@ public class ParallelGatewaySplitBehavior extends ParallelOutgoingBehavior {
             case "Activity":
             case "EmailTask":
             case "WebServiceTask":
+            case "BusinessRuleTask":
                 if (!gatewayInstance.isAutomaticExecution()) {
                     ((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
                 }
