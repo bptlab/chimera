@@ -521,7 +521,6 @@ public class DbObject {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         int rowId = 0;
-        ResultSet rs = null;
         if (conn == null) {
             return rowId;
         }

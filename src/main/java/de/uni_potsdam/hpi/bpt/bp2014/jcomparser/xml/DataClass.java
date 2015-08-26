@@ -1,23 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
-import org.w3c.dom.*;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
 public class DataClass implements IDeserialisable, IPersistable {
     /**
