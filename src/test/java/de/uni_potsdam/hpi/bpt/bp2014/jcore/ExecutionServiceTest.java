@@ -4,21 +4,20 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.TestSetUp;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 
-public class ExecutionServiceTest extends TestSetUp {
+public class ExecutionServiceTest extends AbstractDatabaseDependentTest {
 
 	@Test
 	public void testOneExecutionServicePerScenarioID() {
+		ExecutionService.dropCachedInstances();
 		assertEquals(0, ExecutionService.getInstancesSize());
 		//launch first scenario -> assert HashMap.size == 1
 		ExecutionService ex1 = ExecutionService.getInstance(1);
 		ex1.startNewScenarioInstance();
 		assertEquals(1, ExecutionService.getInstancesSize());
-		//launch second scenario of same type -> assert HashMap.size == 1
 		ex1.startNewScenarioInstance();
 		assertEquals(1, ExecutionService.getInstancesSize());
-		//launch third scenario of different type -> assert HashMap.size == 2
 		ExecutionService ex2 = ExecutionService.getInstance(2);
 		ex2.startNewScenarioInstance();
 		assertEquals(2, ExecutionService.getInstancesSize());

@@ -11,7 +11,8 @@ import org.apache.log4j.Logger;
 /**
  * Handles all scenario instances.
  */
-public class ExecutionService {
+public class ExecutionService /*implements Runnable*/ {
+	
     static Logger log = Logger.getLogger(ExecutionService.class.getName());
     public static final int MAX_MAP_SIZE = 100;
     private static HashMap<Integer, ExecutionService> instances = new HashMap<Integer, ExecutionService>();
@@ -43,6 +44,7 @@ public class ExecutionService {
     	if(instance == null) {
     		instance = new ExecutionService(scenario_id);
     		instances.put(scenario_id, instance);
+//    		instance.run();
     	}
     	//check, if it is necessary to reload all instances from the database due to a new version
     	if(instance.newVersionAvailable) {
@@ -794,6 +796,10 @@ public class ExecutionService {
     	return size;
     }
 
+    protected static void dropCachedInstances() {
+    	instances.clear();
+    }
+
     /**
      * This method is used to test the existence of an activity instance in a given scenarioInstance.
      *
@@ -803,6 +809,11 @@ public class ExecutionService {
     public boolean testActivityInstanceExists(int activityID) {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
         return dbControlNodeInstance.existControlNodeInstance(activityID);
-    }    
-    
+    }
+
+    /*
+	@Override
+	public void run() {
+	}    
+    */
 }
