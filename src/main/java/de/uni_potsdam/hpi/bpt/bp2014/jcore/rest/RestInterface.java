@@ -289,7 +289,7 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (executionService.existScenario(scenarioID)) {
-            int instanceId = executionService.startNewScenarioInstance(scenarioID);
+            int instanceId = executionService.startNewScenarioInstance();
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"id\":" + instanceId +

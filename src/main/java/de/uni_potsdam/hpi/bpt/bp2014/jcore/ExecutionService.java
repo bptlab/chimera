@@ -58,6 +58,7 @@ public class ExecutionService {
      * @param scenario_id This is the id of the scenario.
      * @return the id of the new scenario instance.
      */
+    @Deprecated
     public int startNewScenarioInstance(int scenario_id) {
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id);
         scenarioInstances.add(scenarioInstance);
@@ -65,6 +66,26 @@ public class ExecutionService {
         addScenarioInstanceToMap(scenarioInstance);
         sortedScenarioInstances.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
         return scenarioInstance.getScenarioInstance_id();
+    }
+    
+    /**
+     * Starts a new scenario instance for the given scenario id.
+     *
+     * @param scenario_id This is the id of the scenario.
+     * @return the id of the new scenario instance.
+     */
+    public int startNewScenarioInstance() {
+        ScenarioInstance scenarioInstance = new ScenarioInstance(this.scenario_id);
+        scenarioInstances.add(scenarioInstance);
+//        scenarioInstanceMap.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
+        addScenarioInstanceToMap(scenarioInstance);
+        sortedScenarioInstances.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
+        return scenarioInstance.getScenarioInstance_id();
+    }
+    
+    public static int startNewScenarioInstanceStatic(int scenario_id) {
+    	ExecutionService ex = ExecutionService.getInstance(scenario_id);
+    	return ex.startNewScenarioInstance();
     }
 
     /**
@@ -759,6 +780,18 @@ public class ExecutionService {
 
     public void setNewVersionAvailable(boolean newVersionAvailable) {
     	this.newVersionAvailable = newVersionAvailable;
+    }
+    
+    public boolean isNewVersionAvailable() {
+    	return newVersionAvailable;
+    }
+    
+    protected static int getInstancesSize() {
+    	int size = -1;
+    	if(instances != null) {
+    		size = instances.size();
+    	}
+    	return size;
     }
 
     /**

@@ -50,7 +50,7 @@ public class debugClass {
         ExecutionService executionService = new ExecutionService(scenarioID);
         String scenarioName = executionService.getScenarioName(scenarioID);
         if (scenarioInstanceID == -1) {
-            scenarioInstanceID = executionService.startNewScenarioInstance(scenarioID);
+            scenarioInstanceID = executionService.startNewScenarioInstance();
             System.out.println("neues Scenario " + scenarioName + " geöffnet, Scenario Instance ID: " + scenarioInstanceID);
         } else {
             if (executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
