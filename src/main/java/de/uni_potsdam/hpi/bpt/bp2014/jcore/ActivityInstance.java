@@ -105,6 +105,9 @@ public class ActivityInstance extends ControlNodeInstance {
                 this.taskExecutionBehavior = new WebServiceTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
                 this.isAutomaticTask = true;
                 break;
+            //Added additional case: activities can be terminated every time
+            case "Activity":
+            	this.setCanTerminate(true);
             default:
                 this.taskExecutionBehavior = new HumanTaskExecutionBehavior(controlNodeInstance_id, scenarioInstance, this);
                 this.isAutomaticTask = false;
