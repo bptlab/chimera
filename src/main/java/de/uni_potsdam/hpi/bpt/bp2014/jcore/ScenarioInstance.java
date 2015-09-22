@@ -29,18 +29,18 @@ public class ScenarioInstance {
     /**
      * Lists to save all fragments and all control nodes sorted by state.
      */
-    private LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<>();
-    private LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<>();
-    private LinkedList<ControlNodeInstance> controlFlowEnabledControlNodeInstances = new LinkedList<>();
-    private LinkedList<ControlNodeInstance> dataEnabledControlNodeInstances = new LinkedList<>();
-    private LinkedList<ControlNodeInstance> runningControlNodeInstances = new LinkedList<>();
-    private LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<>();
-    private LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<>();
-    private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<>();
-    private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
-    private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<>();
-    private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();
-    private HashMap<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
+    private LinkedList<ControlNodeInstance> controlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> enabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> controlFlowEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> dataEnabledControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> runningControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<ControlNodeInstance> terminatedControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<DataObjectInstance>();
+    private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<DataObjectInstance>();
+    private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<FragmentInstance>();
+    private LinkedList<ControlNodeInstance> referentialRunningControlNodeInstances = new LinkedList<ControlNodeInstance>();
+    private LinkedList<GatewayInstance> executingGateways = new LinkedList<GatewayInstance>();
+    private HashMap<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<Integer, DataAttributeInstance>();
 
     /**
      * Creates and initializes a new scenario instance from database.
@@ -166,6 +166,7 @@ public class ScenarioInstance {
     /**
      * Checks if a executing gateway can terminate.
      */
+    @SuppressWarnings("unchecked")
     public void checkExecutingGateways(int controlNode_id) {
         for (GatewayInstance gatewayInstance : ((LinkedList<GatewayInstance>) executingGateways.clone())) {
             if (gatewayInstance.checkTermination(controlNode_id)) {
@@ -264,6 +265,7 @@ public class ScenarioInstance {
      * Starts automatic running control node instances.
      * For example it starts the email tasks.
      */
+    @SuppressWarnings("unchecked")
     public void startAutomaticControlNodes() {
         for (ControlNodeInstance controlNodeInstance : ((LinkedList<ControlNodeInstance>) enabledControlNodeInstances.clone())) {
             if (controlNodeInstance.getClass() == ActivityInstance.class && ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {

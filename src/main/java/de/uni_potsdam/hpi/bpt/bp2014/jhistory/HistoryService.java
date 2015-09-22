@@ -1,44 +1,47 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
 
 
 public class HistoryService {
     /**
      * Database Connection objects
      */
-    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
-    private final DbControlNode dbControlNode = new DbControlNode();
+//    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
+//    private final DbControlNode dbControlNode = new DbControlNode();
+    
+    //activityInstance
+    //
 
 
-    /**
-     * Gives all ids of terminated activities for a scenario instance id.
-     *
-     * @param scenarioInstanceId This is the id of the scenario instance.
-     * @return a list of int ids of the activities.
-     */
-    public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstanceId) {
-        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
-    }
-
-    /**
-     * Returns the Labels of terminated activities for a scenario instance id.
-     *
-     * @param scenarioInstanceId This is the id of the scenario instance.
-     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
-     */
-    public HashMap<Integer, String> getTerminatedActivityLabelsForScenarioInstance(int scenarioInstanceId) {
-        LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
-        HashMap<Integer, String> labels = new HashMap<Integer, String>();
-        for (int id : ids) {
-            labels.put(id, dbControlNode.getLabel(id));
-        }
-        return labels;
-    }
+//    /**
+//     * Gives all ids of terminated activities for a scenario instance id.
+//     *
+//     * @param scenarioInstanceId This is the id of the scenario instance.
+//     * @return a list of int ids of the activities.
+//     */
+//    public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstanceId) {
+//        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
+//    }
+//
+//    /**
+//     * Returns the Labels of terminated activities for a scenario instance id.
+//     *
+//     * @param scenarioInstanceId This is the id of the scenario instance.
+//     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
+//     */
+//    public HashMap<Integer, String> getTerminatedActivityLabelsForScenarioInstance(int scenarioInstanceId) {
+//        LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
+//        HashMap<Integer, String> labels = new HashMap<Integer, String>();
+//        for (int id : ids) {
+//            labels.put(id, dbControlNode.getLabel(id));
+//        }
+//        return labels;
+//    }
 
     /**
      * This method returns the DataObjectInstances log entries for a ScenarioInstance.

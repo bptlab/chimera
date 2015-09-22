@@ -35,6 +35,7 @@ public class XORGrammarCompiler {
     /**
      * @param ast
      */
+    @SuppressWarnings("unused")
     private void printTree(CommonTree ast) {
         print(ast, 0);
     }

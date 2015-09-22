@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+
 import org.apache.commons.mail.EmailException;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +9,9 @@ import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -36,8 +39,8 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      */
     @Test
     public void testScenario142() throws MessagingException, IOException, EmailException {
-        ExecutionService executionService = new ExecutionService();
-        int scenarioInstance = executionService.startNewScenarioInstance(142);
+        ExecutionService executionService = ExecutionService.getInstance(142);
+        int scenarioInstance = executionService.startNewScenarioInstance();
         int activity1 = 363;
         System.out.println("Start Scenario 142");
 
@@ -76,8 +79,8 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      */
     @Test
     public void testScenario141() throws MessagingException, IOException, EmailException {
-        ExecutionService executionService = new ExecutionService();
-        int scenarioInstance = executionService.startNewScenarioInstance(141);
+        ExecutionService executionService = ExecutionService.getInstance(141);
+        int scenarioInstance = executionService.startNewScenarioInstance();
         int activity1 = 358;
         System.out.println("Start Scenario 142");
 
@@ -121,9 +124,9 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      */
     @Test
     public void testScenario145() throws MessagingException, IOException, EmailException {
-        ExecutionService executionService = new ExecutionService();
-        int scenarioID = 145;
-        int scenarioInstance = executionService.startNewScenarioInstance(scenarioID);
+    	int scenarioID = 145;
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
+        int scenarioInstance = executionService.startNewScenarioInstance();
         int activity1 = 389;
         int activity2 = 396;
         int activity3 = 399;
@@ -144,7 +147,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         executionService = null;
-        executionService = new ExecutionService();
+        executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
         //do activity 1
@@ -179,9 +182,9 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      */
     @Test
     public void testScenario146() throws MessagingException, IOException, EmailException {
-        ExecutionService executionService = new ExecutionService();
-        int scenarioID = 146;
-        int scenarioInstance = executionService.startNewScenarioInstance(scenarioID);
+    	int scenarioID = 146;
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
+        int scenarioInstance = executionService.startNewScenarioInstance();
         int activity1 = 415;
         int activity2 = 421;
         int activity3 = 416;
@@ -201,7 +204,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         executionService = null;
-        executionService = new ExecutionService();
+        executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
         //do activity 3
@@ -227,7 +230,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
         executionService = null;
-        executionService = new ExecutionService();
+        executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
     }
@@ -241,8 +244,8 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      */
     @Test
     public void testScenario151() throws MessagingException, IOException, EmailException {
-        ExecutionService executionService = new ExecutionService();
-        int scenarioInstance = executionService.startNewScenarioInstance(151);
+        ExecutionService executionService = ExecutionService.getInstance(151);
+        int scenarioInstance = executionService.startNewScenarioInstance();
         int activity1 = 490;
         System.out.println("Start Scenario 151");
 
@@ -264,5 +267,11 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Test", inbox.get(0).getSubject());
         assertEquals("Lieber Kunde Stephan Karphen, Sie bekommen am 2015 12500 ueberwiesen. #Test lol test", inbox.get(0).getContent());
 
+    }
+    
+    private void assertArrayEquals(Object[] expected, Object[] actual) {
+    	Arrays.sort(expected);
+    	Arrays.sort(actual);
+    	org.junit.Assert.assertArrayEquals(expected, actual);
     }
 }

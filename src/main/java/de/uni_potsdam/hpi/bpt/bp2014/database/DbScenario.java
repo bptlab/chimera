@@ -10,6 +10,8 @@ import java.util.Map;
  * It provides the functionality to retrieve all existing scenarios as well as their name.
  */
 public class DbScenario extends DbObject {
+	
+	private String name = null;
     /**
      * Returns you all the database ID's of all scenarios stored in the database.
      *
@@ -17,6 +19,7 @@ public class DbScenario extends DbObject {
      */
     public LinkedList<Integer> getScenarioIDs() {
         String sql = "SELECT id FROM scenario WHERE deleted = 0";
+        log.info(sql);
         return this.executeStatementReturnsListInt(sql, "id");
     }
 
@@ -28,6 +31,7 @@ public class DbScenario extends DbObject {
      */
     public Boolean existScenario(int scenario_id) {
         String sql = "SELECT id FROM scenario WHERE id = " + scenario_id;
+        log.info(sql);
         return this.executeExistStatement(sql);
     }
 
@@ -38,8 +42,12 @@ public class DbScenario extends DbObject {
      * @return the name of the scenario as a String.
      */
     public String getScenarioName(int id) {
-        String sql = "SELECT name FROM scenario WHERE id = " + id;
-        return this.executeStatementReturnsString(sql, "name");
+    	if(name == null) {
+    		String sql = "SELECT name FROM scenario WHERE id = " + id;
+    		log.info(sql);
+    		name = this.executeStatementReturnsString(sql, "name");
+    	}
+        return name;
     }
 
     /**
@@ -49,6 +57,7 @@ public class DbScenario extends DbObject {
      */
     public Map<Integer, String> getScenarios() {
         String sql = "SELECT id, name FROM scenario WHERE deleted = 0";
+        log.info(sql);
         return this.executeStatementReturnsMap(sql, "id", "name");
     }
 
@@ -60,6 +69,7 @@ public class DbScenario extends DbObject {
      */
     public Map<Integer, String> getScenariosLike(String filterString) {
         String sql = "SELECT id, name FROM scenario WHERE deleted = 0 AND name LIKE '%" + filterString + "%'";
+        log.info(sql);
         return this.executeStatementReturnsMap(sql, "id", "name");
     }
 
@@ -69,6 +79,7 @@ public class DbScenario extends DbObject {
      */
     public Map<String, Object> getScenarioDetails(int id) {
         String sql = "SELECT id, name, modelid, modelversion FROM scenario WHERE deleted = 0 AND id = " + id;
+        log.info(sql);
         return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion", "modelid");
     }
 }

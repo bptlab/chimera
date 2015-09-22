@@ -38,7 +38,7 @@ import java.util.*;
 @Path("interface/v2")
 public class RestInterface {
     static Logger log = Logger.getLogger(RestInterface.class.getName());
-
+    
     /**
      * This method allows to give an overview of all scenarios.
      * The response will return a JSON-Array containing the basic
@@ -205,7 +205,7 @@ public class RestInterface {
             @Context UriInfo uri,
             @PathParam("scenarioID") int scenarioID,
             @QueryParam("filter") String filterString) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.existScenario(scenarioID)) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -287,9 +287,9 @@ public class RestInterface {
     public Response startNewInstance(
             @Context UriInfo uri,
             @PathParam("scenarioID") int scenarioID) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (executionService.existScenario(scenarioID)) {
-            int instanceId = executionService.startNewScenarioInstance(scenarioID);
+            int instanceId = executionService.startNewScenarioInstance();
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"id\":" + instanceId +
@@ -331,7 +331,7 @@ public class RestInterface {
         if (name == null) {
             return startNewInstance(uriInfo, scenarioID);
         }
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (executionService.existScenario(scenarioID)) {
             DbScenarioInstance instance = new DbScenarioInstance();
             int instanceId = instance.createNewScenarioInstance(scenarioID, name.name);
@@ -367,7 +367,7 @@ public class RestInterface {
     public Response terminateScenarioInstance(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (executionService.existScenario(scenarioID) &&
                 executionService.existScenarioInstance(instanceID)) {
             executionService.terminateScenarioInstance(instanceID);
@@ -409,7 +409,7 @@ public class RestInterface {
             @Context UriInfo uriInfo,
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         DbScenarioInstance instance = new DbScenarioInstance();
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -465,7 +465,7 @@ public class RestInterface {
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString,
             @QueryParam("state") String state) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
@@ -504,7 +504,7 @@ public class RestInterface {
     private Response getAllActivitiesWithFilterAndState(
             int scenarioID, int instanceID, String filterString,
             String state, UriInfo uriInfo) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Collection<ActivityInstance> instances;
         switch (state) {
@@ -548,7 +548,7 @@ public class RestInterface {
      */
     private Response getAllActivitiesOfInstanceWithFilter(
             int scenarioID, int instanceID, String filterString, UriInfo uriInfo) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
         instances.put("ready", executionService.getEnabledActivities(instanceID));
@@ -593,7 +593,7 @@ public class RestInterface {
      */
     private Response getAllActivitiesOfInstanceWithState(
             int scenarioID, int instanceID, String state, UriInfo uriInfo) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Collection<ActivityInstance> instances;
         switch (state) {
@@ -685,7 +685,7 @@ public class RestInterface {
      */
     private Response getAllActivitiesOfInstance(
             int scenarioID, int instanceID, UriInfo uriInfo) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
         instances.put("ready", executionService.getEnabledActivities(instanceID));
@@ -732,7 +732,7 @@ public class RestInterface {
                                 @PathParam("instanceID") int scenarioInstanceID,
                                 @PathParam("activityID") int activityID) {
 
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
@@ -770,7 +770,7 @@ public class RestInterface {
                                              @PathParam("scenarioID") int scenarioID,
                                              @PathParam("instanceID") int scenarioInstanceID,
                                              @PathParam("activityID") int activityID) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
 
         Collection<ActivityInstance> referencedActivities = executionService.getReferentialEnabledActivities(scenarioInstanceID, activityID);
@@ -807,7 +807,7 @@ public class RestInterface {
                                         @PathParam("instanceID") int scenarioInstanceID,
                                         @PathParam("activityID") int activityID) {
 
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
@@ -865,7 +865,7 @@ public class RestInterface {
                                          @PathParam("instanceID") int scenarioInstanceID,
                                          @PathParam("activityID") int activityID) {
 
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
@@ -918,7 +918,7 @@ public class RestInterface {
                                                      @PathParam("instanceID") int scenarioInstanceID,
                                                      @PathParam("inputsetID") int inputsetID) {
 
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
@@ -964,18 +964,19 @@ public class RestInterface {
                                                       @PathParam("instanceID") int scenarioInstanceID,
                                                       @PathParam("outputsetID") int outputsetID) {
 
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such scenario instance.\"}").build();
         }
-        if (executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID) == null ||
-                executionService.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID).length == 0) {
+        
+        DataObjectInstance[] dataObjectInstances = executionService
+        		.getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
+
+        if (dataObjectInstances == null || dataObjectInstances.length == 0) {
             return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such outputSet instance.\"}").build();
         }
-        DataObjectInstance[] dataObjectInstances = executionService
-                .getDataObjectInstancesForDataSetId(outputsetID, scenarioInstanceID);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
             DataObjectJaxBean dataObject = new DataObjectJaxBean();
@@ -1018,7 +1019,7 @@ public class RestInterface {
                     .entity("{\"error\":\"The state is not set\"}")
                     .build();
         }
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         switch (state) {
             case "begin":
@@ -1043,6 +1044,7 @@ public class RestInterface {
                     .entity("{\"message\":\"activity state changed.\"}")
                     .build();
         } else {
+        	executionService.reloadScenarioInstanceFromDatabase(scenarioID, scenarioInstanceID);
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"impossible to " + (state.equals("begin") ? "start" : "terminate") +
@@ -1065,7 +1067,7 @@ public class RestInterface {
                                      @PathParam("instanceID") int scenarioInstanceID,
                                      @PathParam("activityID") int activityID,
                                      final DataAttributeUpdateJaxBean input) {
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
 
         Map<Integer, String> values = new HashMap<>();
@@ -1110,7 +1112,8 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @QueryParam("filter") String filterString) {
-        ExecutionService executionService = new ExecutionService();
+    	
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
@@ -1168,7 +1171,8 @@ public class RestInterface {
             @PathParam("scenarioID") int scenarioID,
             @PathParam("instanceID") int instanceID,
             @PathParam("dataObjectID") int dataObjectID) {
-        ExecutionService executionService = new ExecutionService();
+    	
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.existScenarioInstance(instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)

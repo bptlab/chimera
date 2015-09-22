@@ -85,7 +85,6 @@ public class DataObject implements IPersistable {
      *              which will be added to the States of the DataObject
      */
     private void addState(final String state) {
-        Connector connector = new Connector();
         if (!states.containsKey(state)) {
             states.put(state, -1);
         }

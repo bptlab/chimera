@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import java.io.*;
 import java.sql.DriverManager;
 
@@ -82,9 +83,11 @@ public class Connection {
      */
     private void initializeDatabaseConfiguration(String path) {
         file = new File(path);
+        BufferedReader br = null;
+        FileReader fr = null;
         try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
             username = br.readLine();
             password = br.readLine();
             url = br.readLine();
@@ -99,6 +102,23 @@ public class Connection {
             }
         } catch (IOException e) {
             log.error("MySQL Connection Error:", e);
+        } finally {
+        	if(fr != null) {
+        		try {
+					fr.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        	if(br != null) {
+        		try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
         }
     }
 }

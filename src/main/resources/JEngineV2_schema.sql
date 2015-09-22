@@ -20,6 +20,9 @@ SET time_zone = "+00:00";
 -- Database: `JEngineV2`
 --
 
+CREATE DATABASE IF NOT EXISTS JEngineV2;
+USE JEngineV2;
+
 -- --------------------------------------------------------
 
 --

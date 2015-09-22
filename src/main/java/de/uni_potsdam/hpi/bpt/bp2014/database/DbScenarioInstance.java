@@ -4,12 +4,19 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * This class administrates the scenario instances in the databases and provides check methods to make sure the database is correct.
  * Moreover it is possible to mark a scenario instance as terminated.
  */
 public class DbScenarioInstance extends DbObject {
+    static Logger log = Logger.getLogger(DbScenarioInstance.class.getName());
+    private boolean exist = false;
+    private int scenario_id = -1;
+    private int scenarioInstance_id = -1;
+    
     /**
      * Checks if a scenario instance belongs to the right scenario.
      *
@@ -18,8 +25,14 @@ public class DbScenarioInstance extends DbObject {
      * @return if the check was positive(true) or not(false).
      */
     public Boolean existScenario(int scenario_id, int scenarioInstance_id) {
-        String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " AND id = " + scenarioInstance_id;
-        return this.executeExistStatement(sql);
+    	if(!exist || this.scenario_id != scenario_id || this.scenarioInstance_id != scenarioInstance_id) {
+    		String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " AND id = " + scenarioInstance_id;
+    		log.info(sql);
+    		exist = this.executeExistStatement(sql);
+    		this.scenario_id = scenario_id;
+    		this.scenarioInstance_id = scenarioInstance_id;
+    	}
+        return exist;
     }
 
     /**
@@ -29,8 +42,13 @@ public class DbScenarioInstance extends DbObject {
      * @return if the check was positive(true) or not(false).
      */
     public Boolean existScenario(int scenarioInstance_id) {
-        String sql = "SELECT id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
-        return this.executeExistStatement(sql);
+    	if(!exist || this.scenarioInstance_id != scenarioInstance_id) {
+    		String sql = "SELECT id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+    		log.info(sql);
+    		exist = this.executeExistStatement(sql);
+    		this.scenarioInstance_id = scenarioInstance_id;
+    	}
+        return exist;
     }
 
     /**
@@ -41,6 +59,7 @@ public class DbScenarioInstance extends DbObject {
      */
     public int createNewScenarioInstance(int id) {
         String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + id + ", (SELECT name FROM scenario WHERE id = " + id + "))";
+        log.info(sql);
         return this.executeInsertStatement(sql);
     }
 
@@ -55,6 +74,7 @@ public class DbScenarioInstance extends DbObject {
     public int createNewScenarioInstance(int id, String name) {
         String sql = "INSERT INTO scenarioinstance (scenario_id, name) " +
                 "VALUES (" + id + "," + "'" + name + "'" + ")";
+        log.info(sql);
         return this.executeInsertStatement(sql);
 
     }
@@ -67,6 +87,7 @@ public class DbScenarioInstance extends DbObject {
      */
     public int getScenarioInstanceID(int scenario_id) {
         String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenario_id + " ORDER BY id DESC";
+        log.info(sql);
         return this.executeStatementReturnsInt(sql, "id");
     }
 
@@ -78,6 +99,7 @@ public class DbScenarioInstance extends DbObject {
      */
     public LinkedList<Integer> getScenarioInstances(int scenario_id) {
         String sql = "SELECT * FROM scenarioinstance WHERE scenarioinstance.terminated = 0 AND scenario_id = " + scenario_id;
+        log.info(sql);
         return this.executeStatementReturnsListInt(sql, "id");
     }
 
@@ -89,6 +111,7 @@ public class DbScenarioInstance extends DbObject {
      */
     public int getScenarioID(int scenarioInstance_id) {
         String sql = "SELECT scenario_id FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+        log.info(sql);
         return this.executeStatementReturnsInt(sql, "scenario_id");
     }
 
@@ -100,6 +123,7 @@ public class DbScenarioInstance extends DbObject {
      */
     public int getTerminated(int scenarioInstance_id) {
         String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = " + scenarioInstance_id;
+        log.info(sql);
         return this.executeStatementReturnsInt(sql, "terminated");
     }
 
@@ -117,6 +141,7 @@ public class DbScenarioInstance extends DbObject {
             terminatedAsInt = 0;
         }
         String sql = "UPDATE scenarioinstance SET scenarioinstance.terminated = " + terminatedAsInt + " WHERE id = " + scenarioInstance_id;
+        log.info(sql);
         this.executeUpdateStatement(sql);
     }
 
@@ -127,11 +152,13 @@ public class DbScenarioInstance extends DbObject {
         if (null != filterString && !filterString.equals("")) {
             sql = sql + " AND name LIKE '%" + filterString + "%'";
         }
+        log.info(sql);
         return this.executeStatementReturnsMap(sql, "id", "name");
     }
 
     public Map<String, Object> getInstanceMap(int instanceId) {
         String sql = "SELECT * FROM scenarioinstance WHERE id = " + instanceId;
+        log.info(sql);
         return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "terminated", "scenario_id");
     }
 }

@@ -11,6 +11,8 @@ public class Aggregation implements IDeserialisable, IPersistable {
     private DataClass target;
     private int multiplicity;
     private Map<Long, DataClass> dataClasses;
+
+    @SuppressWarnings("unused")
     private org.w3c.dom.Node aggregationXML;
 
     @Override

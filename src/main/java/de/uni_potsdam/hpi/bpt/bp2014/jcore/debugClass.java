@@ -47,10 +47,10 @@ public class debugClass {
     public static void main(String args[]) {
         int scenarioID = new Integer(selectScenario());
         int scenarioInstanceID = new Integer(selectScenarioInstance());
-        ExecutionService executionService = new ExecutionService();
+        ExecutionService executionService = new ExecutionService(scenarioID);
         String scenarioName = executionService.getScenarioName(scenarioID);
         if (scenarioInstanceID == -1) {
-            scenarioInstanceID = executionService.startNewScenarioInstance(scenarioID);
+            scenarioInstanceID = executionService.startNewScenarioInstance();
             System.out.println("neues Scenario " + scenarioName + " geöffnet, Scenario Instance ID: " + scenarioInstanceID);
         } else {
             if (executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
@@ -98,7 +98,7 @@ public class debugClass {
             if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
                 System.out.println("Scenario ist terminiert");
             executionService = null;
-            executionService = new ExecutionService();
+            executionService = new ExecutionService(scenarioID);
             executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
         }
 

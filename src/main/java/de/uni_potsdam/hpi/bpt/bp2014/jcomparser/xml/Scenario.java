@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,6 +18,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -421,6 +424,8 @@ public class Scenario implements IDeserialisable, IPersistable {
             if (migrationNecessary) {
                 migrateRunningInstances();
             }
+            //Set flag in executionService to force a reload from the database
+            ExecutionService.getInstance((int)scenarioID).setNewVersionAvailable(true);
             return this.databaseID;
         }
         return -1;
