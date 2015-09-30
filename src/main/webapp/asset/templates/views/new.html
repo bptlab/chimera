@@ -123,9 +123,27 @@
                 <div class="responsive-table pull-left">
                     <table class="table table-striped">
                         <tbody>
-                        <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']">
-                            <td>{{value['label']}}</td>
+                        <tr style="cursor: pointer"
+                        	ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']">
                             <td>
+                            	<div style="position: relative;">
+                            		<p>{{value['label']}}
+                            			<input style="position: absolute; opacity: 0;" class="i-checks">
+                                        	<ins style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 0px none; opacity: 0;"
+                                             class="iCheck-helper" data-toggle="modal"
+                                             data-target="{{'#modal' + value['id']}}"
+                                             ng-click="instanceCtrl.handleReferencedActivities(value['id']);"
+                                             tabindex="-1"></ins>
+                                	</p>
+                                    
+                                    <!-- <ins style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 0px none; opacity: 0;"
+                                             class="iCheck-helper" data-toggle="modal"
+                                             data-target="{{'#modal' + value['id']}}"
+                                             ng-click="instanceCtrl.handleReferencedActivities(value['id']);"
+                                             tabindex="-1"></ins> -->
+                                </div>
+                             </td>
+                          <!--   <td>
                                 <div class="checkbox"><label class="">
                                     <div style="position: relative;" class="icheckbox_square-green"><input
                                             style="position: absolute; opacity: 0;" class="i-checks" type="checkbox">
@@ -136,7 +154,7 @@
                                              tabindex="-1"></ins>
                                     </div>
                                 </label></div>
-                            </td>
+                            </td> -->
                         </tr>
                         </tbody>
                     </table>
