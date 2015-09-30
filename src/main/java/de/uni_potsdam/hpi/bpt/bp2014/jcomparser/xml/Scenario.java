@@ -194,7 +194,8 @@ public class Scenario implements IDeserialisable, IPersistable {
             domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length - 1];
             domainModelURI = domainModelURI.split("\\.")[0];
         } catch (XPathExpressionException e) {
-            log.error("Error:", e);
+        	log.error("Error: unable to set the domain model URL for the scenario.");
+            log.error(e);
         }
     }
 
@@ -320,7 +321,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                 }
                 versionNumber = maxID;
             } catch (XPathExpressionException e) {
-                log.error("Error:", e);
+            	log.error("Error: unable to set the version of the scenario.");
+            	log.error(e);
             }
         }
     }
@@ -365,7 +367,8 @@ public class Scenario implements IDeserialisable, IPersistable {
         try {
             tcs = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
         } catch (XPathExpressionException e) {
-            log.error("Error:", e);
+        	log.error("Error: unable to set the termination condition for the scenario.");
+            log.error(e);
         }
         if (tcs.isEmpty()) {
             terminationCondition = null;
@@ -400,7 +403,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML));
         } catch (XPathExpressionException e) {
-            log.error("Error:", e);
+        	log.error("Error: unable to set the id of the scenario.");
+            log.error(e);
         }
     }
 
@@ -697,7 +701,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                 this.fragments.add(createAndInitializeFragment(currentNodeID));
             }
         } catch (XPathExpressionException e) {
-            log.error("Error:", e);
+        	log.error("Error: unable to generate the fragmentlist.");
+            log.error(e);
         }
     }
 
@@ -752,7 +757,8 @@ public class Scenario implements IDeserialisable, IPersistable {
                     .compile(xPathQuery)
                     .evaluate(this.scenarioXML);
         } catch (XPathExpressionException e) {
-            log.error("Error:", e);
+        	log.error("Error: unable to set the name of the scenario.");
+            log.error(e);
         }
     }
 

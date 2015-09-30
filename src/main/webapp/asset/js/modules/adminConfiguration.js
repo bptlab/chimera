@@ -54,8 +54,10 @@
                                 $http.get(JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios").
                                     success(function (data) {
                                         controller.scenarioDetails = data['ids'];
+                                        alert('The selected scenario was sucessfully imported to Chimera.');
                                     }).
                                     error(function () {
+                                    	alert('The selected scenario could not be imported to Chimera.');
                                         console.log('request failed');
                                     });
                                 //return the new
@@ -63,6 +65,7 @@
                             }
                         }).
                         error(function () {
+                        	alert('The selected scenario could not be imported to Chimera.');
                             console.log('request failed');
                         });
                 };
