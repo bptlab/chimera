@@ -51,9 +51,13 @@
                     <li ng-class="{active: todo_terminated==false}"><a aria-expanded="true" data-toggle="tab"
                                                                        ng-click="todo_terminated = false">Open Tasks</a>
                     </li>
+                   
+                    <!-- 
                     <li ng-class="{active: todo_terminated==true}"><a aria-expanded="false" data-toggle="tab"
                                                                       ng-click="todo_terminated = true">Completed
                         Task</a></li>
+                    -->
+                    
                 </ul>
                 <!-- ./nav tabs options -->
             </div>
@@ -71,11 +75,12 @@
                                         class="fa fa-check text-navy"></i></a></td>
 
                             </tr>
-                            </a>
                             </tbody>
                         </table>
                     </div>
                     <!-- ./ ng-if="!todo_terminated" -->
+                    
+                    <!--
                     <div ng-if="todo_terminated">
                         <div class="responsive-table pull-left">
                             <table class="table table-striped">
@@ -94,6 +99,8 @@
                             </table>
                         </div>
                     </div>
+                    -->
+                    
                     <!-- ./ ng-if="todo_terminated" -->
                 </div>
                 <!-- ./ tab content -->
