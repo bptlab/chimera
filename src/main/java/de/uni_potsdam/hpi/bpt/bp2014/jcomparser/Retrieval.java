@@ -1,15 +1,26 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
-
-import org.apache.log4j.Logger;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
 
-import java.io.*;
-import java.net.*;
-import java.awt.image.BufferedImage;
+import org.apache.log4j.Logger;
+
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 
 
 
@@ -30,11 +41,12 @@ public class Retrieval {
     /**
      * The username needed for the authentication.
      */
-    private String username = Settings.processeditorServerName;
+    private String username = PropertyLoader.getProperty("processeditor.serverName");
+    
     /**
      * The password needed for the authentication.
      */
-    private String password = Settings.processeditorServerPassword;
+    private String password = PropertyLoader.getProperty("processeditor.serverPassword");
 
     /**
      * Get the content from URL. In case of the JComparser, it is used to get the XML of a processModel. Therefore,
