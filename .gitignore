@@ -1,5 +1,8 @@
 .idea
 .idea/*
+.classpath
+.project
+.settings
 *.class
 JEngine.iml
 resources/database_connection
@@ -11,3 +14,4 @@ src/main/webapp/asset/js/angular-route.min.js
 src/main/webapp/asset/js/angular-route.min.js.map
 src/main/webapp/asset/js/angular.min.js
 src/main/webapp/asset/js/angular.min.js.map
+/target/
