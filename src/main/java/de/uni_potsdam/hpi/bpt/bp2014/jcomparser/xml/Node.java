@@ -1,10 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
-import java.util.HashMap;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
 
 /**

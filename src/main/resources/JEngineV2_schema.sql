@@ -20,6 +20,9 @@ SET time_zone = "+00:00";
 -- Database: `JEngineV2`
 --
 
+CREATE DATABASE IF NOT EXISTS JEngineV2;
+USE JEngineV2;
+
 -- --------------------------------------------------------
 
 --
@@ -392,10 +395,12 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
 --
 
 CREATE TABLE IF NOT EXISTS `janalyticsresults` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `service` varchar(256) NOT NULL,
   `json` text,
-  PRIMARY KEY (`service`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 

@@ -9,10 +9,14 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * This class provides an Algorithm to calculate the mean ScenarioInstanceRuntime for all terminated ScenarioInstances
+ * of a Scenario
+ */
 public class ExampleAlgorithm implements AnalyticsService {
-    static final Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
+    static final Logger log = Logger.getLogger(ExampleAlgorithm.class.getName());
 
+    @Override
     /**
      * This Method calculates the mean runtime for all terminated instances of a scenario
      *
@@ -25,6 +29,11 @@ public class ExampleAlgorithm implements AnalyticsService {
         long avgDuration = 0L;
         long sumDuration = 0L;
         int numberOfScenarioInstances = 0;
+        int millisecondsPerSecond = 1000;
+        int secondsPerMinute = 60;
+        int minutesPerHour = 60;
+        int hoursPerDay = 24;
+        int daysPerYear = 365;
         //get instances for scenario
         List<DbScenarioInstanceIDsAndTimestamps> scenarioInstances = MetaAnalyticsModel.getScenarioInstancesForScenario(scenarioId);
         for (DbScenarioInstanceIDsAndTimestamps scenarioInstance : scenarioInstances) {
@@ -44,10 +53,11 @@ public class ExampleAlgorithm implements AnalyticsService {
             return new JSONObject("{\"scenarioId\":" + scenarioId + ",\"meanScenarioInstanceRuntime\":\"No terminated instances.\"}");
         }
 
-        long second = (avgDuration / 1000) % 60;
-        long minute = (avgDuration / (1000 * 60)) % 60;
-        long hour = (avgDuration / (1000 * 60 * 60)) % 24;
-        long day = (avgDuration / (1000 * 60 * 60 * 24)) % 365;
+        // converting duration from milliseconds to human readable format days:hours:minutes:seconds
+        long second = (avgDuration / millisecondsPerSecond) % secondsPerMinute;
+        long minute = (avgDuration / (millisecondsPerSecond * secondsPerMinute)) % minutesPerHour;
+        long hour = (avgDuration / (millisecondsPerSecond * secondsPerMinute * minutesPerHour)) % hoursPerDay;
+        long day = (avgDuration / (millisecondsPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)) % daysPerYear;
 
         String time = String.format("%02d:%02d:%02d:%02d", day, hour, minute, second);
         String json = "{\"scenarioId\":" + scenarioId + ",\"meanScenarioInstanceRuntime\":\"" + time + "\"}";

@@ -20,6 +20,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
     private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<>();
 
     private DbState dbState = new DbState();
+    private String type = null;
+//    private int controlNode_id = -1;
 
     /**
      * Initializes and creates an ExclusiveGatewaySplitBehavior
@@ -58,7 +60,10 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
         LinkedList<Integer> ids = followingControlNodes.get(bucket_id);
         ids.add(id);
         followingControlNodes.set(bucket_id, ids);
-        if (dbControlNode.getType(id).equals("XOR") || dbControlNode.getType(id).equals("AND")) {
+        if(type == null || this.controlNode_id != id) {
+        	type = dbControlNode.getType(id);
+        }
+        if (type.equals("XOR") || type.equals("AND")) {
             for (int controlNode_id : dbControlFlow.getFollowingControlNodes(id)) {
                 this.addFollowingControlNode(bucket_id, controlNode_id);
             }
@@ -85,7 +90,9 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
                 return controlNodeInstance;
             }
         }
-        String type = dbControlNode.getType(controlNode_id);
+        if(type == null || this.controlNode_id != controlNode_id) {
+        	type = dbControlNode.getType(controlNode_id);        	
+        }
         ControlNodeInstance controlNodeInstance = createControlNode(type, controlNode_id);
         setAutomaticExecutionToFalse(type, controlNodeInstance);
         return controlNodeInstance;
@@ -111,7 +118,10 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
      * @return True if the gateway can terminate. false if not.
      */
     public boolean checkTermination(int controlNode_id) {
-        if ((dbControlNode.getType(controlNode_id).equals("AND")) || (dbControlNode.getType(controlNode_id).equals("XOR"))) {
+    	if(type == null || this.controlNode_id != controlNode_id) {
+    		type = dbControlNode.getType(controlNode_id);    		
+    	}
+        if ((type.equals("AND")) || (type.equals("XOR"))) {
             return false;
         }
         for (int i = 0; i < followingControlNodes.size(); i++) {
@@ -134,8 +144,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
      */
     public void evaluateConditions() {
         Map<Integer, String> conditions = dbControlFlow.getConditions(controlNode_id);
-        Set keys = conditions.keySet();
-        Iterator key = keys.iterator();
+        Set<Integer> keys = conditions.keySet();
+        Iterator<Integer> key = keys.iterator();
         Integer controlNode_id = 0;
         boolean defaultExecution = true;
         int defaultControlNode = -1;

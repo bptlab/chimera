@@ -1,8 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import com.google.gson.Gson;
+
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -11,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -24,15 +28,19 @@ import java.util.HashMap;
 
 @Path("jcomparser")
 public class REST {
+	
     static Logger log = Logger.getLogger(REST.class.getName());
-    /**
-     * The URL to the ProcessEditor Model repository.
-     */
-    private static final String PCM_URL = Settings.processeditorServerUrl + "models/";
     /**
      * The URL to the ProcessEditor.
      */
-    private static final String PROCESS_SERVER_URI = Settings.processeditorServerUrl;
+    private static final String PROCESS_SERVER_URI = 
+    		PropertyLoader.getProperty("processeditor.serverUrl");
+   
+    /**
+     * The URL to the ProcessEditor Model repository.
+     */
+    private static final String PCM_URL = PROCESS_SERVER_URI + "models/";
+
 
     /**
      * This methods parses a new scenario and saves it to the database.

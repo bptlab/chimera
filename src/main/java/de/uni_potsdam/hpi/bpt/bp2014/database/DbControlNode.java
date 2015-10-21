@@ -14,7 +14,10 @@ import java.sql.Statement;
  */
 public class DbControlNode extends DbObject {
     static Logger log = Logger.getLogger(DbControlNode.class.getName());
-
+    private String type = null;
+    private String label = null;
+    private int controlNode_id = -1;
+    
     /**
      * This method returns the database Id of a startEvent in the context of a fragment.
      *
@@ -23,6 +26,7 @@ public class DbControlNode extends DbObject {
      */
     public int getStartEventID(int fragment_id) {
         String sql = "SELECT id FROM controlnode WHERE type = 'Startevent' AND fragment_id = " + fragment_id;
+        log.info(sql);
         return this.executeStatementReturnsInt(sql, "id");
     }
 
@@ -33,8 +37,14 @@ public class DbControlNode extends DbObject {
      * @return the type of the controlNode as a String.
      */
     public String getType(int controlNode_id) {
-        String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
-        return this.executeStatementReturnsString(sql, "type");
+    	if(type == null || this.controlNode_id != controlNode_id) {
+    		String sql = "SELECT type FROM controlnode WHERE id = " + controlNode_id;
+    		log.info(sql); 
+    		type = this.executeStatementReturnsString(sql, "type");
+    	} else {
+    		log.info("Used cached type instead of querying the database for contolNodeId=" + controlNode_id);
+    	}
+    	return type;
     }
 
     /**
@@ -44,8 +54,13 @@ public class DbControlNode extends DbObject {
      * @return the label of the controlNode as a String.
      */
     public String getLabel(int controlNode_id) {
-        String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
-        return this.executeStatementReturnsString(sql, "label");
+    	if(label == null || this.controlNode_id != controlNode_id) {
+    		String sql = "SELECT label FROM controlnode WHERE id = " + controlNode_id;
+    		log.info(sql);
+    		label = this.executeStatementReturnsString(sql, "label");   
+    		this.controlNode_id = controlNode_id;
+    	}
+        return label;
     }
 
     /**
@@ -80,6 +95,7 @@ public class DbControlNode extends DbObject {
                     "WHERE dataflow.dataset_id = datasetconsistsofdatanode.dataset_id AND " +
                     "datasetconsistsofdatanode.datanode_id = datanode.id AND controlnode_id = " + controlNode_id1 + " AND " +
                     "dataflow.input = 0))"; //returns nothing if they have same output else something
+            log.info(sql);
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 rs.close();

@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
 import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.*;
 
 
@@ -197,7 +199,7 @@ public class RestConfigurator {
         ArrayList<HashMap<String, Object>> list = webService.getComplexAttributeMap(webserviceID);
         Map<Integer, String> attributes = webService.getOutputAttributesForWebservice(webserviceID);
 
-        HashMap response = new HashMap();
+        HashMap<String, Object> response = new HashMap<String, Object>();
         response.put("attributes", list);
         response.put("method", webService.getMethod(webserviceID));
         response.put("link", webService.getLinkForControlNode(webserviceID));

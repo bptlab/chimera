@@ -1,13 +1,26 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import de.uni_potsdam.hpi.bpt.bp2014.settings.Settings;
-import org.apache.log4j.Logger;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
-import java.io.*;
-import java.net.*;
-import java.awt.image.BufferedImage;
+
+import org.apache.log4j.Logger;
+
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 
 
 
@@ -28,11 +41,12 @@ public class Retrieval {
     /**
      * The username needed for the authentication.
      */
-    private String username = Settings.processeditorServerName;
+    private String username = PropertyLoader.getProperty("processeditor.serverName");
+    
     /**
      * The password needed for the authentication.
      */
-    private String password = Settings.processeditorServerPassword;
+    private String password = PropertyLoader.getProperty("processeditor.serverPassword");
 
     /**
      * Get the content from URL. In case of the JComparser, it is used to get the XML of a processModel. Therefore,
@@ -58,8 +72,8 @@ public class Retrieval {
             inputStream.close();
             return stringBuilder.toString();
         } catch (IOException e) {
-            System.err.println("Request failed.");
-            log.error("Error:", e);
+            log.error("Error: unable to read the processModel from the server. Tried to read " + urlToRead);
+            log.error(e);
         }
         return null;
     }
@@ -88,8 +102,8 @@ public class Retrieval {
             // uncomment line below to send streamed
             //return Response.ok(new ByteArrayInputStream(imageData)).build();
         } catch (IOException e) {
-            System.err.println("Request failed.");
-            log.error("Error:", e);
+            log.error("Error: unable to load an image from the server. Tried to load the image from " + urlToRead);
+            log.error(e);
         }
         return null;
     }
@@ -102,36 +116,32 @@ public class Retrieval {
      *                  html should be retrieved
      *                  (e.g. "http://localhost:1205/models/123456789.png")
      * @return the response from urlToRead as an InputStream
+     * @throws IOException 
+     * @throws MalformedURLException 
      */
-    private InputStream getInputStream(String hosturl, String urlToRead) {
+    private InputStream getInputStream(String hosturl, String urlToRead) throws MalformedURLException, IOException {
         HttpURLConnection connection;
-        try {
-            CookieHandler.setDefault(new CookieManager(
-                    null, CookiePolicy.ACCEPT_ALL));
-            connection = (HttpURLConnection) new URL(hosturl + "users/login")
-                    .openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/xml");
-            connection.setInstanceFollowRedirects(false);
-            OutputStream os = connection.getOutputStream();
-            PrintWriter osw = new PrintWriter(os);
-            osw.println(String.format(loginRequest, username, password));
-            osw.flush();
-            osw.close();
-            connection.getResponseCode();
-            connection.getResponseMessage();
-            HttpURLConnection modelsConnection = (HttpURLConnection)
-                    new URL(urlToRead).openConnection();
-            modelsConnection.setInstanceFollowRedirects(false);
-            modelsConnection.setRequestMethod("GET");
-            InputStream inputStream = modelsConnection.getInputStream();
-            connection.disconnect();
-            return inputStream;
-        } catch (IOException e) {
-            System.err.println("Request failed.");
-            log.error("Error:", e);
-        }
-        return null;
+        CookieHandler.setDefault(new CookieManager(
+                null, CookiePolicy.ACCEPT_ALL));
+        connection = (HttpURLConnection) new URL(hosturl + "users/login")
+                .openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/xml");
+        connection.setInstanceFollowRedirects(false);
+        OutputStream os = connection.getOutputStream();
+        PrintWriter osw = new PrintWriter(os);
+        osw.println(String.format(loginRequest, username, password));
+        osw.flush();
+        osw.close();
+        connection.getResponseCode();
+        connection.getResponseMessage();
+        HttpURLConnection modelsConnection = (HttpURLConnection)
+                new URL(urlToRead).openConnection();
+        modelsConnection.setInstanceFollowRedirects(false);
+        modelsConnection.setRequestMethod("GET");
+        InputStream inputStream = modelsConnection.getInputStream();
+        connection.disconnect();
+        return inputStream;
     }
 }

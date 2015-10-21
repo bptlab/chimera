@@ -1,7 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
-import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.FileReader;
+import java.util.Arrays;
+
 import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,12 +18,15 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.Arrays;
+import com.ibatis.common.jdbc.ScriptRunner;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 
 
 /**
@@ -545,6 +553,12 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testDomainModelVersionImpactOnSaving() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
+        
+        //Launch a scenario to test, whether a reload from the db is required after the scenario-version has changed
+        ExecutionService ex = ExecutionService.getInstance(358512);
+        ex.startNewScenarioInstance();
+        Assert.assertEquals(false, ex.isNewVersionAvailable());
+        
         final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
@@ -559,7 +573,10 @@ public class  ScenarioTest extends TestSetUp {
                 new File("src/test/resources/Testscenario/Scenario.xml")));
         Assert.assertFalse("Even though the domainModel has been changed, the scenario isn't saved as a new one", scenario.save() == -1);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
+        
+        Assert.assertEquals(true, ex.isNewVersionAvailable());
     }
+    
     /**
      * Emptys the database and fills it from INSERT_TESTDATA_FILE afterwards.
      * @throws Exception java.lang.Exception
