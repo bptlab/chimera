@@ -14,7 +14,7 @@ public class PropertyLoader {
 	//TODO should an exception be thrown if the property file could not be read?
 	static {
 		String path = PROPERTIES_FOLDER + File.separator + PROPERTIES_FILE;
-		
+
 		InputStream is = null;
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -24,7 +24,7 @@ public class PropertyLoader {
 			System.err.println("Could not read configuration file " + path);
 			e.printStackTrace();
 		} finally {
-			if(is != null) {
+			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
@@ -67,7 +67,7 @@ public class PropertyLoader {
 		return props;
 	}
 */
-	
+
 	public static String getProperty(String key) {
 		String property = props.getProperty(key);
 		return property;
@@ -76,5 +76,5 @@ public class PropertyLoader {
 	public static void main(String[] args) {
 		System.out.println(PropertyLoader.getProperty("mysql.url"));
 	}
-	
+
 }
