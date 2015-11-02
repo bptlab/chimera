@@ -95,7 +95,7 @@ import java.util.*;
 					.entity("{}").build();
 		}
 		String jsonRepresentation = JsonUtil
-				.JsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
+				.jsonWrapperLinkedList(mail.getAllEmailTasksForScenario(scenarioID));
 		return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -145,7 +145,7 @@ import java.util.*;
 		}
 		DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 		LinkedList<Integer> webServiceTaskIDs = dbWebServiceTask.getWebServiceTasks(scenarioID);
-		String jsonRepresentation = JsonUtil.JsonWrapperLinkedList(webServiceTaskIDs);
+		String jsonRepresentation = JsonUtil.jsonWrapperLinkedList(webServiceTaskIDs);
 		return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -169,7 +169,7 @@ import java.util.*;
 		response.put("body", webService.getPOST(webserviceID));
 		response.put("allAttributes", attributes);
 
-		String jsonResponse = JsonUtil.JsonWrapperHashMapOnly(response);
+		String jsonResponse = JsonUtil.jsonWrapperHashMapOnly(response);
 		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
 	}
 

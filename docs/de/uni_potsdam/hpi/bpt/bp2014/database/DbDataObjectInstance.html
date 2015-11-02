@@ -144,14 +144,14 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#createNewDataObjectInstance(int,%20int,%20int)">createNewDataObjectInstance</a></strong>(int&nbsp;scenarioInstance_id,
                            int&nbsp;state_id,
-                           int&nbsp;dataObject_id)</code>
+                           int&nbsp;dataObjectId)</code>
 <div class="block">This method creates and saves a dataObject instance to the database and saves a log entry into the database.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#existDataObjectInstance(int,%20int)">existDataObjectInstance</a></strong>(int&nbsp;scenarioInstance_id,
-                       int&nbsp;dataObject_id)</code>
+                       int&nbsp;dataObjectId)</code>
 <div class="block">This method checks if the instance of a dataObject is existing.</div>
 </td>
 </tr>
@@ -164,19 +164,19 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#getDataObjectInstanceID(int,%20int)">getDataObjectInstanceID</a></strong>(int&nbsp;scenarioInstance_id,
-                       int&nbsp;dataObject_id)</code>
+                       int&nbsp;dataObjectId)</code>
 <div class="block">This method returns the dataObject instance ID of a corresponding dataObject.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#getOnChange(int)">getOnChange</a></strong>(int&nbsp;dataObjectInstance_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#getOnChange(int)">getOnChange</a></strong>(int&nbsp;dataObjectInstanceId)</code>
 <div class="block">This method checks if the dataObject instance is in a modified state to prevent concurrency.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#getStateID(int)">getStateID</a></strong>(int&nbsp;dataObjectInstance_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObjectInstance.html#getStateID(int)">getStateID</a></strong>(int&nbsp;dataObjectInstanceId)</code>
 <div class="block">This method returns the state ID of a given dataObject instance.</div>
 </td>
 </tr>
@@ -247,9 +247,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <li class="blockList">
 <h4>existDataObjectInstance</h4>
 <pre>public&nbsp;java.lang.Boolean&nbsp;existDataObjectInstance(int&nbsp;scenarioInstance_id,
-                                        int&nbsp;dataObject_id)</pre>
+                                        int&nbsp;dataObjectId)</pre>
 <div class="block">This method checks if the instance of a dataObject is existing.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>dataObject_id</code> - This is the database ID of a dataObject.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>dataObjectId</code> - This is the database ID of a dataObject.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if DataObject is existing else false.</dd></dl>
 </li>
 </ul>
@@ -273,9 +273,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <h4>createNewDataObjectInstance</h4>
 <pre>public&nbsp;int&nbsp;createNewDataObjectInstance(int&nbsp;scenarioInstance_id,
                               int&nbsp;state_id,
-                              int&nbsp;dataObject_id)</pre>
+                              int&nbsp;dataObjectId)</pre>
 <div class="block">This method creates and saves a dataObject instance to the database and saves a log entry into the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>state_id</code> - This is the initial state of a dataObject instance.</dd><dd><code>dataObject_id</code> - This is the database ID of a dataObject.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>state_id</code> - This is the initial state of a dataObject instance.</dd><dd><code>dataObjectId</code> - This is the database ID of a dataObject.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>-1 if something went wrong else return the database ID of the newly created dataObject instance.</dd></dl>
 </li>
 </ul>
@@ -286,9 +286,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <li class="blockList">
 <h4>getDataObjectInstanceID</h4>
 <pre>public&nbsp;int&nbsp;getDataObjectInstanceID(int&nbsp;scenarioInstance_id,
-                          int&nbsp;dataObject_id)</pre>
+                          int&nbsp;dataObjectId)</pre>
 <div class="block">This method returns the dataObject instance ID of a corresponding dataObject.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>dataObject_id</code> - This is the database ID of a dataObject.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>dataObjectId</code> - This is the database ID of a dataObject.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>-1 if something went wrong else the database ID of a dataObject instance.</dd></dl>
 </li>
 </ul>
@@ -298,9 +298,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getStateID</h4>
-<pre>public&nbsp;int&nbsp;getStateID(int&nbsp;dataObjectInstance_id)</pre>
+<pre>public&nbsp;int&nbsp;getStateID(int&nbsp;dataObjectInstanceId)</pre>
 <div class="block">This method returns the state ID of a given dataObject instance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectInstance_id</code> - This is the database ID of a dataObject instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectInstanceId</code> - This is the database ID of a dataObject instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>-1 if something went wrong else the database ID of the state of the dataObject instance.</dd></dl>
 </li>
 </ul>
@@ -310,9 +310,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getOnChange</h4>
-<pre>public&nbsp;boolean&nbsp;getOnChange(int&nbsp;dataObjectInstance_id)</pre>
+<pre>public&nbsp;boolean&nbsp;getOnChange(int&nbsp;dataObjectInstanceId)</pre>
 <div class="block">This method checks if the dataObject instance is in a modified state to prevent concurrency.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectInstance_id</code> - This is the database ID of a dataObject instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectInstanceId</code> - This is the database ID of a dataObject instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if another activity is using this dataObject instance else false.</dd></dl>
 </li>
 </ul>

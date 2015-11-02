@@ -62,7 +62,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
         executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -72,9 +72,9 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         String value12 = "";
         String value13 = "";
         for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
-            if (dataAttributeInstance.getDataAttribute_id() == 12) {
+            if (dataAttributeInstance.getDataAttributeId() == 12) {
                 value12 = dataAttributeInstance.getValue().toString();
-            } else if (dataAttributeInstance.getDataAttribute_id() == 13) {
+            } else if (dataAttributeInstance.getDataAttributeId() == 13) {
                 value13 = dataAttributeInstance.getValue().toString();
             }
         }
@@ -97,7 +97,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
         executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -106,7 +106,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         Collection<DataAttributeInstance> dataAttributeInstances = executionService.getScenarioInstance(scenarioInstance).getDataAttributeInstances().values();
         String value14 = "";
         for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
-            if (dataAttributeInstance.getDataAttribute_id() == 14) {
+            if (dataAttributeInstance.getDataAttributeId() == 14) {
                 value14 = dataAttributeInstance.getValue().toString();
             }
         }
@@ -129,7 +129,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstance_id();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
         executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -138,7 +138,7 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         Collection<DataAttributeInstance> dataAttributeInstances = executionService.getScenarioInstance(scenarioInstance).getDataAttributeInstances().values();
         String value16 = "";
         for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
-            if (dataAttributeInstance.getDataAttribute_id() == 16) {
+            if (dataAttributeInstance.getDataAttributeId() == 16) {
                 value16 = dataAttributeInstance.getValue().toString();
             }
         }

@@ -122,13 +122,13 @@ public class ScenarioInstance {
 		LinkedList<ControlNodeInstance> updatedList = new LinkedList<>(
 				terminatedControlNodeInstances);
 		for (ControlNodeInstance controlNodeInstance : updatedList) {
-			if (controlNodeInstance.fragmentInstance_id == fragmentInstance_id) {
+			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstance_id) {
 				terminatedControlNodeInstances.remove(controlNodeInstance);
 			}
 		}
 		updatedList = new LinkedList<>(controlNodeInstances);
 		for (ControlNodeInstance controlNodeInstance : updatedList) {
-			if (controlNodeInstance.fragmentInstance_id == fragmentInstance_id) {
+			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstance_id) {
 				controlNodeInstances.remove(controlNodeInstance);
 			}
 		}
@@ -184,7 +184,7 @@ public class ScenarioInstance {
 	 */
 	public boolean terminatedControlNodeInstancesContainControlNodeID(int controlNode_id) {
 		for (ControlNodeInstance controlNodeInstance : terminatedControlNodeInstances) {
-			if (controlNodeInstance.controlNode_id == controlNode_id) {
+			if (controlNodeInstance.getControlNodeId() == controlNode_id) {
 				return true;
 			}
 		}
@@ -199,7 +199,7 @@ public class ScenarioInstance {
 	 */
 	public boolean executingGatewaysContainControlNodeID(int controlNode_id) {
 		for (ControlNodeInstance controlNodeInstance : executingGateways) {
-			if (controlNodeInstance.controlNode_id == controlNode_id) {
+			if (controlNodeInstance.getControlNodeId() == controlNode_id) {
 				return true;
 			}
 		}
@@ -224,13 +224,13 @@ public class ScenarioInstance {
 			for (Condition condition : conditions) {
 				DataObjectInstance dataObjectInstance = null;
 				for (DataObjectInstance currentDataObjectInstance : dataObjectInstances) {
-					if (currentDataObjectInstance.getDataObject_id() == condition
+					if (currentDataObjectInstance.getDataObjectId() == condition
 							.getDataObject_id()) {
 						dataObjectInstance = currentDataObjectInstance;
 					}
 				}
 				if (dataObjectInstance != null) {
-					if (dataObjectInstance.getState_id() == condition.getState_id()) {
+					if (dataObjectInstance.getStateId() == condition.getState_id()) {
 						terminated = true;
 					} else {
 						terminated = false;
@@ -286,7 +286,7 @@ public class ScenarioInstance {
 	 */
 	public ControlNodeInstance getControlNodeInstanceForControlNodeId(int controlNode_id) {
 		for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {
-			if (controlNodeInstance.getControlNode_id() == controlNode_id) {
+			if (controlNodeInstance.getControlNodeId() == controlNode_id) {
 				return controlNodeInstance;
 			}
 		}

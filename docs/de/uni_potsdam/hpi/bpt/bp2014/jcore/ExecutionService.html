@@ -155,7 +155,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#existScenario(int)">existScenario</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#existScenario(int)">existScenario</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">Checks if the scenario exist in the database.</div>
 </td>
 </tr>
@@ -167,7 +167,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#existScenarioInstance(int,%20int)">existScenarioInstance</a></strong>(int&nbsp;scenario_id,
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#existScenarioInstance(int,%20int)">existScenarioInstance</a></strong>(int&nbsp;scenarioId,
                      int&nbsp;scenarioInstance_id)</code>
 <div class="block">Checks if the scenario instance exist in the database.</div>
 </td>
@@ -290,7 +290,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#getScenarioName(int)">getScenarioName</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#getScenarioName(int)">getScenarioName</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">Returns the scenario name for a given scenario id.</div>
 </td>
 </tr>
@@ -321,13 +321,13 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.util.LinkedList&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#listAllScenarioInstancesForScenario(int)">listAllScenarioInstancesForScenario</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#listAllScenarioInstancesForScenario(int)">listAllScenarioInstancesForScenario</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">Gives all scenario instance id for a scenario id.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#openExistingScenarioInstance(int,%20int)">openExistingScenarioInstance</a></strong>(int&nbsp;scenario_id,
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#openExistingScenarioInstance(int,%20int)">openExistingScenarioInstance</a></strong>(int&nbsp;scenarioId,
                             int&nbsp;scenarioInstance_id)</code>
 <div class="block">Open a existing scenario instance.</div>
 </td>
@@ -348,7 +348,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#startNewScenarioInstance(int)">startNewScenarioInstance</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ExecutionService.html#startNewScenarioInstance(int)">startNewScenarioInstance</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">Starts a new scenario instance for the given scenario id.</div>
 </td>
 </tr>
@@ -439,9 +439,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>startNewScenarioInstance</h4>
-<pre>public&nbsp;int&nbsp;startNewScenarioInstance(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;int&nbsp;startNewScenarioInstance(int&nbsp;scenarioId)</pre>
 <div class="block">Starts a new scenario instance for the given scenario id.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the id of the scenario.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the id of the scenario.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the id of the new scenario instance.</dd></dl>
 </li>
 </ul>
@@ -451,10 +451,10 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>openExistingScenarioInstance</h4>
-<pre>public&nbsp;boolean&nbsp;openExistingScenarioInstance(int&nbsp;scenario_id,
+<pre>public&nbsp;boolean&nbsp;openExistingScenarioInstance(int&nbsp;scenarioId,
                                    int&nbsp;scenarioInstance_id)</pre>
 <div class="block">Open a existing scenario instance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the id of the scenario.</dd><dd><code>scenarioInstance_id</code> - This is the id of the scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the id of the scenario.</dd><dd><code>scenarioInstance_id</code> - This is the id of the scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the scenario instance could been open and exist. false if the scenario instance couldn't been open.</dd></dl>
 </li>
 </ul>
@@ -499,10 +499,10 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>existScenarioInstance</h4>
-<pre>public&nbsp;boolean&nbsp;existScenarioInstance(int&nbsp;scenario_id,
+<pre>public&nbsp;boolean&nbsp;existScenarioInstance(int&nbsp;scenarioId,
                             int&nbsp;scenarioInstance_id)</pre>
 <div class="block">Checks if the scenario instance exist in the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the id of the scenario.</dd><dd><code>scenarioInstance_id</code> - This is the id of the scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the id of the scenario.</dd><dd><code>scenarioInstance_id</code> - This is the id of the scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the scenario instance exist in the database. false if not.</dd></dl>
 </li>
 </ul>
@@ -512,9 +512,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>existScenario</h4>
-<pre>public&nbsp;boolean&nbsp;existScenario(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;boolean&nbsp;existScenario(int&nbsp;scenarioId)</pre>
 <div class="block">Checks if the scenario exist in the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the id of the scenario.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the id of the scenario.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the scenario exist in the database. false if not.</dd></dl>
 </li>
 </ul>
@@ -524,9 +524,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>listAllScenarioInstancesForScenario</h4>
-<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;listAllScenarioInstancesForScenario(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;listAllScenarioInstancesForScenario(int&nbsp;scenarioId)</pre>
 <div class="block">Gives all scenario instance id for a scenario id.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the id of the scenario.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the id of the scenario.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a list of all scenario instance ids for a the given scenario id.</dd></dl>
 </li>
 </ul>
@@ -788,9 +788,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getScenarioName</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getScenarioName(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;java.lang.String&nbsp;getScenarioName(int&nbsp;scenarioId)</pre>
 <div class="block">Returns the scenario name for a given scenario id.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the database id from the scenario id.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database id from the scenario id.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the scenario name in a String.</dd></dl>
 </li>
 </ul>

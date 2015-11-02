@@ -35,7 +35,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 
 	@Override public void execute() {
 		String link = dbWebServiceTask
-				.getLinkForControlNode(controlNodeInstance.getControlNode_id());
+				.getLinkForControlNode(controlNodeInstance.getControlNodeId());
 		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
 				.getDataAttributeInstances().values()) {
 			link = link.replace(
@@ -56,9 +56,9 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 		Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
 		Response response;
 		try {
-			switch (dbWebServiceTask.getMethod(controlNodeInstance.getControlNode_id())) {
+			switch (dbWebServiceTask.getMethod(controlNodeInstance.getControlNodeId())) {
 			case "POST":
-				String post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
+				String post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNodeId());
 				for (DataAttributeInstance dataAttributeInstance : scenarioInstance
 						.getDataAttributeInstances().values()) {
 					post = post.replace(
@@ -69,7 +69,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				response = invocationBuilder.post(Entity.json(post));
 				break;
 			case "PUT":
-				post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
+				post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNodeId());
 				for (DataAttributeInstance dataAttributeInstance : scenarioInstance
 						.getDataAttributeInstances().values()) {
 					post = post.replace(
@@ -98,10 +98,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 	 */
 	private void writeDataAttributes(String content) {
 		LinkedList<Integer> dataAttributeIds = dbWebServiceTask
-				.getAttributeIdsForControlNode(controlNodeInstance.getControlNode_id());
+				.getAttributeIdsForControlNode(controlNodeInstance.getControlNodeId());
 		for (int dataAttributeId : dataAttributeIds) {
 			LinkedList<String> keys = dbWebServiceTask
-					.getKeys(controlNodeInstance.getControlNode_id(), dataAttributeId);
+					.getKeys(controlNodeInstance.getControlNodeId(), dataAttributeId);
 			JSONObject jsonContent = new JSONObject(content);
 			JSONArray jsonArray = null;
 			boolean isJSONArray = false;
@@ -131,7 +131,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 			}
 			for (DataAttributeInstance dataAttributeInstance : scenarioInstance
 					.getDataAttributeInstances().values()) {
-				if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
+				if (dataAttributeInstance.getDataAttributeId() == dataAttributeId) {
 					if (isJSONArray) {
 						dataAttributeInstance.setValue(jsonArray.get(new Integer(keys.get(i))));
 					} else {

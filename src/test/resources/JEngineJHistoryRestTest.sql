@@ -19148,7 +19148,7 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 
 CREATE TABLE IF NOT EXISTS `datanode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `scenario_id` int(11) NOT NULL,
+  `scenarioId` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
@@ -19160,7 +19160,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
 -- Dumping data for table `datanode`
 --
 
-INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
+INSERT INTO `datanode` (`id`, `scenarioId`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
 (1, 1, 1, 1, 1, NULL),
 (2, 1, 2, 1, 1, NULL),
 (3, 1, 2, 1, 1, NULL),
@@ -19337,7 +19337,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
+  `scenarioId` int(11) NOT NULL,
   `start_state_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
@@ -19346,7 +19346,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
 -- Dumping data for table `dataobject`
 --
 
-INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_state_id`) VALUES
+INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenarioId`, `start_state_id`) VALUES
 (1, 'object1', 1, 1, 1),
 (2, 'object2', 2, 1, 5),
 (3, 'test1', 1, 101, 1),
@@ -21086,7 +21086,7 @@ CREATE TABLE IF NOT EXISTS `eventlog` (
 CREATE TABLE IF NOT EXISTS `fragment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
+  `scenarioId` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`)
@@ -21096,7 +21096,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 -- Dumping data for table `fragment`
 --
 
-INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) VALUES
+INSERT INTO `fragment` (`id`, `name`, `scenarioId`, `modelid`, `modelversion`) VALUES
 (1, 'fragment1', 1, 0, 0),
 (2, 'fragment2', 1, 0, 0),
 (3, 'fragment3', 1, 0, 0),
@@ -28690,7 +28690,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
-  `scenario_id` int(11) NOT NULL,
+  `scenarioId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1395 ;
 
@@ -28698,7 +28698,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 -- Dumping data for table `scenarioinstance`
 --
 
-INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUES
+INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenarioId`) VALUES
 (47, 'HELLOWORLD', 0, 1),
 (48, 'HELLOWORLD', 0, 1),
 (49, 'HELLOWORLD', 0, 1),
@@ -30255,7 +30255,7 @@ CREATE TABLE IF NOT EXISTS `terminationcondition` (
   `conditionset_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
+  `scenarioId` int(11) NOT NULL,
   PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`),
   KEY `dataobject_id` (`dataobject_id`),
   KEY `state_id` (`state_id`)
@@ -30265,7 +30265,7 @@ CREATE TABLE IF NOT EXISTS `terminationcondition` (
 -- Dumping data for table `terminationcondition`
 --
 
-INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenario_id`) VALUES
+INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenarioId`) VALUES
 (1, 5, 10, 102),
 (1, 7, 15, 105),
 (1, 17, 51, 115),

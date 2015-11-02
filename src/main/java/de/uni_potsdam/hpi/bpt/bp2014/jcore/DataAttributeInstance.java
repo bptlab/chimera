@@ -6,42 +6,47 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
  *
  */
 public class DataAttributeInstance {
-	final int dataAttributeInstance_id;
-	final int dataAttribute_id;
-	final int dataObjectInstance_id;
-	final DataObjectInstance dataObjectInstance;
-	final String type;
-	final String name;
-	Object value;
-	DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
+	private final int dataAttributeInstanceId;
+	private final int dataAttributeId;
+	private final int dataObjectInstanceId;
+	private final DataObjectInstance dataObjectInstance;
+	private final String type;
+	private final String name;
+	private Object value;
+	private DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
 	/**
-	 * @param dataAttribute_id
-	 * @param dataObjectInstance_id
-	 * @param dataObjectInstance
+	 * @param dataAttributeId		The ID of the Data Attribute belonging to this
+	 *                              instance.
+	 * @param dataObjectInstanceId	The ID of the Data Object Instance belonging to
+	 *                              this instance.
+	 * @param dataObjectInstance	The Data Object Instance belonging to this instance.
 	 */
-	public DataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id,
+	public DataAttributeInstance(int dataAttributeId, int dataObjectInstanceId,
 			DataObjectInstance dataObjectInstance) {
-		this.dataAttribute_id = dataAttribute_id;
-		this.dataObjectInstance_id = dataObjectInstance_id;
+		this.dataAttributeId = dataAttributeId;
+		this.dataObjectInstanceId = dataObjectInstanceId;
 		this.dataObjectInstance = dataObjectInstance;
-		this.type = dbDataAttributeInstance.getType(dataAttribute_id);
+		this.type = dbDataAttributeInstance.getType(dataAttributeId);
 		if (dbDataAttributeInstance
-				.existDataAttributeInstance(dataAttribute_id, dataObjectInstance_id)) {
+				.existDataAttributeInstance(
+						dataAttributeId, dataObjectInstanceId)) {
 			//creates an existing Attribute Instance using the database information
-			this.dataAttributeInstance_id = dbDataAttributeInstance
-					.getDataAttributeInstanceID(dataAttribute_id, dataObjectInstance_id);
+			this.dataAttributeInstanceId = dbDataAttributeInstance
+					.getDataAttributeInstanceID(
+							dataAttributeId, dataObjectInstanceId);
 		} else {
 			//creates a new Attribute Instance also in database
-			this.dataAttributeInstance_id = dbDataAttributeInstance
-					.createNewDataAttributeInstance(dataAttribute_id, dataObjectInstance_id);
+			this.dataAttributeInstanceId = dbDataAttributeInstance
+					.createNewDataAttributeInstance(
+							dataAttributeId, dataObjectInstanceId);
 		}
-		this.value = dbDataAttributeInstance.getValue(dataAttributeInstance_id);
-		this.name = dbDataAttributeInstance.getName(dataAttribute_id);
+		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
+		this.name = dbDataAttributeInstance.getName(dataAttributeId);
 	}
 
 	/**
-	 * @return
+	 * @return the type of the Data Attribute Instance
 	 */
 	public String getType() {
 		return type;
@@ -50,7 +55,7 @@ public class DataAttributeInstance {
 	// ****************************************** Getter *********************************//
 
 	/**
-	 * @return
+	 * @return the value of the Data Attribute Instance
 	 */
 	public Object getValue() {
 		return value;
@@ -63,32 +68,32 @@ public class DataAttributeInstance {
 	 */
 	public void setValue(Object value) {
 		this.value = value;
-		dbDataAttributeInstance.setValue(dataAttributeInstance_id, value);
+		dbDataAttributeInstance.setValue(dataAttributeInstanceId, value);
 	}
 
 	/**
-	 * @return
+	 * @return the ID of the Data Attribute Instance
 	 */
-	public int getDataAttributeInstance_id() {
-		return dataAttributeInstance_id;
+	public int getDataAttributeInstanceId() {
+		return dataAttributeInstanceId;
 	}
 
 	/**
-	 * @return
+	 * @return the ID of the Data Attribute.
 	 */
-	public int getDataAttribute_id() {
-		return dataAttribute_id;
+	public int getDataAttributeId() {
+		return dataAttributeId;
 	}
 
 	/**
-	 * @return
+	 * @return the Name of the Data Attribute Instance.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return
+	 * @return the Data Object Instance.
 	 */
 	public DataObjectInstance getDataObjectInstance() {
 		return dataObjectInstance;

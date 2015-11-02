@@ -4,18 +4,27 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.json.JSONArray;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * This class provides the helper methods/classes used for the JSON representation for the REST connections.
+ * This class provides the helper methods/classes
+ * used for the JSON representation for the REST connections.
  */
-public class JsonUtil {
+public final class JsonUtil {
+
+	// hide default public constructor
+	private JsonUtil() { }
 
 	/**
 	 * @param content is an ArrayList<HashMap<String,Object>>
 	 * @return JSON Object as String
 	 */
-	public static String JsonWrapperArrayListHashMap(ArrayList<HashMap<String, Object>> content) {
+	public static String jsonWrapperArrayListHashMap(
+			ArrayList<HashMap<String, Object>> content) {
 		Gson gson = new Gson();
 		JSONArray json = new JSONArray(content);
 		return gson.toJson(json);
@@ -25,26 +34,27 @@ public class JsonUtil {
 	 * @param content contains a LinkedList.
 	 * @return a wrapped json.
 	 */
-	public static String JsonWrapperLinkedList(LinkedList<Integer> content) {
+	public static String jsonWrapperLinkedList(LinkedList<Integer> content) {
 		Gson gson = new Gson();
 		JsonIntegerList json = new JsonIntegerList(content);
 		return gson.toJson(json);
 	}
 
 	/**
-	 * @param content
-	 * @return
+	 * @param content contains an Object.
+	 * @return a wrapped json.
 	 */
-	public static String JsonWrapperObject(Object content) {
+	public static String jsonWrapperObject(Object content) {
 		Gson gson = new Gson();
 		JsonObject json = new JsonObject();
 		return gson.toJson(json);
 	}
 
 	/**
-	 *
+	 * @param content contains a Collection.
+	 * @return a wrapped json.
 	 */
-	public static String JsonWrapperCollection(Collection content) {
+	public static String jsonWrapperCollection(Collection content) {
 		Gson gson = new Gson();
 		String json = gson.toJson(content);
 		return gson.toJson(json);
@@ -52,8 +62,10 @@ public class JsonUtil {
 
 	/**
 	 * This class is a JSON containing a String.
+	 * @param value a String.
+	 * @return a wrapped json.
 	 */
-	public static String JsonWrapperString(String value) {
+	public static String jsonWrapperString(String value) {
 		Gson gson = new Gson();
 		JsonString json = new JsonString(value);
 		return gson.toJson(json);
@@ -64,18 +76,18 @@ public class JsonUtil {
 	 * @param labels  contains a String.
 	 * @return a wrapped json
 	 */
-	public static String JsonWrapperHashMap(LinkedList<Integer> content,
-			HashMap<Integer, String> labels) {
+	public static String jsonWrapperHashMap(LinkedList<Integer> content,
+			Map<Integer, String> labels) {
 		Gson gson = new Gson();
 		JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels);
 		return gson.toJson(json);
 	}
 
 	/**
-	 * @param content
-	 * @return
+	 * @param content contains a HashMap.
+	 * @return a wrapped json.
 	 */
-	public static String JsonWrapperHashMapOnly(HashMap content) {
+	public static String jsonWrapperHashMapOnly(Map content) {
 		Gson gson = new Gson();
 		return gson.toJson(content);
 	}
@@ -86,43 +98,53 @@ public class JsonUtil {
 	 * @param states  contains a String
 	 * @return a wrapped json
 	 */
-	public static String JsonWrapperMultipleHashMap(LinkedList<Integer> content,
-			HashMap<Integer, String> labels, HashMap<Integer, String> states) {
+	public static String jsonWrapperMultipleHashMap(LinkedList<Integer> content,
+			Map<Integer, String> labels, Map<Integer, String> states) {
 		Gson gson = new Gson();
-		JsonHashMapMultipleIntegerString json = new JsonHashMapMultipleIntegerString(content,
-				labels, states);
+		JsonHashMapMultipleIntegerString json =
+				new JsonHashMapMultipleIntegerString(content, labels, states);
 		return gson.toJson(json);
 	}
 
 	/**
-	 * This class is a JSON HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
+	 * This class is a JSON HashMap containing a List of ID's
+	 * and a HashMap consisting of the given ID's and labels as Strings.
 	 */
 	public static class JsonHashMapIntegerString {
 		private LinkedList<Integer> ids;
-		private HashMap<Integer, String> label;
+		private Map<Integer, String> label;
 
 		/**
 		 * constructor.
 		 *
 		 * @param ids    This are the database ID's for the given Objects in the HashMap.
-		 * @param labels This is a HashMap of database ID's and the corresponding labels as a String.
+		 * @param labels This is a HashMap of database ID's
+		 *               and the corresponding labels as a String.
 		 */
-		public JsonHashMapIntegerString(LinkedList<Integer> ids, HashMap<Integer, String> labels) {
+		public JsonHashMapIntegerString(LinkedList<Integer> ids,
+				Map<Integer, String> labels) {
 			this.ids = ids;
 			this.label = labels;
 		}
 	}
 
 	/**
-	 * This class is a JSON Multi (!) HashMap containing a List of ID's and a HashMap consisting of the given ID's and labels as Strings.
+	 * This class is a JSON Multi (!) HashMap containing a List of ID's
+	 * and a HashMap consisting of the given ID's and labels as Strings.
 	 */
 	public static class JsonHashMapMultipleIntegerString {
-		private HashMap<Integer, String> states;
+		private Map<Integer, String> states;
 		private LinkedList<Integer> ids;
-		private HashMap<Integer, String> label;
+		private Map<Integer, String> label;
 
+		/**
+		 *
+		 * @param ids		Database ID's for the given Objects in the HashMap.
+		 * @param labels	HashMap of database ID's and corresponding labels.
+		 * @param states	states
+		 */
 		public JsonHashMapMultipleIntegerString(LinkedList<Integer> ids,
-				HashMap<Integer, String> labels, HashMap<Integer, String> states) {
+				Map<Integer, String> labels, Map<Integer, String> states) {
 			this.ids = ids;
 			this.label = labels;
 			this.states = states;
@@ -181,7 +203,7 @@ public class JsonUtil {
 	 * This class is the representation of a HashMap that maps a String to a String.
 	 */
 	public static class JsonStringHashMap {
-		private HashMap<String, String> ids;
+		private Map<String, String> ids;
 
 		/**
 		 * constructor.
@@ -194,7 +216,7 @@ public class JsonUtil {
 	}
 
 	/**
-	 * @param jsonLine
+	 * @param jsonLine line to be parsed
 	 * @return parsed json string
 	 */
 	public static Map parse(String jsonLine) {

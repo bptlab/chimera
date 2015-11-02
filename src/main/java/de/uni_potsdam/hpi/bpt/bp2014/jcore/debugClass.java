@@ -9,9 +9,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class debugClass {
-	static Logger log = Logger.getLogger(debugClass.class.getName());
+/**
+ * A class that helps with debugging.
+ */
+public class DebugClass {
+	private static Logger log = Logger.getLogger(DebugClass.class.getName());
 
+	/**
+	 *
+	 * @return select a scenario.
+	 */
 	public static String selectScenario() {
 
 		System.out.print("Select Scenario: ");
@@ -20,6 +27,10 @@ public class debugClass {
 		return scID;
 	}
 
+	/**
+	 *
+	 * @return select a scenario instance.
+	 */
 	public static String selectScenarioInstance() {
 
 		System.out.print("Select Scenario Instance: ");
@@ -28,6 +39,10 @@ public class debugClass {
 		return scID;
 	}
 
+	/**
+	 *
+	 * @return user input
+	 */
 	public static String readLine() {
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader(isr);
@@ -42,7 +57,11 @@ public class debugClass {
 		return back;
 	}
 
-	public static void main(String args[]) {
+	/**
+	 *
+	 * @param args main class
+	 */
+	public static void main(String[] args) {
 		int scenarioID = new Integer(selectScenario());
 		int scenarioInstanceID = new Integer(selectScenarioInstance());
 		ExecutionService executionService = new ExecutionService(scenarioID);
@@ -50,11 +69,15 @@ public class debugClass {
 		if (scenarioInstanceID == -1) {
 			scenarioInstanceID = executionService.startNewScenarioInstance();
 			System.out.println(
-					"neues Scenario " + scenarioName + " geöffnet, Scenario Instance ID: "
+					"neues Scenario " + scenarioName
+							+ " geöffnet, Scenario Instance ID: "
 							+ scenarioInstanceID);
 		} else {
-			if (executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-				System.out.println("Scenario Instance geöffnet vom Scenario " + scenarioName);
+			if (executionService
+					.openExistingScenarioInstance(
+							scenarioID, scenarioInstanceID)) {
+				System.out.println("Scenario Instance geöffnet vom Scenario "
+						+ scenarioName);
 			} else {
 				System.out.println("Scenario Instance existiert nicht");
 				return;
@@ -68,8 +91,12 @@ public class debugClass {
 			System.out.println("\nenabled Aktivität ID");
 			for (ActivityInstance activityInstance : acts) {
 				System.out.println(
-						activityInstance.getControlNodeInstance_id() + ", " + activityInstance
-								.getLabel() + ", (" + activityInstance.getControlNode_id() + ")");
+						activityInstance.getControlNodeInstanceId() + ", "
+								+ activityInstance.getLabel()
+								+ ", ("
+								+ activityInstance
+								.getControlNodeId()
+								+ ")");
 			}
 
 			System.out.println("Select Activity ID");
@@ -83,8 +110,8 @@ public class debugClass {
 			acts = executionService.getEnabledActivities(scenarioInstanceID);
 			for (ActivityInstance activityInstance : acts) {
 				System.out.println(
-						activityInstance.getControlNodeInstance_id() + ", " + activityInstance
-								.getLabel());
+						activityInstance.getControlNodeInstanceId() + ", "
+								+ activityInstance.getLabel());
 			}
 			Map<Integer, Map<String, String>> outputs = executionService
 					.getOutputSetsForActivityInstance(read);
@@ -99,14 +126,20 @@ public class debugClass {
 			System.out.println("Select outPutSet, -1 for nothing");
 			int read2 = new Integer(readLine());
 			System.out.println("---------terminate activity------------");
-			if (!executionService.terminateActivityInstance(scenarioInstanceID, read, read2)) {
+			if (!executionService
+					.terminateActivityInstance(
+							scenarioInstanceID, read, read2)) {
 				System.out.println("nicht terminiert");
 			}
-			if (executionService.checkTerminationForScenarioInstance(scenarioInstanceID))
+			if (executionService
+					.checkTerminationForScenarioInstance(scenarioInstanceID)) {
 				System.out.println("Scenario ist terminiert");
+			}
 			executionService = null;
 			executionService = new ExecutionService(scenarioID);
-			executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+			executionService
+					.openExistingScenarioInstance(
+							scenarioID, scenarioInstanceID);
 		}
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));
@@ -121,13 +154,14 @@ public class debugClass {
         HashMap<Integer, String> labels2 = historyService.getTerminatedActivityLabelsForScenarioInstance(223);
         for(int activityID: terminatedActivities) {
             System.out.println("ID: " + activityID + ", " + labels2.get(activityID));
-        }*/
-       /* ExecutionService executionService = new ExecutionService();
+        }
+       ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(1);
         LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(id);
         System.out.println("enabled Aktivität ID");
         for(int activityID: activitiesIDs){
             System.out.println(activityID);
-        }*/
+        }
+        */
 	}
 }

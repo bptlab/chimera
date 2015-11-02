@@ -93,7 +93,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
 	 */
 	public Boolean changeDataObjectInstanceState(int dataObject_id, int state_id) {
 		for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
-			if (dataObjectInstance.getDataObject_id() == dataObject_id) {
+			if (dataObjectInstance.getDataObjectId() == dataObject_id) {
 				dataObjectInstance.setState(state_id);
 				return true;
 			}
@@ -112,7 +112,7 @@ public class TaskOutgoingControlFlowBehavior extends ParallelOutgoingBehavior {
 		DataObjectInstance dataObjectInstanceOnChange = null;
 		for (DataObjectInstance dataObjectInstance : scenarioInstance
 				.getDataObjectInstancesOnChange()) {
-			if (dataObjectInstance.getDataObject_id() == dataObject_id) {
+			if (dataObjectInstance.getDataObjectId() == dataObject_id) {
 				dataObjectInstanceOnChange = dataObjectInstance;
 				break;
 			}

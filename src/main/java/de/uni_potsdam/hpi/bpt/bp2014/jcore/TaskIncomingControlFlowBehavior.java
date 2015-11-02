@@ -81,7 +81,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
 	public void startReferences() {
 		for (int activity_id : ((ActivityInstance) controlNodeInstance).getReferences()) {
 			this.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(
-					controlNodeInstance.getControlNode_id(), activity_id);
+					controlNodeInstance.getControlNodeId(), activity_id);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
 	public Boolean setDataObjectInstanceToOnChange(int dataObject_id) {
 		DataObjectInstance dataObjectInstanceOnChange = null;
 		for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
-			if (dataObjectInstance.getDataObject_id() == dataObject_id) {
+			if (dataObjectInstance.getDataObjectId() == dataObject_id) {
 				dataObjectInstanceOnChange = dataObjectInstance;
 				break;
 			}
@@ -132,8 +132,8 @@ public class TaskIncomingControlFlowBehavior extends IncomingBehavior {
 	 */
 	public Boolean compareDataObjectState(int dataObject_id, int state_id) {
 		for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
-			if (dataObjectInstance.getDataObject_id() == dataObject_id
-					&& dataObjectInstance.getState_id() == state_id) {
+			if (dataObjectInstance.getDataObjectId() == dataObject_id
+					&& dataObjectInstance.getStateId() == state_id) {
 				return true;
 			}
 		}

@@ -160,7 +160,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#existScenario(int,%20int)">existScenario</a></strong>(int&nbsp;scenario_id,
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#existScenario(int,%20int)">existScenario</a></strong>(int&nbsp;scenarioId,
              int&nbsp;scenarioInstance_id)</code>
 <div class="block">Checks if a scenario instance belongs to the right scenario.</div>
 </td>
@@ -177,13 +177,13 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getScenarioInstanceID(int)">getScenarioInstanceID</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getScenarioInstanceID(int)">getScenarioInstanceID</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">Returns the highest ID of all scenario instances of a scenario.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.util.LinkedList&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getScenarioInstances(int)">getScenarioInstances</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getScenarioInstances(int)">getScenarioInstances</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">returns a list of all scenario instance ID's belonging to a scenario.</div>
 </td>
 </tr>
@@ -257,10 +257,10 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>existScenario</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;existScenario(int&nbsp;scenario_id,
+<pre>public&nbsp;java.lang.Boolean&nbsp;existScenario(int&nbsp;scenarioId,
                               int&nbsp;scenarioInstance_id)</pre>
 <div class="block">Checks if a scenario instance belongs to the right scenario.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the database ID of a scenario.</dd><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>if the check was positive(true) or not(false).</dd></dl>
 </li>
 </ul>
@@ -308,9 +308,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getScenarioInstanceID</h4>
-<pre>public&nbsp;int&nbsp;getScenarioInstanceID(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;int&nbsp;getScenarioInstanceID(int&nbsp;scenarioId)</pre>
 <div class="block">Returns the highest ID of all scenario instances of a scenario.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the database ID of a scenario.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>-1 if something went wrong else it returns the database ID of the latest scenario instance.</dd></dl>
 </li>
 </ul>
@@ -320,9 +320,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getScenarioInstances</h4>
-<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getScenarioInstances(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getScenarioInstances(int&nbsp;scenarioId)</pre>
 <div class="block">returns a list of all scenario instance ID's belonging to a scenario.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the database ID of a scenario.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a list of database ID's of all scenario instances belonging to this scenario.</dd></dl>
 </li>
 </ul>

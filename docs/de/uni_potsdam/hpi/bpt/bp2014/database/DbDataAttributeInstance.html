@@ -139,28 +139,28 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#createNewDataAttributeInstance(int,%20int)">createNewDataAttributeInstance</a></strong>(int&nbsp;dataAttribute_id,
-                              int&nbsp;dataObjectInstance_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#createNewDataAttributeInstance(int,%20int)">createNewDataAttributeInstance</a></strong>(int&nbsp;dataAttributeId,
+                              int&nbsp;dataObjectInstanceId)</code>
 <div class="block">This method creates and saves a new DataAttributeInstance to the database into the context of a DataObjectInstance and saves a log entry into the database.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#existDataAttributeInstance(int,%20int)">existDataAttributeInstance</a></strong>(int&nbsp;dataAttribute_id,
-                          int&nbsp;dataObjectInstance_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#existDataAttributeInstance(int,%20int)">existDataAttributeInstance</a></strong>(int&nbsp;dataAttributeId,
+                          int&nbsp;dataObjectInstanceId)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#getDataAttributeInstanceID(int,%20int)">getDataAttributeInstanceID</a></strong>(int&nbsp;dataAttribute_id,
-                          int&nbsp;dataObjectInstance_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#getDataAttributeInstanceID(int,%20int)">getDataAttributeInstanceID</a></strong>(int&nbsp;dataAttributeId,
+                          int&nbsp;dataObjectInstanceId)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#getName(int)">getName</a></strong>(int&nbsp;dataAttribute_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#getName(int)">getName</a></strong>(int&nbsp;dataAttributeId)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#getType(int)">getType</a></strong>(int&nbsp;dataAttribute_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataAttributeInstance.html#getType(int)">getType</a></strong>(int&nbsp;dataAttributeId)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
@@ -225,10 +225,10 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>createNewDataAttributeInstance</h4>
-<pre>public&nbsp;int&nbsp;createNewDataAttributeInstance(int&nbsp;dataAttribute_id,
-                                 int&nbsp;dataObjectInstance_id)</pre>
+<pre>public&nbsp;int&nbsp;createNewDataAttributeInstance(int&nbsp;dataAttributeId,
+                                 int&nbsp;dataObjectInstanceId)</pre>
 <div class="block">This method creates and saves a new DataAttributeInstance to the database into the context of a DataObjectInstance and saves a log entry into the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataAttribute_id</code> - This is the database ID of the DataAttribute of which the new Instance is created, the ID can be found in the database.</dd><dd><code>dataObjectInstance_id</code> - This is the database ID of the DataObjectInstance the AttributeInstance belongs to which is found in the database.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataAttributeId</code> - This is the database ID of the DataAttribute of which the new Instance is created, the ID can be found in the database.</dd><dd><code>dataObjectInstanceId</code> - This is the database ID of the DataObjectInstance the AttributeInstance belongs to which is found in the database.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>an Integer which is -1 if something went wrong else it is the database ID of the newly created DataAttributeInstance.</dd></dl>
 </li>
 </ul>
@@ -238,8 +238,8 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>existDataAttributeInstance</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;existDataAttributeInstance(int&nbsp;dataAttribute_id,
-                                           int&nbsp;dataObjectInstance_id)</pre>
+<pre>public&nbsp;java.lang.Boolean&nbsp;existDataAttributeInstance(int&nbsp;dataAttributeId,
+                                           int&nbsp;dataObjectInstanceId)</pre>
 </li>
 </ul>
 <a name="getDataAttributeInstanceID(int, int)">
@@ -248,8 +248,8 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getDataAttributeInstanceID</h4>
-<pre>public&nbsp;int&nbsp;getDataAttributeInstanceID(int&nbsp;dataAttribute_id,
-                             int&nbsp;dataObjectInstance_id)</pre>
+<pre>public&nbsp;int&nbsp;getDataAttributeInstanceID(int&nbsp;dataAttributeId,
+                             int&nbsp;dataObjectInstanceId)</pre>
 </li>
 </ul>
 <a name="getType(int)">
@@ -258,7 +258,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getType</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getType(int&nbsp;dataAttribute_id)</pre>
+<pre>public&nbsp;java.lang.String&nbsp;getType(int&nbsp;dataAttributeId)</pre>
 </li>
 </ul>
 <a name="getValue(int)">
@@ -276,7 +276,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getName</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getName(int&nbsp;dataAttribute_id)</pre>
+<pre>public&nbsp;java.lang.String&nbsp;getName(int&nbsp;dataAttributeId)</pre>
 </li>
 </ul>
 <a name="setValue(int, java.lang.Object)">

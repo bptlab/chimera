@@ -7,9 +7,12 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.log4j.Logger;
 
+/**
+ * Class defining the execution behavior of an Email Task.
+ */
 public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
-	static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class.getName());
-	private final int controlNode_id;
+	private static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class.getName());
+	private final int controlNodeId;
 	private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 	private int port;
 	private String serverAddress;
@@ -21,14 +24,14 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	/**
 	 * Initializes and creates an EmailTaskExecutionBehavior.
 	 *
-	 * @param activityInstance_id This is an id for an activity instance.
+	 * @param activityInstanceId This is an id for an activity instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
 	 * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
 	 */
-	public EmailTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance,
+	public EmailTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance,
 			ControlNodeInstance controlNodeInstance) {
-		super(activityInstance_id, scenarioInstance, controlNodeInstance);
-		controlNode_id = controlNodeInstance.controlNode_id;
+		super(activityInstanceId, scenarioInstance, controlNodeInstance);
+		controlNodeId = controlNodeInstance.getControlNodeId();
 	}
 
 	@Override public void execute() {
@@ -44,10 +47,10 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	private void setValues() {
 		port = 587;
 		serverAddress = "exchange.framsteg.org";
-		receiverMail = emailConfiguration.getReceiverEmailAddress(controlNode_id);
-		sendMail = emailConfiguration.getSendEmailAddress(controlNode_id);
-		subject = emailConfiguration.getSubject(controlNode_id);
-		message = emailConfiguration.getMessage(controlNode_id);
+		receiverMail = emailConfiguration.getReceiverEmailAddress(controlNodeId);
+		sendMail = emailConfiguration.getSendEmailAddress(controlNodeId);
+		subject = emailConfiguration.getSubject(controlNodeId);
+		message = emailConfiguration.getMessage(controlNodeId);
 		this.setDataAttributes();
 	}
 
@@ -55,22 +58,29 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
 				.getDataAttributeInstances().values()) {
 			message = message.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+					"#" + (dataAttributeInstance.getDataObjectInstance())
+							.getName()
+							+ "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 			subject = subject.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+					"#" + (dataAttributeInstance.getDataObjectInstance())
+							.getName()
+							+ "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 			receiverMail = receiverMail.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+					"#" + (dataAttributeInstance.getDataObjectInstance())
+							.getName()
+							+ "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 		}
 		DbState dbState = new DbState();
-		for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
+		for (DataObjectInstance dataObjectInstance
+				: scenarioInstance.getDataObjectInstances()) {
 			message = message.replace("$" + dataObjectInstance.getName(),
-					dbState.getStateName(dataObjectInstance.getState_id()));
+					dbState.getStateName(dataObjectInstance.getStateId()));
 		}
 	}
 

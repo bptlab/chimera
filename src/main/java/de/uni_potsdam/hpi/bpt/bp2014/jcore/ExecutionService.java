@@ -61,7 +61,7 @@ public class ExecutionService /*implements Runnable*/ {
 	@Deprecated public int startNewScenarioInstance(int scenario_id) {
 		ScenarioInstance scenarioInstance = new ScenarioInstance(scenario_id);
 		scenarioInstances.add(scenarioInstance);
-		//        scenarioInstanceMap.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
+		//        scenarioInstanceMap.put(scenarioInstance.getScenarioInstanceId(), scenarioInstance);
 		addScenarioInstanceToMap(scenarioInstance);
 		sortedScenarioInstances.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
 		return scenarioInstance.getScenarioInstance_id();
@@ -76,7 +76,7 @@ public class ExecutionService /*implements Runnable*/ {
 	public int startNewScenarioInstance() {
 		ScenarioInstance scenarioInstance = new ScenarioInstance(this.scenario_id);
 		scenarioInstances.add(scenarioInstance);
-		//        scenarioInstanceMap.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
+		//        scenarioInstanceMap.put(scenarioInstance.getScenarioInstanceId(), scenarioInstance);
 		addScenarioInstanceToMap(scenarioInstance);
 		sortedScenarioInstances.put(scenarioInstance.getScenarioInstance_id(), scenarioInstance);
 		return scenarioInstance.getScenarioInstance_id();
@@ -382,7 +382,7 @@ public class ExecutionService /*implements Runnable*/ {
 			if (!activities.contains(activityInstance)) {
 				Collection<ActivityInstance> references = this
 						.getReferentialEnabledActivities(scenarioInstanceId,
-								activityInstance.getControlNodeInstance_id());
+								activityInstance.getControlNodeInstanceId());
 				enabledActivities.removeAll(references);
 				activities.addAll(references);
 			}
@@ -411,7 +411,7 @@ public class ExecutionService /*implements Runnable*/ {
 				.getControlFlowEnabledControlNodeInstances()) {
 			if (nodeInstance instanceof ActivityInstance) {
 				for (int id : references) {
-					if (id == nodeInstance.getControlNode_id()) {
+					if (id == nodeInstance.getControlNodeId()) {
 						enabledActivities.add((ActivityInstance) nodeInstance);
 					}
 				}
@@ -468,7 +468,7 @@ public class ExecutionService /*implements Runnable*/ {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstance_id);
 		//    	ScenarioInstance scenarioInstance = sortedScenarioInstances.get(scenarioInstance_id);
 		for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNode_id() == activity_id) {
+			if (nodeInstance.getControlNodeId() == activity_id) {
 				return nodeInstance.terminate();
 			}
 		}
@@ -485,7 +485,7 @@ public class ExecutionService /*implements Runnable*/ {
 	public boolean terminateActivity(int scenarioInstance_id, int activity_id, int outputSet_id) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstance_id);
 		for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNode_id() == activity_id) {
+			if (nodeInstance.getControlNodeId() == activity_id) {
 				return ((ActivityInstance) nodeInstance).terminate(outputSet_id);
 			}
 		}
@@ -513,11 +513,11 @@ public class ExecutionService /*implements Runnable*/ {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstance_id);
 		if (scenarioInstance != null) {
 			for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstances()) {
-				dataObjectIDs.add(dataObject.getDataObject_id());
+				dataObjectIDs.add(dataObject.getDataObjectId());
 			}
 			for (DataObjectInstance dataObject : scenarioInstance
 					.getDataObjectInstancesOnChange()) {
-				dataObjectIDs.add(dataObject.getDataObject_id());
+				dataObjectIDs.add(dataObject.getDataObjectId());
 			}
 		}
 		return dataObjectIDs;
@@ -535,13 +535,13 @@ public class ExecutionService /*implements Runnable*/ {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstance_id);
 		if (scenarioInstance != null) {
 			for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstances()) {
-				dataObjectStates.put(dataObject.getDataObject_id(),
-						dbState.getStateName(dataObject.getState_id()));
+				dataObjectStates.put(dataObject.getDataObjectId(),
+						dbState.getStateName(dataObject.getStateId()));
 			}
 			for (DataObjectInstance dataObject : scenarioInstance
 					.getDataObjectInstancesOnChange()) {
-				dataObjectStates.put(dataObject.getDataObject_id(),
-						dbState.getStateName(dataObject.getState_id()));
+				dataObjectStates.put(dataObject.getDataObjectId(),
+						dbState.getStateName(dataObject.getStateId()));
 			}
 		}
 		return dataObjectStates;
@@ -559,13 +559,13 @@ public class ExecutionService /*implements Runnable*/ {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstance_id);
 		if (scenarioInstance != null) {
 			for (DataObjectInstance dataObject : scenarioInstance.getDataObjectInstances()) {
-				dataObjectNames.put(dataObject.getDataObject_id(),
-						dbDataObject.getName(dataObject.getDataObject_id()));
+				dataObjectNames.put(dataObject.getDataObjectId(),
+						dbDataObject.getName(dataObject.getDataObjectId()));
 			}
 			for (DataObjectInstance dataObject : scenarioInstance
 					.getDataObjectInstancesOnChange()) {
-				dataObjectNames.put(dataObject.getDataObject_id(),
-						dbDataObject.getName(dataObject.getDataObject_id()));
+				dataObjectNames.put(dataObject.getDataObjectId(),
+						dbDataObject.getName(dataObject.getDataObjectId()));
 			}
 		}
 		return dataObjectNames;
@@ -633,7 +633,7 @@ public class ExecutionService /*implements Runnable*/ {
 			Map<Integer, String> values) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstance_id);
 		for (ControlNodeInstance nodeInstance : scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeInstance_id() == activityInstanceID) {
+			if (nodeInstance.getControlNodeInstanceId() == activityInstanceID) {
 				((ActivityInstance) nodeInstance).setDataAttributeValues(values);
 				return true;
 			}
@@ -655,7 +655,7 @@ public class ExecutionService /*implements Runnable*/ {
 			values.put("type", dataAttributeInstance.getType());
 			values.put("value", dataAttributeInstance.getValue().toString());
 			values.put("name", dataAttributeInstance.getName());
-			attributeInstances.put(dataAttributeInstance.getDataAttributeInstance_id(), values);
+			attributeInstances.put(dataAttributeInstance.getDataAttributeInstanceId(), values);
 		}
 		return attributeInstances;
 	}
@@ -705,7 +705,7 @@ public class ExecutionService /*implements Runnable*/ {
 			LinkedList<DataObjectInstance> dataObjectInstances = scenarioInstanceMap
 					.get(scenarioInstanceID).getDataObjectInstances();
 			for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-				if (dataObject.getId() == dataObjectInstance.getDataObject_id()) {
+				if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
 					dataObjectInstancesArray[j] = dataObjectInstance;
 					j++;
 				}
@@ -713,7 +713,7 @@ public class ExecutionService /*implements Runnable*/ {
 			dataObjectInstances = scenarioInstanceMap.get(scenarioInstanceID)
 					.getDataObjectInstancesOnChange();
 			for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-				if (dataObject.getId() == dataObjectInstance.getDataObject_id()) {
+				if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
 					dataObjectInstancesArray[j] = dataObjectInstance;
 					j++;
 				}
@@ -730,7 +730,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 */
 	public String getStateNameForDataObjectInstanceInput(DataObjectInstance dataObjectInstance) {
 		DbState dbState = new DbState();
-		return dbState.getStateName(dataObjectInstance.getState_id());
+		return dbState.getStateName(dataObjectInstance.getStateId());
 	}
 
 	/**
@@ -745,7 +745,7 @@ public class ExecutionService /*implements Runnable*/ {
 		DbDataNode dbDataNode = new DbDataNode();
 		LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
 		for (DataObject dataObject : dataObjects) {
-			if (dataObject.getId() == dataObjectInstance.getDataObject_id()) {
+			if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
 				return dbState.getStateName(dataObject.getStateID());
 			}
 		}
@@ -796,7 +796,7 @@ public class ExecutionService /*implements Runnable*/ {
 				.getDataAttributeInstances();
 		for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
 			RestInterface.DataAttributeJaxBean dataAttribute = new RestInterface.DataAttributeJaxBean();
-			dataAttribute.id = dataAttributeInstance.getDataAttributeInstance_id();
+			dataAttribute.id = dataAttributeInstance.getDataAttributeInstanceId();
 			dataAttribute.name = dataAttributeInstance.getName();
 			dataAttribute.type = dataAttributeInstance.getType();
 			dataAttribute.value = dataAttributeInstance.getValue().toString();

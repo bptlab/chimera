@@ -17,14 +17,14 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 	@Override public void execute() {
 		DbDataFlow dbDataFlow = new DbDataFlow();
 		//allow an activity to terminate if it has no data attributes in output.
-		if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id())
+		if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNodeId())
 				.isEmpty()) {
 			this.setCanTerminate(true);
 		} else if (scenarioInstance.getDataAttributeInstances().isEmpty()) {
 			this.setCanTerminate(true);
 		} else {
 			LinkedList<Integer> outputSets = dbDataFlow
-					.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id());
+					.getOutputSetsForControlNode(controlNodeInstance.getControlNodeId());
 			int outputSet = outputSets.getFirst();
 			DbDataNode dbDataNode = new DbDataNode();
 			LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
@@ -44,7 +44,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 	private boolean dataObjectHasAttributes(DataObject dataObject) {
 		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
 				.getDataAttributeInstances().values()) {
-			if (dataAttributeInstance.getDataObjectInstance().getDataObject_id() == dataObject
+			if (dataAttributeInstance.getDataObjectInstance().getDataObjectId() == dataObject
 					.getId()) {
 				return true;
 			}
