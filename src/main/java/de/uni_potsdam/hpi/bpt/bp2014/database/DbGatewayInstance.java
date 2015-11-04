@@ -23,7 +23,8 @@ public class DbGatewayInstance extends DbObject {
 	 * @return the state of the gateway instance as a String.
 	 */
 	public String getState(int gatewayInstanceId) {
-		String sql = "SELECT gateway_state FROM gatewayinstance WHERE id = " + gatewayInstanceId;
+		String sql = "SELECT gateway_state FROM gatewayinstance "
+				+ "WHERE id = " + gatewayInstanceId;
 		return this.executeStatementReturnsString(sql, "gateway_state");
 	}
 
@@ -36,8 +37,10 @@ public class DbGatewayInstance extends DbObject {
 	 */
 	public void createNewGatewayInstance(int controlNodeInstanceId, String type, String state) {
 		String sql =
-				"INSERT INTO gatewayinstance (id, gatewayinstance.type, gateway_state) VALUES ("
-						+ controlNodeInstanceId + ", '" + type + "', '" + state + "')";
+				"INSERT INTO gatewayinstance ("
+						+ "id, gatewayinstance.type, gateway_state) "
+						+ "VALUES (" + controlNodeInstanceId + ", '"
+						+ type + "', '" + state + "')";
 		this.executeUpdateStatement(sql);
 	}
 

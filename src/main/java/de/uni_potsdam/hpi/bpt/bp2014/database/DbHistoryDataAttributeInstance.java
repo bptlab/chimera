@@ -17,16 +17,25 @@ public class DbHistoryDataAttributeInstance extends DbObject {
 	 */
 	public int createEntry(int dataAttributeInstanceId, Object value) {
 		String sql =
-				"INSERT INTO `historydataattributeinstance` (`scenarioinstance_id`,`dataattributeinstance_id`,`oldvalue`,`newvalue`) "
-						+
-						"SELECT (SELECT `scenarioinstance_id` FROM `dataattributeinstance`, dataobjectinstance WHERE dataobjectinstance.id = dataattributeinstance.dataobjectinstance_id AND dataattributeinstance.id = "
-						+ dataAttributeInstanceId + ") AS `scenarioinstance_id`,"
+				"INSERT INTO `historydataattributeinstance` ("
+						+ "`scenarioinstance_id`,"
+						+ "`dataattributeinstance_id`,"
+						+ "`oldvalue`,`newvalue`) "
+						+ "SELECT (SELECT `scenarioinstance_id` "
+						+ "FROM `dataattributeinstance`, "
+						+ "dataobjectinstance "
+						+ "WHERE dataobjectinstance.id = "
+						+ "dataattributeinstance.dataobjectinstance_id "
+						+ "AND dataattributeinstance.id = "
+						+ dataAttributeInstanceId + ") "
+						+ "AS `scenarioinstance_id`,"
 						+ " `id` AS dataattributeinstance_id, "
-						+ "(SELECT `value` FROM `dataattributeinstance` WHERE `id` = "
-						+ dataAttributeInstanceId + ") AS `oldvalue`, "
+						+ "(SELECT `value` FROM `dataattributeinstance` "
+						+ "WHERE `id` = " + dataAttributeInstanceId
+						+ ") AS `oldvalue`, "
 						+ "(SELECT '" + value + "') AS `newvalue` "
-						+ "FROM `dataattributeinstance` WHERE `id` = "
-						+ dataAttributeInstanceId;
+						+ "FROM `dataattributeinstance` "
+						+ "WHERE `id` = " + dataAttributeInstanceId;
 		return this.executeInsertStatement(sql);
 	}
 
@@ -38,14 +47,23 @@ public class DbHistoryDataAttributeInstance extends DbObject {
 	 */
 	public int createNewDataAttributeInstanceEntry(int dataAttributeInstanceId) {
 		String sql =
-				"INSERT INTO `historydataattributeinstance` (`scenarioinstance_id`,`dataattributeinstance_id`,`newvalue`) "
-						+
-						"SELECT (SELECT `scenarioinstance_id` FROM `dataattributeinstance`, dataobjectinstance WHERE dataobjectinstance.id = dataattributeinstance.dataobjectinstance_id AND dataattributeinstance.id = "
-						+ dataAttributeInstanceId + ") AS `scenarioinstance_id`,"
+				"INSERT INTO `historydataattributeinstance` ("
+						+ "`scenarioinstance_id`,"
+						+ "`dataattributeinstance_id`,`newvalue`) "
+						+ "SELECT (SELECT `scenarioinstance_id` "
+						+ "FROM `dataattributeinstance`, "
+						+ "dataobjectinstance "
+						+ "WHERE dataobjectinstance.id = "
+						+ "dataattributeinstance.dataobjectinstance_id "
+						+ "AND dataattributeinstance.id = "
+						+ dataAttributeInstanceId + ") "
+						+ "AS `scenarioinstance_id`,"
 						+ " `id` AS dataattributeinstance_id, "
-						+ "(SELECT `value` FROM `dataattributeinstance` WHERE `id` = "
-						+ dataAttributeInstanceId + ") AS `newvalue` "
-						+ "FROM `dataattributeinstance` WHERE `id` = " + dataAttributeInstanceId;
+						+ "(SELECT `value` FROM `dataattributeinstance` "
+						+ "WHERE `id` = " + dataAttributeInstanceId
+						+ ") AS `newvalue` "
+						+ "FROM `dataattributeinstance` "
+						+ "WHERE `id` = " + dataAttributeInstanceId;
 		return this.executeInsertStatement(sql);
 	}
 
@@ -58,9 +76,21 @@ public class DbHistoryDataAttributeInstance extends DbObject {
 	public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
 		String sql =
-				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldvalue, h.newvalue, h.dataattributeinstance_id, da.name, do.name FROM historydataattributeinstance AS h, dataattributeinstance AS dai, dataattribute AS da, dataobjectinstance AS doi, dataobject AS do WHERE h.scenarioinstance_id = "
+				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldvalue, "
+						+ "h.newvalue, h.dataattributeinstance_id, "
+						+ "da.name, do.name "
+						+ "FROM historydataattributeinstance AS h, "
+						+ "dataattributeinstance AS dai, "
+						+ "dataattribute AS da, "
+						+ "dataobjectinstance AS doi, "
+						+ "dataobject AS do "
+						+ "WHERE h.scenarioinstance_id = "
 						+ scenarioInstanceId
-						+ " AND h.dataattributeinstance_id = dai.id AND dai.dataattribute_id = da.id AND dai.dataobjectinstance_id = doi.id AND doi.dataobject_id = do.id ORDER BY timestamp DESC";
+						+ " AND h.dataattributeinstance_id = dai.id "
+						+ "AND dai.dataattribute_id = da.id "
+						+ "AND dai.dataobjectinstance_id = doi.id "
+						+ "AND doi.dataobject_id = do.id "
+						+ "ORDER BY timestamp DESC";
 		return this.executeStatementReturnsMapWithMapWithKeys(
 				sql, "h.id", "h.scenarioinstance_id", "da.name", "h.timestamp",
 				"h.oldvalue", "h.newvalue",

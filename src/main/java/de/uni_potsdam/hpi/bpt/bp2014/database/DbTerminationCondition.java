@@ -87,7 +87,7 @@ public class DbTerminationCondition extends DbObject {
 	private LinkedList<Condition> executeStatementReturnsListCondition(String sql) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		LinkedList<Condition> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
@@ -117,9 +117,7 @@ public class DbTerminationCondition extends DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -161,7 +159,9 @@ public class DbTerminationCondition extends DbObject {
 				log.error("SQL Error!: ", e);
 			}
 			try {
-				results.close();
+				if (results != null) {
+					results.close();
+				}
 			} catch (SQLException e) {
 				log.error("SQL Error!: ", e);
 			}

@@ -30,7 +30,7 @@ public class DbObject {
 			stmt = conn.createStatement();
 
 			//query
-			ResultSet result = null;
+			ResultSet result;
 			boolean returningRows = stmt.execute(sql);
 			if (returningRows) {
 				result = stmt.getResultSet();
@@ -40,7 +40,7 @@ public class DbObject {
 
 
 			//get metadata
-			ResultSetMetaData meta = null;
+			ResultSetMetaData meta;
 			meta = result.getMetaData();
 
 			//get column names
@@ -101,7 +101,7 @@ public class DbObject {
 	public LinkedList<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		LinkedList<Integer> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
@@ -129,9 +129,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -150,7 +148,7 @@ public class DbObject {
 			String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		LinkedList<String> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
@@ -178,9 +176,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -198,7 +194,7 @@ public class DbObject {
 	public LinkedList<Long> executeStatementReturnsListLong(String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		LinkedList<Long> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
@@ -226,9 +222,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -246,7 +240,7 @@ public class DbObject {
 	public String executeStatementReturnsString(String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		String results = "";
 		if (conn == null) {
 			return results;
@@ -273,9 +267,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -293,7 +285,7 @@ public class DbObject {
 	public int executeStatementReturnsInt(String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		int results = -1;
 		if (conn == null) {
 			return results;
@@ -323,9 +315,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -343,7 +333,7 @@ public class DbObject {
 	public Object executeStatementReturnsObject(String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		Object results = -1;
 		if (conn == null) {
 			return results;
@@ -373,9 +363,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -394,10 +382,11 @@ public class DbObject {
 	public boolean executeStatementReturnsBoolean(String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		Boolean results = false;
 		if (conn == null) {
-			return results;
+			//Connection failed
+			return false;
 		}
 		try {
 			//Execute a query
@@ -421,9 +410,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -440,7 +427,7 @@ public class DbObject {
 	public boolean executeExistStatement(String sql) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		if (conn == null) {
 			return false;
 		}
@@ -467,9 +454,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -486,7 +471,7 @@ public class DbObject {
 	public int executeInsertStatement(String sql) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		if (conn == null) {
 			return -1;
 		}
@@ -512,9 +497,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -552,9 +535,7 @@ public class DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
@@ -594,12 +575,16 @@ public class DbObject {
 			log.error("SQL Error!: ", se);
 		} finally {
 			try {
-				rs.close();
+				if (rs != null) {
+					rs.close();
+				}
 			} catch (SQLException e) {
 				log.error("SQL Error!: ", e);
 			}
 			try {
-				stmt.close();
+				if (stmt != null) {
+					stmt.close();
+				}
 			} catch (SQLException e) {
 				log.error("SQL Error!: ", e);
 			}
@@ -641,7 +626,9 @@ public class DbObject {
 				log.error("SQL Error!: ", e);
 			}
 			try {
-				results.close();
+				if (results != null) {
+					results.close();
+				}
 			} catch (SQLException e) {
 				log.error("SQL Error!: ", e);
 			}
@@ -679,7 +666,9 @@ public class DbObject {
 				log.error("SQL Error!: ", e);
 			}
 			try {
-				results.close();
+				if (results != null) {
+					results.close();
+				}
 			} catch (SQLException e) {
 				log.error("SQL Error!: ", e);
 			}

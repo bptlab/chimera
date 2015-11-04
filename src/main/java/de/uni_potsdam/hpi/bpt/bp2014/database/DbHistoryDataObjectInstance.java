@@ -17,15 +17,19 @@ public class DbHistoryDataObjectInstance extends DbObject {
 	 */
 	public int createEntry(int objectInstanceId, int stateId) {
 		String sql =
-				"INSERT INTO `historydataobjectinstance` (`scenarioinstance_id`,`dataobjectinstance_id`,`oldstate_id`,`newstate_id`) "
-						+
-						"SELECT (SELECT `scenarioinstance_id` FROM `dataobjectinstance` WHERE `id` = "
-						+ objectInstanceId + ") AS`scenarioinstance_id`,"
-						+ " `id`,"
-						+ "(SELECT `state_id` FROM `dataobjectinstance` WHERE `id` = "
-						+ objectInstanceId + ") AS `oldstate_id`, "
-						+ "" + stateId + " AS `newstate_id` "
-						+ "FROM `dataobjectinstance` WHERE `id` = " + objectInstanceId;
+				"INSERT INTO `historydataobjectinstance` ("
+						+ "`scenarioinstance_id`,`dataobjectinstance_id`,"
+						+ "`oldstate_id`,`newstate_id`) "
+						+ "SELECT (SELECT `scenarioinstance_id` "
+						+ "FROM `dataobjectinstance` "
+						+ "WHERE `id` = " + objectInstanceId
+						+ ") AS`scenarioinstance_id`, `id`,"
+						+ "(SELECT `state_id` FROM `dataobjectinstance` "
+						+ "WHERE `id` = " + objectInstanceId
+						+ ") AS `oldstate_id`, "
+						+ stateId + " AS `newstate_id` "
+						+ "FROM `dataobjectinstance` "
+						+ "WHERE `id` = " + objectInstanceId;
 		return this.executeInsertStatement(sql);
 	}
 
@@ -37,13 +41,17 @@ public class DbHistoryDataObjectInstance extends DbObject {
 	 */
 	public int createNewDataObjectInstanceEntry(int objectInstanceId) {
 		String sql =
-				"INSERT INTO `historydataobjectinstance` (`scenarioinstance_id`,`dataobjectinstance_id`,`newstate_id`) "
-						+ "SELECT (SELECT `scenarioinstance_id` FROM `dataobjectinstance` WHERE "
-						+ "`id` = "	+ objectInstanceId + ") AS`scenarioinstance_id`, "
-						+ "`id`, "
-						+ "(SELECT `state_id` FROM `dataobjectinstance` WHERE `id` = "
-						+ objectInstanceId + ") AS `newstate_id` "
-						+ "FROM `dataobjectinstance` WHERE `id` = " + objectInstanceId;
+				"INSERT INTO `historydataobjectinstance` (`scenarioinstance_id`,"
+						+ "`dataobjectinstance_id`,`newstate_id`) "
+						+ "SELECT (SELECT `scenarioinstance_id` "
+						+ "FROM `dataobjectinstance` "
+						+ "WHERE `id` = "	+ objectInstanceId
+						+ ") AS`scenarioinstance_id`, `id`, "
+						+ "(SELECT `state_id` FROM `dataobjectinstance` "
+						+ "WHERE `id` = " + objectInstanceId
+						+ ") AS `newstate_id` "
+						+ "FROM `dataobjectinstance` "
+						+ "WHERE `id` = " + objectInstanceId;
 		return this.executeInsertStatement(sql);
 	}
 
@@ -56,10 +64,19 @@ public class DbHistoryDataObjectInstance extends DbObject {
 	public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
 		String sql =
-				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldstate_id, h.newstate_id, h.dataobjectinstance_id, do.name, ns.name AS newstate_name, os.name AS oldstate_name FROM historydataobjectinstance AS h, dataobjectinstance AS doi, dataobject AS do, state AS ns, state AS os WHERE h.scenarioinstance_id = "
-						+ scenarioInstanceId
-						+ " AND ns.id = h.newstate_id AND os.id = h.oldstate_id"
-						+ " AND h.dataobjectinstance_id = doi.id AND doi.dataobject_id = do.id "
+				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldstate_id, "
+						+ "h.newstate_id, h.dataobjectinstance_id, "
+						+ "do.name, ns.name AS newstate_name, "
+						+ "os.name AS oldstate_name "
+						+ "FROM historydataobjectinstance AS h, "
+						+ "dataobjectinstance AS doi, dataobject AS do, "
+						+ "state AS ns, state AS os "
+						+ "WHERE h.scenarioinstance_id = "
+						+ scenarioInstanceId + " "
+						+ "AND ns.id = h.newstate_id "
+						+ "AND os.id = h.oldstate_id "
+						+ "AND h.dataobjectinstance_id = doi.id "
+						+ "AND doi.dataobject_id = do.id "
 						+ "ORDER BY timestamp DESC";
 		return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id",
 				"h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp",

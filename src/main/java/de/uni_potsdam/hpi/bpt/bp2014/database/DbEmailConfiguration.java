@@ -14,8 +14,8 @@ public class DbEmailConfiguration extends DbObject {
 	 * @return the e-mail address of the receiver as a String.
 	 */
 	public String getReceiverEmailAddress(int controlNodeId) {
-		String sql = "SELECT receivermailaddress FROM emailconfiguration WHERE controlnode_id = "
-				+ controlNodeId;
+		String sql = "SELECT receivermailaddress FROM emailconfiguration "
+				+ "WHERE controlnode_id = "	+ controlNodeId;
 		return this.executeStatementReturnsString(sql, "receivermailaddress");
 	}
 
@@ -27,7 +27,8 @@ public class DbEmailConfiguration extends DbObject {
 	 */
 	public String getSubject(int controlNodeId) {
 		String sql =
-				"SELECT subject FROM emailconfiguration WHERE controlnode_id = " + controlNodeId;
+				"SELECT subject FROM emailconfiguration "
+						+ "WHERE controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsString(sql, "subject");
 	}
 
@@ -39,7 +40,8 @@ public class DbEmailConfiguration extends DbObject {
 	 */
 	public String getMessage(int controlNodeId) {
 		String sql =
-				"SELECT message FROM emailconfiguration WHERE controlnode_id = " + controlNodeId;
+				"SELECT message FROM emailconfiguration "
+						+ "WHERE controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsString(sql, "message");
 	}
 
@@ -50,23 +52,37 @@ public class DbEmailConfiguration extends DbObject {
 	 * @return the e-mail address of the sender of the e-mail as a String.
 	 */
 	public String getSendEmailAddress(int controlNodeId) {
-		String sql = "SELECT sendmailaddress FROM emailconfiguration WHERE controlnode_id = "
-				+ controlNodeId;
+		String sql = "SELECT sendmailaddress FROM emailconfiguration "
+				+ "WHERE controlnode_id = "	+ controlNodeId;
 		return this.executeStatementReturnsString(sql, "sendmailaddress");
 	}
 
+	/**
+	 *
+	 * @param id		This is the database ID of a controlNode.
+	 * @param receiver	This is the email address of the receiver.
+	 * @param subject	This is the subject line of the email.
+	 * @param message	This is the message text of the email.
+	 * @return the integer status code of the operation
+	 */
 	public int setEmailConfiguration(int id, String receiver, String subject, String message) {
-		String sql = "UPDATE emailconfiguration SET message = '" +
-				message + "', subject  = '" + subject +
-				"', receivermailaddress = '" + receiver +
-				"'WHERE controlnode_id = " + id;
+		String sql = "UPDATE emailconfiguration SET message = '" +	message
+				+ "', subject  = '" + subject
+				+ "', receivermailaddress = '" + receiver
+				+ "'WHERE controlnode_id = " + id;
 		return this.executeUpdateStatement(sql);
 	}
 
+	/**
+	 *
+	 * @param scenarioId This is the database ID of a scenario.
+	 * @return a LinkedList with email addresses
+	 */
 	public LinkedList<Integer> getAllEmailTasksForScenario(int scenarioId) {
 		String sql =
-				"SELECT id FROM `controlnode` WHERE type = 'EmailTask' AND fragment_id IN (Select id FROM fragment WHERE scenario_id = "
-						+ scenarioId + ")";
+				"SELECT id FROM `controlnode` WHERE type = 'EmailTask' "
+						+ "AND fragment_id IN (Select id FROM fragment "
+						+ "WHERE scenario_id = " + scenarioId + ")";
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
 }

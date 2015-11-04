@@ -23,8 +23,11 @@ public class DbDataNode extends DbObject {
 	 */
 	public LinkedList<Integer> getDataObjectIdsForDataSets(int dataSetId) {
 		String sql =
-				"Select dataobject_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = "
-						+ dataSetId + " ORDER BY dataobject_id";
+				"Select dataobject_id FROM datanode, datasetconsistsofdatanode "
+						+ "WHERE datanode.id = "
+						+ "datasetconsistsofdatanode.datanode_id "
+						+ "AND dataset_id = " + dataSetId
+						+ " ORDER BY dataobject_id";
 		return this.executeStatementReturnsListInt(sql, "dataobject_id");
 	}
 
@@ -36,8 +39,11 @@ public class DbDataNode extends DbObject {
 	 */
 	public LinkedList<Integer> getDataStatesForDataSets(int dataSetId) {
 		String sql =
-				"Select state_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = "
-						+ dataSetId + " ORDER BY dataobject_id";
+				"Select state_id FROM datanode, datasetconsistsofdatanode "
+						+ "WHERE datanode.id = "
+						+ "datasetconsistsofdatanode.datanode_id "
+						+ "AND dataset_id = " + dataSetId
+						+ " ORDER BY dataobject_id";
 		return this.executeStatementReturnsListInt(sql, "state_id");
 	}
 
@@ -49,12 +55,16 @@ public class DbDataNode extends DbObject {
 	 */
 	public LinkedList<DataObject> getDataObjectsForDataSets(int dataSetId) {
 		String sql =
-				"Select dataobject_id, state_id FROM datanode, datasetconsistsofdatanode WHERE datanode.id = datasetconsistsofdatanode.datanode_id AND dataset_id = "
-						+ dataSetId + " ORDER BY dataobject_id";
+				"SELECT dataobject_id, state_id "
+						+ "FROM datanode, datasetconsistsofdatanode "
+						+ "WHERE datanode.id = "
+						+ "datasetconsistsofdatanode.datanode_id "
+						+ "AND dataset_id = " + dataSetId
+						+ " ORDER BY dataobject_id";
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
-		LinkedList<DataObject> results = new LinkedList<DataObject>();
+		ResultSet rs;
+		LinkedList<DataObject> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
 		}
@@ -82,11 +92,10 @@ public class DbDataNode extends DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
+				se.printStackTrace();
 			}
 		}
 		return results;

@@ -77,7 +77,7 @@ public class DbControlNode extends DbObject {
 	public Boolean controlNodesHaveSameOutputs(int controlNodeId1, int controlNodeId2) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		if (conn == null) {
 			return false;
 		}
@@ -145,9 +145,7 @@ public class DbControlNode extends DbObject {
 				log.error("SQL Error!: ", se2);
 			}
 			try {
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!: ", se);
 			}
