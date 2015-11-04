@@ -6,16 +6,23 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
+/**
+ * This class is the representation of a database object.
+ */
 public class DbObject {
-	static Logger log = Logger.getLogger(DbObject.class.getName());
+	private static Logger log = Logger.getLogger(DbObject.class.getName());
 
 	/**
-	 * @param sql
-	 * @return
+	 * @param sql This is a SQL-Statement
+	 * @return an ArrayList with HashMaps containing the query results.
 	 */
-	public static ArrayList<HashMap<String, Object>> executeStatementReturnsHashMap(String sql) {
+	public static ArrayList<Map<String, Object>> executeStatementReturnsHashMap(String sql) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
 		try {
@@ -23,40 +30,44 @@ public class DbObject {
 			stmt = conn.createStatement();
 
 			//query
-			ResultSet Result = null;
-			boolean Returning_Rows = stmt.execute(sql);
-			if (Returning_Rows)
-				Result = stmt.getResultSet();
-			else
-				return new ArrayList<HashMap<String, Object>>();
+			ResultSet result = null;
+			boolean returningRows = stmt.execute(sql);
+			if (returningRows) {
+				result = stmt.getResultSet();
+			} else {
+				return new ArrayList<>();
+			}
+
 
 			//get metadata
-			ResultSetMetaData Meta = null;
-			Meta = Result.getMetaData();
+			ResultSetMetaData meta = null;
+			meta = result.getMetaData();
 
 			//get column names
-			int Col_Count = Meta.getColumnCount();
-			ArrayList<String> Cols = new ArrayList<String>();
-			for (int Index = 1; Index <= Col_Count; Index++)
-				Cols.add(Meta.getColumnName(Index));
+			int columnCount = meta.getColumnCount();
+			ArrayList<String> columns = new ArrayList<>();
+			for (int index = 1; index <= columnCount; index++) {
+				columns.add(meta.getColumnName(index));
+			}
 
 			//fetch out rows
-			ArrayList<HashMap<String, Object>> Rows = new ArrayList<HashMap<String, Object>>();
+			ArrayList<Map<String, Object>> rows = new
+					ArrayList<>();
 
-			while (Result.next()) {
-				HashMap<String, Object> Row = new HashMap<String, Object>();
-				for (String Col_Name : Cols) {
-					Object Val = Result.getObject(Col_Name);
-					Row.put(Col_Name, Val);
+			while (result.next()) {
+				Map<String, Object> row = new HashMap<>();
+				for (String colName : columns) {
+					Object val = result.getObject(colName);
+					row.put(colName, val);
 				}
-				Rows.add(Row);
+				rows.add(row);
 			}
 
 			//close statement
 			stmt.close();
 
 			//pass back rows
-			return Rows;
+			return rows;
 		} catch (SQLException se) {
 			//Handle errors for JDBC
 			log.error("SQL Error!: ", se);
@@ -91,7 +102,7 @@ public class DbObject {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
 		ResultSet rs = null;
-		LinkedList<Integer> results = new LinkedList<Integer>();
+		LinkedList<Integer> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
 		}
@@ -135,7 +146,8 @@ public class DbObject {
 	 * @param columnLabel This is the label of the column which is used as the result.
 	 * @return List with String.
 	 */
-	public LinkedList<String> executeStatementReturnsListString(String sql, String columnLabel) {
+	public LinkedList<String> executeStatementReturnsListString(
+			String sql, String columnLabel) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -187,7 +199,7 @@ public class DbObject {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
 		ResultSet rs = null;
-		LinkedList<Long> results = new LinkedList<Long>();
+		LinkedList<Long> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
 		}
@@ -514,6 +526,7 @@ public class DbObject {
 	 * Executes the given SQL Statement. Which should be a update or insert statement.
 	 *
 	 * @param sql This is a given SQL Statement.
+	 * @return 0.
 	 */
 	public int executeUpdateStatement(String sql) {
 		java.sql.Connection conn = Connection.getInstance().connect();
@@ -558,7 +571,8 @@ public class DbObject {
 	 * @param value The column name which will be the value of the map
 	 * @return A Map from the key Column to the Value Column
 	 */
-	public Map<Integer, String> executeStatementReturnsMap(String sql, String key, String value) {
+	public Map<Integer, String> executeStatementReturnsMap(
+			String sql, String key, String value) {
 		Map<Integer, String> result = new LinkedHashMap<>();
 
 		java.sql.Connection conn = Connection.getInstance().connect();
@@ -598,8 +612,14 @@ public class DbObject {
 		return result;
 	}
 
-	public Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql,
-			String... keys) {
+	/**
+	 *
+	 * @param sql	The query string to be executed.
+	 * @param keys	The column name which will be key of the map
+	 * @return a Map with IDs and Maps (with keys and values).
+	 */
+	public Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(
+			String sql, String... keys) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		ResultSet results = null;
 		Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
@@ -608,7 +628,8 @@ public class DbObject {
 			while (results.next()) {
 				keysValues.put(results.getInt("id"), new HashMap<String, Object>());
 				for (String key : keys) {
-					(keysValues.get(results.getInt("id"))).put(key, results.getObject(key));
+					(keysValues.get(results.getInt("id"))).put(
+							key, results.getObject(key));
 				}
 			}
 		} catch (SQLException e) {
@@ -637,7 +658,8 @@ public class DbObject {
 	 * @param keys The column names.
 	 * @return A Map of the results.
 	 */
-	protected Map<String, Object> executeStatementReturnsMapWithKeys(String sql, String... keys) {
+	protected Map<String, Object> executeStatementReturnsMapWithKeys(
+			String sql, String... keys) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		ResultSet results = null;
 		Map<String, Object> keysValues = new LinkedHashMap<>();

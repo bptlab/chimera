@@ -119,6 +119,8 @@ extends java.lang.Object</pre>
 <tr class="altColor">
 <td class="colOne"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/Condition.html#Condition(int,%20int,%20int,%20int)">Condition</a></strong>(int&nbsp;conditionSet_id,
          int&nbsp;state_id,
+<td class="colOne"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/Condition.html#Condition(int,%20int,%20int,%20int)">Condition</a></strong>(int&nbsp;conditionSetId,
+         int&nbsp;stateId,
          int&nbsp;dataObjectId,
          int&nbsp;scenarioId)</code>
 <div class="block">Initializes the Condition.</div>
@@ -159,7 +161,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/Condition.html#setConditionSet_id(int)">setConditionSet_id</a></strong>(int&nbsp;conditionSet_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/Condition.html#setConditionSet_id(int)">setConditionSet_id</a></strong>(int&nbsp;conditionSetId)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -171,7 +173,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/Condition.html#setState_id(int)">setState_id</a></strong>(int&nbsp;state_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/Condition.html#setState_id(int)">setState_id</a></strong>(int&nbsp;stateId)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -207,6 +209,12 @@ extends java.lang.Object</pre>
          int&nbsp;scenarioId)</pre>
 <div class="block">Initializes the Condition.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>conditionSet_id</code> - This is the database ID of a condition set.</dd><dd><code>state_id</code> - This is the database ID of a state.</dd><dd><code>dataObjectId</code> - This is the database ID of a data object.</dd><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd></dl>
+<pre>public&nbsp;Condition(int&nbsp;conditionSetId,
+         int&nbsp;stateId,
+         int&nbsp;dataObjectId,
+         int&nbsp;scenarioId)</pre>
+<div class="block">Initializes the Condition.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>conditionSetId</code> - This is the database ID of a condition set.</dd><dd><code>stateId</code> - This is the database ID of a state.</dd><dd><code>dataObjectId</code> - This is the database ID of a data object.</dd><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd></dl>
 </li>
 </ul>
 </li>
@@ -233,7 +241,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setConditionSet_id</h4>
-<pre>public&nbsp;void&nbsp;setConditionSet_id(int&nbsp;conditionSet_id)</pre>
+<pre>public&nbsp;void&nbsp;setConditionSet_id(int&nbsp;conditionSetId)</pre>
 </li>
 </ul>
 <a name="getState_id()">
@@ -251,7 +259,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setState_id</h4>
-<pre>public&nbsp;void&nbsp;setState_id(int&nbsp;state_id)</pre>
+<pre>public&nbsp;void&nbsp;setState_id(int&nbsp;stateId)</pre>
 </li>
 </ul>
 <a name="getDataObject_id()">

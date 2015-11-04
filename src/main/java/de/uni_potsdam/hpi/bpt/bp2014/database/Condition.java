@@ -6,61 +6,58 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
  */
 public class Condition {
 
-	private int conditionSet_id;
-	private int state_id;
-	private int dataObject_id;
-	private int scenario_id;
+	private int conditionSetId;
+	private int stateId;
+	private int dataObjectId;
+	private int scenarioId;
 
 	/**
 	 * Initializes the Condition.
 	 *
-	 * @param conditionSet_id This is the database ID of a condition set.
-	 * @param state_id        This is the database ID of a state.
-	 * @param dataObject_id   This is the database ID of a data object.
-	 * @param scenario_id     This is the database ID of a scenario.
+	 * @param conditionSetId This is the database ID of a condition set.
+	 * @param stateId        This is the database ID of a state.
+	 * @param dataObjectId   This is the database ID of a data object.
+	 * @param scenarioId     This is the database ID of a scenario.
 	 */
-	public Condition(int conditionSet_id, int state_id, int dataObject_id, int scenario_id) {
+	public Condition(int conditionSetId, int stateId, int dataObjectId, int scenarioId) {
 
-		this.conditionSet_id = conditionSet_id;
-		this.state_id = state_id;
-		this.dataObject_id = dataObject_id;
-		this.scenario_id = scenario_id;
+		this.conditionSetId = conditionSetId;
+		this.stateId = stateId;
+		this.dataObjectId = dataObjectId;
+		this.scenarioId = scenarioId;
 	}
 
-	/**
-	 * Getter & Setter.
-	 */
 
-	public int getConditionSet_id() {
-		return conditionSet_id;
+	public int getConditionSetId() {
+		return conditionSetId;
 	}
 
-	public void setConditionSet_id(int conditionSet_id) {
-		this.conditionSet_id = conditionSet_id;
+	public void setConditionSetId(int conditionSetId) {
+		this.conditionSetId = conditionSetId;
 	}
 
-	public int getState_id() {
-		return state_id;
+	public int getStateId() {
+		return stateId;
 	}
 
-	public void setState_id(int state_id) {
-		this.state_id = state_id;
+	public void setStateId(int stateId) {
+		this.stateId = stateId;
 	}
 
-	public int getDataObject_id() {
-		return dataObject_id;
+	public int getDataObjectId() {
+		return dataObjectId;
 	}
 
-	public void setDataObject_id(int dataObject_id) {
-		this.dataObject_id = dataObject_id;
+	public void setDataObjectId(int dataObjectId) {
+		this.dataObjectId = dataObjectId;
 	}
 
-	public int getScenario_id() {
-		return scenario_id;
+	public int getScenarioId() {
+		return scenarioId;
 	}
 
-	public void setScenario_id(int scenario_id) {
-		this.scenario_id = scenario_id;
+	public void setScenarioId(int scenarioId) {
+		this.scenarioId = scenarioId;
 	}
 
 }

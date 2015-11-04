@@ -10,48 +10,48 @@ public class DbEmailConfiguration extends DbObject {
 	/**
 	 * This method returns the e-mail address of the receiver of a mail.
 	 *
-	 * @param controlNode_id This is the database ID of a controlNode.
+	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return the e-mail address of the receiver as a String.
 	 */
-	public String getReceiverEmailAddress(int controlNode_id) {
+	public String getReceiverEmailAddress(int controlNodeId) {
 		String sql = "SELECT receivermailaddress FROM emailconfiguration WHERE controlnode_id = "
-				+ controlNode_id;
+				+ controlNodeId;
 		return this.executeStatementReturnsString(sql, "receivermailaddress");
 	}
 
 	/**
 	 * This method returns the subject of an e-mail.
 	 *
-	 * @param controlNode_id This is the database ID of a controlNode.
+	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return the subject of the e-mail as a String.
 	 */
-	public String getSubject(int controlNode_id) {
+	public String getSubject(int controlNodeId) {
 		String sql =
-				"SELECT subject FROM emailconfiguration WHERE controlnode_id = " + controlNode_id;
+				"SELECT subject FROM emailconfiguration WHERE controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsString(sql, "subject");
 	}
 
 	/**
 	 * This method returns the message of an e-mail.
 	 *
-	 * @param controlNode_id This is the database ID of a controlNode.
+	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return the message of the e-mail as a String.
 	 */
-	public String getMessage(int controlNode_id) {
+	public String getMessage(int controlNodeId) {
 		String sql =
-				"SELECT message FROM emailconfiguration WHERE controlnode_id = " + controlNode_id;
+				"SELECT message FROM emailconfiguration WHERE controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsString(sql, "message");
 	}
 
 	/**
 	 * This method returns the e-mail address of the sender of an e-mail.
 	 *
-	 * @param controlNode_id This is the database ID of a controlNode.
+	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return the e-mail address of the sender of the e-mail as a String.
 	 */
-	public String getSendEmailAddress(int controlNode_id) {
+	public String getSendEmailAddress(int controlNodeId) {
 		String sql = "SELECT sendmailaddress FROM emailconfiguration WHERE controlnode_id = "
-				+ controlNode_id;
+				+ controlNodeId;
 		return this.executeStatementReturnsString(sql, "sendmailaddress");
 	}
 
@@ -63,10 +63,10 @@ public class DbEmailConfiguration extends DbObject {
 		return this.executeUpdateStatement(sql);
 	}
 
-	public LinkedList<Integer> getAllEmailTasksForScenario(int scenario_id) {
+	public LinkedList<Integer> getAllEmailTasksForScenario(int scenarioId) {
 		String sql =
 				"SELECT id FROM `controlnode` WHERE type = 'EmailTask' AND fragment_id IN (Select id FROM fragment WHERE scenario_id = "
-						+ scenario_id + ")";
+						+ scenarioId + ")";
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
 }

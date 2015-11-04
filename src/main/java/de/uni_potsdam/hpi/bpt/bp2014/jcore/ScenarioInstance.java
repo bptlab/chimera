@@ -226,11 +226,14 @@ public class ScenarioInstance {
 				for (DataObjectInstance currentDataObjectInstance : dataObjectInstances) {
 					if (currentDataObjectInstance.getDataObjectId() == condition
 							.getDataObject_id()) {
+					if (currentDataObjectInstance.getDataObject_id() == condition
+							.getDataObjectId()) {
 						dataObjectInstance = currentDataObjectInstance;
 					}
 				}
 				if (dataObjectInstance != null) {
 					if (dataObjectInstance.getStateId() == condition.getState_id()) {
+					if (dataObjectInstance.getState_id() == condition.getStateId()) {
 						terminated = true;
 					} else {
 						terminated = false;
