@@ -4,41 +4,45 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * This class represents the Model within the analytics framework
+ * This class represents the Model within the analytics framework.
  */
 public class AnalyticsModel extends MetaAnalyticsModel {
 
 	/**
-	 * @param scenarioInstance_id The ID of the scenario instance.
-	 * @return
+	 * @param scenarioInstanceId The ID of the scenario instance.
+	 * @return an ArrayList of Maps with Maps containing log information about the scenario.
 	 */
 	public static ArrayList<Map<Integer, Map<String, Object>>> exampleAlgorithm1(
-			int scenarioInstance_id) {
+			int scenarioInstanceId) {
 		ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<>();
 
-		Map<Integer, Map<String, Object>> ActivityLog = getLogEntriesForScenarioInstanceWithinActivity(
-				scenarioInstance_id);
-		Map<Integer, Map<String, Object>> DataAttributeLog = getLogEntriesForScenarioInstanceWithinDataAttribute(
-				scenarioInstance_id);
-		Map<Integer, Map<String, Object>> DataObjectLog = getLogEntriesForScenarioInstanceWithinDataObject(
-				scenarioInstance_id);
-		result.add(ActivityLog);
-		result.add(DataAttributeLog);
-		result.add(DataObjectLog);
+		Map<Integer, Map<String, Object>> activityLog =
+				getLogEntriesForScenarioInstanceWithinActivity(scenarioInstanceId);
+		Map<Integer, Map<String, Object>> dataAttributeLog =
+				getLogEntriesForScenarioInstanceWithinDataAttribute(
+						scenarioInstanceId);
+		Map<Integer, Map<String, Object>> dataObjectLog =
+				getLogEntriesForScenarioInstanceWithinDataObject(
+						scenarioInstanceId);
+		result.add(activityLog);
+		result.add(dataAttributeLog);
+		result.add(dataObjectLog);
 
 		return result;
 	}
 
 	/**
-	 * @param scenarioInstance_id The ID of the scenario instance.
-	 * @return
+	 * @param scenarioInstanceId The ID of the scenario instance.
+	 * @return an ArrayList of Maps with Maps containing timestamps from the scenario.
 	 */
-	public static ArrayList<Map<Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(
-			int scenarioInstance_id) {
+	public static ArrayList<Map<
+			Integer, Map<String, Object>>> calculateScenarioInstanceRunTime(
+			int scenarioInstanceId) {
 		ArrayList<Map<Integer, Map<String, Object>>> result = new ArrayList<>();
 
-		Map<Integer, Map<String, Object>> timestampsForScenarioInstance = getLogTimestampsForScenarioInstance(
-				scenarioInstance_id);
+		Map<Integer, Map<String, Object>> timestampsForScenarioInstance =
+				getLogTimestampsForScenarioInstance(
+				scenarioInstanceId);
 		result.add(timestampsForScenarioInstance);
 
 		return result;

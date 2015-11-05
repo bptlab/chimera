@@ -10,17 +10,17 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class provides an Algorithm to calculate the mean ScenarioInstanceRuntime for all terminated ScenarioInstances
- * of a Scenario
+ * This class provides an Algorithm to calculate the mean ScenarioInstanceRuntime
+ * for all terminated ScenarioInstances of a Scenario.
  */
 public class ExampleAlgorithm implements AnalyticsService {
-	static final Logger log = Logger.getLogger(ExampleAlgorithm.class.getName());
+	static final Logger LOG = Logger.getLogger(ExampleAlgorithm.class.getName());
 
 	@Override
 	/**
 	 * This Method calculates the mean runtime for all terminated instances of a scenario
 	 *
-	 * @param args used to specify the ScenarioID for which the mean Instance-Runtime is calculated
+	 * @param args specify the ScenarioID for which the mean Instance-Runtime is calculated
 	 * @return a JSONObject containing the scenarioID and the mean Instance-Runtime
 	 */ public JSONObject calculateResult(String[] args) {
 		// calculate MeanScenarioInstanceRunTime
@@ -51,25 +51,29 @@ public class ExampleAlgorithm implements AnalyticsService {
 			avgDuration = sumDuration / numberOfScenarioInstances;
 		} else if (numberOfScenarioInstances == 0) {
 			return new JSONObject("{\"scenarioId\":" + scenarioId
-					+ ",\"meanScenarioInstanceRuntime\":\"No terminated instances.\"}");
+					+ ",\"meanScenarioInstanceRuntime\""
+					+ ":\"No terminated instances.\"}");
 		}
 
-		// converting duration from milliseconds to human readable format days:hours:minutes:seconds
+		// convert duration from milliseconds to days:hours:minutes:seconds
 		long second = (avgDuration / millisecondsPerSecond) % secondsPerMinute;
-		long minute = (avgDuration / (millisecondsPerSecond * secondsPerMinute)) % minutesPerHour;
-		long hour = (avgDuration / (millisecondsPerSecond * secondsPerMinute * minutesPerHour))
+		long minute = (avgDuration / (millisecondsPerSecond * secondsPerMinute))
+				% minutesPerHour;
+		long hour = (avgDuration
+				/ (millisecondsPerSecond * secondsPerMinute * minutesPerHour))
 				% hoursPerDay;
-		long day = (avgDuration / (millisecondsPerSecond * secondsPerMinute * minutesPerHour
-				* hoursPerDay)) % daysPerYear;
+		long day = (avgDuration / (millisecondsPerSecond * secondsPerMinute
+				* minutesPerHour * hoursPerDay)) % daysPerYear;
 
 		String time = String.format("%02d:%02d:%02d:%02d", day, hour, minute, second);
-		String json = "{\"scenarioId\":" + scenarioId + ",\"meanScenarioInstanceRuntime\":\"" + time
-				+ "\"}";
+		String json = "{\"scenarioId\":" + scenarioId
+				+ ",\"meanScenarioInstanceRuntime\":\"" + time + "\"}";
 		return new JSONObject(json);
 	}
 
 	/**
-	 * This class is used to provide objects which hold information about the start and end dates of a scenarioinstance
+	 * This class is used to provide objects which hold information
+	 * about the start and end dates of a scenarioinstance.
 	 */
 	public static class DbScenarioInstanceIDsAndTimestamps {
 
@@ -77,6 +81,10 @@ public class ExampleAlgorithm implements AnalyticsService {
 		private Date startDate;
 		private Date endDate;
 
+		/**
+		 *
+		 * @param scenarioInstanceID This is the database ID of a scenario instance.
+		 */
 		public DbScenarioInstanceIDsAndTimestamps(int scenarioInstanceID) {
 			this.scenarioInstanceID = scenarioInstanceID;
 		}
@@ -86,9 +94,10 @@ public class ExampleAlgorithm implements AnalyticsService {
 		}
 
 		/**
-		 * This method is used to calculate the time difference between the start and end date in milliseconds
+		 * This method is used to calculate the time difference between
+		 * the start and end date in milliseconds.
 		 *
-		 * @return duration in milliseconds
+		 * @return the duration in milliseconds
 		 */
 		public long getDuration() {
 			if (endDate == null || startDate == null) {
@@ -98,14 +107,20 @@ public class ExampleAlgorithm implements AnalyticsService {
 		}
 
 		/**
-		 * This method accesses the database to retrieve the start and end timestamps for the given scenarioinstanceID attribute
+		 * This method accesses the database to retrieve the start and end timestamps
+		 * for the given scenarioinstanceID attribute.
 		 */
 		public void initializeTimestamps() {
 
 			String sql =
-					"SELECT MAX(timestamp) AS end_timestamp, MIN(timestamp) AS start_timestamp FROM `historydataobjectinstance` as h, scenarioinstance as s WHERE h.scenarioinstance_id = "
-							+ scenarioInstanceID
-							+ " AND h.scenarioinstance_id = s.id AND s.terminated = 1";
+					"SELECT MAX(timestamp) AS end_timestamp, "
+							+ "MIN(timestamp) AS start_timestamp "
+							+ "FROM `historydataobjectinstance` as h, "
+							+ "scenarioinstance as s "
+							+ "WHERE h.scenarioinstance_id = "
+							+ scenarioInstanceID + " "
+							+ "AND h.scenarioinstance_id = s.id "
+							+ "AND s.terminated = 1";
 			java.sql.Connection conn = Connection.getInstance().connect();
 			ResultSet results = null;
 			try {
@@ -116,17 +131,19 @@ public class ExampleAlgorithm implements AnalyticsService {
 				}
 
 			} catch (SQLException e) {
-				log.error("SQL Error!: ", e);
+				LOG.error("SQL Error!: ", e);
 			} finally {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					log.error("SQL Error!: ", e);
+					LOG.error("SQL Error!: ", e);
 				}
 				try {
-					results.close();
+					if (results != null) {
+						results.close();
+					}
 				} catch (SQLException e) {
-					log.error("SQL Error!: ", e);
+					LOG.error("SQL Error!: ", e);
 				}
 			}
 
