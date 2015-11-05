@@ -49,17 +49,17 @@ public class DataObject implements IPersistable {
 	 * @param dataClass The dataClass the dataObject belongs to
 	 */
 	public DataObject(final DataClass dataClass) {
-		dataNodes = new LinkedList<Node>();
+		dataNodes = new LinkedList<>();
 		this.dataClass = dataClass;
-		states = new HashMap<String, Integer>();
+		states = new HashMap<>();
 	}
 
 	/**
 	 * Creates a new DataObject without a given dataClass.
 	 */
 	public DataObject() {
-		dataNodes = new LinkedList<Node>();
-		states = new HashMap<String, Integer>();
+		dataNodes = new LinkedList<>();
+		states = new HashMap<>();
 	}
 
 	/**
@@ -95,13 +95,14 @@ public class DataObject implements IPersistable {
 		}
 		Connector connector = new Connector();
 		for (String state : states.keySet()) {
-			int stateID = connector.insertStateIntoDatabase(state, dataClass.getDataClassID());
+			int stateID = connector.insertStateIntoDatabase(
+					state, dataClass.getDataClassID());
 			states.put(state, stateID);
 		}
 		initState = states.get("init");
 		String dataObjectName = dataNodes.get(0).getText();
-		databaseId = connector
-				.insertDataObjectIntoDatabase(dataObjectName, dataClass.getDataClassID(),
+		databaseId = connector.insertDataObjectIntoDatabase(
+				dataObjectName, dataClass.getDataClassID(),
 						scenarioId, initState);
 		saveDataNodes();
 		return databaseId;
@@ -114,9 +115,9 @@ public class DataObject implements IPersistable {
 	private void saveDataNodes() {
 		Connector connector = new Connector();
 		for (Node dataNode : dataNodes) {
-			int nodeId = connector
-					.insertDataNodeIntoDatabase(scenarioId, states.get(dataNode.getState()),
-							dataClass.getDataClassID(), databaseId, dataNode.getId());
+			int nodeId = connector.insertDataNodeIntoDatabase(
+					scenarioId, states.get(dataNode.getState()),
+					dataClass.getDataClassID(), databaseId, dataNode.getId());
 			dataNode.setDatabaseID(nodeId);
 		}
 	}

@@ -18,7 +18,7 @@ import java.util.Map;
  * Therefore it uses the database.Connection class.
  */
 public class Connector extends DbObject {
-	static Logger log = Logger.getLogger(Connector.class.getName());
+	private static Logger log = Logger.getLogger(Connector.class.getName());
 
 	/**
 	 * A method to write a scenario to the database.
@@ -32,10 +32,10 @@ public class Connector extends DbObject {
 	 */
 	public int insertScenarioIntoDatabase(final String name, final long modelID,
 			final int modelVersion) {
-		String sql = "INSERT INTO scenario " +
-				"(scenario.name, modelid, modelversion) " +
-				"VALUES ('" + name + "', " + modelID +
-				", " + modelVersion + ")";
+		String sql = "INSERT INTO scenario "
+				+ "(scenario.name, modelid, modelversion) "
+				+ "VALUES ('" + name + "', "
+				+ modelID +	", " + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -51,10 +51,10 @@ public class Connector extends DbObject {
 	 */
 	public int insertFragmentIntoDatabase(final String fragmentName, final int scenarioID,
 			final long modelID, final int modelVersion) {
-		String sql = "INSERT INTO fragment " +
-				"(fragment.name, scenario_id, modelid, modelversion) " +
-				"VALUES ('" + fragmentName + "', " + scenarioID +
-				"," + modelID + "," + modelVersion + ")";
+		String sql = "INSERT INTO fragment "
+				+ "(fragment.name, scenario_id, modelid, modelversion) "
+				+ "VALUES ('" + fragmentName + "', " + scenarioID
+				+ "," + modelID + "," + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -72,10 +72,10 @@ public class Connector extends DbObject {
 	public int insertControlNodeIntoDatabase(final String label, final String type,
 			final int fragmentID, final long modelID) {
 
-		String sql = "INSERT INTO controlnode " +
-				"(label, controlnode.type, fragment_id, modelid) " +
-				"VALUES ('" + label + "', '" +
-				type + "', " + fragmentID + ", " + modelID + ")";
+		String sql = "INSERT INTO controlnode "
+				+ "(label, controlnode.type, fragment_id, modelid) "
+				+ "VALUES ('" + label + "', '" + type
+				+ "', " + fragmentID + ", " + modelID + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -91,10 +91,10 @@ public class Connector extends DbObject {
 	 */
 	public void insertTerminationConditionIntoDatabase(final int conditionID,
 			final int dataObjectID, final int stateID, final int scenarioID) {
-		String sql = "INSERT INTO terminationcondition " +
-				"(conditionset_id, dataobject_id, state_id, scenario_id)" +
-				" VALUES (" + conditionID + ", " + dataObjectID + ", " +
-				stateID + ", " + scenarioID + ")";
+		String sql = "INSERT INTO terminationcondition "
+				+ "(conditionset_id, dataobject_id, state_id, scenario_id)"
+				+ " VALUES (" + conditionID + ", " + dataObjectID + ", "
+				+ stateID + ", " + scenarioID + ")";
 		performDefaultSQLInsertStatement(sql);
 	}
 
@@ -109,9 +109,9 @@ public class Connector extends DbObject {
 	public void insertControlFlowIntoDatabase(final int sourceID, final int targetID,
 			final String condition) {
 
-		String sql = "INSERT INTO controlflow " +
-				"VALUES (" + sourceID + ", " +
-				targetID + ", '" + condition + "')";
+		String sql = "INSERT INTO controlflow "
+				+ "VALUES (" + sourceID + ", "
+				+ targetID + ", '" + condition + "')";
 		performDefaultSQLInsertStatement(sql);
 	}
 
@@ -128,10 +128,10 @@ public class Connector extends DbObject {
 	 */
 	public int insertDataObjectIntoDatabase(final String name, final int dataClassID,
 			final int scenarioID, final int startStateID) {
-		String sql = "INSERT INTO dataobject" +
-				"(dataobject.name, dataclass_id, scenario_id, start_state_id) " +
-				"VALUES ('" + name + "', " + dataClassID + ", " + scenarioID +
-				", " + startStateID + ")";
+		String sql = "INSERT INTO dataobject"
+				+ "(dataobject.name, dataclass_id, scenario_id, start_state_id) "
+				+ "VALUES ('" + name + "', " + dataClassID + ", "
+				+ scenarioID + ", " + startStateID + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -144,8 +144,8 @@ public class Connector extends DbObject {
 	 * @return the database id of the newly created entry.
 	 */
 	public int insertStateIntoDatabase(final String name, final int dataClassId) {
-		String sql = "INSERT INTO state (state.name, olc_id) " +
-				"VALUES ('" + name + "', " + dataClassId + ")";
+		String sql = "INSERT INTO state (state.name, olc_id) "
+				+ "VALUES ('" + name + "', " + dataClassId + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -153,11 +153,12 @@ public class Connector extends DbObject {
 	 * Inserts a new Data Class into the database.
 	 *
 	 * @param name the name of the Class.
+	 * @param root the value for the rootnode of the class.
 	 * @return the id of the newly created entry.
 	 */
 	public int insertDataClassIntoDatabase(final String name, final int root) {
-		String sql = "INSERT INTO dataclass (dataclass.name, dataclass.rootnode) " +
-				"VALUES ('" + name + "', " + root + ")";
+		String sql = "INSERT INTO dataclass (dataclass.name, dataclass.rootnode) "
+				+ "VALUES ('" + name + "', " + root + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -171,9 +172,10 @@ public class Connector extends DbObject {
 	 */
 	public int insertDataAttributeIntoDatabase(final String name, final int dataClassID,
 			final String type) {
-		String sql = "INSERT INTO dataattribute (dataattribute.name, " +
-				"dataclass_id, dataattribute.type, dataattribute.default) " +
-				"VALUES ('" + name + "', " + dataClassID + ", '" + type + "', '')";
+		String sql = "INSERT INTO dataattribute (dataattribute.name, "
+				+ "dataclass_id, dataattribute.type, dataattribute.default) "
+				+ "VALUES ('" + name + "', "
+				+ dataClassID + ", '" + type + "', '')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -187,24 +189,26 @@ public class Connector extends DbObject {
 	public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber,
 			final int scenarioID) {
 		DbObject dbObject = new DbObject();
-		String sql = "UPDATE scenario " +
-				"SET scenario.datamodelid = " + modelID + ", scenario.datamodelversion = "
-				+ versionNumber + " WHERE id = " + scenarioID + "";
+		String sql = "UPDATE scenario "
+				+ "SET scenario.datamodelid = " + modelID
+				+ ", scenario.datamodelversion = " + versionNumber
+				+ " WHERE id = " + scenarioID + "";
 		dbObject.executeUpdateStatement(sql);
 	}
 
 	/**
 	 * This method inserts an aggregation into the database.
 	 *
-	 * @param sourceID     is the databaseID of a dataClass which is the source of the aggregation.
-	 * @param targetID     is the databaseID of a dataClass which is the target of the aggregation.
+	 * @param sourceID     is the ID of a dataClass which is the source of the aggregation.
+	 * @param targetID     is the ID of a dataClass which is the target of the aggregation.
 	 * @param multiplicity is the multiplicity of the aggregation as an Integer.
 	 */
 	public void insertAggregationIntoDatabase(final int sourceID, final int targetID,
 			final int multiplicity) {
-		String sql = "INSERT INTO aggregation (dataclass_id1, " +
-				"dataclass_id2, aggregation.multiplicity) " +
-				"VALUES (" + sourceID + ", " + targetID + ", " + multiplicity + ")";
+		String sql = "INSERT INTO aggregation (dataclass_id1, "
+				+ "dataclass_id2, aggregation.multiplicity) "
+				+ "VALUES (" + sourceID + ", "
+				+ targetID + ", " + multiplicity + ")";
 		performDefaultSQLInsertStatement(sql);
 	}
 
@@ -221,10 +225,10 @@ public class Connector extends DbObject {
 	 */
 	public int insertDataNodeIntoDatabase(final int scenarioID, final int stateID,
 			final int dataClassID, final int dataObjectID, final long modelID) {
-		String sql = "INSERT INTO datanode " +
-				"(scenario_id, state_id, dataclass_id, dataobject_id, modelid)" +
-				" VALUES (" + scenarioID + ", " + stateID + ", " +
-				dataClassID + ", " + dataObjectID + ", " + modelID + ")";
+		String sql = "INSERT INTO datanode "
+				+ "(scenario_id, state_id, dataclass_id, dataobject_id, modelid)"
+				+ " VALUES (" + scenarioID + ", " + stateID + ", "
+				+ dataClassID + ", " + dataObjectID + ", " + modelID + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -237,7 +241,12 @@ public class Connector extends DbObject {
 	 * @return The id of the newly created dataset entry.
 	 */
 	public int insertDataSetIntoDatabase(final boolean isInput) {
-		int inputAsInt = isInput ? 1 : 0;
+		int inputAsInt;
+		if (isInput) {
+			inputAsInt = 1;
+		} else {
+			inputAsInt = 0;
+		}
 		String sql = "INSERT INTO dataset (input) VALUES (" + inputAsInt + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
@@ -251,9 +260,9 @@ public class Connector extends DbObject {
 	 */
 	public void insertDataSetConsistOfDataNodeIntoDatabase(final int dataSetID,
 			final int dataNodeID) {
-		String sql = "INSERT INTO datasetconsistsofdatanode " +
-				"(dataset_id, datanode_id) " +
-				"VALUES (" + dataSetID + ", " + dataNodeID + ")";
+		String sql = "INSERT INTO datasetconsistsofdatanode "
+				+ "(dataset_id, datanode_id) "
+				+ "VALUES (" + dataSetID + ", " + dataNodeID + ")";
 		performDefaultSQLInsertStatement(sql);
 	}
 
@@ -267,15 +276,20 @@ public class Connector extends DbObject {
 	 */
 	public void insertDataFlowIntoDatabase(final int controlNodeID, final int dataSetID,
 			final boolean isInput) {
-		int inputAsInt = isInput ? 1 : 0;
-		String sql = "INSERT INTO dataflow " +
-				"(controlnode_id, dataset_id, input) " +
-				"SELECT " + controlNodeID + ", " +
-				dataSetID + ", " + inputAsInt + " FROM dual WHERE NOT EXISTS( SELECT 1 " +
-				"FROM dataflow " +
-				"WHERE controlnode_id = " + controlNodeID +
-				" AND dataset_id = " + dataSetID +
-				" AND input = " + inputAsInt + " )";
+		int inputAsInt;
+		if (isInput) {
+			inputAsInt = 1;
+		} else {
+			inputAsInt = 0;
+		}
+		String sql = "INSERT INTO dataflow "
+				+ "(controlnode_id, dataset_id, input) "
+				+ "SELECT " + controlNodeID + ", "
+				+ dataSetID + ", " + inputAsInt + " "
+				+ "FROM dual WHERE NOT EXISTS( SELECT 1 "
+				+ "FROM dataflow  WHERE controlnode_id = " + controlNodeID
+				+ " AND dataset_id = " + dataSetID
+				+ " AND input = " + inputAsInt + " )";
 		performDefaultSQLInsertStatement(sql);
 	}
 
@@ -287,7 +301,8 @@ public class Connector extends DbObject {
 	 * @param controlNodeID1 the id of the first node.
 	 * @param controlNodeID2 the id of the second node.
 	 */
-	public void insertReferenceIntoDatabase(final int controlNodeID1, final int controlNodeID2) {
+	public void insertReferenceIntoDatabase(
+			final int controlNodeID1, final int controlNodeID2) {
 		insertReferenceOneSideIntoDatabase(controlNodeID1, controlNodeID2);
 		insertReferenceOneSideIntoDatabase(controlNodeID2, controlNodeID1);
 	}
@@ -300,23 +315,23 @@ public class Connector extends DbObject {
 	 */
 	private void insertReferenceOneSideIntoDatabase(final int sourceNodeId,
 			final int targetNodeId) {
-		String sql = "INSERT INTO reference (controlnode_id1," +
-				" controlnode_id2) VALUES (" + sourceNodeId +
-				", " + targetNodeId + ")";
+		String sql = "INSERT INTO reference (controlnode_id1,"
+				+ " controlnode_id2) VALUES ("
+				+ sourceNodeId + ", " + targetNodeId + ")";
 		performDefaultSQLInsertStatement(sql);
 	}
 
 	/**
-	 * @param controlNodeId
-	 * @return
+	 * @param controlNodeId the id of a control node.
+	 * @return the key of the newly created email template.
 	 */
 	public int createEMailTemplate(int controlNodeId) {
-		String sql = "INSERT INTO emailconfiguration " +
-				"(receivermailaddress, sendmailaddress, subject," +
-				" message, controlnode_id) SELECT " +
-				"receivermailaddress, sendmailaddress, subject, message, " + controlNodeId
-				+ " FROM " +
-				"emailconfiguration WHERE id = -1";
+		String sql = "INSERT INTO emailconfiguration "
+				+ "(receivermailaddress, sendmailaddress, subject,"
+				+ " message, controlnode_id) SELECT "
+				+ "receivermailaddress, sendmailaddress, subject, message, "
+				+ controlNodeId
+				+ " FROM emailconfiguration WHERE id = -1";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -346,9 +361,7 @@ public class Connector extends DbObject {
 				if (stmt != null) {
 					stmt.close();
 				}
-				if (conn != null) {
-					conn.close();
-				}
+				conn.close();
 			} catch (SQLException se2) {
 				System.err.println("An error occurred closing a resource");
 			}
@@ -365,7 +378,7 @@ public class Connector extends DbObject {
 	private int performSQLInsertStatementWithAutoId(final String statement) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		int result = -1;
 		try {
 			stmt = conn.createStatement();
@@ -403,11 +416,11 @@ public class Connector extends DbObject {
 	public int getFragmentVersion(int scenarioID, long modelID) {
 
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT modelversion FROM fragment " +
-				"WHERE scenario_id = " + scenarioID +
-				" AND modelid = " + modelID;
-		LinkedList<Integer> versions = dbDataObject
-				.executeStatementReturnsListInt(select, "modelversion");
+		String select = "SELECT modelversion FROM fragment "
+				+ "WHERE scenario_id = " + scenarioID
+				+ " AND modelid = " + modelID;
+		LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select,
+				"modelversion");
 		if (versions.size() == 0) {
 			return -1;
 		}
@@ -418,13 +431,13 @@ public class Connector extends DbObject {
 	 * Get the version of a scenario which is in the database.
 	 *
 	 * @param scenarioID databaseID of the scenario
-	 * @return version of the scenario with the scenarioID (return -1 if there is no scenario of this id)
+	 * @return the version of the scenario with the scenarioID (Error: -1).
 	 */
 	public int getScenarioVersion(int scenarioID) {
 
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT modelversion FROM scenario " +
-				"WHERE id = " + scenarioID;
+		String select = "SELECT modelversion FROM scenario "
+				+ "WHERE id = " + scenarioID;
 		LinkedList<Integer> versions = dbDataObject
 				.executeStatementReturnsListInt(select, "modelversion");
 		if (versions.size() == 0) {
@@ -442,8 +455,8 @@ public class Connector extends DbObject {
 	 */
 	public int getScenarioID(long scenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id FROM scenario " +
-				"WHERE modelid = " + scenarioID;
+		String select = "SELECT id FROM scenario "
+				+ "WHERE modelid = " + scenarioID;
 		LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "id");
 		if (ids.size() > 0) {
 			return Collections.max(ids);
@@ -462,15 +475,16 @@ public class Connector extends DbObject {
 	 */
 	public List<Integer> migrateScenarioInstance(int oldScenarioID, int newScenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id " +
-				"FROM scenarioinstance " +
-				"WHERE scenarioinstance.terminated = 0 " +
-				"AND scenario_id = " + oldScenarioID;
-		List<Integer> runningInstances = dbDataObject.executeStatementReturnsListInt(select, "id");
-		String update = "UPDATE scenarioinstance " +
-				"SET scenario_id = " + newScenarioID +
-				" WHERE scenarioinstance.terminated = 0 " +
-				"AND scenario_id = " + oldScenarioID;
+		String select = "SELECT id "
+				+ "FROM scenarioinstance "
+				+ "WHERE scenarioinstance.terminated = 0 "
+				+ "AND scenario_id = " + oldScenarioID;
+		List<Integer> runningInstances =
+				dbDataObject.executeStatementReturnsListInt(select, "id");
+		String update = "UPDATE scenarioinstance "
+				+ "SET scenario_id = " + newScenarioID
+				+ " WHERE scenarioinstance.terminated = 0 "
+				+ "AND scenario_id = " + oldScenarioID;
 		dbDataObject.executeUpdateStatement(update);
 		return runningInstances;
 	}
@@ -484,10 +498,10 @@ public class Connector extends DbObject {
 	 */
 	public int getFragmentID(int scenarioID, long modelID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id " +
-				"FROM fragment " +
-				"WHERE scenario_id = " + scenarioID +
-				" AND modelid = " + modelID;
+		String select = "SELECT id "
+				+ "FROM fragment "
+				+ "WHERE scenario_id = " + scenarioID
+				+ " AND modelid = " + modelID;
 		return dbDataObject.executeStatementReturnsInt(select, "id");
 	}
 
@@ -500,9 +514,9 @@ public class Connector extends DbObject {
 	 */
 	public void migrateFragmentInstance(int oldFragmentID, int newFragmentID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE fragmentinstance " +
-				"SET fragment_id = " + newFragmentID +
-				" WHERE fragment_id = " + oldFragmentID;
+		String update = "UPDATE fragmentinstance "
+				+ "SET fragment_id = " + newFragmentID
+				+ " WHERE fragment_id = " + oldFragmentID;
 		dbDataObject.executeUpdateStatement(update);
 	}
 
@@ -514,9 +528,10 @@ public class Connector extends DbObject {
 	 */
 	public void insertFragmentInstance(int fragmentID, int instanceID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String insert = "INSERT INTO fragmentinstance " +
-				"(fragmentinstance.terminated, fragment_id, scenarioinstance_id) " +
-				"VALUES (" + 0 + ", " + fragmentID + ", " + instanceID + ")";
+		String insert = "INSERT INTO fragmentinstance "
+				+ "(fragmentinstance.terminated, "
+				+ "fragment_id, scenarioinstance_id) "
+				+ "VALUES (" + 0 + ", " + fragmentID + ", " + instanceID + ")";
 		dbDataObject.executeUpdateStatement(insert);
 
 	}
@@ -530,10 +545,10 @@ public class Connector extends DbObject {
 	 */
 	public int getControlNodeID(int fragmentID, long modelID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id " +
-				"FROM controlnode " +
-				"WHERE fragment_id = " + fragmentID +
-				" AND modelid = " + modelID;
+		String select = "SELECT id "
+				+ "FROM controlnode "
+				+ "WHERE fragment_id = " + fragmentID
+				+ " AND modelid = " + modelID;
 		return dbDataObject.executeStatementReturnsInt(select, "id");
 
 	}
@@ -546,9 +561,9 @@ public class Connector extends DbObject {
 	 */
 	public void migrateControlNodeInstance(int oldControlNodeID, int newControlNodeID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE controlnodeinstance " +
-				"SET controlnode_id = " + newControlNodeID +
-				" WHERE controlnode_id = " + oldControlNodeID;
+		String update = "UPDATE controlnodeinstance "
+				+ "SET controlnode_id = " + newControlNodeID
+				+ " WHERE controlnode_id = " + oldControlNodeID;
 		dbDataObject.executeUpdateStatement(update);
 	}
 
@@ -556,16 +571,16 @@ public class Connector extends DbObject {
 	 * Get the dataobjectID of the specified dataObject in table "dataobject".
 	 *
 	 * @param scenarioID     the scenarioDatabaseID for which the dataobjectID is selected
-	 * @param dataObjectName the name of the dataObject
-	 *                       (we assume that a scenario can't hold dataObjects with the same name)
+	 * @param dataObjectName the name of the dataObject (we assume that
+	 *                          a scenario can't hold dataObjects with the same name)
 	 * @return the dataobject_id of the selected dataObject
 	 */
 	public int getDataObjectID(int scenarioID, String dataObjectName) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id " +
-				"FROM dataobject " +
-				"WHERE scenario_id = " + scenarioID +
-				" AND name = '" + dataObjectName + "'";
+		String select = "SELECT id "
+				+ "FROM dataobject "
+				+ "WHERE scenario_id = " + scenarioID
+				+ " AND name = '" + dataObjectName + "'";
 		return dbDataObject.executeStatementReturnsInt(select, "id");
 	}
 
@@ -577,21 +592,24 @@ public class Connector extends DbObject {
 	 */
 	public void migrateDataObjectInstance(int oldDataObjectID, int newDataObjectID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE dataobjectinstance " +
-				"SET dataobject_id = " + newDataObjectID +
-				" WHERE dataobject_id = " + oldDataObjectID;
+		String update = "UPDATE dataobjectinstance "
+				+ "SET dataobject_id = " + newDataObjectID
+				+ " WHERE dataobject_id = " + oldDataObjectID;
 		dbDataObject.executeUpdateStatement(update);
 		String sql =
-				"SELECT state_id FROM dataobjectinstance WHERE dataobject_id = " + newDataObjectID;
-		List<Integer> state_ids = dbDataObject.executeStatementReturnsListInt(sql, "state_id");
-		for (int state_id : state_ids) {
-			update = "UPDATE dataobjectinstance SET state_id = " +
-					"(SELECT state.id FROM state WHERE olc_id = (SELECT `dataclass_id` FROM `dataobject` WHERE `id` = "
-					+ newDataObjectID + ") " +
-					"AND name = (SELECT state.name FROM state WHERE state.id = " + state_id + ")) "
-					+
-					"WHERE dataobject_id = " + newDataObjectID +
-					" AND state_id = " + state_id;
+				"SELECT state_id FROM dataobjectinstance "
+						+ "WHERE dataobject_id = " + newDataObjectID;
+		List<Integer> stateIds = dbDataObject.executeStatementReturnsListInt(
+				sql, "state_id");
+		for (int stateId : stateIds) {
+			update = "UPDATE dataobjectinstance SET state_id = "
+					+ "(SELECT state.id FROM state WHERE olc_id = "
+					+ "(SELECT `dataclass_id` FROM `dataobject` "
+					+ "WHERE `id` = " + newDataObjectID + ") "
+					+ "AND name = (SELECT state.name FROM state "
+					+ "WHERE state.id = " + stateId + ")) "
+					+ "WHERE dataobject_id = " + newDataObjectID
+					+ " AND state_id = " + stateId;
 			dbDataObject.executeUpdateStatement(update);
 		}
 	}
@@ -604,9 +622,9 @@ public class Connector extends DbObject {
 	 */
 	public List<Long> getFragmentModelIDs(int scenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT modelid " +
-				"FROM fragment " +
-				"WHERE scenario_id = " + scenarioID;
+		String select = "SELECT modelid "
+				+ "FROM fragment "
+				+ "WHERE scenario_id = " + scenarioID;
 		return dbDataObject.executeStatementReturnsListLong(select, "modelid");
 	}
 
@@ -618,9 +636,9 @@ public class Connector extends DbObject {
 	 */
 	public List<Integer> getDataClassIDs(int scenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT dataclass_id " +
-				"FROM dataobject " +
-				"WHERE scenario_id = " + scenarioID;
+		String select = "SELECT dataclass_id "
+				+ "FROM dataobject "
+				+ "WHERE scenario_id = " + scenarioID;
 		// temporaryDataClassIDs might contain duplicate entries
 		List<Integer> temporaryDataClassIDs = dbDataObject
 				.executeStatementReturnsListInt(select, "dataclass_id");
@@ -641,9 +659,9 @@ public class Connector extends DbObject {
 	 */
 	public String getDataClassName(int dataClassID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT name " +
-				"FROM dataclass " +
-				"WHERE id = " + dataClassID;
+		String select = "SELECT name "
+				+ "FROM dataclass "
+				+ "WHERE id = " + dataClassID;
 		return dbDataObject.executeStatementReturnsString(select, "name");
 	}
 
@@ -655,15 +673,16 @@ public class Connector extends DbObject {
 	 */
 	public Map<Integer, String> getDataAttributes(int dataClassID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id, name " +
-				"FROM dataattribute " +
-				"WHERE dataclass_id = " + dataClassID;
+		String select = "SELECT id, name "
+				+ "FROM dataattribute "
+				+ "WHERE dataclass_id = " + dataClassID;
 		return dbDataObject.executeStatementReturnsMap(select, "id", "name");
 
 	}
 
 	/**
-	 * Change all oldDataAttributeIDs to newDataAttributeID of all specified dataattributeinstances.
+	 * Change all oldDataAttributeIDs to newDataAttributeID
+	 * for all specified dataattributeinstances.
 	 *
 	 * @param oldDataAttributeID DataAttributeID that gets updated by newDataAttributeID
 	 * @param newDataAttributeID new dataAttributeID that overwrites oldDataAttributeID
@@ -671,9 +690,9 @@ public class Connector extends DbObject {
 	public void migrateDataAttributeInstance(Integer oldDataAttributeID,
 			Integer newDataAttributeID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE dataattributeinstance " +
-				"SET dataattribute_id = " + newDataAttributeID +
-				" WHERE dataattribute_id = " + oldDataAttributeID;
+		String update = "UPDATE dataattributeinstance "
+				+ "SET dataattribute_id = " + newDataAttributeID
+				+ " WHERE dataattribute_id = " + oldDataAttributeID;
 		dbDataObject.executeUpdateStatement(update);
 	}
 
@@ -685,9 +704,9 @@ public class Connector extends DbObject {
 	 */
 	public int getDataModelVersion(int scenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT datamodelversion " +
-				"FROM scenario " +
-				"WHERE id = " + scenarioID;
+		String select = "SELECT datamodelversion "
+				+ "FROM scenario "
+				+ "WHERE id = " + scenarioID;
 		return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
 	}
 
@@ -699,9 +718,9 @@ public class Connector extends DbObject {
 	 */
 	public long getDataModelID(int scenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT datamodelid " +
-				"FROM scenario " +
-				"WHERE id = " + scenarioID;
+		String select = "SELECT datamodelid "
+				+ "FROM scenario "
+				+ "WHERE id = " + scenarioID;
 		return dbDataObject.executeStatementReturnsListLong(select, "datamodelid").get(0);
 	}
 
@@ -713,9 +732,9 @@ public class Connector extends DbObject {
 	 */
 	public int isScenarioDeleted(int scenarioID) {
 		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT deleted " +
-				"FROM scenario " +
-				"WHERE id = " + scenarioID;
+		String select = "SELECT deleted "
+				+ "FROM scenario "
+				+ "WHERE id = " + scenarioID;
 		return dbDataObject.executeStatementReturnsInt(select, "deleted");
 	}
 }

@@ -8,6 +8,9 @@ import org.w3c.dom.NodeList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents a DataClass.
+ */
 public class DataClass implements IDeserialisable, IPersistable {
 	/**
 	 * This is the modelID of the dataClass.
@@ -38,6 +41,8 @@ public class DataClass implements IDeserialisable, IPersistable {
 	/**
 	 * Sets the processeditorServerUrl which is needed for connecting to the server
 	 * in order to get the XML-files for the fragments.
+	 *
+	 * @param serverURL This is the server URL.
 	 */
 	public DataClass(String serverURL) {
 
@@ -69,7 +74,7 @@ public class DataClass implements IDeserialisable, IPersistable {
 	 * This sets the corresponding attributes of the dataClass class or
 	 * calls corresponding method based on the property found in the XML.
 	 *
-	 * @param property
+	 * @param property This is the property to look for.
 	 */
 	private void initializeField(final org.w3c.dom.Node property) {
 
@@ -88,7 +93,7 @@ public class DataClass implements IDeserialisable, IPersistable {
 			dataClassModelID = Long.parseLong(value);
 			break;
 		case "stereotype":
-			isRootNode = value.equals("root_instance");
+			isRootNode = "root_instance".equals(value);
 			break;
 		default:
 			// Property will not be handled
@@ -103,7 +108,12 @@ public class DataClass implements IDeserialisable, IPersistable {
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
-		int root = this.isRootNode ? 1 : 0;
+		int root;
+		if (this.isRootNode) {
+			root = 1;
+		} else {
+			root = 0;
+		}
 		this.dataClassID = conn.insertDataClassIntoDatabase(this.dataClassName, root);
 		saveDataAttributes();
 
@@ -126,7 +136,8 @@ public class DataClass implements IDeserialisable, IPersistable {
                     This regex removes all the stuff not needed.
                  */
 				DataAttribute newDataAttribute = new DataAttribute(
-						attribute.replaceAll("\\{[0-9]*\\}|[^a-zA-Z0-9]", ""));
+						attribute.replaceAll(
+								"\\{[0-9]*\\}|[^a-zA-Z0-9]", ""));
 				dataAttributes.add(newDataAttribute);
 			}
 		}

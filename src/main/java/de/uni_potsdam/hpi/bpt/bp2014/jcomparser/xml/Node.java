@@ -55,22 +55,29 @@ public class Node implements IDeserialisable, IPersistable {
 	 * @return the type as String that is written to the database
 	 */
 	private String getDbTypeByPeType(String type) {
-		if (type.contains("Task"))
+		if (type.contains("Task")) {
 			return "Activity";
-		if (type.contains("EndEvent"))
+		}
+		if (type.contains("EndEvent")) {
 			return "Endevent";
-		if (type.contains("StartEvent"))
+		}
+		if (type.contains("StartEvent")) {
 			return "Startevent";
-		if (type.contains("ParallelGateway"))
+		}
+		if (type.contains("ParallelGateway")) {
 			return "AND";
-		if (type.contains("ExclusiveGateway"))
+		}
+		if (type.contains("ExclusiveGateway")) {
 			return "XOR";
-		if (type.contains("SEND"))
+		}
+		if (type.contains("SEND")) {
 			return "EmailTask";
-		if (type.contains("SERVICE"))
+		}
+		if (type.contains("SERVICE")) {
 			return "WebServiceTask";
-		else
+		} else {
 			return "";
+		}
 	}
 
 	/**
@@ -111,7 +118,7 @@ public class Node implements IDeserialisable, IPersistable {
 			text = value;
 			break;
 		case "global":
-			global = value.equals("1");
+			global = "1".equals(value);
 			break;
 		case "state":
 			state = value;
@@ -137,18 +144,17 @@ public class Node implements IDeserialisable, IPersistable {
 		Connector connector = new Connector();
 		if (!type.contains("DataObject")) {
 			if (!stereotype.isEmpty()) {
-				// we identify mailtasks that need to be marked in the database by their stereotype
-				databaseID = connector
-						.insertControlNodeIntoDatabase(text, getDbTypeByPeType(stereotype),
-								fragmentId, id);
-				if (stereotype.equals("SEND"))
+				// identify mailtasks that need to be marked by their stereotype
+				databaseID = connector.insertControlNodeIntoDatabase(text,
+						getDbTypeByPeType(stereotype), fragmentId, id);
+				if ("SEND".equals(stereotype)) {
 					connector.createEMailTemplate(databaseID);
+				}
 
 			} else {
 				// DataNodes will be done in DataObject
-				databaseID = connector
-						.insertControlNodeIntoDatabase(text, getDbTypeByPeType(type), fragmentId,
-								id);
+				databaseID = connector.insertControlNodeIntoDatabase(
+						text, getDbTypeByPeType(type), fragmentId, id);
 			}
 		}
 		return databaseID;
@@ -157,10 +163,12 @@ public class Node implements IDeserialisable, IPersistable {
 	/**
 	 * Migrate datanode- or controlnodeInstances.
 	 *
-	 * @param oldFragmentID databaseId of the old fragment whose instances get migrated and this node belongs to
+	 * @param oldFragmentID databaseId of the old fragment
+	 *                         whose instances get migrated and this node belongs to
 	 */
 	public void migrate(int oldFragmentID) {
-		if (isTask() || type.contains("ParallelGateway") || type.contains("ExclusiveGateway")) {
+		if (isTask() || type.contains("ParallelGateway")
+				|| type.contains("ExclusiveGateway")) {
 			Connector connector = new Connector();
 			int oldControlNodeID = connector.getControlNodeID(oldFragmentID, id);
 			connector.migrateControlNodeInstance(oldControlNodeID, databaseID);

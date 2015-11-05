@@ -6,13 +6,17 @@ import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * As a part of the JComparser we need to provide a REST API.
@@ -22,7 +26,7 @@ import java.util.HashMap;
 
 @Path("jcomparser") public class REST {
 
-	static Logger log = Logger.getLogger(REST.class.getName());
+	private static Logger log = Logger.getLogger(REST.class.getName());
 	/**
 	 * The URL to the ProcessEditor.
 	 */
@@ -56,8 +60,9 @@ import java.util.HashMap;
 	 *
 	 * @return A response with a JSON-Map with the scenario names and ids.
 	 */
-	@GET @Path("scenarios") @Produces(MediaType.APPLICATION_JSON) public Response showScenarios() {
-		HashMap<String, String> scenarioIDs = null;
+	@GET @Path("scenarios") @Produces(MediaType.APPLICATION_JSON)
+	public Response showScenarios() {
+		Map<String, String> scenarioIDs = null;
 		JComparser comparser = new JComparser();
 
 		try {
@@ -66,9 +71,12 @@ import java.util.HashMap;
 			log.error("Error:", e);
 		}
 
-		if (scenarioIDs.size() == 0) {
-			// no scenarios present
-			return Response.ok("{empty}", MediaType.APPLICATION_JSON_TYPE).build();
+		if (scenarioIDs != null) {
+			if (scenarioIDs.size() == 0) {
+				// no scenarios present
+				return Response.ok("{empty}",
+						MediaType.APPLICATION_JSON_TYPE).build();
+			}
 		}
 
 		Gson gson = new Gson();
@@ -85,7 +93,8 @@ import java.util.HashMap;
 	 * @param modelID The ID of the model to be visualized.
 	 * @return A Response containing the image.
 	 */
-	@GET @Path("scenarios/{modelID}/image/") @Produces("image/png") public Response showModelImage(
+	@GET @Path("scenarios/{modelID}/image/") @Produces("image/png")
+	public Response showModelImage(
 			@PathParam("modelID") final String modelID) {
 		String urlToRead = PROCESS_SERVER_URI + "models/" + modelID + ".png";
 

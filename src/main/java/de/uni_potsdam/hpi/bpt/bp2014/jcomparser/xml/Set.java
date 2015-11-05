@@ -4,25 +4,28 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
 import java.util.List;
 
+/**
+ * This class represents a set.
+ */
 public class Set implements IPersistable {
 	/**
 	 * A List of all (DataFlow-) Edges.
 	 * The edges have any of the (Data-) Nodes of the
 	 * Input-Set as source and the activity of the InputSet as the Target
 	 */
-	public List<Edge> associations;
+	private List<Edge> associations;
 	/**
-	 * All DataNodes which are part of this Set
+	 * All DataNodes which are part of this Set.
 	 */
-	public List<Node> dataNodes;
+	private List<Node> dataNodes;
 	/**
-	 * The Activity (Node) which has this set
+	 * The Activity (Node) which has this set.
 	 */
-	public Node node;
+	private Node node;
 	/**
-	 * The databaseID of the InputSet
+	 * The databaseID of the InputSet.
 	 */
-	public int databaseId;
+	private int databaseId;
 
 	/**
 	 * Adds the databaseId of the Set to the edge.
@@ -54,12 +57,24 @@ public class Set implements IPersistable {
 		return dataNodes;
 	}
 
+	public void setDataNodes(List<Node> dataNodes) {
+		this.dataNodes = dataNodes;
+	}
+
 	public Node getNode() {
 		return node;
 	}
 
+	public void setNode(Node node) {
+		this.node = node;
+	}
+
 	public List<Edge> getAssociations() {
 		return associations;
+	}
+
+	public void setAssociations(List<Edge> associations) {
+		this.associations = associations;
 	}
 
 	@Override public int save() {
@@ -69,4 +84,6 @@ public class Set implements IPersistable {
 		updateEdges();
 		return databaseId;
 	}
+
+
 }

@@ -12,13 +12,7 @@ import java.util.ArrayList;
  *
  */
 public class Seed {
-	static Logger log = Logger.getLogger(Seed.class.getName());
-
-	public void getDBcontent() {
-	}
-
-	public void setDBcontent() {
-	}
+	private static Logger log = Logger.getLogger(Seed.class.getName());
 
 	/**
 	 * @param id some some id.
@@ -26,19 +20,22 @@ public class Seed {
 	 */
 	public ArrayList<Integer> getAllActivityIDByFragmentID(int id) {
 
-		Connection conn = de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance().connect();
+		Connection conn = de.uni_potsdam.hpi.bpt.bp2014
+				.database.Connection.getInstance().connect();
 
 		Statement stmt = null;
-		ResultSet rs = null;
-		ArrayList<Integer> results = new ArrayList<Integer>();
-		if (conn == null)
+		ResultSet rs;
+		ArrayList<Integer> results = new ArrayList<>();
+		if (conn == null) {
 			return results;
+		}
 
 		try {
 			//Execute a query
 			stmt = conn.createStatement();
 			String sql =
-					"SELECT id FROM ProcessElement WHERE type = 'Activity' AND fragment_id = " + id
+					"SELECT id FROM ProcessElement WHERE type = 'Activity' "
+							+ "AND fragment_id = " + id
 							+ " ORDER BY id";
 
 			rs = stmt.executeQuery(sql);
@@ -57,13 +54,13 @@ public class Seed {
 		} finally {
 			//finally block used to close resources
 			try {
-				if (stmt != null)
+				if (stmt != null) {
 					stmt.close();
+				}
 			} catch (SQLException ignored) {
-			}// nothing we can do
+			} // nothing we can do
 			try {
-				if (conn != null)
-					conn.close();
+				conn.close();
 			} catch (SQLException se) {
 				log.error("SQL Error!:", se);
 			}

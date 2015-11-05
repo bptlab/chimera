@@ -6,15 +6,26 @@ import org.apache.log4j.Logger;
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * As a part of the JComparser, this class is reponsible for the retrieval
  * of XML docus from a source URL like the repository of the Processeditor.
  */
 public class Retrieval {
-	static Logger log = Logger.getLogger(Retrieval.class.getName());
+	private static Logger log = Logger.getLogger(Retrieval.class.getName());
 
 	/**
 	 * The pattern for setting name and password for the authentication.
@@ -32,8 +43,8 @@ public class Retrieval {
 	private String password = PropertyLoader.getProperty("processeditor.serverPassword");
 
 	/**
-	 * Get the content from URL. In case of the JComparser, it is used to get the XML of a processModel. Therefore,
-	 * the authentication for the ProcessEditor is used.
+	 * Get the content from URL. In case of the JComparser, it gets the XML of a processModel.
+	 * Therefore, the authentication for the ProcessEditor is used.
 	 *
 	 * @param hosturl   the basic hosturl (e.g. "http://localhost:1205/")
 	 * @param urlToRead contains the hosturl and additional path from which
@@ -44,7 +55,8 @@ public class Retrieval {
 	public String getXMLWithAuth(String hosturl, String urlToRead) {
 		try {
 			InputStream inputStream = getInputStream(hosturl, urlToRead);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(inputStream));
 			StringBuilder stringBuilder = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -54,8 +66,8 @@ public class Retrieval {
 			inputStream.close();
 			return stringBuilder.toString();
 		} catch (IOException e) {
-			log.error("Error: unable to read the processModel from the server. Tried to read "
-					+ urlToRead);
+			log.error("Error: unable to read the processModel from the server. "
+					+ "Tried to read " + urlToRead);
 			log.error(e);
 		}
 		return null;
@@ -86,7 +98,8 @@ public class Retrieval {
 			//return Response.ok(new ByteArrayInputStream(imageData)).build();
 		} catch (IOException e) {
 			log.error(
-					"Error: unable to load an image from the server. Tried to load the image from "
+					"Error: unable to load an image from the server. "
+							+ "Tried to load the image from "
 							+ urlToRead);
 			log.error(e);
 		}

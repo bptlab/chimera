@@ -210,7 +210,7 @@ public final class JsonUtil {
 		 *
 		 * @param ids This is a HashMap of names as a String and database ID's as a String.
 		 */
-		public JsonStringHashMap(HashMap<String, String> ids) {
+		public JsonStringHashMap(Map<String, String> ids) {
 			this.ids = ids;
 		}
 	}
