@@ -58,7 +58,9 @@ public class DbHistoryDataObjectInstance extends DbObject {
 		String sql =
 				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldstate_id, h.newstate_id, h.dataobjectinstance_id, do.name, ns.name AS newstate_name, os.name AS oldstate_name FROM historydataobjectinstance AS h, dataobjectinstance AS doi, dataobject AS do, state AS ns, state AS os WHERE h.scenarioinstance_id = "
 						+ scenarioInstanceId
-						+ " AND ns.id = h.newstate_id AND os.id = h.oldstate_id ORDER BY timestamp DESC";
+						+ " AND ns.id = h.newstate_id AND os.id = h.oldstate_id"
+						+ " AND h.dataobjectinstance_id = doi.id AND doi.dataobject_id = do.id "
+						+ "ORDER BY timestamp DESC";
 		return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id",
 				"h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp",
 				"h.dataobjectinstance_id", "oldstate_name", "newstate_name");
