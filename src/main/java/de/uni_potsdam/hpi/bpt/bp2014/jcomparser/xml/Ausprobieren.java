@@ -16,33 +16,28 @@ import java.io.StringReader;
  */
 public class Ausprobieren {
 
-    /**
-     * This main Methods catches a scenario from the server and parses it.
-     * You may have to change the id of the model.
-     *
-     * @param args the command line arguments (will be ignored)
-     * @throws ParserConfigurationException The XML seems to be invalid
-     * @throws IOException                  The server returns an invalid file.
-     * @throws SAXException                 The XML seems to be invalid.
-     */
-    public static void main(String[] args) throws
-            ParserConfigurationException,
-            IOException,
-            SAXException {
+	/**
+	 * This main Methods catches a scenario from the server and parses it.
+	 * You may have to change the id of the model.
+	 *
+	 * @param args the command line arguments (will be ignored)
+	 * @throws ParserConfigurationException The XML seems to be invalid
+	 * @throws IOException                  The server returns an invalid file.
+	 * @throws SAXException                 The XML seems to be invalid.
+	 */
+	public static void main(String[] args)
+			throws ParserConfigurationException, IOException, SAXException {
 
-        Retrieval jRetrieval = new Retrieval();
-        String scenarioXML = jRetrieval.getXMLWithAuth(
-                "http://bp2014w1-dev:1205/",
-                "http://bp2014w1-dev:1205/models/1225104276.pm");
+		Retrieval jRetrieval = new Retrieval();
+		String scenarioXML = jRetrieval.getXMLWithAuth("http://bp2014w1-dev:1205/",
+				"http://bp2014w1-dev:1205/models/1225104276.pm");
 
-        InputSource is = new InputSource();
-        is.setCharacterStream(new StringReader(scenarioXML));
-        DocumentBuilder db = DocumentBuilderFactory
-                .newInstance()
-                .newDocumentBuilder();
-        Document doc = db.parse(is);
-        Scenario scen = new Scenario("http://bp2014w1-dev:1205/");
-        scen.initializeInstanceFromXML(doc.getDocumentElement());
-        scen.save();
-    }
+		InputSource is = new InputSource();
+		is.setCharacterStream(new StringReader(scenarioXML));
+		DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = db.parse(is);
+		Scenario scen = new Scenario("http://bp2014w1-dev:1205/");
+		scen.initializeInstanceFromXML(doc.getDocumentElement());
+		scen.save();
+	}
 }
