@@ -126,7 +126,7 @@ public class RestInterfaceTest extends AbstractTest {
         Response response = base.path("scenario/1/instance/1302/dataobjects").request().get();
         assertThat("Get activities did not contain the expected information",
                 response.readEntity(String.class),
-                jsonEquals("{\"3\":{\"h.scenarioinstance_id\":1302,\"h.id\":3,\"h.oldstate_id\":1,\"h.newstate_id\":2,\"h.dataobjectinstance_id\":1058,\"newstate_name\":\"bearbeitet\",\"oldstate_name\":\"init\",\"do.name\":\"Bestellung\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+                jsonEquals("{\"3\":{\"h.scenarioinstance_id\":1302,\"h.id\":3,\"h.oldstate_id\":1,\"h.newstate_id\":2,\"h.dataobjectinstance_id\":1058,\"newstate_name\":\"bearbeitet\",\"oldstate_name\":\"init\",\"do.name\":\"object1\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     /**
