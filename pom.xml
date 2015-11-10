@@ -12,6 +12,17 @@
     <build>
         <finalName>JEngine</finalName>
         <plugins>
+	    <plugin>
+		<groupId>
+		   org.codehaus.mojo
+		</groupId>
+		<artifactId>
+			sonar-maven-plugin
+		</artifactId>
+		<version>
+			1.0-beta-2
+		</version>
+	    </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
