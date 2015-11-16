@@ -1439,6 +1439,10 @@ import java.util.LinkedList;
 		 * The name which should be assigned to the entity.
 		 */
 		private String name;
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 
 	/**

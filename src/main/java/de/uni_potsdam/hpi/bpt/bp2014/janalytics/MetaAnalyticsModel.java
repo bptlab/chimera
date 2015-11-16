@@ -15,9 +15,8 @@ import java.util.Map;
 /**
  *
  */
-public final class MetaAnalyticsModel {
-	// prevent instantiation
-	private MetaAnalyticsModel() { }
+public class MetaAnalyticsModel {
+
 	private static Logger log = Logger.getLogger(MetaAnalyticsModel.class.getName());
 
 	// **************************** DB Execution Statements ****************************

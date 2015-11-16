@@ -291,7 +291,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testStartNewInstanceWName() {
         RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
-        newName.name = "Dies ist ein Test";
+        newName.setName("Dies ist ein Test");
         Response response = base.path("scenario/1/instance")
                 .request().put(Entity.json(newName));
         assertEquals("The Response code of start new instances was not 201",
@@ -312,7 +312,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testStartInvalidInstanceWName() {
         RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
-        newName.name = "Dies ist ein Test";
+        newName.setName("Dies ist ein Test");
         Response response = base.path("scenario/9999/instance").request()
                 .put(Entity.json(newName));
         assertEquals("The Response code of start new instances was not 400",
@@ -788,7 +788,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
@@ -825,7 +825,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
@@ -845,7 +845,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -874,7 +874,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
