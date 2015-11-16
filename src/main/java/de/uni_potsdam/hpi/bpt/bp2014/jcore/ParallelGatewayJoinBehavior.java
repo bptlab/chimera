@@ -5,7 +5,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 
 import java.util.LinkedList;
 
-public class ParallelGatewayJoinBehavior extends IncomingBehavior {
+/**
+ * This class implements join behavior for parallel gateways.
+ */
+public class ParallelGatewayJoinBehavior extends AbstractIncomingBehavior {
 	/**
 	 * Database Connection objects
 	 */
@@ -20,13 +23,13 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
 	 */
 	ParallelGatewayJoinBehavior(GatewayInstance gatewayInstance,
 			ScenarioInstance scenarioInstance) {
-		this.scenarioInstance = scenarioInstance;
-		this.controlNodeInstance = gatewayInstance;
+		this.setScenarioInstance(scenarioInstance);
+		this.setControlNodeInstance(gatewayInstance);
 	}
 
 	@Override public void enableControlFlow() {
 		if (checkEnabled()) {
-			controlNodeInstance.terminate();
+			this.getControlNodeInstance().terminate();
 		}
 	}
 
@@ -37,7 +40,8 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
 	 */
 	private Boolean checkEnabled() {
 		LinkedList<Integer> predecessors = dbControlFlow
-				.getPredecessorControlNodes(controlNodeInstance.controlNode_id);
+				.getPredecessorControlNodes(this.getControlNodeInstance()
+						.getControlNodeId());
 		//if a start Event ist before this Gateway it is enabled
 		if (predecessors.size() == 1 && dbControlNode.getType(predecessors.get(0))
 				.equals("Startevent")) {
@@ -45,8 +49,11 @@ public class ParallelGatewayJoinBehavior extends IncomingBehavior {
 		}
 		//looks that all predecessors are terminated
 		for (int controlNode : predecessors) {
-			if (!scenarioInstance.terminatedControlNodeInstancesContainControlNodeID(controlNode)
-					&& !scenarioInstance.executingGatewaysContainControlNodeID(controlNode)) {
+			if (!this.getScenarioInstance()
+					.terminatedControlNodeInstancesContainControlNodeID(
+							controlNode)
+					&& !this.getScenarioInstance()
+					.executingGatewaysContainControlNodeID(controlNode)) {
 				return false;
 			}
 		}

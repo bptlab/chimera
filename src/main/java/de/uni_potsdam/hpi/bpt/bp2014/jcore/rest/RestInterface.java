@@ -5,7 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
@@ -756,14 +756,16 @@ import java.util.LinkedList;
 		}
 		ActivityJaxBean activity = new ActivityJaxBean();
 		activity.id = activityID;
-		LinkedList<ControlNodeInstance> controlNodeInstances = executionService
-				.getScenarioInstance(scenarioInstanceID).getControlNodeInstances();
-		for (ControlNodeInstance controlNodeInstance : controlNodeInstances) {
+		LinkedList<AbstractControlNodeInstance> controlNodeInstances =
+				executionService.getScenarioInstance(
+						scenarioInstanceID).getControlNodeInstances();
+		for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
 			if (controlNodeInstance.getControlNodeInstanceId() == activityID) {
 				activity.label = executionService
 						.getLabelForControlNodeID(
-								controlNodeInstance
-										.getControlNodeId());
+								controlNodeInstance.
+										getControlNodeId()
+						);
 			}
 		}
 		activity.inputSetLink = uriInfo.getAbsolutePath() + "/input";
@@ -1344,8 +1346,8 @@ import java.util.LinkedList;
 		DataObjectJaxBean dataObject = new DataObjectJaxBean();
 		dataObject.setId = 0;
 		dataObject.id = dataObjectID;
-		dataObject.label = labels.get(new Integer(dataObjectID));
-		dataObject.state = states.get(new Integer(dataObjectID));
+		dataObject.label = labels.get(dataObjectID);
+		dataObject.state = states.get(dataObjectID);
 		return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -1405,7 +1407,9 @@ import java.util.LinkedList;
 	 * It is used by Jersey to deserialize JSON.
 	 * Also it can be used for tests to provide the correct contents.
 	 * This class in particular is used by the POST for the email configuration.
-	 * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator#updateEmailConfiguration(int, de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator.EmailConfigJaxBean)}
+	 * See the {@link de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest.RestConfigurator
+	 * #updateEmailConfiguration(int, de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest
+	 * .RestConfigurator.EmailConfigJaxBean)}
 	 * updateEmailConfiguration} method for more information.
 	 */
 	@XmlRootElement public static class EmailConfigJaxBean {
@@ -1531,6 +1535,37 @@ import java.util.LinkedList;
 		 */
 		private String value;
 
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
 	}
 
 	/**

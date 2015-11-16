@@ -632,24 +632,43 @@ public class Scenario implements IDeserialisable, IPersistable {
 								}
 							}
 							if (!dataClassFound) {
-								dataObjects.put(node.getText(), new DataObject());
+								dataObjects.put(node.getText(),
+										new DataObject());
 							}
 						} else {
-							String[] slashSplit = link.split("\\/");
-							String dataClassModelID = slashSplit[slashSplit.length - 1]
+							String[] slashSplit = link.split("/");
+							String dataClassModelID
+									= slashSplit[
+									slashSplit.length - 1]
 									.split("#")[0];
-							String dataClassNodeID = slashSplit[slashSplit.length - 1]
+							String dataClassNodeID
+									= slashSplit[
+									slashSplit.length - 1]
 									.split("#")[1];
-							if (Long.parseLong(dataClassModelID) != domainModel
+							if (Long.parseLong(
+									dataClassModelID)
+									!= domainModel
 									.getDomainModelModelID()) {
-								log.error("Error: The referenced domainModel of a dataObject-Node "
-										+ "in the scenario is not existing");
-								dataObjects.put(node.getText(), new DataObject());
+								log.error("Error: The referenced"
+										+ " domainModel of"
+										+ " a dataObject"
+										+ "-Node in the "
+										+ "scenario is"
+										+ " not existing");
+								dataObjects.put(
+										node.getText(),
+										new DataObject());
 								return;
 							} else if (domainModel.getDataClasses()
-									.get(Long.parseLong(dataClassNodeID)) == null)
-								dataObjects.put(node.getText(), new DataObject());
-							dataObjects.put(node.getText(), new DataObject(
+									.get(Long.parseLong(
+											dataClassNodeID)) == null) {
+								dataObjects.put(
+										node.getText(),
+										new DataObject());
+							}
+							dataObjects.put(
+									node.getText(),
+									new DataObject(
 									domainModel.getDataClasses()
 											.get(Long.parseLong(dataClassNodeID))));
 						}

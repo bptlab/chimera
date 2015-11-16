@@ -135,7 +135,6 @@ public class DebugClass {
 					.checkTerminationForScenarioInstance(scenarioInstanceID)) {
 				System.out.println("Scenario ist terminiert");
 			}
-			executionService = null;
 			executionService = new ExecutionService(scenarioID);
 			executionService
 					.openExistingScenarioInstance(
@@ -143,21 +142,26 @@ public class DebugClass {
 		}
 
         /*        int id = executionService.startNewScenarioInstance(new Integer(1));
-		LinkedList<Integer> enabledActivitiesIDs = executionService.getEnabledActivitiesIDsForScenarioInstance(id);
-        HashMap<Integer, String> labels = executionService.getEnabledActivityLabelsForScenarioInstance(id);
+		LinkedList<Integer> enabledActivitiesIDs = executionService
+		.getEnabledActivitiesIDsForScenarioInstance(id);
+        HashMap<Integer, String> labels = executionService
+        .getEnabledActivityLabelsForScenarioInstance(id);
         for(int activityID: enabledActivitiesIDs) {
             System.out.println("ID: " + activityID + ", " + labels.get(activityID));
         }
         System.out.println(" -  -- -- -- -- -- - -- -- -- -- -");
         HistoryService historyService = new HistoryService();
-        LinkedList<Integer> terminatedActivities = historyService.getTerminatedActivitysForScenarioInstance(223);
-        HashMap<Integer, String> labels2 = historyService.getTerminatedActivityLabelsForScenarioInstance(223);
+        LinkedList<Integer> terminatedActivities = historyService
+        .getTerminatedActivitysForScenarioInstance(223);
+        HashMap<Integer, String> labels2 = historyService
+        .getTerminatedActivityLabelsForScenarioInstance(223);
         for(int activityID: terminatedActivities) {
             System.out.println("ID: " + activityID + ", " + labels2.get(activityID));
         }
        ExecutionService executionService = new ExecutionService();
         int id = executionService.startNewScenarioInstance(1);
-        LinkedList<Integer> activitiesIDs= executionService.getEnabledActivitiesIDsForScenarioInstance(id);
+        LinkedList<Integer> activitiesIDs= executionService
+        .getEnabledActivitiesIDsForScenarioInstance(id);
         System.out.println("enabled Aktivität ID");
         for(int activityID: activitiesIDs){
             System.out.println(activityID);

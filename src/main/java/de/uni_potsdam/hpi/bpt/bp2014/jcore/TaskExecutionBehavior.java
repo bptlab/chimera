@@ -6,20 +6,20 @@ import java.util.Map;
  * Performs the execution for one activity.
  */
 public class TaskExecutionBehavior {
-	protected final ScenarioInstance scenarioInstance;
-	protected final int activityInstance_id;
-	protected final ControlNodeInstance controlNodeInstance;
+	private final ScenarioInstance scenarioInstance;
+	private final int activityInstanceId;
+	private final AbstractControlNodeInstance controlNodeInstance;
 
 	/**
 	 * Initializes.
 	 *
-	 * @param activityInstance_id Id from the activity instance in the database.
+	 * @param activityInstanceId Id from the activity instance in the database.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
-	 * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+	 * @param controlNodeInstance This is an AbstractControlNodeInstance.
 	 */
-	public TaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance,
-			ControlNodeInstance controlNodeInstance) {
-		this.activityInstance_id = activityInstance_id;
+	public TaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance,
+			AbstractControlNodeInstance controlNodeInstance) {
+		this.activityInstanceId = activityInstanceId;
 		this.scenarioInstance = scenarioInstance;
 		this.controlNodeInstance = controlNodeInstance;
 	}
@@ -31,16 +31,23 @@ public class TaskExecutionBehavior {
 	}
 
 	/**
-	 * @param canTerminate
+	 * @param canTerminate a boolean stating whether it can terminate.
 	 */
 	protected void setCanTerminate(boolean canTerminate) {
 		((ActivityInstance) controlNodeInstance).setCanTerminate(canTerminate);
 	}
 
 	/**
-	 * @param values
+	 * @param values a Map of Keys and Values.
 	 */
 	public void setDataAttributeValues(Map<Integer, String> values) {
 	}
 
+	public ScenarioInstance getScenarioInstance() {
+		return scenarioInstance;
+	}
+
+	public AbstractControlNodeInstance getControlNodeInstance() {
+		return controlNodeInstance;
+	}
 }

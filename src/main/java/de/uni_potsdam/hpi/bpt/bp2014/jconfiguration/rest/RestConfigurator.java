@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -239,7 +240,7 @@ import java.util.Map;
 		if (jsonObject.has("attributes")) {
 			JSONArray jsonArray = jsonObject.getJSONArray("attributes");
 			if (jsonArray.length() > 0) {
-				HashSet<Integer> ids = new HashSet<>();
+				Set<Integer> ids = new HashSet<>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject o = jsonArray.getJSONObject(i);
 					ids.add(o.getInt("dataattribute_id"));

@@ -12,9 +12,9 @@ import java.util.LinkedList;
  */
 public class FragmentInstance {
 	private final ScenarioInstance scenarioInstance;
-	private final int fragment_id;
-	private final int fragmentInstance_id;
-	private final int scenarioInstance_id;
+	private final int fragmentId;
+	private final int fragmentInstanceId;
+	private final int scenarioInstanceId;
 	/**
 	 * Database Connection objects
 	 */
@@ -25,27 +25,27 @@ public class FragmentInstance {
 
 	/**
 	 * Creates and initializes a new fragment instance.
-	 * Reads the information for an existing fragment instance from the database or creates a new one if no one
-	 * exist in the database.
+	 * Reads the information for an existing fragment instance from the database
+	 * or creates a new one if none exist in the database.
 	 *
-	 * @param fragment_id         This is the database id from the fragment.
-	 * @param scenarioInstance_id This is the database id from the scenario instance.
+	 * @param fragmentId         This is the database id from the fragment.
+	 * @param scenarioInstanceId This is the database id from the scenario instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
 	 */
-	public FragmentInstance(int fragment_id, int scenarioInstance_id,
+	public FragmentInstance(int fragmentId, int scenarioInstanceId,
 			ScenarioInstance scenarioInstance) {
 		this.scenarioInstance = scenarioInstance;
-		this.fragment_id = fragment_id;
-		this.scenarioInstance_id = scenarioInstance_id;
-		if (dbFragmentInstance.existFragment(fragment_id, scenarioInstance_id)) {
+		this.fragmentId = fragmentId;
+		this.scenarioInstanceId = scenarioInstanceId;
+		if (dbFragmentInstance.existFragment(fragmentId, scenarioInstanceId)) {
 			//creates an existing Fragment Instance using the database information
-			fragmentInstance_id = dbFragmentInstance
-					.getFragmentInstanceID(fragment_id, scenarioInstance_id);
+			fragmentInstanceId = dbFragmentInstance
+					.getFragmentInstanceID(fragmentId, scenarioInstanceId);
 			this.initializeExistingNodeInstanceForFragment();
 		} else {
 			//creates a new Fragment Instance also in database
-			this.fragmentInstance_id = dbFragmentInstance
-					.createNewFragmentInstance(fragment_id, scenarioInstance_id);
+			this.fragmentInstanceId = dbFragmentInstance
+					.createNewFragmentInstance(fragmentId, scenarioInstanceId);
 			this.initializeNewNodeInstanceForFragment();
 		}
 	}
@@ -56,20 +56,21 @@ public class FragmentInstance {
 	private void initializeExistingNodeInstanceForFragment() {
 		//initializes all Activity Instances in the database
 		LinkedList<Integer> activities = dbControlNodeInstance
-				.getActivitiesForFragmentInstanceID(fragmentInstance_id);
+				.getActivitiesForFragmentInstanceID(fragmentInstanceId);
 		LinkedList<Integer> activityInstances = dbControlNodeInstance
-				.getActivityInstancesForFragmentInstanceID(fragmentInstance_id);
+				.getActivityInstancesForFragmentInstanceID(fragmentInstanceId);
 		for (int i = 0; activities.size() > i; i++) {
-			new ActivityInstance(activities.get(i), fragmentInstance_id, scenarioInstance,
-					activityInstances.get(i));
+			new ActivityInstance(
+					activities.get(i), fragmentInstanceId,
+					scenarioInstance, activityInstances.get(i));
 		}
 		//initializes all Gateway Instances in the database
 		LinkedList<Integer> gateways = dbControlNodeInstance
-				.getGatewaysForFragmentInstanceID(fragmentInstance_id);
+				.getGatewaysForFragmentInstanceID(fragmentInstanceId);
 		LinkedList<Integer> gatewayInstances = dbControlNodeInstance
-				.getGatewayInstancesForFragmentInstanceID(fragmentInstance_id);
+				.getGatewayInstancesForFragmentInstanceID(fragmentInstanceId);
 		for (int i = 0; gateways.size() > i; i++) {
-			new GatewayInstance(gateways.get(i), fragmentInstance_id, scenarioInstance,
+			new GatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
 					gatewayInstances.get(i));
 		}
 	}
@@ -80,60 +81,63 @@ public class FragmentInstance {
 	 */
 	private void initializeNewNodeInstanceForFragment() {
 		//gets the Start Event and then the following Control Node to initialize it
-		int startEvent = dbControlNode.getStartEventID(fragment_id);
+		int startEvent = dbControlNode.getStartEventID(fragmentId);
 		int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
 		String controlNodeType = dbControlNode.getType(controlNode);
-		ControlNodeInstance controlNodeInstance = null;
+		AbstractControlNodeInstance controlNodeInstance = null;
 		switch (controlNodeType) {
 		case "Activity":
 		case "EmailTask":
 		case "WebServiceTask":
-			controlNodeInstance = new ActivityInstance(controlNode, fragmentInstance_id,
+			controlNodeInstance = new ActivityInstance(controlNode, fragmentInstanceId,
 					scenarioInstance);
 			break;
 		case "AND":
 		case "XOR":
-			controlNodeInstance = new GatewayInstance(controlNode, fragmentInstance_id,
+			controlNodeInstance = new GatewayInstance(controlNode, fragmentInstanceId,
 					scenarioInstance);
 			break;
+		default:
 		}
-		controlNodeInstance.enableControlFlow();
+		if (controlNodeInstance != null) {
+			controlNodeInstance.enableControlFlow();
+		}
 	}
 
 	/**
 	 * Sets the fragment instances to terminated in the database.
 	 */
 	public void terminate() {
-		dbFragmentInstance.terminateFragmentInstance(fragmentInstance_id);
+		dbFragmentInstance.terminateFragmentInstance(fragmentInstanceId);
 	}
 
 	// ****************************** Getter **********************************
 
 	/**
-	 * @return
+	 * @return the scenario instance.
 	 */
 	public ScenarioInstance getScenarioInstance() {
 		return scenarioInstance;
 	}
 
 	/**
-	 * @return
+	 * @return the fragment id.
 	 */
-	public int getFragment_id() {
-		return fragment_id;
+	public int getFragmentId() {
+		return fragmentId;
 	}
 
 	/**
-	 * @return
+	 * @return the fragment instance id.
 	 */
-	public int getFragmentInstance_id() {
-		return fragmentInstance_id;
+	public int getFragmentInstanceId() {
+		return fragmentInstanceId;
 	}
 
 	/**
-	 * @return
+	 * @return the scenario instance id.
 	 */
-	public int getScenarioInstance_id() {
-		return scenarioInstance_id;
+	public int getScenarioInstanceId() {
+		return scenarioInstanceId;
 	}
 }

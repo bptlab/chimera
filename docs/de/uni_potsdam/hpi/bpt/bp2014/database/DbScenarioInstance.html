@@ -154,14 +154,14 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#existScenario(int)">existScenario</a></strong>(int&nbsp;scenarioInstance_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#existScenario(int)">existScenario</a></strong>(int&nbsp;scenarioInstanceId)</code>
 <div class="block">Checks if a given scenario instance ID is present in the database.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#existScenario(int,%20int)">existScenario</a></strong>(int&nbsp;scenarioId,
-             int&nbsp;scenarioInstance_id)</code>
+             int&nbsp;scenarioInstanceId)</code>
 <div class="block">Checks if a scenario instance belongs to the right scenario.</div>
 </td>
 </tr>
@@ -171,7 +171,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getScenarioID(int)">getScenarioID</a></strong>(int&nbsp;scenarioInstance_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getScenarioID(int)">getScenarioID</a></strong>(int&nbsp;scenarioInstanceId)</code>
 <div class="block">returns the corresponding scenario ID for a scenario instance.</div>
 </td>
 </tr>
@@ -194,13 +194,13 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getTerminated(int)">getTerminated</a></strong>(int&nbsp;scenarioInstance_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#getTerminated(int)">getTerminated</a></strong>(int&nbsp;scenarioInstanceId)</code>
 <div class="block">returns if a scenario instance is terminated or not.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#setTerminated(int,%20boolean)">setTerminated</a></strong>(int&nbsp;scenarioInstance_id,
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbScenarioInstance.html#setTerminated(int,%20boolean)">setTerminated</a></strong>(int&nbsp;scenarioInstanceId,
              boolean&nbsp;terminated)</code>
 <div class="block">This sets the terminated status of a scenario instance.</div>
 </td>
@@ -258,9 +258,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <li class="blockList">
 <h4>existScenario</h4>
 <pre>public&nbsp;java.lang.Boolean&nbsp;existScenario(int&nbsp;scenarioId,
-                              int&nbsp;scenarioInstance_id)</pre>
+                              int&nbsp;scenarioInstanceId)</pre>
 <div class="block">Checks if a scenario instance belongs to the right scenario.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>if the check was positive(true) or not(false).</dd></dl>
 </li>
 </ul>
@@ -270,9 +270,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>existScenario</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;existScenario(int&nbsp;scenarioInstance_id)</pre>
+<pre>public&nbsp;java.lang.Boolean&nbsp;existScenario(int&nbsp;scenarioInstanceId)</pre>
 <div class="block">Checks if a given scenario instance ID is present in the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>if the check was positive(true) or not(false).</dd></dl>
 </li>
 </ul>
@@ -332,9 +332,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getScenarioID</h4>
-<pre>public&nbsp;int&nbsp;getScenarioID(int&nbsp;scenarioInstance_id)</pre>
+<pre>public&nbsp;int&nbsp;getScenarioID(int&nbsp;scenarioInstanceId)</pre>
 <div class="block">returns the corresponding scenario ID for a scenario instance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the database ID of the corresponding scenario.</dd></dl>
 </li>
 </ul>
@@ -344,9 +344,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getTerminated</h4>
-<pre>public&nbsp;int&nbsp;getTerminated(int&nbsp;scenarioInstance_id)</pre>
+<pre>public&nbsp;int&nbsp;getTerminated(int&nbsp;scenarioInstanceId)</pre>
 <div class="block">returns if a scenario instance is terminated or not.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>if the scenario instance is terminated(1) or not(0) as an Integer.</dd></dl>
 </li>
 </ul>
@@ -356,10 +356,10 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>setTerminated</h4>
-<pre>public&nbsp;void&nbsp;setTerminated(int&nbsp;scenarioInstance_id,
+<pre>public&nbsp;void&nbsp;setTerminated(int&nbsp;scenarioInstanceId,
                  boolean&nbsp;terminated)</pre>
 <div class="block">This sets the terminated status of a scenario instance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstance_id</code> - This is the database ID of a scenario instance.</dd><dd><code>terminated</code> - This is the changed status of the scenario instance.</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd><dd><code>terminated</code> - This is the changed status of the scenario instance.</dd></dl>
 </li>
 </ul>
 <a name="getScenarioInstancesLike(int, java.lang.String)">

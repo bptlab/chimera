@@ -14,7 +14,7 @@ import java.util.Map;
  * and an incoming behavior.
  */
 
-public class ActivityInstance extends ControlNodeInstance {
+public class ActivityInstance extends AbstractControlNodeInstance {
 	private final ScenarioInstance scenarioInstance;
 	private final String label;
 	/**
@@ -29,6 +29,12 @@ public class ActivityInstance extends ControlNodeInstance {
 	private LinkedList<Integer> references;
 	private boolean automaticExecution;
 	private boolean canTerminate;
+	private AbstractOutgoingBehavior outgoingBehavior;
+	private AbstractIncomingBehavior incomingBehavior;
+	private AbstractStateMachine stateMachine;
+	private int fragmentInstanceId;
+	private int controlNodeInstanceId;
+	private int controlNodeId;
 
 	/**
 	 * Creates and initializes a new activity instance.
@@ -225,7 +231,7 @@ public class ActivityInstance extends ControlNodeInstance {
 	 * @param values values that the attributes should be set to.
 	 */
 	public void setDataAttributeValues(Map<Integer, String> values) {
-		if (((ActivityStateMachine) stateMachine).state.equals("running")) {
+		if (((ActivityStateMachine) stateMachine).getState().equals("running")) {
 			taskExecutionBehavior.setDataAttributeValues(values);
 		}
 	}
@@ -292,8 +298,8 @@ public class ActivityInstance extends ControlNodeInstance {
 	 */
 	public void setAutomaticExecution(boolean automaticExecution) {
 		this.automaticExecution = automaticExecution;
-		this.dbActivityInstance
-				.setAutomaticExecution(getControlNodeInstanceId(), automaticExecution);
+		this.dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(),
+				automaticExecution);
 	}
 
 	/**

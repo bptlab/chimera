@@ -26,10 +26,10 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	 *
 	 * @param activityInstanceId This is an id for an activity instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
-	 * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+	 * @param controlNodeInstance This is an AbstractControlNodeInstance.
 	 */
 	public EmailTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance,
-			ControlNodeInstance controlNodeInstance) {
+			AbstractControlNodeInstance controlNodeInstance) {
 		super(activityInstanceId, scenarioInstance, controlNodeInstance);
 		controlNodeId = controlNodeInstance.getControlNodeId();
 	}
@@ -55,7 +55,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	}
 
 	private void setDataAttributes() {
-		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 				.getDataAttributeInstances().values()) {
 			message = message.replace(
 					"#" + (dataAttributeInstance.getDataObjectInstance())
@@ -78,7 +78,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 		}
 		DbState dbState = new DbState();
 		for (DataObjectInstance dataObjectInstance
-				: scenarioInstance.getDataObjectInstances()) {
+				: getScenarioInstance().getDataObjectInstances()) {
 			message = message.replace("$" + dataObjectInstance.getName(),
 					dbState.getStateName(dataObjectInstance.getStateId()));
 		}
