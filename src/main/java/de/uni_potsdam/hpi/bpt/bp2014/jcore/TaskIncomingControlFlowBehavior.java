@@ -16,8 +16,6 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	private final DbDataFlow dbDataFlow = new DbDataFlow();
 	private final DbDataNode dbDataNode = new DbDataNode();
-	private ScenarioInstance scenarioInstance;
-	private AbstractControlNodeInstance controlNodeInstance;
 
 	/**
 	 * Initializes the TaskIncomingControlFlowBehavior.
@@ -28,8 +26,8 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	public TaskIncomingControlFlowBehavior(AbstractControlNodeInstance controlNodeInstance,
 			ScenarioInstance scenarioInstance, AbstractStateMachine stateMachine) {
-		this.controlNodeInstance = controlNodeInstance;
-		this.scenarioInstance = scenarioInstance;
+		this.setControlNodeInstance(controlNodeInstance);
+		this.setScenarioInstance(scenarioInstance);
 		this.setStateMachine(stateMachine);
 		if (checkInputObjects()) {
 			((ActivityStateMachine) stateMachine).enableData();
@@ -64,7 +62,7 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	private Boolean checkInputObjects() {
 		LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
-				controlNodeInstance.getControlNodeId());
+				getControlNodeInstance().getControlNodeId());
 		Boolean loopCheck = true;
 		for (int inputSet : inputSets) {
 			LinkedList<DataObject> dataObjects =
@@ -88,9 +86,10 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 * Starts all referential activities of the activity.
 	 */
 	public void startReferences() {
-		for (int activityId : ((ActivityInstance) controlNodeInstance).getReferences()) {
+		for (int activityId : ((ActivityInstance) getControlNodeInstance())
+				.getReferences()) {
 			this.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(
-					controlNodeInstance.getControlNodeId(), activityId);
+					getControlNodeInstance().getControlNodeId(), activityId);
 		}
 	}
 
@@ -100,7 +99,7 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	public void setDataObjectInstancesOnChange() {
 		LinkedList<Integer> outputSets = dbDataFlow
 				.getOutputSetsForControlNode(
-						controlNodeInstance.getControlNodeId());
+						getControlNodeInstance().getControlNodeId());
 		for (int outputSet : outputSets) {
 			LinkedList<Integer> dataObjects = dbDataNode
 					.getDataObjectIdsForDataSets(outputSet);
@@ -120,16 +119,16 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	public Boolean setDataObjectInstanceToOnChange(int dataObjectId) {
 		DataObjectInstance dataObjectInstanceOnChange = null;
 		for (DataObjectInstance dataObjectInstance
-				: scenarioInstance.getDataObjectInstances()) {
+				: getScenarioInstance().getDataObjectInstances()) {
 			if (dataObjectInstance.getDataObjectId() == dataObjectId) {
 				dataObjectInstanceOnChange = dataObjectInstance;
 				break;
 			}
 		}
 		if (dataObjectInstanceOnChange != null) {
-			scenarioInstance.getDataObjectInstances().remove(
+			getScenarioInstance().getDataObjectInstances().remove(
 					dataObjectInstanceOnChange);
-			scenarioInstance.getDataObjectInstancesOnChange().add(
+			getScenarioInstance().getDataObjectInstancesOnChange().add(
 					dataObjectInstanceOnChange);
 			dataObjectInstanceOnChange.setOnChange(true);
 			return true;
@@ -146,7 +145,7 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	public Boolean compareDataObjectState(int dataObjectId, int stateId) {
 		for (DataObjectInstance dataObjectInstance
-				: scenarioInstance.getDataObjectInstances()) {
+				: getScenarioInstance().getDataObjectInstances()) {
 			if (dataObjectInstance.getDataObjectId() == dataObjectId
 					&& dataObjectInstance.getStateId() == stateId) {
 				return true;
@@ -165,12 +164,12 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(
 			int controlNodeId, int referencedControlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance : scenarioInstance
+		for (AbstractControlNodeInstance controlNodeInstance : getScenarioInstance()
 				.getControlFlowEnabledControlNodeInstances()) {
 			if (controlNodeInstance.getControlNodeId() == referencedControlNodeId) {
 				if (controlNodeInstance.getClass() == ActivityInstance.class) {
 					DbControlNode dbControlNode = new DbControlNode();
-					if (scenarioInstance.getEnabledControlNodeInstances()
+					if (getScenarioInstance().getEnabledControlNodeInstances()
 							.contains(controlNodeInstance)
 							|| dbControlNode
 							.controlNodesHaveSameOutputs(controlNodeId,

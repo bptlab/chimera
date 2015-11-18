@@ -27,8 +27,6 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 	 */
 	private DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 
-	private AbstractControlNodeInstance controlNodeInstance;
-
 	/**
 	 * Initializes the webservice task.
 	 *
@@ -44,7 +42,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 
 	@Override public void execute() {
 		String link = dbWebServiceTask
-				.getLinkForControlNode(controlNodeInstance.getControlNodeId());
+				.getLinkForControlNode(getControlNodeInstance().getControlNodeId());
 		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 				.getDataAttributeInstances().values()) {
 			link = link.replace("#" + (dataAttributeInstance.getDataObjectInstance())
@@ -67,10 +65,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 		Response response;
 
 			switch (dbWebServiceTask.getMethod(
-					controlNodeInstance.getControlNodeId())) {
+					getControlNodeInstance().getControlNodeId())) {
 			case "POST":
 				String post = dbWebServiceTask.getPOST(
-						controlNodeInstance.getControlNodeId());
+						getControlNodeInstance().getControlNodeId());
 				for (DataAttributeInstance dataAttributeInstance
 						: getScenarioInstance()
 						.getDataAttributeInstances().values()) {
@@ -87,7 +85,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				break;
 			case "PUT":
 				post = dbWebServiceTask.getPOST(
-						controlNodeInstance.getControlNodeId());
+						getControlNodeInstance().getControlNodeId());
 				for (DataAttributeInstance dataAttributeInstance
 						: getScenarioInstance()
 						.getDataAttributeInstances().values()) {
@@ -120,10 +118,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 	private void writeDataAttributes(String content) {
 		LinkedList<Integer> dataAttributeIds = dbWebServiceTask
 				.getAttributeIdsForControlNode(
-						controlNodeInstance.getControlNodeId());
+						getControlNodeInstance().getControlNodeId());
 		for (int dataAttributeId : dataAttributeIds) {
 			LinkedList<String> keys = dbWebServiceTask
-					.getKeys(controlNodeInstance
+					.getKeys(getControlNodeInstance()
 									.getControlNodeId(),
 							dataAttributeId);
 			JSONObject jsonContent = new JSONObject(content);

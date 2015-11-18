@@ -22,8 +22,6 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 
 	private DbState dbState = new DbState();
 	private String type = null;
-	//    private int controlNodeId = -1;
-	private int controlNodeId;
 
 	/**
 	 * Initializes and creates an ExclusiveGatewaySplitBehavior.
@@ -34,7 +32,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 */
 	public ExclusiveGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance,
 			int fragmentInstanceId) {
-		this.controlNodeId = gatewayId;
+		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		initializeFollowingControlNodeIds();
@@ -46,7 +44,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 */
 	private void initializeFollowingControlNodeIds() {
 		LinkedList<Integer> ids = this.getDbControlFlow()
-				.getFollowingControlNodes(controlNodeId);
+				.getFollowingControlNodes(getControlNodeId());
 		for (int i = 0; i < ids.size(); i++) {
 			followingControlNodes.add(new LinkedList<Integer>());
 			this.addFollowingControlNode(i, ids.get(i));
@@ -64,7 +62,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		LinkedList<Integer> ids = followingControlNodes.get(bucketId);
 		ids.add(id);
 		followingControlNodes.set(bucketId, ids);
-		if (type == null || this.controlNodeId != id) {
+		if (type == null || this.getControlNodeId() != id) {
 			type = this.getDbControlNode().getType(id);
 		}
 		if ("XOR".equals(type) || "AND".equals(type)) {
@@ -98,7 +96,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 				return controlNodeInstance;
 			}
 		}
-		if (type == null || this.controlNodeId != controlNodeId) {
+		if (type == null || this.getControlNodeId() != controlNodeId) {
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
 		AbstractControlNodeInstance controlNodeInstance = createControlNode(
@@ -119,6 +117,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
 			break;
 		default:
+			break;
 		}
 	}
 
@@ -130,7 +129,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * @return True if the gateway can terminate. false if not.
 	 */
 	public boolean checkTermination(int controlNodeId) {
-		if (type == null || this.controlNodeId != controlNodeId) {
+		if (type == null || this.getControlNodeId() != controlNodeId) {
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
 		if (("AND".equals(type)) || ("XOR".equals(type))) {
@@ -159,7 +158,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 */
 	public void evaluateConditions() {
 		Map<Integer, String> conditions = this.getDbControlFlow()
-				.getConditions(controlNodeId);
+				.getConditions( getControlNodeId());
 		Set<Integer> keys = conditions.keySet();
 		Iterator<Integer> key = keys.iterator();
 		Integer controlNodeId = 0;
@@ -267,6 +266,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			case "!>=":
 				return !(Float.parseFloat(left) >= Float.parseFloat(right));
 			default:
+				break;
 			}
 		} catch (NumberFormatException e) {
 			log.error("Error can't convert String to Float:", e);

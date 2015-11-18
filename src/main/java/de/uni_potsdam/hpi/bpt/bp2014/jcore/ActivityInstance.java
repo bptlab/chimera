@@ -29,12 +29,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	private LinkedList<Integer> references;
 	private boolean automaticExecution;
 	private boolean canTerminate;
-	private AbstractOutgoingBehavior outgoingBehavior;
-	private AbstractIncomingBehavior incomingBehavior;
-	private AbstractStateMachine stateMachine;
-	private int fragmentInstanceId;
-	private int controlNodeInstanceId;
-	private int controlNodeId;
 
 	/**
 	 * Creates and initializes a new activity instance.
@@ -47,42 +41,42 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public ActivityInstance(int controlNodeId, int fragmentInstanceId,
 			ScenarioInstance scenarioInstance) {
 		this.scenarioInstance = scenarioInstance;
-		this.controlNodeId = controlNodeId;
-		this.fragmentInstanceId = fragmentInstanceId;
+		this.setControlNodeId(controlNodeId);
+		this.setFragmentInstanceId(fragmentInstanceId);
 		this.label = dbControlNode.getLabel(controlNodeId);
 		this.references = dbReference.getReferenceActivitiesForActivity(controlNodeId);
 		scenarioInstance.getControlNodeInstances().add(this);
 		//creates a new Activity Instance also in database
-		this.controlNodeInstanceId = dbControlNodeInstance
+		this.setControlNodeInstanceId(dbControlNodeInstance
 				.createNewControlNodeInstance(
-						controlNodeId, "Activity", fragmentInstanceId);
+						controlNodeId, "Activity", fragmentInstanceId));
 		switch (dbControlNode.getType(controlNodeId)) {
 		case "EmailTask":
 			dbActivityInstance
 					.createNewActivityInstance(
-							controlNodeInstanceId,
+							getControlNodeInstanceId(),
 							"EmailTask",
 							"init");
-			dbActivityInstance.setAutomaticExecution(controlNodeInstanceId, true);
+			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
 			break;
 		case "WebServiceTask":
 			dbActivityInstance
 					.createNewActivityInstance(
-							controlNodeInstanceId,
+							getControlNodeInstanceId(),
 							"WebServiceTask",
 							"init");
-			dbActivityInstance.setAutomaticExecution(controlNodeInstanceId, true);
+			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
 			break;
 		default:
 			dbActivityInstance
 					.createNewActivityInstance(
-							controlNodeInstanceId,
+							getControlNodeInstanceId(),
 							"HumanTask",
 							"init");
 		}
-		this.stateMachine = new ActivityStateMachine(
-				controlNodeInstanceId, scenarioInstance, this);
-		((ActivityStateMachine) stateMachine).enableControlFlow();
+		this.setStateMachine(new ActivityStateMachine(
+				getControlNodeInstanceId(), scenarioInstance, this));
+		((ActivityStateMachine) getStateMachine()).enableControlFlow();
 		this.initActivityInstance();
 	}
 
@@ -98,21 +92,21 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public ActivityInstance(int controlNodeId, int fragmentInstanceId,
 			ScenarioInstance scenarioInstance, int instanceId) {
 		this.scenarioInstance = scenarioInstance;
-		this.controlNodeId = controlNodeId;
-		this.fragmentInstanceId = fragmentInstanceId;
+		this.setControlNodeId(controlNodeId);
+		this.setFragmentInstanceId(fragmentInstanceId);
 		this.label = dbControlNode.getLabel(controlNodeId);
 		this.references = dbReference.getReferenceActivitiesForActivity(controlNodeId);
 		scenarioInstance.getControlNodeInstances().add(this);
 		if (instanceId == -1) {
-			controlNodeInstanceId = dbControlNodeInstance
+			setControlNodeInstanceId(dbControlNodeInstance
 					.getControlNodeInstanceID(
-							controlNodeId, fragmentInstanceId);
+							controlNodeId, fragmentInstanceId));
 		} else {
-			this.controlNodeInstanceId = instanceId;
+			this.setControlNodeInstanceId(instanceId);
 		}
-		this.stateMachine = new ActivityStateMachine(
-				controlNodeInstanceId, scenarioInstance,
-				this);
+		this.setStateMachine(new ActivityStateMachine(
+				getControlNodeInstanceId(), scenarioInstance,
+				this));
 		this.initActivityInstance();
 	}
 
@@ -120,23 +114,25 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * Initialize other information for the instance.
 	 */
 	private void initActivityInstance() {
-		this.canTerminate = dbActivityInstance.getCanTerminate(controlNodeInstanceId);
+		this.canTerminate = dbActivityInstance.getCanTerminate(getControlNodeInstanceId());
 		this.automaticExecution =
-				dbActivityInstance.getAutomaticExecution(controlNodeInstanceId);
-		this.incomingBehavior = new TaskIncomingControlFlowBehavior(this, scenarioInstance,
-				stateMachine);
-		this.outgoingBehavior = new TaskOutgoingControlFlowBehavior(controlNodeId,
-				scenarioInstance, fragmentInstanceId, this);
-		switch (dbControlNode.getType(controlNodeId)) {
+				dbActivityInstance.getAutomaticExecution(
+						getControlNodeInstanceId());
+		this.setIncomingBehavior(new TaskIncomingControlFlowBehavior(
+				this, scenarioInstance, getStateMachine()));
+		this.setOutgoingBehavior(new TaskOutgoingControlFlowBehavior(getControlNodeId(),
+				scenarioInstance, getFragmentInstanceId(), this));
+		switch (dbControlNode.getType(getControlNodeId())) {
 		case "EmailTask":
 			this.taskExecutionBehavior =
-					new EmailTaskExecutionBehavior(controlNodeInstanceId,
+					new EmailTaskExecutionBehavior(getControlNodeInstanceId(),
 					scenarioInstance, this);
 			this.isAutomaticTask = true;
 			break;
 		case "WebServiceTask":
 			this.taskExecutionBehavior =
-					new WebServiceTaskExecutionBehavior(controlNodeInstanceId,
+					new WebServiceTaskExecutionBehavior(
+							getControlNodeInstanceId(),
 					scenarioInstance, this);
 			this.isAutomaticTask = true;
 			break;
@@ -145,7 +141,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			this.setCanTerminate(true);
 		default:
 			this.taskExecutionBehavior =
-					new HumanTaskExecutionBehavior(controlNodeInstanceId,
+					new HumanTaskExecutionBehavior(getControlNodeInstanceId(),
 					scenarioInstance, this);
 			this.isAutomaticTask = false;
 		}
@@ -159,13 +155,13 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could started. false if the activity couldn't started.
 	 */
 	public boolean begin() {
-		if (((ActivityStateMachine) stateMachine).isEnabled()) {
-			((ActivityStateMachine) stateMachine).begin();
-			((TaskIncomingControlFlowBehavior) incomingBehavior).startReferences();
-			((TaskIncomingControlFlowBehavior) incomingBehavior)
+		if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
+			((ActivityStateMachine) getStateMachine()).begin();
+			((TaskIncomingControlFlowBehavior) getIncomingBehavior()).startReferences();
+			((TaskIncomingControlFlowBehavior) getIncomingBehavior())
 					.setDataObjectInstancesOnChange();
 			scenarioInstance.checkDataFlowEnabled();
-			scenarioInstance.checkExecutingGateways(controlNodeId);
+			scenarioInstance.checkExecutingGateways(getControlNodeId());
 			taskExecutionBehavior.execute();
 			if (isAutomaticTask) {
 				this.terminate();
@@ -183,7 +179,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * false if the activity couldn't set.
 	 */
 	public boolean referenceStarted() {
-		return ((ActivityStateMachine) stateMachine).referenceStarted();
+		return ((ActivityStateMachine) getStateMachine()).referenceStarted();
 	}
 
 	/**
@@ -193,8 +189,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could set to terminated. false if the activity couldn't set.
 	 */
 	public boolean referenceTerminated() {
-		boolean workFine = ((ActivityStateMachine) stateMachine).referenceTerminated();
-		((TaskOutgoingControlFlowBehavior) outgoingBehavior).enableFollowing();
+		boolean workFine = ((ActivityStateMachine) getStateMachine()).referenceTerminated();
+		((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).enableFollowing();
 		return workFine;
 	}
 
@@ -217,9 +213,11 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public boolean terminate(int outputSetId) {
 		if (canTerminate) {
-			boolean workingFine = stateMachine.terminate();
-			((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminateReferences();
-			((TaskOutgoingControlFlowBehavior) outgoingBehavior).terminate(outputSetId);
+			boolean workingFine = getStateMachine().terminate();
+			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
+					.terminateReferences();
+			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
+					.terminate(outputSetId);
 			return workingFine;
 		}
 		return false;
@@ -231,7 +229,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @param values values that the attributes should be set to.
 	 */
 	public void setDataAttributeValues(Map<Integer, String> values) {
-		if (((ActivityStateMachine) stateMachine).getState().equals("running")) {
+		if (getStateMachine().getState().equals("running")) {
 			taskExecutionBehavior.setDataAttributeValues(values);
 		}
 	}
@@ -240,12 +238,12 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * Checks if the Activity is now data enabled.
 	 */
 	public void checkDataFlowEnabled() {
-		((TaskIncomingControlFlowBehavior) incomingBehavior)
+		((TaskIncomingControlFlowBehavior) getIncomingBehavior())
 				.checkDataFlowEnabledAndEnableDataFlow();
 	}
 
 	@Override public boolean skip() {
-		return stateMachine.skip();
+		return getStateMachine().skip();
 	}
 
 	// ************************************** Getter & Setter *************************//

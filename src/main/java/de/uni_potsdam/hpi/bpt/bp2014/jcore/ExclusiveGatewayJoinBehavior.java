@@ -6,7 +6,6 @@ import java.util.Collection;
  * This class deals with the join behavior of exclusive gateways.
  */
 public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
-	private AbstractControlNodeInstance controlNodeInstance;
 
 	/**
 	 * Initializes and creates an ExclusiveGatewayJoinBehavior.
@@ -18,25 +17,25 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 	public ExclusiveGatewayJoinBehavior(GatewayInstance gatewayInstance,
 			ScenarioInstance scenarioInstance, AbstractStateMachine stateMachine) {
 		this.setScenarioInstance(scenarioInstance);
-		this.controlNodeInstance = gatewayInstance;
+		this.setControlNodeInstance(gatewayInstance);
 		this.setStateMachine(stateMachine);
 	}
 
 	@Override public void enableControlFlow() {
 		Collection conditions = this.getDbControlFlow().getConditions(
-				controlNodeInstance.getControlNodeId()).values();
+				getControlNodeInstance().getControlNodeId()).values();
 		boolean condition = true;
 		if (conditions.size() > 0 && !conditions.iterator().next().equals("")) {
 			condition = false;
 		}
 		if (condition) {
 			((GatewayStateMachine) this.getStateMachine()).execute();
-			((ExclusiveGatewaySplitBehavior) controlNodeInstance
+			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
 					.getOutgoingBehavior()).execute();
 		} else {
-			((ExclusiveGatewaySplitBehavior) controlNodeInstance.getOutgoingBehavior())
-					.evaluateConditions();
-			controlNodeInstance.terminate();
+			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
+					.getOutgoingBehavior()).evaluateConditions();
+			getControlNodeInstance().terminate();
 		}
 
 	}

@@ -31,64 +31,54 @@ public abstract class AbstractControlNodeInstance {
 	 * @return true if the skip success. false if not.
 	 */
 	public abstract boolean terminate();
-	// *************************************** Getter ***************************************//
 
-	/**
-	 * @return the outgoing behavior.
-	 */
+	// ********************* Getter/Setter *********************//
+
 	public AbstractOutgoingBehavior getOutgoingBehavior() {
 		return outgoingBehavior;
 	}
 
-	/**
-	 *
-	 * @param outgoingBehavior an AbstractOutgoingBehavior
-	 */
 	public void setOutgoingBehavior(AbstractOutgoingBehavior outgoingBehavior) {
 		this.outgoingBehavior = outgoingBehavior;
 	}
 
-	/**
-	 * @return the incoming behavior.
-	 */
 	public AbstractIncomingBehavior getIncomingBehavior() {
 		return incomingBehavior;
 	}
 
-	/**
-	 *
-	 * @param incomingBehavior an AbstractIncomingBehavior
-	 */
 	public void setIncomingBehavior(AbstractIncomingBehavior incomingBehavior) {
 		this.incomingBehavior = incomingBehavior;
 	}
 
-	/**
-	 * @return the state machine.
-	 */
 	public AbstractStateMachine getStateMachine() {
 		return stateMachine;
 	}
 
-	/**
-	 * @return the fragment instance id.
-	 */
+	public void setStateMachine(AbstractStateMachine stateMachine) {
+		this.stateMachine = stateMachine;
+	}
+
 	public int getFragmentInstanceId() {
 		return fragmentInstanceId;
 	}
 
-	/**
-	 * @return the control node instance id.
-	 */
+	public void setFragmentInstanceId(int fragmentInstanceId) {
+		this.fragmentInstanceId = fragmentInstanceId;
+	}
+
 	public int getControlNodeInstanceId() {
 		return controlNodeInstanceId;
 	}
 
-	/**
-	 * @return the control node id.
-	 */
+	public void setControlNodeInstanceId(int controlNodeInstanceId) {
+		this.controlNodeInstanceId = controlNodeInstanceId;
+	}
+
 	public int getControlNodeId() {
 		return controlNodeId;
 	}
 
+	public void setControlNodeId(int controlNodeId) {
+		this.controlNodeId = controlNodeId;
+	}
 }

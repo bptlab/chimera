@@ -11,10 +11,6 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 */
 	private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
-	private ScenarioInstance scenarioInstance;
-	private AbstractControlNodeInstance controlNodeInstance;
-	private String state;
-
 	/**
 	 * Initializes the GatewayStateMachine.
 	 *
@@ -24,17 +20,19 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 */
 	public GatewayStateMachine(int gatewayId, ScenarioInstance scenarioInstance,
 			AbstractControlNodeInstance controlNodeInstance) {
-		this.scenarioInstance = scenarioInstance;
+		this.setScenarioInstance(scenarioInstance);
 		this.setControlNodeInstanceId(gatewayId);
-		this.controlNodeInstance = controlNodeInstance;
-		this.state = dbGatewayInstance.getState(
-				controlNodeInstance.getControlNodeInstanceId());
-		if ("executing".equals(state)) {
+		this.setControlNodeInstance(controlNodeInstance);
+		this.setState(dbGatewayInstance.getState(
+				controlNodeInstance.getControlNodeInstanceId()));
+		if ("executing".equals(getState())) {
 			scenarioInstance.getExecutingGateways().add(
 					(GatewayInstance) controlNodeInstance);
-		} else if ("terminated".equals(state) || "skipped".equals(state)) {
-			scenarioInstance.getTerminatedControlNodeInstances()
-					.add(controlNodeInstance);
+		} else {
+			if ("terminated".equals(getState()) || "skipped".equals(getState())) {
+				scenarioInstance.getTerminatedControlNodeInstances()
+						.add(controlNodeInstance);
+			}
 		}
 		scenarioInstance.getControlNodeInstances().add(controlNodeInstance);
 	}
@@ -44,9 +42,11 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 * Sets the state for the gateway instance in the database to executing.
 	 */
 	public void execute() {
-		state = "executing";
-		dbGatewayInstance.setState(controlNodeInstance.getControlNodeInstanceId(), state);
-		scenarioInstance.getExecutingGateways().add((GatewayInstance) controlNodeInstance);
+		setState("executing");
+		dbGatewayInstance.setState(
+				getControlNodeInstance().getControlNodeInstanceId(), getState());
+		getScenarioInstance().getExecutingGateways()
+				.add((GatewayInstance) getControlNodeInstance());
 	}
 
 	/**
@@ -54,10 +54,12 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 * Sets the state for the gateway instance in the database to terminated.
 	 */
 	@Override public boolean terminate() {
-		state = "terminated";
-		dbGatewayInstance.setState(controlNodeInstance.getControlNodeInstanceId(), state);
-		scenarioInstance.getExecutingGateways().remove(controlNodeInstance);
-		scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+		setState("terminated");
+		dbGatewayInstance.setState(
+				getControlNodeInstance().getControlNodeInstanceId(), getState());
+		getScenarioInstance().getExecutingGateways().remove(getControlNodeInstance());
+		getScenarioInstance().getTerminatedControlNodeInstances()
+				.add(getControlNodeInstance());
 		return true;
 	}
 
@@ -66,10 +68,12 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 * Sets the state for the gateway instance in the database to skipped.
 	 */
 	@Override public boolean skip() {
-		state = "skipped";
-		dbGatewayInstance.setState(controlNodeInstance.getControlNodeInstanceId(), state);
-		scenarioInstance.getExecutingGateways().remove(controlNodeInstance);
-		scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+		setState("skipped");
+		dbGatewayInstance.setState(
+				getControlNodeInstance().getControlNodeInstanceId(), getState());
+		getScenarioInstance().getExecutingGateways().remove(getControlNodeInstance());
+		getScenarioInstance().getTerminatedControlNodeInstances()
+				.add(getControlNodeInstance());
 		return true;
 	}
 }

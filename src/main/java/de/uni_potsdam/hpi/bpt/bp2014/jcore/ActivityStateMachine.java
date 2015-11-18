@@ -11,11 +11,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
 
-	private ScenarioInstance scenarioInstance;
-	private int controlNodeInstanceId;
-	private AbstractControlNodeInstance controlNodeInstance;
-	private String state;
-
 	/**
 	 * Creates and initialize a activity state machine for an activity.
 	 * Reads the state from the database of the activity and
@@ -27,13 +22,13 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public ActivityStateMachine(int activityInstanceId, ScenarioInstance scenarioInstance,
 			AbstractControlNodeInstance controlNodeInstance) {
-		this.scenarioInstance = scenarioInstance;
-		this.controlNodeInstanceId = activityInstanceId;
-		this.controlNodeInstance = controlNodeInstance;
-		state = getDBState();
+		this.setScenarioInstance(scenarioInstance);
+		this.setControlNodeInstanceId(activityInstanceId);
+		this.setControlNodeInstance(controlNodeInstance);
+		setState(getDBState());
 		//adds the Activity Instance to the correct list
 		// in Scenario Instance, decides on the state of the Activity
-		switch (state) {
+		switch (getState()) {
 		case "ready":
 			scenarioInstance.getControlFlowEnabledControlNodeInstances()
 					.add(controlNodeInstance);
@@ -67,6 +62,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 					.add(controlNodeInstance);
 			break;
 		default:
+			break;
 		}
 	}
 
@@ -76,7 +72,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return the state from the database for the specific activity instance.
 	 */
 	private String getDBState() {
-		return dbActivityInstance.getState(controlNodeInstanceId);
+		return dbActivityInstance.getState(getControlNodeInstanceId());
 	}
 
 	/**
@@ -86,20 +82,20 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public boolean enableControlFlow() {
 		//String state = this.getState();
-		if ("init".equals(state)) {
+		if ("init".equals(getState())) {
 			this.setState("ready(ControlFlow)");
-			scenarioInstance.getControlFlowEnabledControlNodeInstances()
-					.add(controlNodeInstance);
+			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+					.add(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready(Data)".equals(state)) {
+			if ("ready(Data)".equals(getState())) {
 				this.setState("ready");
-				scenarioInstance.getControlFlowEnabledControlNodeInstances()
-						.add(controlNodeInstance);
-				scenarioInstance.getEnabledControlNodeInstances()
-						.add(controlNodeInstance);
+				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
 				return true;
-			} else if (this.isReady(state)) {
+			} else if (this.isReady(getState())) {
 				return true;
 			}
 		}
@@ -113,20 +109,20 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public boolean enableData() {
 		//String state = this.getState();
-		if ("init".equals(state)) {
+		if ("init".equals(getState())) {
 			this.setState("ready(Data)");
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.add(controlNodeInstance);
+			getScenarioInstance().getDataEnabledControlNodeInstances()
+					.add(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready(ControlFlow)".equals(state)) {
+			if ("ready(ControlFlow)".equals(getState())) {
 				this.setState("ready");
-				scenarioInstance.getDataEnabledControlNodeInstances()
-						.add(controlNodeInstance);
-				scenarioInstance.getEnabledControlNodeInstances()
-						.add(controlNodeInstance);
+				getScenarioInstance().getDataEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
 				return true;
-			} else if (this.isReady(state)) {
+			} else if (this.isReady(getState())) {
 				return true;
 			}
 		}
@@ -140,18 +136,18 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public boolean disableData() {
 		//String state = this.getState();
-		if ("ready(Data)".equals(state)) {
+		if ("ready(Data)".equals(getState())) {
 			this.setState("init");
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
+			getScenarioInstance().getDataEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready".equals(state)) {
+			if ("ready".equals(getState())) {
 				this.setState("ready(ControlFlow)");
-				scenarioInstance.getDataEnabledControlNodeInstances()
-						.remove(controlNodeInstance);
-				scenarioInstance.getEnabledControlNodeInstances()
-						.remove(controlNodeInstance);
+				getScenarioInstance().getDataEnabledControlNodeInstances()
+						.remove(getControlNodeInstance());
+				getScenarioInstance().getEnabledControlNodeInstances()
+						.remove(getControlNodeInstance());
 				return true;
 			}
 		}
@@ -164,24 +160,24 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to referential running. (else false).
 	 */
 	public boolean referenceStarted() {
-		if ("ready".equals(state)) {
+		if ("ready".equals(getState())) {
 			this.setState("referentialRunning");
-			scenarioInstance.getReferentialRunningControlNodeInstances()
-					.add(controlNodeInstance);
-			scenarioInstance.getControlFlowEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
+			getScenarioInstance().getReferentialRunningControlNodeInstances()
+					.add(getControlNodeInstance());
+			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getDataEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready(ControlFlow)".equals(state)) {
+			if ("ready(ControlFlow)".equals(getState())) {
 				this.setState("referentialRunning");
-				scenarioInstance.getReferentialRunningControlNodeInstances()
-						.add(controlNodeInstance);
-				scenarioInstance.getControlFlowEnabledControlNodeInstances()
-						.remove(controlNodeInstance);
+				getScenarioInstance().getReferentialRunningControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+						.remove(getControlNodeInstance());
 				return true;
 			}
 		}
@@ -195,13 +191,14 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to referential running. (else false).
 	 */
 	public boolean referenceTerminated() {
-		if ("referentialRunning".equals(state)) {
+		if ("referentialRunning".equals(getState())) {
 			this.setState("terminated");
-			scenarioInstance.getReferentialRunningControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getControlNodeInstances().remove(controlNodeInstance);
-			scenarioInstance.getTerminatedControlNodeInstances()
-					.add(controlNodeInstance);
+			getScenarioInstance().getReferentialRunningControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getTerminatedControlNodeInstances()
+					.add(getControlNodeInstance());
 			return true;
 		}
 		return false;
@@ -214,15 +211,16 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public boolean begin() {
 		//String state = this.getState();
-		if ("ready".equals(state)) {
+		if ("ready".equals(getState())) {
 			this.setState("running");
-			scenarioInstance.getRunningControlNodeInstances().add(controlNodeInstance);
-			scenarioInstance.getControlFlowEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
+			getScenarioInstance().getRunningControlNodeInstances()
+					.add(getControlNodeInstance());
+			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getDataEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
 			return true;
 		}
 		return false;
@@ -236,13 +234,14 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	@Override public boolean terminate() {
 		//String state = this.getState();
-		if ("running".equals(state)) {
+		if ("running".equals(getState())) {
 			this.setState("terminated");
-			scenarioInstance.getRunningControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getControlNodeInstances().remove(controlNodeInstance);
-			scenarioInstance.getTerminatedControlNodeInstances()
-					.add(controlNodeInstance);
+			getScenarioInstance().getRunningControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getTerminatedControlNodeInstances()
+					.add(getControlNodeInstance());
 			return true;
 		}
 		return false;
@@ -255,13 +254,13 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	@Override public boolean skip() {
 		//String state = this.getState();
-		if ("init".equals(state) || this.isReady(state)) {
-			scenarioInstance.getControlFlowEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
-			scenarioInstance.getEnabledControlNodeInstances()
-					.remove(controlNodeInstance);
+		if ("init".equals(getState()) || this.isReady(getState())) {
+			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getDataEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
+			getScenarioInstance().getEnabledControlNodeInstances()
+					.remove(getControlNodeInstance());
 			this.setState("skipped");
 			return true;
 		}
@@ -274,7 +273,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state is ready, ready(ControlFlow) or ready(data).
 	 */
 	public boolean isEnabled() {
-		return "ready".equals(this.state);
+		return "ready".equals(this.getState());
 	}
 
 	/**
@@ -294,8 +293,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 *
 	 * @param state This is the new state.
 	 */
-	private void setState(String state) {
-		this.state = state;
-		dbActivityInstance.setState(controlNodeInstanceId, state);
+	public void setState(String state) {
+		super.setState(state);
+		dbActivityInstance.setState(getControlNodeInstanceId(), state);
 	}
 }

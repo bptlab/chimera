@@ -65,7 +65,7 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 (12, 4, 1),
 (12, 6, 0);
 
-INSERT INTO `datanode` (`id`, `scenarioId`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
+INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
 (1, 1, 2, 2, 1, 1517694277),
 (2, 1, 1, 2, 1, 1368161079),
 (3, 1, 4, 1, 2, 650069438),
@@ -73,7 +73,7 @@ INSERT INTO `datanode` (`id`, `scenarioId`, `state_id`, `dataclass_id`, `dataobj
 (5, 1, 3, 1, 2, 155099451),
 (6, 1, 4, 1, 2, 611573211);
 
-INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenarioId`, `start_state_id`) VALUES
+INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_state_id`) VALUES
 (1, 'SubDO', 2, 1, 1),
 (2, 'DO', 1, 1, 3);
 
@@ -100,7 +100,7 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`, `subject`, `message`, `controlnode_id`) VALUES
 (1, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 11);
 
-INSERT INTO `fragment` (`id`, `name`, `scenarioId`, `modelid`, `modelversion`) VALUES
+INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) VALUES
 (1, 'FragmentA', 1, 1084827857, 0),
 (2, 'FragmentB', 1, 894096069, 0);
 
@@ -119,7 +119,7 @@ INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
 INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
 (1, 'Scenario', 0, 358512, 1, 790983467, 0);
 
-INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenarioId`) VALUES
+INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUES
 (1, 'Scenario', 0, 1);
 
 INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
@@ -128,7 +128,7 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 (3, 'init', 1),
 (4, 'state1', 1);
 
-INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenarioId`) VALUES
+INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenario_id`) VALUES
 (1, 1, 2, 1),
 (1, 2, 4, 1),
 (2, 1, 1, 1);

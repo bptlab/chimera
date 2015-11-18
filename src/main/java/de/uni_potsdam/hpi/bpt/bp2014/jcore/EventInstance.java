@@ -9,7 +9,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 public class EventInstance extends AbstractControlNodeInstance {
 	@SuppressWarnings("unused") private final ScenarioInstance scenarioInstance;
 	@SuppressWarnings("unused") private final String type;
-	private int fragmentInstanceId;
 	//Only support Event is an End Event
 	//Don't writes anything in the database
 
@@ -23,7 +22,7 @@ public class EventInstance extends AbstractControlNodeInstance {
 	public EventInstance(int fragmentInstanceId,
 			ScenarioInstance scenarioInstance, String type) {
 		this.scenarioInstance = scenarioInstance;
-		this.fragmentInstanceId = fragmentInstanceId;
+		this.setFragmentInstanceId(fragmentInstanceId);
 		this.type = type;
 		this.setIncomingBehavior(new EventIncomingControlFlowBehavior(
 				this, scenarioInstance, type));

@@ -57,6 +57,7 @@ public abstract class AbstractOutgoingBehavior {
 					id, fragmentInstanceId, scenarioInstance);
 			break;
 		default:
+			break;
 		}
 		return controlNodeInstance;
 	}

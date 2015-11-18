@@ -5,7 +5,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  */
 public class EventIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	private final String type;
-	private ScenarioInstance scenarioInstance;
 
 	/**
 	 * Creates and initializes an event incoming control flow behavior.
@@ -18,12 +17,12 @@ public class EventIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	public EventIncomingControlFlowBehavior(AbstractControlNodeInstance controlNodeInstance,
 			ScenarioInstance scenarioInstance, String type) {
 		this.setControlNodeInstance(controlNodeInstance);
-		this.scenarioInstance = scenarioInstance;
+		this.setScenarioInstance(scenarioInstance);
 		this.type = type;
 	}
 
 	@Override public void enableControlFlow() {
-		scenarioInstance.restartFragment(this.getControlNodeInstance()
+		getScenarioInstance().restartFragment(this.getControlNodeInstance()
 				.getFragmentInstanceId());
 	}
 

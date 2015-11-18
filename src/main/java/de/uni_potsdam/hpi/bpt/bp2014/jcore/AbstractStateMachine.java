@@ -21,11 +21,35 @@ public abstract class AbstractStateMachine {
 	 */
 	public abstract boolean terminate();
 
+	public ScenarioInstance getScenarioInstance() {
+		return scenarioInstance;
+	}
+
+	public void setScenarioInstance(ScenarioInstance scenarioInstance) {
+		this.scenarioInstance = scenarioInstance;
+	}
+
+	public int getControlNodeInstanceId() {
+		return controlNodeInstanceId;
+	}
+
 	public void setControlNodeInstanceId(int controlNodeInstanceId) {
 		this.controlNodeInstanceId = controlNodeInstanceId;
 	}
 
+	public AbstractControlNodeInstance getControlNodeInstance() {
+		return controlNodeInstance;
+	}
+
+	public void setControlNodeInstance(AbstractControlNodeInstance controlNodeInstance) {
+		this.controlNodeInstance = controlNodeInstance;
+	}
+
 	public String getState() {
 		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }

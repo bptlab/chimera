@@ -97,11 +97,10 @@ public class FragmentInstance {
 			controlNodeInstance = new GatewayInstance(controlNode, fragmentInstanceId,
 					scenarioInstance);
 			break;
-		default:
+		default: break;
 		}
-		if (controlNodeInstance != null) {
-			controlNodeInstance.enableControlFlow();
-		}
+		assert controlNodeInstance != null;
+		controlNodeInstance.enableControlFlow();
 	}
 
 	/**
