@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `dataflow` (
 
 CREATE TABLE IF NOT EXISTS `datanode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `scenarioId` int(11) NOT NULL,
+  `scenario_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
-  `scenarioId` int(11) NOT NULL,
+  `scenario_id` int(11) NOT NULL,
   `start_state_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -296,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `eventlog` (
 CREATE TABLE IF NOT EXISTS `fragment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
-  `scenarioId` int(11) NOT NULL,
+  `scenario_id` int(11) NOT NULL,
   `modelid` bigint(11) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`)
@@ -477,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) DEFAULT NULL,
   `terminated` tinyint(1) NOT NULL DEFAULT '0',
-  `scenarioId` int(11) NOT NULL,
+  `scenario_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -528,7 +528,7 @@ CREATE TABLE IF NOT EXISTS `terminationcondition` (
   `conditionset_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `scenarioId` int(11) NOT NULL,
+  `scenario_id` int(11) NOT NULL,
   PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`),
   KEY `dataobject_id` (`dataobject_id`),
   KEY `state_id` (`state_id`)
