@@ -26,6 +26,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlAnyAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -867,14 +868,18 @@ import java.util.LinkedList;
 				new DataObjectSetsJaxBean[inputSetMap.keySet().size()];
 		for (Integer i : inputSetMap.keySet()) {
 			DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
-			inputSet.id = i;
-			inputSet.dataObjects = inputSetMap.get(i);
+            inputSet.setId(i);
+			inputSet.setDataObjects(inputSetMap.get(i));
 			String[] path = uriInfo.getAbsolutePath().toString().split("/");
-			inputSet.linkDataObject = "";
+			inputSet.setLinkDataObject("");
+            inputSet.linkDataObject = "";
 			for (int k = 0; k < path.length - 3; k++) {
-				inputSet.linkDataObject += path[k] + "/";
+                inputSet.setLinkDataObject(
+                          inputSet.getLinkDataObject() + path[k] + "/");
 			}
-			inputSet.linkDataObject += "inputset/" + inputSet.id;
+            inputSet.setLinkDataObject(
+                    inputSet.getLinkDataObject() + "inputset/" + inputSet.getId()
+            );
 			inputSets[j] = inputSet;
 			j++;
 		}
@@ -1491,9 +1496,18 @@ import java.util.LinkedList;
 	 *
 	 */
 	@XmlRootElement public static class DataObjectSetsJaxBean {
+        @XmlAnyAttribute
         private Map<String, String> dataObjects;
-		private int id;
+        private int id;
         private String linkDataObject;
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return this.id;
+        }
 
         public String getLinkDataObject() {
             return linkDataObject;
@@ -1503,8 +1517,8 @@ import java.util.LinkedList;
             this.linkDataObject = linkDataObject;
         }
 
-        public Map<String, String> getDataObjects() {
-            return dataObjects;
+        Map<String, String> getDataObjects() {
+            return this.dataObjects;
         }
 
         public void setDataObjects(Map<String, String> dataObjects) {
@@ -1635,6 +1649,14 @@ import java.util.LinkedList;
 
         public void setId(int id) {
             this.id = id;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public String getValue() {
+            return this.value;
         }
 
         public void setValue(String value) {

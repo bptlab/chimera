@@ -714,7 +714,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"setId\":1,\"state\":\"c\"}]},\"setIDs\":[1]}",
+                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}]},\"setIDs\":[1]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -767,6 +767,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("The response code of getInputDataObjects was not 200", 200, response.getStatus());
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
+        // String responseJson = response.readEntity(String.class);
         assertThat("The returned JSON does not contain the expected content",
                 "[{\"id\":139,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/inputset/139\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
@@ -881,6 +882,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testUpdateActivityWAttributes(){
+        // TODO Find out what this does
         Response response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "begin").request().post(Entity.json("[]"));
         assertEquals("The Response code of updateActivityState was not 202",
@@ -891,16 +893,20 @@ public class RestInterfaceTest extends AbstractTest {
                 "{\"message\":\"activity state changed.\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
-        response = base.path("scenario/135/instance/808/activity/4518")
+
+        // Update value of activity
+        Response updateResponse = base.path("scenario/135/instance/808/activity/4518")
                 .request()
                 .put(Entity.json("{\"id\":1,\"value\":\"Test\"}"));
         assertEquals("The Response code of updateActivityState was not 202",
-                202, response.getStatus());
+                202, updateResponse.getStatus());
+
+        // Terminate activity
         response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "terminate").request()
                 .post(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
-                202, response.getStatus());
+                202, updateResponse.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
