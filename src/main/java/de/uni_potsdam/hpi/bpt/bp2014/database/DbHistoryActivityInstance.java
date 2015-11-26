@@ -44,8 +44,7 @@ public class DbHistoryActivityInstance extends DbObject {
 		String sql =
 				"INSERT INTO historyactivityinstance(`activityinstance_id`, "
 						+ "`newstate`, `scenarioinstance_id`) "
-						+
-						"SELECT `id`, (SELECT activity_state "
+						+ "SELECT `id`, (SELECT activity_state "
 						+ "FROM activityinstance WHERE id = " + id
 						+ ") AS `newstate`, "
 						+ "(SELECT scenarioinstance_id "

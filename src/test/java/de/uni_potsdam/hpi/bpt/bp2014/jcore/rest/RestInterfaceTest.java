@@ -4,7 +4,7 @@ import com.ibatis.common.jdbc.ScriptRunner;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import net.javacrumbs.jsonunit.core.Option;
 
@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
@@ -86,7 +87,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a get to {@link RestInterface#getScenarios(UriInfo, String)} 
+     * When you sent a get to {@link RestInterface#getScenarios(UriInfo, String)}
      * the entity of the response will be a valid JSON array.
      */
     @Test
@@ -97,7 +98,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)} 
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)}
      * the returned JSON will contain the latest version of all Scenarios.
      */
     @Test
@@ -159,7 +160,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getScenarioInstances(UriInfo, int, String)} 
+     * When you send a Get to {@link RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with valid params and no filter
      * then you get 200 a JSON Object.
      */
@@ -268,7 +269,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)} 
+     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -399,7 +400,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an wrong scenario instance ID
      * then a 404 with error message (inside JSON) should be returned.
      */
@@ -417,7 +418,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -436,7 +437,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters, an invalid state but no filter
      * the request should return a 404 with error message
      */
@@ -457,7 +458,7 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -476,7 +477,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state and a filter
      * then the request should return all activities with the state who fulfill the filter condition.
      */
@@ -534,7 +535,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with a filter String
      * then only activities with a label like the filter String will be returned.
      */
@@ -552,7 +553,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with a correct instance id and a wrong scenario ID
      * you will be redirected automatically.
      */
@@ -570,7 +571,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an invalid instance
      * an 404 with error message will be returned
      */
@@ -588,7 +589,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an valid instance and scenario and no filter String
      * you will get a list of all DataObjects for this scenario.
      */
@@ -606,7 +607,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an valid instance and scenario and an filter String
      * you will get a list of all DataObjects with labels like the filter String for this scenario.
      */
@@ -637,7 +638,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"set_id\":0,\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"setId\":0,\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
                         .when(Option.IGNORING_EXTRA_FIELDS));
@@ -692,7 +693,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"set_id\":0,\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"setId\":0,\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
                         .when(Option.IGNORING_EXTRA_FIELDS));
@@ -713,7 +714,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}]},\"setIDs\":[1]}",
+                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"setId\":1,\"state\":\"c\"}]},\"setIDs\":[1]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }

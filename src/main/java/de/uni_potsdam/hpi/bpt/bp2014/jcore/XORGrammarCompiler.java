@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.hpi.bpt.bp2014.jcore.XORGrammarLexer;
-import de.hpi.bpt.bp2014.jcore.XORGrammarParser;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;

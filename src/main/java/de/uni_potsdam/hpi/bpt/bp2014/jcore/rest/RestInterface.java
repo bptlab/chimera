@@ -1449,42 +1449,68 @@ import java.util.LinkedList;
 	 *
 	 */
 	@XmlRootElement public static class ActivityJaxBean {
-		/**
-		 *
-		 */
-		private int id;
-		/**
-		 *
-		 */
-		private String label;
-		/**
-		 *
-		 */
-		private String outputSetLink;
-		/**
-		 *
-		 */
-		private String inputSetLink;
-	}
+        private int id;
+        private String label;
+        private String outputSetLink;
+        private String inputSetLink;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public String getOutputSetLink() {
+            return outputSetLink;
+        }
+
+        public void setOutputSetLink(String outputSetLink) {
+            this.outputSetLink = outputSetLink;
+        }
+
+        public String getInputSetLink() {
+            return inputSetLink;
+        }
+
+        public void setInputSetLink(String inputSetLink) {
+            this.inputSetLink = inputSetLink;
+        }
+    }
 
 	/**
 	 *
 	 */
 	@XmlRootElement public static class DataObjectSetsJaxBean {
-		/**
-		 *
-		 */
+        private Map<String, String> dataObjects;
 		private int id;
-		/**
-		 *
-		 */
-		private String linkDataObject;
-		/**
-		 *
-		 */
-		private Map<String, String> dataObjects;
+        private String linkDataObject;
 
-	}
+        public String getLinkDataObject() {
+            return linkDataObject;
+        }
+
+        public void setLinkDataObject(String linkDataObject) {
+            this.linkDataObject = linkDataObject;
+        }
+
+        public Map<String, String> getDataObjects() {
+            return dataObjects;
+        }
+
+        public void setDataObjects(Map<String, String> dataObjects) {
+            this.dataObjects = dataObjects;
+        }
+    }
 
 	/**
 	 * A JAX bean which is used for dataobject data.
@@ -1516,27 +1542,55 @@ import java.util.LinkedList;
 		 *
 		 */
 		private int setId;
-	}
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public DataAttributeJaxBean[] getAttributeConfiguration() {
+            return attributeConfiguration;
+        }
+
+        public void setAttributeConfiguration(DataAttributeJaxBean[] attributeConfiguration) {
+            this.attributeConfiguration = attributeConfiguration;
+        }
+
+        public int getSetId() {
+            return setId;
+        }
+
+        public void setSetId(int setId) {
+            this.setId = setId;
+        }
+    }
 
 	/**
 	 *
 	 */
 	@XmlRootElement public static class DataAttributeJaxBean {
-		/**
-		 *
-		 */
 		private int id;
-		/**
-		 *
-		 */
 		private String name;
-		/**
-		 *
-		 */
 		private String type;
-		/**
-		 *
-		 */
 		private String value;
 
 		public int getId() {
@@ -1576,14 +1630,15 @@ import java.util.LinkedList;
 	 *
 	 */
 	@XmlRootElement public static class DataAttributeUpdateJaxBean {
-		/**
-		 *
-		 */
 		private int id;
-		/**
-		 *
-		 */
 		private String value;
 
-	}
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
 }
