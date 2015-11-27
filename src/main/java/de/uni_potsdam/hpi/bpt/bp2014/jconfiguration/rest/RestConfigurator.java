@@ -83,8 +83,8 @@ import java.util.Set;
 			@PathParam("emailtaskID") int emailTaskID,
 			final RestConfigurator.EmailConfigJaxBean input) {
 		DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
-		int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID, input.receiver,
-				input.subject, input.message);
+		int result = dbEmailConfiguration.setEmailConfiguration(emailTaskID, input.getReceiver(),
+				input.getSubject(), input.getMessage());
 		if (result > 0) {
 			return Response.status(Response.Status.ACCEPTED).build();
 		} else {
@@ -138,13 +138,13 @@ import java.util.Set;
 		DbScenario scenario = new DbScenario();
 		DbEmailConfiguration mail = new DbEmailConfiguration();
 		EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
-		mailConfig.receiver = mail.getReceiverEmailAddress(mailTaskID);
-		if (!scenario.existScenario(scenarioID) || mailConfig.receiver.equals("")) {
+		mailConfig.setReceiver(mail.getReceiverEmailAddress(mailTaskID));
+		if (!scenario.existScenario(scenarioID) || mailConfig.getReceiver().equals("")) {
 			return Response.status(Response.Status.NOT_FOUND).type(
 					MediaType.APPLICATION_JSON).entity("{}").build();
 		}
-		mailConfig.message = mail.getMessage(mailTaskID);
-		mailConfig.subject = mail.getSubject(mailTaskID);
+		mailConfig.setMessage(mail.getMessage(mailTaskID));
+		mailConfig.setSubject(mail.getSubject(mailTaskID));
 		return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -350,6 +350,30 @@ import java.util.Set;
 		 * Could be any String but null.
 		 */
 		private String message;
+
+		public String getReceiver() {
+			return receiver;
+		}
+
+		public void setReceiver(String receiver) {
+			this.receiver = receiver;
+		}
+
+		public String getSubject() {
+			return subject;
+		}
+
+		public void setSubject(String subject) {
+			this.subject = subject;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
 	}
 
 	/**
