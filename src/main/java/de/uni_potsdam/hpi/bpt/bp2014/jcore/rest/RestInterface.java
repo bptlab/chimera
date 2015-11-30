@@ -172,15 +172,15 @@ import java.util.LinkedList;
 		DbScenario scenario = new DbScenario();
 		DbEmailConfiguration mail = new DbEmailConfiguration();
 		EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
-		mailConfig.receiver = mail.getReceiverEmailAddress(mailTaskID);
-		if (!scenario.existScenario(scenarioID) || mailConfig.receiver.equals("")) {
+		mailConfig.setReceiver(mail.getReceiverEmailAddress(mailTaskID));
+		if (!scenario.existScenario(scenarioID) || mailConfig.getReceiver().equals("")) {
 			return Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.APPLICATION_JSON)
 					.entity("{}")
 					.build();
 		}
-		mailConfig.content = mail.getMessage(mailTaskID);
-		mailConfig.subject = mail.getSubject(mailTaskID);
+		mailConfig.setContent(mail.getMessage(mailTaskID));
+		mailConfig.setSubject(mail.getSubject(mailTaskID));
 		return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -333,7 +333,7 @@ import java.util.LinkedList;
 		ExecutionService executionService = ExecutionService.getInstance(scenarioID);
 		if (executionService.existScenario(scenarioID)) {
 			DbScenarioInstance instance = new DbScenarioInstance();
-			int instanceId = instance.createNewScenarioInstance(scenarioID, name.name);
+			int instanceId = instance.createNewScenarioInstance(scenarioID, name.getName());
 			return Response.status(Response.Status.CREATED)
 					.type(MediaType.APPLICATION_JSON)
 					.entity("{\"id\":" + instanceId
@@ -756,21 +756,21 @@ import java.util.LinkedList;
 					.build();
 		}
 		ActivityJaxBean activity = new ActivityJaxBean();
-		activity.id = activityID;
+		activity.setId(activityID);
 		LinkedList<AbstractControlNodeInstance> controlNodeInstances =
 				executionService.getScenarioInstance(
 						scenarioInstanceID).getControlNodeInstances();
 		for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
 			if (controlNodeInstance.getControlNodeInstanceId() == activityID) {
-				activity.label = executionService
+				activity.setLabel(executionService
 						.getLabelForControlNodeID(
 								controlNodeInstance.
 										getControlNodeId()
-						);
+						));
 			}
 		}
-		activity.inputSetLink = uriInfo.getAbsolutePath() + "/input";
-		activity.outputSetLink = uriInfo.getAbsolutePath() + "/output";
+		activity.setInputSetLink(uriInfo.getAbsolutePath() + "/input");
+		activity.setOutputSetLink(uriInfo.getAbsolutePath() + "/output");
 		return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 
 	}
@@ -951,14 +951,16 @@ import java.util.LinkedList;
 				.size()];
 		for (Integer i : outputSetMap.keySet()) {
 			DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
-			outputSet.id = i;
-			outputSet.dataObjects = outputSetMap.get(i);
+			outputSet.setId(i);
+			outputSet.setDataObjects(outputSetMap.get(i));
 			String[] path = uriInfo.getAbsolutePath().toString().split("/");
-			outputSet.linkDataObject = "";
+			outputSet.setLinkDataObject("");
 			for (int k = 0; k < path.length - 3; k++) {
-				outputSet.linkDataObject += path[k] + "/";
+				outputSet.setLinkDataObject(
+						outputSet.getLinkDataObject()+ path[k] + "/");
 			}
-			outputSet.linkDataObject += "outputset/" + outputSet.id;
+			outputSet.setLinkDataObject(
+					outputSet.getLinkDataObject() + "outputset/" + outputSet.getId());
 			outputSets[j] = outputSet;
 			j++;
 		}
@@ -1016,15 +1018,15 @@ import java.util.LinkedList;
 		DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
 		for (int i = 0; i < dataObjectInstances.length; i++) {
 			DataObjectJaxBean dataObject = new DataObjectJaxBean();
-			dataObject.setId = inputsetID;
-			dataObject.id = dataObjectInstances[i].getDataObjectInstanceId();
-			dataObject.label = dataObjectInstances[i].getName();
-			dataObject.state = executionService
+			dataObject.setSetId(inputsetID);
+			dataObject.setId(dataObjectInstances[i].getDataObjectInstanceId());
+			dataObject.setLabel(dataObjectInstances[i].getName());
+			dataObject.setState(executionService
 					.getStateNameForDataObjectInstanceInput(
-							dataObjectInstances[i]);
-			dataObject.attributeConfiguration = executionService
+							dataObjectInstances[i]));
+			dataObject.setAttributeConfiguration(executionService
 					.getDataAttributesForDataObjectInstance(
-							dataObjectInstances[i]);
+							dataObjectInstances[i]));
 			dataObjects[i] = dataObject;
 		}
 		return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
@@ -1079,15 +1081,15 @@ import java.util.LinkedList;
 		DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
 		for (int i = 0; i < dataObjectInstances.length; i++) {
 			DataObjectJaxBean dataObject = new DataObjectJaxBean();
-			dataObject.setId = outputsetID;
-			dataObject.id = dataObjectInstances[i].getDataObjectInstanceId();
-			dataObject.label = dataObjectInstances[i].getName();
-			dataObject.state = executionService
+			dataObject.setSetId(outputsetID);
+			dataObject.setId(dataObjectInstances[i].getDataObjectInstanceId());
+			dataObject.setLabel(dataObjectInstances[i].getName());
+			dataObject.setState(executionService
 					.getStateNameForDataObjectInstanceOutput(
-							dataObjectInstances[i], outputsetID);
-			dataObject.attributeConfiguration = executionService
+							dataObjectInstances[i], outputsetID));
+			dataObject.setAttributeConfiguration(executionService
 					.getDataAttributesForDataObjectInstance(
-							dataObjectInstances[i]);
+							dataObjectInstances[i]));
 			dataObjects[i] = dataObject;
 		}
 		return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
@@ -1202,7 +1204,7 @@ import java.util.LinkedList;
 
 		Map<Integer, String> values = new HashMap<>();
 		if (input != null) {
-			values.put(input.id, input.value);
+			values.put(input.getId(), input.getValue());
 		}
 
 		if (executionService
@@ -1349,10 +1351,10 @@ import java.util.LinkedList;
 					.build();
 		}
 		DataObjectJaxBean dataObject = new DataObjectJaxBean();
-		dataObject.setId = 0;
-		dataObject.id = dataObjectID;
-		dataObject.label = labels.get(dataObjectID);
-		dataObject.state = states.get(dataObjectID);
+		dataObject.setSetId(0);
+		dataObject.setId(dataObjectID);
+		dataObject.setLabel(labels.get(dataObjectID));
+		dataObject.setState(states.get(dataObjectID));
 		return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -1423,6 +1425,7 @@ import java.util.LinkedList;
 		 * coded as an valid email address (as String)
 		 */
 		private String receiver;
+
 		/**
 		 * The subject of the email.
 		 * Could be any String but null.
@@ -1433,6 +1436,28 @@ import java.util.LinkedList;
 		 * Could be any String but null.
 		 */
 		private String content;
+
+		public String getReceiver() {
+			return receiver;
+		}
+		public void setReceiver(String receiver) {
+			this.receiver = receiver;
+		}
+		public void setSubject(String subject) {
+			this.subject = subject;
+		}
+
+		public String getSubject() {
+			return subject;
+		}
+
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
 	}
 
 	/**
@@ -1445,6 +1470,9 @@ import java.util.LinkedList;
 		 */
 		private String name;
 
+		public String getName() {
+			return name;
+		}
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -1552,9 +1580,7 @@ import java.util.LinkedList;
 		 * Each attribute has an id, name, type and value.
 		 */
 		private DataAttributeJaxBean[] attributeConfiguration;
-		/**
-		 *
-		 */
+
 		private int setId;
 
         public String getLabel() {

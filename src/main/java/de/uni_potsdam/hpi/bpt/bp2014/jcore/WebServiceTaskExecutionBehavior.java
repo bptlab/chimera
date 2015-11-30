@@ -14,6 +14,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This is the execution behavior for webservice tasks.
@@ -63,40 +64,27 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 		Invocation.Builder invocationBuilder = webResource.request(
 				MediaType.APPLICATION_JSON);
 		Response response;
-
-			switch (dbWebServiceTask.getMethod(
-					getControlNodeInstance().getControlNodeId())) {
+		try {
+			switch (dbWebServiceTask.getMethod(getControlNodeInstance().getControlNodeId())) {
 			case "POST":
-				String post = dbWebServiceTask.getPOST(
-						getControlNodeInstance().getControlNodeId());
-				for (DataAttributeInstance dataAttributeInstance
-						: getScenarioInstance()
+				String post = dbWebServiceTask.getPOST(getControlNodeInstance().getControlNodeId());
+				for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 						.getDataAttributeInstances().values()) {
 					post = post.replace(
-							"#" + (dataAttributeInstance
-									.getDataObjectInstance())
-									.getName() + "."
-									+ dataAttributeInstance
-									.getName(),
-							dataAttributeInstance.getValue()
-									.toString());
+							"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+									+ dataAttributeInstance.getName(),
+							dataAttributeInstance.getValue().toString());
 				}
 				response = invocationBuilder.post(Entity.json(post));
 				break;
 			case "PUT":
-				post = dbWebServiceTask.getPOST(
-						getControlNodeInstance().getControlNodeId());
-				for (DataAttributeInstance dataAttributeInstance
-						: getScenarioInstance()
+				post = dbWebServiceTask.getPOST(getControlNodeInstance().getControlNodeId());
+				for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 						.getDataAttributeInstances().values()) {
 					post = post.replace(
-							"#" + (dataAttributeInstance
-									.getDataObjectInstance())
-									.getName() + "."
-									+ dataAttributeInstance
-									.getName(),
-							dataAttributeInstance.getValue()
-									.toString());
+							"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+									+ dataAttributeInstance.getName(),
+							dataAttributeInstance.getValue().toString());
 				}
 				response = invocationBuilder.put(Entity.json(post));
 				break;
@@ -104,9 +92,12 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				response = invocationBuilder.get();
 			}
 			if (response.getStatus() >= 200 && response.getStatus() <= 226) {
-				this.writeDataAttributes(response.readEntity(String.class));
+				String json = response.readEntity(String.class);
+				this.writeDataAttributes(json);
 			}
-
+		} catch(JSONException e) {
+			log.error("Error by getting URL", e);
+		}
 		this.setCanTerminate(true);
 	}
 
@@ -127,30 +118,29 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 			JSONObject jsonContent = new JSONObject(content);
 			JSONArray jsonArray = null;
 			boolean isJSONArray = false;
-			int i;
-			for (i = 0; i < keys.size() - 1; i++) {
+			for (int i = 0; i < keys.size() - 1; i++) {
 				try {
-					if (jsonContent != null) {
+//					if (jsonContent != null) {
 						jsonContent = jsonContent.getJSONObject(
 								keys.get(i));
-					}
+//					}
 					jsonArray = null;
 					isJSONArray = false;
-				} catch (JSONException e1) {
+				} catch (Exception e1) {
 					try {
-						if (jsonArray != null) {
+//						if (jsonArray != null) {
 							jsonContent = jsonArray.getJSONObject(
 									new Integer(keys.get(i)));
-						}
+//						}
 						jsonArray = null;
 						isJSONArray = false;
-					} catch (JSONException e2) {
+					} catch (Exception e2) {
 						try {
 							jsonArray = jsonContent.getJSONArray(
 									keys.get(i));
 							jsonContent = null;
 							isJSONArray = true;
-						} catch (JSONException e3) {
+						} catch (Exception e3) {
 							jsonArray = jsonArray.getJSONArray(
 									new Integer(keys.get(i)));
 							jsonContent = null;
@@ -164,12 +154,12 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				if (dataAttributeInstance.getDataAttributeId() == dataAttributeId) {
 					if (isJSONArray) {
 						dataAttributeInstance.setValue(jsonArray.get(
-								new Integer(keys.get(i))));
+								new Integer(keys.getLast())));
 					} else {
 						if (jsonContent != null) {
 							dataAttributeInstance
 									.setValue(jsonContent.get(
-									keys.get(i)));
+									keys.getLast()));
 						}
 					}
 				}

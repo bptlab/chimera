@@ -380,7 +380,6 @@ import java.util.Set;
 	 *
 	 */
 	@XmlRootElement public static class WebserviceConfigJaxBean {
-
 		/**
 		 *
 		 */
@@ -396,5 +395,28 @@ import java.util.Set;
 		 */
 		private ArrayList<HashMap<String, Object>> attributes;
 
+		public String getLink() {
+			return link;
+		}
+
+		public void setLink(String link) {
+			this.link = link;
+		}
+
+		public String getMethod() {
+			return method;
+		}
+
+		public void setMethod(String method) {
+			this.method = method;
+		}
+
+		public ArrayList<HashMap<String, Object>> getAttributes() {
+			return attributes;
+		}
+
+		public void setAttributes(ArrayList<HashMap<String, Object>> attributes) {
+			this.attributes = attributes;
+		}
 	}
 }
