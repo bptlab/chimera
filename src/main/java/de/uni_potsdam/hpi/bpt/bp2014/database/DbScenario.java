@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import java.util.Map;
  * It provides the functionality to retrieve all existing scenarios as well as their name.
  */
 public class DbScenario extends DbObject {
+	private static Logger log = Logger.getLogger(DbScenario.class.getName());
 
 	private String name = null;
 
@@ -25,11 +28,11 @@ public class DbScenario extends DbObject {
 	/**
 	 * checks if the scenario is stored in the database.
 	 *
-	 * @param scenario_id This is the database ID of a scenario.
+	 * @param scenarioId This is the database ID of a scenario.
 	 * @return a boolean which indicates if the scenario is present(true) or not(false).
 	 */
-	public Boolean existScenario(int scenario_id) {
-		String sql = "SELECT id FROM scenario WHERE id = " + scenario_id;
+	public Boolean existScenario(int scenarioId) {
+		String sql = "SELECT id FROM scenario WHERE id = " + scenarioId;
 		log.info(sql);
 		return this.executeExistStatement(sql);
 	}
@@ -52,7 +55,7 @@ public class DbScenario extends DbObject {
 	/**
 	 * This method provides access to the default information of a scenario.
 	 *
-	 * @return It returns a HashMap of the Database ids and their label.
+	 * @return a HashMap of the Database ids and their label.
 	 */
 	public Map<Integer, String> getScenarios() {
 		String sql = "SELECT id, name FROM scenario WHERE deleted = 0";
@@ -64,12 +67,13 @@ public class DbScenario extends DbObject {
 	 * This method provides access to the default information of a scenario.
 	 * The name of the scenario must contain the filterString.
 	 *
-	 * @return It returns a HashMap of the Database ids and their label.
+	 * @param filterString This is a string to filter the query.
+	 * @return a HashMap of the Database ids and their label.
 	 */
 	public Map<Integer, String> getScenariosLike(String filterString) {
 		String sql =
-				"SELECT id, name FROM scenario WHERE deleted = 0 AND name LIKE '%" + filterString
-						+ "%'";
+				"SELECT id, name FROM scenario WHERE deleted = 0 "
+						+ "AND name LIKE '%" + filterString	+ "%'";
 		log.info(sql);
 		return this.executeStatementReturnsMap(sql, "id", "name");
 	}
@@ -77,13 +81,16 @@ public class DbScenario extends DbObject {
 	/**
 	 * Provides information abut one Scenario.
 	 * The Information consists of the id, name and version.
+	 *
+	 * @param id This is the database ID for a scenario.
+	 * @return a Map with the scenario details.
 	 */
 	public Map<String, Object> getScenarioDetails(int id) {
 		String sql =
-				"SELECT id, name, modelid, modelversion FROM scenario WHERE deleted = 0 AND id = "
-						+ id;
+				"SELECT id, name, modelid, modelversion FROM scenario "
+						+ "WHERE deleted = 0 AND id = "	+ id;
 		log.info(sql);
-		return this
-				.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion", "modelid");
+		return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion",
+				"modelid");
 	}
 }

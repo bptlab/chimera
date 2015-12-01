@@ -8,9 +8,10 @@ import java.util.List;
 public class Execution {
 
 	/**
-	 * This method marks the scenario as deleted as far as there are no running instances thereof.
+	 * This method marks the scenario as deleted if there are no running instances.
 	 *
 	 * @param scenarioID DatabaseID of the scenario that is supposed to get marked as deleted
+	 * @return true if the scenario was deleted (else false)
 	 * @throws Exception Running instances of the scenario exist.
 	 */
 	public boolean deleteScenario(int scenarioID) throws Exception {

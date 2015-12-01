@@ -86,7 +86,7 @@
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/IncomingBehavior.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.IncomingBehavior</a></li>
+<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/IncomingBehavior.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractIncomingBehavior</a></li>
 <li>
 <ul class="inheritance">
 <li>de.uni_potsdam.hpi.bpt.bp2014.jcore.TaskIncomingControlFlowBehavior</li>
@@ -171,8 +171,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/IncomingB
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskIncomingControlFlowBehavior.html#compareDataObjectState(int,%20int)">compareDataObjectState</a></strong>(int&nbsp;dataObject_id,
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskIncomingControlFlowBehavior.html#compareDataObjectState(int,%20int)">compareDataObjectState</a></strong>(int&nbsp;dataObjectId,
                       int&nbsp;state_id)</code>
+                      int&nbsp;stateId)</code>
 <div class="block">Compares the given state for a data object with the state from the data object in the scenario.</div>
 </td>
 </tr>
@@ -190,7 +191,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/IncomingB
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskIncomingControlFlowBehavior.html#setDataObjectInstanceToOnChange(int)">setDataObjectInstanceToOnChange</a></strong>(int&nbsp;dataObject_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskIncomingControlFlowBehavior.html#setDataObjectInstanceToOnChange(int)">setDataObjectInstanceToOnChange</a></strong>(int&nbsp;dataObjectId)</code>
 <div class="block">Sets the data object to on change.</div>
 </td>
 </tr>
@@ -295,10 +296,10 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/IncomingB
 <ul class="blockList">
 <li class="blockList">
 <h4>setDataObjectInstanceToOnChange</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;setDataObjectInstanceToOnChange(int&nbsp;dataObject_id)</pre>
+<pre>public&nbsp;java.lang.Boolean&nbsp;setDataObjectInstanceToOnChange(int&nbsp;dataObjectId)</pre>
 <div class="block">Sets the data object to on change.
  Write this into the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObject_id</code> - This is the database id from the data object.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database id from the data object.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the on change could been set. false if not.</dd></dl>
 </li>
 </ul>
@@ -308,10 +309,13 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/IncomingB
 <ul class="blockList">
 <li class="blockList">
 <h4>compareDataObjectState</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;compareDataObjectState(int&nbsp;dataObject_id,
+<pre>public&nbsp;java.lang.Boolean&nbsp;compareDataObjectState(int&nbsp;dataObjectId,
                                        int&nbsp;state_id)</pre>
 <div class="block">Compares the given state for a data object with the state from the data object in the scenario.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObject_id</code> - This is the database id from the data object.</dd><dd><code>state_id</code> - This is the database id from the state.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database id from the data object.</dd><dd><code>state_id</code> - This is the database id from the state.</dd>
+                                       int&nbsp;stateId)</pre>
+<div class="block">Compares the given state for a data object with the state from the data object in the scenario.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database id from the data object.</dd><dd><code>stateId</code> - This is the database id from the state.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the data object has the same state. false if not</dd></dl>
 </li>
 </ul>

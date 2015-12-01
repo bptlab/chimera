@@ -4,18 +4,19 @@ import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.log4j.Logger;
 
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * This class is used to build a connection to the database.
- * It initializes the JDBC Driver with the needed configuration to be able to connect ot the database.
+ * It initializes the JDBC Driver with the needed configuration to connect to the database.
  */
-public class Connection {
+public final class Connection {
 	private static Connection instance = null;
 	private static String username;
 	private static String password;
 	private static String url;
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static Logger log = Logger.getLogger(Connection.class.getName());
+	private static Logger log = Logger.getLogger(Connection.class.getName());
 
 	/**
 	 * constructor
@@ -57,15 +58,19 @@ public class Connection {
 	 */
 	public java.sql.Connection connect() {
 		java.sql.Connection conn = null;
+
+
 		try {
 			//Register JDBC driver
 			Class.forName(JDBC_DRIVER);
 			//Open a connection
 			conn = DriverManager.getConnection(url, username, password);
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
 			//Handle errors for Class.forName
 			log.error("MySQL Connection Error:", e);
 		}
+
 		return conn;
 	}
 

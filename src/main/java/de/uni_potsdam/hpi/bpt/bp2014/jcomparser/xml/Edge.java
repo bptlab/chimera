@@ -6,9 +6,13 @@ import org.w3c.dom.NodeList;
 
 import java.util.Map;
 
+/**
+ * This class represents an Edge.
+ */
 public class Edge implements IDeserialisable, IPersistable {
 	/**
-	 * Maps the Node-Model-ID (from the XML) to the Node Object (might be either controlNOde or dataNode).
+	 * Maps the Node-Model-ID (from the XML)
+	 * to the Node Object (might be either controlNOde or dataNode).
 	 */
 	private Map<Long, Node> nodes;
 	/**
@@ -60,11 +64,15 @@ public class Edge implements IDeserialisable, IPersistable {
 		int sourceDatabaseId = nodes.get(sourceNodeId).getDatabaseID();
 		Connector connector = new Connector();
 		if (type.contains("SequenceFlow")) {
-			connector.insertControlFlowIntoDatabase(sourceDatabaseId, targetDatabaseId, label);
+			connector.insertControlFlowIntoDatabase(
+					sourceDatabaseId, targetDatabaseId, label);
 		} else if (type.contains("Association")) {
-			Node controlNode = (nodes.get(sourceNodeId).isDataNode()) ?
-					nodes.get(targetNodeId) :
-					nodes.get(sourceNodeId);
+			Node controlNode;
+			if (nodes.get(sourceNodeId).isDataNode()) {
+				controlNode = nodes.get(targetNodeId);
+			} else {
+				controlNode = nodes.get(sourceNodeId);
+			}
 			connector.insertDataFlowIntoDatabase(controlNode.getDatabaseID(), setId,
 					!nodes.get(targetNodeId).isDataNode());
 		}
@@ -88,8 +96,9 @@ public class Edge implements IDeserialisable, IPersistable {
 			id = Integer.parseInt(value);
 			break;
 		case "label":
-			if (label != null && label.equals("DEFAULT"))
+			if (label != null && "DEFAULT".equals(label)) {
 				break;
+			}
 			label = value;
 			break;
 		case "#sourceNode":
@@ -99,7 +108,7 @@ public class Edge implements IDeserialisable, IPersistable {
 			targetNodeId = Long.parseLong(value);
 			break;
 		case "sequence_type":
-			if (value.equals("DEFAULT")) {
+			if ("DEFAULT".equals(value)) {
 				label = value;
 				break;
 			}

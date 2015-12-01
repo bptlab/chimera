@@ -2,7 +2,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import jersey.repackaged.com.google.common.collect.Sets;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A class which represents an InputSet.
@@ -10,18 +14,20 @@ import java.util.*;
 public class InputSet extends Set implements IPersistable {
 
 	/**
-	 * Creates all new InputSets for a task and a list of edges
+	 * Creates all new InputSets for a task and a list of edges.
 	 *
 	 * @param task  The task which has an input set
 	 * @param edges The list of all edges that are part of the fragment the task belongs to
 	 *              (the list has to contain at least all the ingoing associations of the task)
-	 * @return The newly created InputSets or null if no ingoing (DataFlow)-Associations were found.
+	 * @return the newly created InputSets or
+	 * 			null if no ingoing (DataFlow)-Associations were found.
 	 */
-	public static List<InputSet> createInputSetForTaskAndEdges(final Node task,
-			final List<Edge> edges) {
+	public static List<InputSet> createInputSetForTaskAndEdges(
+			final Node task, final List<Edge> edges) {
 		List<Edge> associations = new LinkedList<>();
 		for (Edge edge : edges) {
-			if (edge.getTargetNodeId() == task.getId() && edge.getType().contains("Association")) {
+			if (edge.getTargetNodeId() == task.getId()
+					&& edge.getType().contains("Association")) {
 				associations.add(edge);
 			}
 		}
@@ -39,7 +45,8 @@ public class InputSet extends Set implements IPersistable {
 				orderedAssociations.get(sourceNodeLabel).add(edge);
 			}
 		}
-		// convert orderedAssociations to appropriate form for calculating the cartesian product (convert Map<String, Set> to List<Set>)
+		// convert orderedAssociations to appropriate form
+		// for calculating the cartesian product (convert Map<String, Set> to List<Set>)
 		List<java.util.Set<Edge>> convertedAssociations = new LinkedList<>();
 		for (java.util.Set<Edge> coll : orderedAssociations.values()) {
 			java.util.Set<Edge> hashSet = new HashSet<>();
@@ -50,12 +57,13 @@ public class InputSet extends Set implements IPersistable {
 		List<InputSet> inputSets = new LinkedList<>();
 		for (List<Edge> edgeSet : cartProd) {
 			InputSet instance = new InputSet();
-			instance.associations = edgeSet;
-			instance.dataNodes = new LinkedList<>();
-			instance.node = task;
+			instance.setAssociations(edgeSet);
+			LinkedList<Node> dataNodes = new LinkedList<>();
+			instance.setNode(task);
 			for (Edge e : edgeSet) {
-				instance.dataNodes.add(e.getSource());
+				dataNodes.add(e.getSource());
 			}
+			instance.setDataNodes(dataNodes);
 			inputSets.add(instance);
 		}
 		return inputSets;

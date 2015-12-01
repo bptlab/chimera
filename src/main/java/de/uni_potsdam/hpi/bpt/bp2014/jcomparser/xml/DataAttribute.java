@@ -2,6 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
+/**
+ * This class represents a DataAttribute.
+ */
 public class DataAttribute implements IPersistable {
 	/**
 	 * This is the databaseID of the dataClass belonging to this attribute.
@@ -31,7 +34,8 @@ public class DataAttribute implements IPersistable {
 	}
 
 	/**
-	 * This constructor is only used for testCases as a connection to the server is not needed therefore
+	 * This constructor is only used for testCases
+	 * therefore, a connection to the server is not needed.
 	 */
 	public DataAttribute() {
 	}
@@ -47,8 +51,8 @@ public class DataAttribute implements IPersistable {
 
 	@Override public int save() {
 		Connector conn = new Connector();
-		this.dataAttributeID = conn
-				.insertDataAttributeIntoDatabase(this.dataAttributeName, this.dataClassID,
+		this.dataAttributeID = conn.insertDataAttributeIntoDatabase(
+				this.dataAttributeName, this.dataClassID,
 						this.dataAttributeType);
 		return dataAttributeID;
 	}

@@ -19,14 +19,18 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a Scenario-Model.
  * It can be parsed from an XML and written to a Database.
  */
 public class Scenario implements IDeserialisable, IPersistable {
-	static Logger log = Logger.getLogger(Scenario.class.getName());
+	private static Logger log = Logger.getLogger(Scenario.class.getName());
 	/**
 	 * The Name of the Scenario.
 	 */
@@ -74,7 +78,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private boolean migrationNecessary;
 	/**
-	 * If migration is necessary, we need the databaseID of the scenario that is supposed to be migrated.
+	 * If migration is necessary, we need the databaseID of the scenario to migrate.
 	 */
 	private int migratingScenarioDbID = -1;
 	/**
@@ -90,7 +94,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private DomainModel domainModel;
 	/**
-	 * If migration is necessary, this variable contains all the fragments that are new and not in the older version.
+	 * If migration is necessary, this variable contains all the fragments that are new
+	 * and not in the older version.
 	 */
 	private List<Fragment> newFragments;
 	/**
@@ -161,10 +166,12 @@ public class Scenario implements IDeserialisable, IPersistable {
 		try {
 			Retrieval jRetrieval = new Retrieval();
 			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/" + domainModelURI + ".pm");
+					processeditorServerUrl + "models/"
+							+ domainModelURI + ".pm");
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilder db =
+					DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(is);
 			return doc.getDocumentElement();
 		} catch (ParserConfigurationException | SAXException | IOException e) {
@@ -179,11 +186,13 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private void setDomainModelURL() {
 		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/properties/property" + "[@name='domainModelURI']/@value";
+		String xPathQuery = "/model/properties/property"
+				+ "[@name='domainModelURI']/@value";
 		try {
 			domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
 			//This is used to make sure we only get the domainModelModelID
-			domainModelURI = domainModelURI.split("\\/")[domainModelURI.split("\\/").length - 1];
+			domainModelURI = domainModelURI.split("/")[
+					domainModelURI.split("/").length - 1];
 			domainModelURI = domainModelURI.split("\\.")[0];
 		} catch (XPathExpressionException e) {
 			log.error("Error: unable to set the domain model URL for the scenario.");
@@ -204,8 +213,9 @@ public class Scenario implements IDeserialisable, IPersistable {
 		needsToBeSaved = false;
 		newFragments = new LinkedList<>();
 		for (Fragment fragment : fragments) {
-			newestFragmentDatabaseVersion = connector
-					.getFragmentVersion(oldScenarioDbID, fragment.getFragmentID());
+			newestFragmentDatabaseVersion =
+					connector.getFragmentVersion(oldScenarioDbID,
+					fragment.getFragmentID());
 			// case 1: We don't have a fragment with this modelid in the database
 			if (newestFragmentDatabaseVersion == -1) {
 				needsToBeSaved = true;
@@ -213,32 +223,33 @@ public class Scenario implements IDeserialisable, IPersistable {
 				// 1) the scenario is not in the database yet
 				if (oldScenarioDbID == -1) {
 					migrationNecessary = false;
-				}
-				// 2) a new fragment has been added
-				else {
+				} else {
+					// 2) a new fragment has been added
 					migrationNecessary = true;
 					newFragments.add(fragment);
 					migratingScenarioDbID = oldScenarioDbID;
 				}
-			}
-			// case 2: an existing fragment has been modified: we got a newer version of the fragment here
-			else if (newestFragmentDatabaseVersion < fragment.getVersion()) {
+			} else if (newestFragmentDatabaseVersion < fragment.getVersion()) {
+				//case 2: an existing fragment has been modified:
+				//we got a newer version of the fragment here
 				needsToBeSaved = true;
 				changesMade = true;
 			}
 		}
-		// this evaluation is necessary as otherwise the value of migrationNecessary is influenced by the
+		// this evaluation is necessary as otherwise
+		// the value of migrationNecessary is influenced by the
 		// ordering of the fragments
 		if (changesMade) {
 			migrationNecessary = false;
 		}
-		// case 3: We have a newer version of the scenario (e.g. terminationCondition changed)
+		// case 3: newer version of the scenario (e.g. terminationCondition changed)
 		if (scenarioDbVersion < versionNumber) {
 			needsToBeSaved = true;
 		}
 		if (migrationNecessary) {
-			boolean fragmentFound = false;
-			List<Long> fragmentDbIDs = connector.getFragmentModelIDs(migratingScenarioDbID);
+			boolean fragmentFound;
+			List<Long> fragmentDbIDs = connector.getFragmentModelIDs(
+					migratingScenarioDbID);
 			for (long fragmentModelDbID : fragmentDbIDs) {
 				fragmentFound = false;
 				for (Fragment fragment : fragments) {
@@ -265,7 +276,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Checks the version of the domainModel in the database and compares it with the version of this scenario.
+	 * Checks the version of the domainModel in the database
+	 * and compares it with the version of this scenario.
 	 * If the version in the database older as this one, migration won't be initiated.
 	 *
 	 * @param oldScenarioDbID The databaseID of the newest scenario in the database
@@ -303,8 +315,10 @@ public class Scenario implements IDeserialisable, IPersistable {
 				// the current version is the latest one
 				for (int i = 0; i < versions.getLength(); i++) {
 					xPathQuery = "@id";
-					int currentID = Integer.parseInt((String) xPath.compile(xPathQuery)
-							.evaluate(versions.item(i), XPathConstants.STRING));
+					int currentID = Integer.parseInt(
+							(String) xPath.compile(xPathQuery)
+									.evaluate(versions.item(i),
+									XPathConstants.STRING));
 					if (maxID < currentID) {
 						maxID = currentID;
 					}
@@ -327,12 +341,13 @@ public class Scenario implements IDeserialisable, IPersistable {
 	private Element fetchVersionXML() {
 		try {
 			Retrieval jRetrieval = new Retrieval();
-			String versionXML = jRetrieval
-					.getXMLWithAuth(processeditorServerUrl, processeditorServerUrl + "models/" +
-									scenarioID + "/versions");
+			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
+					processeditorServerUrl + "models/"
+							+ scenarioID + "/versions");
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilder db =
+					DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(is);
 			return doc.getDocumentElement();
 		} catch (ParserConfigurationException | SAXException | IOException e) {
@@ -348,12 +363,14 @@ public class Scenario implements IDeserialisable, IPersistable {
 	private void setTerminationCondition() {
 		terminationCondition = new LinkedList<>();
 		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/properties/property" + "[@name='Termination condition']/@value";
+		String xPathQuery = "/model/properties/property"
+				+ "[@name='Termination condition']/@value";
 		String tcs = "";
 		try {
 			tcs = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
 		} catch (XPathExpressionException e) {
-			log.error("Error: unable to set the termination condition for the scenario.");
+			log.error("Error: unable to set the termination condition "
+					+ "for the scenario.");
 			log.error(e);
 		}
 		if (tcs.isEmpty()) {
@@ -363,18 +380,21 @@ public class Scenario implements IDeserialisable, IPersistable {
 		tcs = tcs.replaceAll("; ", ";");
 		String[] terminationConditions = tcs.split(";");
 		for (String set : terminationConditions) {
-			if (set.isEmpty())
+			if (set.isEmpty()) {
 				continue;
+			}
 			Map<DataObject, String> setMap = new HashMap<>();
 			for (String setEntry : set.split(",")) {
 				String dataObject = setEntry.replaceAll("\\[[a-zA-Z0-9_.]+\\]", "");
-				String state = setEntry.replaceAll("[a-zA-Z0-9_.]+\\[", "").replaceAll("\\]", "");
-				if (dataObject != "" && state != "") {
+				String state = setEntry.replaceAll(
+						"[a-zA-Z0-9_.]+\\[", "").replaceAll("\\]", "");
+				if (!dataObject.isEmpty() && !state.isEmpty()) {
 					setMap.put(dataObjects.get(dataObject), state);
 				}
 			}
-			if (setMap.size() > 0)
+			if (setMap.size() > 0) {
 				terminationCondition.add(setMap);
+			}
 		}
 	}
 
@@ -385,7 +405,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		String xPathQuery = "/model/@id";
 		try {
-			this.scenarioID = Long.parseLong(xPath.compile(xPathQuery).evaluate(this.scenarioXML));
+			this.scenarioID = Long.parseLong(xPath.compile(xPathQuery)
+					.evaluate(this.scenarioXML));
 		} catch (XPathExpressionException e) {
 			log.error("Error: unable to set the id of the scenario.");
 			log.error(e);
@@ -395,8 +416,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 	@Override public int save() {
 		if (needsToBeSaved) {
 			Connector conn = new Connector();
-			this.databaseID = conn
-					.insertScenarioIntoDatabase(this.scenarioName, scenarioID, versionNumber);
+			this.databaseID = conn.insertScenarioIntoDatabase(
+					this.scenarioName, scenarioID, versionNumber);
 			saveFragments();
 			domainModel.setScenarioID(this.databaseID);
 			domainModel.save();
@@ -417,17 +438,19 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Migrate running instances with the modelId of this scenario and with the migratingScenarioVersion.
+	 * Migrate running instances with the modelId of this scenario
+	 * and with the migratingScenarioVersion.
 	 */
 	private void migrateRunningInstances() {
 		Connector connector = new Connector();
 		// get the scenarioInstanceIDs of all running instances that need to be migrated
-		// and migrate them (means changing their old reference to the scenario to this scenario)
+		// and migrate them (means changing their old reference
+		// to the scenario to this scenario)
 		connector.migrateScenarioInstance(migratingScenarioDbID, databaseID);
 		//migrate FragmentInstances
 		for (Fragment fragment : fragments) {
-			// as there is no fragmentinstance for this new fragment in the database so far,
-			// we don't need to change references
+			// as there is no fragmentinstance for this new fragment
+			// in the database so far, we don't need to change references
 			if (!newFragments.contains(fragment)) {
 				fragment.migrate(migratingScenarioDbID);
 			}
@@ -443,8 +466,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 		Connector connector = new Connector();
 		int oldDataObjectDbID;
 		for (Map.Entry<String, DataObject> dataObject : dataObjects.entrySet()) {
-			oldDataObjectDbID = connector
-					.getDataObjectID(migratingScenarioDbID, dataObject.getKey());
+			oldDataObjectDbID = connector.getDataObjectID(migratingScenarioDbID,
+					dataObject.getKey());
 			if (oldDataObjectDbID > 0) {
 				connector.migrateDataObjectInstance(oldDataObjectDbID,
 						dataObject.getValue().getDatabaseId());
@@ -462,14 +485,17 @@ public class Scenario implements IDeserialisable, IPersistable {
 	private void saveReferences() {
 		/* Key is the ID used inside the model, value are a List of
          * all IDs used inside the database. */
-		HashMap<Long, List<Integer>> activities = getActivityDatabaseIDsForEachActivityModelID();
+		Map<Long, List<Integer>> activities =
+				getActivityDatabaseIDsForEachActivityModelID();
 		Connector conn = new Connector();
 		for (List<Integer> databaseIDs : activities.values()) {
 			if (databaseIDs.size() > 1) {
 				// The next two loops find all pairs of referenced activities.
 				for (int i = 0; i < databaseIDs.size() - 1; i++) {
 					for (int j = i + 1; j < databaseIDs.size(); j++) {
-						conn.insertReferenceIntoDatabase(databaseIDs.get(i), databaseIDs.get(j));
+						conn.insertReferenceIntoDatabase(
+								databaseIDs.get(i),
+								databaseIDs.get(j));
 					}
 				}
 			}
@@ -483,18 +509,21 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 *
 	 * @return A map of all activity-model-IDs to a list of their database IDs.
 	 */
-	private HashMap<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
-		HashMap<Long, List<Integer>> result = new HashMap<>();
+	private Map<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+		Map<Long, List<Integer>> result = new HashMap<>();
 		for (Fragment fragment : fragments) {
 			Map<Long, Node> fragmentNodes = fragment.getControlNodes();
 			for (Map.Entry<Long, Node> node : fragmentNodes.entrySet()) {
 				if (node.getValue().isTask()) {
 					if (result.get(node.getKey()) == null) {
-						List<Integer> activityDatabaseIDs = new ArrayList<Integer>();
-						activityDatabaseIDs.add(node.getValue().getDatabaseID());
+						List<Integer> activityDatabaseIDs
+								= new ArrayList<>();
+						activityDatabaseIDs.add(
+								node.getValue().getDatabaseID());
 						result.put(node.getKey(), activityDatabaseIDs);
 					} else {
-						result.get(node.getKey()).add(node.getValue().getDatabaseID());
+						result.get(node.getKey()).add(
+								node.getValue().getDatabaseID());
 					}
 				}
 			}
@@ -510,9 +539,11 @@ public class Scenario implements IDeserialisable, IPersistable {
 		// first parameter currently irrelevant,
 		// due to the restriction of the terminationCondition
 		for (int i = 0; i < terminationCondition.size(); i++) {
-			for (Map.Entry<DataObject, String> entry : terminationCondition.get(i).entrySet()) {
+			for (Map.Entry<DataObject, String> entry
+					: terminationCondition.get(i).entrySet()) {
 				int stateID = entry.getKey().getStates().get(entry.getValue());
-				conn.insertTerminationConditionIntoDatabase(i + 1, entry.getKey().getDatabaseId(),
+				conn.insertTerminationConditionIntoDatabase(
+						i + 1, entry.getKey().getDatabaseId(),
 						stateID, databaseID);
 			}
 		}
@@ -562,8 +593,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 		Connector connector = new Connector();
 		for (Set set : frag.getSets()) {
 			for (Node dataNode : set.getDataNodes()) {
-				connector.insertDataSetConsistOfDataNodeIntoDatabase(set.getDatabaseId(),
-						dataNode.getDatabaseID());
+				connector.insertDataSetConsistOfDataNodeIntoDatabase(
+						set.getDatabaseId(), dataNode.getDatabaseID());
 			}
 		}
 	}
@@ -574,45 +605,70 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private void createDataObjects() {
 		Map<String, String> dataObjectNodes = getAllDataObjectNodes();
-		dataObjects = new HashMap<String, DataObject>();
+		dataObjects = new HashMap<>();
 		for (Fragment fragment : fragments) {
 			for (Node node : fragment.getControlNodes().values()) {
 				if (node.isDataNode()) {
 					if (null == dataObjects.get(node.getText())) {
 						if (domainModel == null) {
-							dataObjects.put(node.getText(), new DataObject());
+							dataObjects.put(node.getText(),
+									new DataObject());
 							break;
 						}
 						String link = dataObjectNodes.get(node.getText());
-						// if there is no reference to the dataClass, we match over the name
-						if (link.equals("")) {
+						// if there is no reference to the dataClass
+						// match over the name
+						if (link.isEmpty()) {
 							boolean dataClassFound = false;
-							for (DataClass dC : domainModel.getDataClasses().values()) {
-								if (dC.getDataClassName().equals(node.getText())) {
-									dataObjects.put(node.getText(), new DataObject(dC));
+							for (DataClass dC : domainModel
+									.getDataClasses().
+											values()) {
+								if (dC.getDataClassName()
+									.equals(node.getText())) {
+									dataObjects.put(node.getText(),
+											new DataObject(dC));
 									dataClassFound = true;
 									break;
 								}
 							}
 							if (!dataClassFound) {
-								dataObjects.put(node.getText(), new DataObject());
+								dataObjects.put(node.getText(),
+										new DataObject());
 							}
 						} else {
-							String[] slashSplit = link.split("\\/");
-							String dataClassModelID = slashSplit[slashSplit.length - 1]
+							String[] slashSplit = link.split("/");
+							String dataClassModelID
+									= slashSplit[
+									slashSplit.length - 1]
 									.split("#")[0];
-							String dataClassNodeID = slashSplit[slashSplit.length - 1]
+							String dataClassNodeID
+									= slashSplit[
+									slashSplit.length - 1]
 									.split("#")[1];
-							if (Long.parseLong(dataClassModelID) != domainModel
+							if (Long.parseLong(
+									dataClassModelID)
+									!= domainModel
 									.getDomainModelModelID()) {
-								log.error("Error: The referenced domainModel of a dataObject-Node "
-										+ "in the scenario is not existing");
-								dataObjects.put(node.getText(), new DataObject());
+								log.error("Error: The referenced"
+										+ " domainModel of"
+										+ " a dataObject"
+										+ "-Node in the "
+										+ "scenario is"
+										+ " not existing");
+								dataObjects.put(
+										node.getText(),
+										new DataObject());
 								return;
 							} else if (domainModel.getDataClasses()
-									.get(Long.parseLong(dataClassNodeID)) == null)
-								dataObjects.put(node.getText(), new DataObject());
-							dataObjects.put(node.getText(), new DataObject(
+									.get(Long.parseLong(
+											dataClassNodeID)) == null) {
+								dataObjects.put(
+										node.getText(),
+										new DataObject());
+							}
+							dataObjects.put(
+									node.getText(),
+									new DataObject(
 									domainModel.getDataClasses()
 											.get(Long.parseLong(dataClassNodeID))));
 						}
@@ -641,7 +697,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 				xPathQuery = "property[@name = 'text']/@value";
 				String name = xPath.compile(xPathQuery).evaluate(nodes.item(i));
 				xPathQuery = "property[@name = 'Data class']/@value";
-				String dataClassLink = xPath.compile(xPathQuery).evaluate(nodes.item(i));
+				String dataClassLink = xPath.compile(xPathQuery)
+						.evaluate(nodes.item(i));
 				dataObjectNodes.put(name, dataClassLink);
 			}
 		} catch (XPathExpressionException e) {
@@ -661,12 +718,13 @@ public class Scenario implements IDeserialisable, IPersistable {
 					+ "@value[contains(.,'PCMFragmentNode')]]]";
 			NodeList fragmentNodes = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(this.scenarioXML, XPathConstants.NODESET);
-			this.fragments = new LinkedList<Fragment>();
+			this.fragments = new LinkedList<>();
 
 			for (int i = 0; i < fragmentNodes.getLength(); i++) {
 				// get the ID of the current node
 				xPathQuery = "property[@name = 'fragment mid']/@value";
-				String currentNodeID = xPath.compile(xPathQuery).evaluate(fragmentNodes.item(i));
+				String currentNodeID = xPath.compile(xPathQuery)
+						.evaluate(fragmentNodes.item(i));
 				this.fragments.add(createAndInitializeFragment(currentNodeID));
 			}
 		} catch (XPathExpressionException e) {
@@ -684,9 +742,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private Fragment createAndInitializeFragment(String fragmentID) {
 		Retrieval retrieval = new Retrieval();
-		String fragmentXML = retrieval
-				.getXMLWithAuth(this.processeditorServerUrl, this.processeditorServerUrl +
-								"models/" + fragmentID + ".pm");
+		String fragmentXML = retrieval.getXMLWithAuth(this.processeditorServerUrl,
+				this.processeditorServerUrl + "models/" + fragmentID + ".pm");
 		Fragment fragment = new Fragment(processeditorServerUrl);
 		fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
 		return fragment;
@@ -700,7 +757,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private Document stringToDocument(final String xml) {
 		try {
-			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilder db =
+					DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(new InputSource(new StringReader(xml)));
 			doc.getDocumentElement().normalize();
 			return doc;

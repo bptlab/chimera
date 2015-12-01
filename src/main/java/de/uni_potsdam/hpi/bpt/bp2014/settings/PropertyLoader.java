@@ -5,9 +5,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropertyLoader {
+/**
+ * Class for accessing Properties from resources/config.properties.
+ */
+public final class PropertyLoader {
 
+	private PropertyLoader() { }
+
+	/**
+	 * Name of properties file.
+	 */
 	public static final String PROPERTIES_FILE = "config.properties";
+	/**
+	 * Folder for properties file.
+	 */
 	public static final String PROPERTIES_FOLDER = "resources";
 	private static Properties props = new Properties();
 
@@ -68,13 +79,13 @@ public class PropertyLoader {
 	}
 */
 
+	/**
+	 *
+	 * @param key Key for the Property to be returned
+	 * @return the property
+	 */
 	public static String getProperty(String key) {
-		String property = props.getProperty(key);
-		return property;
-	}
-
-	public static void main(String[] args) {
-		System.out.println(PropertyLoader.getProperty("mysql.url"));
+		return props.getProperty(key);
 	}
 
 }

@@ -3,43 +3,51 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.ws.rs.client.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
- * This is the execution behavior for webservice tasks
+ * This is the execution behavior for webservice tasks.
  */
 public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
-	static Logger log = Logger.getLogger(WebServiceTaskExecutionBehavior.class.getName());
+	private static Logger log = Logger.getLogger(
+			WebServiceTaskExecutionBehavior.class.getName());
 
 	/**
 	 * DB Connection class.
 	 */
-	DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
+	private DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 
 	/**
 	 * Initializes the webservice task.
 	 *
-	 * @param activityInstance_id The id of the webservice task.
+	 * @param activityInstanceId The id of the webservice task.
 	 * @param scenarioInstance    The instance of the ScenarioInstance.
-	 * @param controlNodeInstance The instance of the ControlNodeInstance (ActivityInstance).
+	 * @param controlNodeInstance The AbstractControlNodeInstance (ActivityInstance).
 	 */
-	public WebServiceTaskExecutionBehavior(int activityInstance_id,
-			ScenarioInstance scenarioInstance, ControlNodeInstance controlNodeInstance) {
-		super(activityInstance_id, scenarioInstance, controlNodeInstance);
+	public WebServiceTaskExecutionBehavior(int activityInstanceId,
+			ScenarioInstance scenarioInstance,
+			AbstractControlNodeInstance controlNodeInstance) {
+		super(activityInstanceId, scenarioInstance, controlNodeInstance);
 	}
 
 	@Override public void execute() {
 		String link = dbWebServiceTask
-				.getLinkForControlNode(controlNodeInstance.getControlNode_id());
-		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+				.getLinkForControlNode(getControlNodeInstance().getControlNodeId());
+		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 				.getDataAttributeInstances().values()) {
-			link = link.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+			link = link.replace("#" + (dataAttributeInstance.getDataObjectInstance())
+							.getName() + "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 		}
@@ -53,13 +61,14 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				webResource = webResource.queryParam(values[0], values[1]);
 			}
 		}
-		Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON);
+		Invocation.Builder invocationBuilder = webResource.request(
+				MediaType.APPLICATION_JSON);
 		Response response;
 		try {
-			switch (dbWebServiceTask.getMethod(controlNodeInstance.getControlNode_id())) {
+			switch (dbWebServiceTask.getMethod(getControlNodeInstance().getControlNodeId())) {
 			case "POST":
-				String post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
-				for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+				String post = dbWebServiceTask.getPOST(getControlNodeInstance().getControlNodeId());
+				for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 						.getDataAttributeInstances().values()) {
 					post = post.replace(
 							"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
@@ -69,8 +78,8 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				response = invocationBuilder.post(Entity.json(post));
 				break;
 			case "PUT":
-				post = dbWebServiceTask.getPOST(controlNodeInstance.getControlNode_id());
-				for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+				post = dbWebServiceTask.getPOST(getControlNodeInstance().getControlNodeId());
+				for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 						.getDataAttributeInstances().values()) {
 					post = post.replace(
 							"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
@@ -83,9 +92,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 				response = invocationBuilder.get();
 			}
 			if (response.getStatus() >= 200 && response.getStatus() <= 226) {
-				this.writeDataAttributes(response.readEntity(String.class));
+				String json = response.readEntity(String.class);
+				this.writeDataAttributes(json);
 			}
-		} catch (Exception e) {
+		} catch(JSONException e) {
 			log.error("Error by getting URL", e);
 		}
 		this.setCanTerminate(true);
@@ -98,44 +108,59 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 	 */
 	private void writeDataAttributes(String content) {
 		LinkedList<Integer> dataAttributeIds = dbWebServiceTask
-				.getAttributeIdsForControlNode(controlNodeInstance.getControlNode_id());
+				.getAttributeIdsForControlNode(
+						getControlNodeInstance().getControlNodeId());
 		for (int dataAttributeId : dataAttributeIds) {
 			LinkedList<String> keys = dbWebServiceTask
-					.getKeys(controlNodeInstance.getControlNode_id(), dataAttributeId);
+					.getKeys(getControlNodeInstance()
+									.getControlNodeId(),
+							dataAttributeId);
 			JSONObject jsonContent = new JSONObject(content);
 			JSONArray jsonArray = null;
 			boolean isJSONArray = false;
-			int i;
-			for (i = 0; i < keys.size() - 1; i++) {
+			for (int i = 0; i < keys.size() - 1; i++) {
 				try {
-					jsonContent = jsonContent.getJSONObject(keys.get(i));
+//					if (jsonContent != null) {
+						jsonContent = jsonContent.getJSONObject(
+								keys.get(i));
+//					}
 					jsonArray = null;
 					isJSONArray = false;
 				} catch (Exception e1) {
 					try {
-						jsonContent = jsonArray.getJSONObject(new Integer(keys.get(i)));
+//						if (jsonArray != null) {
+							jsonContent = jsonArray.getJSONObject(
+									new Integer(keys.get(i)));
+//						}
 						jsonArray = null;
 						isJSONArray = false;
 					} catch (Exception e2) {
 						try {
-							jsonArray = jsonContent.getJSONArray(keys.get(i));
+							jsonArray = jsonContent.getJSONArray(
+									keys.get(i));
 							jsonContent = null;
 							isJSONArray = true;
 						} catch (Exception e3) {
-							jsonArray = jsonArray.getJSONArray(new Integer(keys.get(i)));
+							jsonArray = jsonArray.getJSONArray(
+									new Integer(keys.get(i)));
 							jsonContent = null;
 							isJSONArray = true;
 						}
 					}
 				}
 			}
-			for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+			for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 					.getDataAttributeInstances().values()) {
-				if (dataAttributeInstance.getDataAttribute_id() == dataAttributeId) {
+				if (dataAttributeInstance.getDataAttributeId() == dataAttributeId) {
 					if (isJSONArray) {
-						dataAttributeInstance.setValue(jsonArray.get(new Integer(keys.get(i))));
+						dataAttributeInstance.setValue(jsonArray.get(
+								new Integer(keys.getLast())));
 					} else {
-						dataAttributeInstance.setValue(jsonContent.get(keys.get(i)));
+						if (jsonContent != null) {
+							dataAttributeInstance
+									.setValue(jsonContent.get(
+									keys.getLast()));
+						}
 					}
 				}
 			}

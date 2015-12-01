@@ -86,7 +86,7 @@
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.StateMachine</a></li>
+<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine</a></li>
 <li>
 <ul class="inheritance">
 <li>de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityStateMachine</li>
@@ -120,7 +120,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMach
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;de.uni_potsdam.hpi.bpt.bp2014.jcore.<a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">StateMachine</a></h3>
-<code><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#controlNodeInstance">controlNodeInstance</a>, <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#controlNodeInstance_id">controlNodeInstance_id</a>, <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#scenarioInstance">scenarioInstance</a>, <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#state">state</a></code></li>
+<code><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#controlNodeInstance">controlNodeInstance</a>, <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#controlNodeInstanceId">controlNodeInstanceId</a>, <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#scenarioInstance">scenarioInstance</a>, <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMachine.html#state">state</a></code></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +136,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMach
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ActivityStateMachine.html#ActivityStateMachine(int,%20de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance,%20de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance)">ActivityStateMachine</a></strong>(int&nbsp;activityInstance_id,
+<td class="colOne"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ActivityStateMachine.html#ActivityStateMachine(int,%20de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance,%20de.uni_potsdam.hpi.bpt.bp2014.jcore.ControlNodeInstance)">ActivityStateMachine</a></strong>(int&nbsp;activityInstanceId,
                     <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ScenarioInstance.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">ScenarioInstance</a>&nbsp;scenarioInstance,
                     <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ControlNodeInstance.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">ControlNodeInstance</a>&nbsp;controlNodeInstance)</code>
 <div class="block">Creates and initialize a activity state machine for an activity.</div>
@@ -239,12 +239,12 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/StateMach
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ActivityStateMachine</h4>
-<pre>public&nbsp;ActivityStateMachine(int&nbsp;activityInstance_id,
+<pre>public&nbsp;ActivityStateMachine(int&nbsp;activityInstanceId,
                     <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ScenarioInstance.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">ScenarioInstance</a>&nbsp;scenarioInstance,
                     <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ControlNodeInstance.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">ControlNodeInstance</a>&nbsp;controlNodeInstance)</pre>
 <div class="block">Creates and initialize a activity state machine for an activity.
  Reads the state from the database of the activity and add the activity to the correct lists in scenario instance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>activityInstance_id</code> - This is the database id from the activity instance.</dd><dd><code>scenarioInstance</code> - This is an instance from the class ScenarioInstance.</dd><dd><code>controlNodeInstance</code> - This is an instance from the class ControlNodeInstance.</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>activityInstanceId</code> - This is the database id from the activity instance.</dd><dd><code>scenarioInstance</code> - This is an instance from the class ScenarioInstance.</dd><dd><code>controlNodeInstance</code> - This is an instance from the class ControlNodeInstance.</dd></dl>
 </li>
 </ul>
 </li>

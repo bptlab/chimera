@@ -18,7 +18,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Fragment of the XML-Model.
@@ -28,7 +32,7 @@ import java.util.*;
  * which allows to save the Object to the Database.
  */
 public class Fragment implements IDeserialisable, IPersistable {
-	static Logger log = Logger.getLogger(Fragment.class.getName());
+	private static Logger log = Logger.getLogger(Fragment.class.getName());
 	/**
 	 * The url of the process Editor.
 	 */
@@ -50,7 +54,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 */
 	private long fragmentID;
 	/**
-	 * A Map which maps Model-XML-Element-IDs to nodes (might be either controlNodes or dataNodes).
+	 * A Map which maps Model-XML-Element-IDs to nodes (either controlNodes or dataNodes).
 	 */
 	private Map<Long, Node> nodes;
 	/**
@@ -87,7 +91,8 @@ public class Fragment implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * This constructor is only used for testcases as a connection to the server is not needed therefore.
+	 * This constructor is only used for testcases
+	 * therefore, a connection to the server is not needed .
 	 */
 	public Fragment() {
 	}
@@ -116,11 +121,13 @@ public class Fragment implements IDeserialisable, IPersistable {
 				NodeList versions = (NodeList) xPath.compile(xPathQuery)
 						.evaluate(versionXML, XPathConstants.NODESET);
 				int maxID = 0;
-				// We assume that the version that needs to be saved is the newest one
+				// We assume that the version to save is the newest one
 				for (int i = 0; i < versions.getLength(); i++) {
 					xPathQuery = "@id";
-					int currentID = Integer.parseInt((String) xPath.compile(xPathQuery)
-							.evaluate(versions.item(i), XPathConstants.STRING));
+					int currentID = Integer.parseInt(
+							(String) xPath.compile(xPathQuery)
+							.evaluate(versions.item(i),
+									XPathConstants.STRING));
 					if (maxID < currentID) {
 						maxID = currentID;
 					}
@@ -133,7 +140,8 @@ public class Fragment implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Get the XML which contains all the versions of the current scenario from the processEditorServer.
+	 * Get the XML which contains all the versions of the current scenario
+	 * (from the processEditorServer).
 	 *
 	 * @return XML containing versions
 	 */
@@ -141,10 +149,11 @@ public class Fragment implements IDeserialisable, IPersistable {
 		try {
 			Retrieval jRetrieval = new Retrieval();
 			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/" + fragmentID + "/versions");
+					processeditorServerUrl + "models/"
+							+ fragmentID + "/versions");
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db = null;
+			DocumentBuilder db;
 			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(is);
 			return doc.getDocumentElement();
@@ -162,7 +171,8 @@ public class Fragment implements IDeserialisable, IPersistable {
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		String xPathQuery = "/model/@id";
 		try {
-			this.fragmentID = Long.parseLong(xPath.compile(xPathQuery).evaluate(this.fragmentXML));
+			this.fragmentID = Long.parseLong(
+					xPath.compile(xPathQuery).evaluate(this.fragmentXML));
 		} catch (XPathExpressionException e) {
 			log.error("Error:", e);
 		}
@@ -174,17 +184,20 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 * Assert that first all Control- and DataNodes have been initialized.
 	 */
 	private void generateSets() {
-		inputSets = new LinkedList<InputSet>();
-		outputSets = new LinkedList<OutputSet>();
+		inputSets = new LinkedList<>();
+		outputSets = new LinkedList<>();
 		for (Node node : nodes.values()) {
 			if (node.isTask()) {
-				List<InputSet> iSets = InputSet.createInputSetForTaskAndEdges(node, edges);
+				List<InputSet> iSets =
+						InputSet.createInputSetForTaskAndEdges(node, edges);
 				if (null != iSets) {
 					for (InputSet iSet : iSets) {
 						inputSets.add(iSet);
 					}
 				}
-				List<OutputSet> oSets = OutputSet.createOutputSetForTaskAndEdges(node, edges);
+				List<OutputSet> oSets =
+						OutputSet.createOutputSetForTaskAndEdges(
+								node, edges);
 				if (null != oSets) {
 					for (OutputSet oSet : oSets) {
 						outputSets.add(oSet);
@@ -204,7 +217,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 			String xPathQuery = "/model/edges/edge";
 			NodeList edgeNodes = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(this.fragmentXML, XPathConstants.NODESET);
-			this.edges = new ArrayList<Edge>(edgeNodes.getLength());
+			this.edges = new ArrayList<>(edgeNodes.getLength());
 			for (int i = 0; i < edgeNodes.getLength(); i++) {
 				Edge currentEdge = new Edge();
 				currentEdge.initializeInstanceFromXML(edgeNodes.item(i));
@@ -227,7 +240,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 			String xPathQuery = "/model/nodes/node";
 			NodeList xmlNodes = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(this.fragmentXML, XPathConstants.NODESET);
-			this.nodes = new HashMap<Long, Node>(xmlNodes.getLength());
+			this.nodes = new HashMap<>(xmlNodes.getLength());
 
 			for (int i = 0; i < xmlNodes.getLength(); i++) {
 				Node currentNode = new Node();
@@ -266,9 +279,8 @@ public class Fragment implements IDeserialisable, IPersistable {
 
 	@Override public int save() {
 		Connector conn = new Connector();
-		this.databaseID = conn
-				.insertFragmentIntoDatabase(this.fragmentName, this.scenarioID, this.fragmentID,
-						this.versionNumber);
+		this.databaseID = conn.insertFragmentIntoDatabase(this.fragmentName,
+				this.scenarioID, this.fragmentID, this.versionNumber);
 		for (Node node : nodes.values()) {
 			node.setFragmentId(databaseID);
 			node.save();
@@ -322,7 +334,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 * Returns a Map of Node-Ids (from XML) and their nodes.
 	 * Any changes will manipulate the state of the Fragment.
 	 *
-	 * @return Map<XML_ID, ControlNode>
+	 * @return a Map<XML_ID, ControlNode>
 	 */
 	public Map<Long, Node> getControlNodes() {
 		return nodes;

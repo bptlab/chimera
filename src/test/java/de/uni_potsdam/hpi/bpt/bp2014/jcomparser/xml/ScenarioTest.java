@@ -518,11 +518,11 @@ public class  ScenarioTest extends TestSetUp {
         Assert.assertEquals("Fragment not migrated properly", fragmentA.getDatabaseID(), dbFragmentInstance.getFragmentID(1));
         Assert.assertEquals("Fragment not migrated properly", fragmentB.getDatabaseID(), dbFragmentInstance.getFragmentID(2));
 
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(826790323L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(2));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(517729148L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(3));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(1569336784L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(1));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(2081480666L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(4));
-        Assert.assertEquals("ControlNodeInstance not migrated properly", fragmentB.getControlNodes().get(826790323L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(5));
+        Assert.assertEquals("AbstractControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(826790323L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(2));
+        Assert.assertEquals("AbstractControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(517729148L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(3));
+        Assert.assertEquals("AbstractControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(1569336784L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(1));
+        Assert.assertEquals("AbstractControlNodeInstance not migrated properly", fragmentA.getControlNodes().get(2081480666L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(4));
+        Assert.assertEquals("AbstractControlNodeInstance not migrated properly", fragmentB.getControlNodes().get(826790323L).getDatabaseID(), dbControlNodeInstance.getControlNodeID(5));
 
         Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("SubDO").getDatabaseId(), dbDataObjectInstance.getDataObjectID(1));
         Assert.assertEquals("DataObjectInstance not migrated properly", scenario.getDataObjects().get("DO").getDatabaseId(), dbDataObjectInstance.getDataObjectID(2));

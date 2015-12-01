@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DbControlNodeInstanceTest extends AbstractDatabaseDependentTest {
+public class DbAbstractControlNodeInstanceTest extends AbstractDatabaseDependentTest {
     /**
      *
      */

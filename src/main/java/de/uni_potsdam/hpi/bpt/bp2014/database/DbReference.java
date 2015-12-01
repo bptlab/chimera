@@ -9,11 +9,12 @@ public class DbReference extends DbObject {
 	/**
 	 * This method gives you for a known activity all referenced activities ID's.
 	 *
-	 * @param activity_id This is the database ID of an activity.
+	 * @param activityId This is the database ID of an activity.
 	 * @return a list of all database ID's of all referenced activities for the given activity.
 	 */
-	public LinkedList<Integer> getReferenceActivitiesForActivity(int activity_id) {
-		String sql = "SELECT controlnode_id2 FROM reference WHERE controlnode_id1 = " + activity_id;
+	public LinkedList<Integer> getReferenceActivitiesForActivity(int activityId) {
+		String sql = "SELECT controlnode_id2 FROM reference "
+				+ "WHERE controlnode_id1 = " + activityId;
 		return this.executeStatementReturnsListInt(sql, "controlnode_id2");
 	}
 }

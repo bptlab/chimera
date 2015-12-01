@@ -4,7 +4,7 @@ import com.ibatis.common.jdbc.ScriptRunner;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import net.javacrumbs.jsonunit.core.Option;
 
@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
@@ -86,7 +87,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a get to {@link RestInterface#getScenarios(UriInfo, String)} 
+     * When you sent a get to {@link RestInterface#getScenarios(UriInfo, String)}
      * the entity of the response will be a valid JSON array.
      */
     @Test
@@ -97,7 +98,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)} 
+     * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)}
      * the returned JSON will contain the latest version of all Scenarios.
      */
     @Test
@@ -159,7 +160,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getScenarioInstances(UriInfo, int, String)} 
+     * When you send a Get to {@link RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with valid params and no filter
      * then you get 200 a JSON Object.
      */
@@ -268,7 +269,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)} 
+     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -291,7 +292,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testStartNewInstanceWName() {
         RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
-        newName.name = "Dies ist ein Test";
+        newName.setName("Dies ist ein Test");
         Response response = base.path("scenario/1/instance")
                 .request().put(Entity.json(newName));
         assertEquals("The Response code of start new instances was not 201",
@@ -312,7 +313,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testStartInvalidInstanceWName() {
         RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
-        newName.name = "Dies ist ein Test";
+        newName.setName("Dies ist ein Test");
         Response response = base.path("scenario/9999/instance").request()
                 .put(Entity.json(newName));
         assertEquals("The Response code of start new instances was not 400",
@@ -399,7 +400,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an wrong scenario instance ID
      * then a 404 with error message (inside JSON) should be returned.
      */
@@ -417,7 +418,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -436,7 +437,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters, an invalid state but no filter
      * the request should return a 404 with error message
      */
@@ -457,7 +458,7 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -476,7 +477,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state and a filter
      * then the request should return all activities with the state who fulfill the filter condition.
      */
@@ -534,7 +535,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)} 
+     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with a filter String
      * then only activities with a label like the filter String will be returned.
      */
@@ -552,7 +553,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with a correct instance id and a wrong scenario ID
      * you will be redirected automatically.
      */
@@ -570,7 +571,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an invalid instance
      * an 404 with error message will be returned
      */
@@ -588,7 +589,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an valid instance and scenario and no filter String
      * you will get a list of all DataObjects for this scenario.
      */
@@ -606,7 +607,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)} 
+     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an valid instance and scenario and an filter String
      * you will get a list of all DataObjects with labels like the filter String for this scenario.
      */
@@ -637,7 +638,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"set_id\":0,\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"setId\":0,\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
                         .when(Option.IGNORING_EXTRA_FIELDS));
@@ -692,7 +693,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"set_id\":0,\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"setId\":0,\"id\":1,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
                         .when(Option.IGNORING_EXTRA_FIELDS));
@@ -766,6 +767,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("The response code of getInputDataObjects was not 200", 200, response.getStatus());
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
+        // String responseJson = response.readEntity(String.class);
         assertThat("The returned JSON does not contain the expected content",
                 "[{\"id\":139,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/inputset/139\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
@@ -788,7 +790,7 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
@@ -825,7 +827,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
@@ -845,7 +847,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -874,12 +876,13 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String)}
+     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
     @Test
     public void testUpdateActivityWAttributes(){
+        // TODO Find out what this does
         Response response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "begin").request().post(Entity.json("[]"));
         assertEquals("The Response code of updateActivityState was not 202",
@@ -890,16 +893,20 @@ public class RestInterfaceTest extends AbstractTest {
                 "{\"message\":\"activity state changed.\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
-        response = base.path("scenario/135/instance/808/activity/4518")
+
+        // Update value of activity
+        Response updateResponse = base.path("scenario/135/instance/808/activity/4518")
                 .request()
                 .put(Entity.json("{\"id\":1,\"value\":\"Test\"}"));
         assertEquals("The Response code of updateActivityState was not 202",
-                202, response.getStatus());
+                202, updateResponse.getStatus());
+
+        // Terminate activity
         response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "terminate").request()
                 .post(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));
         assertEquals("The Response code of getTerminationCondition was not 202",
-                202, response.getStatus());
+                202, updateResponse.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",

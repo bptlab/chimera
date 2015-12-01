@@ -23,8 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the DomainModel.
+ */
 public class DomainModel implements IDeserialisable, IPersistable {
-	static Logger log = Logger.getLogger(DomainModel.class.getName());
+	private static Logger log = Logger.getLogger(DomainModel.class.getName());
 
 	/**
 	 * The url of the process Editor.
@@ -104,7 +107,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
 			String xPathQuery = "/model/edges/edge";
 			NodeList aggregates = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(this.domainModelXML, XPathConstants.NODESET);
-			this.aggregations = new ArrayList<Aggregation>(aggregates.getLength());
+			this.aggregations = new ArrayList<>(aggregates.getLength());
 			for (int i = 0; i < aggregates.getLength(); i++) {
 				Aggregation currentAggregation = new Aggregation();
 				currentAggregation.setDataClasses(dataClasses);
@@ -126,12 +129,13 @@ public class DomainModel implements IDeserialisable, IPersistable {
 			String xPathQuery = "/model/nodes/node";
 			NodeList nodes = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(this.domainModelXML, XPathConstants.NODESET);
-			this.dataClasses = new HashMap<Long, DataClass>(nodes.getLength());
+			this.dataClasses = new HashMap<>(nodes.getLength());
 
 			for (int i = 0; i < nodes.getLength(); i++) {
 				DataClass currentClass = new DataClass();
 				currentClass.initializeInstanceFromXML(nodes.item(i));
-				this.dataClasses.put(currentClass.getDataClassModelID(), currentClass);
+				this.dataClasses.put(
+						currentClass.getDataClassModelID(), currentClass);
 			}
 		} catch (XPathExpressionException e) {
 			log.error("Error:", e);
@@ -145,8 +149,8 @@ public class DomainModel implements IDeserialisable, IPersistable {
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		String xPathQuery = "/model/@id";
 		try {
-			this.domainModelModelID = Long
-					.parseLong(xPath.compile(xPathQuery).evaluate(this.domainModelXML));
+			this.domainModelModelID = Long.parseLong(
+					xPath.compile(xPathQuery).evaluate(this.domainModelXML));
 		} catch (XPathExpressionException e) {
 			log.error("Error:", e);
 		}
@@ -164,13 +168,16 @@ public class DomainModel implements IDeserialisable, IPersistable {
 				NodeList versions = (NodeList) xPath.compile(xPathQuery)
 						.evaluate(versionXML, XPathConstants.NODESET);
 				int maxID = 0;
-				// We assume that the version that needs to be saved is the newest one
+				// We assume that the version to save is the newest one
 				for (int i = 0; i < versions.getLength(); i++) {
 					xPathQuery = "@id";
-					int currentID = Integer.parseInt((String) xPath.compile(xPathQuery)
-							.evaluate(versions.item(i), XPathConstants.STRING));
-					if (maxID < currentID)
+					int currentID = Integer.parseInt(
+							(String) xPath.compile(xPathQuery)
+							.evaluate(versions.item(i),
+									XPathConstants.STRING));
+					if (maxID < currentID) {
 						maxID = currentID;
+					}
 				}
 				versionNumber = maxID;
 			} catch (XPathExpressionException e) {
@@ -188,10 +195,11 @@ public class DomainModel implements IDeserialisable, IPersistable {
 		try {
 			Retrieval jRetrieval = new Retrieval();
 			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/" + domainModelModelID + "/versions");
+					processeditorServerUrl + "models/"
+							+ domainModelModelID + "/versions");
 			InputSource is = new InputSource();
 			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db = null;
+			DocumentBuilder db;
 			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(is);
 			return doc.getDocumentElement();
@@ -202,9 +210,10 @@ public class DomainModel implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * This method saves the domainModel to the database as well as for the dataClasses and aggregations.
+	 * This method saves the domainModel to the database
+	 * as well as for the dataClasses and aggregations.
 	 *
-	 * @return
+	 * @return the integer 1.
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
@@ -223,7 +232,8 @@ public class DomainModel implements IDeserialisable, IPersistable {
 	 * Migrate all dataAttributeInstances that are instances of all dataAttributes
 	 * belonging to the instances of the old scenario.
 	 *
-	 * @param oldScenarioDbID DatabaseID of the old scenario whose dataAttributeInstances get migrated.
+	 * @param oldScenarioDbID DatabaseID of the old scenario
+	 *                           whose dataAttributeInstances get migrated.
 	 */
 	public void migrateDataAttributeInstances(int oldScenarioDbID) {
 		Map<Integer, Integer> mappedDataClassIDs = mapDataClassIDs(oldScenarioDbID);
@@ -234,20 +244,25 @@ public class DomainModel implements IDeserialisable, IPersistable {
 					.getDataAttributes(dataClassIDs.getKey());
 			Map<Integer, String> newDataAttributes = connector
 					.getDataAttributes(dataClassIDs.getValue());
-			for (Map.Entry<Integer, String> oldDataAttribute : oldDataAttributes.entrySet()) {
-				for (Map.Entry<Integer, String> newDataAttribute : newDataAttributes.entrySet()) {
-					if (oldDataAttribute.getValue().equals(newDataAttribute.getValue())) {
-						mappedDataAttributeIDs
-								.put(oldDataAttribute.getKey(), newDataAttribute.getKey());
+			for (Map.Entry<Integer, String> oldDataAttribute
+					: oldDataAttributes.entrySet()) {
+				for (Map.Entry<Integer, String> newDataAttribute
+						: newDataAttributes.entrySet()) {
+					if (oldDataAttribute.getValue().equals(
+							newDataAttribute.getValue())) {
+						mappedDataAttributeIDs.put(
+								oldDataAttribute.getKey(),
+								newDataAttribute.getKey());
 						newDataAttributes.remove(newDataAttribute.getKey());
 						break;
 					}
 				}
 			}
 		}
-		for (Map.Entry<Integer, Integer> dataAttribute : mappedDataAttributeIDs.entrySet()) {
-			connector
-					.migrateDataAttributeInstance(dataAttribute.getKey(), dataAttribute.getValue());
+		for (Map.Entry<Integer, Integer> dataAttribute
+				: mappedDataAttributeIDs.entrySet()) {
+			connector.migrateDataAttributeInstance(
+					dataAttribute.getKey(), dataAttribute.getValue());
 		}
 	}
 

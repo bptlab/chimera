@@ -2,29 +2,37 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
 
-public class GatewayStateMachine extends StateMachine {
+/**
+ * This class represents a gateway state machine.
+ */
+public class GatewayStateMachine extends AbstractStateMachine {
 	/**
 	 * Database Connection objects
 	 */
 	private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 
 	/**
-	 * Initializes the GatewayStateMachine
+	 * Initializes the GatewayStateMachine.
 	 *
-	 * @param gateway_id          This is the id of the gateway.
+	 * @param gatewayId          This is the id of the gateway.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
-	 * @param controlNodeInstance This is an instance from the class ControlNodeInstance.
+	 * @param controlNodeInstance This is an AbstractControlNodeInstance.
 	 */
-	public GatewayStateMachine(int gateway_id, ScenarioInstance scenarioInstance,
-			ControlNodeInstance controlNodeInstance) {
-		this.scenarioInstance = scenarioInstance;
-		this.controlNodeInstance_id = gateway_id;
-		this.controlNodeInstance = controlNodeInstance;
-		this.state = dbGatewayInstance.getState(controlNodeInstance.controlNodeInstance_id);
-		if (state.equals("executing")) {
-			scenarioInstance.getExecutingGateways().add((GatewayInstance) controlNodeInstance);
-		} else if (state.equals("terminated") || state.equals("skipped")) {
-			scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+	public GatewayStateMachine(int gatewayId, ScenarioInstance scenarioInstance,
+			AbstractControlNodeInstance controlNodeInstance) {
+		this.setScenarioInstance(scenarioInstance);
+		this.setControlNodeInstanceId(gatewayId);
+		this.setControlNodeInstance(controlNodeInstance);
+		this.setState(dbGatewayInstance.getState(
+				controlNodeInstance.getControlNodeInstanceId()));
+		if ("executing".equals(getState())) {
+			scenarioInstance.getExecutingGateways().add(
+					(GatewayInstance) controlNodeInstance);
+		} else {
+			if ("terminated".equals(getState()) || "skipped".equals(getState())) {
+				scenarioInstance.getTerminatedControlNodeInstances()
+						.add(controlNodeInstance);
+			}
 		}
 		scenarioInstance.getControlNodeInstances().add(controlNodeInstance);
 	}
@@ -34,9 +42,11 @@ public class GatewayStateMachine extends StateMachine {
 	 * Sets the state for the gateway instance in the database to executing.
 	 */
 	public void execute() {
-		state = "executing";
-		dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);
-		scenarioInstance.getExecutingGateways().add((GatewayInstance) controlNodeInstance);
+		setState("executing");
+		dbGatewayInstance.setState(
+				getControlNodeInstance().getControlNodeInstanceId(), getState());
+		getScenarioInstance().getExecutingGateways()
+				.add((GatewayInstance) getControlNodeInstance());
 	}
 
 	/**
@@ -44,10 +54,12 @@ public class GatewayStateMachine extends StateMachine {
 	 * Sets the state for the gateway instance in the database to terminated.
 	 */
 	@Override public boolean terminate() {
-		state = "terminated";
-		dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);
-		scenarioInstance.getExecutingGateways().remove(controlNodeInstance);
-		scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+		setState("terminated");
+		dbGatewayInstance.setState(
+				getControlNodeInstance().getControlNodeInstanceId(), getState());
+		getScenarioInstance().getExecutingGateways().remove(getControlNodeInstance());
+		getScenarioInstance().getTerminatedControlNodeInstances()
+				.add(getControlNodeInstance());
 		return true;
 	}
 
@@ -56,10 +68,12 @@ public class GatewayStateMachine extends StateMachine {
 	 * Sets the state for the gateway instance in the database to skipped.
 	 */
 	@Override public boolean skip() {
-		state = "skipped";
-		dbGatewayInstance.setState(controlNodeInstance.controlNodeInstance_id, state);
-		scenarioInstance.getExecutingGateways().remove(controlNodeInstance);
-		scenarioInstance.getTerminatedControlNodeInstances().add(controlNodeInstance);
+		setState("skipped");
+		dbGatewayInstance.setState(
+				getControlNodeInstance().getControlNodeInstanceId(), getState());
+		getScenarioInstance().getExecutingGateways().remove(getControlNodeInstance());
+		getScenarioInstance().getTerminatedControlNodeInstances()
+				.add(getControlNodeInstance());
 		return true;
 	}
 }

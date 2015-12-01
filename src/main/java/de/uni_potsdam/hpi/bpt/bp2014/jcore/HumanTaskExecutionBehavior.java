@@ -7,27 +7,38 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * This class specifies the human task execution behavior.
+ */
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 
-	public HumanTaskExecutionBehavior(int activityInstance_id, ScenarioInstance scenarioInstance,
-			ControlNodeInstance controlNodeInstance) {
-		super(activityInstance_id, scenarioInstance, controlNodeInstance);
+	/**
+	 *
+	 * @param activityInstanceId This is an activty instance id.
+	 * @param scenarioInstance	  This is a scenario instance.
+	 * @param controlNodeInstance This is a control node instance.
+	 */
+	public HumanTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance,
+			AbstractControlNodeInstance controlNodeInstance) {
+		super(activityInstanceId, scenarioInstance, controlNodeInstance);
 	}
 
 	@Override public void execute() {
 		DbDataFlow dbDataFlow = new DbDataFlow();
 		//allow an activity to terminate if it has no data attributes in output.
-		if (dbDataFlow.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id())
+		if (dbDataFlow.getOutputSetsForControlNode(
+				getControlNodeInstance().getControlNodeId())
 				.isEmpty()) {
 			this.setCanTerminate(true);
-		} else if (scenarioInstance.getDataAttributeInstances().isEmpty()) {
+		} else if (getScenarioInstance().getDataAttributeInstances().isEmpty()) {
 			this.setCanTerminate(true);
 		} else {
-			LinkedList<Integer> outputSets = dbDataFlow
-					.getOutputSetsForControlNode(controlNodeInstance.getControlNode_id());
+			LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
+					getControlNodeInstance().getControlNodeId());
 			int outputSet = outputSets.getFirst();
 			DbDataNode dbDataNode = new DbDataNode();
-			LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(outputSet);
+			LinkedList<DataObject> dataObjects = dbDataNode
+					.getDataObjectsForDataSets(outputSet);
 			boolean hasAttribute = false;
 			for (DataObject dataObject : dataObjects) {
 				if (this.dataObjectHasAttributes(dataObject)) {
@@ -42,10 +53,10 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 	}
 
 	private boolean dataObjectHasAttributes(DataObject dataObject) {
-		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 				.getDataAttributeInstances().values()) {
-			if (dataAttributeInstance.getDataObjectInstance().getDataObject_id() == dataObject
-					.getId()) {
+			if (dataAttributeInstance.getDataObjectInstance().getDataObjectId()
+					== dataObject.getId()) {
 				return true;
 			}
 		}
@@ -54,7 +65,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 
 	@Override public void setDataAttributeValues(Map<Integer, String> values) {
 		for (Integer i : values.keySet()) {
-			DataAttributeInstance dataAttributeInstance = scenarioInstance
+			DataAttributeInstance dataAttributeInstance = getScenarioInstance()
 					.getDataAttributeInstances().get(i);
 			dataAttributeInstance.setValue(values.get(i));
 		}

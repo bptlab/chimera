@@ -17,13 +17,14 @@ import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is the core class of the JComparser.
  * Every functionality can be used by using this class.
  */
 public class JComparser {
-	static Logger log = Logger.getLogger(JComparser.class.getName());
+	private static Logger log = Logger.getLogger(JComparser.class.getName());
 
 	/**
 	 * A main-method which should be used for Debug only.
@@ -56,17 +57,18 @@ public class JComparser {
 	 * @return A map of scenario names and their model ids.
 	 * @throws XPathExpressionException The XPath Query seems to be invalid.
 	 */
-	public HashMap<String, String> getScenarioNamesAndIDs(final String processeditorServerUrl)
+	public Map<String, String> getScenarioNamesAndIDs(final String processeditorServerUrl)
 			throws XPathExpressionException {
 		String modelXML = new Retrieval()
-				.getXMLWithAuth(processeditorServerUrl, processeditorServerUrl + "models");
+				.getXMLWithAuth(processeditorServerUrl,
+						processeditorServerUrl + "models");
 		Document modelDoc = stringToDocument(modelXML);
 		if (modelDoc != null) {
-			HashMap<String, String> result = new HashMap<>();
+			Map<String, String> result = new HashMap<>();
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			// select all models whose type is scenario
-			String xPathQuery = "/models/model[type/text()="
-					+ "'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario']";
+			String xPathQuery = "/models/model[type/text()='de.uni_potsdam.hpi.bpt"
+					+ ".bp2014.jeditor.visualization.pcm.PCMScenario']";
 			NodeList models = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(modelDoc, XPathConstants.NODESET);
 
@@ -76,9 +78,11 @@ public class JComparser {
 						.evaluate(models.item(i), XPathConstants.STRING);
 				// split the URI by "/" --> the last field is the ID of the scenario
 				String[] splittedScenarioURI = currentURI.split("/");
-				String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length - 1];
+				String currentScenarioID =
+						splittedScenarioURI[splittedScenarioURI.length - 1];
 				xPathQuery = "name/text()";
-				String currentName = xPath.compile(xPathQuery).evaluate(models.item(i));
+				String currentName =
+						xPath.compile(xPathQuery).evaluate(models.item(i));
 				result.put(currentScenarioID, currentName);
 			}
 			return result;
@@ -96,7 +100,8 @@ public class JComparser {
 			throws XPathExpressionException {
 
 		String modelXML = new Retrieval()
-				.getXMLWithAuth(processeditorServerUrl, processeditorServerUrl + "models");
+				.getXMLWithAuth(processeditorServerUrl,
+						processeditorServerUrl + "models");
 		Document models = stringToDocument(modelXML);
 		if (models != null) {
 			/* get all (correct) URIs of the scenarios,
@@ -104,22 +109,29 @@ public class JComparser {
              */
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			// select all URIS of models whose type is scenario
-			String xPathQuery = "/models/model[type/text()="
-					+ "'de.uni_potsdam.hpi.bpt.bp2014.jeditor.visualization.pcm.PCMScenario']/uri/text()";
+			String xPathQuery = "/models/model[type/text()='de.uni_potsdam.hpi.bpt."
+					+ "bp2014.jeditor.visualization.pcm.PCMScenario']"
+					+ "/uri/text()";
 			NodeList xmlModelURIs = (NodeList) xPath.compile(xPathQuery)
 					.evaluate(models, XPathConstants.NODESET);
 
 			for (int i = 0; i < xmlModelURIs.getLength(); i++) {
 				String currentXmlUri = xmlModelURIs.item(i).getTextContent();
 				String[] splittedScenarioURI = currentXmlUri.split("/");
-				String currentScenarioID = splittedScenarioURI[splittedScenarioURI.length - 1];
-				String newScenarioURI = processeditorServerUrl +
-						"models/" + currentScenarioID + ".pm";
+				String currentScenarioID =
+						splittedScenarioURI[splittedScenarioURI.length - 1];
+				String newScenarioURI = processeditorServerUrl
+						+ "models/" + currentScenarioID + ".pm";
 				Scenario scenario = new Scenario(processeditorServerUrl);
-				String currentScenarioXML = new Retrieval()
-						.getXMLWithAuth(processeditorServerUrl, newScenarioURI);
-				scenario.initializeInstanceFromXML(
-						stringToDocument(currentScenarioXML).getFirstChild());
+				String currentScenarioXML = new Retrieval().getXMLWithAuth(
+						processeditorServerUrl, newScenarioURI);
+				try {
+					scenario.initializeInstanceFromXML(
+							stringToDocument(currentScenarioXML).
+									getFirstChild());
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}
 				scenario.save();
 			}
 		}
@@ -133,7 +145,8 @@ public class JComparser {
 	 */
 	private Document stringToDocument(final String xml) {
 		try {
-			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilder db =
+					DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = db.parse(new InputSource(new StringReader(xml)));
 			doc.getDocumentElement().normalize();
 			return doc;

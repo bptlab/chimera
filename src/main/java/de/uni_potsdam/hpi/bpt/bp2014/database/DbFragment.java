@@ -10,11 +10,11 @@ public class DbFragment extends DbObject {
 	/**
 	 * This method returns all database ID's of all fragments which belong to a scenario.
 	 *
-	 * @param scenario_id This is the database ID of a scenario.
+	 * @param scenarioId This is the database ID of a scenario.
 	 * @return a list of all ID's of all fragments belonging to the scenario.
 	 */
-	public LinkedList<Integer> getFragmentsForScenario(int scenario_id) {
-		String sql = "SELECT id FROM fragment WHERE scenario_id = " + scenario_id;
+	public LinkedList<Integer> getFragmentsForScenario(int scenarioId) {
+		String sql = "SELECT id FROM fragment WHERE scenario_id = " + scenarioId;
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
 }

@@ -10,8 +10,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
-	static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class.getName());
+/**
+ * This class deals with the split behavior of exclusive gateways.
+ */
+public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehavior {
+	private static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class.getName());
 	/**
 	 * List of IDs of following control nodes.
 	 */
@@ -19,20 +22,19 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 
 	private DbState dbState = new DbState();
 	private String type = null;
-	//    private int controlNode_id = -1;
 
 	/**
-	 * Initializes and creates an ExclusiveGatewaySplitBehavior
+	 * Initializes and creates an ExclusiveGatewaySplitBehavior.
 	 *
-	 * @param gateway_id          The id of the gateway.
+	 * @param gatewayId          The id of the gateway.
 	 * @param scenarioInstance    An instance from the class ScenarioInstance.
-	 * @param fragmentInstance_id The id of the fragment instance.
+	 * @param fragmentInstanceId The id of the fragment instance.
 	 */
-	public ExclusiveGatewaySplitBehavior(int gateway_id, ScenarioInstance scenarioInstance,
-			int fragmentInstance_id) {
-		this.controlNode_id = gateway_id;
-		this.scenarioInstance = scenarioInstance;
-		this.fragmentInstance_id = fragmentInstance_id;
+	public ExclusiveGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance,
+			int fragmentInstanceId) {
+		this.setControlNodeId(gatewayId);
+		this.setScenarioInstance(scenarioInstance);
+		this.setFragmentInstanceId(fragmentInstanceId);
 		initializeFollowingControlNodeIds();
 	}
 
@@ -41,7 +43,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 	 * Creates for every control node a bucket.
 	 */
 	private void initializeFollowingControlNodeIds() {
-		LinkedList<Integer> ids = this.dbControlFlow.getFollowingControlNodes(controlNode_id);
+		LinkedList<Integer> ids = this.getDbControlFlow()
+				.getFollowingControlNodes(getControlNodeId());
 		for (int i = 0; i < ids.size(); i++) {
 			followingControlNodes.add(new LinkedList<Integer>());
 			this.addFollowingControlNode(i, ids.get(i));
@@ -49,21 +52,23 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 	}
 
 	/**
-	 * Adds the control node id to the bucket. Looks for XOR and AND to add the following control nodes.
+	 * Adds the control node id to the bucket.
+	 * Looks for XOR and AND to add the following control nodes.
 	 *
-	 * @param bucket_id The bucket id.
+	 * @param bucketId The bucket id.
 	 * @param id        The id of the control node getting added.
 	 */
-	private void addFollowingControlNode(int bucket_id, int id) {
-		LinkedList<Integer> ids = followingControlNodes.get(bucket_id);
+	private void addFollowingControlNode(int bucketId, int id) {
+		LinkedList<Integer> ids = followingControlNodes.get(bucketId);
 		ids.add(id);
-		followingControlNodes.set(bucket_id, ids);
-		if (type == null || this.controlNode_id != id) {
-			type = dbControlNode.getType(id);
+		followingControlNodes.set(bucketId, ids);
+		if (type == null || this.getControlNodeId() != id) {
+			type = this.getDbControlNode().getType(id);
 		}
-		if (type.equals("XOR") || type.equals("AND")) {
-			for (int controlNode_id : dbControlFlow.getFollowingControlNodes(id)) {
-				this.addFollowingControlNode(bucket_id, controlNode_id);
+		if ("XOR".equals(type) || "AND".equals(type)) {
+			for (int controlNodeId : this.getDbControlFlow()
+					.getFollowingControlNodes(id)) {
+				this.addFollowingControlNode(bucketId, controlNodeId);
 			}
 		}
 	}
@@ -80,24 +85,28 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 		enableFollowing();
 	}
 
-	@Override protected ControlNodeInstance createFollowingNodeInstance(int controlNode_id) {
-		for (ControlNodeInstance controlNodeInstance : scenarioInstance.getControlNodeInstances()) {
-			if (controlNode_id == controlNodeInstance.controlNode_id && !controlNodeInstance
-					.getClass().equals(ActivityInstance.class) && !controlNodeInstance
-					.getStateMachine().state.equals("terminated")) {
+	@Override protected AbstractControlNodeInstance createFollowingNodeInstance(
+			int controlNodeId) {
+		for (AbstractControlNodeInstance controlNodeInstance
+				: this.getScenarioInstance().getControlNodeInstances()) {
+			if (controlNodeId == controlNodeInstance.getControlNodeId()
+					&& !controlNodeInstance.getClass().equals(
+					ActivityInstance.class) && !controlNodeInstance
+					.getStateMachine().getState().equals("terminated")) {
 				return controlNodeInstance;
 			}
 		}
-		if (type == null || this.controlNode_id != controlNode_id) {
-			type = dbControlNode.getType(controlNode_id);
+		if (type == null || this.getControlNodeId() != controlNodeId) {
+			type = this.getDbControlNode().getType(controlNodeId);
 		}
-		ControlNodeInstance controlNodeInstance = createControlNode(type, controlNode_id);
+		AbstractControlNodeInstance controlNodeInstance = createControlNode(
+				type, controlNodeId);
 		setAutomaticExecutionToFalse(type, controlNodeInstance);
 		return controlNodeInstance;
 	}
 
 	private void setAutomaticExecutionToFalse(String type,
-			ControlNodeInstance controlNodeInstance) {
+			AbstractControlNodeInstance controlNodeInstance) {
 		switch (type) {
 		case "Activity":
 		case "EmailTask":
@@ -107,29 +116,34 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 		case "AND":
 			((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
 			break;
+		default:
+			break;
 		}
 	}
 
 	/**
-	 * Checks if the gateway can terminate, because the given control node has changed his state.
+	 * Checks if the gateway can terminate
+	 * (because the given control node has changed his state).
 	 *
-	 * @param controlNode_id The id of the control node.
+	 * @param controlNodeId The id of the control node.
 	 * @return True if the gateway can terminate. false if not.
 	 */
-	public boolean checkTermination(int controlNode_id) {
-		if (type == null || this.controlNode_id != controlNode_id) {
-			type = dbControlNode.getType(controlNode_id);
+	public boolean checkTermination(int controlNodeId) {
+		if (type == null || this.getControlNodeId() != controlNodeId) {
+			type = this.getDbControlNode().getType(controlNodeId);
 		}
-		if ((type.equals("AND")) || (type.equals("XOR"))) {
+		if (("AND".equals(type)) || ("XOR".equals(type))) {
 			return false;
 		}
 		for (int i = 0; i < followingControlNodes.size(); i++) {
-			if (followingControlNodes.get(i).contains(new Integer(controlNode_id))) {
+			if (followingControlNodes.get(i).contains(new Integer(controlNodeId))) {
 				followingControlNodes.remove(i);
-				for (LinkedList<Integer> followingControlNode_ids : followingControlNodes) {
-					for (int id : followingControlNode_ids) {
-						ControlNodeInstance controlNodeInstance = scenarioInstance
-								.getControlNodeInstanceForControlNodeId(id);
+				for (LinkedList<Integer> followingControlNodeIds
+						: followingControlNodes) {
+					for (int id : followingControlNodeIds) {
+						AbstractControlNodeInstance controlNodeInstance
+								= this.getScenarioInstance()
+						.getControlNodeInstanceForControlNodeId(id);
 						controlNodeInstance.skip();
 					}
 				}
@@ -143,30 +157,31 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 	 * Evaluates Conditions for the control flow of an XOR gateway.
 	 */
 	public void evaluateConditions() {
-		Map<Integer, String> conditions = dbControlFlow.getConditions(controlNode_id);
+		Map<Integer, String> conditions = this.getDbControlFlow()
+				.getConditions( getControlNodeId());
 		Set<Integer> keys = conditions.keySet();
 		Iterator<Integer> key = keys.iterator();
-		Integer controlNode_id = 0;
+		Integer controlNodeId = 0;
 		boolean defaultExecution = true;
 		int defaultControlNode = -1;
 		while (key.hasNext()) {
-			controlNode_id = (Integer) key.next();
-			if ((conditions.get(controlNode_id)).equals("DEFAULT")) {
-				defaultControlNode = controlNode_id;
-			} else if (evaluateCondition(conditions.get(controlNode_id))) {
+			controlNodeId = key.next();
+			if ((conditions.get(controlNodeId)).equals("DEFAULT")) {
+				defaultControlNode = controlNodeId;
+			} else if (evaluateCondition(conditions.get(controlNodeId))) {
 				defaultExecution = false;
 				break;
 			}
 		}
 		if (defaultExecution) {
 			if (defaultControlNode != -1) {
-				ControlNodeInstance controlNodeInstance = super
+				AbstractControlNodeInstance controlNodeInstance = super
 						.createFollowingNodeInstance(defaultControlNode);
 				controlNodeInstance.enableControlFlow();
 			}
 		} else {
-			ControlNodeInstance controlNodeInstance = super
-					.createFollowingNodeInstance(controlNode_id);
+			AbstractControlNodeInstance controlNodeInstance = super
+					.createFollowingNodeInstance(controlNodeId);
 			controlNodeInstance.enableControlFlow();
 		}
 
@@ -187,7 +202,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 	private boolean evaluate(int i, Tree ast) {
 		boolean condition = checkCondition(ast, i);
 		if (ast.getChildCount() >= i + 4) {
-			if (ast.getChild(i + 3).toStringTree().equals("&") || ast.getChild(i + 3).toStringTree()
+			if (ast.getChild(i + 3).toStringTree().equals("&")
+					|| ast.getChild(i + 3).toStringTree()
 					.equals(" & ")) {
 				return (condition & evaluate(i + 4, ast));
 			} else {
@@ -199,30 +215,33 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 	}
 
 	/**
-	 * @param ast
-	 * @param i
-	 * @return
+	 * @param ast a tree (ast).
+	 * @param i index for the ast.
+	 * @return the check result.
 	 */
 	private boolean checkCondition(Tree ast, int i) {
 		String left = ast.getChild(i).toStringTree();
 		String comparison = ast.getChild(i + 1).toStringTree();
 		String right = ast.getChild(i + 2).toStringTree();
-		for (DataAttributeInstance dataAttributeInstance : scenarioInstance
+		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance()
 				.getDataAttributeInstances().values()) {
 			left = left.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+					"#" + (dataAttributeInstance.getDataObjectInstance())
+							.getName() + "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 			right = right.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance()).getName() + "."
+					"#" + (dataAttributeInstance.getDataObjectInstance())
+							.getName() + "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 		}
-		for (DataObjectInstance dataObjectInstance : scenarioInstance.getDataObjectInstances()) {
+		for (DataObjectInstance dataObjectInstance
+				: this.getScenarioInstance().getDataObjectInstances()) {
 			left = left.replace("#" + dataObjectInstance.getName(),
-					dbState.getStateName(dataObjectInstance.getState_id()));
+					dbState.getStateName(dataObjectInstance.getStateId()));
 			right = right.replace("#" + dataObjectInstance.getName(),
-					dbState.getStateName(dataObjectInstance.getState_id()));
+					dbState.getStateName(dataObjectInstance.getStateId()));
 		}
 		try {
 			switch (comparison) {
@@ -246,7 +265,8 @@ public class ExclusiveGatewaySplitBehavior extends ParallelOutgoingBehavior {
 				return !(Float.parseFloat(left) > Float.parseFloat(right));
 			case "!>=":
 				return !(Float.parseFloat(left) >= Float.parseFloat(right));
-
+			default:
+				break;
 			}
 		} catch (NumberFormatException e) {
 			log.error("Error can't convert String to Float:", e);

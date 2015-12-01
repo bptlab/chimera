@@ -6,6 +6,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
 
 import java.util.Map;
 
+/**
+ * A class for returning Logs for a specific Scenario Instance.
+ */
 public class HistoryService {
 	/**
 	 * Database Connection objects
@@ -22,8 +25,10 @@ public class HistoryService {
 	//     * @param scenarioInstanceId This is the id of the scenario instance.
 	//     * @return a list of int ids of the activities.
 	//     */
-	//    public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(int scenarioInstanceId) {
-	//        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
+	//    public LinkedList<Integer>
+	// getTerminatedActivitiesForScenarioInstance(int scenarioInstanceId) {
+	//        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(
+	// scenarioInstanceId);
 	//    }
 	//
 	//    /**
@@ -32,8 +37,10 @@ public class HistoryService {
 	//     * @param scenarioInstanceId This is the id of the scenario instance.
 	//     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
 	//     */
-	//    public HashMap<Integer, String> getTerminatedActivityLabelsForScenarioInstance(int scenarioInstanceId) {
-	//        LinkedList<Integer> ids = dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
+	//    public HashMap<Integer, String>
+	// getTerminatedActivityLabelsForScenarioInstance(int scenarioInstanceId) {
+	//        LinkedList<Integer> ids =
+	// dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
 	//        HashMap<Integer, String> labels = new HashMap<Integer, String>();
 	//        for (int id : ids) {
 	//            labels.put(id, dbControlNode.getLabel(id));
@@ -44,36 +51,48 @@ public class HistoryService {
 	/**
 	 * This method returns the DataObjectInstances log entries for a ScenarioInstance.
 	 *
-	 * @param scenarioInstanceId ID of the ScenarioInstance for which the DataObjectInstance log entries shall be returned.
-	 * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
+	 * @param scenarioInstanceId ID of the ScenarioInstance for which the
+	 *                           DataObjectInstance log entries shall be returned.
+	 * @return a Map with a Map of the log entries' attribute names
+	 * 			as keys and their respective values.
 	 */
 	public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryDataObjectInstance dbHistoryDataObjectInstance = new DbHistoryDataObjectInstance();
-		return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(scenarioInstanceId);
+		DbHistoryDataObjectInstance dbHistoryDataObjectInstance =
+				new DbHistoryDataObjectInstance();
+		return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(
+				scenarioInstanceId);
 	}
 
 	/**
 	 * This method returns the Activity log entries for a ScenarioInstance.
 	 *
-	 * @param scenarioInstanceId ID of the ScenarioInstance for which the activity log entries shall be returned.
-	 * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
+	 * @param scenarioInstanceId ID of the ScenarioInstance for which the
+	 *                           activity log entries shall be returned.
+	 * @return a Map with a Map of the log entries' attribute names
+	 * 			as keys and their respective values.
 	 */
 	public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
-		return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(scenarioInstanceId);
+		DbHistoryActivityInstance dbHistoryActivityInstance =
+				new DbHistoryActivityInstance();
+		return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(
+				scenarioInstanceId);
 	}
 
 	/**
 	 * This method returns the terminated Activity log entries for a ScenarioInstance.
 	 *
-	 * @param scenarioInstanceId ID of the ScenarioInstance for which the activity log entries shall be returned.
-	 * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
+	 * @param scenarioInstanceId ID of the ScenarioInstance for which the
+	 *                           activity log entries shall be returned.
+	 * @return a Map with a Map of the log entries' attribute names
+	 * 			as keys and their respective values.
 	 */
-	public Map<Integer, Map<String, Object>> getSelectedActivityInstanceLogEntriesForScenarioInstance(
+	public Map<Integer, Map<String, Object>>
+	getSelectedActivityInstanceLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryActivityInstance dbHistoryActivityInstance = new DbHistoryActivityInstance();
+		DbHistoryActivityInstance dbHistoryActivityInstance =
+				new DbHistoryActivityInstance();
 		return dbHistoryActivityInstance
 				.getterminatedLogEntriesForScenarioInstance(scenarioInstanceId);
 	}
@@ -81,12 +100,17 @@ public class HistoryService {
 	/**
 	 * This method returns the DataAttributeInstance log entries for a ScenarioInstance.
 	 *
-	 * @param scenarioInstanceId ID of the ScenarioInstance for which the DataAttributeInstance log entries shall be returned.
-	 * @return a Map with a Map of the log entries' attribute names as keys and their respective values.
+	 * @param scenarioInstanceId ID of the ScenarioInstance for which the
+	 *                           DataAttributeInstance log entries shall be returned.
+	 * @return a Map with a Map of the log entries' attribute names
+	 * 			as keys and their respective values.
 	 */
-	public Map<Integer, Map<String, Object>> getDataAttributeInstanceLogEntriesForScenarioInstance(
+	public Map<Integer, Map<String, Object>>
+	getDataAttributeInstanceLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance = new DbHistoryDataAttributeInstance();
-		return dbHistoryDataAttributeInstance.getLogEntriesForScenarioInstance(scenarioInstanceId);
+		DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance =
+				new DbHistoryDataAttributeInstance();
+		return dbHistoryDataAttributeInstance.getLogEntriesForScenarioInstance(
+				scenarioInstanceId);
 	}
 }

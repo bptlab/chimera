@@ -141,23 +141,23 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.util.LinkedList&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getAllDataAttributesForDataObject(int)">getAllDataAttributesForDataObject</a></strong>(int&nbsp;dataObject_id)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getAllDataAttributesForDataObject(int)">getAllDataAttributesForDataObject</a></strong>(int&nbsp;dataObjectId)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.util.LinkedList&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getDataObjectsForScenario(int)">getDataObjectsForScenario</a></strong>(int&nbsp;scenario_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getDataObjectsForScenario(int)">getDataObjectsForScenario</a></strong>(int&nbsp;scenarioId)</code>
 <div class="block">This method returns all database ID's for all dataObjects belonging to a scenario.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getName(int)">getName</a></strong>(int&nbsp;dataObject_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getName(int)">getName</a></strong>(int&nbsp;dataObjectId)</code>
 <div class="block">This method returns the name of a dataObject corresponding to the database ID.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getStartStateID(int)">getStartStateID</a></strong>(int&nbsp;dataObject_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbDataObject.html#getStartStateID(int)">getStartStateID</a></strong>(int&nbsp;dataObjectId)</code>
 <div class="block">This method returns the startState of a specific dataObject used for initialization.</div>
 </td>
 </tr>
@@ -213,9 +213,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getDataObjectsForScenario</h4>
-<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getDataObjectsForScenario(int&nbsp;scenario_id)</pre>
+<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getDataObjectsForScenario(int&nbsp;scenarioId)</pre>
 <div class="block">This method returns all database ID's for all dataObjects belonging to a scenario.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenario_id</code> - This is the database ID of a scenario.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioId</code> - This is the database ID of a scenario.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a list of database ID's of dataObjects belonging to this scenario.</dd></dl>
 </li>
 </ul>
@@ -225,9 +225,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getStartStateID</h4>
-<pre>public&nbsp;int&nbsp;getStartStateID(int&nbsp;dataObject_id)</pre>
+<pre>public&nbsp;int&nbsp;getStartStateID(int&nbsp;dataObjectId)</pre>
 <div class="block">This method returns the startState of a specific dataObject used for initialization.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObject_id</code> - This is the database ID of a dataObject.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database ID of a dataObject.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the database ID of the startState of the dataObject.</dd></dl>
 </li>
 </ul>
@@ -237,9 +237,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockList">
 <li class="blockList">
 <h4>getName</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getName(int&nbsp;dataObject_id)</pre>
+<pre>public&nbsp;java.lang.String&nbsp;getName(int&nbsp;dataObjectId)</pre>
 <div class="block">This method returns the name of a dataObject corresponding to the database ID.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObject_id</code> - This is the database ID of a dataObject.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database ID of a dataObject.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the name of a dataObject as a String.</dd></dl>
 </li>
 </ul>
@@ -249,7 +249,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getAllDataAttributesForDataObject</h4>
-<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getAllDataAttributesForDataObject(int&nbsp;dataObject_id)</pre>
+<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getAllDataAttributesForDataObject(int&nbsp;dataObjectId)</pre>
 </li>
 </ul>
 </li>

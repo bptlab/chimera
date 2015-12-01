@@ -2,71 +2,117 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
 
+/**
+ * This class is the representation of a DataAttribute instance in the database.
+ * It provides the functionality to check for existing instances as well as creating new ones.
+ */
 public class DbDataAttributeInstance extends DbObject {
 
 	/**
-	 * This method creates and saves a new DataAttributeInstance to the database into the context of a DataObjectInstance and saves a log entry into the database.
+	 * This method creates and saves a new DataAttributeInstance to the database
+	 * into the context of a DataObjectInstance and saves a log entry into the database.
 	 *
-	 * @param dataAttribute_id      This is the database ID of the DataAttribute of which the new Instance is created, the ID can be found in the database.
-	 * @param dataObjectInstance_id This is the database ID of the DataObjectInstance the AttributeInstance belongs to which is found in the database.
-	 * @return an Integer which is -1 if something went wrong else it is the database ID of the newly created DataAttributeInstance.
+	 * @param dataAttributeId      This is the database ID of the DataAttribute.
+	 * @param dataObjectInstanceId This is the database ID of the DataObjectInstance
+	 *                             the AttributeInstance belongs to.
+	 * @return the database ID of the newly created DataAttributeInstance (Error: -1).
 	 */
-	public int createNewDataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id) {
-		String sql =
-				"INSERT INTO dataattributeinstance (value, dataobjectinstance_id, dataattribute_id) VALUES ((SELECT dataattribute.default FROM dataattribute WHERE id = "
-						+ dataAttribute_id + "), " + dataObjectInstance_id + ", " + dataAttribute_id
-						+ ")";
+	public int createNewDataAttributeInstance(int dataAttributeId, int dataObjectInstanceId) {
+		String sql = "INSERT INTO dataattributeinstance ("
+				+ "value, dataobjectinstance_id, dataattribute_id) "
+				+ "VALUES ((SELECT dataattribute.default "
+				+ "FROM dataattribute WHERE id = "
+				+ dataAttributeId + "), " + dataObjectInstanceId + ", "
+				+ dataAttributeId + ")";
 		int id = this.executeInsertStatement(sql);
 		Log log = new Log();
 		log.newDataAttributeInstance(id);
 		return id;
 	}
 
-	public Boolean existDataAttributeInstance(int dataAttribute_id, int dataObjectInstance_id) {
-		String sql = "SELECT id FROM dataattributeinstance WHERE dataobjectinstance_id = "
-				+ dataObjectInstance_id + " AND dataattribute_id = " + dataAttribute_id;
+	/**
+	 *
+	 * @param dataAttributeId		This is the database ID of the DataAttribute.
+	 * @param dataObjectInstanceId	This is the database ID of the DataObjectInstance
+	 *                              the AttributeInstance belongs to.
+	 * @return as a boolean whether the given dataAttribute exists
+	 */
+	public Boolean existDataAttributeInstance(int dataAttributeId, int dataObjectInstanceId) {
+		String sql = "SELECT id FROM dataattributeinstance "
+				+ "WHERE dataobjectinstance_id = " + dataObjectInstanceId + " "
+				+ "AND dataattribute_id = " + dataAttributeId;
 		return this.executeExistStatement(sql);
 	}
 
-	public int getDataAttributeInstanceID(int dataAttribute_id, int dataObjectInstance_id) {
-		String sql = "SELECT id FROM dataattributeinstance WHERE dataobjectinstance_id = "
-				+ dataObjectInstance_id + " AND dataattribute_id = " + dataAttribute_id;
+	/**
+	 *
+	 * @param dataAttributeId		This is the database ID of the DataAttribute.
+	 * @param dataObjectInstanceId	This is the database ID of the DataObjectInstance
+	 *                              the AttributeInstance belongs to.
+	 * @return the database ID of a DataAttributeInstance (Error: -1).
+	 */
+	public int getDataAttributeInstanceID(int dataAttributeId, int dataObjectInstanceId) {
+		String sql = "SELECT id FROM dataattributeinstance "
+				+ "WHERE dataobjectinstance_id = " + dataObjectInstanceId + " "
+				+ "AND dataattribute_id = " + dataAttributeId;
 		return this.executeStatementReturnsInt(sql, "id");
 	}
 
-	public String getType(int dataAttribute_id) {
-		String sql = "SELECT type FROM dataattribute WHERE id = " + dataAttribute_id;
+	/**
+	 *
+	 * @param dataAttributeId	This is the database ID of the DataAttribute.
+	 * @return the type of the DataAttribute as a String.
+	 */
+	public String getType(int dataAttributeId) {
+		String sql = "SELECT type FROM dataattribute WHERE id = " + dataAttributeId;
 		return this.executeStatementReturnsString(sql, "type");
 	}
 
-	public Object getValue(int dataAttributeInstance_id) {
+	/**
+	 *
+	 * @param dataAttributeInstanceId This is the database ID of the DataAttribute instance.
+	 * @return the Value of the DataAttribute instance.
+	 */
+	public Object getValue(int dataAttributeInstanceId) {
 		String sql =
-				"SELECT value FROM dataattributeinstance WHERE id = " + dataAttributeInstance_id;
+				"SELECT value FROM dataattributeinstance "
+						+ "WHERE id = " + dataAttributeInstanceId;
 		return this.executeStatementReturnsObject(sql, "value");
 	}
 
-	public String getName(int dataAttribute_id) {
-		String sql = "SELECT name FROM dataattribute WHERE id = " + dataAttribute_id;
+	/**
+	 *
+	 * @param dataAttributeId	This is the database ID of the DataAttribute.
+	 * @return the name of the DataAttribute as a String.
+	 */
+	public String getName(int dataAttributeId) {
+		String sql = "SELECT name FROM dataattribute WHERE id = " + dataAttributeId;
 		return this.executeStatementReturnsString(sql, "name");
 	}
 
 	/**
-	 * This method sets the DataAttributeinstance to a desired value and saves a log entry into the database.
+	 * This method sets the DataAttributeinstance to a desired value
+	 * and saves a log entry into the database.
 	 *
-	 * @param dataAttributeInstance_id This is the database ID of the DataAttributeinstance which is found in the database.
-	 * @param value                    This is the value the DataAttributeinstance should have after executing setValue.
+	 * @param dataAttributeInstanceId This is the database ID of the DataAttributeinstance.
+	 * @param value                    This is the desired value for the DataAttributeinstance.
 	 */
-	public void setValue(int dataAttributeInstance_id, Object value) {
+	public void setValue(int dataAttributeInstanceId, Object value) {
 		Log log = new Log();
-		log.newDataAttributeInstanceValue(dataAttributeInstance_id, value);
+		log.newDataAttributeInstanceValue(dataAttributeInstanceId, value);
 		String sql = "UPDATE dataattributeinstance SET value = '" + value + "' WHERE id = "
-				+ dataAttributeInstance_id;
+				+ dataAttributeInstanceId;
 		executeUpdateStatement(sql);
 	}
 
-	public int getDataAttributeID(int dataAttributeInstance_id) {
+	/**
+	 *
+	 * @param dataAttributeInstanceId This is the database ID of the DataAttribute instance.
+	 * @return the database ID of the DataAttribute for the DataAttribute instance.
+	 */
+	public int getDataAttributeID(int dataAttributeInstanceId) {
 		String sql = "SELECT dataattribute_id FROM dataattributeinstance WHERE id = "
-				+ dataAttributeInstance_id;
+				+ dataAttributeInstanceId;
 		return this.executeStatementReturnsInt(sql, "dataattribute_id");
 	}
 }

@@ -86,10 +86,10 @@
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/OutgoingBehavior.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.OutgoingBehavior</a></li>
+<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/OutgoingBehavior.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractOutgoingBehavior</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ParallelOutgoingBehavior.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.ParallelOutgoingBehavior</a></li>
+<li><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ParallelOutgoingBehavior.html" title="class in de.uni_potsdam.hpi.bpt.bp2014.jcore">de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractParallelOutgoingBehavior</a></li>
 <li>
 <ul class="inheritance">
 <li>de.uni_potsdam.hpi.bpt.bp2014.jcore.TaskOutgoingControlFlowBehavior</li>
@@ -165,14 +165,15 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ParallelO
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskOutgoingControlFlowBehavior.html#changeDataObjectInstanceState(int,%20int)">changeDataObjectInstanceState</a></strong>(int&nbsp;dataObject_id,
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskOutgoingControlFlowBehavior.html#changeDataObjectInstanceState(int,%20int)">changeDataObjectInstanceState</a></strong>(int&nbsp;dataObjectId,
                              int&nbsp;state_id)</code>
+                             int&nbsp;stateId)</code>
 <div class="block">Change the state of the given data object.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskOutgoingControlFlowBehavior.html#setDataObjectInstanceToNotOnChange(int)">setDataObjectInstanceToNotOnChange</a></strong>(int&nbsp;dataObject_id)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/TaskOutgoingControlFlowBehavior.html#setDataObjectInstanceToNotOnChange(int)">setDataObjectInstanceToNotOnChange</a></strong>(int&nbsp;dataObjectId)</code>
 <div class="block">Sets the data object to not on change.</div>
 </td>
 </tr>
@@ -300,10 +301,13 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ParallelO
 <ul class="blockList">
 <li class="blockList">
 <h4>changeDataObjectInstanceState</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;changeDataObjectInstanceState(int&nbsp;dataObject_id,
+<pre>public&nbsp;java.lang.Boolean&nbsp;changeDataObjectInstanceState(int&nbsp;dataObjectId,
                                               int&nbsp;state_id)</pre>
 <div class="block">Change the state of the given data object.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObject_id</code> - This is the database id from the data object.</dd><dd><code>state_id</code> - This is the database id from the state.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database id from the data object.</dd><dd><code>state_id</code> - This is the database id from the state.</dd>
+                                              int&nbsp;stateId)</pre>
+<div class="block">Change the state of the given data object.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database id from the data object.</dd><dd><code>stateId</code> - This is the database id from the state.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the data object state could been changed. false if not</dd></dl>
 </li>
 </ul>
@@ -313,10 +317,10 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/ParallelO
 <ul class="blockList">
 <li class="blockList">
 <h4>setDataObjectInstanceToNotOnChange</h4>
-<pre>public&nbsp;java.lang.Boolean&nbsp;setDataObjectInstanceToNotOnChange(int&nbsp;dataObject_id)</pre>
+<pre>public&nbsp;java.lang.Boolean&nbsp;setDataObjectInstanceToNotOnChange(int&nbsp;dataObjectId)</pre>
 <div class="block">Sets the data object to not on change.
  Write this into the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObject_id</code> - This is the database id from the data object.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>dataObjectId</code> - This is the database id from the data object.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the on change could been set. false if not.</dd></dl>
 </li>
 </ul>

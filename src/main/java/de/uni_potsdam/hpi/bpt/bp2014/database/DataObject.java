@@ -18,9 +18,6 @@ public class DataObject {
 		this.stateID = stateID;
 	}
 
-	/**
-	 * Getter.
-	 */
 
 	public int getId() {
 		return id;

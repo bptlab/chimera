@@ -166,7 +166,7 @@ public class RestConfiguratorTest extends AbstractTest {
     // ************************** Scenario **********************************/
 
     /**
-     * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
+     * When one sends a DELETE to {@link RestConfigurator#deleteScenario(Integer)}
      * the returned Status Code should be either 202 or 400
      * depending of it was possible to delete te scenario or if
      * dependencies failed like all instances are not terminated
@@ -179,7 +179,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
     /**
-     * When one sends a DELETE to {@RestConfigurator#deleteScenario(int)}
+     * When one sends a DELETE to {@link RestConfigurator#deleteScenario(Integer)}
      * the returned Status Code should be either 202 or 400
      * depending of it was possible to delete te scenario or if
      * dependencies failed like all instances are not terminated

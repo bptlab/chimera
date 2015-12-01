@@ -7,6 +7,9 @@ import org.w3c.dom.NodeList;
 
 import java.util.Map;
 
+/**
+ *  This class allows for aggregation.
+ */
 public class Aggregation implements IDeserialisable, IPersistable {
 	private DataClass source;
 	private DataClass target;
@@ -54,7 +57,8 @@ public class Aggregation implements IDeserialisable, IPersistable {
 			if (multiplicity[multiplicity.length - 1].equals("*")) {
 				this.multiplicity = Integer.MAX_VALUE;
 			} else {
-				this.multiplicity = Integer.parseInt(multiplicity[multiplicity.length - 1]);
+				this.multiplicity = Integer.parseInt(
+						multiplicity[multiplicity.length - 1]);
 			}
 		}
 	}

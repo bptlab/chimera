@@ -5,33 +5,38 @@ import java.util.LinkedList;
 /**
  * This class is the representation of the dataFlow in the database.
  * It handles the connection between controlNodes and dataSets.
- * It provides the functionality to get all dataSets belonging to the input- or outputSet of a controlNode.
+ * It provides the functionality to get all dataSets
+ * belonging to the input- or outputSet of a controlNode.
  */
 public class DbDataFlow extends DbObject {
 	/**
-	 * This method returns all database ID's of all dataSets belonging to the inputSet of a controlNode.
+	 * This method returns all database ID's of all dataSets
+	 * belonging to the inputSet of a controlNode.
 	 *
-	 * @param controlNode_id This is the database ID of a controlNode.
-	 * @return a list of database ID's of dataSets belonging to the inputSet of this controlNode.
+	 * @param controlNodeId This is the database ID of a controlNode.
+	 * @return a list of database IDs of dataSets for the inputSet of this controlNode.
 	 */
-	public LinkedList<Integer> getInputSetsForControlNode(int controlNode_id) {
+	public LinkedList<Integer> getInputSetsForControlNode(int controlNodeId) {
 		String sql =
-				"Select dataset_id FROM dataflow WHERE dataflow.input = 1 AND controlnode_id = "
-						+ controlNode_id;
+				"Select dataset_id FROM dataflow "
+						+ "WHERE dataflow.input = 1 "
+						+ "AND controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsListInt(sql, "dataset_id");
 
 	}
 
 	/**
-	 * This method returns all database ID's of all dataSets belonging to the outputSet of a controlNode.
+	 * This method returns all database ID's of all dataSets
+	 * belonging to the outputSet of a controlNode.
 	 *
-	 * @param controlNode_id This is the database ID of a controlNode.
-	 * @return a list of database ID's of dataSets belonging to the outputSet of this controlNode.
+	 * @param controlNodeId This is the database ID of a controlNode.
+	 * @return a list of database IDs of dataSets in the outputSet of this controlNode.
 	 */
-	public LinkedList<Integer> getOutputSetsForControlNode(int controlNode_id) {
+	public LinkedList<Integer> getOutputSetsForControlNode(int controlNodeId) {
 		String sql =
-				"Select dataset_id FROM dataflow WHERE dataflow.input = 0 AND controlnode_id = "
-						+ controlNode_id;
+				"Select dataset_id FROM dataflow "
+						+ "WHERE dataflow.input = 0 "
+						+ "AND controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsListInt(sql, "dataset_id");
 	}
 }

@@ -6,7 +6,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
  * So this class represents an end event.
  */
 
-public class EventInstance extends ControlNodeInstance {
+public class EventInstance extends AbstractControlNodeInstance {
 	@SuppressWarnings("unused") private final ScenarioInstance scenarioInstance;
 	@SuppressWarnings("unused") private final String type;
 	//Only support Event is an End Event
@@ -16,14 +16,16 @@ public class EventInstance extends ControlNodeInstance {
 	 * Creates and initializes a new event instance.
 	 *
 	 * @param type                This is the type of the event.
-	 * @param fragmentInstance_id This is the database id from the fragment instance.
+	 * @param fragmentInstanceId This is the database id from the fragment instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
 	 */
-	public EventInstance(int fragmentInstance_id, ScenarioInstance scenarioInstance, String type) {
+	public EventInstance(int fragmentInstanceId,
+			ScenarioInstance scenarioInstance, String type) {
 		this.scenarioInstance = scenarioInstance;
-		this.fragmentInstance_id = fragmentInstance_id;
+		this.setFragmentInstanceId(fragmentInstanceId);
 		this.type = type;
-		this.incomingBehavior = new EventIncomingControlFlowBehavior(this, scenarioInstance, type);
+		this.setIncomingBehavior(new EventIncomingControlFlowBehavior(
+				this, scenarioInstance, type));
 	}
 
 	@Override public boolean skip() {
