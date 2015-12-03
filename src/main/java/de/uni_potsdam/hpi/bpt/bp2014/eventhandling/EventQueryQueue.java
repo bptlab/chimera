@@ -78,6 +78,7 @@ public class EventQueryQueue {
 				} else {
 					event = message.toString();
 				}
+				connection.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
