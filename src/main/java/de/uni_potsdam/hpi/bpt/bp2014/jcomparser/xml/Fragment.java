@@ -98,7 +98,6 @@ public class Fragment implements IDeserialisable, IPersistable {
 	}
 
 	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
-
 		this.fragmentXML = element;
 		setFragmentName();
 		setFragmentID();
