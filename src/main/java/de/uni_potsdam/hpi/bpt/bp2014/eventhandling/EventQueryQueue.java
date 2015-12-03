@@ -22,13 +22,14 @@ import javax.jms.TextMessage;
  */
 public class EventQueryQueue {
 
-	private String uuid;
+	private String uuid = "";
 	private final String host = "bpt.hpi.uni-potsdam.de";
 	private final String port = "61616";
 
 	/**
 	 * Registers an Event Query on the Event Processing Platform.
 	 * Receives a Uuid for identifying the Message Queue that query sends to.
+	 * If the Query could not be registered, uuid
 	 * @param title Title of the Query
 	 * @param queryString The actual Query
 	 * @param email E-Mail-Address of the user the Query is registered for
@@ -45,7 +46,10 @@ public class EventQueryQueue {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target("http://localhost:8080").path("Unicorn/webapi/REST/EventQuery");
 
-		uuid = target.request().post(Entity.json(postJson)).readEntity(String.class);
+		String response = target.request().post(Entity.json(postJson)).readEntity(String.class);
+		if (!response.startsWith("EPException")) {
+			uuid = response;
+		}
 	}
 
 	/**
@@ -54,9 +58,9 @@ public class EventQueryQueue {
 	 */
 	public String receiveEvent() {
 		if (uuid.isEmpty()) {
-			return "No Event Query registered.";
+			return "No Event Query registered or registration failed.";
 		} else {
-			String event = "";
+			String event;
 			try {
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
 						String.format("tcp://%s:%s", host, port));
