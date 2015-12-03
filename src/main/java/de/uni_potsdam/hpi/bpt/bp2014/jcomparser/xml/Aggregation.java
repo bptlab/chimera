@@ -1,87 +1,80 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import org.w3c.dom.NamedNodeMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.util.Map;
 
 /**
  *  This class allows for aggregation.
  */
-public class Aggregation implements IDeserialisable, IPersistable {
+public class Aggregation implements IDeserialisableJson, IPersistable {
 	private DataClass source;
 	private DataClass target;
-	private int multiplicity;
+	private int sourceMultiplicity;
+	private int targetMultiplicity;
 	private Map<Long, DataClass> dataClasses;
 
-	@SuppressWarnings("unused") private org.w3c.dom.Node aggregationXML;
+	@SuppressWarnings("unused") private JSONObject aggregationJson;
 
-	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
-		this.aggregationXML = element;
-		NodeList properties = element.getChildNodes();
-		for (int i = 0; i < properties.getLength(); i++) {
-			if (properties.item(i).getNodeName().equals("property")) {
-				org.w3c.dom.Node property = properties.item(i);
-				initializeField(property);
-			}
+	@Override public void initializeInstanceFromJson(final String element) {
+		try {
+			this.aggregationJson = new JSONObject(element);
+
+			setSourceNode(this.aggregationJson.getLong("sourceNode"));
+			setTargetNode(this.aggregationJson.getLong("targetNode"));
+			setSourceMultiplicity(this.aggregationJson.getString("sourceMultiplicity"));
+			setTargetMultiplicity(this.aggregationJson.getString("targetMultiplicity"));
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 
-	private void initializeField(Node property) {
+	@Override public void initializeInstanceFromXML(Node element) {
 
-		NamedNodeMap attributes = property.getAttributes();
-		String name = attributes.getNamedItem("name").getTextContent();
-		String value = attributes.getNamedItem("value").getTextContent();
-
-		switch (name) {
-		case "#sourceNode":
-			setSourceNode(value);
-			break;
-		case "#targetNode":
-			setTargetNode(value);
-			break;
-		case "sourceMultiplicity":
-			setMultiplicity(value);
-			break;
-		default:
-			// Property will not be handled
-			break;
-		}
 	}
 
-	private void setMultiplicity(String value) {
+	private void setSourceMultiplicity(String value) {
 		String[] multiplicity = value.split("\\.\\.");
 		if (multiplicity.length != 0) {
 			if (multiplicity[multiplicity.length - 1].equals("*")) {
-				this.multiplicity = Integer.MAX_VALUE;
+				this.sourceMultiplicity = Integer.MAX_VALUE;
 			} else {
-				this.multiplicity = Integer.parseInt(
+				this.sourceMultiplicity = Integer.parseInt(
+						multiplicity[multiplicity.length - 1]);
+			}
+		}
+	}
+	public void setTargetMultiplicity(String value) {
+		String[] multiplicity = value.split("\\.\\.");
+		if (multiplicity.length != 0) {
+			if (multiplicity[multiplicity.length - 1].equals("*")) {
+				this.targetMultiplicity = Integer.MAX_VALUE;
+			} else {
+				this.targetMultiplicity = Integer.parseInt(
 						multiplicity[multiplicity.length - 1]);
 			}
 		}
 	}
 
-	private void setTargetNode(String value) {
+	private void setTargetNode(Long value) {
 		if (value != null && this.dataClasses != null) {
-			long targetNodeModelID = Long.parseLong(value);
-			this.target = this.dataClasses.get(targetNodeModelID);
+			this.target = this.dataClasses.get(value);
 		}
 	}
 
-	private void setSourceNode(String value) {
+	private void setSourceNode(Long value) {
 		if (value != null && this.dataClasses != null) {
-
-			long sourceNodeModelID = Long.parseLong(value);
-			this.source = this.dataClasses.get(sourceNodeModelID);
+			this.source = this.dataClasses.get(value);
 		}
 	}
 
 	@Override public int save() {
 		Connector conn = new Connector();
 		conn.insertAggregationIntoDatabase(this.source.getDataClassID(),
-				this.target.getDataClassID(), this.multiplicity);
+				this.target.getDataClassID(), this.sourceMultiplicity);
 		return 1;
 	}
 
@@ -101,8 +94,11 @@ public class Aggregation implements IDeserialisable, IPersistable {
 		return target;
 	}
 
-	public int getMultiplicity() {
-		return multiplicity;
+	public int getSourceMultiplicity() {
+		return sourceMultiplicity;
 	}
 
+	public int getTargetMultiplicity() {
+		return targetMultiplicity;
+	}
 }

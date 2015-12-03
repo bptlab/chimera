@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 
 import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,38 +16,31 @@ import org.w3c.dom.Element;
  */
 public class DataAttributeTest  {
     private Document document = new DocumentImpl(null);
-    private Element dataClass;
+    private String dataClass;
 
     @Before
     public void setupDataClass(){
-        dataClass = document.createElement("node");
-        dataClass.appendChild(createProperty("text", "Reise"));
-        dataClass.appendChild(createProperty("#attributes", "{0}+Beginn ;{1}+Ende ;{2}+Gesamtkosten ;"));
-        dataClass.appendChild(createProperty("#id", "801101005"));
-        dataClass.appendChild(createProperty("#type", "net.frapu.code.visualization.domainModel.DomainClass"));
-        dataClass.appendChild(createProperty("stereotype", "root_instance"));
-    }
-
-    /**
-     *
-     * @param name
-     * @param value
-     * @return
-     */
-    private Element createProperty(String name, String value) {
-        if (null == document) {
-            return null;
-        }
-        Element property = document.createElement("property");
-        property.setAttribute("name", name);
-        property.setAttribute("value", value);
-        return property;
+        dataClass = new JSONObject()
+                .put("name", "Reise")
+                .put("_id", "801101005")
+                .put("is_root", true)
+                .put("attributes", new JSONArray()
+                        .put(new JSONObject()
+                                .put("name", "Beginn")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "Ende")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "Gesamtkosten")
+                                .put("datatype", "Float"))
+                ).toString();
     }
 
     @Test
     public void testDataAttributeSetMethod(){
         DataClass dClass = new DataClass();
-        dClass.initializeInstanceFromXML(dataClass);
+        dClass.initializeInstanceFromJson(dataClass);
         for(DataAttribute attr : dClass.getDataAttributes()){
             attr.setDataClassID(42);
         }

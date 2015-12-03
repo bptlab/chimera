@@ -1,6 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -11,7 +15,7 @@ import java.util.List;
 /**
  * This class represents a DataClass.
  */
-public class DataClass implements IDeserialisable, IPersistable {
+public class DataClass implements IDeserialisableJson, IPersistable {
 	/**
 	 * This is the modelID of the dataClass.
 	 */
@@ -36,7 +40,7 @@ public class DataClass implements IDeserialisable, IPersistable {
 	/**
 	 * This contains the XML representation of the dataClass.
 	 */
-	private org.w3c.dom.Node dataClassXML;
+	private JSONObject dataClassJson;
 
 	/**
 	 * Sets the processeditorServerUrl which is needed for connecting to the server
@@ -55,50 +59,25 @@ public class DataClass implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * This initializes the dataClass from the XML.
+	 * This initializes the dataClass from the JSON.
 	 *
-	 * @param element The XML Node which will be used for deserialisation
+	 * @param element The JSON String which will be used for deserialisation
 	 */
-	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
-		this.dataClassXML = element;
-		NodeList properties = element.getChildNodes();
-		for (int i = 0; i < properties.getLength(); i++) {
-			if (properties.item(i).getNodeName().equals("property")) {
-				org.w3c.dom.Node property = properties.item(i);
-				initializeField(property);
-			}
+	@Override public void initializeInstanceFromJson(final String element) {
+		try {
+			this.dataClassJson = new JSONObject(element);
+
+			this.dataClassName = this.dataClassJson.getString("name");
+			this.dataClassModelID = this.dataClassJson.getLong("_id");
+			this.isRootNode = this.dataClassJson.getBoolean("is_root");
+			generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * This sets the corresponding attributes of the dataClass class or
-	 * calls corresponding method based on the property found in the XML.
-	 *
-	 * @param property This is the property to look for.
-	 */
-	private void initializeField(final org.w3c.dom.Node property) {
+	@Override public void initializeInstanceFromXML(final Node element) {
 
-		NamedNodeMap attributes = property.getAttributes();
-		String name = attributes.getNamedItem("name").getTextContent();
-		String value = attributes.getNamedItem("value").getTextContent();
-
-		switch (name) {
-		case "text":
-			dataClassName = value;
-			break;
-		case "#attributes":
-			generateDataAttributeList(value);
-			break;
-		case "#id":
-			dataClassModelID = Long.parseLong(value);
-			break;
-		case "stereotype":
-			isRootNode = "root_instance".equals(value);
-			break;
-		default:
-			// Property will not be handled
-			break;
-		}
 	}
 
 	/**
@@ -121,25 +100,19 @@ public class DataClass implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * This method gets all the dataAttributes from the XML.
+	 * This method gets all the dataAttributes from the JSON.
 	 * DataAttributes can only be alphanumerical.
 	 *
-	 * @param value This String contains all dataAttributes from the XML, separated by ";".
+	 * @param jsonAttributes This JSONArray contains all dataAttributes from the JSON.
 	 */
-	private void generateDataAttributeList(String value) {
-		String[] attributes = value.split(" ;");
-		for (String attribute : attributes) {
-			if (!attribute.isEmpty()) {
-				/*
-                    DataAttributes are saved in the following form:
-                    "{[number]}+[nameOfTheAttribute]".
-                    This regex removes all the stuff not needed.
-                 */
-				DataAttribute newDataAttribute = new DataAttribute(
-						attribute.replaceAll(
-								"\\{[0-9]*\\}|[^a-zA-Z0-9]", ""));
-				dataAttributes.add(newDataAttribute);
-			}
+	private void generateDataAttributeList(JSONArray jsonAttributes) {
+		int length = jsonAttributes.length();
+		for (int i = 0; i < length; i++) {
+			DataAttribute dataAttribute = new DataAttribute(
+					jsonAttributes.getJSONObject(i).getString("name"),
+					jsonAttributes.getJSONObject(i).getString("datatype")
+			);
+			this.dataAttributes.add(dataAttribute);
 		}
 	}
 
@@ -170,8 +143,8 @@ public class DataClass implements IDeserialisable, IPersistable {
 		return isRootNode;
 	}
 
-	public Node getDataClassXML() {
-		return dataClassXML;
+	public JSONObject getDataClassJson() {
+		return dataClassJson;
 	}
 
 	public long getDataClassModelID() {

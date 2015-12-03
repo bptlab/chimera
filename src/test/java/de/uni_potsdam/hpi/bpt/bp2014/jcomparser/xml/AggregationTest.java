@@ -1,11 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +21,9 @@ import java.util.Map;
 public class AggregationTest {
     private Document document = new DocumentImpl(null);
     private Map<Long, DataClass> dataClasses = new HashMap<>();
-    private Element aggregation;
-    private Element sourceDataClass;
-    private Element targetDataClass;
+    private String aggregation;
+    private String sourceDataClass;
+    private String targetDataClass;
 
     /**
      * Set up an aggregation represented as a Node by appending Elements that correspond to the structure of the XML
@@ -30,12 +31,11 @@ public class AggregationTest {
      */
     @Before
     public void setupAggregation(){
-        aggregation = document.createElement("edge");
-        aggregation.appendChild(createProperty("sourceMultiplicity","1..*"));
-        aggregation.appendChild(createProperty("#id","470092328"));
-        aggregation.appendChild(createProperty("#type","net.frapu.code.visualization.domainModel.Aggregation"));
-        aggregation.appendChild(createProperty("#sourceNode","801101005"));
-        aggregation.appendChild(createProperty("#targetNode","679826034"));
+        aggregation = new JSONObject()
+                .put("sourceMultiplicity", "1..*")
+                .put("targetMultiplicity", "1..*")
+                .put("sourceNode", 801101005L)
+                .put("targetNode", 679826034L).toString();
     }
     /**
      * Set up a dataClass represented as a Node by appending Elements that correspond to the structure of the XML
@@ -43,12 +43,21 @@ public class AggregationTest {
      */
     @Before
     public void setupSourceDataClass(){
-        sourceDataClass = document.createElement("node");
-        sourceDataClass.appendChild(createProperty("text", "Reise"));
-        sourceDataClass.appendChild(createProperty("#attributes", "{0}+Beginn ;{1}+Ende ;{2}+Gesamtkosten ;"));
-        sourceDataClass.appendChild(createProperty("#id", "801101005"));
-        sourceDataClass.appendChild(createProperty("#type", "net.frapu.code.visualization.domainModel.DomainClass"));
-        sourceDataClass.appendChild(createProperty("stereotype", "root_instance"));
+        sourceDataClass = new JSONObject()
+                .put("name", "Reise")
+                .put("_id", 801101005L)
+                .put("is_root", true)
+                .put("attributes", new JSONArray()
+                        .put(new JSONObject()
+                                .put("name", "Beginn")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "Ende")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "Gesamtkosten")
+                                .put("datatype", "Float"))
+                ).toString();
         addToDataClasses(sourceDataClass);
     }
     /**
@@ -57,12 +66,24 @@ public class AggregationTest {
      */
     @Before
     public void setupTargetDataClass(){
-        targetDataClass = document.createElement("node");
-        targetDataClass.appendChild(createProperty("text", "Flug"));
-        targetDataClass.appendChild(createProperty("#attributes", "{0}+Abflugsdatum ;{1}+Ankunftsdatum ;{2}+StartFlughafen ;{3}+EndFlughafen ;"));
-        targetDataClass.appendChild(createProperty("#id", "679826034"));
-        targetDataClass.appendChild(createProperty("#type", "net.frapu.code.visualization.domainModel.DomainClass"));
-        targetDataClass.appendChild(createProperty("stereotype", ""));
+        targetDataClass = new JSONObject()
+                .put("name", "Flug")
+                .put("_id", 679826034L)
+                .put("is_root", false)
+                .put("attributes", new JSONArray()
+                        .put(new JSONObject()
+                                .put("name", "Abflugsdatum")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "Ankunftsdatum")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "StartFlughafen")
+                                .put("datatype", "String"))
+                        .put(new JSONObject()
+                                .put("name", "EndFlughafen")
+                                .put("datatype", "String"))
+                ).toString();
         addToDataClasses(targetDataClass);
     }
 
@@ -70,27 +91,12 @@ public class AggregationTest {
      * Initialize a DataClass with help of the XML-representation and adding it to the list of DataClasses of this test.
      * @param dataClass XML-node of the dataClass (according to the structure of the one the ProcessEditor generates)
      */
-    private void addToDataClasses(Element dataClass){
+    private void addToDataClasses(String dataClass){
         DataClass dClass = new DataClass();
-        dClass.initializeInstanceFromXML(dataClass);
+        dClass.initializeInstanceFromJson(dataClass);
         dataClasses.put(dClass.getDataClassModelID(), dClass);
     }
 
-    /**
-     * Creates an element that might be appended to the Node
-     * @param name Name of the property
-     * @param value Value the property holds
-     * @return An element with the attribute specified by the parameters
-     */
-    private Element createProperty(String name, String value) {
-        if (null == document) {
-            return null;
-        }
-        Element property = document.createElement("property");
-        property.setAttribute("name", name);
-        property.setAttribute("value", value);
-        return property;
-    }
     /**
      * Test deserialization of the root node dataClass is correct.
      */
@@ -116,8 +122,9 @@ public class AggregationTest {
     public void testAggregation(){
         Aggregation aggregate = new Aggregation();
         aggregate.setDataClasses(dataClasses);
-        aggregate.initializeInstanceFromXML(aggregation);
-        Assert.assertEquals("Multiplicity has not been set correctly", Integer.MAX_VALUE, aggregate.getMultiplicity());
+        aggregate.initializeInstanceFromJson(aggregation);
+        Assert.assertEquals("Source multiplicity has not been set correctly", Integer.MAX_VALUE, aggregate.getSourceMultiplicity());
+        Assert.assertEquals("Target multiplicity has not been set correctly", Integer.MAX_VALUE, aggregate.getTargetMultiplicity());
         Assert.assertEquals("SourceName has not been set correctly", "Reise", aggregate.getSource().getDataClassName());
         Assert.assertEquals("SourceId has not been set correctly", 801101005L, aggregate.getSource().getDataClassModelID());
         Assert.assertEquals("TargetName has not been set correctly", "Flug", aggregate.getTarget().getDataClassName());
