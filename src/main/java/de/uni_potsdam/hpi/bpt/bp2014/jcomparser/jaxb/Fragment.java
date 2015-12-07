@@ -12,16 +12,21 @@ import java.util.List;
 @XmlRootElement(name = "bpmn:process")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Fragment {
-    @XmlElement
+    @XmlElement(name = "bpmn:sequenceFlow")
     private List<SequenceFlow> associations;
-    @XmlElement
+    @XmlElement(name = "bpmn:exclusiveGateway")
     private List<ExclusiveGateway> xorGateways;
-    @XmlElement
+    @XmlElement(name = "bpmn:startEvent")
     private StartEvent startEvent;
-    @XmlElement
+    @XmlElement(name = "bpmn:boundaryEvent")
     private List<BoundaryEvent> boundaryEvents;
-    @XmlElement
+    @XmlElement(name = "bpmn:task")
     private List<Task> tasks;
+    @XmlElement(name = "bpmn:dataObjectReference")
+    private List<DataObjectReference> dataObjectReferences;
+    @XmlElement(name = "bpmn:dataObject")
+    private List<DataObject> dataObjects;
+
 
     public List<SequenceFlow> getAssociations() {
         return associations;
@@ -61,5 +66,21 @@ public class Fragment {
 
     public void setStartEvent(StartEvent startEvent) {
         this.startEvent = startEvent;
+    }
+
+    public List<DataObjectReference> getDataObjectReferences() {
+        return dataObjectReferences;
+    }
+
+    public void setDataObjectReferences(List<DataObjectReference> dataObjectReferences) {
+        this.dataObjectReferences = dataObjectReferences;
+    }
+
+    public List<DataObject> getDataObjects() {
+        return dataObjects;
+    }
+
+    public void setDataObjects(List<DataObject> dataObjects) {
+        this.dataObjects = dataObjects;
     }
 }
