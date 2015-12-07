@@ -1,15 +1,26 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
  *
  */
+@XmlRootElement(name = "bpmn:process")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Fragment {
+    @XmlElement
     private List<SequenceFlow> associations;
+    @XmlElement
     private List<ExclusiveGateway> xorGateways;
+    @XmlElement
     private StartEvent startEvent;
+    @XmlElement
     private List<BoundaryEvent> boundaryEvents;
+    @XmlElement
     private List<Task> tasks;
 
     public List<SequenceFlow> getAssociations() {

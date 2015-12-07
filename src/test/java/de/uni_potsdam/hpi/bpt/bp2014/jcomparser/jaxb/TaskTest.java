@@ -52,6 +52,33 @@ public class TaskTest {
     }
 
     @Test
+    public void testSerializeDataAttributes() {
+        String taskWithDataAttributes =
+            "<bpmn:task id=\"Task_16elx6t\" name=\"Second\">\n" +
+            "      <bpmn:incoming>SequenceFlow_1yduzmd</bpmn:incoming>\n" +
+            "      <bpmn:outgoing>SequenceFlow_0yz8125</bpmn:outgoing>\n" +
+            "      <bpmn:dataInputAssociation id=\"DataInputAssociation_16pupih\">\n" +
+            "        <bpmn:sourceRef>DataObjectReference_09uorcc</bpmn:sourceRef>\n" +
+            "      </bpmn:dataInputAssociation>\n" +
+            "      <bpmn:dataInputAssociation id=\"DataInputAssociation_0lfeecw\">\n" +
+            "        <bpmn:sourceRef>DataObjectReference_082q2p3</bpmn:sourceRef>\n" +
+            "      </bpmn:dataInputAssociation>\n" +
+            "      <bpmn:dataInputAssociation id=\"DataInputAssociation_1gfhtf7\">\n" +
+            "        <bpmn:sourceRef>DataObjectReference_0p8oinj</bpmn:sourceRef>\n" +
+            "      </bpmn:dataInputAssociation>\n" +
+            "    </bpmn:task>\n";
+        Document doc = XmlTestHelper.getDocumentFromXmlString(taskWithDataAttributes);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Task.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Task task = (Task) jaxbUnmarshaller.unmarshal(doc);
+            assertEquals(3, task.getDataInputAssociations().size());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testSerialization() {
         Task task = new Task();
         task.setId("Task_1qp9gsh");
