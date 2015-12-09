@@ -128,10 +128,10 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 			this.scenarioName = scenarioJson.getString("name");
 			this.scenarioID = scenarioJson.getLong("_id");
 			this.versionNumber = scenarioJson.getInt("revision");
-			this.domainModelID = scenarioJson.getLong("domain_model");
+			this.domainModelJson = scenarioJson.getJSONObject("domain_model");
 
 			generateFragmentList();
-			setDomainModel();
+			this.domainModel = createAndInitializeDomainModel();
 			createDataObjects();
 			setTerminationCondition();
 
@@ -143,14 +143,6 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 
 	@Override public void initializeInstanceFromXML(org.w3c.dom.Node element) {
 
-	}
-
-	/**
-	 * This method calls 2 more methods which get the domainModelXML and set the domainModel.
-	 */
-	private void setDomainModel() {
-		this.domainModelJson = fetchDomainModelJson();
-		this.domainModel = createAndInitializeDomainModel();
 	}
 
 	/**
@@ -522,8 +514,9 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		JSONArray fragmentarray = this.scenarioJson.getJSONArray("fragments");
 		this.fragments = new LinkedList<>();
 		for (int i = 0; i < fragmentarray.length(); i++) {
-			int fragmentID = fragmentarray.getInt(i);
-			this.fragments.add(createAndInitializeFragment(fragmentID));
+			DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
+			fragment.initializeFromXML(fragmentarray.getString(i));
+			this.fragments.add(fragment);
 		}
 	}
 
