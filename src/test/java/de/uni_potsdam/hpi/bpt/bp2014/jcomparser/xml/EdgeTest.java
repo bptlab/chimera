@@ -49,13 +49,13 @@ public class EdgeTest {
     }
 
     public void setUpTargetAndSource() {
-        HashMap<Long, Node> nodes = new HashMap<Long, Node>();
+        HashMap<String, Node> nodes = new HashMap<>();
         target = new Node();
-        target.setId(1628237226L);
-        nodes.put(1628237226L, target);
+        target.setId("1628237226L");
+        nodes.put("1628237226L", target);
         source = new Node();
-        source.setId(88478777L);
-        nodes.put(88478777L, source);
+        source.setId("88478777L");
+        nodes.put("88478777L", source);
         dataFlowEdge.setNodes(nodes);
         controlFlowEdge.setNodes(nodes);
     }
@@ -105,7 +105,8 @@ public class EdgeTest {
         controlFlowEdge.getSource().setDatabaseID(424242);
         controlFlowEdge.getTarget().setDatabaseID(212121);
         dataFlowEdge.save();
-        Assert.assertFalse("The Value of the database ID of the Edge is invalid (0 or less)", 1 > controlFlowEdge.getId());
+        Assert.assertFalse("The Value of the database ID of the Edge is invalid (0 or less)", 1 >
+                Integer.parseInt(controlFlowEdge.getId()));
     }
 
     @Test
@@ -113,7 +114,8 @@ public class EdgeTest {
         controlFlowEdge.getSource().setDatabaseID(212121);
         controlFlowEdge.getTarget().setDatabaseID(424242);
         controlFlowEdge.save();
-        Assert.assertFalse("The Value of the database ID of the Edge is invalid (0 or less)", 1 > controlFlowEdge.getId());
+        Assert.assertFalse("The Value of the database ID of the Edge is invalid (0 or less)",
+                1 > Integer.parseInt(controlFlowEdge.getId()));
     }
     // END: Tests
 

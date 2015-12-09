@@ -35,7 +35,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
  * from communicating with the ProcessEditor Server.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Scenario.class, Fragment.class, DomainModel.class})
+@PrepareForTest({Scenario.class, DatabaseFragment.class, DomainModel.class})
 public class  ScenarioTest extends TestSetUp {
     // We need the name of all methods which communicate to the server.
     /**
@@ -243,10 +243,10 @@ public class  ScenarioTest extends TestSetUp {
         PowerMock.expectPrivate(scenarioWFragment, FETCH_DOMAIN_MODEL_METHOD).andReturn(null);
         PowerMock.expectPrivate(scenarioWFragment, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.expectPrivate(scenarioWFragment, CREATE_FRAGMENT_METHOD, "1386518929")
-                .andAnswer(new IAnswer<Fragment>() {
+                .andAnswer(new IAnswer<DatabaseFragment>() {
                     @Override
-                    public Fragment answer() throws Throwable {
-                        Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                    public DatabaseFragment answer() throws Throwable {
+                        DatabaseFragment fragment = PowerMock.createPartialMock(DatabaseFragment.class,
                                 FETCH_VERSION_METHOD);
                         PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
                                 .andAnswer(new IAnswer<org.w3c.dom.Element>() {
@@ -286,10 +286,10 @@ public class  ScenarioTest extends TestSetUp {
         PowerMock.expectPrivate(scenarioWTermination, FETCH_DOMAIN_MODEL_METHOD).andReturn(null);
         PowerMock.expectPrivate(scenarioWTermination, CHECK_VERSION_DATABASE).andVoid();
         PowerMock.expectPrivate(scenarioWTermination, CREATE_FRAGMENT_METHOD, "1386518929")
-                .andAnswer(new IAnswer<Fragment>() {
+                .andAnswer(new IAnswer<DatabaseFragment>() {
                     @Override
-                    public Fragment answer() throws Throwable {
-                        Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+                    public DatabaseFragment answer() throws Throwable {
+                        DatabaseFragment fragment = PowerMock.createPartialMock(DatabaseFragment.class,
                                 FETCH_VERSION_METHOD);
                         PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
                                 .andAnswer(new IAnswer<org.w3c.dom.Element>() {
@@ -321,7 +321,7 @@ public class  ScenarioTest extends TestSetUp {
     public void testSaveCompleteScenario() throws Exception {
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
-        final Fragment fragment = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragment = initializeFragment("src/test/resources/Version0.xml");
         fragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/bikeFragment.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -341,10 +341,10 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testSameScenarioNotSavedTwice() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -365,10 +365,10 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testSameScenarioNotDeletedSavedAgain() throws Exception {
         refillDatabase(INSERT_TESTDATA2_FILE);
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -389,10 +389,10 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testModificationInFragmentScenarioNewlySaved() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version1.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version1.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -412,10 +412,10 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testModificationInScenarioScenarioNewlySaved() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -436,13 +436,13 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testNoMigrationWhenFragmentAddedAndModificationsExist() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version1.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version1.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
-        final Fragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
         neuesFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/NeuesFragment.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -463,10 +463,10 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testNoMigrationWhenFragmentDeletedDespiteNewFragment() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
         neuesFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/NeuesFragment.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -496,13 +496,13 @@ public class  ScenarioTest extends TestSetUp {
         DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
         // initialize the new scenario consisting of the old fragments and one new fragment
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
-        final Fragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment neuesFragment = initializeFragment("src/test/resources/Version0.xml");
         neuesFragment.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/NeuesFragment.xml")));
         final DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
@@ -553,16 +553,16 @@ public class  ScenarioTest extends TestSetUp {
     @Test
     public void testDomainModelVersionImpactOnSaving() throws Exception {
         refillDatabase(INSERT_TESTDATA_FILE);
-        
+
         //Launch a scenario to test, whether a reload from the db is required after the scenario-version has changed
         ExecutionService ex = ExecutionService.getInstance(358512);
         ex.startNewScenarioInstance();
         Assert.assertEquals(false, ex.isNewVersionAvailable());
-        
-        final Fragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
+
+        final DatabaseFragment fragmentA = initializeFragment("src/test/resources/Version0.xml");
         fragmentA.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentA.xml")));
-        final Fragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
+        final DatabaseFragment fragmentB = initializeFragment("src/test/resources/Version0.xml");
         fragmentB.initializeInstanceFromXML(getDocumentFromXmlFile(
                 new File("src/test/resources/Testscenario/FragmentB.xml")));
         DomainModel domainModel = initializeDomainModel("src/test/resources/Version1.xml");
@@ -573,10 +573,10 @@ public class  ScenarioTest extends TestSetUp {
                 new File("src/test/resources/Testscenario/Scenario.xml")));
         Assert.assertFalse("Even though the domainModel has been changed, the scenario isn't saved as a new one", scenario.save() == -1);
         assertTrue("Instances should not be migrated.", !scenario.isMigrationNecessary());
-        
+
         Assert.assertEquals(true, ex.isNewVersionAvailable());
     }
-    
+
     /**
      * Emptys the database and fills it from INSERT_TESTDATA_FILE afterwards.
      * @throws Exception java.lang.Exception

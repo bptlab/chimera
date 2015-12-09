@@ -36,7 +36,7 @@ import java.util.*;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Scenario.class, Fragment.class, DomainModel.class})
+@PrepareForTest({Scenario.class, DatabaseFragment.class, DomainModel.class})
 public class HugeComparserTest extends TestSetUp {
     /**
      *
@@ -433,8 +433,8 @@ public class HugeComparserTest extends TestSetUp {
     public void setUp() throws Exception {
         emptyDatabase();
         conn = Connection.getInstance().connect();
-        Fragment fragA = initializeFragment("src/test/resources/Version0.xml");
-        Fragment fragB = initializeFragment("src/test/resources/Version0.xml");
+        DatabaseFragment fragA = initializeFragment("src/test/resources/Version0.xml");
+        DatabaseFragment fragB = initializeFragment("src/test/resources/Version0.xml");
         DomainModel domainModel = initializeDomainModel("src/test/resources/Version0.xml");
         fragA.initializeInstanceFromXML(
                 getDocumentFromXmlFile(new File("src/test/resources/Testscenario/FragmentA.xml")));

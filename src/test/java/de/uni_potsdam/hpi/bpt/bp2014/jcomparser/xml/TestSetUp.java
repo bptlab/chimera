@@ -63,8 +63,8 @@ public class TestSetUp {
      * @return A mocked Fragment
      * @throws Exception java.lang.Exception
      */
-    public static Fragment initializeFragment(final String versionLocation) throws Exception {
-        final Fragment fragment = PowerMock.createPartialMock(Fragment.class,
+    public static DatabaseFragment initializeFragment(final String versionLocation) throws Exception {
+        final DatabaseFragment fragment = PowerMock.createPartialMock(DatabaseFragment.class,
                 FETCH_VERSION_METHOD);
         PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)
                 .andAnswer(new IAnswer<org.w3c.dom.Node>() {
@@ -109,7 +109,8 @@ public class TestSetUp {
      * @return A mocked Scenario
      * @throws Exception java.lang.Exception
      */
-    public static Scenario initializeCompleteScenario(final String versionLocation, final List<Fragment> fragments, final DomainModel domainModel) throws Exception {
+    public static Scenario initializeCompleteScenario(final String versionLocation,
+                                                      final List<DatabaseFragment> fragments, final DomainModel domainModel) throws Exception {
         final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
                 FETCH_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD,
@@ -132,16 +133,16 @@ public class TestSetUp {
                                 .getDocumentElement();
                     }
                 });
-        for (final Fragment fragment : fragments) {
+        for (final DatabaseFragment fragment : fragments) {
             PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentID()))
-                    .andAnswer(new IAnswer<Fragment>() {
+                    .andAnswer(new IAnswer<DatabaseFragment>() {
                         @Override
-                        public Fragment answer() throws Throwable {
+                        public DatabaseFragment answer() throws Throwable {
                             return fragment;
                         }
                     });
             if (fragments.size() == 1) {
-                PowerMock.replay(scenario, fragment, Fragment.class, domainModel);
+                PowerMock.replay(scenario, fragment, DatabaseFragment.class, domainModel);
             }
         }
         if (fragments.size() > 1) {

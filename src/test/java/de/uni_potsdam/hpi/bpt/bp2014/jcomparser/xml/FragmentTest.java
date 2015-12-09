@@ -42,7 +42,7 @@ import java.io.IOException;
  * This class tests the functionality of the xml-Fragment-class.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Fragment.class})
+@PrepareForTest({DatabaseFragment.class})
 public class FragmentTest {
 
     // We need the name of all methods which communicate to the server.
@@ -54,7 +54,7 @@ public class FragmentTest {
     /**
      * the created fragment that needs to be tested
      */
-    private Fragment fragment;
+    private DatabaseFragment fragment;
 
     /**
      * initialize the fragment from file "TestFragment.xml" in the resources-folder
@@ -62,7 +62,7 @@ public class FragmentTest {
     @Before
     public void setupFragment() {
         try {
-            fragment = PowerMock.createPartialMock(Fragment.class,
+            fragment = PowerMock.createPartialMock(DatabaseFragment.class,
                     FETCH_VERSION_METHOD);
             Node fragmentNode = getDocumentFromXmlFile(new File("src/test/resources/TestFragment.xml"));
             PowerMock.expectPrivate(fragment, FETCH_VERSION_METHOD)

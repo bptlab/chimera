@@ -515,7 +515,8 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		this.fragments = new LinkedList<>();
 		for (int i = 0; i < fragmentarray.length(); i++) {
 			DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
-			fragment.initializeFromXML(fragmentarray.getString(i));
+			fragment.initializeFromXml(fragmentarray.getString(i), versionNumber,
+                    "name", 1);
 			this.fragments.add(fragment);
 		}
 	}
