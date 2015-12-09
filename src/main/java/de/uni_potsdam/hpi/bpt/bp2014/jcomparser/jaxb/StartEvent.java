@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.*;
 public class StartEvent {
     @XmlAttribute(name = "id")
     private String id;
+    @XmlAttribute(name = "name")
+    private String name;
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
@@ -27,5 +29,13 @@ public class StartEvent {
 
     public void setOutgoing(String outgoing) {
         this.outgoing = outgoing;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

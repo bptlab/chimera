@@ -18,6 +18,8 @@ import java.util.List;
 public class ExclusiveGateway {
     @XmlAttribute(name = "id")
     private String id;
+    @XmlAttribute(name = "name")
+    private String name;
     @XmlElement(name = "bpmn:incoming")
     private List<String> incoming;
     @XmlElement(name = "bpmn:outgoing")
@@ -45,5 +47,13 @@ public class ExclusiveGateway {
 
     public void setIncoming(List<String> incoming) {
         this.incoming = incoming;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
