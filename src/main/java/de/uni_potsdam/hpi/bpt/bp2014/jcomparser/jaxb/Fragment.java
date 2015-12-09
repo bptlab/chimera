@@ -5,11 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DatabaseFragment;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Edge;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
 
 /**
  *
@@ -94,14 +94,64 @@ public class Fragment {
         this.dataObjects = dataObjects;
     }
 
+
     /**
      *
-     * @return returns something
+     * @return List of Input sets
      */
-    public DatabaseFragment createDbFragment() {
-        DatabaseFragment frag = new DatabaseFragment();
+    public List<InputSet> getInputSets() {
+        List<InputSet> sets = new ArrayList<>();
+        Map<String, Node> idToNode = createMapFromIdToNode();
+        for (Task task : this.tasks) {
+            List<Edge> associations = new ArrayList<>();
+            List<Node> dataNodes = new ArrayList<>();
+            for (DataInputAssociation assoc : task.getDataInputAssociations()) {
+                associations.add(assoc.convertToEdge(task.getId()));
+                Node dataNode =  idToNode.get(assoc.getSourceRef());
+                dataNodes.add(dataNode);
+            }
+            InputSet set = new InputSet();
+            set.setNode(task.convertToNode());
+            set.setAssociations(associations);
+            set.setDataNodes(dataNodes);
+        }
 
-        return frag;
+        return sets;
+    }
+
+    private Map<String, Node> createMapFromIdToNode() {
+        List<Node> nodes = getNodes();
+        Map<String, Node> idToNode = new HashMap<>();
+        for (Node node : nodes) {
+            idToNode.put(node.getId(), node);
+        }
+
+        return idToNode;
+    }
+
+    /**
+     *
+     * @return Returns something
+     */
+    public List<OutputSet> getOutputSets() {
+        List<OutputSet> outputSets = new ArrayList<>();
+        Map<String, Node> idToNode = createMapFromIdToNode();
+
+        for (Task task : this.tasks) {
+            List<Edge> associations = new ArrayList<>();
+            List<Node> dataNodes = new ArrayList<>();
+            for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
+                associations.add(assoc.convertToEdge(task.getId()));
+                Node dataNode =  idToNode.get(assoc.getTargetRef());
+                dataNodes.add(dataNode);
+            }
+            OutputSet set = new OutputSet();
+            set.setNode(task.convertToNode());
+            set.setAssociations(associations);
+            set.setDataNodes(dataNodes);
+            outputSets.add(set);
+        }
+        return outputSets;
     }
 
     /**
@@ -125,6 +175,7 @@ public class Fragment {
     public List<Edge> getEdges() {
         List<Edge> edges = new ArrayList<>();
         edges.addAll(getSequenceFlowEdges());
+        edges.addAll(getDataFlowAssociations());
         return edges;
     }
 

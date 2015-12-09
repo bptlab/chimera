@@ -26,7 +26,7 @@ public class InputSet extends Set implements IPersistable {
 			final Node task, final List<Edge> edges) {
 		List<Edge> associations = new LinkedList<>();
 		for (Edge edge : edges) {
-			if (edge.getTargetNodeId() == task.getId()
+			if (edge.getTargetNodeId().equals(task.getId())
 					&& edge.getType().contains("Association")) {
 				associations.add(edge);
 			}
