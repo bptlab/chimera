@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Edge;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -28,5 +30,15 @@ public class DataOutputAssociation {
 
     public void setTargetRef(String targetRef) {
         this.targetRef = targetRef;
+    }
+
+    public Edge convertToEdge(String taskId) {
+        Edge edge = new Edge();
+        edge.setId(this.id);
+        edge.setIsDataInput(true);
+        edge.setTargetNodeId(this.targetRef);
+        edge.setSourceNodeId(taskId);
+        edge.setType("Association");
+        return edge;
     }
 }

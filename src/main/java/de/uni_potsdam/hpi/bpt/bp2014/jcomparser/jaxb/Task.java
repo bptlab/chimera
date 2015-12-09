@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
@@ -73,5 +75,14 @@ public class Task {
 
     public void setDataInputAssociations(List<DataInputAssociation> dataInputAssociations) {
         this.dataInputAssociations = dataInputAssociations;
+    }
+
+    public Node convertToNode() {
+        Node node = new Node();
+        node.setType("Task");
+        node.setText(this.name);
+        node.setId(this.id);
+        node.setGlobal(false);
+        return node;
     }
 }
