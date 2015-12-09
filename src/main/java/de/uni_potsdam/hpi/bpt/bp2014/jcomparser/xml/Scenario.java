@@ -47,7 +47,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	/**
 	 * A List of fragments which are part of the scenario.
 	 */
-	private List<Fragment> fragments;
+	private List<DatabaseFragment> fragments;
 	/**
 	 * The url of the process Editor.
 	 */
@@ -97,7 +97,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 * If migration is necessary, this variable contains all the fragments that are new
 	 * and not in the older version.
 	 */
-	private List<Fragment> newFragments;
+	private List<DatabaseFragment> newFragments;
 	/**
 	 * List<TCSets<Do, state>>
 	 */
@@ -212,7 +212,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 		boolean changesMade = false;
 		needsToBeSaved = false;
 		newFragments = new LinkedList<>();
-		for (Fragment fragment : fragments) {
+		for (DatabaseFragment fragment : fragments) {
 			newestFragmentDatabaseVersion =
 					connector.getFragmentVersion(oldScenarioDbID,
 					fragment.getFragmentID());
@@ -252,7 +252,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 					migratingScenarioDbID);
 			for (long fragmentModelDbID : fragmentDbIDs) {
 				fragmentFound = false;
-				for (Fragment fragment : fragments) {
+				for (DatabaseFragment fragment : fragments) {
 					if (fragment.getFragmentID() == fragmentModelDbID) {
 						fragmentFound = true;
 						break;
@@ -448,7 +448,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 		// to the scenario to this scenario)
 		connector.migrateScenarioInstance(migratingScenarioDbID, databaseID);
 		//migrate FragmentInstances
-		for (Fragment fragment : fragments) {
+		for (DatabaseFragment fragment : fragments) {
 			// as there is no fragmentinstance for this new fragment
 			// in the database so far, we don't need to change references
 			if (!newFragments.contains(fragment)) {
@@ -511,7 +511,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 */
 	private Map<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
 		Map<Long, List<Integer>> result = new HashMap<>();
-		for (Fragment fragment : fragments) {
+		for (DatabaseFragment fragment : fragments) {
 			Map<Long, Node> fragmentNodes = fragment.getControlNodes();
 			for (Map.Entry<Long, Node> node : fragmentNodes.entrySet()) {
 				if (node.getValue().isTask()) {
@@ -532,7 +532,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Saves the terminationCondition of the Fragment to the database.
+	 * Saves the terminationCondition of the DatabaseFragment to the database.
 	 */
 	private void saveTerminationCondition() {
 		Connector conn = new Connector();
@@ -555,7 +555,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 * the Fragments have to be initialized.
 	 */
 	private void saveFragments() {
-		for (Fragment fragment : fragments) {
+		for (DatabaseFragment fragment : fragments) {
 			fragment.setScenarioID(databaseID);
 			fragment.save();
 		}
@@ -578,18 +578,18 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 * Take care that all DtaNode and Input and Output nodes are implemented
 	 */
 	private void saveConsistsOf() {
-		for (Fragment frag : fragments) {
+		for (DatabaseFragment frag : fragments) {
 			saveDataSetConsistOf(frag);
 		}
 	}
 
 	/**
 	 * Saves the relation of a dataSet to its dataNodes.
-	 * Only the nodes of one Fragment will be represented.
+	 * Only the nodes of one DatabaseFragment will be represented.
 	 *
 	 * @param frag The fragment which contains the DataSet
 	 */
-	private void saveDataSetConsistOf(final Fragment frag) {
+	private void saveDataSetConsistOf(final DatabaseFragment frag) {
 		Connector connector = new Connector();
 		for (Set set : frag.getSets()) {
 			for (Node dataNode : set.getDataNodes()) {
@@ -606,7 +606,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	private void createDataObjects() {
 		Map<String, String> dataObjectNodes = getAllDataObjectNodes();
 		dataObjects = new HashMap<>();
-		for (Fragment fragment : fragments) {
+		for (DatabaseFragment fragment : fragments) {
 			for (Node node : fragment.getControlNodes().values()) {
 				if (node.isDataNode()) {
 					if (null == dataObjects.get(node.getText())) {
@@ -734,17 +734,17 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Creates a Fragment based on a specific fragmentID.
+	 * Creates a DatabaseFragment based on a specific fragmentID.
 	 * Therefore it fetches the XML from a Server.
 	 *
-	 * @param fragmentID The ID of the Fragment.
-	 * @return The newly created Fragment Object.
+	 * @param fragmentID The ID of the DatabaseFragment.
+	 * @return The newly created DatabaseFragment Object.
 	 */
-	private Fragment createAndInitializeFragment(String fragmentID) {
+	private DatabaseFragment createAndInitializeFragment(String fragmentID) {
 		Retrieval retrieval = new Retrieval();
 		String fragmentXML = retrieval.getXMLWithAuth(this.processeditorServerUrl,
 				this.processeditorServerUrl + "models/" + fragmentID + ".pm");
-		Fragment fragment = new Fragment(processeditorServerUrl);
+		DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
 		fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
 		return fragment;
 	}
@@ -820,7 +820,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 *
 	 * @return the List of fragments.
 	 */
-	public List<Fragment> getFragments() {
+	public List<DatabaseFragment> getFragments() {
 		return fragments;
 	}
 
