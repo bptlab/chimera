@@ -38,12 +38,12 @@ public class FragmentInstance {
 		this.fragmentId = fragmentId;
 		this.scenarioInstanceId = scenarioInstanceId;
 		if (dbFragmentInstance.existFragment(fragmentId, scenarioInstanceId)) {
-			//creates an existing Fragment Instance using the database information
+			//creates an existing DatabaseFragment Instance using the database information
 			fragmentInstanceId = dbFragmentInstance
 					.getFragmentInstanceID(fragmentId, scenarioInstanceId);
 			this.initializeExistingNodeInstanceForFragment();
 		} else {
-			//creates a new Fragment Instance also in database
+			//creates a new DatabaseFragment Instance also in database
 			this.fragmentInstanceId = dbFragmentInstance
 					.createNewFragmentInstance(fragmentId, scenarioInstanceId);
 			this.initializeNewNodeInstanceForFragment();

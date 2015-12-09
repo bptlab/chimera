@@ -56,7 +56,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	/**
 	 * A Map which maps Model-XML-Element-IDs to nodes (either controlNodes or dataNodes).
 	 */
-	private Map<Long, Node> nodes;
+	private Map<String, Node> nodes;
 	/**
 	 * The List of Edges created from the FragmentXML.
 	 */
@@ -232,7 +232,6 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	 * Extracts all Nodes from the XML and creates Node objects.
 	 */
 	private void generateNodes() {
-
 		try {
 			//get all nodes from fragmentXML
 			XPath xPath = XPathFactory.newInstance().newXPath();
@@ -313,7 +312,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 		int oldFragmentID = connector.getFragmentID(scenarioDbID, fragmentID);
 		connector.migrateFragmentInstance(oldFragmentID, databaseID);
 		// migrateDataAttributeInstances controlNodes
-		for (Map.Entry<Long, Node> node : nodes.entrySet()) {
+		for (Map.Entry<String, Node> node : nodes.entrySet()) {
 			node.getValue().migrate(oldFragmentID);
 		}
 	}
@@ -335,7 +334,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	 *
 	 * @return a Map<XML_ID, ControlNode>
 	 */
-	public Map<Long, Node> getControlNodes() {
+	public Map<String, Node> getControlNodes() {
 		return nodes;
 	}
 
