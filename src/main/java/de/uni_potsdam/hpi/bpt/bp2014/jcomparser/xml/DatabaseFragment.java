@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a Fragment of the XML-Model.
+ * Represents a DatabaseFragment of the XML-Model.
  * It implements the IDeserialisable interface,
  * which allows to initialize a fragment Object
  * from an XML and the IPersistable Interface,
  * which allows to save the Object to the Database.
  */
-public class Fragment implements IDeserialisable, IPersistable {
-	private static Logger log = Logger.getLogger(Fragment.class.getName());
+public class DatabaseFragment implements IDeserialisable, IPersistable {
+	private static Logger log = Logger.getLogger(DatabaseFragment.class.getName());
 	/**
 	 * The url of the process Editor.
 	 */
@@ -42,7 +42,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 */
 	private int scenarioID = -1;
 	/**
-	 * The name of the Fragment.
+	 * The name of the DatabaseFragment.
 	 */
 	private String fragmentName;
 	/**
@@ -50,7 +50,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 */
 	private org.w3c.dom.Node fragmentXML;
 	/**
-	 * The Model-XML-ID of the Fragment.
+	 * The Model-XML-ID of the DatabaseFragment.
 	 */
 	private long fragmentID;
 	/**
@@ -67,12 +67,12 @@ public class Fragment implements IDeserialisable, IPersistable {
 	private int databaseID;
 	/**
 	 * A list of all Inputs sets,
-	 * which are used by any Activities inside this Fragment.
+	 * which are used by any Activities inside this DatabaseFragment.
 	 */
 	private List<InputSet> inputSets;
 	/**
 	 * A List of all Outputs sets,
-	 * which are used by any Activities inside this Fragment.
+	 * which are used by any Activities inside this DatabaseFragment.
 	 */
 	private List<OutputSet> outputSets;
 	/**
@@ -86,7 +86,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 *
 	 * @param serverURL URL of the processEditorServer
 	 */
-	public Fragment(String serverURL) {
+	public DatabaseFragment(String serverURL) {
 		processeditorServerUrl = serverURL;
 	}
 
@@ -94,7 +94,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	 * This constructor is only used for testcases
 	 * therefore, a connection to the server is not needed .
 	 */
-	public Fragment() {
+	public DatabaseFragment() {
 	}
 
 	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
@@ -179,7 +179,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
 	/**
 	 * generates Sets (I/O) for all Activities,
-	 * which are part of DataFlow inside the Fragment.
+	 * which are part of DataFlow inside the DatabaseFragment.
 	 * Assert that first all Control- and DataNodes have been initialized.
 	 */
 	private void generateSets() {
@@ -321,7 +321,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	/**
 	 * Returns the list of edges.
 	 * This is a Composition, if you change the list
-	 * you will change the state of the Fragment.
+	 * you will change the state of the DatabaseFragment.
 	 *
 	 * @return The List of Edges
 	 */
@@ -331,7 +331,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 
 	/**
 	 * Returns a Map of Node-Ids (from XML) and their nodes.
-	 * Any changes will manipulate the state of the Fragment.
+	 * Any changes will manipulate the state of the DatabaseFragment.
 	 *
 	 * @return a Map<XML_ID, ControlNode>
 	 */
@@ -381,7 +381,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Returns the Model-XML-ID of the Fragment.
+	 * Returns the Model-XML-ID of the DatabaseFragment.
 	 *
 	 * @return fragmentID
 	 */
@@ -390,7 +390,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Returns the Database-ID of the Fragment which is available after saving the fragment.
+	 * Returns the Database-ID of the DatabaseFragment which is available after saving the fragment.
 	 *
 	 * @return DatabaseID
 	 */
@@ -399,7 +399,7 @@ public class Fragment implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Returns the model-version of the Fragment.
+	 * Returns the model-version of the DatabaseFragment.
 	 *
 	 * @return versionNumber
 	 */
