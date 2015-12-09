@@ -14,20 +14,32 @@ public class Edge implements IDeserialisable, IPersistable {
 	 * Maps the Node-Model-ID (from the XML)
 	 * to the Node Object (might be either controlNOde or dataNode).
 	 */
-	private Map<Long, Node> nodes;
+	private Map<String, Node> nodes;
 	/**
 	 * The Model-XML-ID of the Edge.
 	 */
-	private int id;
+	private String id;
 	/**
 	 * The Model-Node-ID (from the XML) of the source Node of the edge.
 	 */
-	private long sourceNodeId;
-	/**
+	private String sourceNodeId;
+
+    public void setTargetNodeId(String targetNodeId) {
+        this.targetNodeId = targetNodeId;
+    }
+
+    /**
 	 * The Model-Node-ID (from the XML) of the target Node of the edge.
 	 */
-	private long targetNodeId;
-	/**
+	private String targetNodeId;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private boolean isDataInput;
+
+    /**
 	 * The type of the edge.
 	 * Could be either "*Association" (DataFlow) or "*SequenceFlow".
 	 */
@@ -73,8 +85,7 @@ public class Edge implements IDeserialisable, IPersistable {
 			} else {
 				controlNode = nodes.get(sourceNodeId);
 			}
-			connector.insertDataFlowIntoDatabase(controlNode.getDatabaseID(), setId,
-					!nodes.get(targetNodeId).isDataNode());
+			connector.insertDataFlowIntoDatabase(controlNode.getDatabaseID(), setId, isDataInput);
 		}
 		return 0;
 	}
@@ -93,7 +104,7 @@ public class Edge implements IDeserialisable, IPersistable {
 			type = value;
 			break;
 		case "#id":
-			id = Integer.parseInt(value);
+			id = value;
 			break;
 		case "label":
 			if (label != null && "DEFAULT".equals(label)) {
@@ -102,10 +113,10 @@ public class Edge implements IDeserialisable, IPersistable {
 			label = value;
 			break;
 		case "#sourceNode":
-			sourceNodeId = Long.parseLong(value);
+			sourceNodeId = value;
 			break;
 		case "#targetNode":
-			targetNodeId = Long.parseLong(value);
+			targetNodeId = value;
 			break;
 		case "sequence_type":
 			if ("DEFAULT".equals(value)) {
@@ -127,7 +138,7 @@ public class Edge implements IDeserialisable, IPersistable {
 	 *
 	 * @param newNodes the map of new nodes
 	 */
-	public void setNodes(final Map<Long, Node> newNodes) {
+	public void setNodes(final Map<String, Node> newNodes) {
 		this.nodes = newNodes;
 	}
 
@@ -138,7 +149,7 @@ public class Edge implements IDeserialisable, IPersistable {
 	 *
 	 * @return all nodes
 	 */
-	public Map<Long, Node> getNodes() {
+	public Map<String, Node> getNodes() {
 		return nodes;
 	}
 
@@ -148,17 +159,20 @@ public class Edge implements IDeserialisable, IPersistable {
 	 *
 	 * @return the sourceNodeid
 	 */
-	public long getSourceNodeId() {
+	public String getSourceNodeId() {
 		return sourceNodeId;
 	}
 
+    public void setSourceNodeId(String sourceNodeId) {
+        this.sourceNodeId = sourceNodeId;
+    }
 	/**
 	 * Returns the ID of the target Node.
 	 * The Id is not the database but the xml id.
 	 *
 	 * @return the targetNodeId
 	 */
-	public long getTargetNodeId() {
+	public String getTargetNodeId() {
 		return targetNodeId;
 	}
 
@@ -186,10 +200,13 @@ public class Edge implements IDeserialisable, IPersistable {
 	 *
 	 * @return the database ID.
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
+    public void setId(String id) {
+        this.id = id;
+    }
 	/**
 	 * The Control Node which is the target of the edge.
 	 *
@@ -217,5 +234,13 @@ public class Edge implements IDeserialisable, IPersistable {
 	public void setSetId(final int newSetId) {
 		this.setId = newSetId;
 	}
-	// END: Getter & Setter
+
+    public boolean isDataInput() {
+        return isDataInput;
+    }
+
+    public void setIsDataInput(boolean isDataInput) {
+        this.isDataInput = isDataInput;
+    }
+    // END: Getter & Setter
 }

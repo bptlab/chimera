@@ -17,7 +17,7 @@ public class Node implements IDeserialisable, IPersistable {
 	/**
 	 * The ID of the node from the xml.
 	 */
-	private long id;
+	private String id;
 	/**
 	 * The text (label) of the node.
 	 */
@@ -112,7 +112,7 @@ public class Node implements IDeserialisable, IPersistable {
 			type = value;
 			break;
 		case "#id":
-			id = Long.parseLong(value);
+			id = value;
 			break;
 		case "text":
 			text = value;
@@ -193,7 +193,7 @@ public class Node implements IDeserialisable, IPersistable {
 	 *
 	 * @return the id extracted from the XML.
 	 */
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -286,7 +286,7 @@ public class Node implements IDeserialisable, IPersistable {
 	 *
 	 * @param newId the new id of the data Node.
 	 */
-	protected void setId(final long newId) {
+	public void setId(final String newId) {
 		this.id = newId;
 	}
 
@@ -296,8 +296,18 @@ public class Node implements IDeserialisable, IPersistable {
 	 *
 	 * @param newLabel the new label of the data Node.
 	 */
-	protected void setText(final String newLabel) {
+	public void setText(final String newLabel) {
 		this.text = newLabel;
 	}
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setGlobal(boolean isGlobal) {
+        this.global = isGlobal;
+    }
+
+
 	// END: Getter & Setter
 }
