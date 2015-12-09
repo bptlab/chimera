@@ -1,7 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
+import com.sun.istack.internal.Nullable;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,6 +11,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -107,7 +112,43 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 		setVersionNumber();
 	}
 
-	/**
+    /**
+     *
+     * @param xml xmlString of fragment which is valid BPMN standard
+     */
+    public void initializeFromXml(String xml, int versionNumber, String fragmentName,
+                                  int fragmentID) {
+        Document doc = getXmlDocFromString(xml);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            Fragment fragment = (Fragment) jaxbUnmarshaller.unmarshal(doc);
+            for (Node node : fragment.getNodes()) {
+                this.nodes.put(node.getId(), node);
+            }
+            this.fragmentName = fragmentName;
+            this.versionNumber = versionNumber;
+            this.fragmentID = fragmentID;
+            this.inputSets = fragment.getInputSets();
+            this.outputSets = fragment.getOutputSets();
+            this.edges = fragment.getEdges();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Nullable
+    private Document getXmlDocFromString(String xml) {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
 	 * Extracts the Version from the XML.
 	 * Corresponding values will be saved to the corresponding fields.
 	 */
@@ -283,7 +324,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 			node.setFragmentId(databaseID);
 			node.save();
 		}
-		saveSet();
+		saveSets();
 		for (Edge edge : edges) {
 			edge.save();
 		}
@@ -293,7 +334,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	/**
 	 * Saves the input and output sets to the database.
 	 */
-	private void saveSet() {
+	private void saveSets() {
 		for (InputSet set : inputSets) {
 			set.save();
 		}
