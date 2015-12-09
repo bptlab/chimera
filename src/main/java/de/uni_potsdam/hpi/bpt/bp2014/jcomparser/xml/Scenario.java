@@ -4,12 +4,17 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,17 +24,13 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a Scenario-Model.
  * It can be parsed from an XML and written to a Database.
  */
-public class Scenario implements IDeserialisable, IPersistable {
+public class Scenario implements IDeserialisableJson, IPersistable {
 	private static Logger log = Logger.getLogger(Scenario.class.getName());
 	/**
 	 * The Name of the Scenario.
@@ -43,7 +44,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	/**
 	 * The XML which holds all information from the model.
 	 */
-	private org.w3c.dom.Node scenarioXML;
+	private JSONObject scenarioJson;
 	/**
 	 * A List of fragments which are part of the scenario.
 	 */
@@ -84,11 +85,11 @@ public class Scenario implements IDeserialisable, IPersistable {
 	/**
 	 * This is a String containing the ProcessEditorServerID for the domainModel.
 	 */
-	private String domainModelURI;
+	private Long domainModelID;
 	/**
 	 * This Element contains the XML representation of the domainModel.
 	 */
-	private Element domainModelXML;
+	private JSONObject domainModelJson;
 	/**
 	 * This is the domainModel Object belonging to this scenario.
 	 */
@@ -116,87 +117,69 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * This Method initializes the scenario from an XML.
-	 * Be Aware, that a scenario consists of fragments, which will
-	 * be loaded automatically;
+	 * This method calls all needed methods to set up the domainModel.
 	 *
-	 * @param element The XML-representation for the scenario.
+	 * @param element The JSON String which will be used for deserialisation
 	 */
-	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
-		this.scenarioXML = element;
-		setScenarioName();
-		setScenarioID();
-		generateFragmentList();
-		setDomainModelURL();
-		setDomainModel();
-		createDataObjects();
-		setTerminationCondition();
-		setVersionNumber();
-		checkIfVersionAlreadyInDatabase();
+	@Override public void initializeInstanceFromJson(final String element) {
+		try {
+			this.scenarioJson = new JSONObject(element);
+
+			this.scenarioName = scenarioJson.getString("name");
+			this.scenarioID = scenarioJson.getLong("_id");
+			this.versionNumber = scenarioJson.getInt("revision");
+			this.domainModelID = scenarioJson.getLong("domain_model");
+
+			generateFragmentList();
+			setDomainModel();
+			createDataObjects();
+			setTerminationCondition();
+
+			checkIfVersionAlreadyInDatabase();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override public void initializeInstanceFromXML(org.w3c.dom.Node element) {
+
 	}
 
 	/**
 	 * This method calls 2 more methods which get the domainModelXML and set the domainModel.
 	 */
 	private void setDomainModel() {
-		domainModelXML = fetchDomainModelXML();
-		domainModel = createAndInitializeDomainModel();
+		this.domainModelJson = fetchDomainModelJson();
+		this.domainModel = createAndInitializeDomainModel();
 	}
 
 	/**
-	 * This method takes the XML and initializes the domainModel.
+	 * This method takes the JSON and initializes the domainModel.
 	 *
-	 * @return the domainModel or null if there was no XML given.
+	 * @return the domainModel or null if there was no JSON given.
 	 */
 	private DomainModel createAndInitializeDomainModel() {
-		if (domainModelXML != null) {
-			domainModel = new DomainModel(processeditorServerUrl);
-			domainModel.initializeInstanceFromXML(domainModelXML);
-			return domainModel;
+		if (this.domainModelJson != null) {
+			DomainModel model = new DomainModel(processeditorServerUrl);
+			model.initializeInstanceFromJson(domainModelJson.toString());
+			return model;
 		}
 		return null;
 	}
 
 	/**
-	 * This method takes the URL given in the scenarioXML and gets the domainModelXML.
+	 * This method takes the ID given in the scenarioJson and gets the domainModelJson.
 	 *
-	 * @return the domainModelXML as an Element.
+	 * @return the domainModelJson as a JSONObject.
 	 */
-	private Element fetchDomainModelXML() {
+	private JSONObject fetchDomainModelJson() {
 		try {
-			Retrieval jRetrieval = new Retrieval();
-			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/"
-							+ domainModelURI + ".pm");
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db =
-					DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = db.parse(is);
-			return doc.getDocumentElement();
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			log.error("Error:", e);
-		}
-		return null;
-	}
-
-	/**
-	 * This method gets the URL for the corresponding domainModel.
-	 * It is found in the scenarioXML.
-	 */
-	private void setDomainModelURL() {
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/properties/property"
-				+ "[@name='domainModelURI']/@value";
-		try {
-			domainModelURI = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
-			//This is used to make sure we only get the domainModelModelID
-			domainModelURI = domainModelURI.split("/")[
-					domainModelURI.split("/").length - 1];
-			domainModelURI = domainModelURI.split("\\.")[0];
-		} catch (XPathExpressionException e) {
-			log.error("Error: unable to set the domain model URL for the scenario.");
-			log.error(e);
+			Client client = ClientBuilder.newClient();
+			WebTarget target = client.target(processeditorServerUrl).path("domainmodel/" + this.domainModelID);
+			return new JSONObject(target.request().get().readEntity(String.class));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -300,116 +283,22 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Extracts the Version from the XML.
-	 * Corresponding values will be saved to the corresponding fields.
-	 */
-	private void setVersionNumber() {
-		Element versionXML = fetchVersionXML();
-		if (versionXML != null) {
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/versions/version";
-			try {
-				NodeList versions = (NodeList) xPath.compile(xPathQuery)
-						.evaluate(versionXML, XPathConstants.NODESET);
-				int maxID = 0;
-				// the current version is the latest one
-				for (int i = 0; i < versions.getLength(); i++) {
-					xPathQuery = "@id";
-					int currentID = Integer.parseInt(
-							(String) xPath.compile(xPathQuery)
-									.evaluate(versions.item(i),
-									XPathConstants.STRING));
-					if (maxID < currentID) {
-						maxID = currentID;
-					}
-				}
-				versionNumber = maxID;
-			} catch (XPathExpressionException e) {
-				log.error("Error: unable to set the version of the scenario.");
-				log.error(e);
-			}
-		}
-	}
-
-	/**
-	 * Get the XML which contains all the versions.
-	 * Connects to the ProcessEditor Server, in order
-	 * to fetch all versions of the current scenario.
-	 *
-	 * @return A Dom-Element containing all the version information.
-	 */
-	private Element fetchVersionXML() {
-		try {
-			Retrieval jRetrieval = new Retrieval();
-			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/"
-							+ scenarioID + "/versions");
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db =
-					DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = db.parse(is);
-			return doc.getDocumentElement();
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			log.error("Error:", e);
-		}
-		return null;
-	}
-
-	/**
 	 * Extracts the TerminationCondition from the XML.
 	 * Corresponding values will be saved to the corresponding fields.
 	 */
 	private void setTerminationCondition() {
-		terminationCondition = new LinkedList<>();
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/properties/property"
-				+ "[@name='Termination condition']/@value";
-		String tcs = "";
-		try {
-			tcs = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
-		} catch (XPathExpressionException e) {
-			log.error("Error: unable to set the termination condition "
-					+ "for the scenario.");
-			log.error(e);
-		}
-		if (tcs.isEmpty()) {
-			terminationCondition = null;
-			return;
-		}
-		tcs = tcs.replaceAll("; ", ";");
-		String[] terminationConditions = tcs.split(";");
-		for (String set : terminationConditions) {
-			if (set.isEmpty()) {
-				continue;
-			}
+		this.terminationCondition = new LinkedList<>();
+		JSONArray terminationConditions = scenarioJson.getJSONArray("termination_conditions");
+		for (int i = 0; i < terminationConditions.length(); i++) {
 			Map<DataObject, String> setMap = new HashMap<>();
-			for (String setEntry : set.split(",")) {
-				String dataObject = setEntry.replaceAll("\\[[a-zA-Z0-9_.]+\\]", "");
-				String state = setEntry.replaceAll(
-						"[a-zA-Z0-9_.]+\\[", "").replaceAll("\\]", "");
-				if (!dataObject.isEmpty() && !state.isEmpty()) {
-					setMap.put(dataObjects.get(dataObject), state);
-				}
+			JSONObject terminationCondition = terminationConditions.getJSONObject(i);
+			Iterator keys = terminationCondition.keys();
+			while (keys.hasNext()) {
+				String dataObject = keys.next().toString();
+				String state = terminationCondition.getString(dataObject);
+				setMap.put(this.dataObjects.get(dataObject), state);
 			}
-			if (setMap.size() > 0) {
-				terminationCondition.add(setMap);
-			}
-		}
-	}
-
-	/**
-	 * Extracts and saves Scenario ID from the ModelXML.
-	 */
-	private void setScenarioID() {
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/@id";
-		try {
-			this.scenarioID = Long.parseLong(xPath.compile(xPathQuery)
-					.evaluate(this.scenarioXML));
-		} catch (XPathExpressionException e) {
-			log.error("Error: unable to set the id of the scenario.");
-			log.error(e);
+			this.terminationCondition.add(setMap);
 		}
 	}
 
@@ -485,7 +374,7 @@ public class Scenario implements IDeserialisable, IPersistable {
 	private void saveReferences() {
 		/* Key is the ID used inside the model, value are a List of
          * all IDs used inside the database. */
-		Map<Long, List<Integer>> activities =
+		Map<String, List<Integer>> activities =
 				getActivityDatabaseIDsForEachActivityModelID();
 		Connector conn = new Connector();
 		for (List<Integer> databaseIDs : activities.values()) {
@@ -509,11 +398,11 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 *
 	 * @return A map of all activity-model-IDs to a list of their database IDs.
 	 */
-	private Map<Long, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
-		Map<Long, List<Integer>> result = new HashMap<>();
+	private Map<String, List<Integer>> getActivityDatabaseIDsForEachActivityModelID() {
+		Map<String, List<Integer>> result = new HashMap<>();
 		for (DatabaseFragment fragment : fragments) {
-			Map<Long, Node> fragmentNodes = fragment.getControlNodes();
-			for (Map.Entry<Long, Node> node : fragmentNodes.entrySet()) {
+			Map<String, Node> fragmentNodes = fragment.getControlNodes();
+			for (Map.Entry<String, Node> node : fragmentNodes.entrySet()) {
 				if (node.getValue().isTask()) {
 					if (result.get(node.getKey()) == null) {
 						List<Integer> activityDatabaseIDs
@@ -599,79 +488,26 @@ public class Scenario implements IDeserialisable, IPersistable {
 		}
 	}
 
-	/**
-	 * Saves the dataObjects of the scenario to the database.
-	 * Fragments (with Control Nodes) have to be created and saved first.
-	 */
 	private void createDataObjects() {
-		Map<String, String> dataObjectNodes = getAllDataObjectNodes();
 		dataObjects = new HashMap<>();
 		for (DatabaseFragment fragment : fragments) {
 			for (Node node : fragment.getControlNodes().values()) {
 				if (node.isDataNode()) {
 					if (null == dataObjects.get(node.getText())) {
 						if (domainModel == null) {
-							dataObjects.put(node.getText(),
-									new DataObject());
+							dataObjects.put(node.getText(), new DataObject());
 							break;
 						}
-						String link = dataObjectNodes.get(node.getText());
-						// if there is no reference to the dataClass
-						// match over the name
-						if (link.isEmpty()) {
-							boolean dataClassFound = false;
-							for (DataClass dC : domainModel
-									.getDataClasses().
-											values()) {
-								if (dC.getDataClassName()
-									.equals(node.getText())) {
-									dataObjects.put(node.getText(),
-											new DataObject(dC));
-									dataClassFound = true;
-									break;
-								}
+						// try to match dataClass over the name
+						for (DataClass dC : domainModel.getDataClasses().
+								values()) {
+							if (dC.getDataClassName().equals(node.getText())) {
+								dataObjects.put(node.getText(), new DataObject(dC));
+								break;
 							}
-							if (!dataClassFound) {
-								dataObjects.put(node.getText(),
-										new DataObject());
-							}
-						} else {
-							String[] slashSplit = link.split("/");
-							String dataClassModelID
-									= slashSplit[
-									slashSplit.length - 1]
-									.split("#")[0];
-							String dataClassNodeID
-									= slashSplit[
-									slashSplit.length - 1]
-									.split("#")[1];
-							if (Long.parseLong(
-									dataClassModelID)
-									!= domainModel
-									.getDomainModelModelID()) {
-								log.error("Error: The referenced"
-										+ " domainModel of"
-										+ " a dataObject"
-										+ "-Node in the "
-										+ "scenario is"
-										+ " not existing");
-								dataObjects.put(
-										node.getText(),
-										new DataObject());
-								return;
-							} else if (domainModel.getDataClasses()
-									.get(Long.parseLong(
-											dataClassNodeID)) == null) {
-								dataObjects.put(
-										node.getText(),
-										new DataObject());
-							}
-							dataObjects.put(
-									node.getText(),
-									new DataObject(
-									domainModel.getDataClasses()
-											.get(Long.parseLong(dataClassNodeID))));
 						}
+						// no data class found
+						dataObjects.put(node.getText(), new DataObject());
 					}
 					dataObjects.get(node.getText()).addDataNode(node);
 				}
@@ -680,56 +516,14 @@ public class Scenario implements IDeserialisable, IPersistable {
 	}
 
 	/**
-	 * Get the link of the dataClass for each dataObject that the scenario contains.
-	 *
-	 * @return A Map of the name of the dataObject to the link of its dataClass
-	 */
-	private Map<String, String> getAllDataObjectNodes() {
-		Map<String, String> dataObjectNodes = new HashMap<>();
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/nodes/node[property[@name = '#type' and "
-				+ "@value[contains(.,'PCMDataObjectNode')]]]";
-		try {
-			NodeList nodes = (NodeList) xPath.compile(xPathQuery)
-					.evaluate(this.scenarioXML, XPathConstants.NODESET);
-			for (int i = 0; i < nodes.getLength(); i++) {
-				// get the name of the current node
-				xPathQuery = "property[@name = 'text']/@value";
-				String name = xPath.compile(xPathQuery).evaluate(nodes.item(i));
-				xPathQuery = "property[@name = 'Data class']/@value";
-				String dataClassLink = xPath.compile(xPathQuery)
-						.evaluate(nodes.item(i));
-				dataObjectNodes.put(name, dataClassLink);
-			}
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
-		}
-		return dataObjectNodes;
-	}
-
-	/**
 	 * Generates a List of Fragments from the ScenarioXML.
 	 */
 	private void generateFragmentList() {
-		try {
-			//look for all fragments in the scenarioXML and save their node
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/model/nodes/node[property[@name = '#type' and "
-					+ "@value[contains(.,'PCMFragmentNode')]]]";
-			NodeList fragmentNodes = (NodeList) xPath.compile(xPathQuery)
-					.evaluate(this.scenarioXML, XPathConstants.NODESET);
-			this.fragments = new LinkedList<>();
-
-			for (int i = 0; i < fragmentNodes.getLength(); i++) {
-				// get the ID of the current node
-				xPathQuery = "property[@name = 'fragment mid']/@value";
-				String currentNodeID = xPath.compile(xPathQuery)
-						.evaluate(fragmentNodes.item(i));
-				this.fragments.add(createAndInitializeFragment(currentNodeID));
-			}
-		} catch (XPathExpressionException e) {
-			log.error("Error: unable to generate the fragmentlist.");
-			log.error(e);
+		JSONArray fragmentarray = this.scenarioJson.getJSONArray("fragments");
+		this.fragments = new LinkedList<>();
+		for (int i = 0; i < fragmentarray.length(); i++) {
+			int fragmentID = fragmentarray.getInt(i);
+			this.fragments.add(createAndInitializeFragment(fragmentID));
 		}
 	}
 
@@ -740,10 +534,12 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 * @param fragmentID The ID of the DatabaseFragment.
 	 * @return The newly created DatabaseFragment Object.
 	 */
-	private DatabaseFragment createAndInitializeFragment(String fragmentID) {
-		Retrieval retrieval = new Retrieval();
-		String fragmentXML = retrieval.getXMLWithAuth(this.processeditorServerUrl,
-				this.processeditorServerUrl + "models/" + fragmentID + ".pm");
+	private DatabaseFragment createAndInitializeFragment(int fragmentID) {
+		//TODO implement REST GET call
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(processeditorServerUrl).path("fragment/" + fragmentID);
+		JSONObject fragmentJson = new JSONObject(target.request().get().readEntity(String.class));
+		String fragmentXML = fragmentJson.getString("content");
 		DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
 		fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
 		return fragment;
@@ -766,22 +562,6 @@ public class Scenario implements IDeserialisable, IPersistable {
 			log.error("Error:", e);
 		}
 		return null;
-	}
-
-	/**
-	 * Sets the name of the Scenario.
-	 * The name is based on the value of the "name" attribute
-	 * of the ScenarioXML Root-Element.
-	 */
-	private void setScenarioName() {
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/@name";
-		try {
-			this.scenarioName = xPath.compile(xPathQuery).evaluate(this.scenarioXML);
-		} catch (XPathExpressionException e) {
-			log.error("Error: unable to set the name of the scenario.");
-			log.error(e);
-		}
 	}
 
 	// Getters - Currently used for Tests only
@@ -809,8 +589,8 @@ public class Scenario implements IDeserialisable, IPersistable {
 	 *
 	 * @return the XML of representing the Scenario.
 	 */
-	public org.w3c.dom.Node getScenarioXML() {
-		return scenarioXML;
+	public JSONObject getScenarioJson() {
+		return scenarioJson;
 	}
 
 	/**
@@ -872,12 +652,12 @@ public class Scenario implements IDeserialisable, IPersistable {
 		return migrationNecessary;
 	}
 
-	public String getDomainModelURI() {
-		return domainModelURI;
+	public Long getDomainModelID() {
+		return domainModelID;
 	}
 
-	public Element getDomainModelXML() {
-		return domainModelXML;
+	public JSONObject getDomainModelJson() {
+		return domainModelJson;
 	}
 
 	public DomainModel getDomainModel() {

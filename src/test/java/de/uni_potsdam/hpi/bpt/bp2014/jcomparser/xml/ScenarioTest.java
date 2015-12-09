@@ -164,7 +164,7 @@ public class  ScenarioTest extends TestSetUp {
         PowerMock.replay(scenarioWOVersion);
         scenarioWOVersion.initializeInstanceFromXML(bikeScenario.getDocumentElement());
         Assert.assertEquals("The URI has not been set correctly",
-                "2049535559", scenarioWOVersion.getDomainModelURI());
+                "2049535559", scenarioWOVersion.getDomainModelID());
         PowerMock.verify(scenarioWOVersion);
     }
     /**
