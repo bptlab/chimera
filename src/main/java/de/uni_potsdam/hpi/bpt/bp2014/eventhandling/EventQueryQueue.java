@@ -15,6 +15,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.ws.rs.core.Response;
 
 /**
  * Receiving Events from Event Queries via ActiveMQ and JMS.
@@ -33,8 +34,9 @@ public class EventQueryQueue {
 	 * @param title Title of the Query
 	 * @param queryString The actual Query
 	 * @param email E-Mail-Address of the user the Query is registered for
+	 * @param url URL of the Server Unicorn is running on
 	 */
-	public void registerQuery(String title, String queryString, String email) {
+	public void registerQuery(String title, String queryString, String email, String url) {
 		EventQueryJson json = new EventQueryJson();
 		json.setTitle(title);
 		json.setQueryString(queryString);
@@ -44,11 +46,11 @@ public class EventQueryQueue {
 		String postJson = gson.toJson(json);
 
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target("http://localhost:8080").path("Unicorn/webapi/REST/EventQuery");
+		WebTarget target = client.target(url).path("Unicorn/webapi/REST/EventQuery");
 
-		String response = target.request().post(Entity.json(postJson)).readEntity(String.class);
-		if (!response.startsWith("EPException")) {
-			uuid = response;
+		Response response = target.request().post(Entity.json(postJson));
+		if (response.getStatus() == 200) {
+			uuid = response.readEntity(String.class);
 		}
 	}
 
