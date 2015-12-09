@@ -224,7 +224,7 @@ public class Connector extends DbObject {
 	 * @return the autoincrement id of the newly created entry.
 	 */
 	public int insertDataNodeIntoDatabase(final int scenarioID, final int stateID,
-			final int dataClassID, final int dataObjectID, final long modelID) {
+			final int dataClassID, final int dataObjectID, final String modelID) {
 		String sql = "INSERT INTO datanode "
 				+ "(scenario_id, state_id, dataclass_id, dataobject_id, modelid)"
 				+ " VALUES (" + scenarioID + ", " + stateID + ", "

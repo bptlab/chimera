@@ -8,7 +8,11 @@ import java.util.List;
  * This class represents a set.
  */
 public class Set implements IPersistable {
-	/**
+    public void setDatabaseId(int databaseId) {
+        this.databaseId = databaseId;
+    }
+
+    /**
 	 * A List of all (DataFlow-) Edges.
 	 * The edges have any of the (Data-) Nodes of the
 	 * Input-Set as source and the activity of the InputSet as the Target

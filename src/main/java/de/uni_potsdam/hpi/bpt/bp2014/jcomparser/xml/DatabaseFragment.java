@@ -126,12 +126,13 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
             for (Node node : fragment.getNodes()) {
                 this.nodes.put(node.getId(), node);
             }
+            this.edges = fragment.getEdges();
             this.fragmentName = fragmentName;
             this.versionNumber = versionNumber;
             this.fragmentID = fragmentID;
             this.inputSets = fragment.getInputSets();
             this.outputSets = fragment.getOutputSets();
-            this.edges = fragment.getEdges();
+            // generateSets();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
