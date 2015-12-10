@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +20,11 @@ public class ExclusiveGateway {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
-    private String name;
+    private String name = "";
     @XmlElement(name = "bpmn:incoming")
-    private List<String> incoming;
+    private List<String> incoming = new ArrayList<>();
     @XmlElement(name = "bpmn:outgoing")
-    private String outgoing;
+    private String outgoing = "";
 
     public String getId() {
         return id;

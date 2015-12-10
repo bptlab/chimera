@@ -132,6 +132,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
             this.fragmentID = fragmentID;
             this.inputSets = fragment.getInputSets();
             this.outputSets = fragment.getOutputSets();
+            this.save();
             // generateSets();
         } catch (JAXBException e) {
             e.printStackTrace();

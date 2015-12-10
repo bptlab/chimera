@@ -75,7 +75,7 @@ public class Connector extends DbObject {
 		String sql = "INSERT INTO controlnode "
 				+ "(label, controlnode.type, fragment_id, modelid) "
 				+ "VALUES ('" + label + "', '" + type
-				+ "', " + fragmentID + ", " + modelID + ")";
+				+ "', " + fragmentID + ", '" + modelID + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 

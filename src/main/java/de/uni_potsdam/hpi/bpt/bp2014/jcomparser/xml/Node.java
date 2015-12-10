@@ -45,7 +45,7 @@ public class Node implements IDeserialisable, IPersistable {
 	/**
 	 * A string, which holds the stereotype of the node (e.g. "SEND" for EmailTask).
 	 */
-	private String stereotype;
+	private String stereotype = "";
 
 	/**
 	 * Each supported type of the process editor is mapped to

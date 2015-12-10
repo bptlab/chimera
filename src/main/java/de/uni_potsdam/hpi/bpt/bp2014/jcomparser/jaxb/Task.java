@@ -20,11 +20,11 @@ public class Task {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
-    private String name;
+    private String name = "";
     @XmlElement(name = "bpmn:incoming")
-    private String incoming;
+    private String incoming = "";
     @XmlElement(name = "bpmn:outgoing")
-    private String outgoing;
+    private String outgoing = "";
     @XmlElement(name = "bpmn:dataOutputAssociation")
     private List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
     @XmlElement(name = "bpmn:dataInputAssociation")

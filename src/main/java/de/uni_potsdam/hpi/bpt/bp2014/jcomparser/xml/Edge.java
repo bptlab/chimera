@@ -18,11 +18,11 @@ public class Edge implements IDeserialisable, IPersistable {
 	/**
 	 * The Model-XML-ID of the Edge.
 	 */
-	private String id;
+	private String id = "";
 	/**
 	 * The Model-Node-ID (from the XML) of the source Node of the edge.
 	 */
-	private String sourceNodeId;
+	private String sourceNodeId = "";
 
     public void setTargetNodeId(String targetNodeId) {
         this.targetNodeId = targetNodeId;
@@ -37,7 +37,7 @@ public class Edge implements IDeserialisable, IPersistable {
         this.type = type;
     }
 
-    private boolean isDataInput;
+    private boolean isDataInput = false;
 
     /**
 	 * The type of the edge.
