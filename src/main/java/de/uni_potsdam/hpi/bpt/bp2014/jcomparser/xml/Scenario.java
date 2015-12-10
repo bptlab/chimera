@@ -481,6 +481,7 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 	}
 
 	private void createDataObjects() {
+		//TODO read data classes of data objects from fragment xml
 		dataObjects = new HashMap<>();
 		for (DatabaseFragment fragment : fragments) {
 			for (Node node : fragment.getControlNodes().values()) {
@@ -515,7 +516,7 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		this.fragments = new LinkedList<>();
 		for (int i = 0; i < fragmentarray.length(); i++) {
 			DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
-			fragment.initializeFromXml(fragmentarray.getString(i), versionNumber,
+			fragment.initializeFromXml(fragmentarray.getJSONObject(i).getString("content"), versionNumber,
                     "name", 1);
 			this.fragments.add(fragment);
 		}
