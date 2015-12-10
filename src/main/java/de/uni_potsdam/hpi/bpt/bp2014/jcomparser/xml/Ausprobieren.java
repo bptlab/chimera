@@ -36,7 +36,7 @@ public class Ausprobieren {
 		is.setCharacterStream(new StringReader(scenarioXML));
 		DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = db.parse(is);
-		Scenario scen = new Scenario("http://bp2014w1-dev:1205/");
+		Scenario scen = new Scenario();
 		scen.initializeInstanceFromXML(doc.getDocumentElement());
 		scen.save();
 	}

@@ -105,18 +105,6 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 	private List<Map<DataObject, String>> terminationCondition;
 
 	/**
-	 * Creates a new Scenario Object and saves the PE-ServerURL.
-	 * The Scenario needs knowledge of the serverURL, if and
-	 * only if it should be initialized from XML.
-	 * Hence, it will load the fragments from the ProcessEditor.
-	 *
-	 * @param serverURL The URL of the ProcessEditor Server.
-	 */
-	public Scenario(final String serverURL) {
-		processeditorServerUrl = serverURL;
-	}
-
-	/**
 	 * This method calls all needed methods to set up the domainModel.
 	 *
 	 * @param element The JSON String which will be used for deserialisation
@@ -152,27 +140,11 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 	 */
 	private DomainModel createAndInitializeDomainModel() {
 		if (this.domainModelJson != null) {
-			DomainModel model = new DomainModel(processeditorServerUrl);
+			DomainModel model = new DomainModel();
 			model.initializeInstanceFromJson(domainModelJson.toString());
 			return model;
 		}
 		return null;
-	}
-
-	/**
-	 * This method takes the ID given in the scenarioJson and gets the domainModelJson.
-	 *
-	 * @return the domainModelJson as a JSONObject.
-	 */
-	private JSONObject fetchDomainModelJson() {
-		try {
-			Client client = ClientBuilder.newClient();
-			WebTarget target = client.target(processeditorServerUrl).path("domainmodel/" + this.domainModelID);
-			return new JSONObject(target.request().get().readEntity(String.class));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	/**
@@ -515,29 +487,11 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		JSONArray fragmentarray = this.scenarioJson.getJSONArray("fragments");
 		this.fragments = new LinkedList<>();
 		for (int i = 0; i < fragmentarray.length(); i++) {
-			DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
+			DatabaseFragment fragment = new DatabaseFragment();
 			fragment.initializeFromXml(fragmentarray.getJSONObject(i).getString("content"), versionNumber,
                     "name", 1);
 			this.fragments.add(fragment);
 		}
-	}
-
-	/**
-	 * Creates a DatabaseFragment based on a specific fragmentID.
-	 * Therefore it fetches the XML from a Server.
-	 *
-	 * @param fragmentID The ID of the DatabaseFragment.
-	 * @return The newly created DatabaseFragment Object.
-	 */
-	private DatabaseFragment createAndInitializeFragment(int fragmentID) {
-		//TODO implement REST GET call
-		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(processeditorServerUrl).path("fragment/" + fragmentID);
-		JSONObject fragmentJson = new JSONObject(target.request().get().readEntity(String.class));
-		String fragmentXML = fragmentJson.getString("content");
-		DatabaseFragment fragment = new DatabaseFragment(processeditorServerUrl);
-		fragment.initializeInstanceFromXML(stringToDocument(fragmentXML));
-		return fragment;
 	}
 
 	/**

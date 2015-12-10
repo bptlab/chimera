@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
@@ -22,10 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import javax.xml.bind.annotation.XmlAnyAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
@@ -265,6 +263,13 @@ import java.util.LinkedList;
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
+	@POST
+	@Path("scenario")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void postInstance(String scenario) {
+		Scenario newScenario = new Scenario();
+		newScenario.initializeInstanceFromJson(scenario);
+	}
 	/**
 	 * Creates a new instance of a specified scenario.
 	 * This method assumes that the name of then new instance will be the same

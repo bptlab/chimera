@@ -44,7 +44,7 @@ public class JComparser {
 		is.setCharacterStream(new StringReader(scenarioXML));
 		DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = db.parse(is);
-		Scenario scen = new Scenario(processServer);
+		Scenario scen = new Scenario();
 		scen.initializeInstanceFromXML(doc.getDocumentElement());
 		scen.save();
 		return 1;
@@ -122,7 +122,7 @@ public class JComparser {
 						splittedScenarioURI[splittedScenarioURI.length - 1];
 				String newScenarioURI = processeditorServerUrl
 						+ "models/" + currentScenarioID + ".pm";
-				Scenario scenario = new Scenario(processeditorServerUrl);
+				Scenario scenario = new Scenario();
 				String currentScenarioXML = new Retrieval().getXMLWithAuth(
 						processeditorServerUrl, newScenarioURI);
 				try {

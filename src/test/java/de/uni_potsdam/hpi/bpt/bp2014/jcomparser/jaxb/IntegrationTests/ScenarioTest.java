@@ -16,7 +16,7 @@ public class ScenarioTest {
     @Test
     public void testScenario() {
         File file = new File("src/test/resources/jaxb/ExampleScenario.json");
-        Scenario scenario = new Scenario("SomeURL");
+        Scenario scenario = new Scenario();
         try {
             String json = FileUtils.readFileToString(file);
             scenario.initializeInstanceFromJson(json);
