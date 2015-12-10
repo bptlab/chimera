@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,9 +26,9 @@ public class Task {
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
     @XmlElement(name = "bpmn:dataOutputAssociation")
-    private List<DataOutputAssociation> dataOutputAssociations;
+    private List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
     @XmlElement(name = "bpmn:dataInputAssociation")
-    private List<DataInputAssociation> dataInputAssociations;
+    private List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
 
     public String getId() {
         return id;

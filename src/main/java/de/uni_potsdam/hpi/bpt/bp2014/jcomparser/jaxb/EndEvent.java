@@ -1,11 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class EndEvent {
     @XmlAttribute(name = "id")
     private String id;

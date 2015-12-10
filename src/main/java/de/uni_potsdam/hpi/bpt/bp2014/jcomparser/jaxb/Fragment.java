@@ -26,9 +26,9 @@ public class Fragment {
     @XmlElement(name = "bpmn:boundaryEvent")
     private List<BoundaryEvent> boundaryEvents;
     @XmlElement(name = "bpmn:task")
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
     @XmlElement(name = "bpmn:dataObjectReference")
-    private List<DataObjectReference> dataObjectReferences;
+    private List<DataObjectReference> dataObjectReferences = new ArrayList<>();
     @XmlElement(name = "bpmn:dataObject")
     private List<DataObject> dataObjects;
     @XmlElement(name = "bpmn:endEvent")

@@ -61,7 +61,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	/**
 	 * A Map which maps Model-XML-Element-IDs to nodes (either controlNodes or dataNodes).
 	 */
-	private Map<String, Node> nodes;
+	private Map<String, Node> nodes = new HashMap<>();
 	/**
 	 * The List of Edges created from the FragmentXML.
 	 */

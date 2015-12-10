@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+        <bpmn:outgoing>SequenceFlow_1r09dad</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="Task_1qp9gsh" name="Do great work">
+        <bpmn:incoming>SequenceFlow_1r09dad</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0306jnu</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:sequenceFlow id="SequenceFlow_1r09dad" sourceRef="StartEvent_1" targetRef="Task_1qp9gsh" />
+
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0pjea83">
+        <bpmn:incoming>SequenceFlow_0306jnu</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0ct04t8</bpmn:outgoing>
+        <bpmn:outgoing>SequenceFlow_1pj6qq6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:sequenceFlow id="SequenceFlow_0306jnu" sourceRef="Task_1qp9gsh" targetRef="ExclusiveGateway_0pjea83" />
+
+    <bpmn:task id="Task_0c9phqs" name="Drink coffee">
+        <bpmn:incoming>SequenceFlow_0ct04t8</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_1gyvb8d</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:sequenceFlow id="SequenceFlow_0ct04t8" sourceRef="ExclusiveGateway_0pjea83" targetRef="Task_0c9phqs" />
+
+    <bpmn:task id="Task_0xjpfqa" name="Continue Work">
+        <bpmn:incoming>SequenceFlow_1pj6qq6</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_17mh7cg</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:sequenceFlow id="SequenceFlow_1pj6qq6" sourceRef="ExclusiveGateway_0pjea83" targetRef="Task_0xjpfqa" />
+
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0ns9z26">
+        <bpmn:incoming>SequenceFlow_17mh7cg</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_1gyvb8d</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_11341ca</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:sequenceFlow id="SequenceFlow_17mh7cg" sourceRef="Task_0xjpfqa" targetRef="ExclusiveGateway_0ns9z26" />
+    <bpmn:sequenceFlow id="SequenceFlow_1gyvb8d" sourceRef="Task_0c9phqs" targetRef="ExclusiveGateway_0ns9z26" />
+
+    <bpmn:endEvent id="EndEvent_0zmuq2v">
+        <bpmn:incoming>SequenceFlow_11341ca</bpmn:incoming>
+        <bpmn:incoming>SequenceFlow_178gzyw</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="SequenceFlow_11341ca" sourceRef="ExclusiveGateway_0ns9z26" targetRef="EndEvent_0zmuq2v" />
+
+    <bpmn:boundaryEvent id="BoundaryEvent_0dgouhn" name="Fell asleep while drinking coffee" attachedToRef="Task_0c9phqs">
+        <bpmn:outgoing>SequenceFlow_178gzyw</bpmn:outgoing>
+        <bpmn:conditionalEventDefinition />
+    </bpmn:boundaryEvent>
+
+
+    <bpmn:sequenceFlow id="SequenceFlow_178gzyw" sourceRef="BoundaryEvent_0dgouhn" targetRef="EndEvent_0zmuq2v" />
+</bpmn:process>
