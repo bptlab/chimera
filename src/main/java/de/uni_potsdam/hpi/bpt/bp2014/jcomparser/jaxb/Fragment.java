@@ -163,6 +163,7 @@ public class Fragment {
         nodes.addAll(getExclusiveGateways());
         nodes.addAll(getTaskNodes());
         nodes.addAll(getDataObjectNodes());
+        nodes.addAll(getBoundaryEventNodes());
         nodes.add(getEndEventNode());
         nodes.add(getStartEventNode());
         return nodes;
@@ -197,6 +198,20 @@ public class Fragment {
         return startEvent;
     }
 
+    private List<Node> getBoundaryEventNodes() {
+        List<Node> events = new ArrayList<>();
+
+        for (BoundaryEvent event : this.boundaryEvents) {
+            Node boundaryEvent = new Node();
+            boundaryEvent.setId(event.getId());
+            boundaryEvent.setGlobal(false);
+            boundaryEvent.setText(event.getName());
+            boundaryEvent.setType("BoundaryEvent");
+            events.add(boundaryEvent);
+        }
+
+        return events;
+    }
 
     private List<Node> getExclusiveGateways() {
         List<Node> overallNodes = new ArrayList<>();

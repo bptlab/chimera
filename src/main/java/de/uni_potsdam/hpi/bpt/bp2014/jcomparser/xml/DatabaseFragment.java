@@ -328,6 +328,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 		}
 		saveSets();
 		for (Edge edge : edges) {
+            edge.setNodes(this.nodes);
 			edge.save();
 		}
 		return databaseID;
