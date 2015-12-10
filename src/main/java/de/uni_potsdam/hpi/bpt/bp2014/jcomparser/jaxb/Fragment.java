@@ -18,19 +18,19 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Fragment {
     @XmlElement(name = "bpmn:sequenceFlow")
-    private List<SequenceFlow> associations;
+    private List<SequenceFlow> associations = new ArrayList<>();
     @XmlElement(name = "bpmn:exclusiveGateway")
-    private List<ExclusiveGateway> xorGateways;
+    private List<ExclusiveGateway> xorGateways = new ArrayList<>();
     @XmlElement(name = "bpmn:startEvent")
     private StartEvent startEvent;
     @XmlElement(name = "bpmn:boundaryEvent")
-    private List<BoundaryEvent> boundaryEvents;
+    private List<BoundaryEvent> boundaryEvents = new ArrayList<>();
     @XmlElement(name = "bpmn:task")
     private List<Task> tasks = new ArrayList<>();
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataObjectReference> dataObjectReferences = new ArrayList<>();
     @XmlElement(name = "bpmn:dataObject")
-    private List<DataObject> dataObjects;
+    private List<DataObject> dataObjects = new ArrayList<>();
     @XmlElement(name = "bpmn:endEvent")
     private EndEvent endEvent;
 
