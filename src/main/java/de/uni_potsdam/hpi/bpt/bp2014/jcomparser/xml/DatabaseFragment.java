@@ -130,8 +130,8 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
             this.fragmentName = fragmentName;
             this.versionNumber = versionNumber;
             this.fragmentID = fragmentID;
-            this.inputSets = fragment.getInputSets();
-            this.outputSets = fragment.getOutputSets();
+            this.inputSets = fragment.getInputSets(this.edges);
+            this.outputSets = fragment.getOutputSets(this.edges);
             this.save();
             // generateSets();
         } catch (JAXBException e) {
@@ -408,7 +408,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	 * @return List of Sets
 	 */
 	public List<Set> getSets() {
-		List<Set> sets = new LinkedList<>();
+		List<Set> sets = new ArrayList<>();
 		sets.addAll(outputSets);
 		sets.addAll(inputSets);
 		return sets;

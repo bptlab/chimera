@@ -35,7 +35,7 @@ public class DataOutputAssociation {
     public Edge convertToEdge(String taskId) {
         Edge edge = new Edge();
         edge.setId(this.id);
-        edge.setIsDataInput(true);
+        edge.setIsDataInput(false);
         edge.setTargetNodeId(this.targetRef);
         edge.setSourceNodeId(taskId);
         edge.setType("Association");

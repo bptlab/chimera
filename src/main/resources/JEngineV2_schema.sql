@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL,
+  `modelid` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

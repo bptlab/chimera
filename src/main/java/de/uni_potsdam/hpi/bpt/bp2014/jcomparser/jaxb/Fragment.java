@@ -99,14 +99,15 @@ public class Fragment {
      *
      * @return List of Input sets
      */
-    public List<InputSet> getInputSets() {
+    public List<InputSet> getInputSets(List<Edge> edges) {
         List<InputSet> sets = new ArrayList<>();
         Map<String, Node> idToNode = createMapFromIdToNode();
+        Map<String, Edge> idToEdge = createMapFromIdToEdge(edges);
         for (Task task : this.tasks) {
             List<Edge> associations = new ArrayList<>();
             List<Node> dataNodes = new ArrayList<>();
             for (DataInputAssociation assoc : task.getDataInputAssociations()) {
-                associations.add(assoc.convertToEdge(task.getId()));
+                associations.add(idToEdge.get(assoc.getId()));
                 Node dataNode =  idToNode.get(assoc.getSourceRef());
                 dataNodes.add(dataNode);
             }
@@ -114,6 +115,7 @@ public class Fragment {
             set.setNode(task.convertToNode());
             set.setAssociations(associations);
             set.setDataNodes(dataNodes);
+            sets.add(set);
         }
 
         return sets;
@@ -133,15 +135,16 @@ public class Fragment {
      *
      * @return Returns something
      */
-    public List<OutputSet> getOutputSets() {
+    public List<OutputSet> getOutputSets(List<Edge> edges) {
         List<OutputSet> outputSets = new ArrayList<>();
         Map<String, Node> idToNode = createMapFromIdToNode();
+        Map<String, Edge> idToEdge = createMapFromIdToEdge(edges);
 
         for (Task task : this.tasks) {
             List<Edge> associations = new ArrayList<>();
             List<Node> dataNodes = new ArrayList<>();
             for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
-                associations.add(assoc.convertToEdge(task.getId()));
+                associations.add(idToEdge.get(assoc.getId()));
                 Node dataNode =  idToNode.get(assoc.getTargetRef());
                 dataNodes.add(dataNode);
             }
@@ -152,6 +155,14 @@ public class Fragment {
             outputSets.add(set);
         }
         return outputSets;
+    }
+
+    private Map<String, Edge> createMapFromIdToEdge(List<Edge> edges) {
+        Map<String, Edge> idToEdge = new HashMap<>();
+        for (Edge dataFlow : edges) {
+            idToEdge.put(dataFlow.getId(), dataFlow);
+        }
+        return idToEdge;
     }
 
     /**
