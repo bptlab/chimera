@@ -37,7 +37,12 @@ public class Node implements IDeserialisable, IPersistable {
 	 * The Database ID of the fragment which consists the node.
 	 */
 	private int fragmentId = -1;
-	/**
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
 	 * A string, which holds the state of the node.
 	 * It will only be set, if and only if the node is a data node.
 	 */

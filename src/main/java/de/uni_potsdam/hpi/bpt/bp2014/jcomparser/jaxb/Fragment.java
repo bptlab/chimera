@@ -111,11 +111,13 @@ public class Fragment {
                 Node dataNode =  idToNode.get(assoc.getSourceRef());
                 dataNodes.add(dataNode);
             }
-            InputSet set = new InputSet();
-            set.setNode(task.convertToNode());
-            set.setAssociations(associations);
-            set.setDataNodes(dataNodes);
-            sets.add(set);
+            if (associations.size() > 0) {
+                InputSet set = new InputSet();
+                set.setNode(task.convertToNode());
+                set.setAssociations(associations);
+                set.setDataNodes(dataNodes);
+                sets.add(set);
+            }
         }
 
         return sets;
@@ -148,11 +150,13 @@ public class Fragment {
                 Node dataNode =  idToNode.get(assoc.getTargetRef());
                 dataNodes.add(dataNode);
             }
-            OutputSet set = new OutputSet();
-            set.setNode(task.convertToNode());
-            set.setAssociations(associations);
-            set.setDataNodes(dataNodes);
-            outputSets.add(set);
+            if (associations.size() > 0) {
+                OutputSet set = new OutputSet();
+                set.setNode(task.convertToNode());
+                set.setAssociations(associations);
+                set.setDataNodes(dataNodes);
+                outputSets.add(set);
+            }
         }
         return outputSets;
     }
@@ -241,7 +245,11 @@ public class Fragment {
         List<Node> dataObjectNodes = new ArrayList<>();
         for (DataObjectReference dataObjectReference : dataObjectReferences) {
             Node node = new Node();
-            node.setText(dataObjectReference.getName());
+            // Complete name for now is a String name \n [state]
+            String completeName = dataObjectReference.getName();
+            String[] splittedName = completeName.split("\n");
+            node.setState(splittedName[1].substring(1, splittedName[1].length() - 1));
+            node.setText(splittedName[0]);
             node.setGlobal(false);
             node.setId(dataObjectReference.getId());
             node.setType("DataObject");
