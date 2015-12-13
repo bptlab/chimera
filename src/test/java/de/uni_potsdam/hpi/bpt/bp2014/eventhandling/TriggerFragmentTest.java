@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Jonas on 10.12.2015.
+ *
  */
 public class TriggerFragmentTest {
 	final String url = "http://localhost:8080";

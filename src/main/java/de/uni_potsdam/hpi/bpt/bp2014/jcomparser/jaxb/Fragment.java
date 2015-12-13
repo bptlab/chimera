@@ -247,7 +247,7 @@ public class Fragment {
             Node node = new Node();
             // Complete name for now is a String name \n [state]
             String completeName = dataObjectReference.getName();
-            String[] splittedName = completeName.split("\n");
+            String[] splittedName = completeName.split("\\s+");
             node.setState(splittedName[1].substring(1, splittedName[1].length() - 1));
             node.setText(splittedName[0]);
             node.setGlobal(false);
