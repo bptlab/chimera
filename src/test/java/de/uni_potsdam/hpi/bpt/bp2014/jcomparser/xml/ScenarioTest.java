@@ -167,15 +167,6 @@ public class  ScenarioTest extends TestSetUp {
                 "2049535559", scenarioWOVersion.getDomainModelID());
         PowerMock.verify(scenarioWOVersion);
     }
-    /**
-     * Tests if the url is set correctly inside the constructor.
-     */
-    @Test
-    public void testConstructorWithURL() {
-        Scenario scenario = new Scenario("processeditor");
-        Assert.assertEquals("The Server URL is not saved correctly",
-                "processeditor", scenario.getProcesseditorServerUrl());
-    }
 
     /**
      * This Test asserts that MetaInformation about the Scenario are Set

@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
-import com.sun.istack.internal.Nullable;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
@@ -139,7 +138,6 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
         }
     }
 
-    @Nullable
     private Document getXmlDocFromString(String xml) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {

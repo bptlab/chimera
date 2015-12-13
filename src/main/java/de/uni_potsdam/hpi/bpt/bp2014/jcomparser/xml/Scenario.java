@@ -124,6 +124,8 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 			setTerminationCondition();
 
 			checkIfVersionAlreadyInDatabase();
+
+			save();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -488,8 +490,9 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		this.fragments = new LinkedList<>();
 		for (int i = 0; i < fragmentarray.length(); i++) {
 			DatabaseFragment fragment = new DatabaseFragment();
-			fragment.initializeFromXml(fragmentarray.getJSONObject(i).getString("content"), versionNumber,
-                    "name", 1);
+			JSONObject fragmentjson = fragmentarray.getJSONObject(i);
+			fragment.initializeFromXml(fragmentjson.getString("content"), fragmentjson.getInt("revision"),
+                    fragmentjson.getString("name"), fragmentjson.getInt("_id"));
 			this.fragments.add(fragment);
 		}
 	}
