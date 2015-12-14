@@ -216,11 +216,11 @@ public class Connector extends DbObject {
      *
      */
     public int insertEventIntoDatabase(String eventtype, String eventquery,
-                                       int fragmentId, String modelId) {
+                                       int fragmentId, String modelId, int controlNodeDatabaseId) {
         String sql = "INSERT INTO event "
-                + "(event_type, query, fragment_id, model_id) "
+                + "(event_type, query, fragment_id, model_id, controlnode_id) "
                 + "VALUES ('" + eventtype + "', '" + eventquery + "', "
-                + fragmentId + ", '" + modelId + "')";
+                + fragmentId + ", '" + modelId + "' " + controlNodeDatabaseId + ")";
         int databaseId = performSQLInsertStatementWithAutoId(sql);
         return databaseId;
     }

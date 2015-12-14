@@ -271,6 +271,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `query` varchar(512) NOT NULL,
   `fragment_id` INTEGER NOT NULL,
   `model_id` varchar(512) NOT NULL,
+  `controlnode_id` INTEGER NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

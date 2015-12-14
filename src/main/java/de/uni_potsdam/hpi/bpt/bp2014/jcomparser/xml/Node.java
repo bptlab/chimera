@@ -147,23 +147,24 @@ public class Node implements IDeserialisable, IPersistable {
 			return -1;
 		}
 		Connector connector = new Connector();
-		if (type.contains("Event")) {
-            databaseID = connector.insertEventIntoDatabase(getDbTypeByPeType(type), text,
-                    fragmentId, id);
-        } else if (!type.contains("DataObject")) {
-			if (!stereotype.isEmpty()) {
-				// identify mailtasks that need to be marked by their stereotype
-				databaseID = connector.insertControlNodeIntoDatabase(text,
-						getDbTypeByPeType(stereotype), fragmentId, id);
-				if ("SEND".equals(stereotype)) {
-					connector.createEMailTemplate(databaseID);
-				}
+        if (!type.contains("DataObject")) {
 
-			} else {
+			if (!stereotype.isEmpty()) {
+                // identify mailtasks that need to be marked by their stereotype
+                databaseID = connector.insertControlNodeIntoDatabase(text,
+                    getDbTypeByPeType(stereotype), fragmentId, id);
+                if ("SEND".equals(stereotype)) {
+                    connector.createEMailTemplate(databaseID);
+                }
+            } else {
 				// DataNodes will be done in DataObject
 				databaseID = connector.insertControlNodeIntoDatabase(
 						text, getDbTypeByPeType(type), fragmentId, id);
 			}
+            if (type.contains("Event")) {
+                connector.insertEventIntoDatabase(getDbTypeByPeType(type), text,
+                        fragmentId, id, databaseID);
+            }
 		}
 		return databaseID;
 	}
