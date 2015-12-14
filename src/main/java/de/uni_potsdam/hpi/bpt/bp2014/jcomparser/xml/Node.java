@@ -147,7 +147,10 @@ public class Node implements IDeserialisable, IPersistable {
 			return -1;
 		}
 		Connector connector = new Connector();
-		if (!type.contains("DataObject")) {
+		if (type.contains("Event")) {
+            databaseID = connector.insertEventIntoDatabase(getDbTypeByPeType(type), text,
+                    fragmentId, id);
+        } else if (!type.contains("DataObject")) {
 			if (!stereotype.isEmpty()) {
 				// identify mailtasks that need to be marked by their stereotype
 				databaseID = connector.insertControlNodeIntoDatabase(text,
@@ -164,6 +167,8 @@ public class Node implements IDeserialisable, IPersistable {
 		}
 		return databaseID;
 	}
+
+
 
 	/**
 	 * Migrate datanode- or controlnodeInstances.

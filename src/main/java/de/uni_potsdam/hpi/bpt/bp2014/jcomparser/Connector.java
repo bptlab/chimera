@@ -212,6 +212,18 @@ public class Connector extends DbObject {
 		performDefaultSQLInsertStatement(sql);
 	}
 
+    /**
+     *
+     */
+    public int insertEventIntoDatabase(String eventtype, String eventquery,
+                                       int fragmentId, String modelId) {
+        String sql = "INSERT INTO event "
+                + "(event_type, query, fragment_id, model_id) "
+                + "VALUES ('" + eventtype + "', '" + eventquery + "', "
+                + fragmentId + ", '" + modelId + "')";
+        int databaseId = performSQLInsertStatementWithAutoId(sql);
+        return databaseId;
+    }
 	/**
 	 * This Methods inserts a new DataNode into the Database.
 	 * All necessary information are given as a parameter.

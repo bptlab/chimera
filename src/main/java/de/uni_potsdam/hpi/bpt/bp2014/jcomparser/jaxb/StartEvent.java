@@ -11,7 +11,7 @@ public class StartEvent {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
-    private String name;
+    private String name = "";
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
