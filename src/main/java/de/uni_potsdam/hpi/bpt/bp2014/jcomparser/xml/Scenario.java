@@ -1,27 +1,18 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -491,8 +482,11 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		for (int i = 0; i < fragmentarray.length(); i++) {
 			DatabaseFragment fragment = new DatabaseFragment();
 			JSONObject fragmentjson = fragmentarray.getJSONObject(i);
-			fragment.initializeFromXml(fragmentjson.getString("content"), fragmentjson.getInt("revision"),
-                    fragmentjson.getString("name"), fragmentjson.getInt("_id"));
+			fragment.initialize(fragmentjson.getString("content"),
+					fragmentjson.getInt("revision"),
+					fragmentjson.getString("name"),
+					fragmentjson.getInt("_id"),
+					this.scenarioJson.getJSONObject("domain_model").getJSONArray("dataclasses"));
 			this.fragments.add(fragment);
 		}
 	}
