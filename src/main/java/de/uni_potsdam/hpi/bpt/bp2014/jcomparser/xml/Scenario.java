@@ -456,33 +456,32 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 	}
 
 	private void createDataObjects() {
-		//TODO read data classes of data objects from fragment xml
 		dataObjects = new HashMap<>();
 		for (DatabaseFragment fragment : fragments) {
 			for (Node node : fragment.getControlNodes().values()) {
-				if (node.isDataNode()) {
-					if (null == dataObjects.get(node.getText())) {
-						if (domainModel == null) {
-							dataObjects.put(node.getText(), new DataObject());
-							break;
-						}
-						// try to match dataClass over the name
-						for (DataClass dC : domainModel.getDataClasses().
-								values()) {
-							if (dC.getDataClassName().equals(node.getText())) {
-								dataObjects.put(node.getText(), new DataObject(dC));
-								break;
-							}
-						}
-						// no data class found
-						dataObjects.put(node.getText(), new DataObject());
-					}
-					dataObjects.get(node.getText()).addDataNode(node);
-				}
+                if (node.isDataNode()) {
+                    addDataObject(node);
+                }
 			}
 		}
 	}
 
+    private void addDataObject(Node node) {
+        if (!dataObjects.containsKey(node.getText())) {
+            DataObject dataObject = findDataObjectViaName(node);
+            dataObjects.put(node.getText(), dataObject);
+        }
+        dataObjects.get(node.getText()).addDataNode(node);
+    }
+
+    private DataObject findDataObjectViaName(Node node) {
+        for (DataClass dC : domainModel.getDataClasses().values()) {
+            if (dC.getDataClassName().equals(node.getText())) {
+                return new DataObject(dC);
+            }
+        }
+        throw new NoSuchElementException();
+    }
 	/**
 	 * Generates a List of Fragments from the ScenarioXML.
 	 */

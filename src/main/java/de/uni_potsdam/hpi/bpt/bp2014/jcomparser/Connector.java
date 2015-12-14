@@ -220,7 +220,7 @@ public class Connector extends DbObject {
         String sql = "INSERT INTO event "
                 + "(event_type, query, fragment_id, model_id, controlnode_id) "
                 + "VALUES ('" + eventtype + "', '" + eventquery + "', "
-                + fragmentId + ", '" + modelId + "' " + controlNodeDatabaseId + ")";
+                + fragmentId + ", '" + modelId + "' ," + controlNodeDatabaseId + ")";
         int databaseId = performSQLInsertStatementWithAutoId(sql);
         return databaseId;
     }
@@ -238,9 +238,9 @@ public class Connector extends DbObject {
 	public int insertDataNodeIntoDatabase(final int scenarioID, final int stateID,
 			final int dataClassID, final int dataObjectID, final String modelID) {
 		String sql = "INSERT INTO datanode "
-				+ "(scenario_id, state_id, dataclass_id, dataobject_id, modelid)"
+				+ "(scenario_id, state_id, dataclass_id, dataobject_id, model_id)"
 				+ " VALUES (" + scenarioID + ", " + stateID + ", "
-				+ dataClassID + ", " + dataObjectID + ", " + modelID + ")";
+				+ dataClassID + ", " + dataObjectID + ", '" + modelID + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 

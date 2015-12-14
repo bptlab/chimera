@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL,
+  `model_id` VARCHAR(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

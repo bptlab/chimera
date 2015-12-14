@@ -60,7 +60,7 @@
       </bpmn:dataOutputAssociation>
     </bpmn:task>
 
-    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp5\" name=\"Soil [dry]\" dataObjectRef=\"DataObject_1pydfq5\" />
+    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp5\" name=\"Soil [init]\" dataObjectRef=\"DataObject_1pydfq5\" />
     <bpmn:dataObject id=\"DataObject_1pydfq5\" />
 
     <bpmn:dataObjectReference id=\"DataObjectReference_0aenw6j\" name=\"Soil [watered]\" dataObjectRef=\"DataObject_0c8f9kj\" />
@@ -101,7 +101,7 @@
       </bpmn:dataOutputAssociation>
     </bpmn:task>
 
-    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp4\" name=\"Foil [black]\" dataObjectRef=\"DataObject_1pydfq4\" />
+    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp4\" name=\"Foil [init]\" dataObjectRef=\"DataObject_1pydfq4\" />
     <bpmn:dataObject id=\"DataObject_1pydfq4\" />
 
     <bpmn:dataObjectReference id=\"DataObjectReference_0aenw6k\" name=\"Foil [white]\" dataObjectRef=\"DataObject_0c8f9kk\" />
