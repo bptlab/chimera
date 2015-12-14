@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DatabaseFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 import org.apache.commons.io.FileUtils;
@@ -8,7 +9,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +28,9 @@ public class DataObjectStateTest {
             String fragmentName = "someName";
             int versionNumber  = 1;
             int fragmentId = 1;
-            frag.initializeFromXml(xml, versionNumber, fragmentName, fragmentId);
+            Map<Long, DataClass> dataClasses = new HashMap<>();
+            frag.initialize(xml, versionNumber, fragmentName, fragmentId,
+                    dataClasses);
             List<Node> nodes = new ArrayList<>(frag.getControlNodes().values());
             List<Node> dataNodes = new ArrayList<>();
             List<String> states = new ArrayList<>();
