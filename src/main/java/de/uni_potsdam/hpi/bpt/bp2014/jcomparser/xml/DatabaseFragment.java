@@ -115,8 +115,8 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
      *
      * @param xml xmlString of fragment which is valid BPMN standard
      */
-    public void initializeFromXml(String xml, int versionNumber, String fragmentName,
-                                  int fragmentID) {
+   public void initialize(String xml, int versionNumber, String fragmentName,
+                                  int fragmentID, Map<Long, DataClass> dataClasses) {
         Document doc = getXmlDocFromString(xml);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);

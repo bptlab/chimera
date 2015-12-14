@@ -118,8 +118,9 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 			this.versionNumber = scenarioJson.getInt("revision");
 			this.domainModelJson = scenarioJson.getJSONObject("domain_model");
 
-			generateFragmentList();
 			this.domainModel = createAndInitializeDomainModel();
+			generateFragmentList();
+
 			createDataObjects();
 			setTerminationCondition();
 
@@ -491,8 +492,11 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		for (int i = 0; i < fragmentarray.length(); i++) {
 			DatabaseFragment fragment = new DatabaseFragment();
 			JSONObject fragmentjson = fragmentarray.getJSONObject(i);
-			fragment.initializeFromXml(fragmentjson.getString("content"), fragmentjson.getInt("revision"),
-                    fragmentjson.getString("name"), fragmentjson.getInt("_id"));
+            fragment.initialize(fragmentjson.getString("content"),
+					fragmentjson.getInt("revision"),
+					fragmentjson.getString("name"),
+					fragmentjson.getInt("_id"),
+					this.domainModel.getDataClasses());
 			this.fragments.add(fragment);
 		}
 	}
