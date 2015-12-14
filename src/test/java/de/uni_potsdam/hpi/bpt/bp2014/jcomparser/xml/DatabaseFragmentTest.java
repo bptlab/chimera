@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.Assert.*;
+
 /**
  *
  */
@@ -16,7 +18,7 @@ public class DatabaseFragmentTest {
         File scenario = new File("src/test/resources/fragments/fragment1.xml");
         try {
             String xml = FileUtils.readFileToString(scenario);
-            fragment.initialize(xml, 1, "someName", 1);
+            fragment.initializeFromXml(xml, 1, "someName", 1);
         } catch (IOException e) {
             e.printStackTrace();
         }

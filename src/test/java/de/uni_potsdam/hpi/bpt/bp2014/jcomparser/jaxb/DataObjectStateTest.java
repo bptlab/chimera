@@ -25,7 +25,7 @@ public class DataObjectStateTest {
             String fragmentName = "someName";
             int versionNumber  = 1;
             int fragmentId = 1;
-            frag.initialize(xml, versionNumber, fragmentName, fragmentId);
+            frag.initializeFromXml(xml, versionNumber, fragmentName, fragmentId);
             List<Node> nodes = new ArrayList<>(frag.getControlNodes().values());
             List<Node> dataNodes = new ArrayList<>();
             List<String> states = new ArrayList<>();

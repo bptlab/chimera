@@ -22,7 +22,7 @@ public class InputOutputSetTest {
             String fragmentName = "someName";
             int versionNumber  = 1;
             int fragmentId = 1;
-            frag.initialize(xml, versionNumber, fragmentName, fragmentId);
+            frag.initializeFromXml(xml, versionNumber, fragmentName, fragmentId);
             assertEquals(2, frag.getInputSets().size());
             assertEquals(2, frag.getOutputSets().size());
 

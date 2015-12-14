@@ -4,8 +4,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -117,8 +115,8 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
      *
      * @param xml xmlString of fragment which is valid BPMN standard
      */
-    public void initialize(String xml, int versionNumber, String fragmentName,
-                                  int fragmentID, JSONArray dataClasses) {
+    public void initializeFromXml(String xml, int versionNumber, String fragmentName,
+                                  int fragmentID) {
         Document doc = getXmlDocFromString(xml);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);
