@@ -2,19 +2,16 @@ package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
 
 import com.google.gson.Gson;
 
+import javax.jms.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.FragmentInstance;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.ws.rs.core.Response;
 
 /**
@@ -24,8 +21,14 @@ import javax.ws.rs.core.Response;
 public class EventQueryQueue {
 
 	private String uuid = "";
+	public boolean hasReceived = false;
+//	private FragmentInstance fragmentInstance;
 	private final String host = "bpt.hpi.uni-potsdam.de";
 	private final String port = "61616";
+
+	public EventQueryQueue() {
+//		this.fragmentInstance = fragmentInstance;
+	}
 
 	/**
 	 * Registers an Event Query on the Event Processing Platform.
@@ -58,16 +61,15 @@ public class EventQueryQueue {
 	 * Listens to the Message Queue and receives an Event that is selected by the query.
 	 * @return The event string.
 	 */
-	public String receiveEvent() {
+	public void receiveEvent() {
 		if (uuid.isEmpty()) {
-			return "No Event Query registered or registration failed.";
+			throw new RuntimeException("No Event Query registered or registration failed.");
 		} else {
-			String event;
 			try {
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
 						String.format("tcp://%s:%s", host, port));
 
-				Connection connection = connectionFactory.createConnection();
+				final Connection connection = connectionFactory.createConnection();
 				connection.start();
 
 				Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -76,20 +78,12 @@ public class EventQueryQueue {
 
 				MessageConsumer consumer = session.createConsumer(destination);
 
-				Message message = consumer.receive(0);
+				EventMessageListener listener = new EventMessageListener(this, connection);
 
-				if (message instanceof TextMessage) {
-					TextMessage textMessage = (TextMessage) message;
-					event = textMessage.getText();
-				} else {
-					event = message.toString();
-				}
-				connection.close();
+				consumer.setMessageListener(listener);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return null;
 			}
-			return event;
 		}
 	}
 
