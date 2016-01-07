@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
 import java.util.concurrent.*;
 
 /**
- * Created by Jonas on 02.12.2015.
+ *
  */
 public class Main {
 	public static void main(String[] args) throws InterruptedException{

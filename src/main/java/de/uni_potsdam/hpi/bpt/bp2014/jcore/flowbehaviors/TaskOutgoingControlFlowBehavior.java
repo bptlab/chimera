@@ -1,8 +1,13 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractParallelOutgoingBehavior;
 
 import java.util.LinkedList;
 

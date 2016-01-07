@@ -1,4 +1,8 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
+
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractOutgoingBehavior;
 
 import java.util.LinkedList;
 

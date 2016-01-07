@@ -6,7 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.FragmentInstance;
 import javax.jms.*;
 
 /**
- * Created by Jonas on 14.12.2015.
+ * Class which is responsible for receiving events.
  */
 public class EventMessageListener implements MessageListener {
 	private EventQueryQueue q;
