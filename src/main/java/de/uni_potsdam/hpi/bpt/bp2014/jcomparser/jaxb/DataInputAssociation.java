@@ -1,15 +1,17 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Edge;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 
 import javax.xml.bind.annotation.*;
+import java.util.Map;
 
 /**
  *
  */
 @XmlRootElement(name = "bpmn:dataInputAssociation")
 @XmlAccessorType(XmlAccessType.NONE)
-public class DataInputAssociation {
+public class DataInputAssociation extends Edge {
     @XmlAttribute
     private String id;
     @XmlElement(name = "bpmn:sourceRef")
@@ -31,13 +33,11 @@ public class DataInputAssociation {
         this.sourceRef = sourceRef;
     }
 
-    public Edge convertToEdge(String taskId) {
-        Edge edge = new Edge();
-        edge.setId(this.id);
-        edge.setIsDataInput(true);
-        edge.setTargetNodeId(taskId);
-        edge.setSourceNodeId(this.sourceRef);
-        edge.setType("Association");
-        return edge;
+
+    public int save(Map<String, Integer> nodeToDatabaseId) {
+        int sourceDatabaseId = nodeToDatabaseId.get(sourceRef);
+        Connector connector = new Connector();
+        connector.insertDataFlowIntoDatabase(sourceDatabaseId, setId, true);
+        return 0;
     }
 }

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.FragmentInserter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import org.apache.log4j.Logger;
@@ -491,11 +492,12 @@ public class Scenario implements IDeserialisableJson, IPersistable {
 		for (int i = 0; i < fragmentarray.length(); i++) {
 			DatabaseFragment fragment = new DatabaseFragment();
 			JSONObject fragmentjson = fragmentarray.getJSONObject(i);
-            fragment.initialize(fragmentjson.getString("content"),
-					fragmentjson.getInt("revision"),
-					fragmentjson.getString("name"),
-					fragmentjson.getInt("_id"),
-					this.domainModel.getDataClasses());
+            FragmentInserter inserter = new FragmentInserter();
+            inserter.save(fragmentjson.getString("content"),
+                    fragmentjson.getInt("revision"),
+                    fragmentjson.getString("name"),
+                    fragmentjson.getInt("_id"),
+                    this.domainModel.getDataClasses());
 			this.fragments.add(fragment);
 		}
 	}

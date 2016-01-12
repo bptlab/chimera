@@ -20,8 +20,8 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 	 * @param fragmentInstanceId This is the database id from the fragment instance.
 	 * @param gatewayInstance     This is an instance from the class GatewayInstance.
 	 */
-	ParallelGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance,
-			int fragmentInstanceId, GatewayInstance gatewayInstance) {
+    public ParallelGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance,
+                                        int fragmentInstanceId, GatewayInstance gatewayInstance) {
 		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);

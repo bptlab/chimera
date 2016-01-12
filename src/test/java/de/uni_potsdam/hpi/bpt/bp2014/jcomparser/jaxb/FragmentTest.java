@@ -68,7 +68,7 @@ public class FragmentTest {
             JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             Fragment fragment = (Fragment) jaxbUnmarshaller.unmarshal(doc);
-            assertEquals(3, fragment.getAssociations().size());
+            assertEquals(3, fragment.getSequenceFlow().size());
             assertEquals(3, fragment.getDataObjects().size());
             assertEquals(3, fragment.getDataObjectReferences().size());
             assertEquals(2, fragment.getTasks().size());

@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Edge;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -35,7 +36,7 @@ import java.util.Map;
  * from an XML and the IPersistable Interface,
  * which allows to save the Object to the Database.
  */
-public class DatabaseFragment implements IDeserialisable, IPersistable {
+public class DatabaseFragment implements IPersistable {
 	private static Logger log = Logger.getLogger(DatabaseFragment.class.getName());
 	/**
 	 * The url of the process Editor.
@@ -101,15 +102,6 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 	public DatabaseFragment() {
 	}
 
-	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
-		this.fragmentXML = element;
-		setFragmentName();
-		setFragmentID();
-		generateNodes();
-		generateEdges();
-		generateSets();
-		setVersionNumber();
-	}
 
     /**
      *
@@ -122,17 +114,13 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
             JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             Fragment fragment = (Fragment) jaxbUnmarshaller.unmarshal(doc);
-            for (Node node : fragment.getNodes()) {
-                this.nodes.put(node.getId(), node);
-            }
-            this.edges = fragment.getEdges();
+
             this.fragmentName = fragmentName;
             this.versionNumber = versionNumber;
             this.fragmentID = fragmentID;
-            this.inputSets = fragment.getInputSets(this.edges);
-            this.outputSets = fragment.getOutputSets(this.edges);
+            this.inputSets = fragment.getInputSets();
+            this.outputSets = fragment.getOutputSets();
             this.save();
-            // generateSets();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -148,163 +136,7 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
         return null;
     }
 
-    /**
-	 * Extracts the Version from the XML.
-	 * Corresponding values will be saved to the corresponding fields.
-	 */
-	private void setVersionNumber() {
-		Element versionXML = fetchVersionXML();
-		if (versionXML != null) {
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/versions/version";
-			try {
-				NodeList versions = (NodeList) xPath.compile(xPathQuery)
-						.evaluate(versionXML, XPathConstants.NODESET);
-				int maxID = 0;
-				// We assume that the version to save is the newest one
-				for (int i = 0; i < versions.getLength(); i++) {
-					xPathQuery = "@id";
-					int currentID = Integer.parseInt(
-							(String) xPath.compile(xPathQuery)
-							.evaluate(versions.item(i),
-									XPathConstants.STRING));
-					if (maxID < currentID) {
-						maxID = currentID;
-					}
-				}
-				versionNumber = maxID;
-			} catch (XPathExpressionException e) {
-				log.error("Error:", e);
-			}
-		}
-	}
 
-	/**
-	 * Get the XML which contains all the versions of the current scenario
-	 * (from the processEditorServer).
-	 *
-	 * @return XML containing versions
-	 */
-	private Element fetchVersionXML() {
-		try {
-			Retrieval jRetrieval = new Retrieval();
-			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/"
-							+ fragmentID + "/versions");
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db;
-			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = db.parse(is);
-			return doc.getDocumentElement();
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			log.error("Error:", e);
-		}
-		return null;
-	}
-
-	/**
-	 * This method extracts the id from the Model-XML.
-	 * It saves the id inside the fragmentID field.
-	 */
-	private void setFragmentID() {
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/@id";
-		try {
-			this.fragmentID = Long.parseLong(
-					xPath.compile(xPathQuery).evaluate(this.fragmentXML));
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
-		}
-	}
-
-	/**
-	 * generates Sets (I/O) for all Activities,
-	 * which are part of DataFlow inside the DatabaseFragment.
-	 * Assert that first all Control- and DataNodes have been initialized.
-	 */
-	private void generateSets() {
-		inputSets = new LinkedList<>();
-		outputSets = new LinkedList<>();
-		for (Node node : nodes.values()) {
-			if (node.isTask()) {
-				List<InputSet> iSets =
-						InputSet.createInputSetForTaskAndEdges(node, edges);
-				if (null != iSets) {
-					for (InputSet iSet : iSets) {
-						inputSets.add(iSet);
-					}
-				}
-				List<OutputSet> oSets =
-						OutputSet.createOutputSetForTaskAndEdges(
-								node, edges);
-				if (null != oSets) {
-					for (OutputSet oSet : oSets) {
-						outputSets.add(oSet);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Extracts all Edges from the XML and creates Edge objects.
-	 */
-	private void generateEdges() {
-		try {
-			//get all edges from fragmentXML
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/model/edges/edge";
-			NodeList edgeNodes = (NodeList) xPath.compile(xPathQuery)
-					.evaluate(this.fragmentXML, XPathConstants.NODESET);
-			this.edges = new ArrayList<>(edgeNodes.getLength());
-			for (int i = 0; i < edgeNodes.getLength(); i++) {
-				Edge currentEdge = new Edge();
-				currentEdge.initializeInstanceFromXML(edgeNodes.item(i));
-				currentEdge.setNodes(nodes);
-				this.edges.add(currentEdge);
-			}
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
-		}
-	}
-
-	/**
-	 * Extracts all Nodes from the XML and creates Node objects.
-	 */
-	private void generateNodes() {
-		try {
-			//get all nodes from fragmentXML
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/model/nodes/node";
-			NodeList xmlNodes = (NodeList) xPath.compile(xPathQuery)
-					.evaluate(this.fragmentXML, XPathConstants.NODESET);
-			this.nodes = new HashMap<>(xmlNodes.getLength());
-
-			for (int i = 0; i < xmlNodes.getLength(); i++) {
-				Node currentNode = new Node();
-				currentNode.initializeInstanceFromXML(xmlNodes.item(i));
-				this.nodes.put(currentNode.getId(), currentNode);
-			}
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
-		}
-	}
-
-	/**
-	 * This method extracts the name from the Model-XML.
-	 * The name will be saved inside the fragmentName field
-	 */
-	private void setFragmentName() {
-
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/@name";
-		try {
-			this.fragmentName = xPath.compile(xPathQuery).evaluate(this.fragmentXML);
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
-		}
-	}
 
 	/**
 	 * Sets the scenario Id.
@@ -320,29 +152,9 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 		Connector conn = new Connector();
 		this.databaseID = conn.insertFragmentIntoDatabase(this.fragmentName,
 				this.scenarioID, this.fragmentID, this.versionNumber);
-		for (Node node : nodes.values()) {
-			node.setFragmentId(databaseID);
-			node.save();
-		}
-		saveSets();
-		for (Edge edge : edges) {
-            edge.setNodes(this.nodes);
-			edge.save();
-		}
-		return databaseID;
+	    return databaseID;
 	}
 
-	/**
-	 * Saves the input and output sets to the database.
-	 */
-	private void saveSets() {
-		for (InputSet set : inputSets) {
-			set.save();
-		}
-		for (OutputSet set : outputSets) {
-			set.save();
-		}
-	}
 
 	/**
 	 * Migrate fragmentinstances.
@@ -359,16 +171,6 @@ public class DatabaseFragment implements IDeserialisable, IPersistable {
 		}
 	}
 
-	/**
-	 * Returns the list of edges.
-	 * This is a Composition, if you change the list
-	 * you will change the state of the DatabaseFragment.
-	 *
-	 * @return The List of Edges
-	 */
-	public List<Edge> getEdges() {
-		return this.edges;
-	}
 
 	/**
 	 * Returns a Map of Node-Ids (from XML) and their nodes.

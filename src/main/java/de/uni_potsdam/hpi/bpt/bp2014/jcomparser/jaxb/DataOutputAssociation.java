@@ -1,16 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Edge;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
 import javax.xml.bind.annotation.*;
+import java.util.Map;
 
 /**
  *
  */
-
 @XmlRootElement(name = "bpmn:dataOutputAssociation")
 @XmlAccessorType(XmlAccessType.NONE)
-public class DataOutputAssociation {
+public class DataOutputAssociation extends Edge {
     @XmlAttribute
     private String id;
     @XmlElement(name = "bpmn:targetRef")
@@ -32,13 +32,11 @@ public class DataOutputAssociation {
         this.targetRef = targetRef;
     }
 
-    public Edge convertToEdge(String taskId) {
-        Edge edge = new Edge();
-        edge.setId(this.id);
-        edge.setIsDataInput(false);
-        edge.setTargetNodeId(this.targetRef);
-        edge.setSourceNodeId(taskId);
-        edge.setType("Association");
-        return edge;
+    public int save(Map<String, Integer> nodeToDatabaseId) {
+        int targetDatabaseId = nodeToDatabaseId.get(targetRef);
+        Connector connector = new Connector();
+        connector.insertDataFlowIntoDatabase(targetDatabaseId, setId, false);
+        return 0;
     }
+
 }

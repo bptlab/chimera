@@ -19,23 +19,51 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
 public class Fragment {
     @XmlElement(name = "bpmn:sequenceFlow")
     private List<SequenceFlow> associations = new ArrayList<>();
+
     @XmlElement(name = "bpmn:exclusiveGateway")
     private List<ExclusiveGateway> xorGateways = new ArrayList<>();
+
     @XmlElement(name = "bpmn:startEvent")
     private StartEvent startEvent;
+
     @XmlElement(name = "bpmn:boundaryEvent")
     private List<BoundaryEvent> boundaryEvents = new ArrayList<>();
+
     @XmlElement(name = "bpmn:task")
     private List<Task> tasks = new ArrayList<>();
+
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataObjectReference> dataObjectReferences = new ArrayList<>();
+
     @XmlElement(name = "bpmn:dataObject")
     private List<DataObject> dataObjects = new ArrayList<>();
+
     @XmlElement(name = "bpmn:endEvent")
     private EndEvent endEvent;
 
+    private String name;
 
-    public List<SequenceFlow> getAssociations() {
+    int fragmentId;
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+    int versionNumber;
+
+    public int getFragmentId() {
+        return fragmentId;
+    }
+
+    public void setFragmentId(int fragmentId) {
+        this.fragmentId = fragmentId;
+    }
+
+    public List<SequenceFlow> getSequenceFlow() {
         return associations;
     }
 
@@ -95,19 +123,19 @@ public class Fragment {
     }
 
 
+
     /**
      *
      * @return List of Input sets
      */
-    public List<InputSet> getInputSets(List<Edge> edges) {
+    public List<InputSet> getInputSets() {
         List<InputSet> sets = new ArrayList<>();
         Map<String, Node> idToNode = createMapFromIdToNode();
-        Map<String, Edge> idToEdge = createMapFromIdToEdge(edges);
         for (Task task : this.tasks) {
             List<Edge> associations = new ArrayList<>();
             List<Node> dataNodes = new ArrayList<>();
             for (DataInputAssociation assoc : task.getDataInputAssociations()) {
-                associations.add(idToEdge.get(assoc.getId()));
+                associations.add(assoc);
                 Node dataNode =  idToNode.get(assoc.getSourceRef());
                 dataNodes.add(dataNode);
             }
@@ -137,17 +165,16 @@ public class Fragment {
      *
      * @return Returns something
      */
-    public List<OutputSet> getOutputSets(List<Edge> edges) {
+    public List<OutputSet> getOutputSets() {
         List<OutputSet> outputSets = new ArrayList<>();
         Map<String, Node> idToNode = createMapFromIdToNode();
-        Map<String, Edge> idToEdge = createMapFromIdToEdge(edges);
 
         for (Task task : this.tasks) {
             List<Edge> associations = new ArrayList<>();
             List<Node> dataNodes = new ArrayList<>();
             for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
-                associations.add(idToEdge.get(assoc.getId()));
-                Node dataNode =  idToNode.get(assoc.getTargetRef());
+                associations.add(assoc);
+                Node dataNode = idToNode.get(assoc.getTargetRef());
                 dataNodes.add(dataNode);
             }
             if (associations.size() > 0) {
@@ -159,14 +186,6 @@ public class Fragment {
             }
         }
         return outputSets;
-    }
-
-    private Map<String, Edge> createMapFromIdToEdge(List<Edge> edges) {
-        Map<String, Edge> idToEdge = new HashMap<>();
-        for (Edge dataFlow : edges) {
-            idToEdge.put(dataFlow.getId(), dataFlow);
-        }
-        return idToEdge;
     }
 
     /**
@@ -182,17 +201,6 @@ public class Fragment {
         nodes.add(getEndEventNode());
         nodes.add(getStartEventNode());
         return nodes;
-    }
-
-    /**
-     *
-     * @return returns something
-     */
-    public List<Edge> getEdges() {
-        List<Edge> edges = new ArrayList<>();
-        edges.addAll(getSequenceFlowEdges());
-        edges.addAll(getDataFlowAssociations());
-        return edges;
     }
 
     private Node getEndEventNode() {
@@ -271,46 +279,33 @@ public class Fragment {
         return overallNodes;
     }
 
-    private List<Edge> getSequenceFlowEdges() {
-        List<Edge> sequenceFlowEdges = new ArrayList<>();
-        for (SequenceFlow flow : this.associations) {
-            Edge edge = new Edge();
-            edge.setId(flow.getId());
-            edge.setSourceNodeId(flow.getSourceRef());
-            edge.setTargetNodeId(flow.getTargetRef());
-            edge.setType("SequenceFlow");
-            sequenceFlowEdges.add(edge);
-            // edge setLabel
-            // edge setDefault
-        }
-        return sequenceFlowEdges;
-    }
 
-    private List<Edge> getDataFlowAssociations() {
-        List<Edge> overallEdges = new ArrayList<>();
+    public List<DataInputAssociation> getDataInputAssociations() {
+        List<DataInputAssociation> overallEdges = new ArrayList<>();
         for (Task task : tasks) {
             for (DataInputAssociation association : task.getDataInputAssociations()) {
-                Edge edge = new Edge();
-                edge.setId(association.getId());
-                edge.setIsDataInput(true);
-                edge.setTargetNodeId(task.getId());
-                edge.setSourceNodeId(association.getSourceRef());
-                edge.setType("Association");
-                overallEdges.add(edge);
-            }
-
-            for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
-                Edge edge = new Edge();
-                edge.setId(assoc.getId());
-                edge.setIsDataInput(false);
-                edge.setTargetNodeId(assoc.getTargetRef());
-                edge.setSourceNodeId(task.getId());
-                edge.setType("Association");
-                overallEdges.add(edge);
+                overallEdges.add(association);
             }
         }
 
         return overallEdges;
     }
 
+    public List<DataOutputAssociation> getDataOutputAssociations() {
+        List<DataOutputAssociation> overallEdges = new ArrayList<>();
+        for (Task task : tasks) {
+            for (DataOutputAssociation association : task.getDataOutputAssociations()) {
+                overallEdges.add(association);
+            }
+        }
+        return overallEdges;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

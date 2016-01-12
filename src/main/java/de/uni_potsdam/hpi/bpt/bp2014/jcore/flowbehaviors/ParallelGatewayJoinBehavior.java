@@ -24,8 +24,8 @@ public class ParallelGatewayJoinBehavior extends AbstractIncomingBehavior {
 	 * @param gatewayInstance  This is an instance from the class GatewayInstance.
 	 * @param scenarioInstance This is an instance from the class ScenarioInstance.
 	 */
-	ParallelGatewayJoinBehavior(GatewayInstance gatewayInstance,
-			ScenarioInstance scenarioInstance) {
+    public ParallelGatewayJoinBehavior(GatewayInstance gatewayInstance,
+                                       ScenarioInstance scenarioInstance) {
 		this.setScenarioInstance(scenarioInstance);
 		this.setControlNodeInstance(gatewayInstance);
 	}
