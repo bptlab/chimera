@@ -179,6 +179,22 @@ public class Connector extends DbObject {
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
+	public int insertEventTypeIntoDatabase(final String name) {
+		String sql = "INSERT INTO eventtype (eventtype.name) "
+				+ "VALUES ('" + name + "')";
+		return performSQLInsertStatementWithAutoId(sql);
+	}
+
+	public int insertEventTypeAttributeIntoDatabase(final String name, final int eventTypeID,
+			final String type) {
+		String sql = "INSERT INTO eventtypeattribute (eventtypeattribute.name, "
+				+ "eventtypeattribute.eventtype_id, eventtypeattribute.type, "
+				+ "eventtypeattribute.default) "
+				+ "VALUES ('" + name + "', "
+				+ eventTypeID + ", '" + type + "', '')";
+		return performSQLInsertStatementWithAutoId(sql);
+	}
+
 	/**
 	 * Updates the scenario entry with the corresponding domainModel.
 	 *
