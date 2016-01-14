@@ -45,8 +45,7 @@ public class EventTypeAttribute implements IPersistable {
     }
 
     /**
-     * This constructor is only used for testCases
-     * therefore, a connection to the server is not needed.
+     * Default constructor
      */
     public EventTypeAttribute() {
     }

@@ -179,19 +179,18 @@ public class Connector extends DbObject {
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
-	public int insertEventTypeIntoDatabase(final String name) {
-		String sql = "INSERT INTO eventtype (eventtype.name) "
-				+ "VALUES ('" + name + "')";
+	public int insertEventTypeIntoDatabase(final String name, final int scenarioID) {
+		String sql = "INSERT INTO eventtype (eventtype.name, eventtype.scenario_id) "
+				+ "VALUES ('" + name + "', " + scenarioID + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
 	public int insertEventTypeAttributeIntoDatabase(final String name, final int eventTypeID,
 			final String type) {
 		String sql = "INSERT INTO eventtypeattribute (eventtypeattribute.name, "
-				+ "eventtypeattribute.eventtype_id, eventtypeattribute.type, "
-				+ "eventtypeattribute.default) "
+				+ "eventtypeattribute.eventtype_id, eventtypeattribute.type) "
 				+ "VALUES ('" + name + "', "
-				+ eventTypeID + ", '" + type + "', '')";
+				+ eventTypeID + ", '" + type + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 

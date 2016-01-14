@@ -30,6 +30,10 @@ public class EventType implements IDeserialisableJson, IPersistable {
      */
     private List<EventTypeAttribute> eventTypeAttributes = new LinkedList<>();
     /**
+     * This is the databaseID of the scenario the eventType belongs to.
+     */
+    private int scenarioID;
+    /**
      * This contains the JSON representation of the eventType.
      */
     private JSONObject eventTypeJson;
@@ -40,14 +44,23 @@ public class EventType implements IDeserialisableJson, IPersistable {
      *
      * @param serverURL This is the server URL.
      */
-    public eventType(String serverURL) {
+    public EventType(String serverURL) {
 
     }
 
     /**
      * The standard constructor.
      */
-    public eventType() {
+    public EventType() {
+    }
+
+    /**
+     * Default constructor, sets the scenarioID for linking the eventType back to the scenario.
+     *
+     * @param scenarioID Database ID of the scenario.
+     */
+    public EventType(int scenarioID) {
+        this.scenarioID = scenarioID;
     }
 
     /**
@@ -78,7 +91,7 @@ public class EventType implements IDeserialisableJson, IPersistable {
      */
     @Override public int save() {
         Connector conn = new Connector();
-        this.eventTypeID = conn.insertEventTypeIntoDatabase(this.eventTypeName);
+        this.eventTypeID = conn.insertEventTypeIntoDatabase(this.eventTypeName, this.scenarioID);
         saveEventTypeAttributes();
 
         return eventTypeID;
