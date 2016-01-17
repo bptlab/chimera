@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Node;
 
 import javax.xml.bind.annotation.*;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "bpmn:task")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Task {
+public class Task extends AbstractControlNode {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
@@ -30,6 +32,7 @@ public class Task {
     @XmlElement(name = "bpmn:dataInputAssociation")
     private List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
 
+    @Override
     public String getId() {
         return id;
     }
@@ -78,12 +81,13 @@ public class Task {
         this.dataInputAssociations = dataInputAssociations;
     }
 
-    public Node convertToNode() {
-        Node node = new Node();
-        node.setType("Task");
-        node.setText(this.name);
-        node.setId(this.id);
-        node.setGlobal(false);
-        return node;
+
+    @Override
+    public int save() {
+        //TODO Handle webtasks correctly
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "Activity", this.getFragmentId(), this.id);
+        return this.databaseId;
     }
 }

@@ -18,6 +18,7 @@ public class StartEvent extends AbstractControlNode {
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
+    @Override
     public String getId() {
         return id;
     }

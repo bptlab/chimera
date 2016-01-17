@@ -18,6 +18,7 @@ public class EndEvent extends AbstractControlNode {
     @XmlElement(name = "bpmn:incoming")
     private String incoming;
 
+    @Override
     public String getId() {
         return id;
     }

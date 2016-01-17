@@ -41,6 +41,7 @@ public class BoundaryEvent extends AbstractControlNode {
         this.attachedToRef = attachedToRef;
     }
 
+    @Override
     public String getId() {
         return id;
     }
