@@ -10,18 +10,28 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "bpmn:dataObjectReference")
 @XmlAccessorType(XmlAccessType.NONE)
-public class DataObjectReference {
+public class DataNode {
     @XmlAttribute
     private String id;
 
+    /**
+     * The name is given at the moment as name [state]
+     */
     @XmlAttribute
     private String name;
+
     /**
      * Id of an data object. This construct is used to express that, an data object can
      * occur multiple times in an BPMN process.
      */
     @XmlAttribute
     private String dataObjectRef;
+
+    public String getState() {
+        String[] splittedName = this.name.split("\\s+");
+        // State
+        return splittedName[1].substring(1, splittedName[1].length() - 1);
+    }
 
     public String getId() {
         return id;
@@ -31,8 +41,12 @@ public class DataObjectReference {
         this.id = id;
     }
 
+    /**
+     * @return the name of the data object which is referred by this data node
+     */
     public String getName() {
-        return name;
+        String[] splittedName = this.name.split("\\s+");
+        return splittedName[0];
     }
 
     public void setName(String name) {
