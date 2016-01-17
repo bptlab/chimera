@@ -1,5 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "bpmn:exclusiveGateway")
 @XmlAccessorType(XmlAccessType.NONE)
-public class ExclusiveGateway {
+public class ExclusiveGateway extends AbstractControlNode {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
@@ -56,5 +59,13 @@ public class ExclusiveGateway {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int save() {
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "XOR", this.getFragmentId(), this.id);
+        return this.databaseId;
     }
 }

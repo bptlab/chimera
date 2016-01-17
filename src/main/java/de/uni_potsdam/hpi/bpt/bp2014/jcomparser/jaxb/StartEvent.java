@@ -1,5 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -7,7 +10,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement(name = "bpmn:startEvent")
 @XmlAccessorType(XmlAccessType.NONE)
-public class StartEvent {
+public class StartEvent extends AbstractControlNode {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
@@ -37,5 +40,13 @@ public class StartEvent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int save() {
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "Startevent", this.getFragmentId(), this.id);
+        return this.databaseId;
     }
 }

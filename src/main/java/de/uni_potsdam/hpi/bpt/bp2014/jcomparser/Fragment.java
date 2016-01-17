@@ -1,49 +1,34 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  *
  */
-@XmlRootElement(name = "bpmn:process")
-@XmlAccessorType(XmlAccessType.NONE)
 public class Fragment {
-    @XmlElement(name = "bpmn:sequenceFlow")
-    private List<SequenceFlow> associations = new ArrayList<>();
 
-    @XmlElement(name = "bpmn:exclusiveGateway")
-    private List<ExclusiveGateway> xorGateways = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:startEvent")
-    private StartEvent startEvent;
-
-    @XmlElement(name = "bpmn:boundaryEvent")
-    private List<BoundaryEvent> boundaryEvents = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:task")
-    private List<Task> tasks = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:dataObjectReference")
-    private List<DataObjectReference> dataObjectReferences = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:dataObject")
-    private List<DataObject> dataObjects = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:endEvent")
-    private EndEvent endEvent;
-
-    private String name;
-
-    int fragmentId;
+    private final int scenarioId;
+    private String fragmentName;
+    private int fragmentId;
+    private int versionNumber;
+    private FragmentXmlWrapper fragment;
 
     public int getVersionNumber() {
         return versionNumber;
@@ -53,8 +38,6 @@ public class Fragment {
         this.versionNumber = versionNumber;
     }
 
-    int versionNumber;
-
     public int getFragmentId() {
         return fragmentId;
     }
@@ -63,67 +46,50 @@ public class Fragment {
         this.fragmentId = fragmentId;
     }
 
-    public List<SequenceFlow> getSequenceFlow() {
-        return associations;
+    public String getName() {
+        return fragmentName;
     }
 
-    public void setAssociations(List<SequenceFlow> associations) {
-        this.associations = associations;
+    public void setName(String name) {
+        this.fragmentName = name;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public Fragment(String fragmentXml, int versionNumber, String fragmentName,
+                    int scenarioId, int fragmentId) {
+        this.fragment = buildFragment(fragmentXml);
+        this.fragmentName = fragmentName;
+        this.versionNumber = versionNumber;
+        this.scenarioId = scenarioId;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public int save() {
+        Connector connector = new Connector();
+        int databaseId = connector.insertFragmentIntoDatabase(fragmentName,
+                scenarioId, fragmentId, versionNumber);
+        return databaseId;
     }
 
-    public List<BoundaryEvent> getBoundaryEvents() {
-        return boundaryEvents;
+    private FragmentXmlWrapper buildFragment(String fragmentXml) {
+        Document doc = getXmlDocFromString(fragmentXml);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            return (FragmentXmlWrapper) jaxbUnmarshaller.unmarshal(doc);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public void setBoundaryEvents(List<BoundaryEvent> boundaryEvents) {
-        this.boundaryEvents = boundaryEvents;
+    private Document getXmlDocFromString(String xml) {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-
-    public List<ExclusiveGateway> getXorGateways() {
-        return xorGateways;
-    }
-
-    public void setXorGateways(List<ExclusiveGateway> xorGateways) {
-        this.xorGateways = xorGateways;
-    }
-
-    public void setEndEvent(EndEvent endEvent) {
-        this.endEvent = endEvent;
-    }
-    public StartEvent getStartEvent() {
-        return startEvent;
-    }
-
-    public void setStartEvent(StartEvent startEvent) {
-        this.startEvent = startEvent;
-    }
-
-    public List<DataObjectReference> getDataObjectReferences() {
-        return dataObjectReferences;
-    }
-
-    public void setDataObjectReferences(List<DataObjectReference> dataObjectReferences) {
-        this.dataObjectReferences = dataObjectReferences;
-    }
-
-    public List<DataObject> getDataObjects() {
-        return dataObjects;
-    }
-
-    public void setDataObjects(List<DataObject> dataObjects) {
-        this.dataObjects = dataObjects;
-    }
-
-
-
     /**
      *
      * @return List of Input sets
@@ -131,7 +97,7 @@ public class Fragment {
     public List<InputSet> getInputSets() {
         List<InputSet> sets = new ArrayList<>();
         Map<String, Node> idToNode = createMapFromIdToNode();
-        for (Task task : this.tasks) {
+        for (Task task : this.fragment.getTasks()) {
             List<Edge> associations = new ArrayList<>();
             List<Node> dataNodes = new ArrayList<>();
             for (DataInputAssociation assoc : task.getDataInputAssociations()) {
@@ -169,7 +135,7 @@ public class Fragment {
         List<OutputSet> outputSets = new ArrayList<>();
         Map<String, Node> idToNode = createMapFromIdToNode();
 
-        for (Task task : this.tasks) {
+        for (Task task : this.fragment.getTasks()) {
             List<Edge> associations = new ArrayList<>();
             List<Node> dataNodes = new ArrayList<>();
             for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
@@ -205,18 +171,18 @@ public class Fragment {
 
     private Node getEndEventNode() {
         Node endEvent = new Node();
-        endEvent.setId(this.endEvent.getId());
+        endEvent.setId(this.fragment.getEndEvent().getId());
         endEvent.setType("EndEvent");
-        endEvent.setText(this.endEvent.getName());
+        endEvent.setText(this.fragment.getEndEvent().getName());
         endEvent.setGlobal(false);
         return endEvent;
     }
 
     private Node getStartEventNode() {
         Node startEvent = new Node();
-        startEvent.setId(this.startEvent.getId());
+        startEvent.setId(this.fragment.getStartEvent().getId());
         startEvent.setType("StartEvent");
-        startEvent.setText(this.startEvent.getName());
+        startEvent.setText(this.fragment.getStartEvent().getName());
         startEvent.setGlobal(false);
         return startEvent;
     }
@@ -224,7 +190,7 @@ public class Fragment {
     private List<Node> getBoundaryEventNodes() {
         List<Node> events = new ArrayList<>();
 
-        for (BoundaryEvent event : this.boundaryEvents) {
+        for (BoundaryEvent event : this.fragment.getBoundaryEvents()) {
             Node boundaryEvent = new Node();
             boundaryEvent.setId(event.getId());
             boundaryEvent.setGlobal(false);
@@ -238,7 +204,7 @@ public class Fragment {
 
     private List<Node> getExclusiveGateways() {
         List<Node> overallNodes = new ArrayList<>();
-        for (ExclusiveGateway exclusiveGateway : this.xorGateways) {
+        for (ExclusiveGateway exclusiveGateway : this.fragment.getXorGateways()) {
             Node node = new Node();
             node.setType("ExclusiveGateway");
             node.setText(exclusiveGateway.getName());
@@ -251,7 +217,7 @@ public class Fragment {
 
     private List<Node> getDataObjectNodes() {
         List<Node> dataObjectNodes = new ArrayList<>();
-        for (DataObjectReference dataObjectReference : dataObjectReferences) {
+        for (DataObjectReference dataObjectReference : this.fragment.getDataObjectReferences()) {
             Node node = new Node();
             // Complete name for now is a String name \n [state]
             String completeName = dataObjectReference.getName();
@@ -268,7 +234,7 @@ public class Fragment {
 
     private List<Node> getTaskNodes() {
         List<Node> overallNodes = new ArrayList<>();
-        for (Task task : tasks) {
+        for (Task task : this.fragment.getTasks()) {
             Node node = new Node();
             node.setType("Task");
             node.setText(task.getName());
@@ -282,7 +248,7 @@ public class Fragment {
 
     public List<DataInputAssociation> getDataInputAssociations() {
         List<DataInputAssociation> overallEdges = new ArrayList<>();
-        for (Task task : tasks) {
+        for (Task task : this.fragment.getTasks()) {
             for (DataInputAssociation association : task.getDataInputAssociations()) {
                 overallEdges.add(association);
             }
@@ -293,7 +259,7 @@ public class Fragment {
 
     public List<DataOutputAssociation> getDataOutputAssociations() {
         List<DataOutputAssociation> overallEdges = new ArrayList<>();
-        for (Task task : tasks) {
+        for (Task task : this.fragment.getTasks()) {
             for (DataOutputAssociation association : task.getDataOutputAssociations()) {
                 overallEdges.add(association);
             }
@@ -301,11 +267,8 @@ public class Fragment {
         return overallEdges;
     }
 
-    public String getName() {
-        return name;
+    public List<SequenceFlow> getSequenceFlow() {
+        return this.fragment.getSequenceFlow();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

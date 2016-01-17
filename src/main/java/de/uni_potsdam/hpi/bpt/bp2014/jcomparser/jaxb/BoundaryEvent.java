@@ -1,5 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -7,7 +10,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement(name = "bpmn:boundaryEvent")
 @XmlAccessorType(XmlAccessType.NONE)
-public class BoundaryEvent {
+public class BoundaryEvent extends AbstractControlNode {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
@@ -22,6 +25,13 @@ public class BoundaryEvent {
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
+    @Override
+    public int save() {
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "Boundaryevent", this.getFragmentId(), this.id);
+        return this.databaseId;
+    }
 
     public String getAttachedToRef() {
         return attachedToRef;

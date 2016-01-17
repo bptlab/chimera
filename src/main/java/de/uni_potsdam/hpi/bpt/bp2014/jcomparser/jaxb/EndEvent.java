@@ -1,5 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -7,7 +10,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class EndEvent {
+public class EndEvent extends AbstractControlNode {
     @XmlAttribute(name = "id")
     private String id;
     @XmlAttribute(name = "name")
@@ -37,5 +40,13 @@ public class EndEvent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int save() {
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "Endevent", this.getFragmentId(), this.id);
+        return this.databaseId;
     }
 }
