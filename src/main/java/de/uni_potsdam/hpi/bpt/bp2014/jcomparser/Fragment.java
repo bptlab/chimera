@@ -90,26 +90,26 @@ public class Fragment {
         }
         return null;
     }
+
     /**
      *
      * @return List of Input sets
      */
     public List<InputSet> getInputSets() {
         List<InputSet> sets = new ArrayList<>();
-        Map<String, Node> idToNode = createMapFromIdToNode();
+        Map<String, DataNode> idToDataNode = new HashMap<>();
+        for (DataNode dataNode : this.getDataNodes()) {
+            idToDataNode.put(dataNode.getId(), dataNode);
+        }
+
         for (Task task : this.fragment.getTasks()) {
-            List<Edge> associations = new ArrayList<>();
-            List<Node> dataNodes = new ArrayList<>();
+            List<DataNode> dataNodes = new ArrayList<>();
             for (DataInputAssociation assoc : task.getDataInputAssociations()) {
-                associations.add(assoc);
-                Node dataNode =  idToNode.get(assoc.getSourceRef());
+                DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
                 dataNodes.add(dataNode);
             }
-            if (associations.size() > 0) {
-                InputSet set = new InputSet();
-                set.setNode(task.convertToNode());
-                set.setAssociations(associations);
-                set.setDataNodes(dataNodes);
+            if (dataNodes.size() > 0) {
+                InputSet set = new InputSet(task, dataNodes);
                 sets.add(set);
             }
         }
@@ -117,37 +117,31 @@ public class Fragment {
         return sets;
     }
 
-    private Map<String, Node> createMapFromIdToNode() {
-        List<Node> nodes = getNodes();
-        Map<String, Node> idToNode = new HashMap<>();
-        for (Node node : nodes) {
-            idToNode.put(node.getId(), node);
+    private Map<String, Task> createMapFromIdToTask() {
+        List<Task> tasks = this.fragment.getTasks();
+        Map<String, Task> idToNode = new HashMap<>();
+        for (Task task : tasks) {
+            idToNode.put(task.getId(), task);
         }
 
         return idToNode;
     }
 
-    /**
-     *
-     * @return Returns something
-     */
     public List<OutputSet> getOutputSets() {
         List<OutputSet> outputSets = new ArrayList<>();
-        Map<String, Node> idToNode = createMapFromIdToNode();
+        Map<String, DataNode> idToDataNode = new HashMap<>();
+        for (DataNode dataNode : this.getDataNodes()) {
+            idToDataNode.put(dataNode.getId(), dataNode);
+        }
 
         for (Task task : this.fragment.getTasks()) {
-            List<Edge> associations = new ArrayList<>();
-            List<Node> dataNodes = new ArrayList<>();
+            List<DataNode> dataNodes = new ArrayList<>();
             for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
-                associations.add(assoc);
-                Node dataNode = idToNode.get(assoc.getTargetRef());
+                DataNode dataNode = idToDataNode.get(assoc.getTargetRef());
                 dataNodes.add(dataNode);
             }
-            if (associations.size() > 0) {
-                OutputSet set = new OutputSet();
-                set.setNode(task.convertToNode());
-                set.setAssociations(associations);
-                set.setDataNodes(dataNodes);
+            if (dataNodes.size() > 0) {
+                OutputSet set = new OutputSet(task, dataNodes);
                 outputSets.add(set);
             }
         }
@@ -156,94 +150,18 @@ public class Fragment {
 
     /**
      *
-     * @return Return something
+     * @return Return a list of all control nodes in a fragment
      */
-    public List<Node> getNodes() {
-        List<Node> nodes = new ArrayList<>();
-        nodes.addAll(getExclusiveGateways());
-        nodes.addAll(getTaskNodes());
-        nodes.addAll(getDataObjectNodes());
-        nodes.addAll(getBoundaryEventNodes());
-        nodes.add(getEndEventNode());
-        nodes.add(getStartEventNode());
+    public List<AbstractControlNode> getControlNodes() {
+        List<AbstractControlNode> nodes = new ArrayList<>();
+        nodes.addAll(this.fragment.getXorGateways());
+        nodes.addAll(this.fragment.getTasks());
+        nodes.addAll(this.fragment.getBoundaryEvents());
+        nodes.add(this.fragment.getEndEvent());
+        nodes.add(this.fragment.getStartEvent());
         return nodes;
     }
 
-    private Node getEndEventNode() {
-        Node endEvent = new Node();
-        endEvent.setId(this.fragment.getEndEvent().getId());
-        endEvent.setType("EndEvent");
-        endEvent.setText(this.fragment.getEndEvent().getName());
-        endEvent.setGlobal(false);
-        return endEvent;
-    }
-
-    private Node getStartEventNode() {
-        Node startEvent = new Node();
-        startEvent.setId(this.fragment.getStartEvent().getId());
-        startEvent.setType("StartEvent");
-        startEvent.setText(this.fragment.getStartEvent().getName());
-        startEvent.setGlobal(false);
-        return startEvent;
-    }
-
-    private List<Node> getBoundaryEventNodes() {
-        List<Node> events = new ArrayList<>();
-
-        for (BoundaryEvent event : this.fragment.getBoundaryEvents()) {
-            Node boundaryEvent = new Node();
-            boundaryEvent.setId(event.getId());
-            boundaryEvent.setGlobal(false);
-            boundaryEvent.setText(event.getName());
-            boundaryEvent.setType("BoundaryEvent");
-            events.add(boundaryEvent);
-        }
-
-        return events;
-    }
-
-    private List<Node> getExclusiveGateways() {
-        List<Node> overallNodes = new ArrayList<>();
-        for (ExclusiveGateway exclusiveGateway : this.fragment.getXorGateways()) {
-            Node node = new Node();
-            node.setType("ExclusiveGateway");
-            node.setText(exclusiveGateway.getName());
-            node.setId(exclusiveGateway.getId());
-            node.setGlobal(false);
-            overallNodes.add(node);
-        }
-        return overallNodes;
-    }
-
-    private List<Node> getDataObjectNodes() {
-        List<Node> dataObjectNodes = new ArrayList<>();
-        for (DataObjectReference dataObjectReference : this.fragment.getDataObjectReferences()) {
-            Node node = new Node();
-            // Complete name for now is a String name \n [state]
-            String completeName = dataObjectReference.getName();
-            String[] splittedName = completeName.split("\\s+");
-            node.setState(splittedName[1].substring(1, splittedName[1].length() - 1));
-            node.setText(splittedName[0]);
-            node.setGlobal(false);
-            node.setId(dataObjectReference.getId());
-            node.setType("DataObject");
-            dataObjectNodes.add(node);
-        }
-        return dataObjectNodes;
-    }
-
-    private List<Node> getTaskNodes() {
-        List<Node> overallNodes = new ArrayList<>();
-        for (Task task : this.fragment.getTasks()) {
-            Node node = new Node();
-            node.setType("Task");
-            node.setText(task.getName());
-            node.setId(task.getId());
-            node.setGlobal(false);
-            overallNodes.add(node);
-        }
-        return overallNodes;
-    }
 
 
     public List<DataInputAssociation> getDataInputAssociations() {
@@ -271,4 +189,7 @@ public class Fragment {
         return this.fragment.getSequenceFlow();
     }
 
+    public List<DataNode> getDataNodes() {
+        return this.fragment.getDataNodes();
+    }
 }
