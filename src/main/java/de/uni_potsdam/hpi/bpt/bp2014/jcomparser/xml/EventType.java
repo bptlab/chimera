@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * This class represents an EventType.
  */
-public class EventType implements IDeserialisableJson, IPersistable {
+public class EventType implements IPersistable { //IDeserialisableJson
     /**
      * This is the modelID of the eventType.
      */
@@ -73,7 +73,8 @@ public class EventType implements IDeserialisableJson, IPersistable {
      *
      * @param element The JSON String which will be used for deserialisation
      */
-    @Override public void initializeInstanceFromJson(final String element) {
+    //@Override
+    public void initializeInstanceFromJson(final String element) {
         try {
             this.eventTypeJson = new JSONObject(element);
 
@@ -86,9 +87,9 @@ public class EventType implements IDeserialisableJson, IPersistable {
         }
     }
 
-    @Override public void initializeInstanceFromXML(final Node element) {
+    //@Override public void initializeInstanceFromXML(final Node element) {
 
-    }
+    //}
 
     /**
      * This method saves the eventType to the database.
@@ -142,7 +143,7 @@ public class EventType implements IDeserialisableJson, IPersistable {
         Gson gson = new Gson();
         String timestampName = "";
 
-        final String url = "localhost:8080/Unicorn/REST/EventType"
+        final String url = "localhost:8080/Unicorn/REST/EventType";
 
         for(EventTypeAttribute eta : getEventTypeAttributes()) {
             if("timestamp".equals(eta.getEventTypeAttributeName())) {
@@ -187,6 +188,8 @@ public class EventType implements IDeserialisableJson, IPersistable {
         buffer.append("</xs:complexType>\n");
         buffer.append("</xs:element>\n");
         buffer.append("</xs:schema>");
+
+        return buffer.toString();
     }
 
     private class EventTypeJson {
