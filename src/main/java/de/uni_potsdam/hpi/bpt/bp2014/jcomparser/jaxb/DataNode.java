@@ -27,6 +27,9 @@ public class DataNode {
     @XmlAttribute
     private String dataObjectRef;
 
+
+    private int databaseId;
+
     public String getState() {
         String[] splittedName = this.name.split("\\s+");
         // State
@@ -59,5 +62,14 @@ public class DataNode {
 
     public void setDataObjectRef(String dataObjectRef) {
         this.dataObjectRef = dataObjectRef;
+    }
+
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public void setDatabaseId(int databaseId) {
+        this.databaseId = databaseId;
     }
 }
