@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Fragment;
 import org.easymock.IAnswer;
 import org.junit.AfterClass;
 import org.powermock.api.easymock.PowerMock;
@@ -63,6 +64,7 @@ public class TestSetUp {
      * @return A mocked Fragment
      * @throws Exception java.lang.Exception
      */
+    /*
     public static DatabaseFragment initializeFragment(final String versionLocation) throws Exception {
         final DatabaseFragment fragment = PowerMock.createPartialMock(DatabaseFragment.class,
                 FETCH_VERSION_METHOD);
@@ -78,7 +80,7 @@ public class TestSetUp {
         PowerMock.replay(fragment);
         return fragment;
     }
-
+    */
     /**
      * Initialize a domainModel by configuring the mock.
      * @param versionLocation Location of the XML-file that contains the versions of the domainModel
@@ -110,7 +112,7 @@ public class TestSetUp {
      * @throws Exception java.lang.Exception
      */
     public static Scenario initializeCompleteScenario(final String versionLocation,
-                                                      final List<DatabaseFragment> fragments, final DomainModel domainModel) throws Exception {
+                                                      final List<Fragment> fragments, final DomainModel domainModel) throws Exception {
         final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
                 FETCH_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD,
@@ -133,16 +135,16 @@ public class TestSetUp {
                                 .getDocumentElement();
                     }
                 });
-        for (final DatabaseFragment fragment : fragments) {
-            PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentID()))
-                    .andAnswer(new IAnswer<DatabaseFragment>() {
+        for (final Fragment fragment : fragments) {
+            PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, Long.toString(fragment.getFragmentId()))
+                    .andAnswer(new IAnswer<Fragment>() {
                         @Override
-                        public DatabaseFragment answer() throws Throwable {
+                        public Fragment answer() throws Throwable {
                             return fragment;
                         }
                     });
             if (fragments.size() == 1) {
-                PowerMock.replay(scenario, fragment, DatabaseFragment.class, domainModel);
+                PowerMock.replay(scenario, fragment, Fragment.class, domainModel);
             }
         }
         if (fragments.size() > 1) {

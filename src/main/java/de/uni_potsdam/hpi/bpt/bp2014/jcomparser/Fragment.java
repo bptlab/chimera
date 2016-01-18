@@ -72,7 +72,7 @@ public class Fragment {
     private FragmentXmlWrapper buildFragment(String fragmentXml) {
         Document doc = getXmlDocFromString(fragmentXml);
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Fragment.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(FragmentXmlWrapper.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             return (FragmentXmlWrapper) jaxbUnmarshaller.unmarshal(doc);
         } catch (JAXBException e) {
