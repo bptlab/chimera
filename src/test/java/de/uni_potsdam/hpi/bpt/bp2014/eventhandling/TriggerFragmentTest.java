@@ -1,20 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DatabaseFragment;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import java.io.File;
 import java.io.IOException;
 
 /**

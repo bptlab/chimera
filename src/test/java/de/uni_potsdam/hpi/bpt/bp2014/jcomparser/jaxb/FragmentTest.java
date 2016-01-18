@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Fragment;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
