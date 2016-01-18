@@ -13,6 +13,8 @@ public abstract class AbstractControlNode {
         this.databaseId = databaseId;
     }
 
+    public abstract String getId();
+
     protected int databaseId;
 
     public int getFragmentId() {
