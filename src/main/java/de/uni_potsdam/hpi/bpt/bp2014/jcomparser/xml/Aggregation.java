@@ -19,6 +19,10 @@ public class Aggregation implements IDeserialisableJson, IPersistable {
 
 	@SuppressWarnings("unused") private JSONObject aggregationJson;
 
+    public Aggregation(Map<Long, DataClass> dataClasses) {
+        this.dataClasses = dataClasses;
+    }
+
 	@Override public void initializeInstanceFromJson(final String element) {
 		try {
 			this.aggregationJson = new JSONObject(element);
@@ -32,9 +36,6 @@ public class Aggregation implements IDeserialisableJson, IPersistable {
 		}
 	}
 
-	@Override public void initializeInstanceFromXML(Node element) {
-
-	}
 
 	private void setSourceMultiplicity(String value) {
 		String[] multiplicity = value.split("\\.\\.");
@@ -76,10 +77,6 @@ public class Aggregation implements IDeserialisableJson, IPersistable {
 		conn.insertAggregationIntoDatabase(this.source.getDataClassID(),
 				this.target.getDataClassID(), this.sourceMultiplicity);
 		return 1;
-	}
-
-	public void setDataClasses(Map<Long, DataClass> dataClasses) {
-		this.dataClasses = dataClasses;
 	}
 
 	public Map<Long, DataClass> getDataClasses() {

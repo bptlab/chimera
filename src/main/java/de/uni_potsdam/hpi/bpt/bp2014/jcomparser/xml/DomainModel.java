@@ -1,27 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +18,6 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	private static Logger log = Logger.getLogger(DomainModel.class.getName());
 
 	/**
-	 * The url of the process Editor.
-	 */
-	private String processeditorServerUrl;
-	/**
 	 * The modelID found in the JSON.
 	 */
 	private long domainModelModelID;
@@ -49,11 +29,8 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 * The databaseID of the corresponding scenario.
 	 */
 	private int scenarioID;
-	/**
-	 * A Mao of modelID's and corresponding dataClasses belonging to this domainModel.
-	 */
-	private Map<Long, DataClass> dataClasses;
-	/**
+
+    /**
 	 * A List of all aggregation between the dataClasses belonging to this domainModel.
 	 */
 	private List<Aggregation> aggregations;
@@ -62,23 +39,13 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 */
 	private JSONObject domainModelJson;
 
-	/**
-	 * The constructor.
-	 *
-	 * @param serverURL the severURL wher the JSON Objects are to be found.
-	 */
-	public DomainModel(String serverURL) {
-		this.processeditorServerUrl = serverURL;
-	}
+    public List<DataClass> getDataClasses() {
+        return dataClasses;
+    }
 
-	/**
-	 * The constructor.
-	 */
-	public DomainModel() {
+    private List<DataClass> dataClasses;
 
-	}
-
-	/**
+    /**
 	 * This method calls all needed methods to set up the domainModel.
 	 *
 	 * @param element The JSON String which will be used for deserialisation
@@ -86,21 +53,27 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	@Override public void initializeInstanceFromJson(final String element) {
 		try {
 			this.domainModelJson = new JSONObject(element);
-
-			this.domainModelModelID = this.domainModelJson.getLong("_id");
+			// this.domainModelModelID = this.domainModelJson.getLong("_id");
 			this.versionNumber = this.domainModelJson.getInt("revision");
-
-			generateDataClasses();
-			generateAggregations();
-
+			this.dataClasses = generateDataClasses();
+			this.aggregations = generateAggregations();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 	}
-	@Override public void initializeInstanceFromXML(final Node element) {
 
-	}
+    /**
+     * Creates a mapping from the Id of the dataclass to the dataclass object itself.
+     * @return map from Id to dataclass
+     */
+    public Map<Long, DataClass> getMapFromIdToDataclass() {
+        Map<Long, DataClass> idToDataclass = new HashMap<>();
+        for (DataClass dataClass : dataClasses) {
+            idToDataclass.put(dataClass.getDataClassModelID(), dataClass);
+        }
+        return idToDataclass;
+    }
 
 	/**
 	 * This sets the scenario ID needed for the update.
@@ -114,44 +87,46 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	/**
 	 * This method generates a List of aggregates from the XML.
 	*/
-	private void generateAggregations() {
-		try {
+	private List<Aggregation> generateAggregations() {
+		Map<Long, DataClass> idToDataclass = getMapFromIdToDataclass();
+        List<Aggregation> aggregations = new ArrayList<>();
+        try {
 			JSONArray jsonAggregations = this.domainModelJson.getJSONArray("aggregations");
 			int length = jsonAggregations.length();
 			this.aggregations = new ArrayList<>(length);
 
 			for (int i = 0; i < length; i++) {
-				Aggregation currentAggregation = new Aggregation();
-				currentAggregation.setDataClasses(dataClasses);
+				Aggregation currentAggregation = new Aggregation(idToDataclass);
 				currentAggregation.initializeInstanceFromJson(
 						jsonAggregations.getJSONObject(i).toString()
 				);
-				this.aggregations.add(currentAggregation);
+				aggregations.add(currentAggregation);
 			}
 		} catch (JSONException e) {
 			log.error("Error: ", e);
 		}
+        return aggregations;
 	}
 
 	/**
 	 * This method generates a Map of dataClasses with their modelID as keys.
 	 */
-	private void generateDataClasses() {
-		try {
+	private List<DataClass> generateDataClasses() {
+        List<DataClass> dataClasses = new ArrayList<>();
+        try {
 			JSONArray jsonDataClasses = this.domainModelJson.getJSONArray("dataclasses");
 			int length = jsonDataClasses.length();
-			this.dataClasses = new HashMap<>(length);
 
 			for (int i = 0; i < length; i++) {
 				DataClass currentClass = new DataClass();
 				currentClass.initializeInstanceFromJson(
 						jsonDataClasses.getJSONObject(i).toString());
-				this.dataClasses.put(
-						currentClass.getDataClassModelID(), currentClass);
+				dataClasses.add(currentClass);
 			}
 		} catch (JSONException e) {
 			log.error("Error: ", e);
 		}
+        return dataClasses;
 	}
 
 	/**
@@ -164,7 +139,7 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 		Connector conn = new Connector();
 		conn.insertDomainModelIntoDatabase(this.domainModelModelID, this.versionNumber,
 				this.scenarioID);
-		for (DataClass dataClass : dataClasses.values()) {
+		for (DataClass dataClass : dataClasses) {
 			dataClass.save();
 		}
 		for (Aggregation aggregation : aggregations) {
@@ -237,10 +212,6 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 
 	public List<Aggregation> getAggregations() {
 		return aggregations;
-	}
-
-	public Map<Long, DataClass> getDataClasses() {
-		return dataClasses;
 	}
 
 	public int getScenarioID() {

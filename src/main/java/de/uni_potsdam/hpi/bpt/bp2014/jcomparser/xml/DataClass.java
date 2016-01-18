@@ -9,8 +9,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class represents a DataClass.
@@ -42,21 +41,9 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 	 */
 	private JSONObject dataClassJson;
 
-	/**
-	 * Sets the processeditorServerUrl which is needed for connecting to the server
-	 * in order to get the XML-files for the fragments.
-	 *
-	 * @param serverURL This is the server URL.
-	 */
-	public DataClass(String serverURL) {
+    private Map<String, Integer> stateToDatabaseId = new HashMap<>();
 
-	}
-
-	/**
-	 * The standard constructor.
-	 */
-	public DataClass() {
-	}
+    private List<String> states = new ArrayList<>();
 
 	/**
 	 * This initializes the dataClass from the JSON.
@@ -76,9 +63,6 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 		}
 	}
 
-	@Override public void initializeInstanceFromXML(final Node element) {
-
-	}
 
 	/**
 	 * This method saves the dataClass to the database.
@@ -95,8 +79,13 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 		}
 		this.dataClassID = conn.insertDataClassIntoDatabase(this.dataClassName, root);
 		saveDataAttributes();
+        Connector connector = new Connector();
+        for (String state : this.states) {
+            int stateID = connector.insertStateIntoDatabase(state, this.dataClassID);
+            stateToDatabaseId.put(state, stateID);
+        }
 
-		return dataClassID;
+        return dataClassID;
 	}
 
 	/**
@@ -151,4 +140,19 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 		return dataClassModelID;
 	}
 
+    public Map<String, Integer> getStateToDatabaseId() {
+        return stateToDatabaseId;
+    }
+
+    public void setStateToDatabaseId(Map<String, Integer> stateToDatabaseId) {
+        this.stateToDatabaseId = stateToDatabaseId;
+    }
+
+    public List<String> getStates() {
+        return states;
+    }
+
+    public void setStates(List<String> states) {
+        this.states = states;
+    }
 }
