@@ -1,8 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.FragmentInstance;
-
 import javax.jms.*;
 
 /**

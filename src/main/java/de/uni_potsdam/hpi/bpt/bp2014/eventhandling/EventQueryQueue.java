@@ -8,8 +8,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Fragment;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.FragmentInstance;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.ws.rs.core.Response;
