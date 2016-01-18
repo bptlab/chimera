@@ -33,19 +33,22 @@ public class Scenario {
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domain_model");
             DomainModel domainModel = createAndInitializeDomainModel(domainModelJson);
-
+            domainModel.setScenarioID(scenarioDatabaseId);
             List<Fragment> fragments = generateFragmentList(scenarioJson);
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
 
+            domainModel.save();
+
             List<DataObject> dataObjects = extractDataObjects(fragments, domainModel);
             for (DataObject dataObject : dataObjects) {
+                dataObject.setScenarioId(scenarioDatabaseId);
                 dataObject.save();
             }
-            domainModel.save();
+
 
             FragmentInserter inserter = new FragmentInserter();
             for (Fragment fragment : fragments) {
-                inserter.save(fragment,domainModel);
+                inserter.save(fragment, domainModel);
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -50,6 +50,7 @@ public class DataObject {
      * @param dataClass The dataClass the dataObject belongs to
      */
     public DataObject(final DataClass dataClass) {
+
         this.dataClass = dataClass;
     }
 
@@ -74,7 +75,7 @@ public class DataObject {
 
         initStateDatabaseId = this.dataClass.getStateToDatabaseId().get("init");
         databaseId = connector.insertDataObjectIntoDatabase(
-                this.dataClass.getDataClassName(), dataClass.getDataClassID(),
+                this.dataClass.getDataClassName(), this.dataClass.getDataClassID(),
                 scenarioId, initStateDatabaseId);
         saveDataNodes();
         return databaseId;

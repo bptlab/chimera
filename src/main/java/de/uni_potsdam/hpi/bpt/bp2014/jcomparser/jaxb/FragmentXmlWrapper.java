@@ -32,8 +32,8 @@ public class FragmentXmlWrapper {
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataNode> dataNodes = new ArrayList<>();
 
-    @XmlElement(name = "bpmn:dataObject")
-    private List<DataObject> dataObjects = new ArrayList<>();
+    // @XmlElement(name = "bpmn:dataObject")
+    // private List<DataObject> dataObjects = new ArrayList<>();
 
     @XmlElement(name = "bpmn:endEvent")
     private EndEvent endEvent;
@@ -95,13 +95,13 @@ public class FragmentXmlWrapper {
         this.dataNodes = dataNodes;
     }
 
-    public List<DataObject> getDataObjects() {
-        return dataObjects;
-    }
+    // public List<DataObject> getDataObjects() {
+    //     return dataObjects;
+    // }
 
-    public void setDataObjects(List<DataObject> dataObjects) {
-        this.dataObjects = dataObjects;
-    }
+    //public void setDataObjects(List<DataObject> dataObjects) {
+    //    this.dataObjects = dataObjects;
+    //}
 
     public String getId() {
         return id;
