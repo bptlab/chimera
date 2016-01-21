@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import com.google.gson.Gson;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;

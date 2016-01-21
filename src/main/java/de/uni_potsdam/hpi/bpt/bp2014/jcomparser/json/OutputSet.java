@@ -1,37 +1,35 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
+
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
-import jersey.repackaged.com.google.common.collect.Sets;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * A class which represents an InputSet.
+ * This class represents an OutputSet.
  */
-public class InputSet extends Set implements IPersistable {
+public class OutputSet extends Set implements IPersistable {
 
-    public InputSet(AbstractControlNode controlNode, List<DataNode> dataNodes) {
+    public OutputSet(AbstractControlNode controlNode, List<DataNode> dataNodes) {
         this.dataNodes = dataNodes;
         this.controlNode = controlNode;
     }
 
     @Override public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertDataSetIntoDatabase(true);
+        this.databaseId = connector.insertDataSetIntoDatabase(false);
 
         for (DataNode dataNode : this.dataNodes) {
             connector.insertDataSetConsistOfDataNodeIntoDatabase(this.databaseId,
                     dataNode.getDatabaseId());
             connector.insertDataFlowIntoDatabase(controlNode.getDatabaseId(), this.databaseId,
-                    true);
+                    false);
         }
 
         return databaseId;
     }
+
+
 }

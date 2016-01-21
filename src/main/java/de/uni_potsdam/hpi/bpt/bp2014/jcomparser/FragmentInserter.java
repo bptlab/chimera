@@ -1,11 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataInputAssociation;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataOutputAssociation;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.SequenceFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DomainModel;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.InputSet;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.OutputSet;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.InputSet;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.OutputSet;
 import java.util.HashMap;
 import java.util.Map;
 

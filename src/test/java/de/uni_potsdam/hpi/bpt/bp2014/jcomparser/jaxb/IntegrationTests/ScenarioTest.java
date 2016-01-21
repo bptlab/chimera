@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.IntegrationTests;
 
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;

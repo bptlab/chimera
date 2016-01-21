@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

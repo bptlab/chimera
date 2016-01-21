@@ -1,9 +1,8 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Edge;
 
 import java.util.List;
 
