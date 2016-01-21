@@ -47,6 +47,7 @@ public class Aggregation implements IDeserialisableJson, IPersistable {
 			}
 		}
 	}
+
 	public void setTargetMultiplicity(String value) {
 		String[] multiplicity = value.split("\\.\\.");
 		if (multiplicity.length != 0) {

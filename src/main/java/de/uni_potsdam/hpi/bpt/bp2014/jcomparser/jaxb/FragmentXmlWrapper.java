@@ -32,7 +32,7 @@ public class FragmentXmlWrapper {
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataNode> dataNodes = new ArrayList<>();
 
-    @XmlElement(name = "")
+    @XmlElement(name = "bpmn:intermediateCatchEvent")
     private List<IntermediateEvent> intermediateEvents = new ArrayList<>();
 
     // @XmlElement(name = "bpmn:dataObject")

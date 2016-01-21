@@ -53,6 +53,10 @@ public class IntermediateEvent extends AbstractControlNode {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "IntermediateEvent", this.fragmentId, this.id);
+
+        connector.insertEventIntoDatabase("IntermediateEvent", this.eventQuery,
+                this.fragmentId, this.id, this.databaseId);
+
         return this.databaseId;
     }
 
