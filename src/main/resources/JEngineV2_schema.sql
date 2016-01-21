@@ -304,6 +304,34 @@ CREATE TABLE IF NOT EXISTS `eventlog` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `eventtypeattribute`
+--
+
+CREATE TABLE IF NOT EXISTS `eventtypeattribute` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) NOT NULL,
+  `type` varchar(256) NOT NULL,
+  `eventtype_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+
+--
+-- Table structure for table `eventtype`
+--
+
+CREATE TABLE IF NOT EXISTS `eventtype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) NOT NULL,
+  `scenario_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fragment`
 --
 
