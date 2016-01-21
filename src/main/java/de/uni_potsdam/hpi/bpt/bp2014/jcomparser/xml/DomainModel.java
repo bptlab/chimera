@@ -39,11 +39,10 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 */
 	private JSONObject domainModelJson;
 
-    public List<DataClass> getDataClasses() {
-        return dataClasses;
-    }
 
     private List<DataClass> dataClasses;
+
+	private List<EventType> eventTypes;
 
     /**
 	 * This method calls all needed methods to set up the domainModel.
@@ -55,8 +54,8 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 			this.domainModelJson = new JSONObject(element);
 			// this.domainModelModelID = this.domainModelJson.getLong("_id");
 			this.versionNumber = this.domainModelJson.getInt("revision");
-			this.dataClasses = generateDataClasses();
 			this.aggregations = generateAggregations();
+			generateDataClassesAndEventTypes();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -109,24 +108,36 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	}
 
 	/**
-	 * This method generates a Map of dataClasses with their modelID as keys.
+	 * This method generates a Map of dataClasses with their modelID as keys
+	 * and a Map of EventTypes with their modelID as keys.
 	 */
-	private List<DataClass> generateDataClasses() {
+	private void generateDataClassesAndEventTypes() {
         List<DataClass> dataClasses = new ArrayList<>();
+		List<EventType> eventTypes = new ArrayList<>();
         try {
 			JSONArray jsonDataClasses = this.domainModelJson.getJSONArray("dataclasses");
 			int length = jsonDataClasses.length();
 
 			for (int i = 0; i < length; i++) {
-				DataClass currentClass = new DataClass();
-				currentClass.initializeInstanceFromJson(
-						jsonDataClasses.getJSONObject(i).toString());
-				dataClasses.add(currentClass);
+				JSONObject currentObject = jsonDataClasses.getJSONObject(i);
+				if(currentObject.getBoolean("is_event")) {
+					EventType currentET = new EventType();
+					currentET.initializeInstanceFromJson(
+							currentObject.toString());
+					eventTypes.add(currentET);
+				}
+				else {
+					DataClass currentClass = new DataClass();
+					currentClass.initializeInstanceFromJson(
+							currentObject.toString());
+					dataClasses.add(currentClass);
+				}
 			}
 		} catch (JSONException e) {
 			log.error("Error: ", e);
 		}
-        return dataClasses;
+        this.dataClasses = dataClasses;
+		this.eventTypes = eventTypes;
 	}
 
 	/**
@@ -225,4 +236,13 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	public long getDomainModelModelID() {
 		return domainModelModelID;
 	}
+
+	public List<DataClass> getDataClasses() {
+		return dataClasses;
+	}
+
+	public List<EventType> getEventTypes() {
+		return eventTypes;
+	}
+
 }

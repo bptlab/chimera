@@ -5,7 +5,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
-import org.w3c.dom.Node;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -42,16 +41,10 @@ public class EventType implements IPersistable { //IDeserialisableJson
      * This contains the JSON representation of the eventType.
      */
     private JSONObject eventTypeJson;
-
     /**
-     * Sets the processeditorServerUrl which is needed for connecting to the server
-     * in order to get the XML-files for the fragments.
-     *
-     * @param serverURL This is the server URL.
+     * The URL of the Event Processing Platform where the Event Query will be registered.
      */
-    public EventType(String serverURL) {
-
-    }
+    private final String registrationUrl = "localhost:8080/Unicorn/REST/EventType";
 
     /**
      * The standard constructor.
@@ -139,11 +132,9 @@ public class EventType implements IPersistable { //IDeserialisableJson
 
         String xsd;
         String schemaName = getEventTypeName();
-        EventTypeJson json = new EventTypeJson();
+        EventTypeJsonObject json = new EventTypeJsonObject();
         Gson gson = new Gson();
         String timestampName = "";
-
-        final String url = "localhost:8080/Unicorn/REST/EventType";
 
         for(EventTypeAttribute eta : getEventTypeAttributes()) {
             if("timestamp".equals(eta.getEventTypeAttributeName())) {
@@ -160,7 +151,8 @@ public class EventType implements IPersistable { //IDeserialisableJson
 
         String jsonString = gson.toJson(json);
         Client client = ClientBuilder.newClient();
-        client.target(url).request(MediaType.APPLICATION_JSON).post(Entity.json(jsonString));
+        client.target(getRegistrationUrl()).request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(jsonString));
 ;    }
 
     private String generateXsd() {
@@ -192,7 +184,7 @@ public class EventType implements IPersistable { //IDeserialisableJson
         return buffer.toString();
     }
 
-    private class EventTypeJson {
+    private class EventTypeJsonObject {
         private String xsd;
         private String schemaName;
         private String timestampName;
@@ -241,6 +233,10 @@ public class EventType implements IPersistable { //IDeserialisableJson
 
     public long getEventTypeModelID() {
         return eventTypeModelID;
+    }
+
+    public String getRegistrationUrl() {
+        return registrationUrl;
     }
 
 }
