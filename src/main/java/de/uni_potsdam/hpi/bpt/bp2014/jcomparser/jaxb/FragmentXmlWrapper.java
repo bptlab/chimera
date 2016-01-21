@@ -32,6 +32,9 @@ public class FragmentXmlWrapper {
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataNode> dataNodes = new ArrayList<>();
 
+    @XmlElement(name = "")
+    private List<IntermediateEvent> intermediateEvents = new ArrayList<>();
+
     // @XmlElement(name = "bpmn:dataObject")
     // private List<DataObject> dataObjects = new ArrayList<>();
 
@@ -111,6 +114,13 @@ public class FragmentXmlWrapper {
         this.id = id;
     }
 
+    public List<IntermediateEvent> getIntermediateEvents() {
+        return intermediateEvents;
+    }
+
+    public void setIntermediateEvents(List<IntermediateEvent> intermediateEvents) {
+        this.intermediateEvents = intermediateEvents;
+    }
 }
 
 

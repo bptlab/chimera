@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 
 public class StartEventTest {
     private String testString =
-            "<bpmn:startEvent id=\"StartEvent_1\">\n" +
-                    "<bpmn:outgoing>SequenceFlow_1r09dad</bpmn:outgoing>\n" +
-                    "</bpmn:startEvent>\n";
+        "<bpmn:startEvent id=\"StartEvent_1jwyrhz\" griffin:eventquery=\"querY\">"  +
+                "<bpmn:outgoing>SequenceFlow_1r09dad</bpmn:outgoing>\n" +
+                "</bpmn:startEvent>\n";
 
     @Test
     public void testEventDeserialization() {
@@ -22,8 +22,9 @@ public class StartEventTest {
             JAXBContext jaxbContext = JAXBContext.newInstance(StartEvent.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             StartEvent startEvent = (StartEvent) jaxbUnmarshaller.unmarshal(doc);
-            assertEquals("StartEvent_1", startEvent.getId());
+            assertEquals("StartEvent_1jwyrhz", startEvent.getId());
             assertEquals("SequenceFlow_1r09dad", startEvent.getOutgoing());
+            assertEquals("querY" , startEvent.getEventQuery());
         } catch (JAXBException e) {
             e.printStackTrace();
         }

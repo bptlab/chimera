@@ -13,10 +13,28 @@ import javax.xml.bind.annotation.*;
 public class StartEvent extends AbstractControlNode {
     @XmlAttribute(name = "id")
     private String id;
+
     @XmlAttribute(name = "name")
     private String name = "";
+
+    @XmlAttribute(name = "griffin:eventquery")
+    private String eventQuery;
+
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
+
+    @Override
+    public int save() {
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "Startevent", this.getFragmentId(), this.id);
+        return this.databaseId;
+    }
+
+    public String getEventQuery() {
+        return this.eventQuery;
+    }
+
 
     @Override
     public String getId() {
@@ -43,11 +61,8 @@ public class StartEvent extends AbstractControlNode {
         this.name = name;
     }
 
-    @Override
-    public int save() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "Startevent", this.getFragmentId(), this.id);
-        return this.databaseId;
+    public void setEventQuery(String eventQuery) {
+        this.eventQuery = eventQuery;
     }
+
 }

@@ -25,6 +25,10 @@ public class BoundaryEvent extends AbstractControlNode {
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
+    @XmlAttribute(name = "griffin:eventquery")
+    private String eventQuery;
+
+
     @Override
     public int save() {
         Connector connector = new Connector();
@@ -64,5 +68,13 @@ public class BoundaryEvent extends AbstractControlNode {
 
     public void setOutgoing(String outgoing) {
         this.outgoing = outgoing;
+    }
+
+    public String getEventQuery() {
+        return this.eventQuery;
+    }
+
+    public void setEventQuery(String eventQuery) {
+        this.eventQuery = eventQuery;
     }
 }
