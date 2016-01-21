@@ -40,7 +40,7 @@ public class Connector extends DbObject {
 	}
 
 	/**
-	 * Inserts a Fragment Into the Database.
+	 * Inserts a DatabaseFragment Into the Database.
 	 * The parameters contain all necessary information.
 	 *
 	 * @param fragmentName The name of the fragment.
@@ -65,17 +65,17 @@ public class Connector extends DbObject {
 	 *
 	 * @param label      The label of the node.
 	 * @param type       The type of the node (StartEvent/EndEvent/Task).
-	 * @param fragmentID The database ID of the Fragment.
+	 * @param fragmentID The database ID of the DatabaseFragment.
 	 * @param modelID    The modelID of the controlNode from the XML.
 	 * @return The newly created database entry.
 	 */
 	public int insertControlNodeIntoDatabase(final String label, final String type,
-			final int fragmentID, final long modelID) {
+			final int fragmentID, final String modelID) {
 
 		String sql = "INSERT INTO controlnode "
 				+ "(label, controlnode.type, fragment_id, modelid) "
 				+ "VALUES ('" + label + "', '" + type
-				+ "', " + fragmentID + ", " + modelID + ")";
+				+ "', " + fragmentID + ", '" + modelID + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -212,6 +212,18 @@ public class Connector extends DbObject {
 		performDefaultSQLInsertStatement(sql);
 	}
 
+    /**
+     *
+     */
+    public int insertEventIntoDatabase(String eventtype, String eventquery,
+                                       int fragmentId, String modelId, int controlNodeDatabaseId) {
+        String sql = "INSERT INTO event "
+                + "(event_type, query, fragment_id, model_id, controlnode_id) "
+                + "VALUES ('" + eventtype + "', '" + eventquery + "', "
+                + fragmentId + ", '" + modelId + "' ," + controlNodeDatabaseId + ")";
+        int databaseId = performSQLInsertStatementWithAutoId(sql);
+        return databaseId;
+    }
 	/**
 	 * This Methods inserts a new DataNode into the Database.
 	 * All necessary information are given as a parameter.
@@ -224,11 +236,11 @@ public class Connector extends DbObject {
 	 * @return the autoincrement id of the newly created entry.
 	 */
 	public int insertDataNodeIntoDatabase(final int scenarioID, final int stateID,
-			final int dataClassID, final int dataObjectID, final long modelID) {
+			final int dataClassID, final int dataObjectID, final String modelID) {
 		String sql = "INSERT INTO datanode "
-				+ "(scenario_id, state_id, dataclass_id, dataobject_id, modelid)"
+				+ "(scenario_id, state_id, dataclass_id, dataobject_id, model_id)"
 				+ " VALUES (" + scenarioID + ", " + stateID + ", "
-				+ dataClassID + ", " + dataObjectID + ", " + modelID + ")";
+				+ dataClassID + ", " + dataObjectID + ", '" + modelID + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -543,7 +555,7 @@ public class Connector extends DbObject {
 	 * @param modelID    the modelId of the controlnode
 	 * @return the databaseID of the selected controlnode
 	 */
-	public int getControlNodeID(int fragmentID, long modelID) {
+	public int getControlNodeID(int fragmentID, String modelID) {
 		DbDataObject dbDataObject = new DbDataObject();
 		String select = "SELECT id "
 				+ "FROM controlnode "

@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
   `label` varchar(512) NOT NULL,
   `type` varchar(512) NOT NULL,
   `fragment_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL,
+  `modelid` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL,
+  `model_id` VARCHAR(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -262,8 +262,22 @@ CREATE TABLE IF NOT EXISTS `emailconfiguration` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
-
+-- --
+-- Table structure for table `event`
 --
+CREATE TABLE IF NOT EXISTS `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_type` VARCHAR(256),
+  `query` varchar(512) NOT NULL,
+  `fragment_id` INTEGER NOT NULL,
+  `model_id` varchar(512) NOT NULL,
+  `controlnode_id` INTEGER NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+-- --
 -- Table structure for table `eventinstance`
 --
 

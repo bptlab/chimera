@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventIncomingControlFlowBehavior;
+
 /**
  * This class represents events.
  * This engine supports only end and starts event. But only end events get represented as instance.

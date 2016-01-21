@@ -3,6 +3,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewayJoinBehavior;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ParallelGatewayJoinBehavior;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ParallelGatewaySplitBehavior;
 
 /**
  * Represents a gateway instance.

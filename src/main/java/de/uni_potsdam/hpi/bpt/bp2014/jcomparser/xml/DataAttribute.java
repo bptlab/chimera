@@ -24,13 +24,24 @@ public class DataAttribute implements IPersistable {
 	private int dataAttributeID;
 
 	/**
-	 * Constructor which sets the attributeName and type of the DataAttribute.
+	 * Constructor which sets the Name of the DataAttribute.
 	 *
-	 * @param attribute This is the name of the dataAttribute.
+	 * @param name This is the name of the DataAttribute.
 	 */
-	public DataAttribute(String attribute) {
-		dataAttributeName = attribute;
-		dataAttributeType = "";
+	public DataAttribute(String name) {
+		this.dataAttributeName = name;
+		this.dataAttributeType = "";
+	}
+
+	/**
+	 * Constructor which sets the Name and Type of the DataAttribute.
+	 *
+	 * @param name This is the name of the DataAttribute.
+	 * @param type This is the dataype of the DataAttribute.
+	 */
+	public DataAttribute(String name, String type) {
+		this.dataAttributeName = name;
+		this.dataAttributeType = type;
 	}
 
 	/**

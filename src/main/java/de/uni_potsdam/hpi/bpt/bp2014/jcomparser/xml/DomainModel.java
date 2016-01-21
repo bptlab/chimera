@@ -1,23 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Retrieval;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +14,11 @@ import java.util.Map;
 /**
  * This class represents the DomainModel.
  */
-public class DomainModel implements IDeserialisable, IPersistable {
+public class DomainModel implements IDeserialisableJson, IPersistable {
 	private static Logger log = Logger.getLogger(DomainModel.class.getName());
 
 	/**
-	 * The url of the process Editor.
-	 */
-	private String processeditorServerUrl;
-	/**
-	 * The modelID found in the XML.
+	 * The modelID found in the JSON.
 	 */
 	private long domainModelModelID;
 	/**
@@ -45,48 +29,51 @@ public class DomainModel implements IDeserialisable, IPersistable {
 	 * The databaseID of the corresponding scenario.
 	 */
 	private int scenarioID;
-	/**
-	 * A Mao of modelID's and corresponding dataClasses belonging to this domainModel.
-	 */
-	private Map<Long, DataClass> dataClasses;
-	/**
+
+    /**
 	 * A List of all aggregation between the dataClasses belonging to this domainModel.
 	 */
 	private List<Aggregation> aggregations;
 	/**
 	 * The XML representation of a domainModel
 	 */
-	private org.w3c.dom.Node domainModelXML;
+	private JSONObject domainModelJson;
 
-	/**
-	 * The constructor.
-	 *
-	 * @param serverURL the severURL wher the XML are to be found.
-	 */
-	public DomainModel(String serverURL) {
-		processeditorServerUrl = serverURL;
-	}
+    public List<DataClass> getDataClasses() {
+        return dataClasses;
+    }
 
-	/**
-	 * The constructor.
-	 */
-	public DomainModel() {
+    private List<DataClass> dataClasses;
 
-	}
-
-	/**
+    /**
 	 * This method calls all needed methods to set up the domainModel.
 	 *
-	 * @param element The XML Node which will be used for deserialisation
+	 * @param element The JSON String which will be used for deserialisation
 	 */
-	@Override public void initializeInstanceFromXML(final org.w3c.dom.Node element) {
-		this.domainModelXML = element;
+	@Override public void initializeInstanceFromJson(final String element) {
+		try {
+			this.domainModelJson = new JSONObject(element);
+			// this.domainModelModelID = this.domainModelJson.getLong("_id");
+			this.versionNumber = this.domainModelJson.getInt("revision");
+			this.dataClasses = generateDataClasses();
+			this.aggregations = generateAggregations();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-		setDomainModelModelID();
-		generateDataClasses();
-		generateAggregations();
-		setVersionNumber();
 	}
+
+    /**
+     * Creates a mapping from the Id of the dataclass to the dataclass object itself.
+     * @return map from Id to dataclass
+     */
+    public Map<Long, DataClass> getMapFromIdToDataclass() {
+        Map<Long, DataClass> idToDataclass = new HashMap<>();
+        for (DataClass dataClass : dataClasses) {
+            idToDataclass.put(dataClass.getDataClassModelID(), dataClass);
+        }
+        return idToDataclass;
+    }
 
 	/**
 	 * This sets the scenario ID needed for the update.
@@ -99,114 +86,47 @@ public class DomainModel implements IDeserialisable, IPersistable {
 
 	/**
 	 * This method generates a List of aggregates from the XML.
-	 */
-	private void generateAggregations() {
-		try {
-			//get all edges from fragmentXML
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/model/edges/edge";
-			NodeList aggregates = (NodeList) xPath.compile(xPathQuery)
-					.evaluate(this.domainModelXML, XPathConstants.NODESET);
-			this.aggregations = new ArrayList<>(aggregates.getLength());
-			for (int i = 0; i < aggregates.getLength(); i++) {
-				Aggregation currentAggregation = new Aggregation();
-				currentAggregation.setDataClasses(dataClasses);
-				currentAggregation.initializeInstanceFromXML(aggregates.item(i));
-				this.aggregations.add(currentAggregation);
+	*/
+	private List<Aggregation> generateAggregations() {
+		Map<Long, DataClass> idToDataclass = getMapFromIdToDataclass();
+        List<Aggregation> aggregations = new ArrayList<>();
+        try {
+			JSONArray jsonAggregations = this.domainModelJson.getJSONArray("aggregations");
+			int length = jsonAggregations.length();
+			this.aggregations = new ArrayList<>(length);
+
+			for (int i = 0; i < length; i++) {
+				Aggregation currentAggregation = new Aggregation(idToDataclass);
+				currentAggregation.initializeInstanceFromJson(
+						jsonAggregations.getJSONObject(i).toString()
+				);
+				aggregations.add(currentAggregation);
 			}
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
+		} catch (JSONException e) {
+			log.error("Error: ", e);
 		}
+        return aggregations;
 	}
 
 	/**
 	 * This method generates a Map of dataClasses with their modelID as keys.
 	 */
-	private void generateDataClasses() {
-		try {
-			//get all nodes from fragmentXML
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/model/nodes/node";
-			NodeList nodes = (NodeList) xPath.compile(xPathQuery)
-					.evaluate(this.domainModelXML, XPathConstants.NODESET);
-			this.dataClasses = new HashMap<>(nodes.getLength());
+	private List<DataClass> generateDataClasses() {
+        List<DataClass> dataClasses = new ArrayList<>();
+        try {
+			JSONArray jsonDataClasses = this.domainModelJson.getJSONArray("dataclasses");
+			int length = jsonDataClasses.length();
 
-			for (int i = 0; i < nodes.getLength(); i++) {
+			for (int i = 0; i < length; i++) {
 				DataClass currentClass = new DataClass();
-				currentClass.initializeInstanceFromXML(nodes.item(i));
-				this.dataClasses.put(
-						currentClass.getDataClassModelID(), currentClass);
+				currentClass.initializeInstanceFromJson(
+						jsonDataClasses.getJSONObject(i).toString());
+				dataClasses.add(currentClass);
 			}
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
+		} catch (JSONException e) {
+			log.error("Error: ", e);
 		}
-	}
-
-	/**
-	 * This method gets and sets the modelId of the domainModel from the XML.
-	 */
-	private void setDomainModelModelID() {
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		String xPathQuery = "/model/@id";
-		try {
-			this.domainModelModelID = Long.parseLong(
-					xPath.compile(xPathQuery).evaluate(this.domainModelXML));
-		} catch (XPathExpressionException e) {
-			log.error("Error:", e);
-		}
-	}
-
-	/**
-	 * This method sets the versionNumber of the domainModel.
-	 */
-	private void setVersionNumber() {
-		Element versionXML = fetchVersionXML();
-		if (versionXML != null) {
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			String xPathQuery = "/versions/version";
-			try {
-				NodeList versions = (NodeList) xPath.compile(xPathQuery)
-						.evaluate(versionXML, XPathConstants.NODESET);
-				int maxID = 0;
-				// We assume that the version to save is the newest one
-				for (int i = 0; i < versions.getLength(); i++) {
-					xPathQuery = "@id";
-					int currentID = Integer.parseInt(
-							(String) xPath.compile(xPathQuery)
-							.evaluate(versions.item(i),
-									XPathConstants.STRING));
-					if (maxID < currentID) {
-						maxID = currentID;
-					}
-				}
-				versionNumber = maxID;
-			} catch (XPathExpressionException e) {
-				log.error("Error:", e);
-			}
-		}
-	}
-
-	/**
-	 * This method gets the versionNumber from the given XML.
-	 *
-	 * @return The XML Element for the version.
-	 */
-	private Element fetchVersionXML() {
-		try {
-			Retrieval jRetrieval = new Retrieval();
-			String versionXML = jRetrieval.getXMLWithAuth(processeditorServerUrl,
-					processeditorServerUrl + "models/"
-							+ domainModelModelID + "/versions");
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(versionXML));
-			DocumentBuilder db;
-			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = db.parse(is);
-			return doc.getDocumentElement();
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			log.error("Error:", e);
-		}
-		return null;
+        return dataClasses;
 	}
 
 	/**
@@ -219,7 +139,7 @@ public class DomainModel implements IDeserialisable, IPersistable {
 		Connector conn = new Connector();
 		conn.insertDomainModelIntoDatabase(this.domainModelModelID, this.versionNumber,
 				this.scenarioID);
-		for (DataClass dataClass : dataClasses.values()) {
+		for (DataClass dataClass : dataClasses) {
 			dataClass.save();
 		}
 		for (Aggregation aggregation : aggregations) {
@@ -292,10 +212,6 @@ public class DomainModel implements IDeserialisable, IPersistable {
 
 	public List<Aggregation> getAggregations() {
 		return aggregations;
-	}
-
-	public Map<Long, DataClass> getDataClasses() {
-		return dataClasses;
 	}
 
 	public int getScenarioID() {

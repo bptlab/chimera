@@ -1,11 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.eventhandling.EventQueryQueue;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents a fragment instance.
@@ -13,8 +12,8 @@ import java.util.LinkedList;
 public class FragmentInstance {
 	private final ScenarioInstance scenarioInstance;
 	private final int fragmentId;
-	private final int fragmentInstanceId;
-	private final int scenarioInstanceId;
+	private int fragmentInstanceId; //final
+	private int scenarioInstanceId; //final
 	/**
 	 * Database Connection objects
 	 */
@@ -22,6 +21,8 @@ public class FragmentInstance {
 	private final DbControlNode dbControlNode = new DbControlNode();
 	private final DbControlFlow dbControlFlow = new DbControlFlow();
 	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+
+	private Boolean start = false;
 
 	/**
 	 * Creates and initializes a new fragment instance.
@@ -37,13 +38,31 @@ public class FragmentInstance {
 		this.scenarioInstance = scenarioInstance;
 		this.fragmentId = fragmentId;
 		this.scenarioInstanceId = scenarioInstanceId;
+
+		DbEvent event = new DbEvent();
+		String sql = "SELECT * FROM event WHERE model_id = " + this.fragmentId;
+		String query = event.executeStatementReturnsString(sql, "query");
+
+		if (!query.isEmpty()) {
+			System.out.println(query);
+
+			final String url = "http://localhost:8080";
+//			EventQueryQueue q = new EventQueryQueue(this);
+//			q.registerQuery(String.valueOf(this.getFragmentInstanceId()), query, "test@test.de", url);
+//			q.receiveEvent();
+		} else {
+			this.createDatabaseFragmentInstance();
+		}
+	}
+
+	public void createDatabaseFragmentInstance () {
 		if (dbFragmentInstance.existFragment(fragmentId, scenarioInstanceId)) {
-			//creates an existing Fragment Instance using the database information
-			fragmentInstanceId = dbFragmentInstance
+			//creates an existing DatabaseFragment Instance using the database information
+			this.fragmentInstanceId = dbFragmentInstance
 					.getFragmentInstanceID(fragmentId, scenarioInstanceId);
 			this.initializeExistingNodeInstanceForFragment();
 		} else {
-			//creates a new Fragment Instance also in database
+			//creates a new DatabaseFragment Instance also in database
 			this.fragmentInstanceId = dbFragmentInstance
 					.createNewFragmentInstance(fragmentId, scenarioInstanceId);
 			this.initializeNewNodeInstanceForFragment();
@@ -139,4 +158,5 @@ public class FragmentInstance {
 	public int getScenarioInstanceId() {
 		return scenarioInstanceId;
 	}
+
 }
