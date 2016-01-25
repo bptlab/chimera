@@ -3,17 +3,15 @@ package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
 import javax.jms.*;
 
 /**
- * Class which is responsible for receiving events.
+ * Class responsible for receiving events.
  */
 public class EventMessageListener implements MessageListener {
-	private EventQueryQueue q;
+	private EventQueryQueue queue;
 	private Connection connection;
-//	private FragmentInstance fragmentInstance;
 
-	public EventMessageListener(EventQueryQueue q, Connection connection) {
-		this.q = q;
+	public EventMessageListener(EventQueryQueue queue, Connection connection) {
+		this.queue = queue;
 		this.connection = connection;
-//		this.fragmentInstance = fragmentInstance;
 	}
 
 	@Override public void onMessage(Message message) {
@@ -22,7 +20,7 @@ public class EventMessageListener implements MessageListener {
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
-		q.hasReceived = true;
-		//fragmentInstance.createDatabaseFragmentInstance();
+		//TODO implement reaction on receiving an event
+		queue.hasReceived = true;
 	}
 }

@@ -20,12 +20,11 @@ public class EventQueryQueue {
 
 	private String uuid = "";
 	public boolean hasReceived = false;
-//	private FragmentInstance fragmentInstance;
-	private final String host = "bpt.hpi.uni-potsdam.de";
-	private final String port = "61616";
+	private final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
+	private final String MQ_PORT = "61616";
+	private final String REST_PATH = "Unicorn/webapi/REST/EventQuery";
 
 	public EventQueryQueue() {
-//		this.fragmentInstance = fragmentInstance;
 	}
 
 	/**
@@ -47,7 +46,7 @@ public class EventQueryQueue {
 		String postJson = gson.toJson(json);
 
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(url).path("Unicorn/webapi/REST/EventQuery");
+		WebTarget target = client.target(url).path(REST_PATH);
 
 		Response response = target.request().post(Entity.json(postJson));
 		if (response.getStatus() == 200) {
@@ -65,7 +64,7 @@ public class EventQueryQueue {
 		} else {
 			try {
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
-						String.format("tcp://%s:%s", host, port));
+						String.format("tcp://%s:%s", MQ_HOST, MQ_PORT));
 
 				final Connection connection = connectionFactory.createConnection();
 				connection.start();
