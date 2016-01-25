@@ -100,26 +100,10 @@ public class FragmentInstance {
 	 */
 	private void initializeNewNodeInstanceForFragment() {
 		//gets the Start Event and then the following Control Node to initialize it
-		int startEvent = dbControlNode.getStartEventID(fragmentId);
-		int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
-		String controlNodeType = dbControlNode.getType(controlNode);
-		AbstractControlNodeInstance controlNodeInstance = null;
-		switch (controlNodeType) {
-		case "Activity":
-		case "EmailTask":
-		case "WebServiceTask":
-			controlNodeInstance = new ActivityInstance(controlNode, fragmentInstanceId,
-					scenarioInstance);
-			break;
-		case "AND":
-		case "XOR":
-			controlNodeInstance = new GatewayInstance(controlNode, fragmentInstanceId,
-					scenarioInstance);
-			break;
-		default: break;
-		}
-		assert controlNodeInstance != null;
-		controlNodeInstance.enableControlFlow();
+		int startEventDatabaseId = dbControlNode.getStartEventID(fragmentId);
+        StartEvent startEvent = new StartEvent(this.fragmentInstanceId, this.scenarioInstance
+            , "StartEvent");
+        startEvent.enableControlFlow();
 	}
 
 	/**
