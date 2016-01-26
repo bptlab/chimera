@@ -1,10 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.eventhandling.EventQueryQueue;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Represents a fragment instance.
@@ -101,8 +99,7 @@ public class FragmentInstance {
 	private void initializeNewNodeInstanceForFragment() {
 		//gets the Start Event and then the following Control Node to initialize it
 		int startEventDatabaseId = dbControlNode.getStartEventID(fragmentId);
-        StartEvent startEvent = new StartEvent(this.fragmentInstanceId, this.scenarioInstance
-            , "StartEvent");
+        StartEvent startEvent = new StartEvent(this.fragmentInstanceId, this.scenarioInstance);
         startEvent.enableControlFlow();
 	}
 

@@ -1,25 +1,18 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventIncomingControlFlowBehavior;
-
 /**
  *
  */
-public class StartEvent extends AbstractControlNodeInstance{
+public class StartEvent extends AbstractEvent {
     private final ScenarioInstance scenarioInstance;
-    private final String type;
 
     /**
-     *
-     * @param fragmentInstanceId
-     * @param scenarioInstance
-     * @param type
+     * @param fragmentInstanceId databaseId of the Fragment where start event belongs to.
+     * @param scenarioInstance ScenarioInstance object which holds control nodes.
      */
-    public StartEvent(int fragmentInstanceId, ScenarioInstance scenarioInstance, String type) {
+    public StartEvent(int fragmentInstanceId, ScenarioInstance scenarioInstance) {
         this.scenarioInstance = scenarioInstance;
         this.setFragmentInstanceId(fragmentInstanceId);
-        this.type = type;
-
     }
 
 
@@ -33,8 +26,4 @@ public class StartEvent extends AbstractControlNodeInstance{
         return false;
     }
 
-    @Override
-    public void enableControlFlow() {
-
-    }
 }

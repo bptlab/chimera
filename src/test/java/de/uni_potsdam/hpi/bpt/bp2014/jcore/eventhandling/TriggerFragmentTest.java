@@ -1,4 +1,4 @@
-//package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
+//package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 //
 //import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DatabaseFragment;
 //import org.junit.Test;
