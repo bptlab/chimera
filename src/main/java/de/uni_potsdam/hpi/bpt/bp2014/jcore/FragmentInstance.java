@@ -36,21 +36,7 @@ public class FragmentInstance {
 		this.scenarioInstance = scenarioInstance;
 		this.fragmentId = fragmentId;
 		this.scenarioInstanceId = scenarioInstanceId;
-
-		DbEvent event = new DbEvent();
-		String sql = "SELECT * FROM event WHERE model_id = " + this.fragmentId;
-		String query = event.executeStatementReturnsString(sql, "query");
-
-		if (!query.isEmpty()) {
-			System.out.println(query);
-
-			final String url = "http://localhost:8080";
-//			EventQueryQueue q = new EventQueryQueue(this);
-//			q.registerQuery(String.valueOf(this.getFragmentInstanceId()), query, "test@test.de", url);
-//			q.receiveEvent();
-		} else {
-			this.createDatabaseFragmentInstance();
-		}
+        this.createDatabaseFragmentInstance();
 	}
 
 	public void createDatabaseFragmentInstance () {
