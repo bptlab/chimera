@@ -24,10 +24,14 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     @Override
     public void enableControlFlow() {
         DbEvent eventDao = new DbEvent();
-        String query = eventDao.getQueryForControlNode(this.controlNodeId);
-        EventQueryQueue queryQueue = new EventQueryQueue(MQ_HOST, MQ_PORT, REST_PATH);
-        String queueId = queryQueue.registerQuery("Automatic", query,
-                "test@mail.de", "localhost:8080");
-        queryQueue.listenToEvent(this, queueId);
+        try {
+            String query = eventDao.getQueryForControlNode(this.controlNodeId);
+            EventQueryQueue queryQueue = new EventQueryQueue(MQ_HOST, MQ_PORT, REST_PATH);
+            String queueId = queryQueue.registerQuery("Automatic", query,
+                    "test@mail.de", "localhost:8080");
+            queryQueue.listenToEvent(this, queueId);
+        } catch (IllegalArgumentException e) {
+            this.terminate();
+        }
     }
 }

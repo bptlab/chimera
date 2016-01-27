@@ -23,9 +23,10 @@ public class DbEvent extends DbObject{
      * Retrieves query for an control node.
      * @param controlNodeId id of the control node in the model
      * @return query or exception if query is not found
+     * @throws IllegalArgumentException if no query is found.
      */
-    public String getQueryForControlNode(int controlNodeId) {
-        String sql = "SELECT * FROM event WHERE event.controlnode_id " + controlNodeId + " ;";
+    public String getQueryForControlNode(int controlNodeId) throws IllegalArgumentException {
+        String sql = "SELECT * FROM event WHERE event.controlnode_id = " + controlNodeId + " ;";
         String query = this.executeStatementReturnsString(sql, "query");
         if ("".equals(query)) {
             throw new IllegalArgumentException("No query found for this control node");

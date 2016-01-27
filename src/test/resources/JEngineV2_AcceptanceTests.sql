@@ -9184,6 +9184,22 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 
 -- --------------------------------------------------------
 
+-- --
+-- Table structure for table `event`
+--
+CREATE TABLE IF NOT EXISTS `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_type` VARCHAR(256),
+  `query` varchar(512) NOT NULL,
+  `fragment_id` INTEGER NOT NULL,
+  `model_id` varchar(512) NOT NULL,
+  `controlnode_id` INTEGER NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+
 --
 -- Tabellenstruktur für Tabelle `controlnodeinstance`
 --
