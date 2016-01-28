@@ -23,7 +23,7 @@ public class ScenarioTest {
 
     @Test
     public void testScenario() {
-        File file = new File("src/test/resources/jaxb/ExampleScenario.json");
+        File file = new File("src/test/resources/jaxb/ExampleScenarioWithoutEvents.json");
         Scenario scenario = new Scenario();
         try {
             String json = FileUtils.readFileToString(file);

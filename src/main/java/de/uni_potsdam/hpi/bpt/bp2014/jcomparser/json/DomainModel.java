@@ -54,8 +54,8 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 			this.domainModelJson = new JSONObject(element);
 			// this.domainModelModelID = this.domainModelJson.getLong("_id");
 			this.versionNumber = this.domainModelJson.getInt("revision");
-			this.aggregations = generateAggregations();
 			generateDataClassesAndEventTypes();
+			this.aggregations = generateAggregations();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
