@@ -10,7 +10,6 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
     private static final String MQ_PORT = "61616";
     private static final String REST_PATH = "Unicorn/webapi/REST/EventQuery";
-
     private int controlNodeId;
 
     /**
@@ -33,5 +32,15 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         } catch (IllegalArgumentException e) {
             this.terminate();
         }
+    }
+
+    @Override
+    public int getControlNodeId() {
+        return controlNodeId;
+    }
+
+    @Override
+    public void setControlNodeId(int controlNodeId) {
+        this.controlNodeId = controlNodeId;
     }
 }

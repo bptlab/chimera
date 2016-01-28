@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
+
 /**
  *
  */
@@ -25,7 +27,10 @@ public class StartEvent extends AbstractEvent {
 
     @Override
     public boolean terminate() {
-        return false;
+        EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
+                this.scenarioInstance, this.getFragmentInstanceId());
+        outgoingBehavior.terminate();
+        return true;
     }
 
 }

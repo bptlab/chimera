@@ -8,7 +8,7 @@ import org.junit.Test;
 public class EventSavingTest {
 
     @Test
-    private void testEventSaving() {
-
+    public void testEventSaving() {
+        assert true;
     }
 }
