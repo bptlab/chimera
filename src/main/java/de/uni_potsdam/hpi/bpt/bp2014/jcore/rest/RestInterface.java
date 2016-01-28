@@ -618,6 +618,12 @@ import java.util.LinkedList;
 		case "running":
 			instances = executionService.getRunningActivities(instanceID);
 			break;
+		case "ready(ControlFlow)":
+			instances = executionService.getControlFlowEnabledActivities(instanceID);
+			break;
+		case "ready(Data)":
+			instances = executionService.getDataEnabledActivities(instanceID);
+			break;
 		default:
 			return Response.status(Response.Status.NOT_FOUND)
 					.type(MediaType.APPLICATION_JSON)

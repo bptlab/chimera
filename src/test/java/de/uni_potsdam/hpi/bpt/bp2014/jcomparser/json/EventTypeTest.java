@@ -1,11 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 /**
  *

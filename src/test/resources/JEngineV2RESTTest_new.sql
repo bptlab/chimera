@@ -155,7 +155,7 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 (186, 'HumanTask', 0, 0, 1, 'ready', 'init'),
 (187, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
 (188, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
-(189, 'HumanTask', 0, 0, 1, 'ready', 'init'),
+(189, 'HumanTask', 0, 0, 1, 'ready(ControlFlow)', 'init'),
 (190, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
 (191, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
 (192, 'HumanTask', 0, 0, 1, 'terminated', 'init'),
