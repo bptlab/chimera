@@ -36,17 +36,17 @@ public abstract class AbstractOutgoingBehavior {
 
 	/**
 	 * @param type a type for the control node.
-	 * @param id the id for a fragment instance.
+	 * @param controlNodeId the id of the control node to create.
 	 * @return a control node instance of the specified type.
 	 */
-	protected AbstractControlNodeInstance createControlNode(String type, int id) {
+	protected AbstractControlNodeInstance createControlNode(String type, int controlNodeId) {
 		AbstractControlNodeInstance controlNodeInstance = null;
 		switch (type) {
 		case "Activity":
 		case "EmailTask":
 		case "WebServiceTask":
 			controlNodeInstance = new ActivityInstance(
-					id, fragmentInstanceId, scenarioInstance);
+                    controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
 		case "Endevent":
 			controlNodeInstance = new EventInstance(
@@ -55,8 +55,11 @@ public abstract class AbstractOutgoingBehavior {
 		case "XOR":
 		case "AND":
 			controlNodeInstance = new GatewayInstance(
-					id, fragmentInstanceId, scenarioInstance);
+                    controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
+        case "IntermediateEvent":
+            controlNodeInstance = new IntermediateEvent(controlNodeId, fragmentInstanceId,
+                    scenarioInstance);
 		default:
 			break;
 		}
