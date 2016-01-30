@@ -48,6 +48,10 @@ public class EndEvent extends AbstractControlNode {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "Endevent", this.getFragmentId(), this.id);
+
+        connector.insertEventIntoDatabase("Endevent", "None",
+                this.fragmentId, this.id, this.databaseId);
+
         return this.databaseId;
     }
 }

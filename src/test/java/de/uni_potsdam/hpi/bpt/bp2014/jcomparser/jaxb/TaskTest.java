@@ -32,7 +32,9 @@ public class TaskTest {
     private String testString =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
                     "<bpmn:task id=\"Task_1qp9gsh\" name=\"Do great work\">\n" +
-                        "   <bpmn:incoming>SequenceFlow_1r09dad</bpmn:incoming>\n" +
+                            " <databaseId>0</databaseId> \n" +
+                            " <fragmentId>0</fragmentId> \n" +
+                            "   <bpmn:incoming>SequenceFlow_1r09dad</bpmn:incoming>\n" +
                         "   <bpmn:outgoing>SequenceFlow_0306jnu</bpmn:outgoing>\n" +
                     "</bpmn:task>";
     @Test

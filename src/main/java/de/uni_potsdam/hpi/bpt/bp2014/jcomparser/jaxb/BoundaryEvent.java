@@ -25,11 +25,19 @@ public class BoundaryEvent extends AbstractControlNode {
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
+    @XmlAttribute(name = "griffin:eventquery")
+    private String eventQuery;
+
+
     @Override
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "Boundaryevent", this.getFragmentId(), this.id);
+                this.getName(), "BoundaryEvent", this.getFragmentId(), this.id);
+
+        connector.insertEventIntoDatabase("BoundaryEvent", this.eventQuery,
+                this.fragmentId, this.id, this.databaseId);
+
         return this.databaseId;
     }
 
@@ -64,5 +72,13 @@ public class BoundaryEvent extends AbstractControlNode {
 
     public void setOutgoing(String outgoing) {
         this.outgoing = outgoing;
+    }
+
+    public String getEventQuery() {
+        return this.eventQuery;
+    }
+
+    public void setEventQuery(String eventQuery) {
+        this.eventQuery = eventQuery;
     }
 }

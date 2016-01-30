@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 
 import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 
 /**

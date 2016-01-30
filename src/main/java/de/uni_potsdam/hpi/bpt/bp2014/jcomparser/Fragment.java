@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -157,6 +157,7 @@ public class Fragment {
         nodes.addAll(this.fragment.getXorGateways());
         nodes.addAll(this.fragment.getTasks());
         nodes.addAll(this.fragment.getBoundaryEvents());
+        nodes.addAll(this.fragment.getIntermediateEvents());
         nodes.add(this.fragment.getEndEvent());
         nodes.add(this.fragment.getStartEvent());
         return nodes;

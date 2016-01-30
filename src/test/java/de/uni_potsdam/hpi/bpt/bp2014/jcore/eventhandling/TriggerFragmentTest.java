@@ -1,4 +1,4 @@
-//package de.uni_potsdam.hpi.bpt.bp2014.eventhandling;
+//package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 //
 //import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.DatabaseFragment;
 //import org.junit.Test;
@@ -13,7 +13,7 @@
 //
 //	@Test
 //	public void testEventQueryQueue() throws IOException {
-////		File file = new File("src/test/resources/jaxb/ExampleScenario.json");
+////		File file = new File("src/test/resources/jaxb/ExampleScenarioWithoutEvents.json");
 ////		Scenario scenario = new Scenario();
 ////		try {
 ////			String json = FileUtils.readFileToString(file);

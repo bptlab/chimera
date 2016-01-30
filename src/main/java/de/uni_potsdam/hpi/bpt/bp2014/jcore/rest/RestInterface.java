@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.Scenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
@@ -617,6 +617,12 @@ import java.util.LinkedList;
 			break;
 		case "running":
 			instances = executionService.getRunningActivities(instanceID);
+			break;
+		case "ready(ControlFlow)":
+			instances = executionService.getControlFlowEnabledActivities(instanceID);
+			break;
+		case "ready(Data)":
+			instances = executionService.getDataEnabledActivities(instanceID);
 			break;
 		default:
 			return Response.status(Response.Status.NOT_FOUND)

@@ -15,6 +15,7 @@
         "name"      : "Soil",
         "_id"       : 123987,
         "is_root"   : true,
+        "is_event"  : false,
         "attributes": [
           {
             "name"    : "Temperature",
@@ -30,6 +31,7 @@
         "name"      : "Foil",
         "_id"       : 123988,
         "is_root"   : true,
+        "is_event"  : false;
         "attributes": [
           {
             "name"    : "sideUp",

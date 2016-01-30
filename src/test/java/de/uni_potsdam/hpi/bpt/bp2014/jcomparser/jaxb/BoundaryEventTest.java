@@ -15,7 +15,8 @@ import static org.junit.Assert.*;
 public class BoundaryEventTest {
     private String testString =
             "<bpmn:boundaryEvent id=\"BoundaryEvent_0dgouhn\" " +
-                    "name=\"Fell asleep while drinking coffee\" attachedToRef=\"Task_0c9phqs\">\n" +
+                    "name=\"Fell asleep while drinking coffee\" attachedToRef=\"Task_0c9phqs\" " +
+                    "griffin:eventquery=\"querY\">\n" +
             "  <bpmn:outgoing>SequenceFlow_178gzyw</bpmn:outgoing>\n" +
             "  <bpmn:conditionalEventDefinition />\n" +
             "</bpmn:boundaryEvent>\n";
@@ -26,14 +27,14 @@ public class BoundaryEventTest {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(BoundaryEvent.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            BoundaryEvent task = (BoundaryEvent) jaxbUnmarshaller.unmarshal(doc);
-            assertEquals("Task_0c9phqs", task.getAttachedToRef());
-            assertEquals("BoundaryEvent_0dgouhn", task.getId());
-            assertEquals("Fell asleep while drinking coffee", task.getName());
-            assertEquals("SequenceFlow_178gzyw", task.getOutgoing());
+            BoundaryEvent event = (BoundaryEvent) jaxbUnmarshaller.unmarshal(doc);
+            assertEquals("Task_0c9phqs", event.getAttachedToRef());
+            assertEquals("BoundaryEvent_0dgouhn", event.getId());
+            assertEquals("Fell asleep while drinking coffee", event.getName());
+            assertEquals("SequenceFlow_178gzyw", event.getOutgoing());
+            assertEquals("querY", event.getEventQuery());
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-
     }
 }

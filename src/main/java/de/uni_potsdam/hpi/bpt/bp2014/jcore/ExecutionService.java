@@ -446,6 +446,46 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	/**
+	 * Returns information about all controlflow enabled Activities of a given scenario instance.
+	 *
+	 * @return a Collection of Activity instances, which are cf-enabled and part of the
+	 * specified scenario instance.
+	 * @param scenarioInstanceId The id which specifies the scenario.
+	 */
+	public Collection<ActivityInstance> getControlFlowEnabledActivities(int scenarioInstanceId) {
+		Collection<ActivityInstance> allCFEnabledActivities = new LinkedList<>();
+		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
+		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
+				.getControlFlowEnabledControlNodeInstances()) {
+			if (nodeInstance instanceof ActivityInstance) {
+				allCFEnabledActivities.add((ActivityInstance) nodeInstance);
+			}
+		}
+
+		return allCFEnabledActivities;
+	}
+
+	/**
+	 * Returns information about all data enabled Activities of a given scenario instance.
+	 *
+	 * @return a Collection of Activity instances, which are data enabled and part of the
+	 * specified scenario instance.
+	 * @param scenarioInstanceId The id which specifies the scenario.
+	 */
+	public Collection<ActivityInstance> getDataEnabledActivities(int scenarioInstanceId) {
+		Collection<ActivityInstance> allDataEnabledActivities = new LinkedList<>();
+		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
+		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
+				.getDataEnabledControlNodeInstances()) {
+			if (nodeInstance instanceof ActivityInstance) {
+				allDataEnabledActivities.add((ActivityInstance) nodeInstance);
+			}
+		}
+
+		return allDataEnabledActivities;
+	}
+
+	/**
 	 * Returns information about all referential Activities
 	 * of a given scenario instance and activity instance.
 	 *

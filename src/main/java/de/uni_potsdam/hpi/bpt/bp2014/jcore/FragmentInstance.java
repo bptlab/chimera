@@ -1,10 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.eventhandling.EventQueryQueue;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Represents a fragment instance.
@@ -38,21 +36,7 @@ public class FragmentInstance {
 		this.scenarioInstance = scenarioInstance;
 		this.fragmentId = fragmentId;
 		this.scenarioInstanceId = scenarioInstanceId;
-
-		DbEvent event = new DbEvent();
-		String sql = "SELECT * FROM event WHERE model_id = " + this.fragmentId;
-		String query = event.executeStatementReturnsString(sql, "query");
-
-		if (!query.isEmpty()) {
-			System.out.println(query);
-
-			final String url = "http://localhost:8080";
-//			EventQueryQueue q = new EventQueryQueue(this);
-//			q.registerQuery(String.valueOf(this.getFragmentInstanceId()), query, "test@test.de", url);
-//			q.receiveEvent();
-		} else {
-			this.createDatabaseFragmentInstance();
-		}
+        this.createDatabaseFragmentInstance();
 	}
 
 	public void createDatabaseFragmentInstance () {
@@ -100,26 +84,10 @@ public class FragmentInstance {
 	 */
 	private void initializeNewNodeInstanceForFragment() {
 		//gets the Start Event and then the following Control Node to initialize it
-		int startEvent = dbControlNode.getStartEventID(fragmentId);
-		int controlNode = dbControlFlow.getNextControlNodeAfterStartEvent(startEvent);
-		String controlNodeType = dbControlNode.getType(controlNode);
-		AbstractControlNodeInstance controlNodeInstance = null;
-		switch (controlNodeType) {
-		case "Activity":
-		case "EmailTask":
-		case "WebServiceTask":
-			controlNodeInstance = new ActivityInstance(controlNode, fragmentInstanceId,
-					scenarioInstance);
-			break;
-		case "AND":
-		case "XOR":
-			controlNodeInstance = new GatewayInstance(controlNode, fragmentInstanceId,
-					scenarioInstance);
-			break;
-		default: break;
-		}
-		assert controlNodeInstance != null;
-		controlNodeInstance.enableControlFlow();
+		int startEventDatabaseId = dbControlNode.getStartEventID(fragmentId);
+        StartEvent startEvent = new StartEvent(startEventDatabaseId,
+                this.fragmentInstanceId, this.scenarioInstance);
+        startEvent.enableControlFlow();
 	}
 
 	/**
