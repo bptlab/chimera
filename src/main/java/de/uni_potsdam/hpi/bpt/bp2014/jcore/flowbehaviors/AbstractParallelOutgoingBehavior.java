@@ -25,9 +25,10 @@ public abstract class AbstractParallelOutgoingBehavior extends AbstractOutgoingB
 	}
 
 	/**
-	 * Initializes and creates the following control node instance
-	 * for the given control node instance id.
-	 *
+	 * Scans for the passed controlnode id in the currently registered instances
+     * in the scenario instance. If it is present the controlNodeInstance will be returned
+     * if it's not an activity instance or terminated. Else a new control node will created.
+     *
 	 * @param controlNodeId This is the database id from the control node instance.
 	 * @return the created control node instance.
 	 */
