@@ -228,6 +228,13 @@ public class Connector extends DbObject {
 	}
 
     /**
+     * This method inserts events into the database.
+     *
+     * @param eventtype type of the event.
+     * @param eventquery the event processing query of the event.
+     * @param fragmentId the ID of the fragment.
+     * @param modelId the ID of the event given by the editor.
+     * @param controlNodeDatabaseId the database ID of the controlnode belonging to this event.
      *
      */
     public int insertEventIntoDatabase(String eventtype, String eventquery,
@@ -239,6 +246,24 @@ public class Connector extends DbObject {
         int databaseId = performSQLInsertStatementWithAutoId(sql);
         return databaseId;
     }
+
+    /**
+     * Boundary events also have an attachedtoref attribute.
+     * @param eventtype type of the event.
+     * @param eventquery the event processing query of the event.
+     * @param fragmentId the ID of the fragment.
+     * @param modelId the ID of the event given by the editor.
+     * @param controlNodeDatabaseId the database ID of the controlnode belonging to this event.
+     * @param attachedToRef the ID of the Activity that the event is attached to.
+     */
+    public void insertBoundaryEventIntoDatabase(String eventtype, String eventquery,
+                int fragmentId, String modelId, int controlNodeDatabaseId, String attachedToRef) {
+        insertEventIntoDatabase(eventtype, eventquery, fragmentId, modelId, controlNodeDatabaseId);
+        String sql = "INSERT INTO boundaryeventref "
+                + "VALUES (" + controlNodeDatabaseId + ", '" + attachedToRef + "')";
+        performDefaultSQLInsertStatement(sql);
+    }
+
 	/**
 	 * This Methods inserts a new DataNode into the Database.
 	 * All necessary information are given as a parameter.

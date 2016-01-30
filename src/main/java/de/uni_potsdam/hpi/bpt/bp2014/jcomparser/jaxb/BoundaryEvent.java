@@ -33,12 +33,12 @@ public class BoundaryEvent extends AbstractControlNode {
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "BoundaryEvent", this.getFragmentId(), this.id);
+                this.getName(), "BoundaryEvent", this.getFragmentId(), this.getId());
 
-        connector.insertEventIntoDatabase("BoundaryEvent", this.eventQuery,
-                this.fragmentId, this.id, this.databaseId);
+        connector.insertBoundaryEventIntoDatabase("BoundaryEvent", this.getEventQuery(),
+                this.getFragmentId(), this.getId(), this.getDatabaseId(), this.getAttachedToRef());
 
-        return this.databaseId;
+        return this.getDatabaseId();
     }
 
     public String getAttachedToRef() {

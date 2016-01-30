@@ -67,6 +67,14 @@ CREATE TABLE IF NOT EXISTS `aggregation` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `boundaryeventref`
+CREATE TABLE IF NOT EXISTS `boundaryeventref` (
+  `controlnode_id` INTEGER NOT NULL,
+  `attachedtoref` varchar(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+
+--
 -- Table structure for table `configuration`
 --
 
