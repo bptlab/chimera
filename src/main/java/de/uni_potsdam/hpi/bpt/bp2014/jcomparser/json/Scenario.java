@@ -31,7 +31,7 @@ public class Scenario {
             this.versionNumber = scenarioJson.getInt("revision");
             int scenarioDatabaseId = saveScenario();
 
-            JSONObject domainModelJson = scenarioJson.getJSONObject("domain_model");
+            JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
             DomainModel domainModel = createAndInitializeDomainModel(domainModelJson);
             domainModel.setScenarioID(scenarioDatabaseId);
             List<Fragment> fragments = generateFragmentList(scenarioJson);
@@ -117,8 +117,8 @@ public class Scenario {
             Fragment fragment = new Fragment(fragmentJson.getString("content"),
                     fragmentJson.getInt("revision"),
                     fragmentJson.getString("name"),
-                    fragmentJson.getInt("_id"),
-                    0
+                    this.scenarioId,
+                    fragmentJson.getString("_id")
             );
             fragments.add(fragment);
         }

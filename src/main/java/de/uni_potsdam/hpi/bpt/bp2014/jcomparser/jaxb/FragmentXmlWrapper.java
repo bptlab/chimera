@@ -8,119 +8,53 @@ import java.util.List;
 /**
  *
  */
-@XmlRootElement(name = "bpmn:process")
+@XmlRootElement(name = "bpmn:definitions")
 @XmlAccessorType(XmlAccessType.NONE)
 public class FragmentXmlWrapper {
-    @XmlAttribute
-    private String id;
 
-    @XmlElement(name = "bpmn:sequenceFlow")
-    private List<SequenceFlow> sequenceFlowAssociations = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:exclusiveGateway")
-    private List<ExclusiveGateway> xorGateways = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:startEvent")
-    private StartEvent startEvent;
-
-    @XmlElement(name = "bpmn:boundaryEvent")
-    private List<BoundaryEvent> boundaryEvents = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:task")
-    private List<Task> tasks = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:dataObjectReference")
-    private List<DataNode> dataNodes = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:intermediateCatchEvent")
-    private List<IntermediateEvent> intermediateEvents = new ArrayList<>();
-
-    // @XmlElement(name = "bpmn:dataObject")
-    // private List<DataObject> dataObjects = new ArrayList<>();
-
-    @XmlElement(name = "bpmn:endEvent")
-    private EndEvent endEvent;
-
+    @XmlElement(name = "bpmn:process")
+    private BpmnProcessXml bpmnProcessXml;
 
     public List<SequenceFlow> getSequenceFlow() {
-        return sequenceFlowAssociations;
+        return this.bpmnProcessXml.getSequenceFlowAssociations();
     }
 
-    public void setAssociations(List<SequenceFlow> associations) {
-        this.sequenceFlowAssociations = associations;
-    }
 
     public List<Task> getTasks() {
-        return tasks;
+        return this.bpmnProcessXml.getTasks();
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
 
     public List<BoundaryEvent> getBoundaryEvents() {
-        return boundaryEvents;
+        return this.bpmnProcessXml.getBoundaryEvents();
     }
 
-    public void setBoundaryEvents(List<BoundaryEvent> boundaryEvents) {
-        this.boundaryEvents = boundaryEvents;
-    }
 
     public List<ExclusiveGateway> getXorGateways() {
-        return xorGateways;
+        return this.bpmnProcessXml.getXorGateways();
     }
 
-    public void setXorGateways(List<ExclusiveGateway> xorGateways) {
-        this.xorGateways = xorGateways;
-    }
-
-    public void setEndEvent(EndEvent endEvent) {
-        this.endEvent = endEvent;
-    }
 
     public EndEvent getEndEvent() {
-        return endEvent;
+        return this.bpmnProcessXml.getEndEvent();
     }
 
     public StartEvent getStartEvent() {
-        return startEvent;
-    }
-
-    public void setStartEvent(StartEvent startEvent) {
-        this.startEvent = startEvent;
+        return this.bpmnProcessXml.getStartEvent();
     }
 
     public List<DataNode> getDataNodes() {
-        return dataNodes;
+        return this.bpmnProcessXml.getDataNodes();
     }
-
-    public void setDataNodes(List<DataNode> dataNodes) {
-        this.dataNodes = dataNodes;
-    }
-
-    // public List<DataObject> getDataObjects() {
-    //     return dataObjects;
-    // }
-
-    //public void setDataObjects(List<DataObject> dataObjects) {
-    //    this.dataObjects = dataObjects;
-    //}
 
     public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        return this.bpmnProcessXml.getId();
     }
 
     public List<IntermediateEvent> getIntermediateEvents() {
-        return intermediateEvents;
+        return this.bpmnProcessXml.getIntermediateEvents();
     }
 
-    public void setIntermediateEvents(List<IntermediateEvent> intermediateEvents) {
-        this.intermediateEvents = intermediateEvents;
-    }
 }
 
 

@@ -14,7 +14,7 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 	/**
 	 * This is the modelID of the dataClass.
 	 */
-	private long dataClassModelID;
+	private String dataClassModelID;
 	/**
 	 * This is the databaseID of the dataClass.
 	 */
@@ -51,7 +51,7 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 			this.dataClassJson = new JSONObject(element);
 
 			this.dataClassName = this.dataClassJson.getString("name");
-			this.dataClassModelID = this.dataClassJson.getLong("_id");
+			this.dataClassModelID = this.dataClassJson.getString("_id");
 			this.isRootNode = this.dataClassJson.getBoolean("is_root");
 			generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
 		} catch (JSONException e) {
@@ -132,7 +132,7 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 		return dataClassJson;
 	}
 
-	public long getDataClassModelID() {
+	public String getDataClassModelID() {
 		return dataClassModelID;
 	}
 

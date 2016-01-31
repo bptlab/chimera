@@ -65,8 +65,8 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
      * Creates a mapping from the Id of the dataclass to the dataclass object itself.
      * @return map from Id to dataclass
      */
-    public Map<Long, DataClass> getMapFromIdToDataclass() {
-        Map<Long, DataClass> idToDataclass = new HashMap<>();
+    public Map<String, DataClass> getMapFromIdToDataclass() {
+        Map<String, DataClass> idToDataclass = new HashMap<>();
         for (DataClass dataClass : dataClasses) {
             idToDataclass.put(dataClass.getDataClassModelID(), dataClass);
         }
@@ -86,7 +86,7 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 * This method generates a List of aggregates from the XML.
 	*/
 	private List<Aggregation> generateAggregations() {
-		Map<Long, DataClass> idToDataclass = getMapFromIdToDataclass();
+		Map<String, DataClass> idToDataclass = getMapFromIdToDataclass();
         List<Aggregation> aggregations = new ArrayList<>();
         try {
 			JSONArray jsonAggregations = this.domainModelJson.getJSONArray("aggregations");

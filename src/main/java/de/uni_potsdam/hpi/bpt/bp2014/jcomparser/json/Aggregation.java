@@ -14,11 +14,11 @@ public class Aggregation implements IDeserialisableJson, IPersistable {
 	private DataClass target;
 	private int sourceMultiplicity;
 	private int targetMultiplicity;
-	private Map<Long, DataClass> dataClasses;
+	private Map<String, DataClass> dataClasses;
 
 	@SuppressWarnings("unused") private JSONObject aggregationJson;
 
-    public Aggregation(Map<Long, DataClass> dataClasses) {
+    public Aggregation(Map<String, DataClass> dataClasses) {
         this.dataClasses = dataClasses;
     }
 
@@ -79,7 +79,7 @@ public class Aggregation implements IDeserialisableJson, IPersistable {
 		return 1;
 	}
 
-	public Map<Long, DataClass> getDataClasses() {
+	public Map<String, DataClass> getDataClasses() {
 		return dataClasses;
 	}
 

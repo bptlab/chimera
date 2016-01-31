@@ -24,9 +24,9 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class Fragment {
 
-    private final int scenarioId;
+    private final String scenarioId;
     private String fragmentName;
-    private int fragmentId;
+    private String fragmentId;
     private int versionNumber;
     private FragmentXmlWrapper fragment;
 
@@ -38,11 +38,11 @@ public class Fragment {
         this.versionNumber = versionNumber;
     }
 
-    public int getFragmentId() {
+    public String getFragmentId() {
         return fragmentId;
     }
 
-    public void setFragmentId(int fragmentId) {
+    public void setFragmentId(String fragmentId) {
         this.fragmentId = fragmentId;
     }
 
@@ -55,11 +55,12 @@ public class Fragment {
     }
 
     public Fragment(String fragmentXml, int versionNumber, String fragmentName,
-                    int scenarioId, int fragmentId) {
+                    String scenarioId, String fragmentId) {
         this.fragment = buildFragment(fragmentXml);
         this.fragmentName = fragmentName;
         this.versionNumber = versionNumber;
         this.scenarioId = scenarioId;
+        this.fragmentId = fragmentId;
     }
 
     public int save() {
