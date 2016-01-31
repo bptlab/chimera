@@ -33,4 +33,17 @@ public class ScenarioTest {
             assert(false);
         }
     }
+
+    @Test
+    public void testScenarioWithEvents() {
+        File file = new File("src/test/resources/jaxb/scenarioWithEvents.json");
+        Scenario scenario = new Scenario();
+        try {
+            String json = FileUtils.readFileToString(file);
+            scenario.initializeInstanceFromJson(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+            assert(false);
+        }
+    }
 }
