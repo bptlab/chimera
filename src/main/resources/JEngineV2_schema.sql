@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS `fragment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `modelid` bigint(11) NOT NULL DEFAULT '-1',
+  `modelid` VARCHAR(256) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

@@ -49,11 +49,11 @@ public class Connector extends DbObject {
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertFragmentIntoDatabase(final String fragmentName, String scenarioID,
+	public int insertFragmentIntoDatabase(final String fragmentName, int scenarioID,
 			final String modelID, final int modelVersion) {
 		String sql = "INSERT INTO fragment "
 				+ "(fragment.name, scenario_id, modelid, modelversion) "
-				+ "VALUES ('" + fragmentName + "', '" + scenarioID
+				+ "VALUES ('" + fragmentName + "', " + scenarioID
 				+ ",'" + modelID + "'," + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}

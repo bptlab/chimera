@@ -24,7 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class Fragment {
 
-    private final String scenarioId;
+    private final int scenarioId;
     private String fragmentName;
     private String fragmentId;
     private int versionNumber;
@@ -55,7 +55,7 @@ public class Fragment {
     }
 
     public Fragment(String fragmentXml, int versionNumber, String fragmentName,
-                    String scenarioId, String fragmentId) {
+                    int scenarioId, String fragmentId) {
         this.fragment = buildFragment(fragmentXml);
         this.fragmentName = fragmentName;
         this.versionNumber = versionNumber;

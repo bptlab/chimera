@@ -22,11 +22,13 @@ public class EventQueryQueue {
 	private final String mqHost;
 	private final String mqPort;
 	private final String restPath;
+    private final String restUrl;
 
-    public EventQueryQueue(String mqHost, String mqPort, String restPath) {
+    public EventQueryQueue(String mqHost, String mqPort, String restPath, String restUrl) {
         this.mqHost = mqHost;
         this.mqPort = mqPort;
         this.restPath = restPath;
+        this.restUrl = restUrl;
     }
 
 	/**
@@ -36,10 +38,9 @@ public class EventQueryQueue {
 	 * @param title Title of the Query
 	 * @param queryString The actual Query
 	 * @param email E-Mail-Address of the user the Query is registered for
-	 * @param url URL of the Server Unicorn is running on
      * @return returns UUID of registered query.
      */
-	public String registerQuery(String title, String queryString, String email, String url) {
+	public String registerQuery(String title, String queryString, String email) {
 		EventQueryJson json = new EventQueryJson();
 		json.setTitle(title);
 		json.setQueryString(queryString);
@@ -49,7 +50,7 @@ public class EventQueryQueue {
 		String postJson = gson.toJson(json);
 
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(url).path(this.restPath);
+		WebTarget target = client.target(this.restUrl).path(this.restPath);
 
 		Response response = target.request().post(Entity.json(postJson));
 		if (response.getStatus() == 200) {

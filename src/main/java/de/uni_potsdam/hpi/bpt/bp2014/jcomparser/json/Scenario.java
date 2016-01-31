@@ -16,8 +16,9 @@ import java.util.*;
  */
 public class Scenario {
     private String scenarioName;
-    private String scenarioId;
+    private String scenarioEditorId;
     private int versionNumber;
+    private int scenarioDbId;
 
     /**
      *
@@ -27,13 +28,13 @@ public class Scenario {
         try {
             JSONObject scenarioJson = new JSONObject(element);
             this.scenarioName = scenarioJson.getString("name");
-            this.scenarioId = scenarioJson.getString("_id");
+            this.scenarioEditorId = scenarioJson.getString("_id");
             this.versionNumber = scenarioJson.getInt("revision");
-            int scenarioDatabaseId = saveScenario();
+            this.scenarioDbId = saveScenario();
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
             DomainModel domainModel = createAndInitializeDomainModel(domainModelJson);
-            domainModel.setScenarioID(scenarioDatabaseId);
+            domainModel.setScenarioID(this.scenarioDbId);
             List<Fragment> fragments = generateFragmentList(scenarioJson);
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
 
@@ -41,7 +42,7 @@ public class Scenario {
 
             List<DataObject> dataObjects = extractDataObjects(fragments, domainModel);
             for (DataObject dataObject : dataObjects) {
-                dataObject.setScenarioId(scenarioDatabaseId);
+                dataObject.setScenarioId(this.scenarioDbId);
                 dataObject.save();
             }
 
@@ -92,7 +93,7 @@ public class Scenario {
     private int saveScenario() {
         Connector connector = new Connector();
         return connector.insertScenarioIntoDatabase(
-                this.scenarioName, this.scenarioId, this.versionNumber);
+                this.scenarioName, this.scenarioEditorId, this.versionNumber);
 
     }
 
@@ -117,7 +118,7 @@ public class Scenario {
             Fragment fragment = new Fragment(fragmentJson.getString("content"),
                     fragmentJson.getInt("revision"),
                     fragmentJson.getString("name"),
-                    this.scenarioId,
+                    this.scenarioDbId,
                     fragmentJson.getString("_id")
             );
             fragments.add(fragment);

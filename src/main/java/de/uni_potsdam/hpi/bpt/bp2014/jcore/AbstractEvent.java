@@ -10,6 +10,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
     private static final String MQ_PORT = "61616";
     private static final String REST_PATH = "Unicorn/webapi/REST/EventQuery";
+    private static final String REST_URL = "http://localhost:8080";
     private int controlNodeId;
 
     /**
@@ -25,9 +26,9 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         DbEvent eventDao = new DbEvent();
         try {
             String query = eventDao.getQueryForControlNode(this.controlNodeId);
-            EventQueryQueue queryQueue = new EventQueryQueue(MQ_HOST, MQ_PORT, REST_PATH);
+            EventQueryQueue queryQueue = new EventQueryQueue(MQ_HOST, MQ_PORT, REST_PATH, REST_URL);
             String queueId = queryQueue.registerQuery("Automatic", query,
-                    "test@mail.de", "localhost:8080");
+                    "test@mail.de");
             queryQueue.listenToEvent(this, queueId);
         } catch (IllegalArgumentException e) {
             this.terminate();

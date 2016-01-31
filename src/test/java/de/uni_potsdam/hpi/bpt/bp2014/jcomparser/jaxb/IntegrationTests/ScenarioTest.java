@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.IntegrationTests;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
@@ -41,6 +42,7 @@ public class ScenarioTest {
         try {
             String json = FileUtils.readFileToString(file);
             scenario.initializeInstanceFromJson(json);
+            ScenarioInstance instance = new ScenarioInstance(1, 3);
         } catch (IOException e) {
             e.printStackTrace();
             assert(false);
