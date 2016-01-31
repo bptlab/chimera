@@ -247,6 +247,21 @@ public class ActivityStateMachine extends AbstractStateMachine {
 		return false;
 	}
 
+    /**
+     * Cancels the current activity.
+     * @return Returns if the activity was running and then could have been terminated correct.
+     */
+    public boolean cancel() {
+        if ("running".equals(getState())) {
+            this.setState("cancel");
+            getScenarioInstance().getRunningControlNodeInstances()
+                    .remove(getControlNodeInstance());
+            getScenarioInstance().getControlNodeInstances()
+                    .remove(getControlNodeInstance());
+            return true;
+        }
+        return false;
+    }
 	/**
 	 * Sets the state from the activity instance specified in attributes to skipped.
 	 *

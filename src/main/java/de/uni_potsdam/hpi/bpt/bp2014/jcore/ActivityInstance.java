@@ -309,4 +309,15 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		this.canTerminate = canTerminate;
 		this.dbActivityInstance.setCanTerminate(getControlNodeInstanceId(), canTerminate);
 	}
+
+    /**
+     * 
+     */
+    public void cancel() {
+        ActivityStateMachine stateMachine = (ActivityStateMachine) this.getStateMachine();
+        stateMachine.cancel();
+        TaskOutgoingControlFlowBehavior out = (TaskOutgoingControlFlowBehavior)
+                this.getOutgoingBehavior();
+        out.cancel();
+    }
 }
