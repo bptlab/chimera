@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class Scenario {
     private String scenarioName;
-    private long scenarioId;
+    private String scenarioId;
     private int versionNumber;
 
     /**
@@ -27,7 +27,7 @@ public class Scenario {
         try {
             JSONObject scenarioJson = new JSONObject(element);
             this.scenarioName = scenarioJson.getString("name");
-            this.scenarioId = scenarioJson.getLong("_id");
+            this.scenarioId = scenarioJson.getString("_id");
             this.versionNumber = scenarioJson.getInt("revision");
             int scenarioDatabaseId = saveScenario();
 

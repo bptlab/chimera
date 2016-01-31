@@ -502,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `modelid` bigint(11) DEFAULT '-1',
+  `modelid` VARCHAR(256) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   `datamodelid` bigint(11) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL,

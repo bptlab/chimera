@@ -30,12 +30,12 @@ public class Connector extends DbObject {
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertScenarioIntoDatabase(final String name, final long modelID,
+	public int insertScenarioIntoDatabase(final String name, final String modelID,
 			final int modelVersion) {
 		String sql = "INSERT INTO scenario "
 				+ "(scenario.name, modelid, modelversion) "
-				+ "VALUES ('" + name + "', "
-				+ modelID +	", " + modelVersion + ")";
+				+ "VALUES ('" + name + "', '"
+				+ modelID +	"', " + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
