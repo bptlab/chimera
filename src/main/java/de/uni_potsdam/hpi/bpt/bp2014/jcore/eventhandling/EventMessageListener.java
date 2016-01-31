@@ -25,11 +25,11 @@ public class EventMessageListener implements MessageListener {
     }
 
 	@Override public void onMessage(Message message) {
+		this.event.terminate();
 		try {
 			this.connection.close();
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
-        this.event.terminate();
     }
 }
