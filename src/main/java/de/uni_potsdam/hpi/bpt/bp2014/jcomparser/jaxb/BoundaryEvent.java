@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 
 import javax.xml.bind.annotation.*;
+import java.util.Map;
 
 /**
  * .
@@ -29,14 +30,14 @@ public class BoundaryEvent extends AbstractControlNode {
     private String eventQuery;
 
 
-    @Override
-    public int save() {
+    public int save(Map<String, Integer> savedControlNodes) {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "BoundaryEvent", this.getFragmentId(), this.getId());
 
+        int activityDatabaseId = savedControlNodes.get(this.getAttachedToRef());
         connector.insertBoundaryEventIntoDatabase("BoundaryEvent", this.getEventQuery(),
-                this.getFragmentId(), this.getId(), this.getDatabaseId(), this.getAttachedToRef());
+                this.getFragmentId(), this.getId(), this.getDatabaseId(), activityDatabaseId);
 
         return this.getDatabaseId();
     }
@@ -52,6 +53,12 @@ public class BoundaryEvent extends AbstractControlNode {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public int save() {
+        throw new IllegalArgumentException("Boundary Events can not be saved without the "
+                + "database id of the activity ");
     }
 
     public void setId(String id) {

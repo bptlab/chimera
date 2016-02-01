@@ -23,4 +23,10 @@ public class DbBoundaryEvent extends DbObject {
         return controlNodeInstance.getControlNodeInstanceID(activityControlNodeId,
                 fragmentInstanceId);
     }
+
+    public int getAttachedBoundaryEvent(int activityDatabaseId) {
+        String editorIdQuery = "SELECT * FROM boundaryeventref where attachedtoref = "
+                + activityDatabaseId + ";";
+        return this.executeStatementReturnsInt(editorIdQuery, "controlnode_id");
+    }
 }

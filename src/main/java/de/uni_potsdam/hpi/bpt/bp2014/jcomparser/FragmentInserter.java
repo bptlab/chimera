@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.BoundaryEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.SequenceFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.InputSet;
@@ -49,8 +51,27 @@ public class FragmentInserter {
             nodeToDatabaseId.put(node.getId(), databaseId);
         }
 
+        Map<String, Integer> boundaryEvents = saveBoundaryEvents(nodeToDatabaseId, fragment,
+                fragmentId);
+
+        for (Map.Entry<String, Integer> boundaryEvent : boundaryEvents.entrySet()) {
+            nodeToDatabaseId.put(boundaryEvent.getKey(), boundaryEvent.getValue());
+        }
+
         return nodeToDatabaseId;
     }
+
+    private Map<String, Integer> saveBoundaryEvents(Map<String, Integer> savedControlNodes,
+            Fragment fragment, int fragmentId) {
+        Map<String, Integer> nodeToDatabaseId = new HashMap<>();
+        for (BoundaryEvent event : fragment.getBoundaryEventNodes()) {
+            event.setFragmentId(fragmentId);
+            int databaseId = event.save(savedControlNodes);
+            nodeToDatabaseId.put(event.getId(), databaseId);
+        }
+        return nodeToDatabaseId;
+    }
+
 
     /**
      * Saves the input and output sets to the database.

@@ -1,9 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskOutgoingControlFlowBehavior;
 
@@ -116,6 +113,12 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * Initialize other information for the instance.
 	 */
 	private void initActivityInstance() {
+        DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
+        int boundaryEventId = boundaryEventDao.getAttachedBoundaryEvent(this.getControlNodeId();
+        if (boundaryEventId != -1) {
+            new BoundaryEvent(boundaryEventId,
+                    this.getFragmentInstanceId(), this.getScenarioInstance());
+        }
 		this.canTerminate = dbActivityInstance.getCanTerminate(getControlNodeInstanceId());
 		this.automaticExecution =
 				dbActivityInstance.getAutomaticExecution(
@@ -311,7 +314,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	}
 
     /**
-     * 
+     *
      */
     public void cancel() {
         ActivityStateMachine stateMachine = (ActivityStateMachine) this.getStateMachine();

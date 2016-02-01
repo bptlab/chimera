@@ -257,10 +257,10 @@ public class Connector extends DbObject {
      * @param attachedToRef the ID of the Activity that the event is attached to.
      */
     public void insertBoundaryEventIntoDatabase(String eventtype, String eventquery,
-                int fragmentId, String modelId, int controlNodeDatabaseId, String attachedToRef) {
+                int fragmentId, String modelId, int controlNodeDatabaseId, int attachedToRef) {
         insertEventIntoDatabase(eventtype, eventquery, fragmentId, modelId, controlNodeDatabaseId);
         String sql = "INSERT INTO boundaryeventref "
-                + "VALUES (" + controlNodeDatabaseId + ", '" + attachedToRef + "')";
+                + "VALUES (" + controlNodeDatabaseId + ", " + attachedToRef + ")";
         performDefaultSQLInsertStatement(sql);
     }
 
