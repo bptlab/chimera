@@ -1,6 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
 
@@ -22,7 +21,6 @@ public class IntermediateEvent extends AbstractEvent {
 
 
     private void saveToDatabase() {
-        DbControlNode dbControlNode = new DbControlNode();
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 
         this.setControlNodeInstanceId(dbControlNodeInstance
