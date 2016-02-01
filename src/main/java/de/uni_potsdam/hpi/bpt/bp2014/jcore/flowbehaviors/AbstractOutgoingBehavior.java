@@ -60,7 +60,11 @@ public abstract class AbstractOutgoingBehavior {
         case "IntermediateEvent":
             controlNodeInstance = new IntermediateEvent(controlNodeId, fragmentInstanceId,
                     scenarioInstance);
-		default:
+            break;
+        case "BoundaryEvent":
+            controlNodeInstance = new BoundaryEvent(controlNodeId, fragmentInstanceId,
+                    scenarioInstance);
+        default:
 			break;
 		}
 		return controlNodeInstance;
