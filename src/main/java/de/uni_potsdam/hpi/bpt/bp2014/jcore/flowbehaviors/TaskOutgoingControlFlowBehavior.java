@@ -10,6 +10,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractParallelOutgoingBehavior;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Handles the behavior of a terminating activity instance.
@@ -54,6 +55,21 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 		this.runAfterTermination();
 	}
 
+    /**
+     * Since at the moment each output set can only contain the same data objects with different
+     * states it is enough to look only at one output set and free all data objects in this.
+     */
+    public void cancel() {
+        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
+                this.getControlNodeId());
+        if (inputSets.size() > 0) {
+            int inputSet = inputSets.getFirst();
+            for (DataObject dataObject : dbDataNode.getDataObjectsForDataSets(inputSet)) {
+                this.setDataObjectInstanceToNotOnChange(dataObject.getId());
+            }
+        }
+    }
+
 	/**
 	 * Sets the states of the data object to the output states of the activity.
 	 * Sets all this data object to not on change.
@@ -65,7 +81,6 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 			LinkedList<DataObject> dataObjects =
 					dbDataNode.getDataObjectsForDataSets(outputSet);
 			for (DataObject dataObject : dataObjects) {
-				//resets DataObjectInstance from OnChange back to not OnChange
 				this.setDataObjectInstanceToNotOnChange(dataObject.getId());
 			}
 		}
