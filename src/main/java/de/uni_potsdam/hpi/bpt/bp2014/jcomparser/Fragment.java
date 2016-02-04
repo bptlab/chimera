@@ -158,6 +158,7 @@ public class Fragment {
         nodes.addAll(this.fragment.getXorGateways());
         nodes.addAll(this.fragment.getTasks());
         nodes.addAll(this.fragment.getIntermediateEvents());
+        nodes.addAll(this.fragment.getBoundaryEvents());
         nodes.add(this.fragment.getEndEvent());
         nodes.add(this.fragment.getStartEvent());
         return nodes;

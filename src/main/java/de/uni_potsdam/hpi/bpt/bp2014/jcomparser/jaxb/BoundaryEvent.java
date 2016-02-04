@@ -30,16 +30,17 @@ public class BoundaryEvent extends AbstractControlNode {
     private String eventQuery;
 
 
-    public int save(Map<String, Integer> savedControlNodes) {
+    /**
+     *
+     * @param savedControlNodes Map from the Id of the control nodes to the database Id, which
+     *                          is needed to reference the activity the event is attached to.
+     * @return
+     */
+    public void saveConnectionToActivity(Map<String, Integer> savedControlNodes) {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "BoundaryEvent", this.getFragmentId(), this.getId());
-
         int activityDatabaseId = savedControlNodes.get(this.getAttachedToRef());
         connector.insertBoundaryEventIntoDatabase("BoundaryEvent", this.getEventQuery(),
                 this.getFragmentId(), this.getId(), this.getDatabaseId(), activityDatabaseId);
-
-        return this.getDatabaseId();
     }
 
     public String getAttachedToRef() {
@@ -57,8 +58,10 @@ public class BoundaryEvent extends AbstractControlNode {
 
     @Override
     public int save() {
-        throw new IllegalArgumentException("Boundary Events can not be saved without the "
-                + "database id of the activity ");
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "BoundaryEvent", this.getFragmentId(), this.getId());
+        return this.getDatabaseId();
     }
 
     public void setId(String id) {

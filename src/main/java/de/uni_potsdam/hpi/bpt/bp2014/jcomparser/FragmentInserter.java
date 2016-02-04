@@ -50,26 +50,16 @@ public class FragmentInserter {
             int databaseId = node.save();
             nodeToDatabaseId.put(node.getId(), databaseId);
         }
-
-        Map<String, Integer> boundaryEvents = saveBoundaryEvents(nodeToDatabaseId, fragment,
-                fragmentId);
-
-        for (Map.Entry<String, Integer> boundaryEvent : boundaryEvents.entrySet()) {
-            nodeToDatabaseId.put(boundaryEvent.getKey(), boundaryEvent.getValue());
-        }
-
+        saveBoundaryEventRelations(nodeToDatabaseId, fragment, fragmentId);
         return nodeToDatabaseId;
     }
 
-    private Map<String, Integer> saveBoundaryEvents(Map<String, Integer> savedControlNodes,
+    private void saveBoundaryEventRelations(Map<String, Integer> savedControlNodes,
             Fragment fragment, int fragmentId) {
-        Map<String, Integer> nodeToDatabaseId = new HashMap<>();
         for (BoundaryEvent event : fragment.getBoundaryEventNodes()) {
             event.setFragmentId(fragmentId);
-            int databaseId = event.save(savedControlNodes);
-            nodeToDatabaseId.put(event.getId(), databaseId);
+            event.saveConnectionToActivity(savedControlNodes);
         }
-        return nodeToDatabaseId;
     }
 
 
