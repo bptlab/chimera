@@ -61,4 +61,10 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    <!-- SERVLET: REST -->
+    <servlet-mapping>
+        <servlet-name>Jersey2Config</servlet-name>
+        <url-pattern>/docu/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

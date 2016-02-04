@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
-@Path("scenario/{scenarioID}/instance/{instanceID}")
+@Path("scenario/{scenarioID}/instance/{instanceID}/events")
 public class EventDispatcher {
     private final String restPath;
     private final String restUrl;
@@ -85,9 +85,4 @@ public class EventDispatcher {
         }
 
     }
-
-
-
-
-
 }
