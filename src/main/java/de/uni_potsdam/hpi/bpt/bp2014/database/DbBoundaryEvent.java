@@ -24,7 +24,14 @@ public class DbBoundaryEvent extends DbObject {
                 fragmentInstanceId);
     }
 
-    public int getAttachedBoundaryEvent(int activityDatabaseId) {
+    /**
+     *
+     * @param activityDatabaseId id of the activity control node, which should be checked for
+     *                           an event.
+     * @return returns the id of the boundary event attached to the activity or -1 of no boundary
+     * event is attached.
+     */
+    public int getBoundaryEventForActivity(int activityDatabaseId) {
         String editorIdQuery = "SELECT * FROM boundaryeventref where attachedtoref = "
                 + activityDatabaseId + ";";
         return this.executeStatementReturnsInt(editorIdQuery, "controlnode_id");
