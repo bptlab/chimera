@@ -1,7 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventQueryQueue;
+
+import java.util.Objects;
 
 /**
  *
@@ -25,15 +28,14 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     @Override
     public void enableControlFlow() {
         DbEvent eventDao = new DbEvent();
-        try {
-            this.queryString = eventDao.getQueryForControlNode(this.controlNodeId);
-            EventQueryQueue queryQueue = new EventQueryQueue(MQ_HOST, MQ_PORT, REST_PATH, REST_URL);
-            String queueId = queryQueue.registerQuery("Automatic", this.queryString,
-                    "test@mail.de");
-            queryQueue.listenToEvent(this, queueId);
-        } catch (IllegalArgumentException e) {
+
+        this.queryString = eventDao.getQueryForControlNode(this.controlNodeId);
+        if ("".equals(this.queryString)) {
             this.terminate();
         }
+        EventDispatcher eventDispatcher = new EventDispatcher(REST_PATH, REST_URL,
+                this.getFragmentInstanceId());
+        eventDispatcher.registerEvent(this);
     }
 
     @Override

@@ -19,25 +19,25 @@ import java.util.UUID;
 public class EventDispatcher {
     private final String restPath;
     private final String restUrl;
-    private final int scenarioInstanceId;
+    private final int fragmentInstanceId;
 
 
-    public EventDispatcher(String restPath, String restUrl, int scenarioInstanceId) {
+    public EventDispatcher(String restPath, String restUrl, int fragmentInstanceId) {
         this.restPath = restPath;
         this.restUrl = restUrl;
-        this.scenarioInstanceId = scenarioInstanceId;
+        this.fragmentInstanceId = fragmentInstanceId;
     }
 
     public void receiveEvent(String requestId) {
         DbEventMapping eventMapping = new DbEventMapping();
-        int eventControlNodeId = eventMapping.getEventControlNodeId(scenarioInstanceId, requestId);
+        int eventControlNodeId = eventMapping.getEventControlNodeId(fragmentInstanceId, requestId);
     }
 
     public void registerEvent(AbstractEvent event) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         sendQueryToEventService(event.getQueryString(), requestId);
         DbEventMapping mapping = new DbEventMapping();
-        mapping.saveMappingToDatabase(this.scenarioInstanceId, requestId, event.getControlNodeId());
+        mapping.saveMappingToDatabase(this.fragmentInstanceId, requestId, event.getControlNodeId());
     }
 
     private void sendQueryToEventService(String query, String requestId) {
