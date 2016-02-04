@@ -157,12 +157,17 @@ public class Fragment {
         List<AbstractControlNode> nodes = new ArrayList<>();
         nodes.addAll(this.fragment.getXorGateways());
         nodes.addAll(this.fragment.getTasks());
-        nodes.addAll(this.fragment.getBoundaryEvents());
         nodes.addAll(this.fragment.getIntermediateEvents());
+        nodes.addAll(this.fragment.getBoundaryEvents());
         nodes.add(this.fragment.getEndEvent());
         nodes.add(this.fragment.getStartEvent());
         return nodes;
     }
+
+    public List<BoundaryEvent> getBoundaryEventNodes() {
+        return this.fragment.getBoundaryEvents();
+    }
+
 
 
 
