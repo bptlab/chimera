@@ -9,8 +9,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventQueryQueue;
 public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
     private static final String MQ_PORT = "61616";
-    private static final String REST_PATH = "Unicorn/webapi/REST/EventQuery";
-    private static final String REST_URL = "http://localhost:8080";
+    private static final String REST_PATH = "webapi/REST/EventQuery";
+    private static final String REST_URL = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
     private int controlNodeId;
 
     /**

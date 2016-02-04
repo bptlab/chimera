@@ -1197,4 +1197,20 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals("{\"error\":\"There is no such inputSet instance.\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+    /**
+     * test that getVersion() gives a valid response.
+      */
+    @Test
+    public void testGetVersion() {
+        Response response = base.path("version").request().get();
+        assertEquals("The Response code of getTermiantionCondition was not 200",
+                200, response.getStatus());
+        assertEquals("Get Version does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"version\": \"1.0-SNAPSHOT\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
 }

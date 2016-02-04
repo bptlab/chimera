@@ -9,6 +9,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -1367,6 +1368,24 @@ import java.util.LinkedList;
 		dataObject.setLabel(labels.get(dataObjectID));
 		dataObject.setState(states.get(dataObjectID));
 		return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
+	}
+
+	/**
+	 * Method for checking whether an address specified in the griffin editor
+	 * links to a valid running chimera instance
+	 * @return Response containing the version.
+     */
+	@GET
+	@Path("version")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getVersion() {
+		String version = PropertyLoader.getProperty("webapp.version");
+
+		return Response.status(Response.Status.OK)
+				.type(MediaType.APPLICATION_JSON)
+				.entity("{\"version\": \""
+						+ version + "\"}")
+				.build();
 	}
 
 	/**
