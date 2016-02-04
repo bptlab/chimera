@@ -1,15 +1,17 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import org.glassfish.grizzly.http.server.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
-import javax.ws.rs.client.InvocationCallback;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 /**
  * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
@@ -41,7 +43,25 @@ public class EventDispatcher {
     private void sendQueryToEventService(String query, String requestId) {
         // TODO add here path which is used to receive events
         String dummyPath = "";
-        String requestPath = dummyPath + requestId;
+        String notificationPath = dummyPath + requestId;
+
+        JsonObject queryRequest = new JsonObject();
+        queryRequest.addProperty("queryString", query);
+        queryRequest.addProperty("notificationPath", notificationPath);
+        Gson gson = new Gson();
+        HttpPost post = new HttpPost(restUrl);
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        try {
+            StringEntity postString = new StringEntity(gson.toJson(queryRequest));
+            post.setEntity(postString);
+            post.setHeader("Content-type", "application/json");
+            HttpResponse response = httpClient.execute(post);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Query could not be registered");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
