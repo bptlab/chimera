@@ -83,6 +83,16 @@ public class DbControlNodeInstance extends DbObject {
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
 
+    /**
+     * @param controlNodeInstanceId id of the control node instance
+     * @return id of the Fragment the control node instance belongs to or -1 if not found
+     */
+    public int getFragmentInstanceId(int controlNodeInstanceId) {
+        String getFragmentInstace = "SELECT * FROM controlnodeinstance = "
+                + controlNodeInstanceId + ";";
+        return this.executeStatementReturnsInt(getFragmentInstace, "fragmentinstance_id");
+    }
+
 	/**
 	 * This method returns all database ID's of all activities belonging to a fragment instance.
 	 *

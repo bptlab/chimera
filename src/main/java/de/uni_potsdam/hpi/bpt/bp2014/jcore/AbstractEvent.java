@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventQueryQueue;
 
 import java.util.Objects;
 

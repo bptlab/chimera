@@ -2,20 +2,30 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.UUID;
 
 /**
  * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
+@Path("scenario/{scenarioID}/instance/{instanceID}")
 public class EventDispatcher {
     private final String restPath;
     private final String restUrl;
@@ -28,9 +38,20 @@ public class EventDispatcher {
         this.fragmentInstanceId = fragmentInstanceId;
     }
 
-    public void receiveEvent(String requestId) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{requestKey}")
+    public Response receiveEvent(
+            @PathParam("scenarioID") int scenarioId,
+            @PathParam("instanceID") int scenarioInstanceId,
+            @PathParam("requestKey") String requestId) {
         DbEventMapping eventMapping = new DbEventMapping();
+        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         int eventControlNodeId = eventMapping.getEventControlNodeId(fragmentInstanceId, requestId);
+        EventFactory factory = new EventFactory(scenarioInstance);
+        AbstractEvent event = factory.getEventForId(eventControlNodeId);
+        event.terminate();
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 
     public void registerEvent(AbstractEvent event) {
