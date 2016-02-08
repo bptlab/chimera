@@ -5,6 +5,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
  */
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -18,6 +19,6 @@ public class DbGatewayInstanceTest extends AbstractDatabaseDependentTest {
     @Test
     public void testGetState(){
         DbGatewayInstance gatewayInstance = new DbGatewayInstance();
-        assertEquals("init", gatewayInstance.getState(100));
+        assertEquals(AbstractStateMachine.STATE.INIT, gatewayInstance.getState(100));
     }
 }

@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
 
 import java.util.LinkedList;
@@ -18,10 +19,11 @@ public class DbActivityInstance extends DbObject {
 	 * @param id This is the database ID of an activity instance.
 	 * @return the state of the activity as a String.
 	 */
-	public String getState(int id) {
+	public AbstractStateMachine.STATE getState(int id) {
 		String sql = "SELECT activity_state FROM activityinstance WHERE id = " + id;
-		return this.executeStatementReturnsString(sql, "activity_state");
-	}
+		String activityState = this.executeStatementReturnsString(sql, "activity_state");
+	    return AbstractStateMachine.STATE.valueOf(activityState.toUpperCase());
+    }
 
 	/**
 	 * This method sets the activity to a state and saves a log entry into the database.
@@ -29,11 +31,11 @@ public class DbActivityInstance extends DbObject {
 	 * @param id    This is the database ID of an activity instance in the database.
 	 * @param state This is the state in which an activity should be after executing setState.
 	 */
-	public void setState(int id, String state) {
+	public void setState(int id, AbstractStateMachine.STATE state) {
 		Log log = new Log();
-		log.newActivityInstanceState(id, state);
+		log.newActivityInstanceState(id, state.name());
 		String sql = "UPDATE activityinstance "
-				+ "SET activity_state = '" + state + "' "
+				+ "SET activity_state = '" + state.name() + "' "
 				+ "WHERE id = " + id;
 		this.executeUpdateStatement(sql);
 	}

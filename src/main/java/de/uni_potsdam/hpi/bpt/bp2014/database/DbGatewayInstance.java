@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
+
 /**
  * This class is the representation of a gateway instance in the database.
  * It provides the functionality to create a new gateway instance or get/set their state.
@@ -22,11 +24,12 @@ public class DbGatewayInstance extends DbObject {
 	 * @param gatewayInstanceId This is the database ID of a gateway instance.
 	 * @return the state of the gateway instance as a String.
 	 */
-	public String getState(int gatewayInstanceId) {
+	public AbstractStateMachine.STATE getState(int gatewayInstanceId) {
 		String sql = "SELECT gateway_state FROM gatewayinstance "
 				+ "WHERE id = " + gatewayInstanceId;
-		return this.executeStatementReturnsString(sql, "gateway_state");
-	}
+		String state = this.executeStatementReturnsString(sql, "gateway_state");
+	    return AbstractStateMachine.STATE.valueOf(state.toUpperCase());
+    }
 
 	/**
 	 * This method creates and saves a new gateway instance to the database.
