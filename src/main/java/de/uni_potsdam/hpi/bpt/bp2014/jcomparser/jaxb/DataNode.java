@@ -15,13 +15,17 @@ public class DataNode {
     private String id;
 
     /**
-     * The name is given at the moment as name [state]
+     * Name of the dataclass the dataobject/node refers to.
      */
-    @XmlAttribute
+    @XmlAttribute(name = "griffin:dataclass")
     private String name;
-
     /**
-     * Id of an data object. This construct is used to express that, an data object can
+     * Current [state] of the datanode
+     */
+    @XmlAttribute(name = "griffin:state")
+    private String state;
+    /**
+     * Id of a data object. This construct is used to express that a data object can
      * occur multiple times in an BPMN process.
      */
     @XmlAttribute
@@ -31,9 +35,7 @@ public class DataNode {
     private int databaseId;
 
     public String getState() {
-        String[] splittedName = this.name.split("\\s+");
-        // State
-        return splittedName[1].substring(1, splittedName[1].length() - 1);
+        return state;
     }
 
     public String getId() {
@@ -48,8 +50,7 @@ public class DataNode {
      * @return the name of the data object which is referred by this data node
      */
     public String getName() {
-        String[] splittedName = this.name.split("\\s+");
-        return splittedName[0];
+        return name;
     }
 
     public void setName(String name) {
