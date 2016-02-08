@@ -25,11 +25,11 @@ public class GatewayStateMachine extends AbstractStateMachine {
 		this.setControlNodeInstance(controlNodeInstance);
 		this.setState(dbGatewayInstance.getState(
 				controlNodeInstance.getControlNodeInstanceId()));
-		if ("executing".equals(getState())) {
+		if (STATE.EXECUTING.equals(getState())) {
 			scenarioInstance.getExecutingGateways().add(
 					(GatewayInstance) controlNodeInstance);
 		} else {
-			if ("terminated".equals(getState()) || "skipped".equals(getState())) {
+			if (STATE.TERMINATED.equals(getState()) || STATE.SKIPPED.equals(getState())) {
 				scenarioInstance.getTerminatedControlNodeInstances()
 						.add(controlNodeInstance);
 			}
@@ -42,9 +42,9 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 * Sets the state for the gateway instance in the database to executing.
 	 */
 	public void execute() {
-		setState("executing");
+		setState(STATE.EXECUTING);
 		dbGatewayInstance.setState(
-				getControlNodeInstance().getControlNodeInstanceId(), getState());
+				getControlNodeInstance().getControlNodeInstanceId(), getState().toString());
 		getScenarioInstance().getExecutingGateways()
 				.add((GatewayInstance) getControlNodeInstance());
 	}
@@ -54,9 +54,9 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 * Sets the state for the gateway instance in the database to terminated.
 	 */
 	@Override public boolean terminate() {
-		setState("terminated");
+		setState(STATE.TERMINATED);
 		dbGatewayInstance.setState(
-				getControlNodeInstance().getControlNodeInstanceId(), getState());
+				getControlNodeInstance().getControlNodeInstanceId(), getState().toString());
 		getScenarioInstance().getExecutingGateways().remove(getControlNodeInstance());
 		getScenarioInstance().getTerminatedControlNodeInstances()
 				.add(getControlNodeInstance());
@@ -68,9 +68,9 @@ public class GatewayStateMachine extends AbstractStateMachine {
 	 * Sets the state for the gateway instance in the database to skipped.
 	 */
 	@Override public boolean skip() {
-		setState("skipped");
+		setState(STATE.SKIPPED);
 		dbGatewayInstance.setState(
-				getControlNodeInstance().getControlNodeInstanceId(), getState());
+				getControlNodeInstance().getControlNodeInstanceId(), getState().toString());
 		getScenarioInstance().getExecutingGateways().remove(getControlNodeInstance());
 		getScenarioInstance().getTerminatedControlNodeInstances()
 				.add(getControlNodeInstance());

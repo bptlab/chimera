@@ -29,7 +29,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 		//adds the Activity Instance to the correct list
 		// in Scenario Instance, decides on the state of the Activity
 		switch (getState()) {
-		case "ready":
+        case READY:
 			scenarioInstance.getControlFlowEnabledControlNodeInstances()
 					.add(controlNodeInstance);
 			scenarioInstance.getDataEnabledControlNodeInstances()
@@ -37,27 +37,27 @@ public class ActivityStateMachine extends AbstractStateMachine {
 			scenarioInstance.getEnabledControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
-		case "ready(Data)":
+        case DATAFLOW_ENABLED:
 			scenarioInstance.getDataEnabledControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
-		case "ready(ControlFlow)":
+        case CONTROLFLOW_ENABLED:
 			scenarioInstance.getControlFlowEnabledControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
-		case "running":
+        case RUNNING:
 			scenarioInstance.getRunningControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
-		case "terminated":
+        case TERMINATED:
 			scenarioInstance.getTerminatedControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
-		case "skipped":
+		case SKIPPED:
 			scenarioInstance.getTerminatedControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
-		case "referentialRunning":
+		case REFERENTIAL_RUNNING:
 			scenarioInstance.getReferentialRunningControlNodeInstances()
 					.add(controlNodeInstance);
 			break;
@@ -71,25 +71,25 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 *
 	 * @return the state from the database for the specific activity instance.
 	 */
-	private String getDBState() {
-		return dbActivityInstance.getState(getControlNodeInstanceId());
-	}
+	private STATE getDBState() {
+        return dbActivityInstance.getState(getControlNodeInstanceId());
+    }
 
 	/**
 	 * Enables the control flow for the activity instance specified in attributes.
 	 *
-	 * @return true if the state could been updated. false if the state couldn't been updated.
+	 * @return true if the state update was successful, false if not.
 	 */
 	public boolean enableControlFlow() {
 		//String state = this.getState();
-		if ("init".equals(getState())) {
-			this.setState("ready(ControlFlow)");
+		if (STATE.INIT.equals(getState())) {
+			this.setState(STATE.CONTROLFLOW_ENABLED);
 			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
 					.add(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready(Data)".equals(getState())) {
-				this.setState("ready");
+			if (STATE.DATAFLOW_ENABLED.equals(getState())) {
+				this.setState(STATE.READY);
 				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
 						.add(getControlNodeInstance());
 				getScenarioInstance().getEnabledControlNodeInstances()
@@ -105,18 +105,17 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	/**
 	 * Enables the data flow for the activity instance specified in attributes.
 	 *
-	 * @return true if the state could been updated. false if the state couldn't been updated.
+	 * @return true if the state update was successful, false if not.
 	 */
 	public boolean enableData() {
-		//String state = this.getState();
-		if ("init".equals(getState())) {
-			this.setState("ready(Data)");
+		if (STATE.INIT.equals(getState())) {
+			this.setState(STATE.DATAFLOW_ENABLED);
 			getScenarioInstance().getDataEnabledControlNodeInstances()
 					.add(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready(ControlFlow)".equals(getState())) {
-				this.setState("ready");
+			if (STATE.CONTROLFLOW_ENABLED.equals(getState())) {
+				this.setState(STATE.READY);
 				getScenarioInstance().getDataEnabledControlNodeInstances()
 						.add(getControlNodeInstance());
 				getScenarioInstance().getEnabledControlNodeInstances()
@@ -136,14 +135,14 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public boolean disableData() {
 		//String state = this.getState();
-		if ("ready(Data)".equals(getState())) {
-			this.setState("init");
+		if (STATE.DATAFLOW_ENABLED.equals(getState())) {
+			this.setState(STATE.INIT);
 			getScenarioInstance().getDataEnabledControlNodeInstances()
 					.remove(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready".equals(getState())) {
-				this.setState("ready(ControlFlow)");
+			if (STATE.READY.equals(getState())) {
+				this.setState(STATE.CONTROLFLOW_ENABLED);
 				getScenarioInstance().getDataEnabledControlNodeInstances()
 						.remove(getControlNodeInstance());
 				getScenarioInstance().getEnabledControlNodeInstances()
@@ -160,8 +159,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to referential running. (else false).
 	 */
 	public boolean referenceStarted() {
-		if ("ready".equals(getState())) {
-			this.setState("referentialRunning");
+		if (STATE.READY.equals(getState())) {
+			this.setState(STATE.REFERENTIAL_RUNNING);
 			getScenarioInstance().getReferentialRunningControlNodeInstances()
 					.add(getControlNodeInstance());
 			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
@@ -172,8 +171,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 					.remove(getControlNodeInstance());
 			return true;
 		} else {
-			if ("ready(ControlFlow)".equals(getState())) {
-				this.setState("referentialRunning");
+			if (STATE.CONTROLFLOW_ENABLED.equals(getState())) {
+				this.setState(STATE.REFERENTIAL_RUNNING);
 				getScenarioInstance().getReferentialRunningControlNodeInstances()
 						.add(getControlNodeInstance());
 				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
@@ -191,8 +190,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to referential running. (else false).
 	 */
 	public boolean referenceTerminated() {
-		if ("referentialRunning".equals(getState())) {
-			this.setState("terminated");
+		if (STATE.REFERENTIAL_RUNNING.equals(getState())) {
+			this.setState(STATE.TERMINATED);
 			getScenarioInstance().getReferentialRunningControlNodeInstances()
 					.remove(getControlNodeInstance());
 			getScenarioInstance().getControlNodeInstances()
@@ -211,8 +210,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	public boolean begin() {
 		//String state = this.getState();
-		if ("ready".equals(getState())) {
-			this.setState("running");
+		if (STATE.READY.equals(getState())) {
+			this.setState(STATE.RUNNING);
 			getScenarioInstance().getRunningControlNodeInstances()
 					.add(getControlNodeInstance());
 			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
@@ -234,8 +233,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	@Override public boolean terminate() {
 		//String state = this.getState();
-		if ("running".equals(getState())) {
-			this.setState("terminated");
+		if (STATE.RUNNING.equals(getState())) {
+			this.setState(STATE.TERMINATED);
 			getScenarioInstance().getRunningControlNodeInstances()
 					.remove(getControlNodeInstance());
 			getScenarioInstance().getControlNodeInstances()
@@ -252,8 +251,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
      * @return Returns true if the activity was running and then could have been terminated correct.
      */
     public boolean cancel() {
-        if ("running".equals(getState())) {
-            this.setState("cancel");
+        if (STATE.RUNNING.equals(getState())) {
+            this.setState(STATE.CANCEL);
             getScenarioInstance().getRunningControlNodeInstances()
                     .remove(getControlNodeInstance());
             getScenarioInstance().getControlNodeInstances()
@@ -270,14 +269,14 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 */
 	@Override public boolean skip() {
 		//String state = this.getState();
-		if ("init".equals(getState()) || this.isReady(getState())) {
+		if (STATE.INIT.equals(getState()) || this.isReady(getState())) {
 			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
 					.remove(getControlNodeInstance());
 			getScenarioInstance().getDataEnabledControlNodeInstances()
 					.remove(getControlNodeInstance());
 			getScenarioInstance().getEnabledControlNodeInstances()
 					.remove(getControlNodeInstance());
-			this.setState("skipped");
+			this.setState(STATE.SKIPPED);
 			return true;
 		}
 		return false;
@@ -289,7 +288,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state is ready, ready(ControlFlow) or ready(data).
 	 */
 	public boolean isEnabled() {
-		return "ready".equals(this.getState());
+		return STATE.READY.equals(this.getState());
 	}
 
 	/**
@@ -298,9 +297,9 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @param state The state which should be checked.
 	 * @return true if the state is ready, ready(ControlFlow) or ready(data).
 	 */
-	private boolean isReady(String state) {
-		return "ready".equals(state) || "ready(ControlFlow)".equals(state) || "ready(Data)"
-				.equals(state);
+	private boolean isReady(STATE state) {
+		return STATE.READY.equals(state) || STATE.CONTROLFLOW_ENABLED.equals(state) ||
+                STATE.DATAFLOW_ENABLED.equals(state);
 	}
 
 	/**
@@ -309,7 +308,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 *
 	 * @param state This is the new state.
 	 */
-	public void setState(String state) {
+	public void setState(STATE state) {
 		super.setState(state);
 		dbActivityInstance.setState(getControlNodeInstanceId(), state);
 	}

@@ -294,7 +294,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity2);
         executionService.beginActivity(scenarioInstance, activity2);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        assertEquals("referentialRunning", dbActivityInstance.getState(activity3instance_id));
+        assertEquals(AbstractStateMachine.STATE.REFERENTIAL_RUNNING, dbActivityInstance.getState(activity3instance_id));
         ////executionService.setDataAttributeValues(scenarioInstance, activity3instance_id, new HashMap<Integer, String>());
         ////executionService.setDataAttributeValues(scenarioInstance, activity2instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity2);
@@ -302,8 +302,8 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
 
-        assertEquals("terminated", dbActivityInstance.getState(activity2instance_id));
-        assertEquals("terminated", dbActivityInstance.getState(activity3instance_id));
+        assertEquals(AbstractStateMachine.STATE.TERMINATED, dbActivityInstance.getState(activity2instance_id));
+        assertEquals(AbstractStateMachine.STATE.TERMINATED, dbActivityInstance.getState(activity3instance_id));
     }
 
     /**
@@ -334,7 +334,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        assertEquals("referentialRunning", dbActivityInstance.getState(activity2instance_id));
+        assertEquals(AbstractStateMachine.STATE.REFERENTIAL_RUNNING, dbActivityInstance.getState(activity2instance_id));
 
         System.out.println("--- restart Service ---");
         executionService = null;
@@ -855,7 +855,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
     }
-    
+
     private void assertArrayEquals(Object[] expected, Object[] actual) {
     	Arrays.sort(expected);
     	Arrays.sort(actual);

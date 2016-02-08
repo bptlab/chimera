@@ -7,8 +7,12 @@ public abstract class AbstractStateMachine {
 	private ScenarioInstance scenarioInstance;
 	private int controlNodeInstanceId;
 	private AbstractControlNodeInstance controlNodeInstance;
-	private String state;
+	private STATE state;
 
+    public enum STATE {
+        DATAFLOW_ENABLED, CONTROLFLOW_ENABLED, READY, EXECUTING, TERMINATED,
+        SKIPPED, INIT, RUNNING, CANCEL, REFERENTIAL_RUNNING
+    }
 	/**
 	 *
 	 * @return true if successfully skipped.
@@ -45,11 +49,11 @@ public abstract class AbstractStateMachine {
 		this.controlNodeInstance = controlNodeInstance;
 	}
 
-	public String getState() {
+	public STATE getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(STATE state) {
 		this.state = state;
 	}
 }

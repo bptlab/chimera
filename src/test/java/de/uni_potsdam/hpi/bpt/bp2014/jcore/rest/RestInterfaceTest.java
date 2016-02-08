@@ -1204,7 +1204,7 @@ public class RestInterfaceTest extends AbstractTest {
     @Test
     public void testGetVersion() {
         Response response = base.path("version").request().get();
-        assertEquals("The Response code of getTermiantionCondition was not 200",
+        assertEquals("The Response code of getVersion was not 200",
                 200, response.getStatus());
         assertEquals("Get Version does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
