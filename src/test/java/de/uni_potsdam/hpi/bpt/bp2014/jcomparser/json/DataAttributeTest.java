@@ -51,7 +51,28 @@ public class DataAttributeTest  {
     @Test
     public void testDataAttribute(){
         DataAttribute dataAttribute = new DataAttribute("state");
-        Assert.assertEquals("AttributeName has been set correctly", "state", dataAttribute.getDataAttributeName());
+        Assert.assertEquals("AttributeName has not been set correctly", "state", dataAttribute
+                .getDataAttributeName());
         Assert.assertEquals("AttributeType has not been set correctly", "", dataAttribute.getDataAttributeType());
+    }
+
+    @Test
+    public void testTypedDataAttribute(){
+        DataAttribute dataAttribute = new DataAttribute("state","String");
+        Assert.assertEquals("AttributeName has not been set correctly", "state", dataAttribute
+                .getDataAttributeName());
+        Assert.assertEquals("AttributeType has not been set correctly", "String", dataAttribute
+                .getDataAttributeType());
+    }
+
+    @Test
+    public void testDataAttributeParsing(){
+        DataClass dClass = new DataClass();
+        dClass.initializeInstanceFromJson(dataClass);
+        DataAttribute dAttribute = dClass.getDataAttributes().get(0);
+        Assert.assertEquals("AttributeName has not been set correctly", "Beginn", dAttribute
+                .getDataAttributeName());
+        Assert.assertEquals("AttributeType has not been set correctly", "String", dAttribute
+                .getDataAttributeType());
     }
 }

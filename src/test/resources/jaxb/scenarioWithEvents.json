@@ -14,7 +14,8 @@
         "attributes": [
           {
             "name": "Temperature",
-            "_id": "56ae3855973e910e65885f62"
+            "_id": "56ae3855973e910e65885f62",
+            "datatype": "Integer"
           }
         ]
       },
