@@ -97,7 +97,6 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 					jsonAttributes.getJSONObject(i).getString("name"),
 					jsonAttributes.getJSONObject(i).getString("datatype")
 			);
-			dataAttribute.setDataClassID(dataClassID);
 			this.dataAttributes.add(dataAttribute);
 		}
 	}
@@ -108,6 +107,7 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 	 */
 	private void saveDataAttributes() {
 		for (DataAttribute dataAttribute : dataAttributes) {
+            dataAttribute.setDataClassID(dataClassID);
 			dataAttribute.save();
 		}
 	}
