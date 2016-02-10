@@ -25,20 +25,6 @@ public final class Connection {
 	}
 
 	/**
-	 * This method is used to build a connection with a given path for the database.
-	 *
-	 * @param path This is the path for the database.
-	 * @return the instance of a new Connection.
-	 */
-	public static Connection getInstance(String path) {
-		if (instance == null) {
-			instance = new Connection();
-			instance.initializeDatabaseConfiguration();
-		}
-		return instance;
-	}
-
-	/**
 	 * This method builds a connection for the database with a default path.
 	 *
 	 * @return the instance of a new Connection.
