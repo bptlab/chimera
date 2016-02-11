@@ -133,6 +133,8 @@
     </build>
 
 	<properties>
+	<!-- The value of the schema.version property has to be increased when the schema changes! -->
+		<schema.version>2</schema.version>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
