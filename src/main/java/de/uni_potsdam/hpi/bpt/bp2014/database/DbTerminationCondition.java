@@ -62,7 +62,7 @@ public class DbTerminationCondition extends DbObject {
 	/**
 	 * Returns a list of Hashmap with all the information
 	 * of a Termination Condition of one specific Scenario.
-	 * Tje Scenario is specified by the given id.
+	 * The Scenario is specified by the given id.
 	 *
 	 * @param scenarioID the id of the given Scenario
 	 * @return a Map with detailed information about the scenario
