@@ -7,6 +7,7 @@ import com.ibatis.common.jdbc.ScriptRunner;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,25 +20,35 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * This class is used to build a connection to the database. It reads database credentials from the
- * configuration file and initializes the JDBC Driver accordingly.
+ * This class knows the database credentials and provides a method to connect to the database. It
+ * initializes the JDBC Driver and checks whether the schema version used in the database is smaller
+ * then the version used by the engine. In that case the database is updated.
  */
 public final class Connection {
   private static Connection instance = null;
-  private static String username;
-  private static String password;
-  private static String url;
+  private String username;
+  private String password;
+  private String url;
   private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+  private static final String SCHEMA_DEFINITION_FILE = "JEngineV2_schema.sql";
   private static Logger log = Logger.getLogger(Connection.class.getName());
 
   /**
-   * constructor
+   * Stores the current schema version used in the Chimera engine. Is set to '-1', if reading the
+   * version file fails.
+   */
+  private int schemaVersion = getSchemaVersion();
+
+  /**
+   * Empty constructor. Use {@link getInstance()} to get the singleton instance.
    */
   private Connection() {
   }
 
   /**
-   * This method builds a connection for the database with a default path.
+   * This method builds a connection for the database with the credentials taken from the
+   * config.properties file. It compares the schema version to the version used in the database and
+   * "updates" the database by dropping the schema and executing a SQL script to recreate it.
    *
    * @return the instance of a new Connection.
    */
@@ -45,36 +56,35 @@ public final class Connection {
     if (instance == null) {
       instance = new Connection();
       instance.initializeDatabaseConfiguration();
-      instance.schemaVersionOutdated();
+      if (instance.schemaVersionOutdated()) {
+        instance.updateSchema();
+      }
     }
     return instance;
   }
 
   /**
-   * This connection is used to connect to the database.
+   * Connects to the database and return the {@link java.sql.Connection} object.
    *
-   * @return the open connection.
+   * @return the open connection
    */
   public java.sql.Connection connect() {
     java.sql.Connection conn = null;
-
     try {
       // Register JDBC driver
       Class.forName(JDBC_DRIVER);
       // Open a connection
       conn = DriverManager.getConnection(url, username, password);
     } catch (ClassNotFoundException | SQLException e) {
-      e.printStackTrace();
       // Handle errors for Class.forName
       log.error("MySQL Connection Error:", e);
     }
-
     return conn;
   }
 
   /**
    * Checks whether a schema update is necessary. Returns {@literal true} if the schema version in
-   * the database it outdated.
+   * the database it outdated or not found in the database.
    */
   private Boolean schemaVersionOutdated() {
     int dbVersion;
@@ -84,23 +94,30 @@ public final class Connection {
       log.error("Could not read schema version used in database. Will update the schema.", e);
       return true;
     }
-    int schemaVersion;
-    try {
-      InputStream is = Thread.currentThread().getContextClassLoader()
-          .getResourceAsStream("schemaversion");
-      String line = (new BufferedReader(new InputStreamReader(is))).readLine();
-      schemaVersion = Integer.parseInt(line);
-    } catch (IOException e) {
-      log.error(
-          "Could no read schema version used by this build of the engine (should be stored in a file called 'schemaversion').\n Will NOT update schema.",
-          e);
-      return false;
-    }
     log.info(String.format("Version in DB: %d,\nVersion of schema: %d", dbVersion, schemaVersion));
     if (schemaVersion > dbVersion) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  /**
+   * Reads the schema version used by the Chimera engine from file.
+   * 
+   * @return the schema version
+   */
+  private int getSchemaVersion() {
+    try {
+      InputStream is = Thread.currentThread().getContextClassLoader()
+          .getResourceAsStream("schemaversion");
+      String line = (new BufferedReader(new InputStreamReader(is))).readLine();
+      return Integer.parseInt(line);
+    } catch (IOException e) {
+      log.error(
+          "Could no read schema version used by this build of the engine (should be stored in a file called 'schemaversion').\n Will NOT update schema.",
+          e);
+      return -1;
     }
   }
 
@@ -125,7 +142,7 @@ public final class Connection {
     if (!rs.next()) {
       throw new SQLException("Table 'version' is empty.");
     }
-    int dbVersion = rs.getInt(0);
+    int dbVersion = rs.getInt(1);
     conn.close();
     return dbVersion;
   }
@@ -136,20 +153,35 @@ public final class Connection {
    */
   private void updateSchema() {
     java.sql.Connection conn = this.connect();
+    log.info("Trying to update the schema");
     try {
+      InputStream is = Thread.currentThread().getContextClassLoader()
+          .getResourceAsStream(SCHEMA_DEFINITION_FILE);
+      if (is == null) {
+        throw new FileNotFoundException(String
+            .format("The schema definition file %s could not be found.", SCHEMA_DEFINITION_FILE));
+      }
       Statement stmt = conn.createStatement();
       String schemaName = PropertyLoader.getProperty("mysql.schema");
-      stmt.executeQuery("DROP SCHEMA " + schemaName);
-      stmt.executeQuery("CREATE SCHEMA " + schemaName);
+      stmt.execute("DROP SCHEMA " + schemaName);
+      // now run the script to create the schema definition
       ScriptRunner runner = new ScriptRunner(conn, false, false);
-      runner.runScript(new FileReader("JEngineV2_schema.sql"));
+      runner.runScript(new InputStreamReader(is, "UTF-8"));
+      //
+      stmt.execute("INSERT INTO version VALUES (" + schemaVersion + ")");
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.error("Could not update the schema.", e);
+    } catch (FileNotFoundException e) {
+      log.error("Did not find schema definition file. Failed to update schema.", e);
+    } catch (IOException e) {
+      log.error("Could not read schema definition file. Failed to update schema.", e);
     }
 
   }
 
+  /**
+   * Reads database credentials from the property file and stores them in fields.
+   */
   private void initializeDatabaseConfiguration() {
     username = PropertyLoader.getProperty("mysql.username");
     password = PropertyLoader.getProperty("mysql.password");

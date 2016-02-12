@@ -20,9 +20,14 @@ SET time_zone = "+00:00";
 -- Database: `JEngineV2`
 --
 
-CREATE DATABASE IF NOT EXISTS JEngineV2;
-USE JEngineV2;
+CREATE DATABASE IF NOT EXISTS ${db.schema};
+USE  ${db.schema};
 
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `version` tinyint(1) NOT NULL,
+  PRIMARY KEY (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 
 --
