@@ -2,16 +2,18 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
@@ -49,7 +51,7 @@ public class EventDispatcher {
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         int eventControlNodeId = eventMapping.getEventControlNodeId(fragmentInstanceId, requestId);
         EventFactory factory = new EventFactory(scenarioInstance);
-        AbstractEvent event = factory.getEventForId(eventControlNodeId);
+        AbstractEvent event = factory.getEventForInstanceId(eventControlNodeId);
         event.terminate();
         return Response.status(Response.Status.ACCEPTED).build();
     }
@@ -71,15 +73,18 @@ public class EventDispatcher {
         queryRequest.addProperty("notificationPath", notificationPath);
         Gson gson = new Gson();
         HttpPost post = new HttpPost(restUrl);
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         try {
             StringEntity postString = new StringEntity(gson.toJson(queryRequest));
             post.setEntity(postString);
             post.setHeader("Content-type", "application/json");
-            HttpResponse response = httpClient.execute(post);
+            final HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 2000);
+            HttpClient httpClient1 = new DefaultHttpClient(httpParams);
+            HttpResponse response = httpClient1.execute(post);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new RuntimeException("Query could not be registered");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

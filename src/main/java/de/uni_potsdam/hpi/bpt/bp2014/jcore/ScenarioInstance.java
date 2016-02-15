@@ -1,15 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Condition;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents a scenario instance.
@@ -105,7 +99,13 @@ public class ScenarioInstance {
 		}
 	}
 
-	/**
+    // TODO Test this method
+    public List<AbstractEvent> getEventsForScenarioInstance() {
+        return this.fragmentInstances.stream().map(FragmentInstance::getRegisteredEvents).
+                flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    /**
 	 * Creates and initializes the fragment with the specific fragment id.
 	 *
 	 * @param fragmentId This is the database id from the fragment.

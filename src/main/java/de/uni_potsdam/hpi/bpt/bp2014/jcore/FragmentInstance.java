@@ -2,7 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents a fragment instance.
@@ -38,6 +40,18 @@ public class FragmentInstance {
 		this.scenarioInstanceId = scenarioInstanceId;
         this.createDatabaseFragmentInstance();
 	}
+
+
+    public List<AbstractEvent> getRegisteredEvents() {
+        DbEventMapping mapping = new DbEventMapping();
+        EventFactory factory = new EventFactory(this.scenarioInstance);
+        List<AbstractEvent> events = new ArrayList<>();
+        for (Integer event : mapping.getRegisteredEventsForFragment(this.fragmentInstanceId)) {
+            events.add(factory.getEventForControlNodeId(event, this.fragmentInstanceId));
+        }
+
+        return events;
+    }
 
 	public void createDatabaseFragmentInstance () {
 		if (dbFragmentInstance.existFragment(fragmentId, scenarioInstanceId)) {
