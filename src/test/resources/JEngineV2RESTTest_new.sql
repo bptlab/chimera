@@ -22,6 +22,14 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+
+CREATE TABLE IF NOT EXISTS `eventmapping` (
+  `fragmentInstanceId` int(11) NOT NULL,
+  `eventcontrolnodeid` int(11) NOT NULL,
+  `eventkey` VARCHAR(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 --
 -- Tabellenstruktur für Tabelle `activityinstance`
 --

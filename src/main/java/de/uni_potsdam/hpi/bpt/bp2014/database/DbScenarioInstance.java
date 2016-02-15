@@ -175,7 +175,7 @@ public class DbScenarioInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * TODO make this method more clear.
 	 * @param instanceId This is the database ID of a scenario instance.
 	 * @return a Map with detailed information about the scenario instance.
 	 */

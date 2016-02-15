@@ -374,6 +374,16 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `eventmapping`
+--
+
+CREATE TABLE IF NOT EXISTS `eventmapping` (
+  `fragmentInstanceId` int(11) NOT NULL,
+  `eventcontrolnodeid` int(11) NOT NULL,
+  `eventkey` VARCHAR(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `gatewayandeventstate`
 --
 
