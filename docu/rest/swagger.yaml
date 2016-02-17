@@ -1,0 +1,1162 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: Chimera API
+host: localhost:8080
+basePath: /api/interface/v2
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /scenario:
+    get:
+      description: This method allows to give an overview of all current scenarios.
+      operationId: getScenarios_
+      produces:
+      - application/json
+      parameters:
+      - name: filter
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          Specifies a search. Only scenarios which
+                               name contain the specified string will be
+                               returned.
+      responses:
+        '200':
+          description: List of all scenarios.
+          schema:
+            $ref: '#/definitions/ScenarioList'
+    post:
+      description: This method allows to upload a new scenario.
+      operationId: postInstance_
+      consumes:
+      - application/json
+      parameters:
+      - name: scenario
+        in: body
+        required: true
+        x-is-map: false
+        schema:
+          $ref: '#/definitions/Scenario'
+      responses:
+        'default':
+          description: (empty response)
+  /scenario/{scenarioID}:
+    get:
+      description: This method provides information about one scenario.
+      operationId: getScenario_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The Id of the scenario used inside the database.
+      responses:
+        '200':
+          description: Detailed information about the scenario.
+          schema:
+            $ref: '#/definitions/ScenarioDetails'
+        '404':
+          description: There is no scenario with the given id.
+  /scenario/{scenarioID}/emailtask:
+    get:
+      description: >-
+        This method provides information about all email Tasks inside
+         a given scenario.
+      operationId: getAllEmailTasks_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario, its mail tasks will be returned.
+      - name: filter
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          A Filter String, only mail tasks with a label containing
+                               this filter String will be returned.
+      responses:
+        '200':
+          description: List of emailtasks for the scenarios.
+          schema:
+            $ref: '#/definitions/EmailtaskList'
+        '404':
+          description: there is no scenario with the given id.
+  /scenario/{scenarioID}/emailtask/{emailTaskID}:
+    get:
+      description: This method provides information about an email Task.
+      operationId: getEmailTaskConfiguration_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario model.
+      - name: emailTaskID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The control node ID of the mail Task.
+      responses:
+        '200':
+          description: Detailed information about the emailtask.
+          schema:
+            $ref: '#/definitions/EmailConfigJaxBean'
+        '404':
+          description: There is no emailtask in the scenario with the given ids.
+  /scenario/{scenarioID}/instance:
+    get:
+      description: This method provides information about all instances of one scenario.
+      operationId: getScenarioInstances_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of the scenario which instances should be returned.
+      - name: filter
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          Specifies a search. Only scenarios which
+                               name contain the specified string will be
+                               returned.
+      responses:
+        '200':
+          description: List of all instances for the scenario.
+          schema:
+            $ref: '#/definitions/ScenarioInstanceList'
+        '404':
+          description: There is no scenario with the given id.
+    put:
+      description: Creates a new instance of a specified scenario.
+      operationId: Update_startNewNamedInstance_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: the id of the scenario.
+      - name: name
+        in: body
+        required: true
+        x-is-map: false
+        description: The name, which will be used for the new instance.
+        schema:
+          $ref: '#/definitions/RestInterface-NamedJaxBean'
+      responses:
+        '200':
+          description: success
+    post:
+      description: Creates a new instance of a specified scenario.
+      operationId: Create_startNewInstance_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: the id of the scenario.
+      responses:
+        '201':
+          description: successfully created the instance.
+        '400':
+          description: Bad Request.
+  /scenario/{scenarioID}/instance/{instanceID}:
+    get:
+      description: This method provides detailed information about a scenario instance.
+      operationId: getScenarioInstance_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the instance.
+      responses:
+        '200':
+          description: Detailed information about the instance.
+    put:
+      description: This post can be used to terminate an existing scenario instance.
+      operationId: Update_terminateScenarioInstance_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The Id of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The Id of the instance to be terminated.
+      responses:
+        '200':
+          description: success
+  /scenario/{scenarioID}/instance/{instanceID}/activity:
+    get:
+      description: >-
+        Returns a JSON-Object containing information about all activity
+         instances of a specified scenario instance.
+      operationId: getActivitiesOfInstance_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of the scenario
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of the instance.
+      - name: filter
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          Defines a search strings. Only activities
+                               with a label containing this String will be
+                               shown.
+      - name: state
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: The state of the instance.
+      responses:
+        '200':
+          description: success
+  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}:
+    get:
+      description: This method is used to get all the information for an activity.
+      operationId: getActivity_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of a scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of a scenarioInstance.
+      - name: activityID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of an activityInstance.
+      responses:
+        '200':
+          description: success
+    put:
+      description: >-
+        This method updates the data attributes of a specific activity
+         defined via its activityID.
+      operationId: Update_setDataAttribute_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of a scenario model.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: the id of an scenario instance.
+      - name: activityID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: the control node id of the activity.
+      - name: input
+        in: body
+        required: true
+        x-is-map: false
+        description: data input.
+        schema:
+          $ref: '#/definitions/RestInterface-DataAttributeUpdateJaxBean'
+      responses:
+        '202':
+          description: Input was accepted.
+          schema:
+            $ref: '#/definitions/Message'
+        '400':
+          description: Bad Request.
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Updates the state of an activity instance.
+      operationId: updateActivityState_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of a scenario model.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: the id of an scenario instance.
+      - name: activityID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: the control node id of the activity.
+      - name: state
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: the new state of the activity.
+      - name: outputset
+        in: query
+        required: true
+        x-is-map: false
+        default: -1
+        type: integer
+        format: int64
+        description: the outputset of the activity.
+      responses:
+        '202':
+          description: Input was accepted.
+          schema:
+            $ref: '#/definitions/Message'
+        '400':
+          description: Bad Request.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input:
+    get:
+      description: This method responds to a GET request by returning an array of inputSets.
+      operationId: getInputDataObjects_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          The databaseID of the scenarioInstance belonging to the
+                                        aforementioned scenario.
+      - name: activityID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          The databaseID of the activityInstance belonging to this
+                                        scenarioInstance.
+      responses:
+        '200':
+          description: success
+  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output:
+    get:
+      description: This method responds to a GET request by returning an array of outputSets.
+      operationId: getOutputDataObjects_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          The databaseID of the scenarioInstance belonging to the
+                                        aforementioned scenario.
+      - name: activityID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          The databaseID of the activityInstance belonging to this
+                                        scenarioInstance.
+      responses:
+        '200':
+          description: success
+  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references:
+    get:
+      description: This method implements the REST call for retrieving.
+      operationId: getReferencesForActivity_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of a scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of a scenarioInstance.
+      - name: activityID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of an activityInstance.
+      responses:
+        '200':
+          description: success
+  /scenario/{scenarioID}/instance/{instanceID}/dataobject:
+    get:
+      description: >-
+        Returns a JSON-Object, which contains information about all
+         data objects of a specified scenario instance.
+      operationId: getDataObjects_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario model.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario instance.
+      - name: filter
+        in: query
+        required: true
+        x-is-map: false
+        type: string
+        description: >-
+          A String which specifies a filter. Only Data
+                               Objects with a label containing this string
+                               will be returned.
+      responses:
+        '200':
+          description: List of all data objects.
+          schema:
+            $ref: '#/definitions/DataObjectList'
+        '303':
+          description: The instance was found for a different scenario id.
+          schema:
+            description: Correct URI
+            format: string
+        '404':
+          description: There is no scenario / instance / data object for the given ids.
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Wrong scenario id - couldn't create correct URI for redirection
+  /scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataObjectID}:
+    get:
+      description: This method provides detailed information about an data Object.
+      operationId: getDataObject_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The scenario Model ID.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The scenario Instance ID.
+      - name: dataObjectID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The Data Object ID.
+      responses:
+        '200':
+          description: Detailed information about the data object.
+          schema:
+            $ref: '#/definitions/DataObjectJaxBean'
+        '303':
+          description: The instance was found for a different scenario id.
+          schema:
+            description: Correct URI
+            format: string
+        '404':
+          description: There is no scenario / instance / data object for the given ids.
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Wrong scenario id - couldn't create correct URI for redirection
+  /scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}:
+    get:
+      description: >-
+        This method responds to a GET request
+         by returning an array of dataObjectsInstances with their dataAttributeInstances
+         belonging to an inputSet.
+      operationId: getInputDataObjectsAndAttributes_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: This is the databaseID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          This is the databaseID of the scenarioInstance of the
+                                        aforementioned scenario.
+      - name: inputsetID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          This is the databaseID of an inputSet belonging to this
+                                        scenarioInstance.
+      responses:
+        '200':
+          description: success
+  /scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}:
+    get:
+      description: >-
+        This method responds to a GET request
+         by returning an array of dataObjectsInstances with their dataAttributeInstances
+         belonging to an outputSet.
+      operationId: getOutputDataObjectsAndAttributes_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: This is the databaseID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          This is the databaseID of the scenarioInstance of the
+                                        aforementioned scenario.
+      - name: outputsetID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          This is the databaseID of an outputSet belonging to this
+                                        scenarioInstance.
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/OutputsetList'
+        '404':
+          description: Not found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioId}/terminationcondition:
+    get:
+      description: This method provides information about the termination condition.
+      operationId: getTerminationCondition_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          This id specifies the scenario. The id is the
+                             primary key inside the database.
+      responses:
+        '200':
+          description: The termination conditions for the scenario.
+          schema:
+            $ref: '#/definitions/TerminationCondition'
+        '404':
+          description: There is no scenario with the given id.
+  /version:
+    get:
+      description: >-
+        Method for checking whether an address specified in the griffin editor
+         links to a valid running chimera instance
+      operationId: getVersion_
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: A JSON object with the Chimera version
+          schema:
+            $ref: '#/definitions/VersionObject'
+definitions:
+  RestInterface-NamedJaxBean:
+    title: RestInterface-NamedJaxBean
+    type: object
+    properties:
+      name:
+        description: The name which should be assigned to the entity.
+        type: string
+    required:
+    - name
+  RestInterface-DataAttributeUpdateJaxBean:
+    title: RestInterface-DataAttributeUpdateJaxBean
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      value:
+        type: string
+    required:
+    - id
+    - value
+  ScenarioList:
+    type: object
+    properties:
+      ids:
+        type: array
+        description: 'IDs of all known scenarios.'
+        items:
+          type: number
+          format: integer
+      links:
+        type: array
+        description: 'References to all known scenarios.'
+        items:
+          $ref: '#/definitions/ScenarioRef'
+      labels:
+        type: array
+        description: 'Labels of all known scenarios.'
+        items:
+          $ref: '#/definitions/ScenarioLabel'
+  ScenarioRef:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: 'ID of the scenario.'
+      link:
+        type: string
+        description: 'URI of the scenario.'
+  ScenarioLabel:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: 'ID of the scenario.'
+      label:
+        type: string
+        description: 'Label of the scenario.'
+  ScenarioDetails:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: 'The database ID of the scenario.'
+      name:
+        type: string
+        description: 'The name of the scenario.'
+      modelid:
+        type: number
+        format: integer
+        description: 'The model ID of the scenario.'
+      modelversion:
+        type: number
+        format: integer
+        description: 'The model version of the scenario.'
+      instances:
+        type: string
+        description: 'URI to retrieve instances of the scenario.'
+  EmailtaskList:
+    type: object
+    properties:
+      ids:
+        type: array
+        description: 'IDs of all known emailtasks.'
+        items:
+          type: number
+          format: integer
+  EmailConfigJaxBean:
+    type: object
+    properties:
+      receiver:
+        type: string
+        description: 'The receiver of the email.'
+      subject:
+        type: string
+        description: 'The subject of the email.'
+      content:
+        type: string
+        description: 'The content of the email.'
+  ScenarioInstanceList:
+    type: object
+    properties:
+      ids:
+        type: array
+        description: 'IDs of all known scenario instances.'
+        items:
+          type: number
+          format: integer
+      labels:
+        type: array
+        description: 'Labels of all known scenario instances.'
+        items:
+          $ref: '#/definitions/InstanceLabel'         
+      links:
+        type: array
+        description: 'References to all known scenario instances.'
+        items:
+          $ref: '#/definitions/InstanceRef'
+  InstanceLabel:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: 'ID of the instance.'
+      label:
+        type: string
+        description: 'Label of the instance.'
+  InstanceRef:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: 'ID of the scenario instance.'
+      link:
+        type: string
+        description: 'URI of the scenario instance.'
+  TerinationCondition:
+    type: object
+    properties:
+      conditions:
+        type: array
+        description: 'The termination conditions for the scenario.'
+        items:
+          $ref: '#/definitions/TerminationConditionList'
+      setIDs:
+        type: array
+        description: 'IDs of the termination conditions.'
+        items:
+          type: number
+          format: integer
+  TerminationConditionList:
+    type: object
+    properties:
+      state:
+        type: string
+        description: 'State required for termination.'
+      data_object:
+        type: string
+        description: 'Name of the associated data object.'
+      set_id:
+        type: number
+        format: integer
+        description: 'ID of the termination condition set.'
+  Scenario:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 'The scenarios name'
+      _id:
+        type: number
+        format: integer
+        description: 'Unique identifier of any scenario.'
+      terminationconditions:
+        type: array
+        items:
+          $ref: '#/definitions/TerminationCondition'
+        description: 'The termination conditions that are used.'  
+      domain_model:
+        type: number
+        format: integer
+        description: 'The ID of the associated domain model.'
+      fragments:
+        type: array
+        items:
+          type: number
+          format: integer
+        description: 'The IDs of associated fragments.'
+      revision:
+        type: number
+        format: integer
+        description: |
+          The scenarios revision. Is increased automatically if the
+          fragments, the data_objects or the termination condition is different 
+          from the last version
+  DataObjectList:
+    type: object
+    properties:
+      ids:
+        type: array
+        description: 'IDs of all data objects.'
+        items:
+          type: number
+          format: integer
+      results:
+        type: array
+        description: 'Information about all data objects.'
+        items:
+          $ref: '#/definitions/DataObjectEntry'   
+  DataObjectEntry:
+    type: object
+    properties:
+      id:
+        type: array
+        description: 'the name of this attribute is the actual ID of the data object (note that swagger cant do this).'
+        items:
+          $ref: '#/definitions/DataObject'
+  DataObject:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: 'Unique identifier for the data object.'
+      label:
+        type: string
+        description: 'The label of the data object'
+      state:
+        type: string
+        description: 'The state of the data object'
+      link:
+        type: string
+        description: 'The URI of the data object'
+          
+  TerminationCondition:
+    type: object
+    properties:
+      dataobjectname:
+        type: string
+        description: |
+          For each DataObject involved in this TerminationCondition, add a
+          Key/Value-Pair where the Key is the name of the DataObject and the
+          Value is the name of the state. 
+  Fragment:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 'The fragments name.'
+      _id:
+        type: number
+        format: integer
+        description: 'The fragments unique identifier.'
+      content:
+        type: string
+        format: integer
+        description: 'The BPMN-XML used to describe the content.'
+      revision:
+        type: number
+        format: integer
+        description: 'The fragments revision. Gets increased everytime the fragment is updated.'
+  FragmentStructureObject:
+    type: object
+  DomainModel:
+    type: object
+    required:
+      - name
+      - dataclasses
+    properties:
+      name:
+        type: string
+        description: 'The name of the domain model.'
+      _id:
+        type: number
+        format: long
+        description: 'The unique identifier of the domain model.'
+      revision:
+        type: number
+        format: integer
+        description: 'The domain models revision. Gets increased everytime the domain model is updated.'
+      dataclasses:
+        type: array
+        description: 'The data classes belonging to the domain model.'
+        items:
+          $ref: '#/definitions/DataClass'
+      aggregations:
+        type: array
+        description: 'The aggregation relationships between the data classes of this domain model.'
+        items:
+          $ref: '#/definitions/Aggregation'
+  DataClass:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 'The name of the data class.'
+      _id:
+        type: number
+        format: long
+        description: 'The unique identifier the data class.'
+      is_root:
+        type: boolean
+        description: 'Describes whether the data class is the root element of the domain model.'
+      is_event:
+        type: boolean
+        description: 'Describes whether the data class represents event data.'
+      attributes:
+        type: array
+        description: 'The attributes of the data class.'
+        items:
+          $ref: '#/definitions/DataClassAttribute'
+  DataClassAttribute:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 'The name of the attribute.'
+      datatype:
+        type: string
+        description: 'The datatype of the attribute.'
+  Aggregation:
+    type: object
+    properties:
+      sourceMultiplicity:
+        type: string
+        format: x..y
+        description: 'The source multiplicity of the aggregation relationship.'
+      targetMultiplicity:
+        type: string
+        format: x..y
+        description: 'The target multiplicity of the aggregation relationship.'
+      sourceNode:
+        type: number
+        format: long
+        description: 'The id of the aggregation relationship source node.'
+      targetNode:
+        type: number
+        format: long
+        description: 'The id of the aggregation relationship target node.'
+  ValidationReport:
+    type: object
+    properties:
+      scenario:
+        $ref: '#/definitions/ScenarioList'
+      correct:
+        type: boolean
+        description: 'True if no errors were found. Otherwise false.'
+      errors:
+        type: array
+        description: 'All errors found.'
+        items:
+          $ref: '#/definitions/ValidationError'
+  ValidationError:
+    type: object
+    properties:
+      message:
+        type: string
+        description: 'The message for this error. This should be displayed to the user.'
+      type:
+        type: string
+        description: 'The type of the error.'
+      level:
+        type: number
+        format: integer
+        description: 'The level of the error (1 Error, 2 Warning, 3 Notice).'
+  FragmentList:
+    type: object
+    properties:
+      content_length:
+        type: number
+        format: integer
+        description: 'The number of fragments found.'
+      scenarios:
+        type: array
+        description: 'All fragments found.'
+        items:
+          $ref: '#/definitions/Fragment'
+  DomainModelList:
+    type: object
+    properties:
+      content_length:
+        type: number
+        format: integer
+        description: 'The number of domain models found.'
+      scenarios:
+        type: array
+        description: 'All models found.'
+        items:
+          $ref: '#/definitions/DomainModel'
+
+  OutputsetList:
+    type: array
+    description: 'All data objects found.'
+    items:
+      $ref: '#/definitions/DataObjectJaxBean'
+  Message:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Content of the message.
+  DataObjectJaxBean:
+    type: object
+    properties:
+      label:
+        type: string
+        description: 'The label of the data object.'
+      id:
+        type: number
+        format: integer
+        description: 'The id the dataobject (not the instance) has inside the database.'
+      state:
+        type: string
+        description: 'The state of the data object.'
+      setId:
+        type: number
+        format: integer
+        description: 'The setId of the dataobject.'
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+        description: Description of the error.          
+  VersionObject:
+    type: object
+    properties:
+      version:
+        description: The current Chimera version.
+        type: string
