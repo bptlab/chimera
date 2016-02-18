@@ -105,6 +105,29 @@ public class ScenarioInstance {
                 flatMap(Collection::stream).collect(Collectors.toList());
     }
 
+    public AbstractControlNodeInstance getControlNodeInstanceWithId(int controlNodeInstanceId) {
+        for (AbstractControlNodeInstance controlNodeInstance : this.getControlNodeInstances()) {
+            if (controlNodeInstance.getControlNodeInstanceId() == controlNodeInstanceId) {
+                return controlNodeInstance;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @return returns a List of all registered keys to events.
+     */
+    public List<String> getRequestKeys() {
+        List<String> eventKeys = new ArrayList<>();
+        for (FragmentInstance fragmentInstance : this.fragmentInstances) {
+            Integer fragmentInstanceId = fragmentInstance.getFragmentInstanceId();
+            DbEventMapping eventMapping = new DbEventMapping();
+            eventKeys.addAll(eventMapping.getRequestKeysForFragment(fragmentInstanceId));
+        }
+        return eventKeys;
+    }
+
     /**
 	 * Creates and initializes the fragment with the specific fragment id.
 	 *

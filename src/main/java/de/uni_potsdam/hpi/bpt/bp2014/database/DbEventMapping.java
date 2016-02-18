@@ -40,4 +40,10 @@ public class DbEventMapping extends DbObject {
                 + "fragmentInstanceId = " + fragmentInstanceId + ";";
         return this.executeStatementReturnsListInt(retrieveEventControlNodeId, "eventcontrolnodeid");
     }
+
+    public List<String> getRequestKeysForFragment(int fragmentInstanceId) {
+        String retrieveRequestKeys = "SELECT * FROM eventmapping WHERE "
+                + "fragmentInstanceId = " + fragmentInstanceId + ";";
+        return this.executeStatementReturnsListString(retrieveRequestKeys, "eventkey");
+    }
 }
