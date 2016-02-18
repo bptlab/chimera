@@ -1,26 +1,44 @@
 package de.uni_potsdam.hpi.bpt.bp2014.events;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
-import org.apache.commons.io.FileUtils;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import org.junit.After;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Maarten on 11.02.2016.
+ *
  */
 public class BoundaryEventTest {
-	@Test
-	public void testScenario() {
-		File file = new File("src/test/resources/Testscenario/TestBoundaryEvent.json");
-		Scenario scenario = new Scenario();
-		try {
-			String json = FileUtils.readFileToString(file);
-			scenario.initializeInstanceFromJson(json);
-		} catch (IOException e) {
-			e.printStackTrace();
-			assert(false);
-		}
-	}
+    @After
+    public void teardown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
+
+    @Test
+    public void testActivityCancellation() {
+        String path = "src/test/resources/EventScenarios/TestBoundaryEvent.json";
+        try {
+            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ActivityInstance activity = (ActivityInstance)
+                    scenarioInstance.getEnabledControlNodeInstances().get(0);
+            List<AbstractEvent> registeredEvents = scenarioInstance.getEventsForScenarioInstance();
+            assertEquals("Boundary event should only be active after beginning activity",
+                    0, registeredEvents.size());
+            activity.begin();
+            registeredEvents = scenarioInstance.getEventsForScenarioInstance();
+            BoundaryEvent boundaryEvent = (BoundaryEvent) registeredEvents.get(0);
+            boundaryEvent.terminate();
+            assertEquals(AbstractStateMachine.STATE.CANCEL, activity.getStateMachine().getState());
+        } catch (IOException e) {
+            assert(false);
+            e.printStackTrace();
+        }
+    }
 }

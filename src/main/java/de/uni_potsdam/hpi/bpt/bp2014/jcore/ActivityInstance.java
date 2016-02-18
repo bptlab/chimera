@@ -113,13 +113,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * Initialize other information for the instance.
 	 */
 	private void initActivityInstance() {
-        DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
-        int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
-        if (boundaryEventId != -1) {
-            BoundaryEvent event = new BoundaryEvent(boundaryEventId,
-                    this.getFragmentInstanceId(), this.getScenarioInstance());
-            event.enableControlFlow();
-        }
 		this.canTerminate = dbActivityInstance.getCanTerminate(getControlNodeInstanceId());
 		this.automaticExecution =
 				dbActivityInstance.getAutomaticExecution(
@@ -169,7 +162,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			scenarioInstance.checkDataFlowEnabled();
 			scenarioInstance.checkExecutingGateways(getControlNodeId());
 			taskExecutionBehavior.execute();
-			if (isAutomaticTask) {
+            enableAttachedEvents();
+            if (isAutomaticTask) {
 				this.terminate();
 			}
 			return true;
@@ -178,6 +172,15 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		}
 	}
 
+    private void enableAttachedEvents() {
+        DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
+        int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
+        if (boundaryEventId != -1) {
+            BoundaryEvent event = new BoundaryEvent(boundaryEventId,
+                    this.getFragmentInstanceId(), this.getScenarioInstance());
+            event.enableControlFlow();
+        }
+    }
 	/**
 	 * Sets an activity to referential running.
 	 *
@@ -324,4 +327,5 @@ public class ActivityInstance extends AbstractControlNodeInstance {
                 this.getOutgoingBehavior();
         out.cancel();
     }
+
 }

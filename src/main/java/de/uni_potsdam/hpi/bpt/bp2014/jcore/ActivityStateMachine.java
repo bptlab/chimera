@@ -268,7 +268,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state could been set. false if the state couldn't been set.
 	 */
 	@Override public boolean skip() {
-		//String state = this.getState();
 		if (STATE.INIT.equals(getState()) || this.isReady(getState())) {
 			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
 					.remove(getControlNodeInstance());
