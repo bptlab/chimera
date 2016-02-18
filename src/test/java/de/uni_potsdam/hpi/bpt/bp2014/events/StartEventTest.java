@@ -2,8 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.events;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
@@ -23,18 +22,36 @@ public class StartEventTest {
     }
 
     @Test
-	public void testScenario() {
-		File file = new File("src/test/resources/Testscenario/TestStartEvent.json");
-		Scenario scenario = new Scenario();
-		try {
-			String json = FileUtils.readFileToString(file);
-			scenario.initializeInstanceFromJson(json);
-            ScenarioInstance instance = new ScenarioInstance(1, 3);
-            List<AbstractEvent> events = instance.getEventsForScenarioInstance();
-            System.out.println(events);
+	public void testStartEventRegistration() {
+        String path = "src/test/resources/EventScenarios/StartEventWithQuery.json";
+        try {
+            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            List<AbstractControlNodeInstance> controlNodeInstances =
+                    scenarioInstance.getEnabledControlNodeInstances();
+            assert (controlNodeInstances.size() == 0);
+            List<AbstractEvent> events = scenarioInstance.getEventsForScenarioInstance();
+            assert (events.get(0) instanceof StartEvent);
         } catch (IOException e) {
-			e.printStackTrace();
-			assert(false);
-		}
-	}
+            e.printStackTrace();
+            assert(false);
+        }
+    }
+
+
+    // If the start event has no event query, the next control node should be activated
+    // from the beginning.
+    @Test
+    public void testStartQueryWithoutEvent() {
+        String path = "src/test/resources/EventScenarios/StartEventWithoutQuery.json";
+        try {
+            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            List<AbstractControlNodeInstance> controlNodeInstances =
+                    scenarioInstance.getEnabledControlNodeInstances();
+            ActivityInstance firstActivity = (ActivityInstance) controlNodeInstances.get(0);
+            assert (firstActivity.getLabel().equals("Do something"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            assert(false);
+        }
+    }
 }

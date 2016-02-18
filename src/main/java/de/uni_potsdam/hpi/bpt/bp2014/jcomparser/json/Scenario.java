@@ -18,6 +18,7 @@ public class Scenario {
     private String scenarioName;
     private String scenarioEditorId;
     private int versionNumber;
+
     private int scenarioDbId;
 
     /**
@@ -136,6 +137,12 @@ public class Scenario {
         model.initializeInstanceFromJson(domainModelJson.toString());
         return model;
     }
+
+
+    public int getScenarioDbId() {
+        return scenarioDbId;
+    }
+    
     /**
      -        * Extracts the TerminationCondition from the XML.
      -        * Corresponding values will be saved to the corresponding fields.
