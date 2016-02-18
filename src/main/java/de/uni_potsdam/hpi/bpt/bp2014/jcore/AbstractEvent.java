@@ -31,10 +31,11 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         this.queryString = eventDao.getQueryForControlNode(this.controlNodeId);
         if ("".equals(this.queryString)) {
             this.terminate();
+        } else {
+            EventDispatcher eventDispatcher = new EventDispatcher(REST_PATH, REST_URL,
+                    this.getFragmentInstanceId());
+            eventDispatcher.registerEvent(this);
         }
-        EventDispatcher eventDispatcher = new EventDispatcher(REST_PATH, REST_URL,
-                this.getFragmentInstanceId());
-        eventDispatcher.registerEvent(this);
     }
 
     @Override

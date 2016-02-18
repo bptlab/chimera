@@ -18,7 +18,7 @@ public class StartEvent extends AbstractControlNode {
     private String name = "";
 
     @XmlAttribute(name = "griffin:eventquery")
-    private String eventQuery;
+    private String eventQuery = "";
 
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
