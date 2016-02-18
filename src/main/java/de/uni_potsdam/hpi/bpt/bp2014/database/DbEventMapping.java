@@ -46,4 +46,12 @@ public class DbEventMapping extends DbObject {
                 + "fragmentInstanceId = " + fragmentInstanceId + ";";
         return this.executeStatementReturnsListString(retrieveRequestKeys, "eventkey");
     }
+
+    public void removeEventMapping(int fragmentInstanceId, int eventControlNodeId) {
+        String deleteMapping = "DELETE FROM eventmapping WHERE "
+                + "fragmentInstanceId = " + fragmentInstanceId + " AND eventcontrolnodeid = "
+                + eventControlNodeId + " ;";
+        this.executeUpdateStatement(deleteMapping);
+    }
+
 }

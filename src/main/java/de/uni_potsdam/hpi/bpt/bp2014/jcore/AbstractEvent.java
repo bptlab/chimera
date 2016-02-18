@@ -11,8 +11,6 @@ import java.util.Objects;
 public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
     private static final String MQ_PORT = "61616";
-    private static final String REST_PATH = "webapi/REST/EventQuery";
-    private static final String REST_URL = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
     private int controlNodeId;
     private String queryString;
 
@@ -32,8 +30,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         if ("".equals(this.queryString)) {
             this.terminate();
         } else {
-            EventDispatcher eventDispatcher = new EventDispatcher(REST_PATH, REST_URL,
-                    this.getFragmentInstanceId());
+            EventDispatcher eventDispatcher = new EventDispatcher(this.getFragmentInstanceId());
             eventDispatcher.registerEvent(this);
         }
     }

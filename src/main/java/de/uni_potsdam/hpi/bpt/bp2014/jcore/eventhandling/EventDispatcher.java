@@ -29,14 +29,12 @@ import java.util.UUID;
  */
 @Path("scenario/{scenarioID}/instance/{instanceID}/events")
 public class EventDispatcher {
-    private final String restPath;
-    private final String restUrl;
+    private final String restPath = "webapi/REST/EventQuery";
+    private final String restUrl = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
     private final int fragmentInstanceId;
 
 
-    public EventDispatcher(String restPath, String restUrl, int fragmentInstanceId) {
-        this.restPath = restPath;
-        this.restUrl = restUrl;
+    public EventDispatcher(int fragmentInstanceId) {
         this.fragmentInstanceId = fragmentInstanceId;
     }
 
@@ -90,4 +88,10 @@ public class EventDispatcher {
         }
 
     }
+
+    public void unregisterEvent(int eventControlNodeId) {
+        DbEventMapping eventMapping = new DbEventMapping();
+        eventMapping.removeEventMapping(this.fragmentInstanceId, eventControlNodeId);
+    }
+
 }
