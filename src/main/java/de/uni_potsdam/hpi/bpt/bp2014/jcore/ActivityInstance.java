@@ -116,8 +116,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
         int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
         if (boundaryEventId != -1) {
-            new BoundaryEvent(boundaryEventId,
+            BoundaryEvent event = new BoundaryEvent(boundaryEventId,
                     this.getFragmentInstanceId(), this.getScenarioInstance());
+            event.enableControlFlow();
         }
 		this.canTerminate = dbActivityInstance.getCanTerminate(getControlNodeInstanceId());
 		this.automaticExecution =

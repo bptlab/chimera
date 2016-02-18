@@ -254,13 +254,13 @@ public class Connector extends DbObject {
      * @param fragmentId the ID of the fragment.
      * @param modelId the ID of the event given by the editor.
      * @param controlNodeDatabaseId the database ID of the controlnode belonging to this event.
-     * @param attachedToRef the ID of the Activity that the event is attached to.
+     * @param activityDbId the ID of the Activity that the event is attached to.
      */
     public void insertBoundaryEventIntoDatabase(String eventtype, String eventquery,
-                int fragmentId, String modelId, int controlNodeDatabaseId, int attachedToRef) {
+                int fragmentId, String modelId, int controlNodeDatabaseId, int activityDbId) {
         insertEventIntoDatabase(eventtype, eventquery, fragmentId, modelId, controlNodeDatabaseId);
-        String sql = "INSERT INTO boundaryeventref "
-                + "VALUES (" + controlNodeDatabaseId + ", " + attachedToRef + ")";
+        String sql = "INSERT INTO boundaryeventref (controlnode_id, attachedtoref)"
+                + "VALUES (" + controlNodeDatabaseId + ", " + activityDbId + ")";
         performDefaultSQLInsertStatement(sql);
     }
 

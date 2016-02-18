@@ -14,11 +14,7 @@ public class DbBoundaryEvent extends DbObject {
     public int getControlNodeAttachedToEvent(int eventNodeId, int fragmentInstanceId) {
         String editorIdQuery = "SELECT * FROM boundaryeventref where controlnode_id = "
                 + eventNodeId + ";";
-        String editorId = this.executeStatementReturnsString(editorIdQuery, "attachedtoref");
-        String getControlNodeForEditorId = "SELECT * FROM controlnode WHERE modelid = "
-                + editorId + ";";
-        int activityControlNodeId = this.executeStatementReturnsInt(getControlNodeForEditorId,
-                "controlnode_id");
+        Integer activityControlNodeId = this.executeStatementReturnsInt(editorIdQuery, "attachedtoref");
         DbControlNodeInstance controlNodeInstance = new DbControlNodeInstance();
         return controlNodeInstance.getControlNodeInstanceID(activityControlNodeId,
                 fragmentInstanceId);
