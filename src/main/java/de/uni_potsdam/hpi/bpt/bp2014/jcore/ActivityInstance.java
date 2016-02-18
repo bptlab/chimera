@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskOutgoingControlFlowBehavior;
 
@@ -227,10 +228,18 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 					.terminateReferences();
 			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
 					.terminate(outputSetId);
-			return workingFine;
+			cancelAttachedEvents();
+            return workingFine;
 		}
 		return false;
 	}
+
+    private void cancelAttachedEvents() {
+        EventDispatcher eventDispatcher = new EventDispatcher(this.getFragmentInstanceId());
+        DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
+        int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
+        eventDispatcher.unregisterEvent(boundaryEventId);
+    }
 
 	/**
 	 * sets the dataAttributes for an activity.
@@ -238,7 +247,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @param values values that the attributes should be set to.
 	 */
 	public void setDataAttributeValues(Map<Integer, String> values) {
-		if (getStateMachine().getState().equals("running")) {
+		if (AbstractStateMachine.STATE.RUNNING == getStateMachine().getState()) {
 			taskExecutionBehavior.setDataAttributeValues(values);
 		}
 	}
