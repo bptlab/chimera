@@ -235,10 +235,10 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	}
 
     private void cancelAttachedEvents() {
-        EventDispatcher eventDispatcher = new EventDispatcher(this.getFragmentInstanceId());
+        EventDispatcher eventDispatcher = new EventDispatcher();
         DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
         int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
-        eventDispatcher.unregisterEvent(boundaryEventId);
+        eventDispatcher.unregisterEvent(boundaryEventId, this.getFragmentInstanceId());
     }
 
 	/**

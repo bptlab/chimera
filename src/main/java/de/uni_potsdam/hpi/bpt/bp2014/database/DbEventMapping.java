@@ -25,13 +25,12 @@ public class DbEventMapping extends DbObject {
 
     /**
      * Searches for the event control node Id which was saved with the given key.
-     * @param fragmentInstanceId The if of scenario instance, which contains the event
      * @param eventKey The request key which was generated when registering the event.
      * @return Return id of the event control node which registered.
      */
-    public int getEventControlNodeId(int fragmentInstanceId, String eventKey) {
+    public int getEventControlNodeId(String eventKey) {
         String retrieveEventControlNodeId = "SELECT * FROM eventmapping WHERE eventKey = '"
-                + eventKey + "' AND fragmentInstanceId = " + fragmentInstanceId + ";";
+                + eventKey + "' ;";
         return this.executeStatementReturnsInt(retrieveEventControlNodeId, "eventcontrolnodeid");
     }
 

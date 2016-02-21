@@ -118,7 +118,7 @@ public class ScenarioInstance {
      *
      * @return returns a List of all registered keys to events.
      */
-    public List<String> getRequestKeys() {
+    public List<String> getRegisteredEventKeys() {
         List<String> eventKeys = new ArrayList<>();
         for (FragmentInstance fragmentInstance : this.fragmentInstances) {
             Integer fragmentInstanceId = fragmentInstance.getFragmentInstanceId();

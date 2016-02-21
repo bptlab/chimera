@@ -32,6 +32,16 @@ public class DbControlNode extends DbObject {
 		return this.executeStatementReturnsInt(sql, "id");
 	}
 
+    /**
+     *
+     * @param controlNodeId Id of the control node
+     * @return fragment id the control node belongs to.
+     */
+    public int getFragmentId(int controlNodeId) {
+        String sql = "SELECT * FROM controlnode WHERE id = " + controlNodeId;
+        return this.executeStatementReturnsInt(sql, "fragment_id");
+    }
+
 	/**
 	 * This method returns the type of a controlNode.
 	 *

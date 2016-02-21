@@ -2,7 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
@@ -27,38 +29,43 @@ import java.util.UUID;
 /**
  * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
-@Path("scenario/{scenarioID}/instance/{instanceID}/events")
+@Path("eventdispatcher/")
 public class EventDispatcher {
     private final String restPath = "webapi/REST/EventQuery";
     private final String restUrl = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
-    private final int fragmentInstanceId;
 
-
-    public EventDispatcher(int fragmentInstanceId) {
-        this.fragmentInstanceId = fragmentInstanceId;
-    }
 
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{requestKey}")
+    @Path("scenario/{scenarioID}/instance/{instanceID}/events/{requestKey}")
     public Response receiveEvent(
             @PathParam("scenarioID") int scenarioId,
             @PathParam("instanceID") int scenarioInstanceId,
             @PathParam("requestKey") String requestId) {
-        DbEventMapping eventMapping = new DbEventMapping();
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-        int eventControlNodeId = eventMapping.getEventControlNodeId(fragmentInstanceId, requestId);
-        EventFactory factory = new EventFactory(scenarioInstance);
-        AbstractEvent event = factory.getEventForInstanceId(eventControlNodeId);
+        AbstractEvent event = getEvent(scenarioInstance, requestId);
         event.terminate();
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
-    public void registerEvent(AbstractEvent event) {
+    private AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
+        DbEventMapping eventMapping = new DbEventMapping();
+        int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
+        EventFactory factory = new EventFactory(instance);
+        DbControlNode controlNode = new DbControlNode();
+        int fragmentId = controlNode.getFragmentId(eventControlNodeId);
+        DbFragmentInstance fragmentInstance = new DbFragmentInstance();
+        int fragmentInstanceId =
+                fragmentInstance.getFragmentInstanceID(fragmentId, instance.getScenarioId());
+        return factory.getEventForControlNodeId(eventControlNodeId,
+                fragmentInstanceId);
+    }
+
+    public void registerEvent(AbstractEvent event, int fragmentInstanceId) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         sendQueryToEventService(event.getQueryString(), requestId);
         DbEventMapping mapping = new DbEventMapping();
-        mapping.saveMappingToDatabase(this.fragmentInstanceId, requestId, event.getControlNodeId());
+        mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId());
     }
 
     private void sendQueryToEventService(String query, String requestId) {
@@ -89,9 +96,8 @@ public class EventDispatcher {
 
     }
 
-    public void unregisterEvent(int eventControlNodeId) {
+    public void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
         DbEventMapping eventMapping = new DbEventMapping();
-        eventMapping.removeEventMapping(this.fragmentInstanceId, eventControlNodeId);
+        eventMapping.removeEventMapping(fragmentInstanceId, eventControlNodeId);
     }
-
 }

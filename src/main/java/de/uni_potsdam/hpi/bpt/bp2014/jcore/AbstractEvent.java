@@ -30,8 +30,8 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         if ("".equals(this.queryString)) {
             this.terminate();
         } else {
-            EventDispatcher eventDispatcher = new EventDispatcher(this.getFragmentInstanceId());
-            eventDispatcher.registerEvent(this);
+            EventDispatcher eventDispatcher = new EventDispatcher();
+            eventDispatcher.registerEvent(this, this.getFragmentInstanceId());
         }
     }
 
