@@ -15,12 +15,12 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	/**
 	 * Database Connection objects.
 	 */
-	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-	private final DbControlNode dbControlNode = new DbControlNode();
-	private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
-	private boolean isXOR;
-	private boolean isAND;
-	private boolean automaticExecution;
+	protected final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+	protected final DbControlNode dbControlNode = new DbControlNode();
+	protected final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
+	protected GatewayType type;
+	protected ScenarioInstance scenarioInstance;
+	protected boolean automaticExecution;
 
 	/**
 	 * Creates and initializes a new gateway instance.
@@ -47,36 +47,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		//scenarioInstance.getControlNodeInstances().add(this);
-		switch (dbControlNode.getType(controlNodeId)) {
-		case "AND":
-			this.isAND = true;
-			this.isXOR = false;
-			break;
-		case "XOR":
-			this.isAND = false;
-			this.isXOR = true;
-			break;
-		default:
-			break;
-		}
-		//creates a new Gateway Instance also in database
-		if (isAND) {
-			this.setControlNodeInstanceId(dbControlNodeInstance
-					.createNewControlNodeInstance(
-							controlNodeId, "AND", fragmentInstanceId));
-		} else if (isXOR) {
-			this.setControlNodeInstanceId(dbControlNodeInstance
-					.createNewControlNodeInstance(
-							controlNodeId, "XOR", fragmentInstanceId));
-		}
-		if (isAND) {
-			dbGatewayInstance.createNewGatewayInstance(
-					getControlNodeInstanceId(), "AND", "init");
-		} else if (isXOR) {
-			dbGatewayInstance.createNewGatewayInstance(
-					getControlNodeInstanceId(), "XOR", "init");
-		}
-		this.initGatewayInstance();
 	}
 
 	/**
@@ -94,41 +64,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
-		//scenarioInstance.getControlNodeInstances().add(this);
-		switch (dbControlNode.getType(controlNodeId)) {
-		case "AND":
-			this.isAND = true;
-			this.isXOR = false;
-			break;
-		case "XOR":
-			this.isAND = false;
-			this.isXOR = true;
-			break;
-		default: break;
-		}
-		this.setControlNodeInstanceId(instanceId);
-		this.initGatewayInstance();
-	}
-
-	/**
-	 * Initialize other information for the instance.
-	 */
-	private void initGatewayInstance() {
-		this.setStateMachine(new GatewayStateMachine(
-				getControlNodeId(), scenarioInstance, this));
-		if (isAND) {
-			this.setOutgoingBehavior(new ParallelGatewaySplitBehavior(
-					getControlNodeId(), scenarioInstance,
-					getFragmentInstanceId(), this));
-			this.setIncomingBehavior(new ParallelGatewayJoinBehavior(
-					this, scenarioInstance));
-		} else if (isXOR) {
-			this.setOutgoingBehavior(new ExclusiveGatewaySplitBehavior(
-					getControlNodeId(), scenarioInstance,
-					getFragmentInstanceId()));
-			this.setIncomingBehavior(new ExclusiveGatewayJoinBehavior(
-					this, scenarioInstance, getStateMachine()));
-		}
 	}
 
 	/**
@@ -154,20 +89,9 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 
 	// ******************************* Getter & Setter ***************************//
 
-	/**
-	 * @return boolean isXOR.
-	 */
-	public Boolean getIsXOR() {
-		return isXOR;
+	public GatewayType getType() {
+		return this.type;
 	}
-
-	/**
-	 * @return boolean isAND.
-	 */
-	public Boolean getIsAND() {
-		return isAND;
-	}
-
 	/**
 	 * @return ScenarioInstance.
 	 */

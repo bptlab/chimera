@@ -87,8 +87,22 @@ public class FragmentInstance {
 		LinkedList<Integer> gatewayInstances = dbControlNodeInstance
 				.getGatewayInstancesForFragmentInstanceID(fragmentInstanceId);
 		for (int i = 0; gateways.size() > i; i++) {
-			new GatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
-					gatewayInstances.get(i));
+			switch(dbControlNode.getType(gateways.get(i))) {
+				case "AND":
+					new AndGatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
+							gatewayInstances.get(i));
+					break;
+				case "XOR":
+					new XorGatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
+							gatewayInstances.get(i));
+					break;
+				case "EVENT_BASED":
+					new EventBasedGatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
+							gatewayInstances.get(i));
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

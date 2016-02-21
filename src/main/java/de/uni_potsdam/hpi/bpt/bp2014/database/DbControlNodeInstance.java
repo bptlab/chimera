@@ -132,7 +132,8 @@ public class DbControlNodeInstance extends DbObject {
 		String sql =
 				"SELECT controlnode_id FROM controlnodeinstance "
 						+ "WHERE (controlnodeinstance.Type = 'AND' "
-						+ "OR controlnodeinstance.Type = 'XOR') "
+						+ "OR controlnodeinstance.Type = 'XOR'"
+						+ "OR controlnodeinstance.Type = 'EVENT_BASED') "
 						+ "AND fragmentinstance_id = "
 						+ fragmentInstanceId;
 		return this.executeStatementReturnsListInt(sql, "controlnode_id");
@@ -160,7 +161,8 @@ public class DbControlNodeInstance extends DbObject {
 		String sql =
 				"SELECT id FROM controlnodeinstance "
 						+ "WHERE (controlnodeinstance.Type = 'AND' "
-						+ "OR controlnodeinstance.Type = 'XOR') "
+						+ "OR controlnodeinstance.Type = 'XOR'"
+						+ "OR controlnodeinstance.Type = 'EVENT_BASED') "
 						+ "AND fragmentinstance_id = " + fragmentInstanceId;
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
