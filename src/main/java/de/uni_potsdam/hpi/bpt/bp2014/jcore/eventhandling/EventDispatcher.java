@@ -30,15 +30,17 @@ import java.util.UUID;
  * The event dispatcher class is responsible for manage registrations from Events to RestQueries.
  */
 @Path("eventdispatcher/")
-public class EventDispatcher {
-    private final String restPath = "webapi/REST/EventQuery";
+public final class EventDispatcher {
+    private final String restPath = "webapi/REST/EventQuery/REST";
     private final String restUrl = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
+
+    private final String selfUrl = "http://172.16.64.113:8080/Chimera/";
 
 
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("scenario/{scenarioID}/instance/{instanceID}/events/{requestKey}")
-    public Response receiveEvent(
+    public static Response receiveEvent(
             @PathParam("scenarioID") int scenarioId,
             @PathParam("instanceID") int scenarioInstanceId,
             @PathParam("requestKey") String requestId) {
@@ -48,36 +50,38 @@ public class EventDispatcher {
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
-    private AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
+    private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
         DbEventMapping eventMapping = new DbEventMapping();
-        int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
-        EventFactory factory = new EventFactory(instance);
         DbControlNode controlNode = new DbControlNode();
-        int fragmentId = controlNode.getFragmentId(eventControlNodeId);
+        EventFactory factory = new EventFactory(instance);
         DbFragmentInstance fragmentInstance = new DbFragmentInstance();
+
+        int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
+        int fragmentId = controlNode.getFragmentId(eventControlNodeId);
         int fragmentInstanceId =
                 fragmentInstance.getFragmentInstanceID(fragmentId, instance.getScenarioId());
         return factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
     }
 
-    public void registerEvent(AbstractEvent event, int fragmentInstanceId) {
+    public static void registerEvent(AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId,
+                              int scenarioId) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-        sendQueryToEventService(event.getQueryString(), requestId);
+        sendQueryToEventService(event.getQueryString(), requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId());
     }
 
-    private void sendQueryToEventService(String query, String requestId) {
-        // TODO add here path which is used to receive events
-        String dummyPath = "";
-        String notificationPath = dummyPath + requestId;
+    private static void sendQueryToEventService(String query, String requestId, int scenarioInstanceId,
+                                         int scenarioId) {
+        String reveicePath = "scenario/" + scenarioId + "/instance/" + scenarioInstanceId + "/events/";
+        String notificationPath = selfUrl + reveicePath + requestId;
 
         JsonObject queryRequest = new JsonObject();
         queryRequest.addProperty("queryString", query);
         queryRequest.addProperty("notificationPath", notificationPath);
         Gson gson = new Gson();
-        HttpPost post = new HttpPost(restUrl);
+        HttpPost post = new HttpPost(restUrl + restPath);
         try {
             StringEntity postString = new StringEntity(gson.toJson(queryRequest));
             post.setEntity(postString);
@@ -96,7 +100,7 @@ public class EventDispatcher {
 
     }
 
-    public void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
+    public static void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
         DbEventMapping eventMapping = new DbEventMapping();
         eventMapping.removeEventMapping(fragmentInstanceId, eventControlNodeId);
     }

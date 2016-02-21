@@ -11,6 +11,9 @@ import java.util.Objects;
 public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
     private static final String MQ_PORT = "61616";
+
+
+
     private int controlNodeId;
     private String queryString;
 
@@ -18,8 +21,9 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
      *
      * @param controlNodeId id of the abstract control node which represents the event.
      */
-    public AbstractEvent(int controlNodeId) {
+    public AbstractEvent(int controlNodeId, ScenarioInstance scenarioInstance) {
         this.controlNodeId = controlNodeId;
+        this.scenarioInstance = scenarioInstance;
     }
 
     @Override
@@ -27,11 +31,12 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         DbEvent eventDao = new DbEvent();
 
         this.queryString = eventDao.getQueryForControlNode(this.controlNodeId);
-        if ("".equals(this.queryString)) {
+        if (queryString.trim().isEmpty()) {
             this.terminate();
         } else {
-            EventDispatcher eventDispatcher = new EventDispatcher();
-            eventDispatcher.registerEvent(this, this.getFragmentInstanceId());
+            EventDispatcher.registerEvent(this, this.getFragmentInstanceId(),
+                    this.getScenarioInstance().getScenarioInstanceId(),
+                    this.getScenarioInstance().getScenarioId());
         }
     }
 
@@ -48,5 +53,9 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     public String getQueryString() {
         return queryString;
+    }
+
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
     }
 }

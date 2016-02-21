@@ -7,6 +7,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractOutgoingBehavio
  * Represents the abstract control node.
  */
 public abstract class AbstractControlNodeInstance {
+
+	protected ScenarioInstance scenarioInstance;
 	private AbstractOutgoingBehavior outgoingBehavior;
 	private AbstractIncomingBehavior incomingBehavior;
 	private AbstractStateMachine stateMachine;
@@ -84,4 +86,13 @@ public abstract class AbstractControlNodeInstance {
 	public void setControlNodeId(int controlNodeId) {
 		this.controlNodeId = controlNodeId;
 	}
+
+	public ScenarioInstance getScenarioInstance() {
+		return scenarioInstance;
+	}
+
+	public void setScenarioInstance(ScenarioInstance scenarioInstance) {
+		this.scenarioInstance = scenarioInstance;
+	}
+
 }

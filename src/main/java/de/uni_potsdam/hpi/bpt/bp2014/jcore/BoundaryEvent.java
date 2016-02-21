@@ -6,7 +6,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.BoundaryEventOutgoingBe
  *
  */
 public class BoundaryEvent extends AbstractEvent {
-    private final ScenarioInstance scenarioInstance;
 
     /**
      * @param controlNodeId id of the abstract control node which represents the event.
@@ -15,8 +14,7 @@ public class BoundaryEvent extends AbstractEvent {
      */
     public BoundaryEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
-        super(controlNodeId);
-        this.scenarioInstance = scenarioInstance;
+        super(controlNodeId, scenarioInstance);
         this.setFragmentInstanceId(fragmentInstanceId);
     }
 

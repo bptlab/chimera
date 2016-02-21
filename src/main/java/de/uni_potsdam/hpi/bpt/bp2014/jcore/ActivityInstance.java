@@ -15,7 +15,6 @@ import java.util.Map;
  */
 
 public class ActivityInstance extends AbstractControlNodeInstance {
-	private final ScenarioInstance scenarioInstance;
 	private final String label;
 	/**
 	 * Database Connection objects.
@@ -235,10 +234,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	}
 
     private void cancelAttachedEvents() {
-        EventDispatcher eventDispatcher = new EventDispatcher();
         DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
         int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
-        eventDispatcher.unregisterEvent(boundaryEventId, this.getFragmentInstanceId());
+        EventDispatcher.unregisterEvent(boundaryEventId, this.getFragmentInstanceId());
     }
 
 	/**

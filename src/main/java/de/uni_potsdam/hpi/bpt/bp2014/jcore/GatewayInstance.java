@@ -20,7 +20,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 	private boolean isXOR;
 	private boolean isAND;
-	private ScenarioInstance scenarioInstance;
 	private boolean automaticExecution;
 
 	/**

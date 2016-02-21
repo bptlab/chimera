@@ -9,7 +9,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventIncomingControlFlo
  */
 
 public class EventInstance extends AbstractControlNodeInstance {
-	@SuppressWarnings("unused") private final ScenarioInstance scenarioInstance;
 	@SuppressWarnings("unused") private final String type;
 	//Only support Event is an End Event
 	//Don't writes anything in the database
