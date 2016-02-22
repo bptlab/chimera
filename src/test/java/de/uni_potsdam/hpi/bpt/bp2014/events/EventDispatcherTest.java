@@ -47,17 +47,10 @@ public class EventDispatcherTest extends JerseyTest {
         String path = "src/test/resources/EventScenarios/StartEventWithQuery.json";
         try {
             ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
-            int scenarioId = scenarioInstance.getScenarioId();
-            int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
-            List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
-
             List<AbstractControlNodeInstance> activatedBeforeEvent =
                     scenarioInstance.getEnabledControlNodeInstances();
             assertEquals(activatedBeforeEvent.size(), 0);
-            String registeredEvent = registeredEventKeys.get(0);
-            String route = String.format("scenario/%d/instance/%d/events/%s", scenarioId,
-                    scenarioInstanceId, registeredEvent);
-            base.path(route).request().post(Entity.json(""));
+            triggerEventInScenario(scenarioInstance);
             List<AbstractControlNodeInstance> activatedAfterEvent =
                     scenarioInstance.getEnabledControlNodeInstances();
             assertEquals(activatedAfterEvent.size(), 1);
@@ -65,5 +58,30 @@ public class EventDispatcherTest extends JerseyTest {
             e.printStackTrace();
             assert(false);
         }
+    }
+
+    @Test
+    public void testRemovalAfterActivation() {
+        String path = "src/test/resources/EventScenarios/StartEventWithQuery.json";
+        try {
+            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            List<String> registeredEventKeysBeforeEvent = scenarioInstance.getRegisteredEventKeys();
+            assertEquals(1, registeredEventKeysBeforeEvent.size());
+            triggerEventInScenario(scenarioInstance);
+            List<String> registeredEventKeysAfterEvent = scenarioInstance.getRegisteredEventKeys();
+            assertEquals(0, registeredEventKeysAfterEvent.size());
+        } catch (IOException e) {
+            assert (false);
+        }
+    }
+
+    private void triggerEventInScenario(ScenarioInstance scenarioInstance) {
+        int scenarioId = scenarioInstance.getScenarioId();
+        int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
+        String registeredEvent = registeredEventKeys.get(0);
+        String route = String.format("scenario/%d/instance/%d/events/%s", scenarioId,
+                scenarioInstanceId, registeredEvent);
+        base.path(route).request().post(Entity.json(""));
     }
 }
