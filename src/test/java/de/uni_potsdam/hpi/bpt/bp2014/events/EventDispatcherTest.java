@@ -1,8 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.events;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -18,6 +17,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -51,9 +52,13 @@ public class EventDispatcherTest extends JerseyTest {
                     scenarioInstance.getEnabledControlNodeInstances();
             assertEquals(activatedBeforeEvent.size(), 0);
             triggerEventInScenario(scenarioInstance);
+            ScenarioInstance scenarioInstance2 = new ScenarioInstance(
+                    scenarioInstance.getScenarioId(), scenarioInstance.getScenarioInstanceId());
             List<AbstractControlNodeInstance> activatedAfterEvent =
-                    scenarioInstance.getEnabledControlNodeInstances();
-            assertEquals(activatedAfterEvent.size(), 1);
+                    scenarioInstance2.getEnabledControlNodeInstances();
+            assertFalse(activatedAfterEvent.isEmpty());
+            assertTrue(activatedAfterEvent.get(0) instanceof ActivityInstance);
+            //assertEquals(activatedAfterEvent.size(), 1);
         } catch (IOException e) {
             e.printStackTrace();
             assert(false);

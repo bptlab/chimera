@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
@@ -30,7 +31,7 @@ public final class EventDispatcher {
 
     private static final String REST_PATH = "webapi/REST/EventQuery/REST";
     private static final String REST_URL = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
-    private static final String SELF_URL = "http://172.16.64.113:8080/Chimera/";
+    private static final String SELF_URL = "http://172.16.64.113:8080/Chimera";
 
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
@@ -44,7 +45,6 @@ public final class EventDispatcher {
 
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         AbstractEvent event = getEvent(scenarioInstance, requestId);
-
         event.terminate();
         unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
 

@@ -28,42 +28,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 		setState(getDBState());
 		//adds the Activity Instance to the correct list
 		// in Scenario Instance, decides on the state of the Activity
-		switch (getState()) {
-        case READY:
-			scenarioInstance.getControlFlowEnabledControlNodeInstances()
-					.add(controlNodeInstance);
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.add(controlNodeInstance);
-			scenarioInstance.getEnabledControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-        case DATAFLOW_ENABLED:
-			scenarioInstance.getDataEnabledControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-        case CONTROLFLOW_ENABLED:
-			scenarioInstance.getControlFlowEnabledControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-        case RUNNING:
-			scenarioInstance.getRunningControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-        case TERMINATED:
-			scenarioInstance.getTerminatedControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-		case SKIPPED:
-			scenarioInstance.getTerminatedControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-		case REFERENTIAL_RUNNING:
-			scenarioInstance.getReferentialRunningControlNodeInstances()
-					.add(controlNodeInstance);
-			break;
-		default:
-			break;
-		}
+
 	}
 
 	/**
@@ -304,11 +269,48 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	/**
 	 * Sets the state.
 	 * Updates the state in database and in attributes
+	 * also updates the scenario instance
 	 *
 	 * @param state This is the new state.
 	 */
 	public void setState(STATE state) {
 		super.setState(state);
 		dbActivityInstance.setState(getControlNodeInstanceId(), state);
+		switch (state) {
+			case READY:
+				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getDataEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case DATAFLOW_ENABLED:
+				getScenarioInstance().getDataEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case CONTROLFLOW_ENABLED:
+				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case RUNNING:
+				getScenarioInstance().getRunningControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case TERMINATED:
+				getScenarioInstance().getTerminatedControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case SKIPPED:
+				getScenarioInstance().getTerminatedControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case REFERENTIAL_RUNNING:
+				getScenarioInstance().getReferentialRunningControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			default:
+				break;
+		}
 	}
 }
