@@ -350,8 +350,8 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
 
-        assertEquals("terminated", dbActivityInstance.getState(activity1instance_id));
-        assertEquals("terminated", dbActivityInstance.getState(activity2instance_id));
+        assertEquals(AbstractStateMachine.STATE.TERMINATED, dbActivityInstance.getState(activity1instance_id));
+        assertEquals(AbstractStateMachine.STATE.TERMINATED, dbActivityInstance.getState(activity2instance_id));
     }
 
     /**

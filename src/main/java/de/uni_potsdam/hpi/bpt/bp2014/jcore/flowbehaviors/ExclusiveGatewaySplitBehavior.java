@@ -93,7 +93,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			if (controlNodeId == controlNodeInstance.getControlNodeId()
 					&& !controlNodeInstance.getClass().equals(
 					ActivityInstance.class) && !controlNodeInstance
-					.getStateMachine().getState().equals("terminated")) {
+					.getStateMachine().getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}

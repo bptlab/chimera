@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractOutgoingBehavior;
 
@@ -39,7 +40,7 @@ public abstract class AbstractParallelOutgoingBehavior extends AbstractOutgoingB
 					&& !controlNodeInstance.getClass()
 					.equals(ActivityInstance.class)
 					&& !controlNodeInstance
-					.getStateMachine().getState().equals("terminated")) {
+					.getStateMachine().getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}

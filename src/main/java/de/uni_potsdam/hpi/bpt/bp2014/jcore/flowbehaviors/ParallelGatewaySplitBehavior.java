@@ -1,9 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.GatewayInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractParallelOutgoingBehavior;
 
 /**
@@ -43,7 +40,7 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 					&& !controlNodeInstance.getClass().equals(
 						ActivityInstance.class)
 					&& !controlNodeInstance.getStateMachine()
-					.getState().equals("terminated")) {
+					.getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}
