@@ -8,22 +8,18 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -31,11 +27,12 @@ import java.util.UUID;
  */
 @Path("eventdispatcher/")
 public final class EventDispatcher {
-    private final String restPath = "webapi/REST/EventQuery/REST";
-    private final String restUrl = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
 
-    private final String selfUrl = "http://172.16.64.113:8080/Chimera/";
+    private static final String REST_PATH = "webapi/REST/EventQuery/REST";
+    private static final String REST_URL = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
+    private static final String SELF_URL = "http://172.16.64.113:8080/Chimera/";
 
+    private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -74,30 +71,21 @@ public final class EventDispatcher {
 
     private static void sendQueryToEventService(String query, String requestId, int scenarioInstanceId,
                                          int scenarioId) {
-        String reveicePath = "scenario/" + scenarioId + "/instance/" + scenarioInstanceId + "/events/";
-        String notificationPath = selfUrl + reveicePath + requestId;
+        String notificationPath = String.format("%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s",
+                SELF_URL, scenarioId, scenarioInstanceId, requestId);
 
         JsonObject queryRequest = new JsonObject();
         queryRequest.addProperty("queryString", query);
         queryRequest.addProperty("notificationPath", notificationPath);
         Gson gson = new Gson();
-        HttpPost post = new HttpPost(restUrl + restPath);
-        try {
-            StringEntity postString = new StringEntity(gson.toJson(queryRequest));
-            post.setEntity(postString);
-            post.setHeader("Content-type", "application/json");
-            final HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, 2000);
-            HttpClient httpClient1 = new DefaultHttpClient(httpParams);
-            HttpResponse response = httpClient1.execute(post);
-            if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Query could not be registered");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(REST_URL).path(REST_PATH);
+        Response response = target.request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(gson.toJson(queryRequest)));
+        if (response.getStatus() != 200) {
+            // throw new RuntimeException("Query could not be registered");
+            logger.debug("Could not register Query");
         }
-
     }
 
     public static void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {

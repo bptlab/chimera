@@ -39,8 +39,7 @@ public class EventDispatcherTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(
-                de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher.class);
+        return new ResourceConfig(EventDispatcher.class);
     }
 
     @Test

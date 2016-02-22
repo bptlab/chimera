@@ -16,9 +16,6 @@ public abstract class AbstractControlNodeInstance {
 	private int controlNodeInstanceId;
 	private int controlNodeId;
 
-	/**
-	 * Enables the control flow.
-	 */
 	public void enableControlFlow() {
 		incomingBehavior.enableControlFlow();
 	}
