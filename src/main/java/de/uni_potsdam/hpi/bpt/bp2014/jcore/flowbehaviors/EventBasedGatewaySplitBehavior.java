@@ -1,10 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 
+import java.util.LinkedList;
+
 /**
- * Created by jonas on 21.02.16.
+ * Behavior for EventBased Gateways
+ * Enable following events. Wait for first event to receive queried event. Then cancel others.
  */
 public class EventBasedGatewaySplitBehavior extends ExclusiveGatewaySplitBehavior {
     /**
@@ -19,11 +23,15 @@ public class EventBasedGatewaySplitBehavior extends ExclusiveGatewaySplitBehavio
     }
 
     @Override
-    public void checkAfterTermination() {
-        //TODO
-    }
-
-    public void runAfterTermination() {
-        //TODO
+    public void execute() {
+        //TODO event based behaviour
+        LinkedList<Integer> followingControlNodeIds = this.getDbControlFlow()
+                .getFollowingControlNodes(this.getControlNodeId());
+        for (int followingControlNodeId : followingControlNodeIds) {
+            AbstractControlNodeInstance followingControlNodeInstance =
+                    createFollowingNodeInstance(followingControlNodeId);
+            //enable following instances
+            followingControlNodeInstance.enableControlFlow();
+        }
     }
 }
