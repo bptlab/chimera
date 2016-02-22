@@ -41,9 +41,13 @@ public final class EventDispatcher {
             @PathParam("scenarioID") int scenarioId,
             @PathParam("instanceID") int scenarioInstanceId,
             @PathParam("requestKey") String requestId) {
+
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         AbstractEvent event = getEvent(scenarioInstance, requestId);
+
         event.terminate();
+        unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
+
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
