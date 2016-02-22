@@ -33,6 +33,7 @@ public class EventBasedGatewaySplitBehavior extends ExclusiveGatewaySplitBehavio
             //enable following instances
             followingControlNodeInstance.enableControlFlow();
         }
+
     public void checkAfterTermination() {
         //TODO
     }
