@@ -25,41 +25,25 @@ public class ExclusiveGateway extends AbstractControlNode {
     @XmlAttribute(name = "name")
     private String name = "";
     @XmlElement(name = "bpmn:incoming")
-    private List<String> incoming = new ArrayList<>();
+    private String incoming = "";
     @XmlElement(name = "bpmn:outgoing")
-    private String outgoing = "";
+    private List<String> outgoing = new ArrayList<>();
 
     @Override
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getOutgoing() {
+    public List<String> getOutgoing() {
         return outgoing;
     }
 
-    public void setOutgoing(String outgoing) {
-        this.outgoing = outgoing;
-    }
-
-    public List<String> getIncoming() {
+    public String getIncoming() {
         return incoming;
-    }
-
-    public void setIncoming(List<String> incoming) {
-        this.incoming = incoming;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

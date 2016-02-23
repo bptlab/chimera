@@ -34,6 +34,12 @@ public class BpmnProcessXml {
     @XmlElement(name = "bpmn:intermediateCatchEvent")
     private List<IntermediateEvent> intermediateEvents = new ArrayList<>();
 
+    @XmlElement(name = "bpmn:eventBasedGateway")
+    private List<EventBasedGateway> eventBasedGateways = new ArrayList<>();
+
+    @XmlElement(name = "bpmn:endEvent")
+    private EndEvent endEvent;
+
     public EndEvent getEndEvent() {
         return endEvent;
     }
@@ -41,9 +47,6 @@ public class BpmnProcessXml {
     public void setEndEvent(EndEvent endEvent) {
         this.endEvent = endEvent;
     }
-
-    @XmlElement(name = "bpmn:endEvent")
-    private EndEvent endEvent;
 
     public List<SequenceFlow> getSequenceFlowAssociations() {
         return sequenceFlowAssociations;
@@ -107,5 +110,9 @@ public class BpmnProcessXml {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<EventBasedGateway> getEventBasedGateways() {
+        return this.eventBasedGateways;
     }
 }
