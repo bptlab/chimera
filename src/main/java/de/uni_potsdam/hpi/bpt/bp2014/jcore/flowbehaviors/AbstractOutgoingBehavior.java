@@ -71,6 +71,11 @@ public abstract class AbstractOutgoingBehavior {
         case "BoundaryEvent":
             controlNodeInstance = new BoundaryEvent(controlNodeId, fragmentInstanceId,
                     scenarioInstance);
+            break;
+        case "EventBaseGateway":
+            controlNodeInstance = new EventBasedGatewayInstance(controlNodeId, fragmentInstanceId,
+                    scenarioInstance);
+            break;
         default:
 			break;
 		}

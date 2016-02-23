@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.*;
 
 import java.util.List;
@@ -33,10 +32,12 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         this.setOutgoingBehavior(new EventBasedGatewaySplitBehavior(
                 getControlNodeId(), scenarioInstance,
                 getFragmentInstanceId()));
-        this.setIncomingBehavior(new ExclusiveGatewayJoinBehavior(
-                this, scenarioInstance));
-    }
+        }
 
+    @Override
+    public void enableControlFlow() {
+        this.terminate();
+    }
 
     @Override
     public boolean terminate() {

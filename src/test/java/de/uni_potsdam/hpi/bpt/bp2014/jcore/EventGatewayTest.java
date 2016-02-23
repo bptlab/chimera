@@ -25,10 +25,25 @@ public class EventGatewayTest {
         String path = "src/test/resources/EventScenarios/EventGatewayScenario.json";
         try {
             ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
-
+            List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
         } catch (IOException e) {
             assert(false);
             e.printStackTrace();
         }
+    }
+
+    // Test whether all outgoing events are initialized from event based gateway
+    @Test
+    public void testEventEnablement() {
+        String path = "src/test/resources/EventScenarios/EventGatewayScenario.json";
+        try {
+            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
+            assertEquals(3, registeredEvents.size());
+        } catch (IOException e) {
+            assert(false);
+            e.printStackTrace();
+        }
+
     }
 }
