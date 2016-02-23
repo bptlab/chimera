@@ -1,19 +1,19 @@
 {
   "name"                  : "AsparagusScenario",
-  "_id"                   : 987654,
-  "termination_conditions": [
+  "_id"                   : "987654",
+  "terminationconditions": [
     {
       "Foil" : "white"
     }
   ],
-  "domain_model"          : {
+  "domainmodel"          : {
     "name"        : "AsparagusDomainModel",
-    "_id"         : 456321,
+    "_id"         : "456321",
     "revision"    : 1,
     "dataclasses" :[
       {
         "name"      : "Soil",
-        "_id"       : 123987,
+        "_id"       : "123987",
         "is_root"   : true,
         "is_event"  : false,
         "attributes": [
@@ -29,7 +29,7 @@
       },
       {
         "name"      : "Foil",
-        "_id"       : 123988,
+        "_id"       : "123988",
         "is_root"   : true,
         "is_event"  : false;
         "attributes": [
@@ -45,14 +45,14 @@
   "fragments"             : [
     {
       "name"    : "Water asparagus",
-      "_id"     : 90,
-     "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:process id=\"Process_1\" isExecutable=\"false\">    <bpmn:sequenceFlow id=\"SequenceFlow_0aq01e7\" sourceRef=\"StartEvent_1fx4pdw\" targetRef=\"Task_0vny5qx\" />    <bpmn:sequenceFlow id=\"SequenceFlow_0n79vj7\" sourceRef=\"Task_0vny5qx\" targetRef=\"EndEvent_0oqv2s6\" />     <bpmn:task id=\"Task_0vny5qx\" name=\"Water Asparagus\">      <bpmn:incoming>SequenceFlow_0aq01e7</bpmn:incoming>      <bpmn:outgoing>SequenceFlow_0n79vj7</bpmn:outgoing>       <bpmn:dataInputAssociation id=\"DataInputAssociation_0k3zqp4\">        <bpmn:sourceRef>DataObjectReference_0k3zqp4</bpmn:sourceRef>      </bpmn:dataInputAssociation>      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_154yyxy\">        <bpmn:targetRef>DataObjectReference_154yyxy</bpmn:targetRef>      </bpmn:dataOutputAssociation>    </bpmn:task>    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp4\" griffin:state=\"init\" griffin:dataclass=\"Foil\" name=\"Foil [init]\" dataObjectRef=\"DataObject_1pydfq4\" />    <bpmn:dataObject id=\"DataObject_1pydfq4\" />    <bpmn:dataObjectReference id=\"DataObjectReference_154yyxy\" griffin:state=\"white\" griffin:dataclass=\"Foil\" name=\"Foil [white]\" dataObjectRef=\"DataObject_0c8f9kk\" />       <bpmn:dataObject id=\"DataObject_0c8f9kk\" />    <bpmn:startEvent id=\"StartEvent_1fx4pdw\" name=\"SELECT * FROM HumidityEvent WHERE Humidity > 30\">      <bpmn:outgoing>SequenceFlow_0aq01e7</bpmn:outgoing>      <bpmn:messageEventDefinition />    </bpmn:startEvent>    <bpmn:endEvent id=\"EndEvent_0oqv2s6\">      <bpmn:incoming>SequenceFlow_0n79vj7</bpmn:incoming>    </bpmn:endEvent>  </bpmn:process>",
+      "_id"     : "90",
+     "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:definitions><bpmn:process id=\"Process_1\" isExecutable=\"false\">    <bpmn:sequenceFlow id=\"SequenceFlow_0aq01e7\" sourceRef=\"StartEvent_1fx4pdw\" targetRef=\"Task_0vny5qx\" />    <bpmn:sequenceFlow id=\"SequenceFlow_0n79vj7\" sourceRef=\"Task_0vny5qx\" targetRef=\"EndEvent_0oqv2s6\" />     <bpmn:task id=\"Task_0vny5qx\" name=\"Water Asparagus\">      <bpmn:incoming>SequenceFlow_0aq01e7</bpmn:incoming>      <bpmn:outgoing>SequenceFlow_0n79vj7</bpmn:outgoing>       <bpmn:dataInputAssociation id=\"DataInputAssociation_0k3zqp4\">        <bpmn:sourceRef>DataObjectReference_0k3zqp4</bpmn:sourceRef>      </bpmn:dataInputAssociation>      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_154yyxy\">        <bpmn:targetRef>DataObjectReference_154yyxy</bpmn:targetRef>      </bpmn:dataOutputAssociation>    </bpmn:task>    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp4\" griffin:state=\"init\" griffin:dataclass=\"Foil\" name=\"Foil [init]\" dataObjectRef=\"DataObject_1pydfq4\" />    <bpmn:dataObject id=\"DataObject_1pydfq4\" />    <bpmn:dataObjectReference id=\"DataObjectReference_154yyxy\" griffin:state=\"white\" griffin:dataclass=\"Foil\" name=\"Foil [white]\" dataObjectRef=\"DataObject_0c8f9kk\" />       <bpmn:dataObject id=\"DataObject_0c8f9kk\" />    <bpmn:startEvent id=\"StartEvent_1fx4pdw\" name=\"SELECT * FROM HumidityEvent WHERE Humidity > 30\">      <bpmn:outgoing>SequenceFlow_0aq01e7</bpmn:outgoing>      <bpmn:messageEventDefinition />    </bpmn:startEvent>    <bpmn:endEvent id=\"EndEvent_0oqv2s6\">      <bpmn:incoming>SequenceFlow_0n79vj7</bpmn:incoming>    </bpmn:endEvent>  </bpmn:process></bpmn:definitions>",
       "revision": 1
     },
     {
       "name"    : "Turn foil around",
-      "_id"     : 91,
-      "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:process id=\"Process_2\" isExecutable=\"false\">    <bpmn:sequenceFlow id=\"SequenceFlow_0aq01e8\" sourceRef=\"StartEvent_1fx4pdx\" targetRef=\"Task_0vny5qz\" />    <bpmn:sequenceFlow id=\"SequenceFlow_0n79vj8\" sourceRef=\"Task_0vny5qz\" targetRef=\"EndEvent_0oqv2s7\" />     <bpmn:task id=\"Task_0vny5qz\" name=\"Turn Foil around\">      <bpmn:incoming>SequenceFlow_0aq01e8</bpmn:incoming>      <bpmn:outgoing>SequenceFlow_0n79vj8</bpmn:outgoing>      <bpmn:dataInputAssociation id=\"DataInputAssociation_0k3zqp4\">        <bpmn:sourceRef>DataObjectReference_0k3zqp5</bpmn:sourceRef>      </bpmn:dataInputAssociation>      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_154yyxy\">        <bpmn:targetRef>DataObjectReference_0aenw6j</bpmn:targetRef>      </bpmn:dataOutputAssociation>    </bpmn:task>    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp5\" griffin:state=\"init\" griffin:dataclass=\"Soil\" name=\"Soil [init]\" dataObjectRef=\"DataObject_1pydfq5\" />    <bpmn:dataObject id=\"DataObject_1pydfq5\" />    <bpmn:dataObjectReference id=\"DataObjectReference_0aenw6j\" griffin:state=\"watered\" griffin:dataclass=\"Soil\" name=\"Soil [watered]\" dataObjectRef=\"DataObject_0c8f9kj\" />       <bpmn:dataObject id=\"DataObject_0c8f9kj\" />    <bpmn:startEvent id=\"StartEvent_1fx4pdx\">      <bpmn:outgoing>SequenceFlow_0aq01e8</bpmn:outgoing>      <bpmn:messageEventDefinition />    </bpmn:startEvent>    <bpmn:endEvent id=\"EndEvent_0oqv2s7\">      <bpmn:incoming>SequenceFlow_0n79vj8</bpmn:incoming>    </bpmn:endEvent>  </bpmn:process>",
+      "_id"     : "91",
+      "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:definitions><bpmn:process id=\"Process_2\" isExecutable=\"false\">    <bpmn:sequenceFlow id=\"SequenceFlow_0aq01e8\" sourceRef=\"StartEvent_1fx4pdx\" targetRef=\"Task_0vny5qz\" />    <bpmn:sequenceFlow id=\"SequenceFlow_0n79vj8\" sourceRef=\"Task_0vny5qz\" targetRef=\"EndEvent_0oqv2s7\" />     <bpmn:task id=\"Task_0vny5qz\" name=\"Turn Foil around\">      <bpmn:incoming>SequenceFlow_0aq01e8</bpmn:incoming>      <bpmn:outgoing>SequenceFlow_0n79vj8</bpmn:outgoing>      <bpmn:dataInputAssociation id=\"DataInputAssociation_0k3zqp4\">        <bpmn:sourceRef>DataObjectReference_0k3zqp5</bpmn:sourceRef>      </bpmn:dataInputAssociation>      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_154yyxy\">        <bpmn:targetRef>DataObjectReference_0aenw6j</bpmn:targetRef>      </bpmn:dataOutputAssociation>    </bpmn:task>    <bpmn:dataObjectReference id=\"DataObjectReference_0k3zqp5\" griffin:state=\"init\" griffin:dataclass=\"Soil\" name=\"Soil [init]\" dataObjectRef=\"DataObject_1pydfq5\" />    <bpmn:dataObject id=\"DataObject_1pydfq5\" />    <bpmn:dataObjectReference id=\"DataObjectReference_0aenw6j\" griffin:state=\"watered\" griffin:dataclass=\"Soil\" name=\"Soil [watered]\" dataObjectRef=\"DataObject_0c8f9kj\" />       <bpmn:dataObject id=\"DataObject_0c8f9kj\" />    <bpmn:startEvent id=\"StartEvent_1fx4pdx\">      <bpmn:outgoing>SequenceFlow_0aq01e8</bpmn:outgoing>      <bpmn:messageEventDefinition />    </bpmn:startEvent>    <bpmn:endEvent id=\"EndEvent_0oqv2s7\">      <bpmn:incoming>SequenceFlow_0n79vj8</bpmn:incoming>    </bpmn:endEvent>  </bpmn:process></bpmn:definitions>",
       "revision": 1
     }
   ],
