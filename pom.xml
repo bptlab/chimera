@@ -36,7 +36,7 @@
             <inherited>true</inherited>
             <configuration>
               <source>1.8</source>
-              <target>1.7</target>
+              <target>1.8</target>
             </configuration>
           </plugin>
 	  <plugin>
