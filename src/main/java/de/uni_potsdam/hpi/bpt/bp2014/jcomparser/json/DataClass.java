@@ -52,8 +52,9 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 
 			this.dataClassName = this.dataClassJson.getString("name");
 			this.dataClassModelID = this.dataClassJson.getString("_id");
-			this.isRootNode = this.dataClassJson.getBoolean("is_root");
 			generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
+			// TODO warning, this throws the exception at the current state. dont put anything beneath it.
+			this.isRootNode = this.dataClassJson.getBoolean("is_root");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
