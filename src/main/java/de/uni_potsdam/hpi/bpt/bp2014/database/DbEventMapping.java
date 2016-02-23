@@ -1,6 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
+
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This class is used by the
@@ -53,4 +56,17 @@ public class DbEventMapping extends DbObject {
         this.executeUpdateStatement(deleteMapping);
     }
 
+
+    public void saveAlternativeEvents(List<AbstractEvent> events) {
+        final String mappingId = UUID.randomUUID().toString().replaceAll("\\-", "");
+        int fragementInstanceId = events.get(0).getFragmentInstanceId();
+        int scenarioInstanceId = events.get(0).getScenarioInstance().getScenarioInstanceId();
+        String insertMapping = "INSERT INTO ExclusiveEvents (MappingKey, FragmentInstanceId,"
+                + "ScenarioInstanceId, EventControlNodeId) Values (%s, %d, %d, %d)";
+        for (AbstractEvent event : events) {
+            String insertEvent = String.format(insertMapping, mappingId, fragementInstanceId,
+                    scenarioInstanceId, event.getControlNodeId());
+            this.executeInsertStatement(insertEvent);
+        }
+    }
 }
