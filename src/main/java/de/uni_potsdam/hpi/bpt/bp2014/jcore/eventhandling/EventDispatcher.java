@@ -21,6 +21,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -72,6 +73,18 @@ public final class EventDispatcher {
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId());
     }
+
+    public static void registerExclusiveEvents(List<AbstractEvent> events) {
+        for (AbstractEvent event : events) {
+            int scenarioInstanceId = event.getScenarioInstance().getScenarioInstanceId();
+            int scenarioId = event.getScenarioInstance().getScenarioId();
+            registerEvent(event, event.getFragmentInstanceId(), scenarioInstanceId, scenarioId);
+        }
+        DbEventMapping mapping = new DbEventMapping();
+        
+    }
+
+
 
     private static void sendQueryToEventService(String query, String requestId, int scenarioInstanceId,
                                          int scenarioId) {

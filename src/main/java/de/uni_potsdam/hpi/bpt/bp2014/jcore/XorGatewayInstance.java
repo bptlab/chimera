@@ -31,6 +31,6 @@ public class XorGatewayInstance extends GatewayInstance {
                 getControlNodeId(), scenarioInstance,
                 getFragmentInstanceId()));
         this.setIncomingBehavior(new ExclusiveGatewayJoinBehavior(
-                this, scenarioInstance, getStateMachine()));
+                this, scenarioInstance));
     }
 }

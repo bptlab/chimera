@@ -1,9 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * Created by jonas on 21.02.16.
+ *
  */
 public class EventBasedGatewayInstance extends GatewayInstance {
 
@@ -11,8 +16,7 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.EVENT_BASED;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(
-                        controlNodeId, "EVENT_BASED", fragmentInstanceId));
+                .createNewControlNodeInstance(controlNodeId, "EVENT_BASED", fragmentInstanceId));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "EVENT_BASED", "init");
         this.initGatewayInstance();
@@ -26,11 +30,24 @@ public class EventBasedGatewayInstance extends GatewayInstance {
     }
 
     private void initGatewayInstance() {
-        //TODO add event based behavior
         this.setOutgoingBehavior(new EventBasedGatewaySplitBehavior(
                 getControlNodeId(), scenarioInstance,
                 getFragmentInstanceId()));
         this.setIncomingBehavior(new ExclusiveGatewayJoinBehavior(
                 this, scenarioInstance));
+    }
+
+
+    @Override
+    public boolean terminate() {
+        DbControlFlow controlFlow = new DbControlFlow();
+        List<Integer> followingControlNodes =
+                controlFlow.getFollowingControlNodes(this.getControlNodeId());
+        EventFactory factory = new EventFactory(this.scenarioInstance);
+        List<AbstractEvent> followingEvents = followingControlNodes.stream().map(
+                x -> factory.getEventForControlNodeId(x, this.getFragmentInstanceId()))
+                .collect(Collectors.toList());
+        followingEvents.forEach(AbstractEvent::enableControlFlow);
+        return true;
     }
 }
