@@ -85,7 +85,8 @@ public final class EventDispatcher {
         Gson gson = new Gson();
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(REST_URL).path(REST_PATH);
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        String x = gson.toJson(queryRequest);
+        Response response = target.request()
                 .post(Entity.json(gson.toJson(queryRequest)));
         if (response.getStatus() != 200) {
             // throw new RuntimeException("Query could not be registered");
