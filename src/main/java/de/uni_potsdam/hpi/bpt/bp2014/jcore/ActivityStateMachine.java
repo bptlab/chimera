@@ -25,10 +25,45 @@ public class ActivityStateMachine extends AbstractStateMachine {
 		this.setScenarioInstance(scenarioInstance);
 		this.setControlNodeInstanceId(activityInstanceId);
 		this.setControlNodeInstance(controlNodeInstance);
+		switch (getDBState()) {
+			case READY:
+				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getDataEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				getScenarioInstance().getEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case DATAFLOW_ENABLED:
+				getScenarioInstance().getDataEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case CONTROLFLOW_ENABLED:
+				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case RUNNING:
+				getScenarioInstance().getRunningControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case TERMINATED:
+				getScenarioInstance().getTerminatedControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case SKIPPED:
+				getScenarioInstance().getTerminatedControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			case REFERENTIAL_RUNNING:
+				getScenarioInstance().getReferentialRunningControlNodeInstances()
+						.add(getControlNodeInstance());
+				break;
+			default:
+				break;
+		}
 		setState(getDBState());
 		//adds the Activity Instance to the correct list
 		// in Scenario Instance, decides on the state of the Activity
-
 	}
 
 	/**
@@ -276,41 +311,5 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	public void setState(STATE state) {
 		super.setState(state);
 		dbActivityInstance.setState(getControlNodeInstanceId(), state);
-		switch (state) {
-			case READY:
-				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
-						.add(getControlNodeInstance());
-				getScenarioInstance().getDataEnabledControlNodeInstances()
-						.add(getControlNodeInstance());
-				getScenarioInstance().getEnabledControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			case DATAFLOW_ENABLED:
-				getScenarioInstance().getDataEnabledControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			case CONTROLFLOW_ENABLED:
-				getScenarioInstance().getControlFlowEnabledControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			case RUNNING:
-				getScenarioInstance().getRunningControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			case TERMINATED:
-				getScenarioInstance().getTerminatedControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			case SKIPPED:
-				getScenarioInstance().getTerminatedControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			case REFERENTIAL_RUNNING:
-				getScenarioInstance().getReferentialRunningControlNodeInstances()
-						.add(getControlNodeInstance());
-				break;
-			default:
-				break;
-		}
 	}
 }
