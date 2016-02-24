@@ -75,6 +75,7 @@ public final class EventDispatcher {
 
     private static void sendQueryToEventService(String query, String requestId, int scenarioInstanceId,
                                          int scenarioId) {
+        logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
         String notificationPath = String.format("%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s",
                 SELF_URL, scenarioId, scenarioInstanceId, requestId);
 
