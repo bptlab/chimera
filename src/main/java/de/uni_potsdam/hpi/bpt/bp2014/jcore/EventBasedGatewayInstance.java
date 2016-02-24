@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.*;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         List<AbstractEvent> followingEvents = followingControlNodes.stream().map(
                 x -> factory.getEventForControlNodeId(x, this.getFragmentInstanceId()))
                 .collect(Collectors.toList());
+        EventDispatcher.registerExclusiveEvents(followingEvents);
         followingEvents.forEach(AbstractEvent::enableControlFlow);
         return true;
     }

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.IntermediateEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -62,11 +63,41 @@ public class DbEventMapping extends DbObject {
         int fragementInstanceId = events.get(0).getFragmentInstanceId();
         int scenarioInstanceId = events.get(0).getScenarioInstance().getScenarioInstanceId();
         String insertMapping = "INSERT INTO ExclusiveEvents (MappingKey, FragmentInstanceId,"
-                + "ScenarioInstanceId, EventControlNodeId) Values (%s, %d, %d, %d)";
+                + " ScenarioInstanceId, EventControlNodeId) Values ('%s', %d, %d, %d);";
         for (AbstractEvent event : events) {
             String insertEvent = String.format(insertMapping, mappingId, fragementInstanceId,
                     scenarioInstanceId, event.getControlNodeId());
             this.executeInsertStatement(insertEvent);
         }
+    }
+
+    public boolean isAlternativeEvent(AbstractEvent event) {
+        String mappingKey = getMappingKeyForEvent(event);
+        return !"".equals(mappingKey);
+    }
+
+    public List<Integer> getAlternativeEvents(AbstractEvent event) {
+        String mappingKey = getMappingKeyForEvent(event);
+        return getEventsForMappingKey(mappingKey);
+    }
+
+    private String getMappingKeyForEvent(AbstractEvent event) {
+        int fragmentInstanceId = event.getFragmentInstanceId();
+        int scenarioInstanceId = event.getScenarioInstance().getScenarioInstanceId();
+        int eventControlNodeId = event.getControlNodeId();
+        String retrieveMappingKey = "SELECT * FROM ExclusiveEvents "
+                + "WHERE FragmentInstanceId = '%s'"
+                + "AND ScenarioInstanceId = %d AND EventControlNodeId = %d;";
+        String retrieveAlternativeEventsQuery = String.format(retrieveMappingKey,
+                fragmentInstanceId, scenarioInstanceId, eventControlNodeId);
+        return this.executeStatementReturnsString(retrieveAlternativeEventsQuery,
+                "MappingKey");
+    }
+
+    public List<Integer> getEventsForMappingKey(String mappingKey) {
+        String checkExclusiveEvents = "SELECT * FROM ExclusiveEvents WHERE MappingKey = '%s';";
+        List<Integer> alternativeEvents = this.executeStatementReturnsListInt(
+                String.format(checkExclusiveEvents, mappingKey), "EventControlNodeId");
+        return alternativeEvents;
     }
 }

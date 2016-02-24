@@ -12,8 +12,6 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
     private static final String MQ_PORT = "61616";
 
-
-
     private int controlNodeId;
     private String queryString;
 

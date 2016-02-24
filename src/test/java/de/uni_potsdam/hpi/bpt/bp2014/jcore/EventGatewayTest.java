@@ -45,7 +45,10 @@ public class EventGatewayTest extends JerseyTest {
         try {
             ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
-
+            assertEquals(3, registeredEvents.size());
+            triggerEventInScenario(scenarioInstance);
+            registeredEvents = scenarioInstance.getRegisteredEventKeys();
+            assertEquals(0, registeredEvents.size());
         } catch (IOException e) {
             assert(false);
             e.printStackTrace();
@@ -60,9 +63,6 @@ public class EventGatewayTest extends JerseyTest {
             ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
             assertEquals(3, registeredEvents.size());
-            triggerEventInScenario(scenarioInstance);
-            registeredEvents = scenarioInstance.getRegisteredEventKeys();
-            assertEquals(0, registeredEvents.size());
         } catch (IOException e) {
             assert(false);
             e.printStackTrace();

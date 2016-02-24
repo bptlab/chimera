@@ -47,9 +47,25 @@ public final class EventDispatcher {
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         AbstractEvent event = getEvent(scenarioInstance, requestId);
         event.terminate();
-        unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
-
+        int fragmentInstanceId = event.getFragmentInstanceId();
+        if (isExclusiveEvent(event)) {
+            discardAllAlternatives(event);
+        } else {
+            unregisterEvent(event.getControlNodeId(), fragmentInstanceId);
+        }
         return Response.status(Response.Status.ACCEPTED).build();
+    }
+
+    private static void discardAllAlternatives(AbstractEvent event) {
+        DbEventMapping mapping = new DbEventMapping();
+        int fragmentInstanceId = event.getFragmentInstanceId();
+        List<Integer> alternativeEventNodes = mapping.getAlternativeEvents(event);
+        alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
+    }
+
+    private static boolean isExclusiveEvent(AbstractEvent event) {
+        DbEventMapping mapping = new DbEventMapping();
+        return mapping.isAlternativeEvent(event);
     }
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
@@ -75,16 +91,9 @@ public final class EventDispatcher {
     }
 
     public static void registerExclusiveEvents(List<AbstractEvent> events) {
-        for (AbstractEvent event : events) {
-            int scenarioInstanceId = event.getScenarioInstance().getScenarioInstanceId();
-            int scenarioId = event.getScenarioInstance().getScenarioId();
-            registerEvent(event, event.getFragmentInstanceId(), scenarioInstanceId, scenarioId);
-        }
         DbEventMapping mapping = new DbEventMapping();
-        
+        mapping.saveAlternativeEvents(events);
     }
-
-
 
     private static void sendQueryToEventService(String query, String requestId, int scenarioInstanceId,
                                          int scenarioId) {
