@@ -60,10 +60,6 @@ public abstract class AbstractOutgoingBehavior {
 			controlNodeInstance = new AndGatewayInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
-		case "EVENT_BASED":
-			controlNodeInstance = new EventBasedGatewayInstance(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-			break;
         case "IntermediateEvent":
             controlNodeInstance = new IntermediateEvent(controlNodeId, fragmentInstanceId,
                     scenarioInstance);
@@ -72,7 +68,7 @@ public abstract class AbstractOutgoingBehavior {
             controlNodeInstance = new BoundaryEvent(controlNodeId, fragmentInstanceId,
                     scenarioInstance);
             break;
-        case "EventBaseGateway":
+        case "EventBasedGateway":
             controlNodeInstance = new EventBasedGatewayInstance(controlNodeId, fragmentInstanceId,
                     scenarioInstance);
             break;

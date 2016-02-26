@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
@@ -59,7 +58,7 @@ public final class EventDispatcher {
     private static void discardAllAlternatives(AbstractEvent event) {
         DbEventMapping mapping = new DbEventMapping();
         int fragmentInstanceId = event.getFragmentInstanceId();
-        List<Integer> alternativeEventNodes = mapping.getAlternativeEvents(event);
+        List<Integer> alternativeEventNodes = mapping.getAlternativeEventsIds(event);
         alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
     }
 

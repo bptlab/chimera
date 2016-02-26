@@ -22,7 +22,7 @@ public class BoundaryEventTest {
 
     //
     @Test
-    public void testBoundaryDisablementWhenTerminatingActivity() {
+    public void testEventDisablementWhenTerminatingActivity() {
         String path = "src/test/resources/EventScenarios/BoundaryEvent.json";
         try {
             ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);

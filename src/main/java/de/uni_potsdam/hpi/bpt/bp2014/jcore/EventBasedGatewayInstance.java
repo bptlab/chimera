@@ -16,24 +16,18 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.EVENT_BASED;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(controlNodeId, "EVENT_BASED", fragmentInstanceId));
+                .createNewControlNodeInstance(controlNodeId, "EventBasedGateway", fragmentInstanceId));
         this.dbGatewayInstance.createNewGatewayInstance(
-                getControlNodeInstanceId(), "EVENT_BASED", "init");
-        this.initGatewayInstance();
+                getControlNodeInstanceId(), "EventBasedGateway", "init");
     }
 
     public EventBasedGatewayInstance(int controlNodeId, int fragmentInstanceId,
                                      ScenarioInstance scenarioInstance, int instanceId) {
         super(controlNodeId, fragmentInstanceId,scenarioInstance, instanceId);
         this.type = GatewayType.EVENT_BASED;
-        this.initGatewayInstance();
     }
 
-    private void initGatewayInstance() {
-        this.setOutgoingBehavior(new EventBasedGatewaySplitBehavior(
-                getControlNodeId(), scenarioInstance,
-                getFragmentInstanceId()));
-        }
+
 
     @Override
     public void enableControlFlow() {

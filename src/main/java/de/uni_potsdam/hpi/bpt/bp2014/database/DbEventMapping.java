@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.IntermediateEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -76,9 +75,9 @@ public class DbEventMapping extends DbObject {
         return !"".equals(mappingKey);
     }
 
-    public List<Integer> getAlternativeEvents(AbstractEvent event) {
+    public List<Integer> getAlternativeEventsIds(AbstractEvent event) {
         String mappingKey = getMappingKeyForEvent(event);
-        return getEventsForMappingKey(mappingKey);
+        return getEventIdsForMappingKey(mappingKey);
     }
 
     private String getMappingKeyForEvent(AbstractEvent event) {
@@ -94,7 +93,7 @@ public class DbEventMapping extends DbObject {
                 "MappingKey");
     }
 
-    public List<Integer> getEventsForMappingKey(String mappingKey) {
+    public List<Integer> getEventIdsForMappingKey(String mappingKey) {
         String checkExclusiveEvents = "SELECT * FROM ExclusiveEvents WHERE MappingKey = '%s';";
         List<Integer> alternativeEvents = this.executeStatementReturnsListInt(
                 String.format(checkExclusiveEvents, mappingKey), "EventControlNodeId");
