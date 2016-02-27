@@ -321,8 +321,7 @@ public class ScenarioInstance {
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
 		for (AbstractControlNodeInstance controlNodeInstance : (
-				(LinkedList<
-						AbstractControlNodeInstance>)
+				(LinkedList<AbstractControlNodeInstance>)
 						enabledControlNodeInstances
 				.clone())) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class

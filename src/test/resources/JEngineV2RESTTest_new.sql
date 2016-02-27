@@ -14785,6 +14785,21 @@ CREATE TABLE IF NOT EXISTS `eventlog` (
 
 -- --------------------------------------------------------
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ExclusiveEvents`
+--
+
+CREATE TABLE IF NOT EXISTS `ExclusiveEvents` (
+  `MappingKey` varchar(256) NOT NULL,
+  `FragmentInstanceId` int(11) NOT NULL,
+  `ScenarioInstanceId` int(11) NOT NULL,
+  `EventControlNodeId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
 --
 -- Tabellenstruktur für Tabelle `fragment`
 --

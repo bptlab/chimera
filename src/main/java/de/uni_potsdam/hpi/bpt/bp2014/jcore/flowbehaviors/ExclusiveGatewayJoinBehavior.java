@@ -14,13 +14,11 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 	 *
 	 * @param gatewayInstance  An instance from the class GatewayInstance.
 	 * @param scenarioInstance An instance from the class ScenarioInstance.
-	 * @param stateMachine     An instance from the class AbstractStateMachine.
 	 */
 	public ExclusiveGatewayJoinBehavior(GatewayInstance gatewayInstance,
-			ScenarioInstance scenarioInstance, AbstractStateMachine stateMachine) {
+			ScenarioInstance scenarioInstance) {
 		this.setScenarioInstance(scenarioInstance);
 		this.setControlNodeInstance(gatewayInstance);
-		this.setStateMachine(stateMachine);
 	}
 
 	@Override public void enableControlFlow() {
@@ -31,7 +29,7 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 			condition = false;
 		}
 		if (condition) {
-			((GatewayStateMachine) this.getStateMachine()).execute();
+			((GatewayStateMachine) this.getControlNodeInstance().getStateMachine()).execute();
 			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
 					.getOutgoingBehavior()).execute();
 		} else {
@@ -39,6 +37,5 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 					.getOutgoingBehavior()).evaluateConditions();
 			getControlNodeInstance().terminate();
 		}
-
 	}
 }

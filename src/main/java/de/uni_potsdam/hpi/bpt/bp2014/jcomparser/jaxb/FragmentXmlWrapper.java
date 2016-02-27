@@ -29,6 +29,10 @@ public class FragmentXmlWrapper {
         return this.bpmnProcessXml.getBoundaryEvents();
     }
 
+    public List<EventBasedGateway> getEventBasedGateways() {
+        return this.bpmnProcessXml.getEventBasedGateways();
+    }
+
 
     public List<ExclusiveGateway> getXorGateways() {
         return this.bpmnProcessXml.getXorGateways();

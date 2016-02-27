@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
@@ -21,6 +20,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -46,9 +46,25 @@ public final class EventDispatcher {
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         AbstractEvent event = getEvent(scenarioInstance, requestId);
         event.terminate();
-        unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
-
+        int fragmentInstanceId = event.getFragmentInstanceId();
+        if (isExclusiveEvent(event)) {
+            discardAllAlternatives(event);
+        } else {
+            unregisterEvent(event.getControlNodeId(), fragmentInstanceId);
+        }
         return Response.status(Response.Status.ACCEPTED).build();
+    }
+
+    private static void discardAllAlternatives(AbstractEvent event) {
+        DbEventMapping mapping = new DbEventMapping();
+        int fragmentInstanceId = event.getFragmentInstanceId();
+        List<Integer> alternativeEventNodes = mapping.getAlternativeEventsIds(event);
+        alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
+    }
+
+    private static boolean isExclusiveEvent(AbstractEvent event) {
+        DbEventMapping mapping = new DbEventMapping();
+        return mapping.isAlternativeEvent(event);
     }
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
@@ -71,6 +87,11 @@ public final class EventDispatcher {
         sendQueryToEventService(event.getQueryString(), requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId());
+    }
+
+    public static void registerExclusiveEvents(List<AbstractEvent> events) {
+        DbEventMapping mapping = new DbEventMapping();
+        mapping.saveAlternativeEvents(events);
     }
 
     private static void sendQueryToEventService(String query, String requestId, int scenarioInstanceId,

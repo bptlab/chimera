@@ -66,7 +66,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		if (type == null || this.getControlNodeId() != id) {
 			type = this.getDbControlNode().getType(id);
 		}
-		if ("XOR".equals(type) || "AND".equals(type)) {
+		if ("XOR".equals(type) || "AND".equals(type) || "EVENT_BASED".equals(type)) {
 			for (int controlNodeId : this.getDbControlFlow()
 					.getFollowingControlNodes(id)) {
 				this.addFollowingControlNode(bucketId, controlNodeId);
@@ -114,7 +114,8 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		case "WebServiceTask":
 			((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
 			break;
-		case "AND":
+		case "XOR":
+		case "EVENT_BASED":
 			((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
 			break;
 		default:

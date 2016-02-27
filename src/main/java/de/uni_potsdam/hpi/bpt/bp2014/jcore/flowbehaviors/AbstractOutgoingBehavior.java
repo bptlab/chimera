@@ -53,8 +53,11 @@ public abstract class AbstractOutgoingBehavior {
 					fragmentInstanceId, scenarioInstance, "Endevent");
 			break;
 		case "XOR":
+			controlNodeInstance = new XorGatewayInstance(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
+			break;
 		case "AND":
-			controlNodeInstance = new GatewayInstance(
+			controlNodeInstance = new AndGatewayInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
         case "IntermediateEvent":
@@ -64,6 +67,11 @@ public abstract class AbstractOutgoingBehavior {
         case "BoundaryEvent":
             controlNodeInstance = new BoundaryEvent(controlNodeId, fragmentInstanceId,
                     scenarioInstance);
+            break;
+        case "EventBasedGateway":
+            controlNodeInstance = new EventBasedGatewayInstance(controlNodeId, fragmentInstanceId,
+                    scenarioInstance);
+            break;
         default:
 			break;
 		}
