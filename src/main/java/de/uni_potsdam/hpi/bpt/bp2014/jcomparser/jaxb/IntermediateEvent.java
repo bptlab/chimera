@@ -31,6 +31,9 @@ public class IntermediateEvent extends AbstractControlNode {
     @XmlElement(name = "bpmn:outgoing")
     private String outgoing;
 
+    @XmlElement(name = "bpmn:timerEventDefinition")
+    private TimerDefinition timer;
+
     @XmlElement(name = "bpmn:incoming")
     private String incoming;
 
@@ -107,5 +110,9 @@ public class IntermediateEvent extends AbstractControlNode {
 
     public void setOutgoing(String outgoing) {
         this.outgoing = outgoing;
+    }
+
+    public TimerDefinition getTimer() {
+        return timer;
     }
 }
