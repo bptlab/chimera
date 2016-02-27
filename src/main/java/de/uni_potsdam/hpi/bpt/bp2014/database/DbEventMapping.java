@@ -37,6 +37,17 @@ public class DbEventMapping extends DbObject {
         return this.executeStatementReturnsInt(retrieveEventControlNodeId, "eventcontrolnodeid");
     }
 
+    /**
+     * Searches for the fragment instance Id with was saved with the given key.
+     * @param eventKey The request key which was generated when registering the event.
+     * @return Return id of the event control node which registered.
+     */
+    public int getFragmentInstanceId(String eventKey) {
+        String retrieveFragmentInstanceId = "SELECT * FROM eventmapping WHERE eventkey = '"
+                + eventKey + "';";
+        return this.executeStatementReturnsInt(retrieveFragmentInstanceId, "fragmentInstanceId");
+    }
+
     public List<Integer> getRegisteredEventsForFragment(int fragmentInstanceId) {
         String retrieveEventControlNodeId = "SELECT * FROM eventmapping WHERE "
                 + "fragmentInstanceId = " + fragmentInstanceId + ";";
@@ -99,4 +110,5 @@ public class DbEventMapping extends DbObject {
                 String.format(checkExclusiveEvents, mappingKey), "EventControlNodeId");
         return alternativeEvents;
     }
+
 }

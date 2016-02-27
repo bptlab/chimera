@@ -36,7 +36,6 @@ public final class EventDispatcher {
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("scenario/{scenarioID}/instance/{instanceID}/events/{requestKey}")
     public static Response receiveEvent(
             @PathParam("scenarioID") int scenarioId,
@@ -52,7 +51,7 @@ public final class EventDispatcher {
         } else {
             unregisterEvent(event.getControlNodeId(), fragmentInstanceId);
         }
-        return Response.status(Response.Status.ACCEPTED).build();
+        return Response.accepted("Event received.").build();
     }
 
     private static void discardAllAlternatives(AbstractEvent event) {
@@ -74,9 +73,8 @@ public final class EventDispatcher {
         DbFragmentInstance fragmentInstance = new DbFragmentInstance();
 
         int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
-        int fragmentId = controlNode.getFragmentId(eventControlNodeId);
-        int fragmentInstanceId =
-                fragmentInstance.getFragmentInstanceID(fragmentId, instance.getScenarioId());
+        int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
+
         return factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
     }

@@ -66,10 +66,10 @@ public class ExecutionService /*implements Runnable*/ {
 			//    		instance.run();
 		}
 		//if there is a new version available, reload all instances from the database.
-		if (instance.newVersionAvailable) {
+		//if (instance.newVersionAvailable) {j
 			instance.scenarioInstanceMap.clear();
 			instance.instanceHistory.clear();
-		}
+		//}
 		return instance;
 	}
 
