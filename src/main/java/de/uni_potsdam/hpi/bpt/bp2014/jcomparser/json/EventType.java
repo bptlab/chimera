@@ -20,7 +20,7 @@ public class EventType implements IPersistable { //IDeserialisableJson
     /**
      * This is the modelID of the eventType.
      */
-    private long eventTypeModelID;
+    private String eventTypeModelID;
     /**
      * This is the databaseID of the eventType.
      */
@@ -72,17 +72,13 @@ public class EventType implements IPersistable { //IDeserialisableJson
             this.eventTypeJson = new JSONObject(element);
 
             this.eventTypeName = this.eventTypeJson.getString("name");
-            this.eventTypeModelID = this.eventTypeJson.getLong("_id");
+            this.eventTypeModelID = this.eventTypeJson.getString("_id");
             generateEventTypeAttributeList(this.eventTypeJson.getJSONArray("attributes"));
-            registerEventType();
+            // registerEventType();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
-    //@Override public void initializeInstanceFromXML(final Node element) {
-
-    //}
 
     /**
      * This method saves the eventType to the database.
@@ -229,10 +225,6 @@ public class EventType implements IPersistable { //IDeserialisableJson
 
     public JSONObject getEventTypeJson() {
         return eventTypeJson;
-    }
-
-    public long getEventTypeModelID() {
-        return eventTypeModelID;
     }
 
     public String getRegistrationUrl() {
