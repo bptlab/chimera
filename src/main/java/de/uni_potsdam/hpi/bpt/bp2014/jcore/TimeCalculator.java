@@ -10,10 +10,6 @@ import java.util.Date;
  *
  */
 public class TimeCalculator {
-    // For now supports dates in form of PT1M30S
-    public Date getDateForTimerDefinition(String timeInterval) {
-        return new Date();
-    }
 
     // For now supports dates in form of PT1M30S
     public Date getDatePlusInterval(Date start, String timeInterval) {
@@ -23,7 +19,7 @@ public class TimeCalculator {
             Duration duration = DatatypeFactory.newInstance().newDuration(timeInterval);
             duration.addTo(beginning);
         } catch (DatatypeConfigurationException e) {
-            throw new RuntimeException("Get fucked");
+            throw new RuntimeException("Time calculation failed.");
         }
         return beginning;
     }
