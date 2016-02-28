@@ -32,9 +32,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         if (queryString.trim().isEmpty()) {
             this.terminate();
         } else {
-            EventDispatcher.registerEvent(this, this.getFragmentInstanceId(),
-                    this.getScenarioInstance().getScenarioInstanceId(),
-                    this.getScenarioInstance().getScenarioId());
+            this.registerEvent();
         }
     }
 
@@ -48,6 +46,11 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         this.controlNodeId = controlNodeId;
     }
 
+    protected void registerEvent() {
+        EventDispatcher.registerEvent(this, this.getFragmentInstanceId(),
+                this.getScenarioInstance().getScenarioInstanceId(),
+                this.getScenarioInstance().getScenarioId());
+    }
 
     public String getQueryString() {
         return queryString;
@@ -55,5 +58,15 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     public ScenarioInstance getScenarioInstance() {
         return scenarioInstance;
+    }
+
+    @Override
+    public boolean skip() {
+        return false;
+    }
+
+    @Override
+    public boolean terminate() {
+        return false;
     }
 }

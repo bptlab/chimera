@@ -8,6 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.TimerEventInstance;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -59,6 +60,12 @@ public final class EventDispatcher {
         int fragmentInstanceId = event.getFragmentInstanceId();
         List<Integer> alternativeEventNodes = mapping.getAlternativeEventsIds(event);
         alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
+    }
+
+    public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId,
+                                          int scenarioInstanceId, int scenarioId) {
+        registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
+        ;
     }
 
     private static boolean isExclusiveEvent(AbstractEvent event) {
