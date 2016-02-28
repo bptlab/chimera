@@ -53,6 +53,8 @@ public class BoundaryEventTest {
             BoundaryEvent boundaryEvent = (BoundaryEvent) registeredEvents.get(0);
             boundaryEvent.terminate();
             assertEquals(AbstractStateMachine.STATE.CANCEL, activity.getStateMachine().getState());
+            assertEquals(scenarioInstance.getEnabledControlNodeInstances().size(), 1);
+
         } catch (IOException e) {
             assert(false);
             e.printStackTrace();

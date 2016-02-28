@@ -24,6 +24,8 @@ public class BoundaryEventOutgoingBehavior extends EventOutgoingBehavior {
         ActivityInstance attachedActivity = (ActivityInstance) scenario.getControlNodeInstanceWithId(
                 attachedControlNode);
         attachedActivity.cancel();
+
+        super.terminate();
     }
 
 }
