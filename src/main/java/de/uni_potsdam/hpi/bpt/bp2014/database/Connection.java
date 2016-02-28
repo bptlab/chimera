@@ -1,9 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.log4j.Logger;
 
-import com.ibatis.common.jdbc.ScriptRunner;
+//import com.ibatis.common.jdbc.ScriptRunner;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import com.ibatis.common.jdbc.ScriptRunner;
+//import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
@@ -26,7 +27,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Objects;
 
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
