@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 -- Database: `JEngineV2`
 --
 
-CREATE DATABASE IF NOT EXISTS ${db.schema};
-USE  ${db.schema};
+CREATE DATABASE IF NOT EXISTS JEngineV2;
+USE  JEngineV2;
 
 
 CREATE TABLE IF NOT EXISTS `version` (
@@ -625,6 +625,17 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `timerevent`
+--
+
+CREATE TABLE IF NOT EXISTS `timerevent` (
+  `controlNodeDatabaseId` int(11) NOT NULL,
+  `timerDefinition` varchar(512) NOT NULL,
+  `fragmentId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 

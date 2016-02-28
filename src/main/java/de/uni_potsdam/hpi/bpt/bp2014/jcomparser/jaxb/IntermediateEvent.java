@@ -39,28 +39,34 @@ public class IntermediateEvent extends AbstractControlNode {
 
     private int databaseId;
 
-    @Override
-    public int getFragmentId() {
-        return fragmentId;
-    }
-
-    @Override
-    public void setFragmentId(int fragmentId) {
-        this.fragmentId = fragmentId;
-    }
-
     private int fragmentId;
 
     @Override
     public int save() {
+        if (timer == null) {
+            saveIntermediateWithoutTimer();
+        } else {
+            saveTimerIntermediate();
+        }
+        return this.databaseId;
+    }
+
+    private void saveIntermediateWithoutTimer() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "IntermediateEvent", this.fragmentId, this.id);
 
         connector.insertEventIntoDatabase("IntermediateEvent", this.eventQuery,
                 this.fragmentId, this.id, this.databaseId);
+    }
 
-        return this.databaseId;
+    private void saveTimerIntermediate() {
+        Connector connector = new Connector();
+        this.databaseId = connector.insertControlNodeIntoDatabase(
+                this.getName(), "TimerEvent", this.fragmentId, this.id);
+        connector.insertEventIntoDatabase("TimerEvent", this.eventQuery,
+                this.fragmentId, this.id, this.databaseId);
+        connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
     }
 
 
@@ -115,4 +121,15 @@ public class IntermediateEvent extends AbstractControlNode {
     public TimerDefinition getTimer() {
         return timer;
     }
+
+    @Override
+    public int getFragmentId() {
+        return fragmentId;
+    }
+
+    @Override
+    public void setFragmentId(int fragmentId) {
+        this.fragmentId = fragmentId;
+    }
+
 }
