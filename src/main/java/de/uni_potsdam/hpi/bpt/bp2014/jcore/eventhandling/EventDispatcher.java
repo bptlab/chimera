@@ -46,7 +46,7 @@ public final class EventDispatcher {
             @PathParam("instanceID") int scenarioInstanceId,
             @PathParam("requestKey") String requestId) {
         terminateEvent(requestId, scenarioId, scenarioInstanceId);
-        return Response.status(Response.Status.ACCEPTED).build();
+        return Response.accepted("Event received.").build();
     }
 
     public static void terminateEvent(String mappingKey, int scenarioId, int scenarioInstanceId) {
@@ -59,7 +59,6 @@ public final class EventDispatcher {
         } else {
             unregisterEvent(event.getControlNodeId(), fragmentInstanceId);
         }
-        return Response.accepted("Event received.").build();
     }
 
     private static void discardAllAlternatives(AbstractEvent event) {
