@@ -135,7 +135,7 @@
 
 	<properties>
 	<!-- The value of the schema.version property has to be increased when the schema changes! -->
-		<schema.version>3</schema.version>
+		<schema.version>4</schema.version>
 		<db.schema>JEngineV2</db.schema>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
@@ -313,8 +313,14 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>
 		</dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.2</version>
+        </dependency>
 
-	</dependencies>
+
+    </dependencies>
 	<profiles>
 		<profile>
 			<id>remote</id>

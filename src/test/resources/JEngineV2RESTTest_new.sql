@@ -21249,6 +21249,18 @@ CREATE TABLE IF NOT EXISTS `successor` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `timerevent`
+--
+
+CREATE TABLE IF NOT EXISTS `timerevent` (
+  `controlNodeDatabaseId` int(11) NOT NULL,
+  `timerDefinition` varchar(512) NOT NULL,
+  `fragmentId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `terminationcondition`
 --
 

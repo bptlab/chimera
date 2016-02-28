@@ -30,12 +30,4 @@ public class IntermediateEvent extends AbstractEvent {
     public boolean skip() {
         return false;
     }
-
-    @Override
-    public boolean terminate() {
-        EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
-                this.scenarioInstance, this.getFragmentInstanceId());
-        outgoingBehavior.terminate();
-        return true;
-    }
 }

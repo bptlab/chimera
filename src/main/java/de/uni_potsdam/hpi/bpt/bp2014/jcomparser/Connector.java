@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import org.apache.log4j.Logger;
+import org.apache.log4j.varia.StringMatchFilter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -245,6 +246,15 @@ public class Connector extends DbObject {
                 + fragmentId + ", '" + modelId + "' ," + controlNodeDatabaseId + ")";
         int databaseId = performSQLInsertStatementWithAutoId(sql);
         return databaseId;
+    }
+
+    public void saveTimerDefinition(String timerDefinition, int fragmentId,
+                                   int controlNodeDatabaseId) {
+        String insertTimerDefinition = "INSERT INTO timerevent (timerDefinition, fragmentId,"
+                + " controlNodeDatabaseId) VALUES ('%s', %d, %d);";
+        String filledOutQuery = String.format(insertTimerDefinition, timerDefinition, fragmentId,
+            controlNodeDatabaseId);
+        this.performDefaultSQLInsertStatement(filledOutQuery);
     }
 
     /**
