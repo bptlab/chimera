@@ -100,7 +100,6 @@ public class DbTerminationCondition extends DbObject {
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				results.add(new TerminationCondition(
-						rs.getInt("state_id"), rs.getInt("dataobject_id"),
 						rs.getInt("scenario_id")));
 			}
 			//Clean-up environment

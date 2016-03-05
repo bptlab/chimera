@@ -273,20 +273,19 @@ public class ScenarioInstance {
 				DataObjectInstance dataObjectInstance = null;
 				for (DataObjectInstance currentDataObjectInstance
 						: dataObjectInstances) {
-					if (currentDataObjectInstance.getDataObjectId()
-							== terminationCondition.getDataObjectId()) {
-							dataObjectInstance =
-									currentDataObjectInstance;
-						}
-					}
-					if (dataObjectInstance != null) {
-						if (dataObjectInstance.getStateId()
-								== terminationCondition.getStateId()) {
-							terminated = true;
-						} else {
-							terminated = false;
-							break;
-						}
+					//if (currentDataObjectInstance.getDataObjectId()
+                    //        == terminationCondition.getDataObjectId()) {
+					//		dataObjectInstance =
+					//				currentDataObjectInstance;
+					//	}
+					//}
+					//if (dataObjectInstance != null) {
+					//	if (dataObjectInstance.getStateId() == terminationCondition.getStateId()) {
+					//		terminated = true;
+					//	} else {
+					//		terminated = false;
+					//		break;
+					//	}
 					}
 				}
 				//termination condition is true
@@ -294,11 +293,11 @@ public class ScenarioInstance {
 					break;
 				}
 			}
-				//terminate the scenario
-				if (terminated) {
-					this.terminate();
-				}
-				return terminated;
+        //terminate the scenario
+        if (terminated) {
+            this.terminate();
+        }
+        return terminated;
 	}
 
 

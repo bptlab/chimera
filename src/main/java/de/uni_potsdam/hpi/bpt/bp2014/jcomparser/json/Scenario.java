@@ -158,61 +158,19 @@ public class Scenario {
     public int getScenarioDbId() {
         return scenarioDbId;
     }
-    
+
     /**
      * Extracts the TerminationCondition from the String in the JSON.
      * Finds the DataObject for the given Name.
      */
     private void setTerminationCondition() {
         JSONArray jsonTerminationConditions = scenarioJson.getJSONArray("terminationconditions");
-
-        // iterate over all termination condition sets
-        for (int i = 0; i < jsonTerminationConditions.length(); i++) {
-
-            // get dataobjects and states for one termination condition set
-            String[] tcStrings = jsonTerminationConditions.getString(i).split(",");
-
-            for(String tcString : tcStrings) {
-                String dataClassString = tcString.split("[")[0];
-                String stateString = tcString.replaceAll(".*\\[|\\].*", "");
-
-                int dataObjectId = findDataObjectByClass(dataClassString).getDatabaseId();
-                int stateId = findStateIdByName(stateString);
-
-                this.terminationConditions.add(new TerminationCondition(
-                        stateId,
-                        dataObjectId,
-                        getScenarioDbId())
-                );
-
-            }
-
-        }
+        Map<String, Integer> stateToDatabaseId = new DbState().getStateToIdMap();
+        this.terminationConditions = TerminationCondition.parseTerminationConditions(
+                jsonTerminationConditions, this.dataObjects, scenarioDbId, stateToDatabaseId);
     }
 
     private void saveTerminationConditions() {
         terminationConditions.forEach(TerminationCondition::save);
     }
-
-    /**
-     * Find a DataObject by the name of its Data Class.
-     * @param dataClassName name of the dataClass
-     * @return DataObject that has the given class
-     */
-    private DataObject findDataObjectByClass(String dataClassName) {
-        return this.dataObjects.stream()
-                .filter(a -> a.getDataClassName().equals(dataClassName))
-                .findFirst().get();
-    }
-
-    /**
-     * Find the id of a DataNode State by the name.
-     * @param stateName name of the state
-     * @return id of the state
-     */
-    private int findStateIdByName(String stateName) {
-        DbState dbState = new DbState();
-        return dbState.getStateId(stateName);
-    }
-
 }

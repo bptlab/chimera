@@ -19,7 +19,8 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 	 * This is the databaseID of the dataClass.
 	 */
 	private int dataClassID;
-	/**
+
+    /**
 	 * This is the name of the dataClass.
 	 */
 	private String dataClassName;
@@ -134,5 +135,9 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 
     public void setStates(List<String> states) {
         this.states = states;
+    }
+
+    public void setDataClassName(String dataClassName) {
+        this.dataClassName = dataClassName;
     }
 }
