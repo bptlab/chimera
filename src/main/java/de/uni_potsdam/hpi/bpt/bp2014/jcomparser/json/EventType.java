@@ -10,13 +10,17 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * This class represents an EventType.
  */
-public class EventType implements IPersistable { //IDeserialisableJson
+public class EventType implements IPersistable {
+
+    private static Logger LOGGER = Logger.getLogger(EventType.class);
     /**
      * This is the modelID of the eventType.
      */
@@ -44,7 +48,7 @@ public class EventType implements IPersistable { //IDeserialisableJson
     /**
      * The URL of the Event Processing Platform where the Event Query will be registered.
      */
-    private final String registrationUrl = "localhost:8080/Unicorn/REST/EventType";
+    private final String registrationUrl = "http://172.16.64.105/Unicorn-unicorn_BP15_dev/webapi/REST/EventType";
 
     /**
      * The standard constructor.
@@ -74,9 +78,9 @@ public class EventType implements IPersistable { //IDeserialisableJson
             this.eventTypeName = this.eventTypeJson.getString("name");
             this.eventTypeModelID = this.eventTypeJson.getString("_id");
             generateEventTypeAttributeList(this.eventTypeJson.getJSONArray("attributes"));
-            // registerEventType();
+            registerEventType();
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOGGER.debug(e.getMessage());
         }
     }
 
@@ -147,8 +151,15 @@ public class EventType implements IPersistable { //IDeserialisableJson
 
         String jsonString = gson.toJson(json);
         Client client = ClientBuilder.newClient();
-        client.target(getRegistrationUrl()).request(MediaType.APPLICATION_JSON)
+
+        Response response = client.target(getRegistrationUrl()).request()
                 .post(Entity.json(jsonString));
+
+        if (response.getStatus() != 200) {
+            LOGGER.warn("Unexpected response while registering Event Type. Status:"
+                    + response.getStatus());
+        }
+
 ;    }
 
     private String generateXsd() {

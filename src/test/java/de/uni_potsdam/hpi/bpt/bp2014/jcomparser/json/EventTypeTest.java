@@ -1,46 +1,55 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Ignore;
+import org.junit.*;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  */
 public class EventTypeTest {
 
-    private String eventType;
+    @After
+    public void deleteEventType() {
+        DbObject dbObject = new DbObject();
+        String sql3 = "DELETE FROM EventType WHERE id = '56dabdeb02c19ae942450d85'";
+        String sql4 = "DELETE FROM EventTypeAttribute WHERE type = 'Customer'";
 
-    @Before
-    public void setupEventType(){
-        eventType = new JSONObject()
-                .put("name", "TestEvent")
-                .put("_id", 679826037L)
-                .put("attributes", new JSONArray()
-                        .put(new JSONObject()
-                                .put("name", "EventWert")
-                                .put("datatype", "String"))
-                        .put(new JSONObject()
-                                .put("name", "Eintrittsdatum")
-                                .put("datatype", "String"))
-
-                ).toString();
+        dbObject.executeUpdateStatement(sql3);
+        dbObject.executeUpdateStatement(sql4);
     }
 
-    @Test@Ignore
+    @Test
     public void testEventType() {
-        EventType eType = new EventType();
-        eType.initializeInstanceFromJson(eventType);
-        Assert.assertEquals("ID has not been set correctly", 679826037L, eType.getEventTypeID());
-        Assert.assertEquals("Name has not been set correctly", "TestEvent", eType.getEventTypeName());
-        Assert.assertEquals("Attributes have not been set correctly", 2, eType.getEventTypeAttributes().size());
-        String[] attributes = {"EventWert", "Eintrittsdatum"};
-        for (int i = 0; i < eType.getEventTypeAttributes().size(); i++) {
-            Assert.assertEquals("Attribute" + i + "has not been set correctly", attributes[i],
-                    eType.getEventTypeAttributes().get(i).getEventTypeAttributeName());
+
+        File file = new File("src/test/resources/EventScenarios/EventTypeScenario.json");
+        try {
+            String json = FileUtils.readFileToString(file);
+
+            Scenario scenario = new Scenario();
+            scenario.initializeInstanceFromJson(json);
+
+            // Test saving of event type
+            String sql = "SELECT * FROM EventType WHERE id = '56dabdeb02c19ae942450d85'";
+            DbObject dbObject = new DbObject();
+            String dbName = dbObject.executeStatementReturnsString(sql, "name");
+            assertEquals(dbName, "Customer");
+
+            // Test saving of attributes
+            String sql2 = "SELECT * FROM EventTypeAttribute WHERE type = 'Customer'";
+            String dbAttributeName = dbObject.executeStatementReturnsString(sql2, "name");
+            assertEquals(dbAttributeName, "name");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            assert(false);
         }
     }
 
