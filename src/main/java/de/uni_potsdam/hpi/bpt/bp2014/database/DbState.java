@@ -14,4 +14,9 @@ public class DbState extends DbObject {
 		String sql = "SELECT name FROM state WHERE id = " + id;
 		return this.executeStatementReturnsString(sql, "name");
 	}
+
+	public int getStateId(String name) {
+		String sql = "SELECT id FROM state WHERE name = '" + name + "'";
+		return this.executeStatementReturnsInt(sql, "id");
+	}
 }

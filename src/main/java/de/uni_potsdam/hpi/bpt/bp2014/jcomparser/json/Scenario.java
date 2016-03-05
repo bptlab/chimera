@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Fragment;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.FragmentInserter;
@@ -21,32 +22,39 @@ public class Scenario {
 
     private int scenarioDbId;
 
+    private List<TerminationCondition> terminationConditions;
+
+    private List<DataObject> dataObjects;
+    private JSONObject scenarioJson;
+    private DomainModel domainModel;
+
     /**
      *
      * @param element an element.
      */
     public void initializeInstanceFromJson(final String element) {
         try {
-            JSONObject scenarioJson = new JSONObject(element);
+            this.scenarioJson = new JSONObject(element);
             this.scenarioName = scenarioJson.getString("name");
             this.scenarioEditorId = scenarioJson.getString("_id");
             this.versionNumber = scenarioJson.getInt("revision");
             this.scenarioDbId = saveScenario();
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
-            DomainModel domainModel = createAndInitializeDomainModel(domainModelJson);
+            domainModel = createAndInitializeDomainModel(domainModelJson);
             domainModel.setScenarioID(this.scenarioDbId);
             List<Fragment> fragments = generateFragmentList(scenarioJson);
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
+            setTerminationCondition();
 
             domainModel.save();
+            saveTerminationConditions();
 
-            List<DataObject> dataObjects = extractDataObjects(fragments, domainModel);
+            this.dataObjects = extractDataObjects(fragments, domainModel);
             for (DataObject dataObject : dataObjects) {
                 dataObject.setScenarioId(this.scenarioDbId);
                 dataObject.save();
             }
-
 
             FragmentInserter inserter = new FragmentInserter();
             for (Fragment fragment : fragments) {
@@ -57,6 +65,14 @@ public class Scenario {
         }
     }
 
+    /**
+     * Looks if a DataObject for the given DataNodes in the fragment already exists.
+     * If so, adds the DataNodes to the DataObject.
+     * If not, creates a new DataObject and adds the DataNodes afterwards.
+     * @param fragments List of all Fragments
+     * @param model the DomainModel containing all DataClasses
+     * @return List of all DataObjects
+     */
     private List<DataObject> extractDataObjects(List<Fragment> fragments, DomainModel model) {
         Map<String, DataObject> nameToDataObject = new HashMap<>();
 
@@ -144,26 +160,59 @@ public class Scenario {
     }
     
     /**
-     -        * Extracts the TerminationCondition from the XML.
-     -        * Corresponding values will be saved to the corresponding fields.
-     -        */
-
-    /*
+     * Extracts the TerminationCondition from the String in the JSON.
+     * Finds the DataObject for the given Name.
+     */
     private void setTerminationCondition() {
-        this.terminationCondition = new LinkedList<>();
-        JSONArray terminationConditions = scenarioJson.getJSONArray("termination_conditions");
-        for (int i = 0; i < terminationConditions.length(); i++) {
-            Map<DataObject, String> setMap = new HashMap<>();
-            JSONObject terminationCondition = terminationConditions.getJSONObject(i);
-            Iterator keys = terminationCondition.keys();
-            while (keys.hasNext()) {
-                String dataObject = keys.next().toString();
-                String state = terminationCondition.getString(dataObject);
-                setMap.put(this.dataObjects.get(dataObject), state);
+        JSONArray jsonTerminationConditions = scenarioJson.getJSONArray("terminationconditions");
+
+        // iterate over all termination condition sets
+        for (int i = 0; i < jsonTerminationConditions.length(); i++) {
+
+            // get dataobjects and states for one termination condition set
+            String[] tcStrings = jsonTerminationConditions.getString(i).split(",");
+
+            for(String tcString : tcStrings) {
+                String dataClassString = tcString.split("[")[0];
+                String stateString = tcString.replaceAll(".*\\[|\\].*", "");
+
+                int dataObjectId = findDataObjectByClass(dataClassString).getDatabaseId();
+                int stateId = findStateIdByName(stateString);
+
+                this.terminationConditions.add(new TerminationCondition(
+                        stateId,
+                        dataObjectId,
+                        getScenarioDbId())
+                );
+
             }
-            this.terminationCondition.add(setMap);
+
         }
     }
-    */
+
+    private void saveTerminationConditions() {
+        terminationConditions.forEach(TerminationCondition::save);
+    }
+
+    /**
+     * Find a DataObject by the name of its Data Class.
+     * @param dataClassName name of the dataClass
+     * @return DataObject that has the given class
+     */
+    private DataObject findDataObjectByClass(String dataClassName) {
+        return this.dataObjects.stream()
+                .filter(a -> a.getDataClassName().equals(dataClassName))
+                .findFirst().get();
+    }
+
+    /**
+     * Find the id of a DataNode State by the name.
+     * @param stateName name of the state
+     * @return id of the state
+     */
+    private int findStateIdByName(String stateName) {
+        DbState dbState = new DbState();
+        return dbState.getStateId(stateName);
+    }
 
 }

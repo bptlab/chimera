@@ -120,7 +120,7 @@
 //     */
 //    @Test
 //    public void testSimpleDomainModelDeserialization(){
-//        Assert.assertEquals("The DomainModelID has not been set or is wrong", 269479299, domainModel.getDomainModelModelID());
+//        Assert.assertEquals("The DomainModelID has not been set or is wrong", 269479299, domainModel.getDomainModelEditorId());
 //    }
 //
 //    /**

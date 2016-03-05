@@ -21,7 +21,7 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	/**
 	 * The modelID found in the JSON.
 	 */
-	private long domainModelModelID;
+	private String domainModelEditorId;
 	/**
 	 * The version number of the domainModel
 	 */
@@ -53,12 +53,12 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	@Override public void initializeInstanceFromJson(final String element) {
 		try {
 			this.domainModelJson = new JSONObject(element);
-			// this.domainModelModelID = this.domainModelJson.getLong("_id");
+			this.domainModelEditorId = this.domainModelJson.getString("_id");
 			this.versionNumber = this.domainModelJson.getInt("revision");
 			generateDataClassesAndEventTypes();
 			//this.aggregations = generateAggregations();
         } catch (JSONException e) {
-			e.printStackTrace();
+			log.error("Error parsing Domain Model: " + e.getMessage());
 		}
 	}
 
@@ -132,7 +132,7 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
-		conn.insertDomainModelIntoDatabase(this.domainModelModelID, this.versionNumber,
+		conn.insertDomainModelIntoDatabase(this.domainModelEditorId, this.versionNumber,
 				this.scenarioID);
 		dataClasses.forEach(DataClass::save);
 		eventTypes.forEach(EventType::save);
@@ -214,8 +214,8 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 		return versionNumber;
 	}
 
-	public long getDomainModelModelID() {
-		return domainModelModelID;
+	public String getDomainModelEditorId() {
+		return domainModelEditorId;
 	}
 
 	public List<DataClass> getDataClasses() {

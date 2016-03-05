@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.TerminationCondition;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -264,23 +265,23 @@ public class ScenarioInstance {
 		LinkedList<Integer> conditionsSets = dbTerminationCondition
 				.getConditionsSetIDsForScenario(scenarioId);
 		for (int conditionSet : conditionsSets) {
-			LinkedList<Condition> conditions = dbTerminationCondition
+			LinkedList<TerminationCondition> terminationConditions = dbTerminationCondition
 					.getConditionsForConditionSetAndScenario(
 							scenarioId, conditionSet);
 			//prove every condition in condition set
-			for (Condition condition : conditions) {
+			for (TerminationCondition terminationCondition : terminationConditions) {
 				DataObjectInstance dataObjectInstance = null;
 				for (DataObjectInstance currentDataObjectInstance
 						: dataObjectInstances) {
 					if (currentDataObjectInstance.getDataObjectId()
-							== condition.getDataObjectId()) {
+							== terminationCondition.getDataObjectId()) {
 							dataObjectInstance =
 									currentDataObjectInstance;
 						}
 					}
 					if (dataObjectInstance != null) {
 						if (dataObjectInstance.getStateId()
-								== condition.getStateId()) {
+								== terminationCondition.getStateId()) {
 							terminated = true;
 						} else {
 							terminated = false;

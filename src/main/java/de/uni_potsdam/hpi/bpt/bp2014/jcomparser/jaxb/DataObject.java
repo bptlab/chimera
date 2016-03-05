@@ -141,6 +141,10 @@ public class DataObject {
         return id;
     }
 
+    public String getDataClassName() {
+        return dataClass.getDataClassName();
+    }
+
     public void setId(String id) {
         this.id = id;
     }

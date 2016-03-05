@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.TerminationCondition;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ public class DbTerminationCondition extends DbObject {
 	 * @param scenarioId This is the database ID of a scenario.
 	 * @return a list of conditions which terminate the scenario if fulfilled.
 	 */
-	public LinkedList<Condition> getConditionsForScenario(int scenarioId) {
+	public LinkedList<TerminationCondition> getConditionsForScenario(int scenarioId) {
 		String sql =
 				"SELECT conditionset_id, dataobject_id, state_id, scenario_id "
 						+ "FROM terminationcondition "
@@ -49,8 +50,8 @@ public class DbTerminationCondition extends DbObject {
 	 * @param conditionSetId This is the database ID of a conditionSet for the scenario.
 	 * @return a list of conditions for a scenario and the corresponding conditionSet.
 	 */
-	public LinkedList<Condition> getConditionsForConditionSetAndScenario(int scenarioId,
-			int conditionSetId) {
+	public LinkedList<TerminationCondition> getConditionsForConditionSetAndScenario(int scenarioId,
+																					int conditionSetId) {
 		String sql =
 				"SELECT conditionset_id, dataobject_id, state_id, scenario_id "
 						+ "FROM terminationcondition "
@@ -84,11 +85,11 @@ public class DbTerminationCondition extends DbObject {
 	 * @param sql This is the sql Statement which shall be executed.
 	 * @return a list of conditions.
 	 */
-	private LinkedList<Condition> executeStatementReturnsListCondition(String sql) {
+	private LinkedList<TerminationCondition> executeStatementReturnsListCondition(String sql) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		Statement stmt = null;
 		ResultSet rs;
-		LinkedList<Condition> results = new LinkedList<>();
+		LinkedList<TerminationCondition> results = new LinkedList<>();
 		if (conn == null) {
 			return results;
 		}
@@ -98,7 +99,7 @@ public class DbTerminationCondition extends DbObject {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				results.add(new Condition(rs.getInt("conditionset_id"),
+				results.add(new TerminationCondition(
 						rs.getInt("state_id"), rs.getInt("dataobject_id"),
 						rs.getInt("scenario_id")));
 			}

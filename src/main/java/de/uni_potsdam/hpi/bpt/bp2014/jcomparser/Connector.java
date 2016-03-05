@@ -85,18 +85,16 @@ public class Connector extends DbObject {
 	 * Information necessary for the insertion are given to
 	 * the database.
 	 *
-	 * @param conditionID  The Id of the condition inside the model.
-	 * @param dataObjectID The Id of the dataObj. as a part of the condition.
-	 * @param stateID      The ID of the state which is inside the condition.
-	 * @param scenarioID   The Id of the scenario which has the term. condition.
+	 * @param dataObjectId The Id of the dataObj. as a part of the condition.
+	 * @param stateId      The State id of the condition.
+	 * @param scenarioId   The Id of the scenario which has the term. condition.
 	 */
-	public void insertTerminationConditionIntoDatabase(final int conditionID,
-			final int dataObjectID, final int stateID, final int scenarioID) {
+	public int insertTerminationConditionIntoDatabase(final int stateId, final int dataObjectId, final int scenarioId) {
 		String sql = "INSERT INTO terminationcondition "
-				+ "(conditionset_id, dataobject_id, state_id, scenario_id)"
-				+ " VALUES (" + conditionID + ", " + dataObjectID + ", "
-				+ stateID + ", " + scenarioID + ")";
-		performDefaultSQLInsertStatement(sql);
+				+ "(dataobject_id, state_id, scenario_id)"
+				+ " VALUES (" + dataObjectId + ", "
+				+ stateId + ", " + scenarioId + ")";
+		return performSQLInsertStatementWithAutoId(sql);
 	}
 
 	/**
@@ -197,17 +195,17 @@ public class Connector extends DbObject {
 	/**
 	 * Updates the scenario entry with the corresponding domainModel.
 	 *
-	 * @param modelID       is the modelID of the domainModel which should be saved as a Long.
+	 * @param editorId      is the modelID of the domainModel which should be saved as a String.
 	 * @param versionNumber is the versionNumber of the domainModel as an Integer.
-	 * @param scenarioID    is the databaseID of the corresponding scenario.
+	 * @param scenarioId    is the databaseID of the corresponding scenario.
 	 */
-	public void insertDomainModelIntoDatabase(final long modelID, final int versionNumber,
-			final int scenarioID) {
+	public void insertDomainModelIntoDatabase(final String editorId, final int versionNumber,
+			final int scenarioId) {
 		DbObject dbObject = new DbObject();
 		String sql = "UPDATE scenario "
-				+ "SET scenario.datamodelid = " + modelID
-				+ ", scenario.datamodelversion = " + versionNumber
-				+ " WHERE id = " + scenarioID + "";
+				+ "SET scenario.datamodelid = '" + editorId
+				+ "', scenario.datamodelversion = " + versionNumber
+				+ " WHERE id = " + scenarioId + "";
 		dbObject.executeUpdateStatement(sql);
 	}
 

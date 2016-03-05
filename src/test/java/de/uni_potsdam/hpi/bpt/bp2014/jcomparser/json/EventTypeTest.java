@@ -27,7 +27,6 @@ public class EventTypeTest {
     public void removeEventType() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target();
     }
     @Test
     public void testEventType() {
