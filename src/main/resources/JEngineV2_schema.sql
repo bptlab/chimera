@@ -604,7 +604,7 @@ CREATE TABLE IF NOT EXISTS `successor` (
 --
 
 CREATE TABLE IF NOT EXISTS `terminationcondition` (
-  `conditionset_id` int(11) NOT NULL,
+  `conditionset_id` VARCHAR(512) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,

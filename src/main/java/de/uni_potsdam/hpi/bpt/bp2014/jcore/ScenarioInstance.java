@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.TerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.TerminationCondition;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,6 +48,7 @@ public class ScenarioInstance {
 	private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
+    private TerminationCondition terminationCondition;
 	/**
 	 * Creates and initializes a new scenario instance from database.
 	 * Reads the information for an existing scenario instance from the database.
@@ -57,9 +58,11 @@ public class ScenarioInstance {
 	 * @param scenarioInstanceId This is the database id from the scenario instance.
 	 */
 	public ScenarioInstance(int scenarioId, int scenarioInstanceId) {
-		this.name = dbScenario.getScenarioName(scenarioId);
+
+        this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
-		if (dbScenarioInstance.existScenario(scenarioId, scenarioInstanceId)) {
+		this.terminationCondition = new TerminationCondition(this);
+        if (dbScenarioInstance.existScenario(scenarioId, scenarioInstanceId)) {
 			//creates an existing Scenario Instance using the database information
 			this.scenarioInstanceId = scenarioInstanceId;
 		} else {
@@ -85,7 +88,8 @@ public class ScenarioInstance {
 		this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(scenarioId);
-		this.initializeDataObjects();
+        this.terminationCondition = new TerminationCondition(this);
+        this.initializeDataObjects();
 		this.initializeFragments();
 		this.startAutomaticControlNodes();
 	}
@@ -260,44 +264,7 @@ public class ScenarioInstance {
 	 * @return true if the condition is true. false if not.
 	 */
 	public boolean checkTerminationCondition() {
-		boolean terminated = false;
-		//get the condition Set IDs
-		LinkedList<Integer> conditionsSets = dbTerminationCondition
-				.getConditionsSetIDsForScenario(scenarioId);
-		for (int conditionSet : conditionsSets) {
-			LinkedList<TerminationCondition> terminationConditions = dbTerminationCondition
-					.getConditionsForConditionSetAndScenario(
-							scenarioId, conditionSet);
-			//prove every condition in condition set
-			for (TerminationCondition terminationCondition : terminationConditions) {
-				DataObjectInstance dataObjectInstance = null;
-				for (DataObjectInstance currentDataObjectInstance
-						: dataObjectInstances) {
-					//if (currentDataObjectInstance.getDataObjectId()
-                    //        == terminationCondition.getDataObjectId()) {
-					//		dataObjectInstance =
-					//				currentDataObjectInstance;
-					//	}
-					//}
-					//if (dataObjectInstance != null) {
-					//	if (dataObjectInstance.getStateId() == terminationCondition.getStateId()) {
-					//		terminated = true;
-					//	} else {
-					//		terminated = false;
-					//		break;
-					//	}
-					}
-				}
-				//termination condition is true
-				if (terminated) {
-					break;
-				}
-			}
-        //terminate the scenario
-        if (terminated) {
-            this.terminate();
-        }
-        return terminated;
+        return this.terminationCondition.checkTerminationCondition(this.dataObjectInstances);
 	}
 
 
@@ -305,7 +272,7 @@ public class ScenarioInstance {
 	 * Terminates a scenario instance.
 	 * Write the termination in the database and clears all lists.
 	 */
-	private void terminate() {
+    public void terminate() {
 		dbScenarioInstance.setTerminated(scenarioInstanceId, true);
 		controlNodeInstances.clear();
 		enabledControlNodeInstances.clear();

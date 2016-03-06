@@ -597,7 +597,62 @@ public class DbObject {
 		return result;
 	}
 
-	/**
+    /**
+     * This method makes a sql Query and returns the keys and values in a Map.
+     * We assume that every key is an integer.
+     *
+     * @param sql   The query string to be executed
+     * @param key   The column name which will be key of the map
+     * @param value The column name which will be the value of the map
+     * @return A Map from the key Column to the Value Column
+     */
+    public Map<Integer, Integer> executeStatementReturnsMapIntInt(
+            String sql, String key, String value) {
+        Map<Integer, Integer> result = new LinkedHashMap<>();
+
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Statement stmt = null;
+        ResultSet rs = null;
+        if (conn == null) {
+            return result;
+        }
+
+        try {
+            //Execute a query
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                result.put(rs.getInt(key), rs.getInt(value));
+            }
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            log.error("SQL Error!: ", se);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                log.error("SQL Error!: ", e);
+            }
+        }
+        return result;
+    }
+
+
+    /**
 	 *
 	 * @param sql	The query string to be executed.
 	 * @param keys	The column name which will be key of the map
