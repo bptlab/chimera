@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ParallelGatewayJoinBeha
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ParallelGatewaySplitBehavior;
 
 /**
- * Created by jonas on 21.02.16.
+ *
  */
 public class AndGatewayInstance extends GatewayInstance {
 
@@ -12,10 +12,11 @@ public class AndGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.AND;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(
-                        controlNodeId, "AND", fragmentInstanceId));
+                .createNewControlNodeInstance(controlNodeId, "AND", fragmentInstanceId));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "AND", "init");
+        this.setStateMachine(new GatewayStateMachine(this.getControlNodeId(),
+                this.scenarioInstance, this));
         this.initGatewayInstance();
     }
 

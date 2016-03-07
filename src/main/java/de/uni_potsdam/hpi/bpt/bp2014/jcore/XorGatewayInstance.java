@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewayJoinBeh
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 
 /**
- * Created by jonas on 21.02.16.
+ *
  */
 public class XorGatewayInstance extends GatewayInstance {
 
@@ -16,6 +16,8 @@ public class XorGatewayInstance extends GatewayInstance {
                         controlNodeId, "XOR", fragmentInstanceId));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "XOR", "init");
+        this.setStateMachine(new GatewayStateMachine(this.getControlNodeId(),
+                this.scenarioInstance, this));
         this.initGatewayInstance();
     }
 
