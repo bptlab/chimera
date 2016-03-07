@@ -48,7 +48,7 @@ public class EventType implements IPersistable {
     /**
      * The URL of the Event Processing Platform where the Event Query will be registered.
      */
-    private final String registrationUrl = "http://172.16.64.105/Unicorn-unicorn_BP15_dev/webapi/REST/EventType";
+    private final String registrationUrl = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/webapi/REST/EventType";
 
     /**
      * The standard constructor.

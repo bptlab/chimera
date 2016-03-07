@@ -134,12 +134,9 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 		Connector conn = new Connector();
 		conn.insertDomainModelIntoDatabase(this.domainModelModelID, this.versionNumber,
 				this.scenarioID);
-		for (DataClass dataClass : dataClasses) {
-			dataClass.save();
-		}
-		for (Aggregation aggregation : aggregations) {
-			aggregation.save();
-		}
+		dataClasses.forEach(DataClass::save);
+		eventTypes.forEach(EventType::save);
+		aggregations.forEach(Aggregation::save);
 		return 1;
 	}
 
