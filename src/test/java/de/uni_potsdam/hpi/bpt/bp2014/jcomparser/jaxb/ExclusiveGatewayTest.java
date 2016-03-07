@@ -32,7 +32,7 @@ public class ExclusiveGatewayTest {
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             ExclusiveGateway gateway = (ExclusiveGateway) jaxbUnmarshaller.unmarshal(doc);
             assertEquals("ExclusiveGateway_0ns9z26", gateway.getId());
-            assertEquals("SequenceFlow_11341ca", gateway.getOutgoing());
+            assertEquals("SequenceFlow_11341ca", gateway.getOutgoing().get(0));
             assertEquals(Arrays.asList("SequenceFlow_17mh7cg", "SequenceFlow_1gyvb8d"),
                     gateway.getIncoming());
         } catch (JAXBException e) {

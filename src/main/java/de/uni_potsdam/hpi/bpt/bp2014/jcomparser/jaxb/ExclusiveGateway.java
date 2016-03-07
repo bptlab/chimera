@@ -25,7 +25,7 @@ public class ExclusiveGateway extends AbstractControlNode {
     @XmlAttribute(name = "name")
     private String name = "";
     @XmlElement(name = "bpmn:incoming")
-    private String incoming = "";
+    private List<String> incoming = new ArrayList<>();
     @XmlElement(name = "bpmn:outgoing")
     private List<String> outgoing = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class ExclusiveGateway extends AbstractControlNode {
         return outgoing;
     }
 
-    public String getIncoming() {
+    public List<String> getIncoming() {
         return incoming;
     }
 
