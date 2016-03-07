@@ -30,30 +30,6 @@ public class Fragment {
     private int versionNumber;
     private FragmentXmlWrapper fragment;
 
-    public int getVersionNumber() {
-        return versionNumber;
-    }
-
-    public void setVersionNumber(int versionNumber) {
-        this.versionNumber = versionNumber;
-    }
-
-    public String getFragmentId() {
-        return fragmentId;
-    }
-
-    public void setFragmentId(String fragmentId) {
-        this.fragmentId = fragmentId;
-    }
-
-    public String getName() {
-        return fragmentName;
-    }
-
-    public void setName(String name) {
-        this.fragmentName = name;
-    }
-
     public Fragment(String fragmentXml, int versionNumber, String fragmentName,
                     int scenarioId, String fragmentId) {
         this.fragment = buildFragment(fragmentXml);
@@ -200,4 +176,29 @@ public class Fragment {
     public List<DataNode> getDataNodes() {
         return this.fragment.getDataNodes();
     }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+    public String getFragmentId() {
+        return fragmentId;
+    }
+
+    public void setFragmentId(String fragmentId) {
+        this.fragmentId = fragmentId;
+    }
+
+    public String getName() {
+        return fragmentName;
+    }
+
+    public void setName(String name) {
+        this.fragmentName = name;
+    }
+
 }
