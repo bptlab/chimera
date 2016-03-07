@@ -393,8 +393,9 @@ CREATE TABLE IF NOT EXISTS `fragmentinstance` (
 
 CREATE TABLE IF NOT EXISTS `eventmapping` (
   `fragmentInstanceId` int(11) NOT NULL,
-  `eventcontrolnodeid` int(11) NOT NULL,
-  `eventkey` VARCHAR(512) NOT NULL
+  `eventControlNodeId` int(11) NOT NULL,
+  `eventKey` VARCHAR(512) NOT NULL,
+  `notificationRuleId` VARCHAR(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

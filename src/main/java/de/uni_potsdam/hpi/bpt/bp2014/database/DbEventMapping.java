@@ -19,10 +19,10 @@ public class DbEventMapping extends DbObject {
      * @param eventControlNodeId The Id of the event control node
      */
     public void saveMappingToDatabase(int fragmentInstanceId, String eventKey, int
-            eventControlNodeId) {
+            eventControlNodeId, String notificationRuleId) {
         String saveMappingQuery = "INSERT into eventmapping (fragmentInstanceId, "
-                + "eventKey, eventcontrolnodeid) VALUES (" + fragmentInstanceId + ", '"
-                + eventKey + "', " + eventControlNodeId + ");";
+                + "eventKey, eventControlNodeId, notificationRuleId) VALUES (" + fragmentInstanceId + ", '"
+                + eventKey + "', " + eventControlNodeId + ", '" + notificationRuleId + "');";
         this.executeInsertStatement(saveMappingQuery);
     }
 
@@ -109,6 +109,12 @@ public class DbEventMapping extends DbObject {
         List<Integer> alternativeEvents = this.executeStatementReturnsListInt(
                 String.format(checkExclusiveEvents, mappingKey), "EventControlNodeId");
         return alternativeEvents;
+    }
+
+    public String getNotificationRuleId(int eventControlNodeId) {
+        String findNotificationRuleId = "SELECT * FROM eventmapping WHERE eventControlNodeId = "
+                + eventControlNodeId + ";";
+        return this.executeStatementReturnsString(findNotificationRuleId, "notificationRuleId");
     }
 
 }
