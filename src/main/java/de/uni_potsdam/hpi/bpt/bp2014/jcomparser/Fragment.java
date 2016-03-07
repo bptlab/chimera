@@ -2,13 +2,14 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.*;
+import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
+import jersey.repackaged.com.google.common.collect.Sets;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -68,6 +69,36 @@ public class Fragment {
         return null;
     }
 
+    public List<OutputSet> getOutputSets() {
+        List<OutputSet> sets = new ArrayList<>();
+        Map<String, DataNode> idToDataNode = new HashMap<>();
+        for (DataNode dataNode : this.getDataNodes()) {
+            idToDataNode.put(dataNode.getId(), dataNode);
+        }
+
+        for (Task task : this.fragment.getTasks()) {
+            sets.addAll(getOutputSetsForTask(task, idToDataNode));
+        }
+        return sets;
+    }
+
+    private List<OutputSet> getOutputSetsForTask(Task task, Map<String, DataNode> idToDataNode) {
+        Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
+        for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
+            DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
+            if(!dataNodeToStates.containsKey(dataNode.getName())) {
+                dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
+            }
+            dataNodeToStates.get(dataNode.getName()).add(dataNode);
+        }
+        List<List<DataNode>> datanodeCombinations = CollectionUtil.computeCartesianProduct(
+                new ArrayList<>(dataNodeToStates.values()));
+
+        return datanodeCombinations.stream().map(combination ->
+                new OutputSet(task, combination)).collect(Collectors.toList());
+    }
+
+
     /**
      *
      * @return List of Input sets
@@ -80,18 +111,25 @@ public class Fragment {
         }
 
         for (Task task : this.fragment.getTasks()) {
-            List<DataNode> dataNodes = new ArrayList<>();
-            for (DataInputAssociation assoc : task.getDataInputAssociations()) {
-                DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
-                dataNodes.add(dataNode);
-            }
-            if (dataNodes.size() > 0) {
-                InputSet set = new InputSet(task, dataNodes);
-                sets.add(set);
-            }
+            sets.addAll(getInputSetsForTask(task, idToDataNode));
         }
-
         return sets;
+    }
+
+    public List<InputSet> getInputSetsForTask(Task task, Map<String, DataNode> idToDataNode) {
+        Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
+        for (DataInputAssociation assoc : task.getDataInputAssociations()) {
+            DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
+            if(!dataNodeToStates.containsKey(dataNode.getName())) {
+                dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
+            }
+            dataNodeToStates.get(dataNode.getName()).add(dataNode);
+        }
+        List<List<DataNode>> datanodeCombinations = CollectionUtil.computeCartesianProduct(
+                new ArrayList<>(dataNodeToStates.values()));
+
+        return datanodeCombinations.stream().map(combination ->
+                new InputSet(task, combination)).collect(Collectors.toList());
     }
 
     private Map<String, Task> createMapFromIdToTask() {
@@ -102,27 +140,6 @@ public class Fragment {
         }
 
         return idToNode;
-    }
-
-    public List<OutputSet> getOutputSets() {
-        List<OutputSet> outputSets = new ArrayList<>();
-        Map<String, DataNode> idToDataNode = new HashMap<>();
-        for (DataNode dataNode : this.getDataNodes()) {
-            idToDataNode.put(dataNode.getId(), dataNode);
-        }
-
-        for (Task task : this.fragment.getTasks()) {
-            List<DataNode> dataNodes = new ArrayList<>();
-            for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
-                DataNode dataNode = idToDataNode.get(assoc.getTargetRef());
-                dataNodes.add(dataNode);
-            }
-            if (dataNodes.size() > 0) {
-                OutputSet set = new OutputSet(task, dataNodes);
-                outputSets.add(set);
-            }
-        }
-        return outputSets;
     }
 
     /**
