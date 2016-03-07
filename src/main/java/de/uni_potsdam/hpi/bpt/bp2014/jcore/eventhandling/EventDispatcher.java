@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -131,8 +132,10 @@ public final class EventDispatcher {
         mapping.saveAlternativeEvents(events);
     }
 
-    private static String sendQueryToEventService(String query, String requestId, int scenarioInstanceId,
+    private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId,
                                          int scenarioId) {
+        // since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
+        String query = StringEscapeUtils.unescapeHtml4(rawQuery);
         logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
         String notificationPath = String.format("%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s",
                 SELF_URL, scenarioId, scenarioInstanceId, requestId);

@@ -23,7 +23,7 @@
 //            String xml = FileUtils.readFileToString(file);
 //            DatabaseFragment frag = new DatabaseFragment();
 //            String fragmentName = "someName";
-//            int versionNumber  = 1;
+//            int versionNumber  = 1;E
 //            int fragmentId = 1;
 //            Map<Long, DataClass> dataClasses = new HashMap<>();
 //            frag.initialize(xml, versionNumber, fragmentName, fragmentId,
