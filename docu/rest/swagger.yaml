@@ -1030,9 +1030,6 @@ definitions:
         type: number
         format: long
         description: 'The unique identifier the data class.'
-      is_root:
-        type: boolean
-        description: 'Describes whether the data class is the root element of the domain model.'
       is_event:
         type: boolean
         description: 'Describes whether the data class represents event data.'

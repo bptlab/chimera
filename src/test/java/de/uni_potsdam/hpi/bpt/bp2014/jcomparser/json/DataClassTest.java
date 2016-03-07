@@ -21,7 +21,6 @@ public class DataClassTest  {
         rootDataClass = new JSONObject()
                 .put("name", "Reise")
                 .put("_id", "801101005L")
-                .put("is_root", true)
                 .put("attributes", new JSONArray()
                         .put(new JSONObject()
                                 .put("name", "Beginn")
@@ -41,7 +40,6 @@ public class DataClassTest  {
         normalDataClass = new JSONObject()
                 .put("name", "Flug")
                 .put("_id", "679826034L")
-                .put("is_root", false)
                 .put("attributes", new JSONArray()
                         .put(new JSONObject()
                                 .put("name", "Abflugsdatum")
@@ -62,7 +60,6 @@ public class DataClassTest  {
     public void testRootDataClass(){
         DataClass dClass = new DataClass();
         dClass.initializeInstanceFromJson(rootDataClass);
-        Assert.assertTrue(dClass.isRootNode());
         Assert.assertEquals("ID has not been set correctly", "801101005L", dClass.getDataClassModelID());
         Assert.assertEquals("Name has not been set correctly", "Reise", dClass.getDataClassName());
         Assert.assertEquals("Attributes have not been set correctly", 3, dClass.getDataAttributes().size());
@@ -76,7 +73,6 @@ public class DataClassTest  {
     public void testNormalDataClass(){
         DataClass dClass = new DataClass();
         dClass.initializeInstanceFromJson(normalDataClass);
-        Assert.assertFalse(dClass.isRootNode());
         Assert.assertEquals("ID has not been set correctly", "679826034L", dClass.getDataClassModelID());
         Assert.assertEquals("Name has not been set correctly", "Flug", dClass.getDataClassName());
         Assert.assertEquals("Attributes have not been set correctly", 4, dClass.getDataAttributes().size());

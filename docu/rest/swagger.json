@@ -1373,10 +1373,6 @@
                     "format": "long",
                     "description": "The unique identifier the data class."
                 },
-                "is_root": {
-                    "type": "boolean",
-                    "description": "Describes whether the data class is the root element of the domain model."
-                },
                 "is_event": {
                     "type": "boolean",
                     "description": "Describes whether the data class represents event data."
@@ -1400,31 +1396,6 @@
                 "datatype": {
                     "type": "string",
                     "description": "The datatype of the attribute."
-                }
-            }
-        },
-        "Aggregation": {
-            "type": "object",
-            "properties": {
-                "sourceMultiplicity": {
-                    "type": "string",
-                    "format": "x..y",
-                    "description": "The source multiplicity of the aggregation relationship."
-                },
-                "targetMultiplicity": {
-                    "type": "string",
-                    "format": "x..y",
-                    "description": "The target multiplicity of the aggregation relationship."
-                },
-                "sourceNode": {
-                    "type": "number",
-                    "format": "long",
-                    "description": "The id of the aggregation relationship source node."
-                },
-                "targetNode": {
-                    "type": "number",
-                    "format": "long",
-                    "description": "The id of the aggregation relationship target node."
                 }
             }
         },

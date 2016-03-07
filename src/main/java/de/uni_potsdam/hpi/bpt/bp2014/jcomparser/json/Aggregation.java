@@ -9,31 +9,17 @@ import java.util.Map;
 /**
  *  This class allows for aggregation.
  */
-public class Aggregation implements IDeserialisableJson, IPersistable {
+public class Aggregation implements IPersistable {
+	//TODO how to handle this
 	private DataClass source;
 	private DataClass target;
 	private int sourceMultiplicity;
 	private int targetMultiplicity;
 	private Map<String, DataClass> dataClasses;
 
-	@SuppressWarnings("unused") private JSONObject aggregationJson;
-
     public Aggregation(Map<String, DataClass> dataClasses) {
         this.dataClasses = dataClasses;
     }
-
-	@Override public void initializeInstanceFromJson(final String element) {
-		try {
-			this.aggregationJson = new JSONObject(element);
-
-			setSourceNode(this.aggregationJson.getLong("sourceNode"));
-			setTargetNode(this.aggregationJson.getLong("targetNode"));
-			setSourceMultiplicity(this.aggregationJson.getString("sourceMultiplicity"));
-			setTargetMultiplicity(this.aggregationJson.getString("targetMultiplicity"));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
 
 
 	private void setSourceMultiplicity(String value) {

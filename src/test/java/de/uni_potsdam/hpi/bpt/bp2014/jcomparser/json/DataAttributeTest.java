@@ -22,7 +22,6 @@ public class DataAttributeTest  {
         dataClass = new JSONObject()
                 .put("name", "Reise")
                 .put("_id", "801101005")
-                .put("is_root", true)
                 .put("attributes", new JSONArray()
                         .put(new JSONObject()
                                 .put("name", "Beginn")

@@ -171,7 +171,6 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 CREATE TABLE IF NOT EXISTS `dataclass` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) NOT NULL,
-  `rootnode` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

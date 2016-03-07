@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 			// this.domainModelModelID = this.domainModelJson.getLong("_id");
 			this.versionNumber = this.domainModelJson.getInt("revision");
 			generateDataClassesAndEventTypes();
-			this.aggregations = generateAggregations();
+			//this.aggregations = generateAggregations();
         } catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -86,24 +87,8 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 * This method generates a List of aggregates from the XML.
 	*/
 	private List<Aggregation> generateAggregations() {
-		Map<String, DataClass> idToDataclass = getMapFromIdToDataclass();
-        List<Aggregation> aggregations = new ArrayList<>();
-        try {
-			JSONArray jsonAggregations = this.domainModelJson.getJSONArray("aggregations");
-			int length = jsonAggregations.length();
-			this.aggregations = new ArrayList<>(length);
-
-			for (int i = 0; i < length; i++) {
-				Aggregation currentAggregation = new Aggregation(idToDataclass);
-				currentAggregation.initializeInstanceFromJson(
-						jsonAggregations.getJSONObject(i).toString()
-				);
-				aggregations.add(currentAggregation);
-			}
-		} catch (JSONException e) {
-			log.error("Error: ", e);
-		}
-        return aggregations;
+		// TODO check every attribute if its name equals one of the data classes' name
+		throw new NotImplementedException("Aggregations cannot be parsed.");
 	}
 
 	/**

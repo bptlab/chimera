@@ -31,11 +31,8 @@
 //     */
 //    @Before
 //    public void setupAggregation(){
-//        aggregation = new JSONObject()
-//                .put("sourceMultiplicity", "1..*")
-//                .put("targetMultiplicity", "1..*")
-//                .put("sourceNode", 801101005L)
-//                .put("targetNode", 679826034L).toString();
+//        // this has changed, aggregations do not have a json object
+//        // but are given via data class attributes
 //    }
 //    /**
 //     * Set up a dataClass represented as a Node by appending Elements that correspond to the structure of the XML
@@ -46,7 +43,6 @@
 //        sourceDataClass = new JSONObject()
 //                .put("name", "Reise")
 //                .put("_id", 801101005L)
-//                .put("is_root", true)
 //                .put("attributes", new JSONArray()
 //                        .put(new JSONObject()
 //                                .put("name", "Beginn")
@@ -69,7 +65,6 @@
 //        targetDataClass = new JSONObject()
 //                .put("name", "Flug")
 //                .put("_id", 679826034L)
-//                .put("is_root", false)
 //                .put("attributes", new JSONArray()
 //                        .put(new JSONObject()
 //                                .put("name", "Abflugsdatum")

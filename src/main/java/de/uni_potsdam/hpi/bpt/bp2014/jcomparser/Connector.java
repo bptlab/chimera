@@ -154,12 +154,11 @@ public class Connector extends DbObject {
 	 * Inserts a new Data Class into the database.
 	 *
 	 * @param name the name of the Class.
-	 * @param root the value for the rootnode of the class.
 	 * @return the id of the newly created entry.
 	 */
-	public int insertDataClassIntoDatabase(final String name, final int root) {
-		String sql = "INSERT INTO dataclass (dataclass.name, dataclass.rootnode) "
-				+ "VALUES ('" + name + "', " + root + ")";
+	public int insertDataClassIntoDatabase(final String name) {
+		String sql = "INSERT INTO dataclass (dataclass.name) "
+				+ "VALUES ('" + name + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 

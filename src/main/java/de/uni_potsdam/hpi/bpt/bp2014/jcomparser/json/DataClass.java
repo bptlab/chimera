@@ -24,11 +24,6 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 	 */
 	private String dataClassName;
 	/**
-	 * This boolean is used to identify the root element
-	 * of the domainModel which is used to get the caseDataObject.
-	 */
-	private boolean isRootNode = false;
-	/**
 	 * This is a list containing all dataAttributes belonging to this dataClass.
 	 */
 	private List<DataAttribute> dataAttributes = new LinkedList<>();
@@ -53,8 +48,6 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 			this.dataClassName = this.dataClassJson.getString("name");
 			this.dataClassModelID = this.dataClassJson.getString("_id");
 			generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
-			// TODO warning, this throws the exception at the current state. dont put anything beneath it.
-			this.isRootNode = this.dataClassJson.getBoolean("is_root");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -68,13 +61,7 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
-		int root;
-		if (this.isRootNode) {
-			root = 1;
-		} else {
-			root = 0;
-		}
-		this.dataClassID = conn.insertDataClassIntoDatabase(this.dataClassName, root);
+		this.dataClassID = conn.insertDataClassIntoDatabase(this.dataClassName);
 		saveDataAttributes();
         Connector connector = new Connector();
         for (String state : this.states) {
@@ -123,10 +110,6 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 
 	public List<DataAttribute> getDataAttributes() {
 		return dataAttributes;
-	}
-
-	public boolean isRootNode() {
-		return isRootNode;
 	}
 
 	public JSONObject getDataClassJson() {
