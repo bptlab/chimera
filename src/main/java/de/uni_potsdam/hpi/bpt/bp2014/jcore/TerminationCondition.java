@@ -13,10 +13,10 @@ public class TerminationCondition {
 
     public TerminationCondition(ScenarioInstance scenarioInstance) {
         DbTerminationCondition terminationCondition = new DbTerminationCondition();
-        List<String> conditionSetKeys = terminationCondition.getConditionSetKeysForScenario(0);
+        List<String> conditionSetKeys = terminationCondition.getConditionSetKeysForScenario(
+                scenarioInstance.getScenarioId());
         this.terminationParts = conditionSetKeys.stream().
                 map(TerminationPart::new).collect(Collectors.toList());
-        scenarioInstance.terminate();
     }
 
 

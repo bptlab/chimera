@@ -16,10 +16,6 @@ import java.util.stream.Collectors;
  * consisting of multiple DataObjects in certain states.
  */
 public class TerminationCondition {
-
-
-    // auto increment in the database
-    private int conditionSetId;
     Map<Integer, Integer> dataObjectIdToStateId = new HashMap<>();
     private int scenarioId;
 
@@ -107,16 +103,10 @@ public class TerminationCondition {
     public void save() {
         String conditionSetId = UUID.randomUUID().toString();
         Connector conn = new Connector();
-        // this.conditionSetId =
-        // conn.insertTerminationConditionIntoDatabase(stateId, dataObjectId, scenarioId);
-    }
-
-    public int getConditionSetId() {
-        return conditionSetId;
-    }
-
-    public void setConditionSetId(int conditionSetId) {
-        this.conditionSetId = conditionSetId;
+        for (Map.Entry<Integer, Integer> condition: this.dataObjectIdToStateId.entrySet()) {
+            conn.insertTerminationConditionIntoDatabase(condition.getKey(), condition.getValue(),
+                    scenarioId, conditionSetId);
+        }
     }
 
     public int getScenarioId() {

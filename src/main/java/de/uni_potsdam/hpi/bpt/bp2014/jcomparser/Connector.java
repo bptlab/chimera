@@ -89,12 +89,15 @@ public class Connector extends DbObject {
 	 * @param stateId      The State id of the condition.
 	 * @param scenarioId   The Id of the scenario which has the term. condition.
 	 */
-	public int insertTerminationConditionIntoDatabase(final int stateId, final int dataObjectId, final int scenarioId) {
+	public void insertTerminationConditionIntoDatabase(
+            final int dataObjectId, final int stateId, final int scenarioId,
+            final String conditionSetId) {
 		String sql = "INSERT INTO terminationcondition "
-				+ "(dataobject_id, state_id, scenario_id)"
-				+ " VALUES (" + dataObjectId + ", "
-				+ stateId + ", " + scenarioId + ")";
-		return performSQLInsertStatementWithAutoId(sql);
+				+ "(dataobject_id, state_id, scenario_id, conditionset_id)"
+				+ " VALUES (%d, %d, %d, '%s');";
+        String insertTerminationCondition = String.format(sql, stateId, dataObjectId,
+                scenarioId, conditionSetId);
+		performDefaultSQLInsertStatement(insertTerminationCondition);
 	}
 
 	/**

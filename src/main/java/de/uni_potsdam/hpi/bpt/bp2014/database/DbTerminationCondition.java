@@ -15,7 +15,7 @@ public class DbTerminationCondition extends DbObject {
 	private static Logger log = Logger.getLogger(DbTerminationCondition.class);
 
     public List<String> getConditionSetKeysForScenario(int scenarioId) {
-        String sql = "SELECT * terminationcondition WHERE scenario_id = %d;";
+        String sql = "SELECT * FROM terminationcondition WHERE scenario_id = %d;";
         String retrieveMappingKeys = String.format(sql, scenarioId);
         return this.executeStatementReturnsListString(retrieveMappingKeys, "conditionset_id");
     }
@@ -25,7 +25,7 @@ public class DbTerminationCondition extends DbObject {
      * @return
      */
     public Map<Integer, Integer> retrieveDataobjectIdToStateId(String mappingKey) {
-        String sql = "SELECT * terminationcondition WHERE conditionset_id = %s;";
+        String sql = "SELECT * FROM terminationcondition WHERE conditionset_id = %s;";
         String retrieveDataObjectMap = String.format(sql, mappingKey);
         return this.executeStatementReturnsMapIntInt(
                 retrieveDataObjectMap, "dataobject_id", "state_id");
