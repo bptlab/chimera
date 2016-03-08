@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
-import de.uni_potsdam.hpi.bpt.bp2014.events.EventTestHelper;
+import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.junit.After;
 import org.junit.Test;
@@ -19,12 +19,12 @@ public class TimerEventTest {
     public void teardown() {
 
     }
-    
+
     @Test
     public void testTimerEvent() {
         String path = "src/test/resources/EventScenarios/TimerScenario.json";
         try {
-            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
             assertEquals(1, registeredEventKeys.size());
             Thread.sleep(4000);

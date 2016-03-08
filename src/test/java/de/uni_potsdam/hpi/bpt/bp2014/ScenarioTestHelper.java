@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.events;
+package de.uni_potsdam.hpi.bpt.bp2014;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
@@ -10,12 +10,11 @@ import java.util.List;
 
 /**
  * This class should be used to hold helper methods which are needed in tests
- * which are concerned with events.
+ * which are concerned with scenarios.
  */
-public class EventTestHelper {
-    // The class contains only static methods so there should be no public
-    // default constructor
-    private EventTestHelper() {
+public class ScenarioTestHelper {
+    // The class contains only static methods so there should be no public default constructor
+    private ScenarioTestHelper() {
     }
 
     /**

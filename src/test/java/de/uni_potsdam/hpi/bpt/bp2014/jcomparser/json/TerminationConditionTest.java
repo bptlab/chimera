@@ -24,6 +24,7 @@ public class TerminationConditionTest {
     public void testTerminationCondition() {
 
         try {
+
             File file = new File("src/test/resources/EventScenarios/TerminationConditionScenario.json");
             String json = FileUtils.readFileToString(file);
 

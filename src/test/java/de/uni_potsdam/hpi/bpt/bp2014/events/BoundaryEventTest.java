@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.events;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import org.junit.After;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class BoundaryEventTest {
     public void testEventDisablementWhenTerminatingActivity() {
         String path = "src/test/resources/EventScenarios/BoundaryEvent.json";
         try {
-            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             ActivityInstance activity = (ActivityInstance)
                     scenarioInstance.getEnabledControlNodeInstances().get(0);
             activity.begin();
@@ -42,7 +43,7 @@ public class BoundaryEventTest {
     public void testActivityCancellation() {
         String path = "src/test/resources/EventScenarios/BoundaryEvent.json";
         try {
-            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             ActivityInstance activity = (ActivityInstance)
                     scenarioInstance.getEnabledControlNodeInstances().get(0);
             List<AbstractEvent> registeredEvents = scenarioInstance.getEventsForScenarioInstance();

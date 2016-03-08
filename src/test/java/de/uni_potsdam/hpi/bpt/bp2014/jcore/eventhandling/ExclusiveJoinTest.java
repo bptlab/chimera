@@ -1,9 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
-import de.uni_potsdam.hpi.bpt.bp2014.events.EventTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ public class ExclusiveJoinTest {
     public void testExclusiveJoin() throws InterruptedException {
         String path = "src/test/resources/EventScenarios/ExclusiveJoinScenario.json";
         try {
-            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             Thread.sleep(2000);
             ScenarioInstance reloadedInstance = new ScenarioInstance(scenarioInstance.getScenarioId(),
                     scenarioInstance.getScenarioInstanceId());

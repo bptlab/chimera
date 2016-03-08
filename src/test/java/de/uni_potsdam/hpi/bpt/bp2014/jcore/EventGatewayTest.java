@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.events.EventTestHelper;
+import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -43,7 +43,7 @@ public class EventGatewayTest extends JerseyTest {
     public void testBoundaryDisablementWhenTerminatingActivity() {
         String path = "src/test/resources/EventScenarios/EventGatewayScenario.json";
         try {
-            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
             assertEquals(3, registeredEvents.size());
             triggerEventInScenario(scenarioInstance);
@@ -60,7 +60,7 @@ public class EventGatewayTest extends JerseyTest {
     public void testEventEnablement() {
         String path = "src/test/resources/EventScenarios/EventGatewayScenario.json";
         try {
-            ScenarioInstance scenarioInstance = EventTestHelper.createScenarioInstance(path);
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
             assertEquals(3, registeredEvents.size());
         } catch (IOException e) {
