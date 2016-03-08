@@ -1,13 +1,18 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
-import org.apache.commons.io.FileUtils;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.json.JSONArray;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,36 +25,42 @@ import static org.junit.Assert.assertEquals;
  */
 public class TerminationConditionTest {
 
+    @After
+    public void teardown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
+
     @Test
     public void testTerminationCondition() {
-
         try {
+            String path = "src/test/resources/TerminationConditionScenario.json";
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
+            assertEquals(false, scenarioInstance.checkTerminationCondition());
 
-            File file = new File("src/test/resources/EventScenarios/TerminationConditionScenario.json");
-            String json = FileUtils.readFileToString(file);
-
-            Scenario scenario = new Scenario();
-            scenario.initializeInstanceFromJson(json);
-
-            ExecutionService service = ExecutionService.getInstance(scenario.getScenarioDbId());
-            int instanceId = service.startNewScenarioInstance();
-
-            // TODO find activity id
-            int activityId = 0;
-
-
-            //TODO assert termination condition not triggered
-            assert(false);
-
-            service.beginActivity(instanceId, activityId);
-            service.terminateActivity(instanceId, activityId);
-
-            //TODO assert termination condition triggered
-            assert(false);
-
+            List<AbstractControlNodeInstance> controlNodeInstances =
+                    scenarioInstance.getEnabledControlNodeInstances();
+            ActivityInstance instance = (ActivityInstance) controlNodeInstances.get(0);
+            instance.terminate();
+            assertEquals(true, scenarioInstance.checkTerminationCondition());
         } catch (IOException e) {
-            e.printStackTrace();
-            assert(false);
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testMultiTerminationCondition() {
+        try {
+            String path = "src/test/resources/TerminationConditionScenario.json";
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
+            assertEquals(false, scenarioInstance.checkTerminationCondition());
+
+            List<AbstractControlNodeInstance> controlNodeInstances =
+                    scenarioInstance.getEnabledControlNodeInstances();
+            ActivityInstance instance = (ActivityInstance) controlNodeInstances.get(1);
+            instance.terminate();
+            assertEquals(true, scenarioInstance.checkTerminationCondition());
+        } catch (IOException e) {
+            Assert.fail();
         }
     }
 

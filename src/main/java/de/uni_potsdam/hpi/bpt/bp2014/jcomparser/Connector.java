@@ -95,7 +95,7 @@ public class Connector extends DbObject {
 		String sql = "INSERT INTO terminationcondition "
 				+ "(dataobject_id, state_id, scenario_id, conditionset_id)"
 				+ " VALUES (%d, %d, %d, '%s');";
-        String insertTerminationCondition = String.format(sql, stateId, dataObjectId,
+        String insertTerminationCondition = String.format(sql, dataObjectId, stateId,
                 scenarioId, conditionSetId);
 		performDefaultSQLInsertStatement(insertTerminationCondition);
 	}

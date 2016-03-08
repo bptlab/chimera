@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * TerminationPart is one set of dataobjects and their respective state which can lead to
+ * termination.
  */
 public class TerminationPart {
     Map<Integer, Integer> dataobjectIdToState;
@@ -17,8 +18,12 @@ public class TerminationPart {
 
     public boolean checkTermination(List<DataObjectInstance> dataObjectInstances) {
         for (DataObjectInstance instance : dataObjectInstances) {
-            Integer dataObjectName = instance.getDataObjectId();
-            if (dataobjectIdToState.get(dataObjectName) != instance.getStateId()) {
+            Integer dataObjectId = instance.getDataObjectId();
+            // Data objects which are not present in this termination condition part don't matter
+            if (!dataobjectIdToState.containsKey(dataObjectId)) {
+                continue;
+            }
+            if (dataobjectIdToState.get(dataObjectId) != instance.getStateId()) {
                 return false;
             }
         }

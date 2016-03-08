@@ -25,7 +25,7 @@ public class DbTerminationCondition extends DbObject {
      * @return
      */
     public Map<Integer, Integer> retrieveDataobjectIdToStateId(String mappingKey) {
-        String sql = "SELECT * FROM terminationcondition WHERE conditionset_id = %s;";
+        String sql = "SELECT * FROM terminationcondition WHERE conditionset_id = '%s';";
         String retrieveDataObjectMap = String.format(sql, mappingKey);
         return this.executeStatementReturnsMapIntInt(
                 retrieveDataObjectMap, "dataobject_id", "state_id");

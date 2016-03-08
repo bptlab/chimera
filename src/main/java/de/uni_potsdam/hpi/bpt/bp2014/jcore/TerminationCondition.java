@@ -2,7 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -15,7 +17,8 @@ public class TerminationCondition {
         DbTerminationCondition terminationCondition = new DbTerminationCondition();
         List<String> conditionSetKeys = terminationCondition.getConditionSetKeysForScenario(
                 scenarioInstance.getScenarioId());
-        this.terminationParts = conditionSetKeys.stream().
+        Set<String> uniqueConditionSetKeys = new HashSet<>(conditionSetKeys);
+        this.terminationParts = uniqueConditionSetKeys.stream().
                 map(TerminationPart::new).collect(Collectors.toList());
     }
 
