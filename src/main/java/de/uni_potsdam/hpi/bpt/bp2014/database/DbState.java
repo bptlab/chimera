@@ -25,7 +25,7 @@ public class DbState extends DbObject {
 
     public Map<String, Integer> getStateToIdMap() {
         String sql = "SELECT * FROM state;";
-        Map<Integer, String> idToName = this.executeStatementReturnsMap(sql, "name", "id");
+        Map<Integer, String> idToName = this.executeStatementReturnsMap(sql, "id", "name");
         Map<String, Integer> nameToId = new HashMap<>();
 
         for (Map.Entry<Integer, String> pair : idToName.entrySet()) {

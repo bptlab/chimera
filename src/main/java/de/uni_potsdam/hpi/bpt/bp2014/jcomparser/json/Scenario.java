@@ -45,16 +45,18 @@ public class Scenario {
             domainModel.setScenarioID(this.scenarioDbId);
             List<Fragment> fragments = generateFragmentList(scenarioJson);
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
-            setTerminationCondition();
 
             domainModel.save();
-            saveTerminationConditions();
 
             this.dataObjects = extractDataObjects(fragments, domainModel);
             for (DataObject dataObject : dataObjects) {
                 dataObject.setScenarioId(this.scenarioDbId);
                 dataObject.save();
             }
+
+            // For termination conditions data objects have to be created first.
+            setTerminationCondition();
+            saveTerminationConditions();
 
             FragmentInserter inserter = new FragmentInserter();
             for (Fragment fragment : fragments) {
