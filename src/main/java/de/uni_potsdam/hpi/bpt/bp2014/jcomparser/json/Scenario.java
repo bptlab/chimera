@@ -160,7 +160,6 @@ public class Scenario {
     public int getScenarioDbId() {
         return scenarioDbId;
     }
-
     /**
      * Extracts the TerminationCondition from the String in the JSON.
      * Finds the DataObject for the given Name.
