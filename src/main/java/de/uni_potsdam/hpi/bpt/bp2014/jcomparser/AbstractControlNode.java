@@ -5,17 +5,17 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
  * get saved in the ControlNode table and can be part of control flow.
  */
 public abstract class AbstractControlNode {
-    public int getDatabaseId() {
-        return databaseId;
-    }
 
-    public void setDatabaseId(int databaseId) {
-        this.databaseId = databaseId;
-    }
-
-    public abstract String getId();
 
     protected int databaseId;
+
+    protected int fragmentId;
+
+    /**
+     * Saves the control node to the database and returns it's database id.
+     * @return database id which was created by autoincrement.
+     */
+    public abstract int save();
 
     public int getFragmentId() {
         return fragmentId;
@@ -25,11 +25,13 @@ public abstract class AbstractControlNode {
         this.fragmentId = fragmentId;
     }
 
-    protected int fragmentId;
+    public int getDatabaseId() {
+        return databaseId;
+    }
 
-    /**
-     * Saves the control node to the database and returns it's database id.
-     * @return database id which was created by autoincrement.
-     */
-    public abstract int save();
+    public void setDatabaseId(int databaseId) {
+        this.databaseId = databaseId;
+    }
+
+    public abstract String getId();
 }

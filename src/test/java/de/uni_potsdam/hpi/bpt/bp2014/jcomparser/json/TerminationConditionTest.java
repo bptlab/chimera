@@ -87,11 +87,11 @@ public class TerminationConditionTest {
 
     private List<DataObject> createExampleDataobjects() {
         List<DataObject> dataObjects = new ArrayList<>();
-        DataClass a = new DataClass();
+        DataClass a = new DataClass("");
         a.setDataClassName("A");
         DataObject A = new DataObject(a);
 
-        DataClass b = new DataClass();
+        DataClass b = new DataClass("");
         b.setDataClassName("B");
         DataObject B = new DataObject(b);
 

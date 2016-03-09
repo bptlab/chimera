@@ -58,8 +58,7 @@ public class DataClassTest  {
 
     @Test
     public void testRootDataClass(){
-        DataClass dClass = new DataClass();
-        dClass.initializeInstanceFromJson(rootDataClass);
+        DataClass dClass = new DataClass(rootDataClass);
         Assert.assertEquals("ID has not been set correctly", "801101005L", dClass.getDataClassModelID());
         Assert.assertEquals("Name has not been set correctly", "Reise", dClass.getDataClassName());
         Assert.assertEquals("Attributes have not been set correctly", 3, dClass.getDataAttributes().size());
@@ -71,8 +70,7 @@ public class DataClassTest  {
 
     @Test
     public void testNormalDataClass(){
-        DataClass dClass = new DataClass();
-        dClass.initializeInstanceFromJson(normalDataClass);
+        DataClass dClass = new DataClass(normalDataClass);
         Assert.assertEquals("ID has not been set correctly", "679826034L", dClass.getDataClassModelID());
         Assert.assertEquals("Name has not been set correctly", "Flug", dClass.getDataClassName());
         Assert.assertEquals("Attributes have not been set correctly", 4, dClass.getDataAttributes().size());

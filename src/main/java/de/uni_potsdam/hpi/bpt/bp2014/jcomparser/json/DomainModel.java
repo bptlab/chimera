@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * This class represents the DomainModel.
  */
-public class DomainModel implements IDeserialisableJson, IPersistable {
+public class DomainModel implements IPersistable {
 	private static Logger log = Logger.getLogger(DomainModel.class);
 
 	/**
@@ -41,25 +41,21 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	private JSONObject domainModelJson;
 
 
-    private List<DataClass> dataClasses;
+    private List<DataClass> dataClasses = new ArrayList<>();
 
-	private List<EventType> eventTypes;
+	private List<EventType> eventTypes = new ArrayList<>();
 
-    /**
-	 * This method calls all needed methods to set up the domainModel.
-	 *
-	 * @param element The JSON String which will be used for deserialisation
-	 */
-	@Override public void initializeInstanceFromJson(final String element) {
-		try {
-			this.domainModelJson = new JSONObject(element);
-			this.domainModelEditorId = this.domainModelJson.getString("_id");
-			this.versionNumber = this.domainModelJson.getInt("revision");
-			generateDataClassesAndEventTypes();
-			//this.aggregations = generateAggregations();
+
+    public DomainModel(final String element) {
+        try {
+            this.domainModelJson = new JSONObject(element);
+            this.versionNumber = this.domainModelJson.getInt("revision");
+            generateDataClassesAndEventTypes();
+            // TODO this.aggregations = generateAggregations();
         } catch (JSONException e) {
-			log.error("Error parsing Domain Model: " + e.getMessage());
-		}
+            log.error(e);
+            throw new JSONException("Illegal Domain Model JSON");
+        }
 	}
 
     /**
@@ -96,8 +92,6 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 	 * and a Map of EventTypes with their modelID as keys.
 	 */
 	private void generateDataClassesAndEventTypes() {
-        List<DataClass> dataClasses = new ArrayList<>();
-		List<EventType> eventTypes = new ArrayList<>();
         try {
 			JSONArray jsonDataClasses = this.domainModelJson.getJSONArray("dataclasses");
 			int length = jsonDataClasses.length();
@@ -105,23 +99,17 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
 			for (int i = 0; i < length; i++) {
 				JSONObject currentObject = jsonDataClasses.getJSONObject(i);
 				if(currentObject.getBoolean("is_event")) {
-					EventType currentET = new EventType();
-					currentET.initializeInstanceFromJson(
-							currentObject.toString());
+					EventType currentET = new EventType(currentObject.toString());
 					eventTypes.add(currentET);
 				}
 				else {
-					DataClass currentClass = new DataClass();
-					currentClass.initializeInstanceFromJson(
-							currentObject.toString());
+					DataClass currentClass = new DataClass(currentObject.toString());
 					dataClasses.add(currentClass);
 				}
 			}
 		} catch (JSONException e) {
 			log.error("Error: ", e);
 		}
-        this.dataClasses = dataClasses;
-		this.eventTypes = eventTypes;
 	}
 
 	/**

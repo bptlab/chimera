@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -10,8 +11,10 @@ import java.util.*;
 /**
  * This class represents a DataClass.
  */
-public class DataClass implements IDeserialisableJson, IPersistable {
-	/**
+public class DataClass implements IPersistable {
+    private static Logger logger = Logger.getLogger(EventType.class);
+
+    /**
 	 * This is the modelID of the dataClass.
 	 */
 	private String dataClassModelID;
@@ -37,23 +40,17 @@ public class DataClass implements IDeserialisableJson, IPersistable {
 
     private List<String> states = new ArrayList<>();
 
-	/**
-	 * This initializes the dataClass from the JSON.
-	 *
-	 * @param element The JSON String which will be used for deserialisation
-	 */
-	@Override public void initializeInstanceFromJson(final String element) {
-		try {
-			this.dataClassJson = new JSONObject(element);
-
-			this.dataClassName = this.dataClassJson.getString("name");
-			this.dataClassModelID = this.dataClassJson.getString("_id");
-			generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
+	public DataClass(final String element) {
+        try {
+            this.dataClassName = this.dataClassJson.getString("name");
+            this.dataClassModelID = this.dataClassJson.getString("_id");
+            this.dataClassJson = new JSONObject(element);
+            generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
+        } catch (JSONException e) {
+            logger.trace(e);
+            throw new JSONException("Invalid class name");
+        }
+    }
 
 	/**
 	 * This method saves the dataClass to the database.

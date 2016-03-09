@@ -12,15 +12,14 @@ import static org.junit.Assert.*;
 import org.w3c.dom.Document;
 
 /**
- * Created by Maarten on 09.02.2016.
+ *
  */
 public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
-	private Document document = new DocumentImpl(null);
-	private String dataClass;
+	private String dataclassString;
 
 	@Before
 	public void setupDataClass(){
-		dataClass = new JSONObject()
+		dataclassString = new JSONObject()
 				.put("name", "Reise")
 				.put("_id", "801101005")
 				.put("attributes", new JSONArray()
@@ -38,8 +37,7 @@ public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
 
 	@Test
 	public void testAttributeSaving() {
-		DataClass dClass = new DataClass();
-		dClass.initializeInstanceFromJson(dataClass);
+		DataClass dClass = new DataClass(dataclassString);
 		dClass.save();
 		DataAttribute attribute = dClass.getDataAttributes().get(0);
 		DbDataAttributeInstance instance  = new DbDataAttributeInstance();
@@ -47,6 +45,5 @@ public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
 		String dbName = instance.getName(attribute.getDataAttributeID());
 		assertEquals("The attributeName has not been saved correctly", "Beginn", dbName);
 		assertEquals("The attributeType has not been saved correctly", "String", dbType);
-
 	}
 }

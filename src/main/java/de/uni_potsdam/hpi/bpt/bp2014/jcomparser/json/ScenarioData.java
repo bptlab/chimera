@@ -39,14 +39,15 @@ public class ScenarioData {
             this.versionNumber = scenarioJson.getInt("revision");
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
-            this.domainModel = createAndInitializeDomainModel(domainModelJson);
+            this.domainModel = new DomainModel(domainModelJson.toString());
             this.fragments = generateFragmentList(scenarioJson);
 
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
             this.dataObjects = extractDataObjects(fragments, domainModel);
         } catch (JSONException e) {
             logger.fatal("Invalid scenario json provided");
-            throw new IllegalArgumentException("No valid scenario json provided");
+            logger.trace(e);
+            throw new JSONException("No valid scenario json provided");
         }
     }
 
@@ -89,7 +90,7 @@ public class ScenarioData {
         for (Fragment fragment : fragments) {
             List<DataNode> dataNodes = fragment.getDataNodes();
             for (DataNode node : dataNodes) {
-                if (! nameToDataObject.containsKey(node.getName())) {
+                if (!nameToDataObject.containsKey(node.getName())) {
                     DataClass belongingDataClass = nameToDataClass.get(node.getName());
                     DataObject dataObject = new DataObject(belongingDataClass);
                     nameToDataObject.put(node.getName(), dataObject);
@@ -128,11 +129,11 @@ public class ScenarioData {
 
 
     /**
-     * Generates a List of Fragments from the .
+     * Generates a List of Fragments from the Json object.
      */
     private List<Fragment> generateFragmentList(JSONObject scenarioJson) {
         JSONArray fragmentStrings = scenarioJson.getJSONArray("fragments");
-        List<Fragment> fragments = new ArrayList<>();
+        List<Fragment> generatedFragments = new ArrayList<>();
         for (int i = 0; i < fragmentStrings.length(); i++) {
             JSONObject fragmentJson = fragmentStrings.getJSONObject(i);
             Fragment fragment = new Fragment(fragmentJson.getString("content"),
@@ -140,20 +141,9 @@ public class ScenarioData {
                     fragmentJson.getString("name"),
                     fragmentJson.getString("_id")
             );
-            fragments.add(fragment);
+            generatedFragments.add(fragment);
         }
-        return fragments;
-    }
-
-    /**
-     * This method takes the JSON and initializes the domainModel.
-     *
-     * @return the domainModel or null if there was no JSON given.
-     */
-    private DomainModel createAndInitializeDomainModel(JSONObject domainModelJson) {
-        DomainModel model = new DomainModel();
-        model.initializeInstanceFromJson(domainModelJson.toString());
-        return model;
+        return generatedFragments;
     }
 
     /**

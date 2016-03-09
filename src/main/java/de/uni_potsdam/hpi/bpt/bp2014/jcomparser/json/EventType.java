@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,8 +18,8 @@ import org.apache.log4j.Logger;
  * This class represents an EventType.
  */
 public class EventType implements IPersistable {
+    private static Logger logger = Logger.getLogger(EventType.class);
 
-    private static Logger LOGGER = Logger.getLogger(EventType.class);
     /**
      * This is the modelID of the eventType.
      */
@@ -53,34 +52,16 @@ public class EventType implements IPersistable {
     /**
      * The standard constructor.
      */
-    public EventType() {
-    }
-
-    /**
-     * Default constructor, sets the scenarioID for linking the eventType back to the scenario.
-     *
-     * @param scenarioID Database ID of the scenario.
-     */
-    public EventType(int scenarioID) {
-        this.scenarioID = scenarioID;
-    }
-
-    /**
-     * This initializes the eventType from the JSON.
-     *
-     * @param element The JSON String which will be used for deserialisation
-     */
-    //@Override
-    public void initializeInstanceFromJson(final String element) {
+    public EventType(final String element) {
         try {
             this.eventTypeJson = new JSONObject(element);
-
             this.eventTypeName = this.eventTypeJson.getString("name");
             this.eventTypeModelID = this.eventTypeJson.getString("_id");
             generateEventTypeAttributeList(this.eventTypeJson.getJSONArray("attributes"));
             registerEventType();
         } catch (JSONException e) {
-            LOGGER.debug(e.getMessage());
+            logger.debug(e);
+            throw new IllegalArgumentException("Illegal Event Type");
         }
     }
 
@@ -156,7 +137,7 @@ public class EventType implements IPersistable {
                 .post(Entity.json(jsonString));
 
         if (response.getStatus() != 200) {
-            LOGGER.warn("Unexpected response while registering Event Type. Status:"
+            logger.warn("Unexpected response while registering Event Type. Status:"
                     + response.getStatus());
         }
 

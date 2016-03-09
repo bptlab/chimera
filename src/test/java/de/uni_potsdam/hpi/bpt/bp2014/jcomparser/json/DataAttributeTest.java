@@ -37,8 +37,7 @@ public class DataAttributeTest  {
 
     @Test
     public void testDataAttributeSetMethod(){
-        DataClass dClass = new DataClass();
-        dClass.initializeInstanceFromJson(dataClass);
+        DataClass dClass = new DataClass(dataClass);
         for(DataAttribute attr : dClass.getDataAttributes()){
             attr.setDataClassID(42);
         }
@@ -66,8 +65,7 @@ public class DataAttributeTest  {
 
     @Test
     public void testDataAttributeParsing(){
-        DataClass dClass = new DataClass();
-        dClass.initializeInstanceFromJson(dataClass);
+        DataClass dClass = new DataClass(dataClass);
         DataAttribute dAttribute = dClass.getDataAttributes().get(0);
         Assert.assertEquals("AttributeName has not been set correctly", "Beginn", dAttribute
                 .getDataAttributeName());
