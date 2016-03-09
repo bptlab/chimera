@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * This class represents the Scenario in the database.
+ * This class represents the ScenarioData in the database.
  * It provides the functionality to retrieve all existing scenarios as well as their name.
  */
 public class DbScenario extends DbObject {
@@ -79,7 +79,7 @@ public class DbScenario extends DbObject {
 	}
 
 	/**
-	 * Provides information abut one Scenario.
+	 * Provides information abut one ScenarioData.
 	 * The Information consists of the id, name and version.
 	 *
 	 * @param id This is the database ID for a scenario.

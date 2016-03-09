@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Fragment;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.FragmentInserter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,18 +16,57 @@ import java.util.*;
 /**
  *
  */
-public class Scenario {
+public class ScenarioData {
+    private static Logger logger = Logger.getLogger(ScenarioData.class.getName());
+
     private String scenarioName;
     private String scenarioEditorId;
     private int versionNumber;
 
-    private int scenarioDbId;
-
+    List<Fragment> fragments;
     private List<TerminationCondition> terminationConditions;
-
     private List<DataObject> dataObjects;
     private JSONObject scenarioJson;
     private DomainModel domainModel;
+
+    private int scenarioDbId;
+
+    public ScenarioData(final String element) {
+        try {
+            JSONObject scenarioJson = new JSONObject(element);
+            this.scenarioName = scenarioJson.getString("name");
+            this.scenarioEditorId = scenarioJson.getString("_id");
+            this.versionNumber = scenarioJson.getInt("revision");
+
+            JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
+            this.domainModel = createAndInitializeDomainModel(domainModelJson);
+            this.fragments = generateFragmentList(scenarioJson);
+
+            associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
+            this.dataObjects = extractDataObjects(fragments, domainModel);
+        } catch (JSONException e) {
+            logger.fatal("Invalid scenario json provided");
+            throw new IllegalArgumentException("No valid scenario json provided");
+        }
+    }
+
+    public int save() {
+        this.scenarioDbId = saveScenario();
+        domainModel.setScenarioID(this.scenarioDbId);
+
+        for (DataObject dataObject : this.dataObjects) {
+            dataObject.setScenarioId(this.scenarioDbId);
+            dataObject.save();
+        }
+
+        domainModel.save();
+
+        FragmentInserter inserter = new FragmentInserter();
+        for (Fragment fragment : fragments) {
+            inserter.save(fragment, domainModel);
+        }
+        return this.scenarioDbId;
+    }
 
     /**
      *
@@ -113,14 +153,12 @@ public class Scenario {
         Connector connector = new Connector();
         return connector.insertScenarioIntoDatabase(
                 this.scenarioName, this.scenarioEditorId, this.versionNumber);
-
     }
 
     private Map<String, DataClass> getNameToDataclass(DomainModel domainModel) {
         Map<String, DataClass> dataClassNameToDatabaseId = new HashMap<>();
         for (DataClass dataClass : domainModel.getDataClasses()) {
-            dataClassNameToDatabaseId.put(
-                    dataClass.getDataClassName(), dataClass);
+            dataClassNameToDatabaseId.put(dataClass.getDataClassName(), dataClass);
         }
         return dataClassNameToDatabaseId;
     }
