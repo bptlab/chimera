@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
@@ -268,8 +268,8 @@ import java.util.LinkedList;
 	@Path("scenario")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void postInstance(String scenario) {
-		Scenario newScenario = new Scenario();
-		newScenario.initializeInstanceFromJson(scenario);
+		ScenarioData newScenario = new ScenarioData(scenario);
+		newScenario.save();
 	}
 	/**
 	 * Creates a new instance of a specified scenario.

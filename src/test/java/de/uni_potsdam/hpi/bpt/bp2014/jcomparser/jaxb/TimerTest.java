@@ -1,9 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
@@ -56,10 +55,11 @@ public class TimerTest {
     public void testTimerSaving() {
         File file = new File("src/test/resources/TimerScenario.json");
 
-        Scenario scenario = new Scenario();
         try {
             String json = FileUtils.readFileToString(file);
-            scenario.initializeInstanceFromJson(json);
+            ScenarioData scenario = new ScenarioData(json);
+            scenario.save();
+
             DbObject dataObject = new DbObject();
             String retrieveTimerDefinitions = "SELECT * FROM timerevent";
             List<String> timerDefinitions = dataObject.

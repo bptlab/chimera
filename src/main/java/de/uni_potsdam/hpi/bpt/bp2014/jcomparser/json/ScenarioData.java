@@ -63,49 +63,12 @@ public class ScenarioData {
 
         FragmentInserter inserter = new FragmentInserter();
         for (Fragment fragment : fragments) {
+            fragment.setScenarioId(this.scenarioDbId);
             inserter.save(fragment, domainModel);
         }
         return this.scenarioDbId;
     }
 
-    /**
-     *
-     * @param element an element.
-     */
-    public void initializeInstanceFromJson(final String element) {
-        try {
-            this.scenarioJson = new JSONObject(element);
-            this.scenarioName = scenarioJson.getString("name");
-            this.scenarioEditorId = scenarioJson.getString("_id");
-            this.versionNumber = scenarioJson.getInt("revision");
-            this.scenarioDbId = saveScenario();
-
-            JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
-            domainModel = createAndInitializeDomainModel(domainModelJson);
-            domainModel.setScenarioID(this.scenarioDbId);
-            List<Fragment> fragments = generateFragmentList(scenarioJson);
-            associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
-
-            domainModel.save();
-
-            this.dataObjects = extractDataObjects(fragments, domainModel);
-            for (DataObject dataObject : dataObjects) {
-                dataObject.setScenarioId(this.scenarioDbId);
-                dataObject.save();
-            }
-
-            // For termination conditions data objects have to be created first.
-            setTerminationCondition();
-            saveTerminationConditions();
-
-            FragmentInserter inserter = new FragmentInserter();
-            for (Fragment fragment : fragments) {
-                inserter.save(fragment, domainModel);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Looks if a DataObject for the given DataNodes in the fragment already exists.
@@ -175,7 +138,6 @@ public class ScenarioData {
             Fragment fragment = new Fragment(fragmentJson.getString("content"),
                     fragmentJson.getInt("revision"),
                     fragmentJson.getString("name"),
-                    this.scenarioDbId,
                     fragmentJson.getString("_id")
             );
             fragments.add(fragment);
@@ -194,10 +156,6 @@ public class ScenarioData {
         return model;
     }
 
-
-    public int getScenarioDbId() {
-        return scenarioDbId;
-    }
     /**
      * Extracts the TerminationCondition from the String in the JSON.
      * Finds the DataObject for the given Name.

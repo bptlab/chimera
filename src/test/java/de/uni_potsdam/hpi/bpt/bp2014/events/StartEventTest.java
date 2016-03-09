@@ -2,8 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.events;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
+
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,8 +32,7 @@ public class StartEventTest {
             List<AbstractEvent> events = scenarioInstance.getEventsForScenarioInstance();
             assert (events.get(0) instanceof StartEvent);
         } catch (IOException e) {
-            e.printStackTrace();
-            assert(false);
+            Assert.fail();
         }
     }
 
@@ -48,8 +49,7 @@ public class StartEventTest {
             ActivityInstance firstActivity = (ActivityInstance) controlNodeInstances.get(0);
             assert (firstActivity.getLabel().equals("Do something"));
         } catch (IOException e) {
-            e.printStackTrace();
-            assert(false);
+            Assert.fail();
         }
     }
 }

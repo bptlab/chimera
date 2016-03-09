@@ -20,7 +20,7 @@ public class InputOutputSetTest {
             String fragmentName = "aDummyName";
             int scenarioId = 0;
             String fragmentId = "aDummyId";
-            Fragment fragment = new Fragment(xml, versionNumber, fragmentName, scenarioId, fragmentId);
+            Fragment fragment = new Fragment(xml, versionNumber, fragmentName, fragmentId);
             assertEquals(4, fragment.getInputSets().size());
         } catch (IOException e) {
             e.printStackTrace();

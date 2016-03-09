@@ -112,9 +112,9 @@ public class TestSetUp {
      * @return A mocked Scenario
      * @throws Exception java.lang.Exception
      */
-    public static Scenario initializeCompleteScenario(final String versionLocation,
+    public static ScenarioData initializeCompleteScenario(final String versionLocation,
                                                       final List<Fragment> fragments, final DomainModel domainModel) throws Exception {
-        final Scenario scenario = PowerMock.createPartialMock(Scenario.class,
+        final ScenarioData scenario = PowerMock.createPartialMock(ScenarioData.class,
                 FETCH_VERSION_METHOD,
                 CREATE_FRAGMENT_METHOD,
                 SET_DOMAIN_MODEL_METHOD,

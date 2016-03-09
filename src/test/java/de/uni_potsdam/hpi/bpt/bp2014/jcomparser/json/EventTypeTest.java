@@ -34,9 +34,8 @@ public class EventTypeTest {
         File file = new File("src/test/resources/EventScenarios/EventTypeScenario.json");
         try {
             String json = FileUtils.readFileToString(file);
-
-            Scenario scenario = new Scenario();
-            scenario.initializeInstanceFromJson(json);
+            ScenarioData scenario = new ScenarioData(json);
+            scenario.save();
 
             // Test saving of event type
             String sql = "SELECT * FROM eventtype WHERE scenario_id = 0";

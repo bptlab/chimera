@@ -2,15 +2,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.IntegrationTests;
 
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Scenario;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface.DataObjectJaxBean;
+import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -29,15 +27,13 @@ public class ScenarioTest {
 
     @Test
     public void testScenario() {
-        //File file = new File("src/test/resources/jaxb/ExampleScenarioWithoutEvents.json");
-        //File file = new File("src/test/resources/EventScenarios/AsparagusScenarioWithoutEvents.json");
         File file = new File("src/test/resources/EventScenarios/AsparagusScenario.json");
-        Scenario scenario = new Scenario();
+
         try {
             String json = FileUtils.readFileToString(file);
-            scenario.initializeInstanceFromJson(json);
-            //ScenarioInstance instance = new ScenarioInstance(scenario.getScenarioDbId());
-            ExecutionService service = ExecutionService.getInstance(scenario.getScenarioDbId());
+            ScenarioData scenario = new ScenarioData(json);
+            int databaseId = scenario.save();
+            ExecutionService service = ExecutionService.getInstance(databaseId);
             service.startNewScenarioInstance();
             DataObjectInstance[] dataObjectInstances = service
                     .getDataObjectInstancesForDataSetId(
@@ -57,22 +53,7 @@ public class ScenarioTest {
                 dataObjects[i] = dataObject;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            assert(false);
-        }
-    }
-
-    @Test @Ignore
-    public void testScenarioWithEvents() {
-        File file = new File("src/test/resources/jaxb/scenarioWithEvents.json");
-        Scenario scenario = new Scenario();
-        try {
-            String json = FileUtils.readFileToString(file);
-            scenario.initializeInstanceFromJson(json);
-            ScenarioInstance instance = new ScenarioInstance(1, 3);
-        } catch (IOException e) {
-            e.printStackTrace();
-            assert(false);
+            Assert.fail();
         }
     }
 }

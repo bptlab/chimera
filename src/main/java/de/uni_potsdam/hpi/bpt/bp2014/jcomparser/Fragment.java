@@ -25,18 +25,19 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class Fragment {
 
-    private final int scenarioId;
+
+    private int scenarioId;
     private String fragmentName;
     private String fragmentId;
     private int versionNumber;
     private FragmentXmlWrapper fragment;
 
     public Fragment(String fragmentXml, int versionNumber, String fragmentName,
-                    int scenarioId, String fragmentId) {
+                    String fragmentId) {
         this.fragment = buildFragment(fragmentXml);
         this.fragmentName = fragmentName;
         this.versionNumber = versionNumber;
-        this.scenarioId = scenarioId;
+        // TODO rename to fragment editor Id
         this.fragmentId = fragmentId;
     }
 
@@ -194,12 +195,8 @@ public class Fragment {
         return this.fragment.getDataNodes();
     }
 
-    public int getVersionNumber() {
-        return versionNumber;
-    }
-
-    public void setVersionNumber(int versionNumber) {
-        this.versionNumber = versionNumber;
+    public void setScenarioId(int scenarioId) {
+        this.scenarioId = scenarioId;
     }
 
     public String getFragmentId() {
@@ -217,5 +214,4 @@ public class Fragment {
     public void setName(String name) {
         this.fragmentName = name;
     }
-
 }
