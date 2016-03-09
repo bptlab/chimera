@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 /**
  * The Interface for database persistence.

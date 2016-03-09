@@ -1,15 +1,13 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.*;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
-import jersey.repackaged.com.google.common.collect.Sets;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

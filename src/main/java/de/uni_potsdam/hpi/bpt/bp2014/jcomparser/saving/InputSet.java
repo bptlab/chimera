@@ -1,7 +1,5 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 
 import java.util.List;

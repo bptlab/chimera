@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 /**
  * Possible control nodes are gateways, activities, webtasks and events. Each of them

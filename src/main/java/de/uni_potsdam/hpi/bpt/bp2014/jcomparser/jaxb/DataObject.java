@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 
 

@@ -1,9 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Fragment;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.FragmentInserter;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.FragmentInserter;
+
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import org.apache.log4j.Logger;

@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 //import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Fragment;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 import org.easymock.IAnswer;
 import org.junit.AfterClass;
 import org.powermock.api.easymock.PowerMock;

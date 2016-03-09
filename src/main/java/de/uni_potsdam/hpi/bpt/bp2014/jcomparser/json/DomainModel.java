@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;

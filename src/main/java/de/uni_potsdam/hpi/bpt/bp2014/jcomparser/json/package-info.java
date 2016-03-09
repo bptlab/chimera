@@ -1,9 +1,5 @@
 /**
- * This package contains classes to parse the model-xml.
- * Every class represents entities of the model.
- * <p/>
- * The class Ausprobieren is for debug options only
- *
- * @since 0.1
+ * This package holds information concerning the elements which have to be deserialized
+ * from Json format.
  */
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;

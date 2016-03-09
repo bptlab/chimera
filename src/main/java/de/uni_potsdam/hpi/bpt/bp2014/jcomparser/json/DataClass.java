@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ public class DataClass implements IPersistable {
 
 	public DataClass(final String element) {
         try {
+            this.dataClassJson = new JSONObject(element);
             this.dataClassName = this.dataClassJson.getString("name");
             this.dataClassModelID = this.dataClassJson.getString("_id");
             this.dataClassJson = new JSONObject(element);

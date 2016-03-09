@@ -1,10 +1,9 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import org.apache.log4j.Logger;
-import org.apache.log4j.varia.StringMatchFilter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.AbstractControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 
 import javax.xml.bind.annotation.*;
 

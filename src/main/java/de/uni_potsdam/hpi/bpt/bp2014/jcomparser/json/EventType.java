@@ -1,7 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import com.google.gson.Gson;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 
 /**
  * This class represents a DataAttribute.

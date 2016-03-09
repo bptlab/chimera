@@ -1,11 +1,9 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.BoundaryEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.SequenceFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.InputSet;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.OutputSet;
+
 import java.util.HashMap;
 import java.util.Map;
 
