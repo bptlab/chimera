@@ -18,6 +18,28 @@ import java.util.Map;
 public class DbObject {
 	private static Logger log = Logger.getLogger(DbObject.class);
 
+
+    /**
+     * Performs a sql insert statement.
+     * This method contains an basic error handling. Resources will be closed.
+     *
+     * @param statement the statement to be executed.
+     * @return the auto increment id of the newly created entry.
+     */
+    public int performSQLInsertStatementWithAutoId(final String statement) {
+        int result = -1;
+        try (java.sql.Connection conn = Connection.getInstance().connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(statement, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = stmt.getGeneratedKeys();
+            rs.next();
+            result = rs.getInt(1);
+        } catch (SQLException se) {
+            log.error("Error:", se);
+        }
+        return result;
+    }
+
 	/**
 	 * @param sql This is a SQL-Statement
 	 * @return an ArrayList with HashMaps containing the query results.

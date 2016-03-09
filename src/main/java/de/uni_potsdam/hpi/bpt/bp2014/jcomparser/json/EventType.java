@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
  * This class represents an EventType.
  */
 public class EventType implements IPersistable {
+    private final static String REGISTRATION_URL =
+            "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/webapi/REST/EventType";
+
     private static Logger logger = Logger.getLogger(EventType.class);
 
     /**
@@ -48,7 +51,6 @@ public class EventType implements IPersistable {
     /**
      * The URL of the Event Processing Platform where the Event Query will be registered.
      */
-    private final String registrationUrl = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/webapi/REST/EventType";
 
     /**
      * The standard constructor.
@@ -221,7 +223,7 @@ public class EventType implements IPersistable {
     }
 
     public String getRegistrationUrl() {
-        return registrationUrl;
+        return REGISTRATION_URL;
     }
 
 }

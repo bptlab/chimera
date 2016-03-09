@@ -1,13 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import org.apache.log4j.Logger;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,7 +92,7 @@ public class Connector extends DbObject {
 				+ " VALUES (%d, %d, %d, '%s');";
         String insertTerminationCondition = String.format(sql, dataObjectId, stateId,
                 scenarioId, conditionSetId);
-		performDefaultSQLInsertStatement(insertTerminationCondition);
+		this.executeInsertStatement(insertTerminationCondition);
 	}
 
 	/**
@@ -113,7 +109,7 @@ public class Connector extends DbObject {
 		String sql = "INSERT INTO controlflow "
 				+ "VALUES (" + sourceID + ", "
 				+ targetID + ", '" + condition + "')";
-		performDefaultSQLInsertStatement(sql);
+        this.executeInsertStatement(sql);
 	}
 
 	/**
@@ -224,7 +220,7 @@ public class Connector extends DbObject {
 				+ "dataclass_id2, aggregation.multiplicity) "
 				+ "VALUES (" + sourceID + ", "
 				+ targetID + ", " + multiplicity + ")";
-		performDefaultSQLInsertStatement(sql);
+        this.executeInsertStatement(sql);
 	}
 
     /**
@@ -243,8 +239,7 @@ public class Connector extends DbObject {
                 + "(event_type, query, fragment_id, model_id, controlnode_id) "
                 + "VALUES ('" + eventtype + "', '" + eventquery + "', "
                 + fragmentId + ", '" + modelId + "' ," + controlNodeDatabaseId + ")";
-        int databaseId = performSQLInsertStatementWithAutoId(sql);
-        return databaseId;
+        return performSQLInsertStatementWithAutoId(sql);
     }
 
     public void saveTimerDefinition(String timerDefinition, int fragmentId,
@@ -253,7 +248,7 @@ public class Connector extends DbObject {
                 + " controlNodeDatabaseId) VALUES ('%s', %d, %d);";
         String filledOutQuery = String.format(insertTimerDefinition, timerDefinition, fragmentId,
             controlNodeDatabaseId);
-        this.performDefaultSQLInsertStatement(filledOutQuery);
+        this.executeInsertStatement(filledOutQuery);
     }
 
     /**
@@ -270,7 +265,7 @@ public class Connector extends DbObject {
         insertEventIntoDatabase(eventtype, eventquery, fragmentId, modelId, controlNodeDatabaseId);
         String sql = "INSERT INTO boundaryeventref (controlnode_id, attachedtoref)"
                 + "VALUES (" + controlNodeDatabaseId + ", " + activityDbId + ")";
-        performDefaultSQLInsertStatement(sql);
+        this.executeInsertStatement(sql);
     }
 
 	/**
@@ -324,7 +319,7 @@ public class Connector extends DbObject {
 		String sql = "INSERT INTO datasetconsistsofdatanode "
 				+ "(dataset_id, datanode_id) "
 				+ "VALUES (" + dataSetID + ", " + dataNodeID + ")";
-		performDefaultSQLInsertStatement(sql);
+        this.executeInsertStatement(sql);
 	}
 
 	/**
@@ -351,7 +346,7 @@ public class Connector extends DbObject {
 				+ "FROM dataflow  WHERE controlnode_id = " + controlNodeID
 				+ " AND dataset_id = " + dataSetID
 				+ " AND input = " + inputAsInt + " )";
-		performDefaultSQLInsertStatement(sql);
+        this.executeInsertStatement(sql);
 	}
 
 	/**
@@ -379,7 +374,7 @@ public class Connector extends DbObject {
 		String sql = "INSERT INTO reference (controlnode_id1,"
 				+ " controlnode_id2) VALUES ("
 				+ sourceNodeId + ", " + targetNodeId + ")";
-		performDefaultSQLInsertStatement(sql);
+        this.executeInsertStatement(sql);
 	}
 
 	/**
@@ -397,77 +392,6 @@ public class Connector extends DbObject {
 	}
 
 	/**
-	 * Perform a insert statement for the database.
-	 * Nothing will be returned. Exceptions will be catched and handled.
-	 *
-	 * @param statement the statement to be executed.
-	 */
-	private void performDefaultSQLInsertStatement(final String statement) {
-		java.sql.Connection conn = Connection.getInstance().connect();
-		Statement stmt = null;
-		if (conn == null) {
-			System.err.println("Could not create a Connection instance.");
-			return;
-		}
-		try {
-			stmt = conn.createStatement();
-			stmt.executeUpdate(statement);
-		} catch (SQLException se) {
-			System.err.println("Error occured executing the statement:");
-			System.err.println(statement);
-			log.error("Error:", se);
-		} finally {
-			// Close used resources (Statement/Connection)
-			try {
-				if (stmt != null) {
-					stmt.close();
-				}
-				conn.close();
-			} catch (SQLException se2) {
-				System.err.println("An error occurred closing a resource");
-			}
-		}
-	}
-
-	/**
-	 * Performs a sql insert statement.
-	 * This method contains an basic error handling. Resources will be closed.
-	 *
-	 * @param statement the statement to be executed.
-	 * @return the auto increment id of the newly created entry.
-	 */
-	private int performSQLInsertStatementWithAutoId(final String statement) {
-		java.sql.Connection conn = Connection.getInstance().connect();
-		Statement stmt = null;
-		ResultSet rs;
-		int result = -1;
-		try {
-			stmt = conn.createStatement();
-			stmt.executeUpdate(statement, Statement.RETURN_GENERATED_KEYS);
-			rs = stmt.getGeneratedKeys();
-			rs.next();
-			result = rs.getInt(1);
-		} catch (SQLException se) {
-			System.err.println("Error occured executing the statement:");
-			System.err.println(statement);
-			log.error("Error:", se);
-		} finally {
-			// Close used resources (Statement/Connection)
-			try {
-				if (stmt != null) {
-					stmt.close();
-				}
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (SQLException se2) {
-				System.err.println("An error occurred closing a resource");
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Get the version of a fragment which is in the database.
 	 *
 	 * @param scenarioID databaseID of the scenario the fragment belongs to
@@ -475,14 +399,13 @@ public class Connector extends DbObject {
 	 * @return version of the specified fragment (return -1 if there is no fragment of this id)
 	 */
 	public int getFragmentVersion(int scenarioID, long modelID) {
-
 		DbDataObject dbDataObject = new DbDataObject();
 		String select = "SELECT modelversion FROM fragment "
 				+ "WHERE scenario_id = " + scenarioID
 				+ " AND modelid = " + modelID;
 		LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select,
 				"modelversion");
-		if (versions.size() == 0) {
+		if (versions.isEmpty()) {
 			return -1;
 		}
 		return versions.get(0);
@@ -495,13 +418,12 @@ public class Connector extends DbObject {
 	 * @return the version of the scenario with the scenarioID (Error: -1).
 	 */
 	public int getScenarioVersion(int scenarioID) {
-
 		DbDataObject dbDataObject = new DbDataObject();
 		String select = "SELECT modelversion FROM scenario "
 				+ "WHERE id = " + scenarioID;
 		LinkedList<Integer> versions = dbDataObject
 				.executeStatementReturnsListInt(select, "modelversion");
-		if (versions.size() == 0) {
+		if (versions.isEmpty()) {
 			return -1;
 		}
 		return versions.get(0);
@@ -519,7 +441,7 @@ public class Connector extends DbObject {
 		String select = "SELECT id FROM scenario "
 				+ "WHERE modelid = " + scenarioID;
 		LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "id");
-		if (ids.size() > 0) {
+		if (!ids.isEmpty()) {
 			return Collections.max(ids);
 		} else {
 			return -1;
@@ -553,7 +475,7 @@ public class Connector extends DbObject {
 	/**
 	 * Get the databaseId for the specified fragment in table "fragment".
 	 *
-	 * @param scenarioID the scenarioDatabaseID for which the fragment is selected
+	 * @param scenarioID the shbaseID for which the fragment is selected
 	 * @param modelID    the modelId of the fragment
 	 * @return the databaseID of the selected fragment
 	 */
