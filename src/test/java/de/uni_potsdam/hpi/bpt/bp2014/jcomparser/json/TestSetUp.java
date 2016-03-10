@@ -137,7 +137,7 @@ public class TestSetUp {
                     }
                 });
         for (final Fragment fragment : fragments) {
-            PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, fragment.getFragmentId())
+            PowerMock.expectPrivate(scenario, CREATE_FRAGMENT_METHOD, fragment.getFragmentEditorId())
                     .andAnswer(new IAnswer<Fragment>() {
                         @Override
                         public Fragment answer() throws Throwable {

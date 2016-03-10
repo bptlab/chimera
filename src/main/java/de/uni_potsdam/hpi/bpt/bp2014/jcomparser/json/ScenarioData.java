@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.xml.bind.JAXBException;
 import java.util.*;
 
 /**
@@ -41,7 +42,7 @@ public class ScenarioData {
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
             this.domainModel = new DomainModel(domainModelJson.toString());
-            this.fragments = generateFragmentList(scenarioJson);
+            this.fragments = generateFragmentList(scenarioJson, domainModel);
 
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
             this.dataObjects = extractDataObjects(fragments, domainModel);
@@ -132,17 +133,24 @@ public class ScenarioData {
     /**
      * Generates a List of Fragments from the Json object.
      */
-    private List<Fragment> generateFragmentList(JSONObject scenarioJson) {
+    private List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) {
         JSONArray fragmentStrings = scenarioJson.getJSONArray("fragments");
         List<Fragment> generatedFragments = new ArrayList<>();
         for (int i = 0; i < fragmentStrings.length(); i++) {
             JSONObject fragmentJson = fragmentStrings.getJSONObject(i);
-            Fragment fragment = new Fragment(fragmentJson.getString("content"),
-                    fragmentJson.getInt("revision"),
-                    fragmentJson.getString("name"),
-                    fragmentJson.getString("_id")
-            );
-            generatedFragments.add(fragment);
+            try {
+                Fragment fragment = new Fragment(fragmentJson.getString("content"),
+                        fragmentJson.getInt("revision"),
+                        fragmentJson.getString("name"),
+                        fragmentJson.getString("_id")
+                );
+                if (isValidFragment(fragment, domainModel)) {
+                    generatedFragments.add(fragment);
+                }
+            } catch (JAXBException e) {
+                logger.error(e);
+                logger.error("Fragment could not have been added");
+            }
         }
         return generatedFragments;
     }
@@ -160,5 +168,16 @@ public class ScenarioData {
 
     private void saveTerminationConditions() {
         terminationConditions.forEach(TerminationCondition::save);
+    }
+
+    private boolean isValidFragment(Fragment fragment, DomainModel domainModel) {
+        Set<String>  dataclassNames = getNameToDataclass(domainModel).keySet();
+        for (DataNode node : fragment.getDataNodes()) {
+            if (!dataclassNames.contains(node.getName())) {
+                throw new IllegalArgumentException("Data Node does not reference a legal " +
+                        "data class");
+            }
+        }
+        return true;
     }
 }

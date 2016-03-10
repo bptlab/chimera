@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -22,40 +23,38 @@ import javax.xml.parsers.ParserConfigurationException;
  *
  */
 public class Fragment {
-
+    private static Logger logger = Logger.getLogger(Fragment.class.getName());
 
     private int scenarioId;
     private String fragmentName;
-    private String fragmentId;
+    private String fragmentEditorId;
     private int versionNumber;
-    private FragmentXmlWrapper fragment;
+    private FragmentXmlWrapper fragmentXml;
 
     public Fragment(String fragmentXml, int versionNumber, String fragmentName,
-                    String fragmentId) {
-        this.fragment = buildFragment(fragmentXml);
+                    String fragmentEditorId) throws JAXBException {
+        this.fragmentXml = buildFragment(fragmentXml);
         this.fragmentName = fragmentName;
         this.versionNumber = versionNumber;
-        // TODO rename to fragment editor Id
-        this.fragmentId = fragmentId;
+        this.fragmentEditorId = fragmentEditorId;
     }
 
     public int save() {
         Connector connector = new Connector();
-        int databaseId = connector.insertFragmentIntoDatabase(fragmentName,
-                scenarioId, fragmentId, versionNumber);
-        return databaseId;
+        return connector.insertFragmentIntoDatabase(fragmentName,
+                scenarioId, fragmentEditorId, versionNumber);
     }
 
-    private FragmentXmlWrapper buildFragment(String fragmentXml) {
+    private FragmentXmlWrapper buildFragment(String fragmentXml) throws JAXBException {
         Document doc = getXmlDocFromString(fragmentXml);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(FragmentXmlWrapper.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             return (FragmentXmlWrapper) jaxbUnmarshaller.unmarshal(doc);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            logger.error(e);
+            throw new JAXBException("Fragment xml was not valid");
         }
-        return null;
     }
 
     private Document getXmlDocFromString(String xml) {
@@ -63,9 +62,9 @@ public class Fragment {
         try {
             return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+            logger.error(e);
+            throw new IllegalArgumentException("Creation of xml fragment failed");
         }
-        return null;
     }
 
     public List<OutputSet> getOutputSets() {
@@ -75,7 +74,7 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (Task task : this.fragment.getTasks()) {
+        for (Task task : this.fragmentXml.getTasks()) {
             sets.addAll(getOutputSetsForTask(task, idToDataNode));
         }
         return sets;
@@ -109,7 +108,7 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (Task task : this.fragment.getTasks()) {
+        for (Task task : this.fragmentXml.getTasks()) {
             sets.addAll(getInputSetsForTask(task, idToDataNode));
         }
         return sets;
@@ -132,7 +131,7 @@ public class Fragment {
     }
 
     private Map<String, Task> createMapFromIdToTask() {
-        List<Task> tasks = this.fragment.getTasks();
+        List<Task> tasks = this.fragmentXml.getTasks();
         Map<String, Task> idToNode = new HashMap<>();
         for (Task task : tasks) {
             idToNode.put(task.getId(), task);
@@ -147,62 +146,39 @@ public class Fragment {
      */
     public List<AbstractControlNode> getControlNodes() {
         List<AbstractControlNode> nodes = new ArrayList<>();
-        nodes.addAll(this.fragment.getXorGateways());
-        nodes.addAll(this.fragment.getTasks());
-        nodes.addAll(this.fragment.getIntermediateEvents());
-        nodes.addAll(this.fragment.getBoundaryEvents());
-        nodes.addAll(this.fragment.getEventBasedGateways());
-        nodes.add(this.fragment.getEndEvent());
-        nodes.add(this.fragment.getStartEvent());
+        nodes.addAll(this.fragmentXml.getXorGateways());
+        nodes.addAll(this.fragmentXml.getTasks());
+        nodes.addAll(this.fragmentXml.getIntermediateEvents());
+        nodes.addAll(this.fragmentXml.getBoundaryEvents());
+        nodes.addAll(this.fragmentXml.getEventBasedGateways());
+        nodes.add(this.fragmentXml.getEndEvent());
+        nodes.add(this.fragmentXml.getStartEvent());
         return nodes;
     }
 
     public List<BoundaryEvent> getBoundaryEventNodes() {
-        return this.fragment.getBoundaryEvents();
+        return this.fragmentXml.getBoundaryEvents();
     }
 
-
-
-
-    public List<DataInputAssociation> getDataInputAssociations() {
-        List<DataInputAssociation> overallEdges = new ArrayList<>();
-        for (Task task : this.fragment.getTasks()) {
-            for (DataInputAssociation association : task.getDataInputAssociations()) {
-                overallEdges.add(association);
-            }
-        }
-
-        return overallEdges;
-    }
-
-    public List<DataOutputAssociation> getDataOutputAssociations() {
-        List<DataOutputAssociation> overallEdges = new ArrayList<>();
-        for (Task task : this.fragment.getTasks()) {
-            for (DataOutputAssociation association : task.getDataOutputAssociations()) {
-                overallEdges.add(association);
-            }
-        }
-        return overallEdges;
-    }
 
     public List<SequenceFlow> getSequenceFlow() {
-        return this.fragment.getSequenceFlow();
+        return this.fragmentXml.getSequenceFlow();
     }
 
     public List<DataNode> getDataNodes() {
-        return this.fragment.getDataNodes();
+        return this.fragmentXml.getDataNodes();
     }
 
     public void setScenarioId(int scenarioId) {
         this.scenarioId = scenarioId;
     }
 
-    public String getFragmentId() {
-        return fragmentId;
+    public String getFragmentEditorId() {
+        return fragmentEditorId;
     }
 
-    public void setFragmentId(String fragmentId) {
-        this.fragmentId = fragmentId;
+    public void setFragmentEditorId(String fragmentEditorId) {
+        this.fragmentEditorId = fragmentEditorId;
     }
 
     public String getName() {

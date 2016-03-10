@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class InputOutputSetTest {
     @Test
-    public void testInputOutputSet() {
+    public void testInputOutputSet() throws JAXBException {
         String path = "src/test/resources/fragments/InputOutputFragment.xml";
         File file = new File(path);
         try {
