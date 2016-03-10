@@ -34,7 +34,7 @@ public class DomainModel implements IDeserialisableJson, IPersistable {
     /**
 	 * A List of all aggregation between the dataClasses belonging to this domainModel.
 	 */
-	private List<Aggregation> aggregations;
+	private List<Aggregation> aggregations = new ArrayList<>();
 	/**
 	 * The XML representation of a domainModel
 	 */
