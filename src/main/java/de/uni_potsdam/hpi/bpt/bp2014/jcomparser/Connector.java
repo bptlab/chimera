@@ -19,7 +19,7 @@ import java.util.Map;
  * Therefore it uses the database.Connection class.
  */
 public class Connector extends DbObject {
-	private static Logger log = Logger.getLogger(Connector.class.getName());
+	private static Logger log = Logger.getLogger(Connector.class);
 
 	/**
 	 * A method to write a scenario to the database.

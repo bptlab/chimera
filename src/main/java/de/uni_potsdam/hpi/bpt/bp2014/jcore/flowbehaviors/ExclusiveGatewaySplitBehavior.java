@@ -15,7 +15,7 @@ import java.util.Set;
  * This class deals with the split behavior of exclusive gateways.
  */
 public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehavior {
-	private static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class.getName());
+	private static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class);
 	/**
 	 * List of IDs of following control nodes.
 	 */

@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014;
 
-import com.ibatis.common.jdbc.ScriptRunner;
+//import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,7 +17,7 @@ public class AbstractDatabaseDependentTest {
     /**
      * The Database Seed file.
      */
-    public static String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    public static final String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
 

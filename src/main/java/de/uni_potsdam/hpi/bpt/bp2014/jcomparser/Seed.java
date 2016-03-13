@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  */
 public class Seed {
-	private static Logger log = Logger.getLogger(Seed.class.getName());
+	private static Logger log = Logger.getLogger(Seed.class);
 
 	/**
 	 * @param id some some id.

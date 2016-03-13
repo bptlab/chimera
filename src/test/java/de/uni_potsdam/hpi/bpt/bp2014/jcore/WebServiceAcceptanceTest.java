@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.ibatis.common.jdbc.ScriptRunner;
+//import com.ibatis.common.jdbc.ScriptRunner;
+import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
+
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;

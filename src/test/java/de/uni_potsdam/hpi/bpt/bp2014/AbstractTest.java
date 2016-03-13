@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014;
 
-import com.ibatis.common.jdbc.ScriptRunner;
+//import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;

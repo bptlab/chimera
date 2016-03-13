@@ -13,7 +13,7 @@ import java.sql.Statement;
  * Moreover it is possible to check if two controlNodes have the same output.
  */
 public class DbControlNode extends DbObject {
-	private static Logger log = Logger.getLogger(DbControlNode.class.getName());
+	private static Logger log = Logger.getLogger(DbControlNode.class);
 	private String type = null;
 	private String label = null;
 	private int controlNodeId = -1;

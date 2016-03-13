@@ -25,7 +25,7 @@ import java.net.URL;
  * of XML docus from a source URL like the repository of the Processeditor.
  */
 public class Retrieval {
-	private static Logger log = Logger.getLogger(Retrieval.class.getName());
+	private static Logger log = Logger.getLogger(Retrieval.class);
 
 	/**
 	 * The pattern for setting name and password for the authentication.

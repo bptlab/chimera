@@ -12,7 +12,7 @@ import java.util.Date;
  * This class provides an Algorithm to calculate the Runtime for a ScenarioInstance.
  */
 public class ScenarioInstanceRuntime implements AnalyticsService {
-	private static Logger log = Logger.getLogger(ScenarioInstanceRuntime.class.getName());
+	private static Logger log = Logger.getLogger(ScenarioInstanceRuntime.class);
 	private Date startDate;
 
 	@Override

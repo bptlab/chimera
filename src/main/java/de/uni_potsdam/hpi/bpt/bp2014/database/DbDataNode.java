@@ -13,7 +13,7 @@ import java.util.LinkedList;
  * belonging to a dataSet as well as the states they can have.
  */
 public class DbDataNode extends DbObject {
-	private static Logger log = Logger.getLogger(DbDataNode.class.getName());
+	private static Logger log = Logger.getLogger(DbDataNode.class);
 
 	/**
 	 * This method returns all database ID's of all dataObjects belonging to a dataSet.

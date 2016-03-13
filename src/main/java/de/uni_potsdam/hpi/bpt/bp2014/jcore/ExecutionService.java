@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class ExecutionService /*implements Runnable*/ {
 
-	private static Logger log = Logger.getLogger(ExecutionService.class.getName());
+	private static Logger log = Logger.getLogger(ExecutionService.class);
 	/**
 	 * Define the maximum allowable Map size.
 	 */

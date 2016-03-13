@@ -48,7 +48,7 @@ import java.util.LinkedList;
  * to access the database directly.
  */
 @Path("interface/v2") public class RestInterface {
-	private static Logger log = Logger.getLogger(RestInterface.class.getName());
+	private static Logger log = Logger.getLogger(RestInterface.class);
 
 	/**
 	 * This method allows to give an overview of all scenarios.
