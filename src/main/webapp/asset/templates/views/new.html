@@ -443,27 +443,24 @@
                                 <input ng-switch-when="Integer" type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="attributeConfiguration['value']"
                                        ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"
-                                       pattern="([0-9])+"
-                                ><br>
+                                       pattern="([0-9])+">
 
                                 <!-- Floating point input for doubles -->
                                 <input ng-switch-when="Double" type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="attributeConfiguration['value']"
                                        ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"
-                                       pattern="([0-9])+[,|.]([0-9])+"
-                                ><br>
+                                       pattern="([0-9])+[,|.]([0-9])+">
 
                                 <!-- Checkbox input for booleans -->
                                 <input ng-switch-when="Boolean" type="checkbox" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="attributeConfiguration['value']"
-                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"><br>
+                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])">
 
                                 <!-- Text input for strings and anything else (i.e. enums, class references) -->
                                 <input ng-switch-default type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="attributeConfiguration['value']"
                                        ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"
-                                       pattern="^([a-zA-Z\d]|[a-zA-Z\d](?!.*[ _]{2})[a-zA-Z\d _]*?[a-zA-Z\d])$"
-                                ><br>
+                                       pattern="^([a-zA-Z\d]|[a-zA-Z\d](?!.*[ _]{2})[a-zA-Z\d _]*?[a-zA-Z\d])$">
                                 <span ng-show="form.key3.$pending">tipping...</span>
                             </td>
                         </tr>
