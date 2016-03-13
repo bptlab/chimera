@@ -10,6 +10,7 @@ import org.junit.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class EventTypeTest {
         Client client = ClientBuilder.newClient();
     }
     @Test
-    public void testEventType() {
+    public void testEventType() throws JAXBException {
 
         File file = new File("src/test/resources/EventScenarios/EventTypeScenario.json");
         try {

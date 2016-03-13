@@ -52,7 +52,7 @@ public class TimerTest {
     }
 
     @Test
-    public void testTimerSaving() {
+    public void testTimerSaving() throws JAXBException {
         File file = new File("src/test/resources/TimerScenario.json");
 
         try {

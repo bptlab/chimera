@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class ScenarioTest {
     }
 
     @Test
-    public void testScenario() {
+    public void testScenario() throws JAXBException {
         File file = new File("src/test/resources/EventScenarios/AsparagusScenario.json");
 
         try {

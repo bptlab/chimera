@@ -33,7 +33,7 @@ public class ScenarioData {
 
     private int scenarioDbId;
 
-    public ScenarioData(final String element) {
+    public ScenarioData(final String element) throws JAXBException {
         try {
             JSONObject scenarioJson = new JSONObject(element);
             this.scenarioName = scenarioJson.getString("name");
@@ -82,26 +82,42 @@ public class ScenarioData {
      * @return List of all DataObjects
      */
     private List<DataObject> extractDataObjects(List<Fragment> fragments, DomainModel model) {
-        Map<String, DataObject> nameToDataObject = new HashMap<>();
 
+        Map<String, DataObject> nameToDataObject = new HashMap<>();
+        for (Fragment fragment : fragments) {
+            extractDataObjectsFromFragment(fragment, nameToDataObject, model);
+        }
+        return new ArrayList<>(nameToDataObject.values());
+    }
+
+    private Map<String, DataClass> extractNameToDataclass(DomainModel model) {
         Map<String, DataClass> nameToDataClass = new HashMap<>();
         for (DataClass dataClass : model.getDataClasses()) {
             nameToDataClass.put(dataClass.getDataClassName(), dataClass);
         }
+        return nameToDataClass;
+    }
 
-        for (Fragment fragment : fragments) {
-            List<DataNode> dataNodes = fragment.getDataNodes();
-            for (DataNode node : dataNodes) {
-                if (!nameToDataObject.containsKey(node.getName())) {
-                    DataClass belongingDataClass = nameToDataClass.get(node.getName());
-                    DataObject dataObject = new DataObject(belongingDataClass);
-                    nameToDataObject.put(node.getName(), dataObject);
-                }
-                DataObject dataObject = nameToDataObject.get(node.getName());
-                dataObject.addDataNode(node);
+    private void extractDataObjectsFromFragment(
+            Fragment fragment, Map<String, DataObject> nameToDataObject,
+            DomainModel model) {
+        Map<String, DataClass> nameToDataClass = extractNameToDataclass(model);
+        List<DataNode> dataNodes = fragment.getDataNodes();
+        for (DataNode node : dataNodes) {
+            if (!nameToDataClass.containsKey(node.getName())) {
+                throw new IllegalArgumentException(String.format(
+                        "Data node %s references invalid dataclass", node.getName()));
             }
+
+            if (!nameToDataObject.containsKey(node.getName())) {
+
+                DataClass belongingDataClass = nameToDataClass.get(node.getName());
+                DataObject dataObject = new DataObject(belongingDataClass);
+                nameToDataObject.put(node.getName(), dataObject);
+            }
+            DataObject dataObject = nameToDataObject.get(node.getName());
+            dataObject.addDataNode(node);
         }
-        return new ArrayList<>(nameToDataObject.values());
     }
 
     private void associateStatesWithDataClasses(List<Fragment> fragments,
@@ -133,7 +149,7 @@ public class ScenarioData {
     /**
      * Generates a List of Fragments from the Json object.
      */
-    private List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) {
+    private List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) throws JAXBException {
         JSONArray fragmentStrings = scenarioJson.getJSONArray("fragments");
         List<Fragment> generatedFragments = new ArrayList<>();
         for (int i = 0; i < fragmentStrings.length(); i++) {
@@ -150,6 +166,9 @@ public class ScenarioData {
             } catch (JAXBException e) {
                 logger.error(e);
                 logger.error("Fragment could not have been added");
+                String errorMsg = String.format("Invalid fragment Xml provided for fragment %s",
+                        fragmentJson.getString("name"));
+                throw new JAXBException(errorMsg);
             }
         }
         return generatedFragments;
@@ -174,8 +193,8 @@ public class ScenarioData {
         Set<String>  dataclassNames = getNameToDataclass(domainModel).keySet();
         for (DataNode node : fragment.getDataNodes()) {
             if (!dataclassNames.contains(node.getName())) {
-                throw new IllegalArgumentException("Data Node does not reference a legal " +
-                        "data class");
+                throw new IllegalArgumentException(String.format(
+                        "Data node %s references an invalid data class", node.getName()));
             }
         }
         return true;

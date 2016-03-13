@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.commons.io.FileUtils;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,8 +26,13 @@ public class ScenarioTestHelper {
     public static ScenarioInstance createScenarioInstance(String path) throws IOException {
         File file = new File(path);
         String json = FileUtils.readFileToString(file);
-        ScenarioData scenario = new ScenarioData(json);
-        int databaseId = scenario.save();
-        return new ScenarioInstance(databaseId);
+        try {
+            ScenarioData scenario  = new ScenarioData(json);
+            int databaseId = scenario.save();
+            return new ScenarioInstance(databaseId);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
     }
 }

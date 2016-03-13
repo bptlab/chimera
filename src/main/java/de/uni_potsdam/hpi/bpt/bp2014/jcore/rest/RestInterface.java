@@ -25,6 +25,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.*;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAnyAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
@@ -267,10 +268,23 @@ import java.util.LinkedList;
 	@POST
 	@Path("scenario")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void postInstance(String scenario) {
-		ScenarioData newScenario = new ScenarioData(scenario);
-		newScenario.save();
-	}
+	public Response postInstance(String scenario) {
+        try {
+            ScenarioData newScenario = new ScenarioData(scenario);
+            newScenario.save();
+            return Response.status(201).build();
+        } catch (IllegalArgumentException e){
+            return Response.status(422)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (JAXBException e) {
+            return Response.status(400)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity("Invalid xml " + e.getMessage())
+                    .build();
+        }
+    }
 	/**
 	 * Creates a new instance of a specified scenario.
 	 * This method assumes that the name of then new instance will be the same

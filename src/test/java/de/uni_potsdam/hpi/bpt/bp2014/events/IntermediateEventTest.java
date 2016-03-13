@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
  */
 public class IntermediateEventTest {
 	@Test
-	public void testScenario() {
+	public void testScenario() throws JAXBException {
 		File file = new File("src/test/resources/Testscenario/TestIntermediateEvent.json");
 		try {
 			String json = FileUtils.readFileToString(file);
