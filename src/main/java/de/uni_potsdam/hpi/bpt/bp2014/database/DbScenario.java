@@ -10,7 +10,7 @@ import java.util.Map;
  * It provides the functionality to retrieve all existing scenarios as well as their name.
  */
 public class DbScenario extends DbObject {
-	private static Logger log = Logger.getLogger(DbScenario.class.getName());
+	private static Logger log = Logger.getLogger(DbScenario.class);
 
 	private String name = null;
 

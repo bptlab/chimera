@@ -14,7 +14,7 @@ import java.util.Map;
  * This class creates and executes sql statements to get the terminationCondition for a scenario.
  */
 public class DbTerminationCondition extends DbObject {
-	private static Logger log = Logger.getLogger(DbTerminationCondition.class.getName());
+	private static Logger log = Logger.getLogger(DbTerminationCondition.class);
 
 	/**
 	 * Creates a list of Conditions which shall terminate the scenario if they are fulfilled.

@@ -13,7 +13,7 @@ import java.util.Map;
  * A class that helps with debugging.
  */
 public class DebugClass {
-	private static Logger log = Logger.getLogger(DebugClass.class.getName());
+	private static Logger log = Logger.getLogger(DebugClass.class);
 
 	/**
 	 *

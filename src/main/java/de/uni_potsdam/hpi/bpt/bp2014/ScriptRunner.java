@@ -37,6 +37,8 @@ import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 /**
  * Tool to run database scripts. This version of the script can be found at 
  * https://gist.github.com/gists/831762/  
@@ -54,6 +56,8 @@ public class ScriptRunner {
     private PrintWriter errorLogWriter = new PrintWriter(System.err);
     private String delimiter = DEFAULT_DELIMITER;
     private boolean fullLineDelimiter = false;
+
+    private static Logger LOGGER = Logger.getLogger(ScriptRunner.class);
 
     /**
      * Default constructor.
@@ -150,7 +154,7 @@ public class ScriptRunner {
                 }
                 String trimmedLine = line.trim();
                 if (trimmedLine.startsWith("--")) {
-                    //println(trimmedLine);
+                    LOGGER.info(trimmedLine);
                 } else if (trimmedLine.length() < 1 || trimmedLine.startsWith("//")) {
                     // Do nothing
                 } else if (trimmedLine.length() < 1 || trimmedLine.startsWith("--")) {
@@ -174,7 +178,7 @@ public class ScriptRunner {
                     command.append(" ");
                     Statement statement = conn.createStatement();
 
-                    //println(command);
+                    LOGGER.info(command);
 
                     boolean hasResults = false;
                     if (stopOnError) {
@@ -184,8 +188,8 @@ public class ScriptRunner {
                             statement.execute(command.toString());
                         } catch (SQLException e) {
                             e.fillInStackTrace();
-                            printlnError("Error executing: " + command);
-                            printlnError(e);
+                            LOGGER.error("Error executing: " + command);
+                            LOGGER.error(e);
                         }
                     }
 
@@ -199,15 +203,13 @@ public class ScriptRunner {
                         int cols = md.getColumnCount();
                         for (int i = 0; i < cols; i++) {
                             String name = md.getColumnLabel(i);
-                            print(name + "\t");
+                            LOGGER.info(name + "\t");
                         }
-                        //println("");
                         while (rs.next()) {
                             for (int i = 1; i <= cols; i++) {
                                 String value = rs.getString(i);
-                                print(value + "\t");
+                                LOGGER.info(value + "\t");
                             }
-                            //println("");
                         }
                     }
 
@@ -217,14 +219,14 @@ public class ScriptRunner {
                             rs.close();
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOGGER.error(e);
                     }
                     try {
                         if (statement != null) {
                             statement.close();
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOGGER.error(e);
                         // Ignore to workaround a bug in Jakarta DBCP
                     }
                 } else {
@@ -248,13 +250,13 @@ public class ScriptRunner {
             }
         } catch (SQLException e) {
             e.fillInStackTrace();
-            printlnError("Error executing: " + command);
-            printlnError(e);
+            LOGGER.error("Error executing: " + command);
+            LOGGER.error(e);
             throw e;
         } catch (IOException e) {
             e.fillInStackTrace();
-            printlnError("Error executing: " + command);
-            printlnError(e);
+            LOGGER.error("Error executing: " + command);
+            LOGGER.error(e);
             throw e;
         } finally {
             conn.rollback();
@@ -264,24 +266,6 @@ public class ScriptRunner {
 
     private String getDelimiter() {
         return delimiter;
-    }
-
-    private void print(Object o) {
-        if (logWriter != null) {
-            logWriter.print(o);
-        }
-    }
-
-    private void println(Object o) {
-        if (logWriter != null) {
-            logWriter.println(o);
-        }
-    }
-
-    private void printlnError(Object o) {
-        if (errorLogWriter != null) {
-            errorLogWriter.println(o);
-        }
     }
 
     private void flush() {

@@ -14,7 +14,7 @@ import java.util.List;
  * for all terminated ScenarioInstances of a Scenario.
  */
 public class ExampleAlgorithm implements AnalyticsService {
-	static final Logger LOG = Logger.getLogger(ExampleAlgorithm.class.getName());
+	static final Logger LOG = Logger.getLogger(ExampleAlgorithm.class);
 
 	@Override
 	/**

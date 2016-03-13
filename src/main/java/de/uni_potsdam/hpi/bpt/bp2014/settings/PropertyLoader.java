@@ -46,7 +46,7 @@ public final class PropertyLoader {
 	}
 	
 /*	
-//    static Logger log = Logger.getLogger(PropertyReader.class.getName());
+//    static Logger log = Logger.getLogger(PropertyReader.class);
 
 	
 	public PropertyLoader() {

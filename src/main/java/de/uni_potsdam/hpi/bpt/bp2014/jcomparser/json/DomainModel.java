@@ -15,7 +15,7 @@ import java.util.Map;
  * This class represents the DomainModel.
  */
 public class DomainModel implements IDeserialisableJson, IPersistable {
-	private static Logger log = Logger.getLogger(DomainModel.class.getName());
+	private static Logger log = Logger.getLogger(DomainModel.class);
 
 	/**
 	 * The modelID found in the JSON.

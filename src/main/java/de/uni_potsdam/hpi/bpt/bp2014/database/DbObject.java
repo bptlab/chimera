@@ -16,7 +16,7 @@ import java.util.Map;
  * This class is the representation of a database object.
  */
 public class DbObject {
-	private static Logger log = Logger.getLogger(DbObject.class.getName());
+	private static Logger log = Logger.getLogger(DbObject.class);
 
 	/**
 	 * @param sql This is a SQL-Statement

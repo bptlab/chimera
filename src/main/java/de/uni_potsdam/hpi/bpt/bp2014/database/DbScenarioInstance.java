@@ -11,7 +11,7 @@ import java.util.Map;
  * Moreover it is possible to mark a scenario instance as terminated.
  */
 public class DbScenarioInstance extends DbObject {
-	private static Logger log = Logger.getLogger(DbScenarioInstance.class.getName());
+	private static Logger log = Logger.getLogger(DbScenarioInstance.class);
 	private boolean exist = false;
 	private int scenarioId = -1;
 	private int scenarioInstanceId = -1;

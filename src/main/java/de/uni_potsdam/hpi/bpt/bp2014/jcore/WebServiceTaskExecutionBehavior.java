@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 	private static Logger log = Logger.getLogger(
-			WebServiceTaskExecutionBehavior.class.getName());
+			WebServiceTaskExecutionBehavior.class);
 
 	/**
 	 * DB Connection class.

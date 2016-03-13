@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
  * Class defining the execution behavior of an Email Task.
  */
 public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
-	private static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class.getName());
+	private static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class);
 	private final int controlNodeId;
 	private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
 	private int port;

@@ -32,7 +32,7 @@ public final class Connection {
   private String url;
   private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
   private static final String SCHEMA_DEFINITION_FILE = "JEngineV2_schema.sql";
-  private static Logger log = Logger.getLogger(Connection.class.getName());
+  private static Logger log = Logger.getLogger(Connection.class);
 
   /**
    * Stores the current schema version used in the Chimera engine. Is set to '-1', if reading the

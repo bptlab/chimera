@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
  * Define the database Properties inside the database_connection file.
  */
 public class RestInterfaceTest extends AbstractTest {
-    static Logger log = Logger.getLogger(RestInterfaceTest.class.getName());
+    static Logger log = Logger.getLogger(RestInterfaceTest.class);
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
     /**
