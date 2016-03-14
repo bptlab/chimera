@@ -19,7 +19,5 @@
       "revision": 2
     }
   ],
-  "terminationconditions": [
-    "Default[init]"
-  ]
+  "terminationconditions": []
 }
