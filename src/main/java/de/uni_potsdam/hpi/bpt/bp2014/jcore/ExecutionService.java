@@ -66,7 +66,7 @@ public class ExecutionService /*implements Runnable*/ {
 			//    		instance.run();
 		}
 		//if there is a new version available, reload all instances from the database.
-		//if (instance.newVersionAvailable) {j
+		//if (instance.newVersionAvailable) {
 			instance.scenarioInstanceMap.clear();
 			instance.instanceHistory.clear();
 		//}

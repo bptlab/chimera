@@ -146,9 +146,9 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertArrayEquals(new Integer[]{activity1, activity3, activity4, activity5, activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
-        executionService = null;
-        executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
+//        executionService = null;
+//        executionService = ExecutionService.getInstance(scenarioID);
+//        executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
         //do activity 1
         System.out.println("do activity " + activity1);
@@ -203,9 +203,9 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertArrayEquals(new Integer[]{activity2, activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
-        executionService = null;
-        executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
+//        executionService = null;
+//        executionService = ExecutionService.getInstance(scenarioID);
+//        executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
         //do activity 3
         System.out.println("do activity " + activity3);
