@@ -58,10 +58,8 @@ public class TerminationConditionTest {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             assertEquals(false, scenarioInstance.checkTerminationCondition());
 
-            List<AbstractControlNodeInstance> controlNodeInstances =
-                    scenarioInstance.getEnabledControlNodeInstances();
-            ActivityInstance instance = (ActivityInstance) controlNodeInstances.get(1);
-            instance.terminate();
+            ScenarioTestHelper.terminateActivityInstanceByName("Review Costumer", scenarioInstance);
+            ScenarioTestHelper.terminateActivityInstanceByName("Accept Another", scenarioInstance);
             assertEquals(true, scenarioInstance.checkTerminationCondition());
         } catch (IOException e) {
             Assert.fail();

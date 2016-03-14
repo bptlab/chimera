@@ -20,6 +20,7 @@ import java.util.*;
  */
 public class ScenarioData {
     private static Logger logger = Logger.getLogger(ScenarioData.class.getName());
+    private final JSONObject scenarioJson;
 
     private String scenarioName;
     private String scenarioEditorId;
@@ -28,14 +29,13 @@ public class ScenarioData {
     List<Fragment> fragments;
     private List<TerminationCondition> terminationConditions;
     private List<DataObject> dataObjects;
-    private JSONObject scenarioJson;
     private DomainModel domainModel;
 
     private int scenarioDbId;
 
     public ScenarioData(final String element) throws JAXBException {
         try {
-            JSONObject scenarioJson = new JSONObject(element);
+            this.scenarioJson = new JSONObject(element);
             this.scenarioName = scenarioJson.getString("name");
             this.scenarioEditorId = scenarioJson.getString("_id");
             this.versionNumber = scenarioJson.getInt("revision");
@@ -71,6 +71,10 @@ public class ScenarioData {
             fragment.setScenarioId(this.scenarioDbId);
             inserter.save(fragment, domainModel);
         }
+
+        setTerminationCondition(scenarioJson);
+        terminationConditions.forEach(TerminationCondition::save);
+
         return this.scenarioDbId;
     }
 
@@ -180,15 +184,11 @@ public class ScenarioData {
      * Extracts the TerminationCondition from the String in the JSON.
      * Finds the DataObject for the given Name.
      */
-    private void setTerminationCondition() {
+    private void setTerminationCondition(JSONObject scenarioJson) {
         JSONArray jsonTerminationConditions = scenarioJson.getJSONArray("terminationconditions");
         Map<String, Integer> stateToDatabaseId = new DbState().getStateToIdMap();
         this.terminationConditions = TerminationCondition.parseTerminationConditions(
                 jsonTerminationConditions, this.dataObjects, scenarioDbId, stateToDatabaseId);
-    }
-
-    private void saveTerminationConditions() {
-        terminationConditions.forEach(TerminationCondition::save);
     }
 
     private boolean isValidFragment(Fragment fragment, DomainModel domainModel) {
