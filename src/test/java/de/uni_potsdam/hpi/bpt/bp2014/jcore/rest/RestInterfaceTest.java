@@ -715,7 +715,7 @@ public class RestInterfaceTest extends AbstractTest {
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}]},\"setIDs\":[1]}",
+                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}]},\"setIDs\":[\"1\"]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
