@@ -74,10 +74,11 @@ public class TerminationConditionTest {
         JSONArray array = new JSONArray(terminationConditionStrings);
         int scenarioId = 0;
         List<DataObject> dataObjects = createExampleDataobjects();
-
         Map<String, Integer> stateToDatabaseId = getExampleStates();
         List<TerminationCondition> terminationConditions = TerminationCondition.
                 parseTerminationConditions(array, dataObjects, scenarioId, stateToDatabaseId);
+
+
         assertEquals(2, terminationConditions.size());
     }
 
@@ -92,22 +93,17 @@ public class TerminationConditionTest {
     private List<DataObject> createExampleDataobjects() {
         List<DataObject> dataObjects = new ArrayList<>();
         DataObject a = createNiceMock(DataObject.class);
-        expect(a.getDataClassName()).andReturn("A");
+        expect(a.getDataClassName()).andReturn("A").anyTimes();
         expect(a.save()).andReturn(0);
         replay(a);
 
         DataObject b = createNiceMock(DataObject.class);
-        expect(b.getDataClassName()).andReturn("B");
+        expect(b.getDataClassName()).andReturn("B").anyTimes();
         expect(b.save()).andReturn(1);
         replay(b);
 
         dataObjects.add(a);
         dataObjects.add(b);
-
-        System.out.println(dataObjects.stream()
-                .filter(x -> x.getDataClassName().equals("B"))
-                .findFirst().get());
-
         return dataObjects;
     }
 
