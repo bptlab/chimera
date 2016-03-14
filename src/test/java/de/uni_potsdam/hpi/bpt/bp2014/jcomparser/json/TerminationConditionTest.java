@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import org.easymock.TestSubject;
 import org.json.JSONArray;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -87,16 +91,23 @@ public class TerminationConditionTest {
 
     private List<DataObject> createExampleDataobjects() {
         List<DataObject> dataObjects = new ArrayList<>();
-        DataClass a = new DataClass("");
-        a.setDataClassName("A");
-        DataObject A = new DataObject(a);
+        DataObject a = createNiceMock(DataObject.class);
+        expect(a.getDataClassName()).andReturn("A");
+        expect(a.save()).andReturn(0);
+        replay(a);
 
-        DataClass b = new DataClass("");
-        b.setDataClassName("B");
-        DataObject B = new DataObject(b);
+        DataObject b = createNiceMock(DataObject.class);
+        expect(b.getDataClassName()).andReturn("B");
+        expect(b.save()).andReturn(1);
+        replay(b);
 
-        dataObjects.add(A);
-        dataObjects.add(B);
+        dataObjects.add(a);
+        dataObjects.add(b);
+
+        System.out.println(dataObjects.stream()
+                .filter(x -> x.getDataClassName().equals("B"))
+                .findFirst().get());
+
         return dataObjects;
     }
 

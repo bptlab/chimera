@@ -57,12 +57,14 @@ public class ScenarioData {
         this.scenarioDbId = saveScenario();
         domainModel.setScenarioID(this.scenarioDbId);
 
+
+        domainModel.save();
+
         for (DataObject dataObject : this.dataObjects) {
             dataObject.setScenarioId(this.scenarioDbId);
             dataObject.save();
         }
 
-        domainModel.save();
 
         FragmentInserter inserter = new FragmentInserter();
         for (Fragment fragment : fragments) {

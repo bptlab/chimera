@@ -50,7 +50,7 @@ public class DataClass implements IPersistable {
             generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
         } catch (JSONException e) {
             logger.trace(e);
-            throw new JSONException("Invalid class name");
+            throw new JSONException("Invalid class json");
         }
     }
 
