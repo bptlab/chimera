@@ -40,7 +40,7 @@ public class DbTerminationCondition extends DbObject {
 	 * @return a Map with detailed information about the scenario
 	 */
     @Deprecated
-	public Map<Integer, List<Map<String, Object>>> getDetailedConditionsForScenario(
+	public Map<String, List<Map<String, Object>>> getDetailedConditionsForScenario(
 			int scenarioID) {
 		String sql = "SELECT t.conditionset_id AS set_id, "
 				+ "s.name AS state, d.name AS data_object "
@@ -58,15 +58,15 @@ public class DbTerminationCondition extends DbObject {
 	 * @return a Map with a List of Maps with Keys
 	 */
     @Deprecated
-	public Map<Integer, List<Map<String, Object>>>
+	public Map<String, List<Map<String, Object>>>
 		executeStatementReturnsMapOfListOfMapsWithKeys(String sql, String... keys) {
 		java.sql.Connection conn = Connection.getInstance().connect();
 		ResultSet results = null;
-		Map<Integer, List<Map<String, Object>>> conditionSets = new HashMap<>();
+		Map<String, List<Map<String, Object>>> conditionSets = new HashMap<>();
 		try {
 			results = conn.prepareStatement(sql).executeQuery();
 			while (results.next()) {
-				Integer conditionSetId = results.getInt("set_id");
+				String conditionSetId = results.getString("set_id");
 				if (!conditionSets.containsKey(conditionSetId)) {
 					conditionSets.put(conditionSetId,
 							new LinkedList<Map<String, Object>>());

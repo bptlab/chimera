@@ -256,7 +256,7 @@ import java.util.LinkedList;
 					.build();
 		}
 		DbTerminationCondition terminationCondition = new DbTerminationCondition();
-		Map<Integer, List<Map<String, Object>>> conditionSets = terminationCondition
+		Map<String, List<Map<String, Object>>> conditionSets = terminationCondition
 				.getDetailedConditionsForScenario(scenarioID);
 		JSONObject conditions = new JSONObject(conditionSets);
 		JSONObject result = new JSONObject();

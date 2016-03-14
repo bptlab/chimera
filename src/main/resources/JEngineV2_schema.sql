@@ -541,7 +541,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `modelid` VARCHAR(256) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
-  `datamodelid` bigint(11) DEFAULT NULL,
+  `datamodelid` varchar(256) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

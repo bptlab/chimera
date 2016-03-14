@@ -135,7 +135,7 @@
 
 	<properties>
 	<!-- The value of the schema.version property has to be increased when the schema changes! -->
-		<schema.version>6</schema.version>
+		<schema.version>7</schema.version>
 		<db.schema>JEngineV2</db.schema>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
