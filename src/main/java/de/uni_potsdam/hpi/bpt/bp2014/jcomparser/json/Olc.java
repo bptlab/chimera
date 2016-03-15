@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 public class Olc {
     private static Logger log = Logger.getLogger(Olc.class);
 
-    private Map<String, List<String>> stateToOutgoing;
+    private Map<String, List<String>> stateToOutgoing = new HashMap<>();
 
     /**
      * Map which represents allowed state transitions.
      */
-    public Map<String, List<String>> nameToOutgoing;
+    public Map<String, List<String>> nameToOutgoing = new HashMap<>();
 
     public Olc(final String element) {
         try {
@@ -46,13 +46,10 @@ public class Olc {
     }
 
     private void parseSequenceFlows(JSONObject olcJson) {
-        JSONArray states = olcJson.getJSONArray("state");
-        for (int i = 0; i < states.length(); i++) {
-            JSONObject state = states.getJSONObject(i);
-            JSONArray out = state.getJSONArray("outgoing");
-            for (int j = 0; j < out.length(); j++) {
-                stateToOutgoing.get(state.getString("id")).add(out.getString(j));
-            }
+        JSONArray sequenceFlow = olcJson.getJSONArray("sequenceFlow");
+        for (int i = 0; i < sequenceFlow.length(); i++) {
+            JSONObject flow = sequenceFlow.getJSONObject(i);
+            stateToOutgoing.get(flow.getString("sourceRef")).add(flow.getString("targetRef"));
         }
     }
 

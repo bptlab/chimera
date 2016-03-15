@@ -42,7 +42,7 @@
     },
     {
       "id":"State_03n5kb8",
-      "name":"state4",
+      "name":"state3",
       "incoming":[
         "SequenceFlow_15yhme2"
       ],
