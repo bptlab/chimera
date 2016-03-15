@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 
 import org.apache.log4j.Logger;
@@ -138,6 +139,56 @@ public class Fragment {
         }
 
         return idToNode;
+    }
+
+    public Boolean isOLCValid(Olc olc) {
+        //idea: get a map of DataObjects with possible states for input / output for each task.
+        //test for every possible transitions per task whether it fits the OLC
+        //this seems inefficient and complicated ... is there a better way?
+
+        Map<String, DataNode> idToDataNode = new HashMap<>();
+        for (DataNode dataNode : this.getDataNodes()) {
+            idToDataNode.put(dataNode.getId(), dataNode);
+        }
+
+        for (Task task : this.fragmentXml.getTasks()) {
+            Map<String, List<String>> sourceDataNodesToStates = new HashMap<>();
+            for (DataInputAssociation assoc : task.getDataInputAssociations()) {
+                DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
+                if(!sourceDataNodesToStates.containsKey(dataNode.getName())) {
+                    sourceDataNodesToStates.put(dataNode.getName(), new ArrayList<>());
+                }
+                sourceDataNodesToStates.get(dataNode.getName()).add(dataNode.getState());
+            }
+
+            Map<String, List<String>> targetDataNodesToStates = new HashMap<>();
+            for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
+                DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
+                if(!targetDataNodesToStates.containsKey(dataNode.getName())) {
+                    targetDataNodesToStates.put(dataNode.getName(), new ArrayList<>());
+                }
+                targetDataNodesToStates.get(dataNode.getName()).add(dataNode.getState());
+            }
+
+            //iterate over DataNodes
+            for (Map.Entry<String, List<String>> entry : sourceDataNodesToStates.entrySet()) {
+                //now iterate over states
+                for (String state : entry.getValue()) {
+                    //state doesn't exist in OLC
+                    if (!olc.nameToOutgoing.containsKey(state)) return false;
+                    //in case a data node only serves as an input we don't have to consider it
+                    if (targetDataNodesToStates.containsKey(state)) {
+                        //let's eventually compare the output states :|
+                        if (!olc.nameToOutgoing.get(state).containsAll(
+                                targetDataNodesToStates.get(entry.getKey()))) {
+                                    return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
