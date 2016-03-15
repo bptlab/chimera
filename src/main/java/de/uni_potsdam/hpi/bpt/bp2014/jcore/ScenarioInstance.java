@@ -24,7 +24,6 @@ public class ScenarioInstance {
 	private final DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
 	private final DbFragment dbFragment = new DbFragment();
 	private final DbDataObject dbDataObject = new DbDataObject();
-	private final DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
 	private final DbScenario dbScenario = new DbScenario();
 	/**
 	 * Lists to save all fragments and all control nodes sorted by state.
@@ -48,6 +47,7 @@ public class ScenarioInstance {
 	private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
+    private boolean canTerminate;
     private TerminationCondition terminationCondition;
 	/**
 	 * Creates and initializes a new scenario instance from database.
@@ -76,6 +76,7 @@ public class ScenarioInstance {
 			this.initializeFragments();
 		}
 		this.startAutomaticControlNodes();
+        canTerminate = checkTerminationCondition();
 	}
 
 	/**
@@ -264,11 +265,7 @@ public class ScenarioInstance {
 	 * @return true if the condition is true. false if not.
 	 */
 	public boolean checkTerminationCondition() {
-        if (this.terminationCondition.checkTerminationCondition(this.dataObjectInstances)) {
-            this.terminate();
-            return true;
-        }
-        return false;
+        return this.terminationCondition.checkTerminationCondition(this.dataObjectInstances);
 	}
 
 
@@ -417,4 +414,8 @@ public class ScenarioInstance {
 	public Map<Integer, DataAttributeInstance> getDataAttributeInstances() {
 		return dataAttributeInstances;
 	}
+
+    public boolean canTerminate() {
+        return canTerminate;
+    }
 }

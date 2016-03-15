@@ -5,10 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 import org.apache.log4j.Logger;
@@ -384,8 +381,8 @@ import java.util.LinkedList;
 	@Path("scenario/{scenarioID}/instance/{instanceID}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON) public Response terminateScenarioInstance(
-			@PathParam("scenarioID") int scenarioID,
-			@PathParam("instanceID") int instanceID) {
+            @PathParam("scenarioID") int scenarioID,
+            @PathParam("instanceID") int instanceID) {
 		ExecutionService executionService = ExecutionService.getInstance(scenarioID);
 		if (executionService.existScenario(scenarioID) && executionService
 				.existScenarioInstance(instanceID)) {
@@ -404,25 +401,49 @@ import java.util.LinkedList;
 		}
 	}
 
-	/**
-	 * This method provides detailed information about a scenario instance.
-	 * The information will contain the id, name, parent scenario and the
-	 * number of activities in the different states.
-	 * The Response is JSON-Object.
-	 *
-	 * @param uriInfo    Contains the context information, is used to build
-	 *                   links to other resources.
-	 * @param scenarioID The ID of the scenario.
-	 * @param instanceID The ID of the instance.
-	 * @return Will return a Response with a JSON-Object body, containing
-	 * the information about the instance.
-	 * If the instance ID or both are incorrect 404 (NOT_FOUND) will be
-	 * returned.
-	 * If the scenario ID is wrong but the instance ID is correct a 301
-	 * (REDIRECT) will be returned.
-	 * If both IDs are correct a 200 (OK) with the expected JSON-Content
-	 * will be returned.
-	 */
+    @GET
+    @Path("scenario/{scenarioId}/instance/{scenarioId}/canTerminate")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response checkTermination(
+            @PathParam("scenarioId") int scenarioId, @PathParam("scenarioId") int instanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        if (executionService.existScenario(scenarioId) && executionService
+                .existScenarioInstance(instanceId)) {
+            ScenarioInstance instance = executionService.getScenarioInstance(instanceId);
+            return Response.status(Response.Status.OK)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(instance.canTerminate())
+                    .build();
+
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity("Scenario or scenario instance does not exist")
+                    .build();
+        }
+    }
+
+
+
+    /**
+     * This method provides detailed information about a scenario instance.
+     * The information will contain the id, name, parent scenario and the
+     * number of activities in the different states.
+     * The Response is JSON-Object.
+     *
+     * @param uriInfo    Contains the context information, is used to build
+     *                   links to other resources.
+     * @param scenarioID The ID of the scenario.
+     * @param instanceID The ID of the instance.
+     * @return Will return a Response with a JSON-Object body, containing
+     * the information about the instance.
+     * If the instance ID or both are incorrect 404 (NOT_FOUND) will be
+     * returned.
+     * If the scenario ID is wrong but the instance ID is correct a 301
+     * (REDIRECT) will be returned.
+     * If both IDs are correct a 200 (OK) with the expected JSON-Content
+     * will be returned.
+     */
 	@GET
 	@Path("scenario/{scenarioID}/instance/{instanceID}")
 	@Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstance(
