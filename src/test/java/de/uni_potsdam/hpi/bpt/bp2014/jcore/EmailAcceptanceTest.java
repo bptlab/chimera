@@ -229,9 +229,9 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
-        executionService = null;
-        executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
+        // executionService = null;
+        // executionService = ExecutionService.getInstance(scenarioID);
+        // executionService.openExistingScenarioInstance(scenarioID, scenarioInstance);
 
     }
 
@@ -268,7 +268,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Lieber Kunde Stephan Karphen, Sie bekommen am 2015 12500 ueberwiesen. #Test lol test", inbox.get(0).getContent());
 
     }
-    
+
     private void assertArrayEquals(Object[] expected, Object[] actual) {
     	Arrays.sort(expected);
     	Arrays.sort(actual);

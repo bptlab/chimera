@@ -21,17 +21,13 @@ import static org.junit.Assert.assertEquals;
  *
  */
 public class EventTypeTest {
-
-    private static final String REST_URL = "http://172.16.64.";
-
     @After
     public void removeEventType() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
-        Client client = ClientBuilder.newClient();
     }
+
     @Test
     public void testEventType() throws JAXBException {
-
         File file = new File("src/test/resources/EventScenarios/EventTypeScenario.json");
         try {
             String json = FileUtils.readFileToString(file);

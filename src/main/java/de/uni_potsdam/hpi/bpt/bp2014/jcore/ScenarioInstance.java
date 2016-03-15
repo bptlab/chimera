@@ -264,7 +264,11 @@ public class ScenarioInstance {
 	 * @return true if the condition is true. false if not.
 	 */
 	public boolean checkTerminationCondition() {
-        return this.terminationCondition.checkTerminationCondition(this.dataObjectInstances);
+        if (this.terminationCondition.checkTerminationCondition(this.dataObjectInstances)) {
+            this.terminate();
+            return true;
+        }
+        return false;
 	}
 
 
