@@ -1,0 +1,80 @@
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
+
+import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+/**
+ *
+ */
+public class Olc {
+    private static Logger log = Logger.getLogger(Olc.class);
+
+    private Map<String, List<String>> stateToOutgoing;
+
+    /**
+     * Map which represents allowed state transitions.
+     */
+    public Map<String, List<String>> nameToOutgoing;
+
+    public Olc(final String element) {
+        try {
+            JSONObject olcJson = new JSONObject(element);
+            parseStates(olcJson);
+            parseSequenceFlows(olcJson);
+            nameToOutgoing = replaceIdsWithNames(olcJson);
+        } catch (JSONException e) {
+            log.error(e);
+            throw new JSONException("Illegal OLC JSON");
+        }
+    }
+
+    private void parseStates(JSONObject olcJson) {
+        JSONArray states = olcJson.getJSONArray("state");
+        for (int i = 0; i < states.length(); i++) {
+            JSONObject state = states.getJSONObject(i);
+            stateToOutgoing.put(state.getString("id"), new ArrayList<>());
+        }
+    }
+
+    private void parseSequenceFlows(JSONObject olcJson) {
+        JSONArray states = olcJson.getJSONArray("state");
+        for (int i = 0; i < states.length(); i++) {
+            JSONObject state = states.getJSONObject(i);
+            JSONArray out = state.getJSONArray("outgoing");
+            for (int j = 0; j < out.length(); j++) {
+                stateToOutgoing.get(state.getString("id")).add(out.getString(j));
+            }
+        }
+    }
+
+    private Map<String, String> getIdToNameMapping(JSONObject olcJson) {
+        Map<String, String> idToName = new HashMap<>();
+        JSONArray states = olcJson.getJSONArray("state");
+        for (int i = 0; i < states.length(); i++) {
+            JSONObject state = states.getJSONObject(i);
+            idToName.put(state.getString("id"), state.getString("name"));
+        }
+        return idToName;
+    }
+
+    private Map<String, List<String>> replaceIdsWithNames(JSONObject olcJson) {
+        Map<String, List<String>> nameOutgoing = new HashMap<>();
+        Map<String, String> idToName = getIdToNameMapping(olcJson);
+        for (Map.Entry<String, List<String>> entry : stateToOutgoing.entrySet()) {
+            String stateName = idToName.get(entry.getKey());
+            List<String> outgoingStateNames = entry.getValue().stream().map(
+                    idToName::get).collect(Collectors.toList());
+            nameOutgoing.put(stateName, outgoingStateNames);
+        }
+        return nameOutgoing;
+    }
+}
