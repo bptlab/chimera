@@ -141,7 +141,13 @@ public class Fragment {
         return idToNode;
     }
 
-    public Boolean isOLCValid(Olc olc) {
+    /**
+     * This method validates the fragment against the given OLCs. Note that in case there is no OLC
+     * for a given DataClass all transitions for this class are considered valid.
+     * @param olcs A map of DataClasses (identified by name) to their respective OLCs.
+     * @return true if the fragment matches all given OLCs (false if there is a violation)
+     */
+    public Boolean isOLCValid(Map<String, Olc> olcs) {
         //idea: get a map of DataObjects with possible states for the input / output of each task.
         //test for all transitions whether they fit the OLC (per task)
         //this seems inefficient and complicated ... is there a better way?
@@ -155,7 +161,7 @@ public class Fragment {
             Map<String, List<String>> sourceDataNodesToStates = new HashMap<>();
             for (DataInputAssociation assoc : task.getDataInputAssociations()) {
                 DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
-                if(!sourceDataNodesToStates.containsKey(dataNode.getName())) {
+                if (!sourceDataNodesToStates.containsKey(dataNode.getName())) {
                     sourceDataNodesToStates.put(dataNode.getName(), new ArrayList<>());
                 }
                 sourceDataNodesToStates.get(dataNode.getName()).add(dataNode.getState());
@@ -164,30 +170,31 @@ public class Fragment {
             Map<String, List<String>> targetDataNodesToStates = new HashMap<>();
             for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
                 DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
-                if(!targetDataNodesToStates.containsKey(dataNode.getName())) {
+                if (!targetDataNodesToStates.containsKey(dataNode.getName())) {
                     targetDataNodesToStates.put(dataNode.getName(), new ArrayList<>());
                 }
                 targetDataNodesToStates.get(dataNode.getName()).add(dataNode.getState());
             }
 
-            //iterate over DataNodes
+            //iterate over source DataNodes
             for (Map.Entry<String, List<String>> entry : sourceDataNodesToStates.entrySet()) {
+                //We need an OLC to validate the DataClass.
+                if (!olcs.containsKey(entry.getKey())) continue;
                 //now iterate over states
                 for (String state : entry.getValue()) {
-                    //state doesn't exist in OLC
-                    if (!olc.nameToOutgoing.containsKey(state)) return false;
-                    //in case a data node only serves as an input we don't have to consider it
+                    //state doesn't exist in the respective OLC for the DataClass
+                    if (!olcs.get(entry.getKey()).nameToOutgoing.containsKey(state)) return false;
+                    //only look a DataNodes where there is actually a transition
                     if (targetDataNodesToStates.containsKey(entry.getKey())) {
                         //let's eventually compare the output states :|
-                        if (!olc.nameToOutgoing.get(state).containsAll(
-                                targetDataNodesToStates.get(entry.getKey()))) {
-                                    return false;
-                        }
+                        if (!olcs.get(entry.getKey()).nameToOutgoing.get(state).containsAll(
+                                targetDataNodesToStates.get(entry.getKey()))) return false;
                     }
                 }
             }
         }
 
+        //since there are no invalid transitions, the fragment matches the OLCs :)
         return true;
     }
 
