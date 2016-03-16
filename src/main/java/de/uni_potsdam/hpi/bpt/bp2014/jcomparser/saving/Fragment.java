@@ -213,7 +213,9 @@ public class Fragment {
     }
 
     public List<String> getChangedDataobjectNamesWithOlc(
-            Set<String> incomingDataobjects, Set<String> outgoingDataObjects, Set<String> dataObjectsWithOlc) {
+            Set<String> incomingDataobjects,
+            Set<String> outgoingDataObjects,
+            Set<String> dataObjectsWithOlc) {
         // Get data objects which are in input and output set and have an olc
         List<String> dataObjectsNames =  Stream.concat(
                 incomingDataobjects.stream(),

@@ -41,10 +41,13 @@ public class DomainModel implements IPersistable {
 	 */
 	private JSONObject domainModelJson;
 
-
     private List<DataClass> dataClasses = new ArrayList<>();
 
 	private List<EventType> eventTypes = new ArrayList<>();
+	/**
+	 * A map with all known OLCs for DataClasses (identified by name).
+	 */
+	private Map<String, Olc> olcs = new HashMap<>();
 
 
     public DomainModel(final String element) {
@@ -99,13 +102,19 @@ public class DomainModel implements IPersistable {
 
 			for (int i = 0; i < length; i++) {
 				JSONObject currentObject = jsonDataClasses.getJSONObject(i);
-				if(currentObject.getBoolean("is_event")) {
+				if (currentObject.getBoolean("is_event")) {
 					EventType currentET = new EventType(currentObject.toString());
 					eventTypes.add(currentET);
-				}
-				else {
+				} else {
 					DataClass currentClass = new DataClass(currentObject.toString());
 					dataClasses.add(currentClass);
+					//In case we need a list of all OLCs we might as well create
+					//it on the fly by iterating over all data classes
+					//(basically like here)
+					if (currentClass.getDataClassOlc() != null) {
+						olcs.put(currentClass.getDataClassName(),
+								currentClass.getDataClassOlc());
+					}
 				}
 			}
 		} catch (JSONException e) {
@@ -213,6 +222,10 @@ public class DomainModel implements IPersistable {
 
 	public List<EventType> getEventTypes() {
 		return eventTypes;
+	}
+
+	public Map<String, Olc> getOlcs() {
+		return olcs;
 	}
 
 }
