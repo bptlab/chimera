@@ -214,7 +214,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void terminateScenarioInstance() {
-        Response response = base.path("scenario/1/instance/47").request().put(Entity.json(""));
+        Response response = base.path("scenario/1/instance/47/terminate").request().post(null);
         assertEquals("The Response code of terminating an instances was not 200",
                 200, response.getStatus());
     }
@@ -226,7 +226,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void terminateScenarioInstanceInvalidId() {
-        Response response = base.path("scenario/1/instance/9999").request().put(Entity.json(""));
+        Response response = base.path("scenario/1/instance/9999/terminate").request().post(null);
         assertEquals("The Response code of terminating an instances was not 400",
                 400, response.getStatus());
         assertEquals("The Media type of terminating an instance was not JSON",
@@ -924,8 +924,8 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testTerminateInvalidScenarioInstance() {
-        Response response = base.path("scenario/9999/instance/72")
-                .queryParam("state", "begin").request().put(Entity.json("{}"));
+        Response response = base.path("scenario/9999/instance/72/terminate")
+                .queryParam("state", "begin").request().post(null);
         assertEquals("The Response code of terminateScenarioInstance was not 400",
                 400, response.getStatus());
         assertEquals("Get terminateScenarioInstance does not return a JSON",
@@ -934,8 +934,8 @@ public class RestInterfaceTest extends AbstractTest {
                 response.readEntity(String.class),
                 jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
-        response = base.path("scenario/1/instance/9999")
-                .queryParam("status", "begin").request().put(Entity.json("{}"));
+        response = base.path("scenario/1/instance/9999/terminate")
+                .queryParam("status", "begin").request().post(null);
         assertEquals("The Response code of terminateScenarioInstance was not 400",
                 400, response.getStatus());
         assertEquals("Get terminateScenarioInstance does not return a JSON",
@@ -954,8 +954,8 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testTerminateScenarioInstance() {
-        Response response = base.path("scenario/1/instance/72")
-                .queryParam("state", "begin").request().put(Entity.json("{}"));
+        Response response = base.path("scenario/1/instance/72/terminate")
+                .queryParam("state", "begin").request().post(null);
         assertEquals("The Response code of terminateScenarioInstance was not 200",
                 200, response.getStatus());
         assertEquals("terminateScenarioInstance does not return a JSON",

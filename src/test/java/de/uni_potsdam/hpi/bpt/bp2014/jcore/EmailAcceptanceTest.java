@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 
 import org.apache.commons.mail.EmailException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
@@ -180,7 +181,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      * @throws IOException
      * @throws EmailException
      */
-    @Test
+    @Test @Ignore
     public void testScenario146() throws MessagingException, IOException, EmailException {
     	int scenarioID = 146;
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
