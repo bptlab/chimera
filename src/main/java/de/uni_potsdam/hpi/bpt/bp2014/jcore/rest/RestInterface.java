@@ -377,8 +377,8 @@ import java.util.LinkedList;
 	 * A Created Response will be returned if the POST has been successful
 	 * and a BAD_REQUEST else.
 	 */
-	@PUT
-	@Path("scenario/{scenarioID}/instance/{instanceID}")
+    @POST
+	@Path("scenario/{scenarioID}/instance/{instanceID}/terminate")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON) public Response terminateScenarioInstance(
             @PathParam("scenarioID") int scenarioID,
@@ -410,11 +410,18 @@ import java.util.LinkedList;
         if (executionService.existScenario(scenarioId) && executionService
                 .existScenarioInstance(instanceId)) {
             ScenarioInstance instance = executionService.getScenarioInstance(instanceId);
-            return Response.status(Response.Status.OK)
-                    .type(MediaType.TEXT_PLAIN)
-                    .entity(instance.canTerminate())
-                    .build();
-
+            if (instance.canTerminate()) {
+                instance.terminate();
+                return Response.status(Response.Status.OK)
+                        .type(MediaType.TEXT_PLAIN)
+                        .entity("{Entity deleted succesful}")
+                        .build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .type(MediaType.TEXT_PLAIN)
+                        .entity("Termination condition is not fulfilled")
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.TEXT_PLAIN)
@@ -423,7 +430,9 @@ import java.util.LinkedList;
         }
     }
 
+    /*
 
+     */
 
     /**
      * This method provides detailed information about a scenario instance.
