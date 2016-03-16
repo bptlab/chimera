@@ -22,7 +22,7 @@ public class OlcTest {
             String json = FileUtils.readFileToString(file);
             Olc olc = new Olc(json);
             List<String> expected = Arrays.asList("state2", "state3");
-            assertEquals("The OLC couldn't parse outgoing behaviors correctly", expected, olc.nameToOutgoing.get("state1"));
+            assertEquals("The OLC couldn't parse outgoing behaviors correctly", expected, olc.allowedStateTransitions.get("state1"));
         } catch (IOException e) {
             e.printStackTrace();
             Assert.fail();

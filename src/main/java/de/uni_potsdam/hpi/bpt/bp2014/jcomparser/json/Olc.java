@@ -22,14 +22,14 @@ public class Olc {
     /**
      * Map which represents allowed state transitions.
      */
-    public Map<String, List<String>> nameToOutgoing = new HashMap<>();
+    public Map<String, List<String>> allowedStateTransitions = new HashMap<>();
 
     public Olc(final String element) {
         try {
             JSONObject olcJson = new JSONObject(element);
             parseStates(olcJson);
             parseSequenceFlows(olcJson);
-            nameToOutgoing = replaceIdsWithNames(olcJson);
+            allowedStateTransitions = replaceIdsWithNames(olcJson);
         } catch (JSONException e) {
             log.error(e);
             throw new JSONException("Illegal OLC JSON");

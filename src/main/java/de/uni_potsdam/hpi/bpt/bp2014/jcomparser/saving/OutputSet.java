@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * This class represents an OutputSet.
  */
-public class OutputSet extends Set implements IPersistable {
+public class OutputSet extends AbstractSet implements IPersistable {
 
     public OutputSet(AbstractControlNode controlNode, List<DataNode> dataNodes) {
         this.dataNodes = dataNodes;

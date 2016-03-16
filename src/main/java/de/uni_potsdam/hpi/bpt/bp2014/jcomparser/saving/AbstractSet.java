@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * This class represents a set.
  */
-public abstract class Set implements IPersistable {
+public abstract class AbstractSet implements IPersistable {
     /**
 	 * All DataNodes which are part of this Set.
 	 */
