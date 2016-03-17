@@ -52,7 +52,7 @@ public class DataClass implements IPersistable {
             this.dataClassModelID = this.dataClassJson.getString("_id");
             generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
 			if (this.dataClassJson.has("olc")) {
-				this.dataClassOlc = new Olc(this.dataClassJson.getString("olc"));
+				this.dataClassOlc = new Olc(this.dataClassJson.get("olc").toString());
 			}
         } catch (JSONException e) {
             logger.trace(e);
