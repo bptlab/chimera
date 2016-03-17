@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014;
 
 //import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 
@@ -17,9 +19,13 @@ public class AbstractDatabaseDependentTest {
     /**
      * The Database Seed file.
      */
-    public static final String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+    private static final String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+    /**
+     * TODO: The same database is used for testing and running (cf. CM-429 in Jira)
+     */
+    private static final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.schema");
 
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
@@ -45,6 +51,7 @@ public class AbstractDatabaseDependentTest {
      * Drops and recreates the database.
      */
     protected static void clearDatabase() {
+      // connect() uses the url of the normal db, not the test db
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         if (conn == null) {
@@ -53,8 +60,8 @@ public class AbstractDatabaseDependentTest {
         try {
             //Execute a querystmt = conn.createStatement();
             stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE JEngineV2");
-            stmt.execute("CREATE DATABASE JEngineV2");
+            stmt.execute("DROP DATABASE " + TEST_DB_SCHEMA); 
+            stmt.execute("CREATE DATABASE " + TEST_DB_SCHEMA);
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();

@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 //import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
@@ -16,8 +17,8 @@ import java.sql.Statement;
 import java.util.List;
 
 
-public class ExecutionTest {
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+public class ExecutionTest extends AbstractDatabaseDependentTest {
+    //private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     @Test
     public void testDeletion() throws IOException, SQLException, Exception{
         String insertScenarios = "INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES " +
@@ -47,40 +48,6 @@ public class ExecutionTest {
         select = "SELECT deleted FROM scenario WHERE id = 6";
         deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
         Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());
-    }
-    /**
-     * Refill database from DEVELOPMENT_SQL_SEED_FILE after clearing it.
-     * @throws IOException java.io.Exception
-     * @throws SQLException java.sql.Exception
-     */
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        if (conn == null) {
-            return;
-        }
-        try {
-            //Execute a querystmt = conn.createStatement();
-            stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE JEngineV2");
-            stmt.execute("CREATE DATABASE JEngineV2");
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            conn.close();
-        }
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
 }
