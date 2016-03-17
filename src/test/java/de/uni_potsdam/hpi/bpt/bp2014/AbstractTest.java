@@ -2,7 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014;
 
 //import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
+
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.AfterClass;
 import org.junit.Before;
 
 import java.io.FileReader;
@@ -19,7 +22,11 @@ public abstract class AbstractTest extends JerseyTest {
      * The Database Seed file.
      */
     public static String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
-
+    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+    /**
+     * TODO: The same database is used for testing and running (cf. CM-429 in Jira)
+     */
+    private static final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.schema");
     /**
      * Sets up the database for RestTests.
      *
@@ -31,6 +38,13 @@ public abstract class AbstractTest extends JerseyTest {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+    }
+    
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+        clearDatabase();
+        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
     /**
@@ -45,8 +59,8 @@ public abstract class AbstractTest extends JerseyTest {
         try {
             //Execute a querystmt = conn.createStatement();
             stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE JEngineV2");
-            stmt.execute("CREATE DATABASE JEngineV2");
+            stmt.execute("DROP DATABASE " + TEST_DB_SCHEMA); 
+            stmt.execute("CREATE DATABASE " + TEST_DB_SCHEMA);
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();

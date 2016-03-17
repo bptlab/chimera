@@ -28,8 +28,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class WebServiceAcceptanceTest extends AbstractTest {
 
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
-
     /**
      * Sets up the seed file for the test database.
      */
@@ -37,12 +35,6 @@ public class WebServiceAcceptanceTest extends AbstractTest {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     }
 
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
 
     @Override
     protected Application configure() {
