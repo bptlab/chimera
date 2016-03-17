@@ -1,11 +1,12 @@
 // globsal constants
 var JEngine_Server_URL = window.location.origin;
+var InstanceName = window.location.pathname.split('/')[1];
 var JUserManagement_Server_URL = window.location.origin;
-var JCore_REST_Interface = "Chimera/api/interface/v2";
-var JConfig_REST_Interface = "Chimera/api/config/v2";
-var JHistory_REST_Interface = "Chimera/api/history/v2";
-var JAnalytics_REST_Interface = "Chimera/api/analytics/v2";
-var JComparser_REST_Interface = "Chimera/api/jcomparser";
+var JCore_REST_Interface = InstanceName + "/api/interface/v2";
+var JConfig_REST_Interface = InstanceName + "/api/config/v2";
+var JHistory_REST_Interface = InstanceName + "/api/history/v2";
+var JAnalytics_REST_Interface = InstanceName + "/api/analytics/v2";
+var JComparser_REST_Interface = InstanceName + "/api/jcomparser";
 var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 
 (function () {
