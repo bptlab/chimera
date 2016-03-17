@@ -142,88 +142,6 @@ public class Fragment {
         return idToNode;
     }
 
-    private Map<String, DataNode> getIdToDataNode() {
-        Map<String, DataNode> idToDataNode = new HashMap<>();
-        for (DataNode dataNode : this.getDataNodes()) {
-            idToDataNode.put(dataNode.getId(), dataNode);
-        }
-        return idToDataNode;
-    }
-
-
-    Map<String, List<String>> getIncomingStatesPerDataobject(Task task) {
-        Map<String, DataNode> idToDataNode = getIdToDataNode();
-        Map<String, List<String>> incomingStatesPerDataobject = new HashMap<>();
-        for (DataInputAssociation assoc : task.getDataInputAssociations()) {
-            DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
-            if (!incomingStatesPerDataobject.containsKey(dataNode.getName())) {
-                incomingStatesPerDataobject.put(dataNode.getName(), new ArrayList<>());
-            }
-            incomingStatesPerDataobject.get(dataNode.getName()).add(dataNode.getState());
-        }
-        return incomingStatesPerDataobject;
-    }
-
-    Map<String, List<String>> getOutgoingStatesPerDataobject(Task task) {
-        Map<String, DataNode> idToDataNode = getIdToDataNode();
-        Map<String, List<String>> outgoingStatesPerDataobject = new HashMap<>();
-        for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
-            DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
-            if (!outgoingStatesPerDataobject.containsKey(dataNode.getName())) {
-                outgoingStatesPerDataobject.put(dataNode.getName(), new ArrayList<>());
-            }
-            outgoingStatesPerDataobject.get(dataNode.getName()).add(dataNode.getState());
-        }
-        return outgoingStatesPerDataobject;
-    }
-
-
-
-
-    /**
-     * This method validates the fragment against the given OLCs. Note that in case there is no OLC
-     * for a given DataClass all transitions for this class are considered valid.
-     * @param olcs A map of DataClasses (identified by name) to their respective OLCs.
-     * @return true if the fragment matches all given OLCs (false if there is a violation)
-     */
-    public Boolean isOLCValid(Map<String, Olc> olcs) {
-        for (Task task : this.fragmentXml.getTasks()) {
-            Map<String, List<String>> incomingDataobjectStates =
-                    getIncomingStatesPerDataobject(task);
-            Map<String, List<String>> outgoingDataobjectStates =
-                    getOutgoingStatesPerDataobject(task);
-            List<String> dataObjectsNames = getChangedDataobjectNamesWithOlc(
-                    incomingDataobjectStates.keySet(),
-                    outgoingDataobjectStates.keySet(), olcs.keySet());
-
-            for (String dataobjectName : dataObjectsNames) {
-                List<String> inputStates = incomingDataobjectStates.get(dataobjectName);
-                List<String> outputStates = outgoingDataobjectStates.get(dataobjectName);
-                Olc olcForDataobject = olcs.get(dataobjectName);
-                for (String state : inputStates) {
-                    if (!olcForDataobject.allowedStateTransitions.get(state).containsAll(outputStates)) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        //since there are no invalid transitions, the fragment matches the OLCs :)
-        return true;
-    }
-
-    public List<String> getChangedDataobjectNamesWithOlc(
-            Set<String> incomingDataobjects,
-            Set<String> outgoingDataObjects,
-            Set<String> dataObjectsWithOlc) {
-        // Get data objects which are in input and output set and have an olc
-        List<String> dataObjectsNames =  Stream.concat(
-                incomingDataobjects.stream(),
-                outgoingDataObjects.stream())
-                .distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
-        return dataObjectsNames;
-    }
-
     /**
      *
      * @return Return a list of all control nodes in a fragment
@@ -271,5 +189,9 @@ public class Fragment {
 
     public void setName(String name) {
         this.fragmentName = name;
+    }
+
+    public List<Task> getTasks() {
+        return this.fragmentXml.getTasks();
     }
 }
