@@ -1,6 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.EventType;
+import org.apache.log4j.Logger;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -8,8 +15,9 @@ import java.util.Map;
  * This class implements the WebServiceTask.
  */
 public class DbWebServiceTask extends DbObject {
+    private static Logger log = Logger.getLogger(DbWebServiceTask.class);
 
-	/**
+    /**
 	 * Returns the Link for the webservice task.
 	 *
 	 * @param controlNodeId The controlnode_id of the webservice task.
@@ -21,7 +29,26 @@ public class DbWebServiceTask extends DbObject {
 		return this.executeStatementReturnsString(sql, "link");
 	}
 
-	/**
+    public Map<String, String> retrieveWebserviceMapping(int scenarioId) {
+        String retrieveWebserviceMapping = String.format(
+                "Select * From WebserviceMapping Where scenarioId = %d", scenarioId);
+        return null;
+    }
+
+    private Map<String, String> retrieve(String sql) {
+        java.sql.Connection conn = Connection.getInstance().connect();
+        Map<String, String> webserviceMapping = new HashMap<>();
+        try(Statement stat = conn.createStatement(); ResultSet rs =  stat.executeQuery(sql);) {
+            while (rs.next()) {
+                webserviceMapping.put(rs.getString("dataattributeid"), rs.getString("jsonpath"));
+            }
+        } catch (SQLException e) {
+            log.error(e);
+        }
+        return webserviceMapping;
+    }
+
+    /**
 	 * Get a List with all ids from the attributes which get changed by the webservice task.
 	 *
 	 * @param controlNodeId The controlnode_id of the webservice task.
