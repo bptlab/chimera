@@ -337,7 +337,7 @@
 						<version>1.7</version>
 						<executions>
 							<execution>
-								<phase>prepare-package</phase>
+								<phase>generate-test-resources</phase>
 								<configuration>
 									<target>
 										<move
