@@ -10,6 +10,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 import org.apache.log4j.Logger;
 
@@ -964,6 +966,6 @@ public class ExecutionService /*implements Runnable*/ {
     /*
 	@Override
 	public void run() {
-	}    
+	}
     */
 }

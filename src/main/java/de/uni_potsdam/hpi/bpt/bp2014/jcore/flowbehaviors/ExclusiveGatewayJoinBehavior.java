@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.GatewayStateMachine;
 
 import java.util.Collection;
 

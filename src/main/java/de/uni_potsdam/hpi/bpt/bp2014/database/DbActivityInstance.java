@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
 
 import java.util.LinkedList;

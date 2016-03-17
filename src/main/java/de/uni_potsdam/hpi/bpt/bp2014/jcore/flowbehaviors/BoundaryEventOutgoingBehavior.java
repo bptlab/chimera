@@ -1,8 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbBoundaryEvent;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 /**

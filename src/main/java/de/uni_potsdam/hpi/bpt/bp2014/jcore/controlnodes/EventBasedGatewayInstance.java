@@ -1,8 +1,12 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayType;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.*;
 
 import java.util.List;
 import java.util.stream.Collectors;

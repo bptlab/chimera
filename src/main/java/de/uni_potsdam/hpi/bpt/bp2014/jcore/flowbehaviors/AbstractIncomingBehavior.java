@@ -1,8 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 /**

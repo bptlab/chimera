@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractStateMachine;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 
 /**
  * This class is the representation of a gateway instance in the database.

@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 
 import java.util.List;
 import java.util.UUID;

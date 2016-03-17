@@ -1,8 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.commons.io.FileUtils;
 

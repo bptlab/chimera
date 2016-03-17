@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.*;
 
 /**
  * This class represents generic outgoing behavior.
