@@ -6,7 +6,7 @@
 	<groupId>de.uni_potsdam.hpi.bpt.bp2014</groupId>
 	<artifactId>Chimera</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1</version>
 	<name>Chimera</name>
 
 	<build>
