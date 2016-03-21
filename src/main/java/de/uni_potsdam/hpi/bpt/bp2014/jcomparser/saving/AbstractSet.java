@@ -23,14 +23,6 @@ public abstract class AbstractSet implements IPersistable {
     protected int databaseId;
 
 
-	/**
-	 * Returns the list of Inputs.
-	 * The Inputs are DataNodes. It is not a copy.
-	 * This means changes will affect the state of the InputSet.
-	 *
-	 * @return the list of data nodes which are part of the InputSet
-	 */
-
 	@Override public int save() {
 		Connector connector = new Connector();
 		databaseId = connector.insertDataSetIntoDatabase(this.getClass().getName()

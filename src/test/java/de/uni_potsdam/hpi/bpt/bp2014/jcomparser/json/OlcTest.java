@@ -33,7 +33,7 @@ public class OlcTest {
 
     @Test(expected = InvalidDataTransitionException.class)
     public void testOlcValidation() throws JAXBException, IOException {
-        File file = new File("src/test/resources/EventScenarios/OLCTestScenario.json");
+        File file = new File("src/test/resources/EventScenarios/InvalidTransitionOLCScenario.json");
         String json = FileUtils.readFileToString(file);
         ScenarioData scenarioData = new ScenarioData(json);
     }

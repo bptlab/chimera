@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 
 import org.apache.log4j.Logger;

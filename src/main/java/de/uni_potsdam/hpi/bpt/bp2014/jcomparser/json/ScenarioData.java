@@ -158,7 +158,6 @@ public class ScenarioData {
      */
     private List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) throws JAXBException {
         JSONArray fragmentStrings = scenarioJson.getJSONArray("fragments");
-        FragmentValidator validator = new FragmentValidator();
         List<Fragment> generatedFragments = new ArrayList<>();
         for (int i = 0; i < fragmentStrings.length(); i++) {
             JSONObject fragmentJson = fragmentStrings.getJSONObject(i);
@@ -168,11 +167,11 @@ public class ScenarioData {
                         fragmentJson.getString("name"),
                         fragmentJson.getString("_id")
                 );
-                validator.validateFragment(fragment, domainModel);
+                FragmentValidator.validateFragment(fragment, domainModel);
                 generatedFragments.add(fragment);
             } catch (JAXBException e) {
                 logger.error(e);
-                logger.error("Fragment could not have been added");
+                logger.error("Fragment could not be added");
                 String errorMsg = String.format("Invalid fragment Xml provided for fragment %s",
                         fragmentJson.getString("name"));
                 throw new JAXBException(errorMsg);

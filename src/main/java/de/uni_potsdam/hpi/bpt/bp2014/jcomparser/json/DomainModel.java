@@ -75,15 +75,15 @@ public class DomainModel implements IPersistable {
     }
 
     /**
-     * Creates a mapping from the Id of the dataclass to the dataclass object itself.
-     * @return map from Id to dataclass
+     * Creates a mapping from the name of the dataclass to the dataclass object itself.
+     * @return map from name to dataclass
      */
     public Map<String, DataClass> getMapFromNameToDataclass() {
-        Map<String, DataClass> idToDataclass = new HashMap<>();
+        Map<String, DataClass> nameToDataclass = new HashMap<>();
         for (DataClass dataClass : dataClasses) {
-            idToDataclass.put(dataClass.getDataClassName(), dataClass);
+            nameToDataclass.put(dataClass.getDataClassName(), dataClass);
         }
-        return idToDataclass;
+        return nameToDataclass;
     }
 	/**
 	 * This sets the scenario ID needed for the update.

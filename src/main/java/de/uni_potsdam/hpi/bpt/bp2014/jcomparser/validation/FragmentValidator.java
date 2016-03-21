@@ -18,31 +18,32 @@ import java.util.stream.Stream;
 public class FragmentValidator {
 
     /**
-     * Takes in a fragment and throws
+     * For a given fragment and its corresponding domain model, checks if
+     * all data objects belong to a data class, and if all state transitions are modeled
+     * in the OLC and thus valid.
+     * Throws an exception if these conditions are not fulfilled.
      * @param fragment
      * @param domainModel
      */
-    public void validateFragment(Fragment fragment, DomainModel domainModel) {
+    public static void validateFragment(Fragment fragment, DomainModel domainModel) {
         validateDataReferences(fragment, domainModel);
-        if (!isOlcValid(domainModel.getOlcs(), fragment)) {
-            throw new InvalidDataTransitionException("Invalid ocl transition found ");
-        }
+        validateOlc(domainModel.getOlcs(), fragment);
     }
 
     /**
-     * This method validates an against the given OLCs. Note that in case there is no OLC
+     * This method validates a fragment against the given OLCs. Note that in case there is no OLC
      * for a given DataClass all transitions for this class are considered valid.
      * @param olcs A map of DataClasses (identified by name) to their respective OLCs.
      * @return true if the fragment matches all given OLCs (false if there is a violation)
      */
-    public Boolean isOlcValid(Map<String, Olc> olcs, Fragment fragment) {
+    private static void validateOlc(Map<String, Olc> olcs, Fragment fragment) {
         Map<String, DataNode> idToDataNode = getIdToDataNode(fragment.getDataNodes());
         for (Task task : fragment.getTasks()) {
             Map<String, List<String>> incomingDataobjectStates =
                     getIncomingStatesPerDataobject(task, idToDataNode);
             Map<String, List<String>> outgoingDataobjectStates =
                     getOutgoingStatesPerDataobject(task, idToDataNode);
-            List<String> dataObjectsNames = getChangedDataobjectNamesWithOlc(
+            List<String> dataObjectsNames = getDataObjectsToBeChecked(
                     incomingDataobjectStates.keySet(),
                     outgoingDataobjectStates.keySet(), olcs.keySet());
 
@@ -52,15 +53,14 @@ public class FragmentValidator {
                 Olc olcForDataobject = olcs.get(dataobjectName);
                 for (String state : inputStates) {
                     if (!olcForDataobject.allowedStateTransitions.get(state).containsAll(outputStates)) {
-                        return false;
+                        throw new InvalidDataTransitionException("Invalid OLC transition found ");
                     }
                 }
             }
         }
-        return true;
     }
 
-    private void validateDataReferences(Fragment fragment, DomainModel domainModel) {
+    private static void validateDataReferences(Fragment fragment, DomainModel domainModel) {
         Set<String>  dataclassNames = domainModel.getMapFromNameToDataclass().keySet();
         for (DataNode node : fragment.getDataNodes()) {
             if (!dataclassNames.contains(node.getName())) {
@@ -70,7 +70,7 @@ public class FragmentValidator {
         }
     }
 
-    private Map<String, DataNode> getIdToDataNode(List<DataNode> dataNodes) {
+    private static Map<String, DataNode> getIdToDataNode(List<DataNode> dataNodes) {
         Map<String, DataNode> idToDataNode = new HashMap<>();
         for (DataNode dataNode : dataNodes) {
             idToDataNode.put(dataNode.getId(), dataNode);
@@ -79,7 +79,7 @@ public class FragmentValidator {
     }
 
 
-    private Map<String, List<String>> getIncomingStatesPerDataobject(
+    private static Map<String, List<String>> getIncomingStatesPerDataobject(
             Task task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> incomingStatesPerDataobject = new HashMap<>();
         for (DataInputAssociation assoc : task.getDataInputAssociations()) {
@@ -92,7 +92,7 @@ public class FragmentValidator {
         return incomingStatesPerDataobject;
     }
 
-    private Map<String, List<String>> getOutgoingStatesPerDataobject(
+    private static Map<String, List<String>> getOutgoingStatesPerDataobject(
             Task task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> outgoingStatesPerDataobject = new HashMap<>();
         for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
@@ -106,11 +106,18 @@ public class FragmentValidator {
     }
 
 
-    private List<String> getChangedDataobjectNamesWithOlc(
+    /**
+     *
+     * @param incomingDataobjects
+     * @param outgoingDataObjects
+     * @param dataObjectsWithOlc
+     * @return a list of data object names for data objects, that are in an input and
+     * an output set and are part of an OLC
+     */
+    private static List<String> getDataObjectsToBeChecked(
             Set<String> incomingDataobjects,
             Set<String> outgoingDataObjects,
             Set<String> dataObjectsWithOlc) {
-        // Get data objects which are in input and output set and have an olc
         return Stream.concat(incomingDataobjects.stream(), outgoingDataObjects.stream())
                 .distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
     }
