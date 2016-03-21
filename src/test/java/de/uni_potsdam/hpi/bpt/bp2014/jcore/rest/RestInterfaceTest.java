@@ -214,7 +214,7 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void terminateScenarioInstance() {
-        Response response = base.path("scenario/1/instance/47").request().put(Entity.json(""));
+        Response response = base.path("scenario/1/instance/47/terminate").request().post(Entity.json(null));
         assertEquals("The Response code of terminating an instances was not 200",
                 200, response.getStatus());
     }
@@ -226,15 +226,14 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void terminateScenarioInstanceInvalidId() {
-        Response response = base.path("scenario/1/instance/9999").request().put(Entity.json(""));
-        assertEquals("The Response code of terminating an instances was not 400",
-                400, response.getStatus());
-        assertEquals("The Media type of terminating an instance was not JSON",
-                MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
-        assertThat("The content of the response was not as expected",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
+        Response response = base.path("scenario/1/instance/9999/terminate").request().post(Entity.json(null));
+        assertEquals("The Response code of terminating an instances was not 404",
+                404, response.getStatus());
+        assertEquals("The Media type of terminating an instance was not TEXT",
+                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+        assertEquals("The content of the response was not as expected",
+                "Scenario or scenario instance does not exist",
+                response.readEntity(String.class));
     }
 
 
@@ -924,26 +923,15 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testTerminateInvalidScenarioInstance() {
-        Response response = base.path("scenario/9999/instance/72")
-                .queryParam("state", "begin").request().put(Entity.json("{}"));
-        assertEquals("The Response code of terminateScenarioInstance was not 400",
-                400, response.getStatus());
-        assertEquals("Get terminateScenarioInstance does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-        response = base.path("scenario/1/instance/9999")
-                .queryParam("status", "begin").request().put(Entity.json("{}"));
-        assertEquals("The Response code of terminateScenarioInstance was not 400",
-                400, response.getStatus());
-        assertEquals("Get terminateScenarioInstance does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"The Scenario instance could not be found!\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
+        Response response = base.path("scenario/9999/instance/72/terminate")
+                .request().post(Entity.json(null));
+        assertEquals("The Response code of terminateScenarioInstance was not 404",
+                404, response.getStatus());
+        assertEquals("Get terminateScenarioInstance does not return TEXT",
+                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+        assertEquals("The returned TEXT does not contain the expected content",
+                "Scenario or scenario instance does not exist",
+                response.readEntity(String.class));
     }
 
     /**
@@ -954,16 +942,15 @@ public class RestInterfaceTest extends AbstractTest {
      */
     @Test
     public void testTerminateScenarioInstance() {
-        Response response = base.path("scenario/1/instance/72")
-                .queryParam("state", "begin").request().put(Entity.json("{}"));
+        Response response = base.path("scenario/1/instance/72/terminate")
+                .request().post(Entity.json(null));
         assertEquals("The Response code of terminateScenarioInstance was not 200",
                 200, response.getStatus());
-        assertEquals("terminateScenarioInstance does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"message\":\"The is instance has been terminated.\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
+        assertEquals("terminateScenarioInstance does not return a TEXT",
+                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+        assertEquals("The returned TEXT does not contain the expected content",
+                "Instance has been terminated",
+                response.readEntity(String.class));
     }
 
     /**

@@ -307,7 +307,7 @@
                             instanceCtrl.initializeDataobjectlogInstances();
                             instanceCtrl.initializeDataobjectAttributelogInstances();
                             instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
-                            instanceCtrl.canTerminate($routeParams.id, id)
+                            instanceCtrl.canTerminate();
                         }
                     }).
                     error(function () {
@@ -406,6 +406,7 @@
                         instanceCtrl.initializeActivitylogInstances();
                         instanceCtrl.initializeDataobjectlogInstances();
                         instanceCtrl.initializeDataobjectAttributelogInstances();
+                        instanceCtrl.canTerminate();
                     }).
                     error(function () {
                         console.log('request failed');
@@ -425,6 +426,7 @@
                         instanceCtrl.initializeActivitylogInstances();
                         instanceCtrl.initializeDataobjectlogInstances();
                         instanceCtrl.initializeDataobjectAttributelogInstances();
+                        instanceCtrl.canTerminate();
                     }).
                     error(function () {
                         console.log('request failed');
@@ -443,8 +445,8 @@
             };
 
             // check whether the scenario instance can terminate
-            this.canTerminate = function (id, instanceID) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/" + instanceID + "/canTerminate").
+            this.canTerminate = function () {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/canTerminate").
                 success(function () {
                     instanceCtrl.instanceDetails.canTerminate = true;
                 }).
@@ -454,9 +456,9 @@
                 });
             };
 
-            // check whether the scenario instance can terminate
-            this.terminateInstance = function (id, instanceID) {
-                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/" + instanceID + "/terminate").
+            // terminate the scenario instance
+            this.terminateInstance = function () {
+                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/terminate").
                 success(function () {
                     console.log('[DBG] request successful');
                 }).

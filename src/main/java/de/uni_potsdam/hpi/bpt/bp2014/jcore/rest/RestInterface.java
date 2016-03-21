@@ -365,56 +365,28 @@ import java.util.LinkedList;
 		}
 	}
 
-	/**
-	 * This post can be used to terminate an existing scenario instance.
-	 * The scenario instance is specified by an instance id and a scenario id.
-	 * The Response will be either a JSON Object with an error message (400)
-	 * or an 201 without an content.
-	 *
-	 * @param scenarioID The Id of the scenario.
-	 * @param instanceID The Id of the instance to be terminated.
-	 * @return A Response object with json Object.
-	 * A Created Response will be returned if the POST has been successful
-	 * and a BAD_REQUEST else.
-	 */
-    @POST
-	@Path("scenario/{scenarioID}/instance/{instanceID}/terminate")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON) public Response terminateScenarioInstance(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int instanceID) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-		if (executionService.existScenario(scenarioID) && executionService
-				.existScenarioInstance(instanceID)) {
-			executionService.terminateScenarioInstance(instanceID);
-			return Response.status(Response.Status.OK)
-					.type(MediaType.APPLICATION_JSON)
-					.entity("{\"message\":\"The is instance "
-							+ "has been terminated.\"}")
-					.build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST)
-					.type(MediaType.APPLICATION_JSON)
-					.entity("{\"error\":\"The Scenario instance "
-							+ "could not be found!\"}")
-					.build();
-		}
-	}
 
+	/**
+	 * This get is used to determine whether a given scenario instance can terminate,
+	 * meaning whether one of its termination conditions is fulfilled.
+	 * @param scenarioId The Id of the scenario
+	 * @param instanceId The Id of the instance
+     * @return A Response: 200 if termination conditions are fulfilled,
+	 * 400 if none is fulfilled, 404 if the scenario instance is not found.
+     */
     @GET
-    @Path("scenario/{scenarioId}/instance/{scenarioId}/canTerminate")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/canTerminate")
     @Produces(MediaType.TEXT_PLAIN)
     public Response checkTermination(
-            @PathParam("scenarioId") int scenarioId, @PathParam("scenarioId") int instanceId) {
+            @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         if (executionService.existScenario(scenarioId) && executionService
                 .existScenarioInstance(instanceId)) {
-            ScenarioInstance instance = executionService.getScenarioInstance(instanceId);
+            ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
             if (instance.canTerminate()) {
-                instance.terminate();
                 return Response.status(Response.Status.OK)
                         .type(MediaType.TEXT_PLAIN)
-                        .entity("{Entity deleted succesful}")
+                        .entity("Instance can be deleted")
                         .build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST)
@@ -429,6 +401,43 @@ import java.util.LinkedList;
                     .build();
         }
     }
+
+	/**
+	 * This post is used to terminate a scenario instance.
+	 * @param scenarioId The Id of the scenario
+	 * @param instanceId The Id of the instance
+	 * @return A Response: 200 if termination conditions are fulfilled and it
+	 * has been terminated, 400 if the termination conditions are not fulfilled,
+	 * 404 if the scenario instance is not found.
+	 */
+	@POST
+	@Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response terminateScenarioInstance(
+			@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
+		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+		if (executionService.existScenario(scenarioId) && executionService
+				.existScenarioInstance(instanceId)) {
+			ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
+			if (instance.canTerminate()) {
+				instance.terminate();
+				return Response.status(Response.Status.OK)
+						.type(MediaType.TEXT_PLAIN)
+						.entity("Instance has been terminated")
+						.build();
+			} else {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.type(MediaType.TEXT_PLAIN)
+						.entity("Termination condition is not fulfilled")
+						.build();
+			}
+		} else {
+			return Response.status(Response.Status.NOT_FOUND)
+					.type(MediaType.TEXT_PLAIN)
+					.entity("Scenario or scenario instance does not exist")
+					.build();
+		}
+	}
 
     /*
 
