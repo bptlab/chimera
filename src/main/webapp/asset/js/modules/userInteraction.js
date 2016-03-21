@@ -307,6 +307,7 @@
                             instanceCtrl.initializeDataobjectlogInstances();
                             instanceCtrl.initializeDataobjectAttributelogInstances();
                             instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
+                            instanceCtrl.canTerminate($routeParams.id, id)
                         }
                     }).
                     error(function () {
@@ -439,6 +440,29 @@
                     error(function () {
                         console.log('request failed');
                     });
+            };
+
+            // check whether the scenario instance can terminate
+            this.canTerminate = function (id, instanceID) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/" + instanceID + "/canTerminate").
+                success(function () {
+                    instanceCtrl.instanceDetails.canTerminate = true;
+                }).
+                error(function () {
+                    instanceCtrl.instanceDetails.canTerminate = false;
+                    console.log('request failed');
+                });
+            };
+
+            // check whether the scenario instance can terminate
+            this.terminateInstance = function (id, instanceID) {
+                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/" + instanceID + "/terminate").
+                success(function () {
+                    console.log('[DBG] request successful');
+                }).
+                error(function () {
+                    console.log('request failed');
+                });
             };
 
             this.getActivityReferences = function (activityID) {
