@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * A class which represents an InputSet.
  */
-public class InputSet extends Set implements IPersistable {
+public class InputSet extends AbstractSet implements IPersistable {
 
     public InputSet(AbstractControlNode controlNode, List<DataNode> dataNodes) {
         this.dataNodes = dataNodes;

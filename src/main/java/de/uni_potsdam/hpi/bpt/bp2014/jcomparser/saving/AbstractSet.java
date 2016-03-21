@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * This class represents a set.
  */
-public abstract class Set implements IPersistable {
+public abstract class AbstractSet implements IPersistable {
     /**
 	 * All DataNodes which are part of this Set.
 	 */
@@ -22,14 +22,6 @@ public abstract class Set implements IPersistable {
 	 */
     protected int databaseId;
 
-
-	/**
-	 * Returns the list of Inputs.
-	 * The Inputs are DataNodes. It is not a copy.
-	 * This means changes will affect the state of the InputSet.
-	 *
-	 * @return the list of data nodes which are part of the InputSet
-	 */
 
 	@Override public int save() {
 		Connector connector = new Connector();

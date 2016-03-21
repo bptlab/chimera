@@ -7,6 +7,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.FragmentInserter;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.FragmentValidator;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -166,12 +167,11 @@ public class ScenarioData {
                         fragmentJson.getString("name"),
                         fragmentJson.getString("_id")
                 );
-                if (isValidFragment(fragment, domainModel)) {
-                    generatedFragments.add(fragment);
-                }
+                FragmentValidator.validateFragment(fragment, domainModel);
+                generatedFragments.add(fragment);
             } catch (JAXBException e) {
                 logger.error(e);
-                logger.error("Fragment could not have been added");
+                logger.error("Fragment could not be added");
                 String errorMsg = String.format("Invalid fragment Xml provided for fragment %s",
                         fragmentJson.getString("name"));
                 throw new JAXBException(errorMsg);
@@ -191,14 +191,5 @@ public class ScenarioData {
                 jsonTerminationConditions, this.dataObjects, scenarioDbId, stateToDatabaseId);
     }
 
-    private boolean isValidFragment(Fragment fragment, DomainModel domainModel) {
-        Set<String>  dataclassNames = getNameToDataclass(domainModel).keySet();
-        for (DataNode node : fragment.getDataNodes()) {
-            if (!dataclassNames.contains(node.getName())) {
-                throw new IllegalArgumentException(String.format(
-                        "Data node %s references an invalid data class", node.getName()));
-            }
-        }
-        return true;
-    }
+
 }
