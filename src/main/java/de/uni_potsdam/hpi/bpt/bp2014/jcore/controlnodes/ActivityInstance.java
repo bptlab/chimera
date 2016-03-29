@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;

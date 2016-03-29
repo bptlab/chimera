@@ -1,7 +1,17 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AndGatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventBasedGatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.StartEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.XorGatewayInstance;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
