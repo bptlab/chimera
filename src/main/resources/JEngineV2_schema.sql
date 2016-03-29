@@ -480,6 +480,18 @@ CREATE TABLE IF NOT EXISTS `janalyticsresults` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pathmapping`
+--
+
+CREATE TABLE IF NOT EXISTS `pathmapping` (
+  `dataattribute_id` int(11) NOT NULL,
+  `controlnode_id` int(11) NOT NULL,
+  `jsonpath` varchar(256)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 

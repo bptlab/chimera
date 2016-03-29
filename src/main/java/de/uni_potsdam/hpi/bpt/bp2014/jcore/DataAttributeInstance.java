@@ -10,8 +10,6 @@ public class DataAttributeInstance {
 	private final int dataAttributeId;
 	private final int dataObjectInstanceId;
 
-
-    private final String editorId = "toImplement";
 	private final DataObjectInstance dataObjectInstance;
 	private final String type;
 	private final String name;
@@ -101,9 +99,4 @@ public class DataAttributeInstance {
 	public DataObjectInstance getDataObjectInstance() {
 		return dataObjectInstance;
 	}
-
-
-    public String getEditorId() {
-        return editorId;
-    }
 }

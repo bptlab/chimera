@@ -29,12 +29,6 @@ public class DbWebServiceTask extends DbObject {
 		return this.executeStatementReturnsString(sql, "link");
 	}
 
-    public Map<String, String> retrieveWebserviceMapping(int scenarioId) {
-        String retrieveWebserviceMapping = String.format(
-                "Select * From WebserviceMapping Where scenarioId = %d", scenarioId);
-        return null;
-    }
-
     private Map<String, String> retrieve(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Map<String, String> webserviceMapping = new HashMap<>();

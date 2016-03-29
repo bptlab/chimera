@@ -10,13 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
 
 /**
  *
  */
-public class WebserviceMappingTest {
+public class PathMappingTest {
     private String testJson = "     {\n" +
             "    \t\"a\": [{\n" +
             "    \t\t\"b\": {\n" +
@@ -33,11 +31,11 @@ public class WebserviceMappingTest {
 
     @Test
     public void testWebserviceWriting() {
-        WebserviceMapping mapping = new WebserviceMapping(0);
+        PathMapping mapping = new PathMapping(0);
         List<DataAttributeInstance> attributeInstances = createExampleInstances();
         Map<String, String> jsonPathMap = new HashMap<>();
-        mapping.setAttributeidToJsonPath(jsonPathMap);
-        mapping.writeDataObjects(testJson, attributeInstances);
+        mapping.setAttributeIdToJsonPath(jsonPathMap);
+        mapping.writeDataAttributesFromJson(testJson, attributeInstances);
 
         for (DataAttributeInstance instance : attributeInstances) {
             verify(instance);
