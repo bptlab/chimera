@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class is used to update data objects according to the result of a webservice task
+ * This class is used to update data attributes according to the result of a webservice task
  * or event.
  */
 public class DataAttributeWriter {
