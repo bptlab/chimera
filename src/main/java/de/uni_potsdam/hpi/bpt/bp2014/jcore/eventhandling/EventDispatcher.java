@@ -122,11 +122,28 @@ public final class EventDispatcher {
     public static String registerEvent(AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId,
                               int scenarioId) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
+        String query = parseQuery(event.getQueryString(), scenarioInstanceId, scenarioId);
         String notificationRuleId = sendQueryToEventService(
-                event.getQueryString(), requestId, scenarioInstanceId, scenarioId);
+                query, requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
         return requestId;
+    }
+
+    private static String parseQuery(String queryString, int scenarioInstanceId, int scenarioId) {
+        //check whether parsing is necessary
+        if (queryString.contains("#")) {
+            ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+            for (DataAttributeInstance dataAttributeInstance : instance
+                    .getDataAttributeInstances().values()) {
+                queryString = queryString.replace("#"
+                        + (dataAttributeInstance.getDataObjectInstance()).getName()
+                        + "."
+                        + dataAttributeInstance.getName(),
+                        dataAttributeInstance.getValue().toString());
+            }
+        }
+        return queryString;
     }
 
     public static void registerExclusiveEvents(List<AbstractEvent> events) {
