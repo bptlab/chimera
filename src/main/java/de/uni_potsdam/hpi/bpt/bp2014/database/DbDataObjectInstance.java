@@ -29,8 +29,6 @@ public class DbDataObjectInstance extends DbObject {
 	 * @param state This is the desirable state of a dataObject instance.
 	 */
 	public void setState(int id, int state) {
-		Log log = new Log();
-		log.logDataobjectStateTransition(id, state);
 		String sql = "UPDATE dataobjectinstance SET state_id = " + state
 				+ " WHERE id = " + id;
 		this.executeUpdateStatement(sql);

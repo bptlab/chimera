@@ -47,7 +47,8 @@ public class Log {
 	 * @param objectInstanceId the ID of the DataObjectInstance that is changed.
 	 * @param stateId           the new state of the DataObjectInstance.
 	 */
-	public void logDataobjectStateTransition(int objectInstanceId, int stateId) {
+	public void logDataobjectStateTransition(int objectInstanceId, int stateId, int activityId) {
+        int latestActivityEntry = dbHistoryActivityTransition.findLatestEntryFor(activityId);
 		dbHistoryDataObjectTransition.createEntry(objectInstanceId, stateId);
 	}
 

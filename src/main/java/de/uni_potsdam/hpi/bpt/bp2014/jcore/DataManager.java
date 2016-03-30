@@ -23,17 +23,22 @@ public class DataManager {
         initializeDataObjects();
     }
 
-
-    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId) {
-        Optional<DataObjectInstance> dataObjectInstance =
-                this.scenarioInstance.getDataManager().getDataObjectInstances().stream()
-                        .filter(x -> x.getDataObjectId() == dataObjectId).findFirst();
+    /**
+     * Changes the state of a data object instance if there exists one matching the passed id.
+     * Logs the appropriate change to the database.
+     *
+     * @param dataObjectId Id of the dataobject, to which the instance belongs
+     * @param stateId Id of the new state
+     * @param activityId id of the activity which changed the dataobject
+     * @return Returns if the state was successfully changed
+     */
+    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityId) {
+        Optional<DataObjectInstance> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
             Log scenarioLog = new Log();
-
-            // TODO implement properly
-            scenarioLog.logDataobjectStateTransition(0, 0);
+            scenarioLog.logDataobjectStateTransition(
+                    dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityId);
             return true;
         }
 
@@ -41,13 +46,9 @@ public class DataManager {
 
     }
 
-    public DataObjectInstance getDataobjectInstanceForId(int id) {
-        for (DataObjectInstance dataObjectInstance : this.dataObjectInstances) {
-            if (dataObjectInstance.getDataObjectId() == id) {
-                return dataObjectInstance;
-            }
-        }
-        throw new IllegalArgumentException("Not a valid data object key");
+    public Optional<DataObjectInstance> getDataobjectInstanceForId(int dataObjectId) {
+        return this.dataObjectInstances.stream()
+                .filter(x -> x.getDataObjectId() == dataObjectId).findFirst();
     }
 
     /**

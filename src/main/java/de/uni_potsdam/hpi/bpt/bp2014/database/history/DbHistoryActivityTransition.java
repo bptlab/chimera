@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.history;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Map;
 
@@ -35,6 +36,9 @@ public class DbHistoryActivityTransition extends DbObject {
 		return this.executeInsertStatement(sql);
 	}
 
+    public int findLatestEntryFor(int activityId) {
+        throw new NotImplementedException("Implement me");
+    }
 	/**
 	 * This method saves a log entry of a newly created ActivityInstance into the database.
 	 *

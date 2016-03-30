@@ -121,7 +121,8 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 */
 	public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        return dataManager.changeDataObjectInstanceState(dataObjectId, stateId);
+        return dataManager.changeDataObjectInstanceState(dataObjectId, stateId,
+                activityInstance.getControlNodeId());
 	}
 
 	/**
