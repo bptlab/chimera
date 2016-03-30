@@ -183,7 +183,8 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      */
     @Test @Ignore
     public void testScenario146() throws MessagingException, IOException, EmailException {
-    	int scenarioID = 146;
+    	// TODO do not execute Webservice tasks after xor
+        int scenarioID = 146;
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         int scenarioInstance = executionService.startNewScenarioInstance();
         int activity1 = 415;
