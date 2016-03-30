@@ -82,7 +82,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 		}
 		DbState dbState = new DbState();
 		for (DataObjectInstance dataObjectInstance
-				: getScenarioInstance().getDataObjectInstances()) {
+				: getScenarioInstance().getDataManager().getDataObjectInstances()) {
 			message = message.replace("$" + dataObjectInstance.getName(),
 					dbState.getStateName(dataObjectInstance.getStateId()));
 		}

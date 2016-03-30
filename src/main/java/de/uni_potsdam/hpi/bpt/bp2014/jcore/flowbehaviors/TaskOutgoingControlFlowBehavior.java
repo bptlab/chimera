@@ -132,19 +132,17 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * @return true if the on change could been set. false if not.
 	 */
 	public Boolean setDataObjectInstanceToNotOnChange(int dataObjectId) {
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
 		DataObjectInstance dataObjectInstanceOnChange = null;
-		for (DataObjectInstance dataObjectInstance : this.getScenarioInstance()
-				.getDataObjectInstancesOnChange()) {
+		for (DataObjectInstance dataObjectInstance : dataManager.getDataObjectInstancesOnChange()) {
 			if (dataObjectInstance.getDataObjectId() == dataObjectId) {
 				dataObjectInstanceOnChange = dataObjectInstance;
 				break;
 			}
 		}
 		if (dataObjectInstanceOnChange != null) {
-			this.getScenarioInstance().getDataObjectInstancesOnChange()
-					.remove(dataObjectInstanceOnChange);
-			this.getScenarioInstance().getDataObjectInstances()
-					.add(dataObjectInstanceOnChange);
+            dataManager.getDataObjectInstancesOnChange().remove(dataObjectInstanceOnChange);
+            dataManager.getDataObjectInstances().add(dataObjectInstanceOnChange);
 			dataObjectInstanceOnChange.setOnChange(false);
 			return true;
 		}

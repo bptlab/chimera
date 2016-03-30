@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -773,7 +774,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService.terminateActivity(scenarioInstance, activity541, 208);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        LinkedList<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataObjectInstances();
+        List<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjectInstances();
         boolean loopCheck = false;
         for(DataObjectInstance d : doI){
            if (d.getStateId() == 157) {
@@ -809,7 +810,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService.terminateActivity(scenarioInstance, activity541, 209);
         assertArrayEquals(new Integer[]{activity543}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        LinkedList<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataObjectInstances();
+        List<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjectInstances();
         boolean loopCheck = false;
         for(DataObjectInstance d : doI){
             if (d.getStateId() == 159) {

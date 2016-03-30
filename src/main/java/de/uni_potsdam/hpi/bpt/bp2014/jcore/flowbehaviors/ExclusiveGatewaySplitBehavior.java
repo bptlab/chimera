@@ -247,7 +247,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 					dataAttributeInstance.getValue().toString());
 		}
 		for (DataObjectInstance dataObjectInstance
-				: this.getScenarioInstance().getDataObjectInstances()) {
+				: this.getScenarioInstance().getDataManager().getDataObjectInstances()) {
 			left = left.replace("#" + dataObjectInstance.getName(),
 					dbState.getStateName(dataObjectInstance.getStateId()));
 			right = right.replace("#" + dataObjectInstance.getName(),

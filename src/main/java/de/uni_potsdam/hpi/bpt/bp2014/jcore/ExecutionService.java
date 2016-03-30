@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Handles all scenario instances.
@@ -617,14 +619,11 @@ public class ExecutionService /*implements Runnable*/ {
 		LinkedList<Integer> dataObjectIDs = new LinkedList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		if (scenarioInstance != null) {
-			for (DataObjectInstance dataObject
-					: scenarioInstance.getDataObjectInstances()) {
-				dataObjectIDs.add(dataObject.getDataObjectId());
-			}
-			for (DataObjectInstance dataObject : scenarioInstance
-					.getDataObjectInstancesOnChange()) {
-				dataObjectIDs.add(dataObject.getDataObjectId());
-			}
+            DataManager dataManager = scenarioInstance.getDataManager();
+            dataObjectIDs.addAll(dataManager.getDataObjectInstances().stream()
+                    .map(DataObjectInstance::getDataObjectId).collect(Collectors.toList()));
+            dataObjectIDs.addAll(dataManager.getDataObjectInstancesOnChange().stream()
+                    .map(DataObjectInstance::getDataObjectId).collect(Collectors.toList()));
 		}
 		return dataObjectIDs;
 	}
@@ -640,15 +639,14 @@ public class ExecutionService /*implements Runnable*/ {
 		Map<Integer, String> dataObjectStates = new HashMap<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		if (scenarioInstance != null) {
-			for (DataObjectInstance dataObject
-					: scenarioInstance.getDataObjectInstances()) {
+            DataManager dataManager = scenarioInstance.getDataManager();
+            for (DataObjectInstance dataObject : dataManager.getDataObjectInstances()) {
 				dataObjectStates.put(dataObject.getDataObjectId(),
 						dbState.getStateName(dataObject.getStateId()));
 			}
-			for (DataObjectInstance dataObject : scenarioInstance
-					.getDataObjectInstancesOnChange()) {
+			for (DataObjectInstance dataObject : dataManager.getDataObjectInstancesOnChange()) {
 				dataObjectStates.put(dataObject.getDataObjectId(),
-						dbState.getStateName(dataObject.getStateId()));
+                        dbState.getStateName(dataObject.getStateId()));
 			}
 		}
 		return dataObjectStates;
@@ -665,13 +663,12 @@ public class ExecutionService /*implements Runnable*/ {
 		Map<Integer, String> dataObjectNames = new HashMap<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		if (scenarioInstance != null) {
-			for (DataObjectInstance dataObject
-					: scenarioInstance.getDataObjectInstances()) {
+            DataManager dataManager = scenarioInstance.getDataManager();
+            for (DataObjectInstance dataObject : dataManager.getDataObjectInstances()) {
 				dataObjectNames.put(dataObject.getDataObjectId(),
 						dbDataObject.getName(dataObject.getDataObjectId()));
 			}
-			for (DataObjectInstance dataObject : scenarioInstance
-					.getDataObjectInstancesOnChange()) {
+			for (DataObjectInstance dataObject : dataManager.getDataObjectInstancesOnChange()) {
 				dataObjectNames.put(dataObject.getDataObjectId(),
 						dbDataObject.getName(dataObject.getDataObjectId()));
 			}
@@ -807,6 +804,7 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	/**
+     * //TODO check this method for improvement
 	 * This method gets all dataObjectInstances for a specific set of a scenarioInstance.
 	 *
 	 * @param setID              This is the databaseID of a DataSet (either Input or Output).
@@ -821,16 +819,15 @@ public class ExecutionService /*implements Runnable*/ {
 		DataObjectInstance[] dataObjectInstancesArray =
 				new DataObjectInstance[dataObjects.size()];
 		for (DataObject dataObject : dataObjects) {
-			LinkedList<DataObjectInstance> dataObjectInstances = scenarioInstanceMap
-					.get(scenarioInstanceID).getDataObjectInstances();
+            DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceID).getDataManager();
+            List<DataObjectInstance> dataObjectInstances = dataManager.getDataObjectInstances();
 			for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
 				if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
 					dataObjectInstancesArray[j] = dataObjectInstance;
 					j++;
 				}
 			}
-			dataObjectInstances = scenarioInstanceMap.get(scenarioInstanceID)
-					.getDataObjectInstancesOnChange();
+			dataObjectInstances = dataManager.getDataObjectInstancesOnChange();
 			for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
 				if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
 					dataObjectInstancesArray[j] = dataObjectInstance;

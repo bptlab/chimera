@@ -31,7 +31,6 @@ public class ScenarioInstance {
 	 */
 	private final DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
 	private final DbFragment dbFragment = new DbFragment();
-	private final DbDataObject dbDataObject = new DbDataObject();
 	private final DbScenario dbScenario = new DbScenario();
 	/**
 	 * Lists to save all fragments and all control nodes sorted by state.
@@ -47,8 +46,7 @@ public class ScenarioInstance {
 			= new LinkedList<>();
 	private LinkedList<AbstractControlNodeInstance> terminatedControlNodeInstances
 			= new LinkedList<>();
-	private LinkedList<DataObjectInstance> dataObjectInstances = new LinkedList<>();
-	private LinkedList<DataObjectInstance> dataObjectInstancesOnChange = new LinkedList<>();
+
 	private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
 	private LinkedList<AbstractControlNodeInstance> referentialRunningControlNodeInstances
 			= new LinkedList<>();
@@ -84,7 +82,6 @@ public class ScenarioInstance {
 			this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
 					scenarioId);
 		}
-		this.initializeDataObjects();
 		if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
 			this.initializeFragments();
 		}
@@ -104,8 +101,7 @@ public class ScenarioInstance {
 		this.scenarioId = scenarioId;
 		this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(scenarioId);
         this.terminationCondition = new TerminationCondition(this);
-        this.initializeDataObjects();
-		this.initializeFragments();
+        this.initializeFragments();
 		this.startAutomaticControlNodes();
 	}
 
@@ -198,22 +194,6 @@ public class ScenarioInstance {
 		this.startAutomaticControlNodes();
 	}
 
-	/**
-	 * Initializes all data objects for the scenario instance.
-	 */
-	private void initializeDataObjects() {
-		LinkedList<Integer> data = dbDataObject.getDataObjectsForScenario(scenarioId);
-		for (Integer dataObject : data) {
-			DataObjectInstance dataObjectInstance = new DataObjectInstance(
-					dataObject, scenarioId, scenarioInstanceId, this);
-			//checks if dataObjectInstance is locked
-			if (dataObjectInstance.getOnChange()) {
-				dataObjectInstancesOnChange.add(dataObjectInstance);
-			} else {
-				dataObjectInstances.add(dataObjectInstance);
-			}
-		}
-	}
 
 	/**
 	 * Checks if the control flow enabled control nodes can set to data flow enabled.
@@ -281,7 +261,7 @@ public class ScenarioInstance {
 	 */
 	public boolean checkTerminationCondition() {
         this.canTerminate = this.terminationCondition.
-                checkTerminationCondition(this.dataObjectInstances);
+                checkTerminationCondition(this.dataManager.getDataObjectInstances());
         return this.canTerminate;
 	}
 
@@ -397,20 +377,6 @@ public class ScenarioInstance {
 	 */
 	public LinkedList<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
 		return terminatedControlNodeInstances;
-	}
-
-	/**
-	 * @return a LinkedList of data object instances.
-	 */
-	public LinkedList<DataObjectInstance> getDataObjectInstances() {
-		return dataObjectInstances;
-	}
-
-	/**
-	 * @return a LinkedList of data object instances on change.
-	 */
-	public LinkedList<DataObjectInstance> getDataObjectInstancesOnChange() {
-		return dataObjectInstancesOnChange;
 	}
 
 	/**

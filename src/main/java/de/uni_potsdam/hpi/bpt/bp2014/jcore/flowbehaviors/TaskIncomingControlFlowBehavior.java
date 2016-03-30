@@ -115,6 +115,7 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	}
 
 	/**
+     * TODO look at this method again
 	 * Sets the data object to on change.
 	 * Write this into the database.
 	 *
@@ -123,17 +124,12 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	public Boolean setDataObjectInstanceToOnChange(int dataObjectId) {
 		DataObjectInstance dataObjectInstanceOnChange = null;
-		for (DataObjectInstance dataObjectInstance
-				: getScenarioInstance().getDataObjectInstances()) {
-			if (dataObjectInstance.getDataObjectId() == dataObjectId) {
-				dataObjectInstanceOnChange = dataObjectInstance;
-				break;
-			}
-		}
+
 		if (dataObjectInstanceOnChange != null) {
-			getScenarioInstance().getDataObjectInstances().remove(
+            DataManager dataManager = getScenarioInstance().getDataManager();
+            dataManager.getDataObjectInstances().remove(
 					dataObjectInstanceOnChange);
-			getScenarioInstance().getDataObjectInstancesOnChange().add(
+            dataManager.getDataObjectInstancesOnChange().add(
 					dataObjectInstanceOnChange);
 			dataObjectInstanceOnChange.setOnChange(true);
 			return true;
@@ -149,8 +145,8 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 * @return true if the data object has the same state. false if not
 	 */
 	public Boolean compareDataObjectState(int dataObjectId, int stateId) {
-		for (DataObjectInstance dataObjectInstance
-				: getScenarioInstance().getDataObjectInstances()) {
+        DataManager dataManager = getScenarioInstance().getDataManager();
+        for (DataObjectInstance dataObjectInstance : dataManager.getDataObjectInstances()) {
 			if (dataObjectInstance.getDataObjectId() == dataObjectId
 					&& dataObjectInstance.getStateId() == stateId) {
 				return true;
