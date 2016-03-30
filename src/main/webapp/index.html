@@ -37,22 +37,19 @@
 		<!-- endbuild -->
 
 		<!-- build:js({.tmp,app}) scripts/scripts.js -->
-		<script src="scripts/app.js"></script>
+		<script src="js/app.js"></script>
 		<script src="js/sb-admin-2.js"></script>
 		<!-- endbuild -->
-
-		<!-- Custom CSS -->
-
-		<!-- Custom Fonts -->
-
-		<!-- Morris Charts CSS -->
-		<!-- <link href="styles/morrisjs/morris.css" rel="stylesheet"> -->
-
-
 	</head>
 	<div id="wrapper">
 		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
 				<a class="navbar-brand" ng-href="#index.html">Chimera</a>
 			</div>
 		</nav>
@@ -60,7 +57,20 @@
 		<div class="navbar-default sidebar" role="navigation">
 			<div class="sidebar-nav sidebar-collapse">
 				<ul class="nav" id="side-menu">
-					<li scenario-menu-entry></li>
+					<li>
+						<!-- Creates Menu Entries for the Scenarios -->
+						<a href="#"><i class="fa fa-check-square-o fa-fw"></i>
+							Scenarios
+							<span class="fa arrow"></span>
+						</a>
+						<!-- iterate over all scenario items within the scenarioCtrl and display them with ID and name as list -->
+						<ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
+							<li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
+								<a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
+							</li>
+						</ul>
+					</li>
+
 					<li>
 						<a href="#"><i class="fa fa-dashboard fa-fw"></i> Admin<span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
@@ -78,8 +88,7 @@
 		<!-- Main Wrapper -->
 		<div id="page-wrapper">
 		<!-- Begin of the Main Content -->
-			<div class="content ng-view">
-			</div>
+
 		</div>
 	</div>
 </html>
