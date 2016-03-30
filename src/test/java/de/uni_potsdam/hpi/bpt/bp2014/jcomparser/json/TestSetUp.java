@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 //import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
@@ -26,7 +27,7 @@ import java.util.List;
  * This class provides methods for both creating scenarios by mocking necessary components and for setting the database
  * to an appropriate state after executing the tests.
  */
-public class TestSetUp {
+public class TestSetUp extends AbstractDatabaseDependentTest {
     // We need the name of all methods which communicate to the server.
     /**
      * This Method fetches The Version from the PE-Server.
@@ -180,50 +181,5 @@ public class TestSetUp {
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
         runner.runScript(new FileReader(TRUNCATE_TABLES_FILE));
     }
-    /**
-     * Refill database from DEVELOPMENT_SQL_SEED_FILE after clearing it.
-     * @throws IOException java.io.Exception
-     * @throws SQLException java.sql.Exception
-     */
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
-    /**
-     * Drops and recreates the database.
-     */
-    private static void clearDatabase() {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Statement stmt = null;
-        if (conn == null) {
-            return;
-        }
-        try {
-            //Execute a querystmt = conn.createStatement();
-            stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE JEngineV2");
-            stmt.execute("CREATE DATABASE JEngineV2");
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-    }
+ 
 }

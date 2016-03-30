@@ -249,9 +249,11 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
 
-        //check termination in database
-        DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        assertEquals(1, dbScenarioInstance.getTerminated(scenarioInstance));
+
+        // After the output set is reached the scenario instance should be able to terminate
+        ScenarioInstance instance = executionService.getScenarioInstance(scenarioInstance);
+        instance.checkTerminationCondition();
+        assertTrue(instance.canTerminate());
     }
 
     /**

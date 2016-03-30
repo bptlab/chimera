@@ -6,135 +6,136 @@
 	<groupId>de.uni_potsdam.hpi.bpt.bp2014</groupId>
 	<artifactId>Chimera</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1</version>
 	<name>Chimera</name>
 
-    <build>
-        <finalName>Chimera</finalName>
-        		<resources>
+	<build>
+		<finalName>Chimera</finalName>
+		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>${basedir}/src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+				<directory>${basedir}</directory>
+				<includes>
+					<include>config.properties</include>
+				</includes>
+			</resource>
 		</resources>
-        <plugins>
-	  <plugin>
-	    <groupId>org.apache.tomcat.maven</groupId>
-	    <artifactId>tomcat7-maven-plugin</artifactId>
-	    <version>2.2</version>
-	    <!-- Deployment is configured in profile managed by jenkins
-		<configuration>
-	      <url>http://172.16.64.113:8080/manager/text</url>
-	      <server>chimera113</server>
-	      <path>/Chimera</path>
-	    </configuration>-->
-	  </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.5.1</version>
-            <inherited>true</inherited>
-            <configuration>
-              <source>1.8</source>
-              <target>1.8</target>
-            </configuration>
-          </plugin>
-	  <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-surefire-plugin</artifactId>
-	      <version>2.18.1</version>
-	      <configuration>
-		<argLine>-noverify</argLine>
-	      </configuration>
-	    </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                    <!-- Exclude Debug-Files -->
-                    <instrumentation>
-                        <excludes>
-                            <exclude>**/Ausprobieren.class</exclude>
-                            <exclude>**/debugClass.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                    <check/>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr3-maven-plugin</artifactId>
-                <version>3.5.2</version>
-                <executions>
-                    <execution>
-                        <id>run antlr</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>antlr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${basedir}/target/generated-sources/antlr3</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-service-docs</id>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <doclet>com.carma.swagger.doclet.ServiceDoclet</doclet>
-                            <docletArtifact>
-                                <groupId>com.carma</groupId>
-                                <artifactId>swagger-doclet</artifactId>
-                                <version>1.0.5</version>
-                            </docletArtifact>
-                            <reportOutputDirectory>${project.build.outputDirectory}</reportOutputDirectory>
-                            <useStandardDocletOptions>false</useStandardDocletOptions>
-                            <additionalparam>-apiVersion 0.1 -docBasePath http://interface/v2
-                                -apiBasePath http://interface/v2</additionalparam>
-                        </configuration>
-                        <goals>
-                            <goal>javadoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
-        </plugins>
-    </build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<!-- Deployment is configured in profile managed by jenkins <configuration> 
+					<url>http://172.16.64.113:8080/manager/text</url> <server>chimera113</server> 
+					<path>/Chimera</path> </configuration> -->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<inherited>true</inherited>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/src/main/resources</directory>
+							<includes>
+								<include>config.properties</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<argLine>-noverify</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<format>xml</format>
+					<maxmem>256m</maxmem>
+					<!-- aggregated reports for multi-module projects -->
+					<aggregate>true</aggregate>
+					<!-- Exclude Debug-Files -->
+					<instrumentation>
+						<excludes>
+							<exclude>**/Ausprobieren.class</exclude>
+							<exclude>**/debugClass.class</exclude>
+						</excludes>
+					</instrumentation>
+					<check />
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr3-maven-plugin</artifactId>
+				<version>3.5.2</version>
+				<executions>
+					<execution>
+						<id>run antlr</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>antlr</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${basedir}/target/generated-sources/antlr3</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
+				<version>2.9.1</version> <executions> <execution> <id>generate-service-docs</id> 
+				<phase>generate-resources</phase> <configuration> <doclet>com.carma.swagger.doclet.ServiceDoclet</doclet> 
+				<docletArtifact> <groupId>com.carma</groupId> <artifactId>swagger-doclet</artifactId> 
+				<version>1.0.5</version> </docletArtifact> <reportOutputDirectory>${project.build.outputDirectory}</reportOutputDirectory> 
+				<useStandardDocletOptions>false</useStandardDocletOptions> <additionalparam>-apiVersion 
+				0.1 -docBasePath http://interface/v2 -apiBasePath http://interface/v2</additionalparam> 
+				</configuration> <goals> <goal>javadoc</goal> </goals> </execution> </executions> 
+				</plugin> -->
+		</plugins>
+	</build>
 
 	<properties>
-	<!-- The value of the schema.version property has to be increased when the schema changes! -->
+		<!-- The value of the schema.version property has to be increased when 
+			the schema changes! -->
 		<schema.version>7</schema.version>
 		<db.schema>JEngineV2</db.schema>
 		<powermock.version>1.6.1</powermock.version>
@@ -313,17 +314,22 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>
 		</dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.2.2</version>
-        </dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.2.2</version>
+		</dependency>
 
 
-    </dependencies>
+	</dependencies>
 	<profiles>
 		<profile>
 			<id>remote</id>
+			<properties>
+				<db.schema>JEngineV2</db.schema>
+				<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
+				<db.url>${db.url.root}${db.schema}</db.url>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -331,12 +337,76 @@
 						<version>1.7</version>
 						<executions>
 							<execution>
-								<phase>prepare-package</phase>
+								<phase>generate-test-resources</phase>
 								<configuration>
 									<target>
 										<move
 											file="${project.build.outputDirectory}/config_template.properties"
 											tofile="${project.build.outputDirectory}/config.properties" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- creates config file with default values if not existing -->
+			<id>local</id>
+			<activation>
+				<file>
+					<missing>${basedir}/config.properties</missing>
+				</file>
+			</activation>
+			<properties>
+				<!-- default values -->
+				<db.user>chimera</db.user>
+				<db.password>bp2015</db.password>
+				<db.schema>JEngineV2</db.schema>
+				<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
+				<db.url>${db.url.root}${db.schema}</db.url>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- copy and filter config template to basedir -->
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.6</version>
+						<executions>
+							<execution>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${basedir}/src/main/resources</directory>
+											<include>config_template.properties</include>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+									<overwrite>true</overwrite>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<!-- rename template file to 'config.properties' -->
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<phase>validate</phase>
+								<configuration>
+									<target>
+										<move file="${basedir}/config_template.properties"
+											tofile="${basedir}/config.properties" />
 									</target>
 								</configuration>
 								<goals>

@@ -31,7 +31,6 @@ import static org.junit.Assert.assertThat;
  */
 public class RestConfiguratorTest extends AbstractTest {
 
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
     /**
      * Sets up the seed file for the test database.
      */
@@ -43,13 +42,6 @@ public class RestConfiguratorTest extends AbstractTest {
      * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
      */
     private WebTarget base;
-
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
 
     @Override
     protected Application configure() {

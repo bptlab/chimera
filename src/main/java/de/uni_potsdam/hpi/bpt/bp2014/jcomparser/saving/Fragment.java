@@ -188,4 +188,8 @@ public class Fragment {
     public void setName(String name) {
         this.fragmentName = name;
     }
+
+    public List<Task> getTasks() {
+        return this.fragmentXml.getTasks();
+    }
 }

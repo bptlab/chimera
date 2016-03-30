@@ -36,6 +36,10 @@ public class DataClass implements IPersistable {
 	 * This contains the XML representation of the dataClass.
 	 */
 	private JSONObject dataClassJson;
+	/**
+	 * This contains the OLC of the dataClass (if one exists).
+	 */
+	private Olc dataClassOlc;
 
     private Map<String, Integer> stateToDatabaseId = new HashMap<>();
 
@@ -46,8 +50,10 @@ public class DataClass implements IPersistable {
             this.dataClassJson = new JSONObject(element);
             this.dataClassName = this.dataClassJson.getString("name");
             this.dataClassModelID = this.dataClassJson.getString("_id");
-            this.dataClassJson = new JSONObject(element);
             generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
+			if (this.dataClassJson.has("olc")) {
+				this.dataClassOlc = new Olc(this.dataClassJson.get("olc").toString());
+			}
         } catch (JSONException e) {
             logger.trace(e);
             throw new JSONException("Invalid class json");
@@ -139,4 +145,12 @@ public class DataClass implements IPersistable {
     public void setDataClassName(String dataClassName) {
         this.dataClassName = dataClassName;
     }
+
+	public Olc getDataClassOlc() {
+		return this.dataClassOlc;
+	}
+
+	public void setDataClassOlc(Olc dataClassOlc) {
+		this.dataClassOlc = dataClassOlc;
+	}
 }

@@ -1,18 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-//import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
-
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import net.javacrumbs.jsonunit.core.Option;
-
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,10 +16,6 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.SQLException;
 
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
@@ -44,7 +33,6 @@ import static org.junit.Assert.*;
 public class RestInterfaceTest extends AbstractTest {
     static Logger log = Logger.getLogger(RestInterfaceTest.class);
 
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
     /**
      * Sets up the seed file for the test database.
      */
@@ -56,13 +44,6 @@ public class RestInterfaceTest extends AbstractTest {
      * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
      */
     private WebTarget base;
-
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-    }
 
     @Override
     protected Application configure() {
