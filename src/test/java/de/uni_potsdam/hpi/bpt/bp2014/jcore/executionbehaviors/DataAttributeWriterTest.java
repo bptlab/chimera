@@ -18,16 +18,16 @@ import static org.junit.Assert.fail;
 /**
  *
  */
-public class PathMappingTest {
+public class DataAttributeWriterTest {
 
     private String path = "src/test/resources/json/jsonPathExample.json";
 
     @Test
     public void testWebserviceWriting() {
-        PathMapping mapping = new PathMapping();
+        int dummyControlNodeId = 0;
+        DataAttributeWriter mapping = new DataAttributeWriter(dummyControlNodeId);
         List<DataAttributeInstance> attributeInstances = createExampleInstances();
-
-        Map<Integer, String> jsonPathMap = generateJsonPathMap();
+        Map<Integer, String> jsonPathMap = createAttributeIdToJsonPathExample();
 
         File file = new File(path);
 
@@ -36,17 +36,15 @@ public class PathMappingTest {
             mapping.setAttributeIdToJsonPath(jsonPathMap);
             mapping.writeDataAttributesFromJson(json, attributeInstances);
 
-            for (DataAttributeInstance instance : attributeInstances) {
-                verify(instance);
-            }
+            // Since $a[0].b.prop1 should evaluate to foo on the example, a setValue('foo') call
+            // on the Dataattribute with id 67890 is expected.
+            attributeInstances.forEach(EasyMock::verify);
         } catch (IOException e) {
             fail("Could not load test resource:" + e.getMessage());
         }
-
-
     }
 
-    private Map<Integer,String> generateJsonPathMap() {
+    private Map<Integer,String> createAttributeIdToJsonPathExample() {
         Map<Integer, String> map = new HashMap<>();
         // retrieve "foo"
         map.put(67890, "$.a[0].b.prop1");

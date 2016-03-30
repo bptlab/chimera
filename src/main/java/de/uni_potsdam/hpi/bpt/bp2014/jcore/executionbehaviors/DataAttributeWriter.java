@@ -9,22 +9,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class represents a mapping between the data attributes of a data object
- * and the given json path for retrieving the value of the response json object,
- * which is received either from a webservice or from an event.
+ * This class is used to update data objects according to the result of a webservice task
+ * or event.
  */
-
-public class PathMapping {
-
-    DbPathMapping dbPathMapping;
+public class DataAttributeWriter {
     Map<Integer, String> attributeIdToJsonPath;
 
-    public PathMapping() {
-        dbPathMapping = new DbPathMapping();
-    }
-
-    public PathMapping(int controlNodeId) {
-        dbPathMapping = new DbPathMapping();
+    /**
+     * Creates
+     * @param controlNodeId The id of the webservice task or event, writes the data attributes.
+     */
+    public DataAttributeWriter(int controlNodeId) {
         this.setAttributeIdToJsonPath(controlNodeId);
     }
 
@@ -45,6 +40,7 @@ public class PathMapping {
     }
 
     public void setAttributeIdToJsonPath(int controlNodeId) {
-        this.attributeIdToJsonPath = dbPathMapping.getPathsForAttributesOfControlNode(controlNodeId);
+        DbPathMapping pathMapping = new DbPathMapping();
+        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
     }
 }

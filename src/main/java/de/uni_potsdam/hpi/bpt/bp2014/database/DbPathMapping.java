@@ -16,14 +16,14 @@ public class DbPathMapping extends DbObject {
         String retrievePath = String.format(
                 "SELECT * FROM pathmapping WHERE "
                         + "controlnode_id = %d "
-                        + "AND dataattribute_id = %d", controlNodeId, dataAttributeId);
+                        + "AND dataattribute_id = %d;", controlNodeId, dataAttributeId);
         return executeStatementReturnsString(retrievePath, "jsonpath");
     }
 
     public Map<Integer, String> getPathsForAttributesOfControlNode(int controlNodeId) {
         String retrievePaths = String.format(
                 "SELECT * FROM pathmapping WHERE "
-                    + "controlnode_id = %d", controlNodeId);
+                    + "controlnode_id = %d;", controlNodeId);
         return executeStatementReturnsMap(retrievePaths, "dataattribute_id", "jsonpath");
     }
 }
