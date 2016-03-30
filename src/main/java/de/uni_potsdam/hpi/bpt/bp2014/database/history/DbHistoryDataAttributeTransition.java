@@ -1,4 +1,6 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.history;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.util.Map;
 
@@ -6,7 +8,7 @@ import java.util.Map;
  * This class provides the actual implementation for the logging of DataAttributeInstances
  * and the retrieval of log entries for presentation.
  */
-public class DbHistoryDataAttributeInstance extends DbObject {
+public class DbHistoryDataAttributeTransition extends DbObject {
 
 	/**
 	 * This method saves a log entry for a DataAttributeInstance value change into the database.

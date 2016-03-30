@@ -1,8 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryActivityTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataAttributeTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransition;
 
 /**
  * This class provides an abstraction layer for logging,
@@ -12,12 +12,12 @@ public class Log {
 	/**
 	 * Database Connection objects.
 	 */
-	private DbHistoryActivityInstance dbHistoryActivityInstance =
-			new DbHistoryActivityInstance();
-	private DbHistoryDataObjectInstance dbHistoryDataObjectInstance =
-			new DbHistoryDataObjectInstance();
-	private DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance =
-			new DbHistoryDataAttributeInstance();
+	private DbHistoryActivityTransition dbHistoryActivityTransition =
+			new DbHistoryActivityTransition();
+	private DbHistoryDataObjectTransition dbHistoryDataObjectTransition =
+			new DbHistoryDataObjectTransition();
+	private DbHistoryDataAttributeTransition dbHistoryDataAttributeInstance =
+			new DbHistoryDataAttributeTransition();
 
 	/**
 	 * This method delegates a log entry containing an activity state transition
@@ -27,7 +27,7 @@ public class Log {
 	 * @param state the new state of the ActivityInstance.
 	 */
 	public void newActivityInstanceState(int id, String state) {
-		dbHistoryActivityInstance.createEntry(id, state);
+		dbHistoryActivityTransition.createEntry(id, state);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class Log {
 	 * @param id the ID of the ActivityInstance that is created.
 	 */
 	public void newActivityInstance(int id) {
-		dbHistoryActivityInstance.createNewActivityEntry(id);
+		dbHistoryActivityTransition.createNewActivityEntry(id);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class Log {
 	 * @param stateId           the new state of the DataObjectInstance.
 	 */
 	public void newDataObjectInstanceState(int objectInstanceId, int stateId) {
-		dbHistoryDataObjectInstance.createEntry(objectInstanceId, stateId);
+		dbHistoryDataObjectTransition.createEntry(objectInstanceId, stateId);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class Log {
 	 * @param id the ID of the DataObjectInstance that is created.
 	 */
 	public void newDataObjectInstance(int id) {
-		dbHistoryDataObjectInstance.createNewDataObjectInstanceEntry(id);
+		dbHistoryDataObjectTransition.createNewDataObjectInstanceEntry(id);
 	}
 
 	/**

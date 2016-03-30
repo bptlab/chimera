@@ -1,8 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbHistoryDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryActivityTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataAttributeTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransition;
 
 import java.util.Map;
 
@@ -58,9 +58,9 @@ public class HistoryService {
 	 */
 	public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryDataObjectInstance dbHistoryDataObjectInstance =
-				new DbHistoryDataObjectInstance();
-		return dbHistoryDataObjectInstance.getLogEntriesForScenarioInstance(
+		DbHistoryDataObjectTransition dbHistoryDataObjectTransition =
+				new DbHistoryDataObjectTransition();
+		return dbHistoryDataObjectTransition.getLogEntriesForScenarioInstance(
 				scenarioInstanceId);
 	}
 
@@ -74,9 +74,9 @@ public class HistoryService {
 	 */
 	public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryActivityInstance dbHistoryActivityInstance =
-				new DbHistoryActivityInstance();
-		return dbHistoryActivityInstance.getLogEntriesForScenarioInstance(
+		DbHistoryActivityTransition dbHistoryActivityTransition =
+				new DbHistoryActivityTransition();
+		return dbHistoryActivityTransition.getLogEntriesForScenarioInstance(
 				scenarioInstanceId);
 	}
 
@@ -91,9 +91,9 @@ public class HistoryService {
 	public Map<Integer, Map<String, Object>>
 	getSelectedActivityInstanceLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryActivityInstance dbHistoryActivityInstance =
-				new DbHistoryActivityInstance();
-		return dbHistoryActivityInstance
+		DbHistoryActivityTransition dbHistoryActivityTransition =
+				new DbHistoryActivityTransition();
+		return dbHistoryActivityTransition
 				.getterminatedLogEntriesForScenarioInstance(scenarioInstanceId);
 	}
 
@@ -108,8 +108,8 @@ public class HistoryService {
 	public Map<Integer, Map<String, Object>>
 	getDataAttributeInstanceLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
-		DbHistoryDataAttributeInstance dbHistoryDataAttributeInstance =
-				new DbHistoryDataAttributeInstance();
+		DbHistoryDataAttributeTransition dbHistoryDataAttributeInstance =
+				new DbHistoryDataAttributeTransition();
 		return dbHistoryDataAttributeInstance.getLogEntriesForScenarioInstance(
 				scenarioInstanceId);
 	}

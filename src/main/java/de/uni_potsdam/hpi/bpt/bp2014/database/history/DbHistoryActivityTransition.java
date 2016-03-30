@@ -1,4 +1,6 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.history;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.util.Map;
 
@@ -6,7 +8,7 @@ import java.util.Map;
  * This class provides the actual implementation for the logging of ActivityInstances
  * and the retrieval of log entries for presentation.
  */
-public class DbHistoryActivityInstance extends DbObject {
+public class DbHistoryActivityTransition extends DbObject {
 	/**
 	 * This method saves a log entry containing an activity state transition into the database.
 	 *
@@ -16,8 +18,7 @@ public class DbHistoryActivityInstance extends DbObject {
 	 */
 	public int createEntry(int id, String state) {
 		String sql =
-				"INSERT INTO historyactivityinstance("
-						+ "`activityinstance_id`, `oldstate`,"
+				"INSERT INTO historyactivityinstance(`activityinstance_id`, `oldstate`,"
 						+ " `newstate`, `scenarioinstance_id`)"
 						+ " SELECT `id`, (SELECT activity_state "
 						+ "FROM activityinstance WHERE id = " + id

@@ -1,4 +1,6 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.history;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.util.Map;
 
@@ -7,7 +9,7 @@ import java.util.Map;
  * and the retrieval of log entries for presentation.
  */
 
-public class DbHistoryDataObjectInstance extends DbObject {
+public class DbHistoryDataObjectTransition extends DbObject {
 	/**
 	 * This method saves a log entry with a DataAttributeInstance value change in the database.
 	 *
