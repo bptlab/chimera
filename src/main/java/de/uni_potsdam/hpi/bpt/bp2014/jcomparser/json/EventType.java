@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 import com.google.gson.Gson;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -20,7 +21,9 @@ import org.apache.log4j.Logger;
  */
 public class EventType implements IPersistable {
     private final static String REGISTRATION_URL =
-            "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/webapi/REST/EventType";
+            PropertyLoader.getProperty("unicorn.url")
+                    + PropertyLoader.getProperty("unicorn.path.deploy")
+                    + PropertyLoader.getProperty("unicorn.path.eventtype");
 
     private static Logger logger = Logger.getLogger(EventType.class);
 

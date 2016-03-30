@@ -6,18 +6,13 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
+import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -37,12 +32,16 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @Path("eventdispatcher/")
 public final class EventDispatcher {
 
-    private static final String REST_PATH = "webapi/REST/EventQuery/REST";
-    private static final String REST_URL = "http://172.16.64.105:8080/Unicorn-unicorn_BP15_dev/";
-    private static final String SELF_URL = "http://172.16.64.113:8080/Chimera";
+    private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
+    private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url")
+            + PropertyLoader.getProperty("unicorn.path.deploy");
+    private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url")
+            + PropertyLoader.getProperty("chimera.path.deploy");
+    private static final String SELF_PATH = PropertyLoader.getProperty("chimera.path.response");
 
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("scenario/{scenarioID}/instance/{instanceID}/events/{requestKey}")
     public static Response receiveEvent(
@@ -140,15 +139,15 @@ public final class EventDispatcher {
         // since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
         String query = StringEscapeUtils.unescapeHtml4(rawQuery);
         logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
-        String notificationPath = String.format("%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s",
-                SELF_URL, scenarioId, scenarioInstanceId, requestId);
+        String notificationPath = String.format(SELF_PATH,
+                SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
 
         JsonObject queryRequest = new JsonObject();
         queryRequest.addProperty("queryString", query);
         queryRequest.addProperty("notificationPath", notificationPath);
         Gson gson = new Gson();
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(REST_URL).path(REST_PATH);
+        WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
         Response response = target.request()
                 .post(Entity.json(gson.toJson(queryRequest)));
         if (response.getStatus() != 200) {
@@ -173,7 +172,7 @@ public final class EventDispatcher {
 
     private static void unregisterNotificationRule(String notificationRuleId) {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(REST_URL).path(REST_PATH + "/" + notificationRuleId);
+        WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
         Response response = target.request().delete();
         if(response.getStatus() != 200) {
             logger.debug("Could not unregister Query");
