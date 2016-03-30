@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
@@ -119,14 +120,8 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * @return true if the data object state could been changed. false if not
 	 */
 	public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId) {
-		for (DataObjectInstance dataObjectInstance
-				: this.getScenarioInstance().getDataObjectInstances()) {
-			if (dataObjectInstance.getDataObjectId() == dataObjectId) {
-				dataObjectInstance.setState(stateId);
-				return true;
-			}
-		}
-		return false;
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
+        return dataManager.changeDataObjectInstanceState(dataObjectId, stateId);
 	}
 
 	/**

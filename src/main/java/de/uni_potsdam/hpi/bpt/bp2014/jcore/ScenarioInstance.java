@@ -55,6 +55,9 @@ public class ScenarioInstance {
 	private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
+
+    private DataManager dataManager;
+
     private boolean canTerminate;
     private TerminationCondition terminationCondition;
 	/**
@@ -70,6 +73,8 @@ public class ScenarioInstance {
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
+
+        this.dataManager = new DataManager(this);
         if (dbScenarioInstance.existScenario(scenarioId, scenarioInstanceId)) {
 			//creates an existing Scenario Instance using the database information
 			this.scenarioInstanceId = scenarioInstanceId;
@@ -94,7 +99,8 @@ public class ScenarioInstance {
 	 * @param scenarioId This is the database id from the scenario.
 	 */
 	public ScenarioInstance(int scenarioId) {
-		this.name = dbScenario.getScenarioName(scenarioId);
+        this.dataManager = new DataManager(this);
+        this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(scenarioId);
         this.terminationCondition = new TerminationCondition(this);
@@ -430,5 +436,9 @@ public class ScenarioInstance {
 
     public boolean canTerminate() {
         return canTerminate;
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
     }
 }
