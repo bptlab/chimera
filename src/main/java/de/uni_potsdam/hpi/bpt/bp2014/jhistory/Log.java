@@ -26,7 +26,7 @@ public class Log {
 	 * @param id    the ID of the ActivityInstance that is changed.
 	 * @param state the new state of the ActivityInstance.
 	 */
-	public void newActivityInstanceState(int id, String state) {
+	public void logStateTransition(int id, String state) {
 		dbHistoryActivityTransition.createEntry(id, state);
 	}
 
@@ -36,7 +36,7 @@ public class Log {
 	 *
 	 * @param id the ID of the ActivityInstance that is created.
 	 */
-	public void newActivityInstance(int id) {
+	public void logActivityCreation(int id) {
 		dbHistoryActivityTransition.createNewActivityEntry(id);
 	}
 
@@ -47,7 +47,7 @@ public class Log {
 	 * @param objectInstanceId the ID of the DataObjectInstance that is changed.
 	 * @param stateId           the new state of the DataObjectInstance.
 	 */
-	public void newDataObjectInstanceState(int objectInstanceId, int stateId) {
+	public void logDataobjectStateTransition(int objectInstanceId, int stateId) {
 		dbHistoryDataObjectTransition.createEntry(objectInstanceId, stateId);
 	}
 
@@ -57,7 +57,7 @@ public class Log {
 	 *
 	 * @param id the ID of the DataObjectInstance that is created.
 	 */
-	public void newDataObjectInstance(int id) {
+	public void logDataObjectCreation(int id) {
 		dbHistoryDataObjectTransition.createNewDataObjectInstanceEntry(id);
 	}
 
@@ -68,7 +68,7 @@ public class Log {
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is changed.
 	 * @param value                    the new value of the DataAttributeInstance.
 	 */
-	public void newDataAttributeInstanceValue(int dataAttributeInstanceId, Object value) {
+	public void logDataAttributeTransition(int dataAttributeInstanceId, Object value) {
 		dbHistoryDataAttributeInstance.createEntry(dataAttributeInstanceId, value);
 	}
 
@@ -78,7 +78,7 @@ public class Log {
 	 *
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is created.
 	 */
-	public void newDataAttributeInstance(int dataAttributeInstanceId) {
+	public void logDataAttributeCreation(int dataAttributeInstanceId) {
 		dbHistoryDataAttributeInstance
 				.createNewDataAttributeInstanceEntry(dataAttributeInstanceId);
 	}

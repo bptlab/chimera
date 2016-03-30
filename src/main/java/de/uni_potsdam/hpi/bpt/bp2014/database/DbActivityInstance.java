@@ -33,7 +33,7 @@ public class DbActivityInstance extends DbObject {
 	 */
 	public void setState(int id, AbstractStateMachine.STATE state) {
 		Log log = new Log();
-		log.newActivityInstanceState(id, state.name());
+		log.logStateTransition(id, state.name());
 		String sql = "UPDATE activityinstance "
 				+ "SET activity_state = '" + state.name() + "' "
 				+ "WHERE id = " + id;
@@ -60,7 +60,7 @@ public class DbActivityInstance extends DbObject {
 						+ activityState	+ "', 'init')";
 		int id = this.executeInsertStatement(sql);
 		Log log = new Log();
-		log.newActivityInstance(controlNodeInstanceId);
+		log.logActivityCreation(controlNodeInstanceId);
 		return id;
 	}
 

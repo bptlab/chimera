@@ -26,7 +26,7 @@ public class DbDataAttributeInstance extends DbObject {
 				+ dataAttributeId + ")";
 		int id = this.executeInsertStatement(sql);
 		Log log = new Log();
-		log.newDataAttributeInstance(id);
+		log.logDataAttributeCreation(id);
 		return id;
 	}
 
@@ -99,7 +99,7 @@ public class DbDataAttributeInstance extends DbObject {
 	 */
 	public void setValue(int dataAttributeInstanceId, Object value) {
 		Log log = new Log();
-		log.newDataAttributeInstanceValue(dataAttributeInstanceId, value);
+		log.logDataAttributeTransition(dataAttributeInstanceId, value);
 		String sql = "UPDATE dataattributeinstance SET value = '" + value + "' WHERE id = "
 				+ dataAttributeInstanceId;
 		executeUpdateStatement(sql);

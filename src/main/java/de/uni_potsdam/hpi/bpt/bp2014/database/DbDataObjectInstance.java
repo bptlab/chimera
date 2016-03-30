@@ -30,7 +30,7 @@ public class DbDataObjectInstance extends DbObject {
 	 */
 	public void setState(int id, int state) {
 		Log log = new Log();
-		log.newDataObjectInstanceState(id, state);
+		log.logDataobjectStateTransition(id, state);
 		String sql = "UPDATE dataobjectinstance SET state_id = " + state
 				+ " WHERE id = " + id;
 		this.executeUpdateStatement(sql);
@@ -53,7 +53,7 @@ public class DbDataObjectInstance extends DbObject {
 						+ stateId + ", " + dataObjectId + ")";
 		int id = this.executeInsertStatement(sql);
 		Log log = new Log();
-		log.newDataObjectInstance(id);
+		log.logDataObjectCreation(id);
 		return id;
 	}
 
