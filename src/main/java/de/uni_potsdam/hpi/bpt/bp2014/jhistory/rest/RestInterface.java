@@ -49,12 +49,12 @@ import java.util.Map;
 		switch (state) {
 		case "terminated":
 			activityLog = historyService
-					.getSelectedActivityInstanceLogEntriesForScenarioInstance(
+					.getTerminatedActivities(
 							instanceID);
 			break;
 		default:
 			activityLog = historyService
-					.getActivityInstanceLogEntriesForScenarioInstance(
+					.getActivityInstanceEntries(
 							instanceID);
 			break;
 		}
@@ -85,7 +85,7 @@ import java.util.Map;
 		}
 		Map<Integer, Map<String, Object>> dataObjectLog;
 		dataObjectLog = historyService
-				.getDataObjectLogEntriesForScenarioInstance(scenarioInstanceID);
+				.getDataObjectEntries(scenarioInstanceID);
 		return Response.ok().type(MediaType.APPLICATION_JSON)
 				.entity(new JSONObject(dataObjectLog).toString()).build();
 	}

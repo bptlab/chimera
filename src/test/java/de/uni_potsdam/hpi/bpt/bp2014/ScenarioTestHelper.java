@@ -49,13 +49,15 @@ public class ScenarioTestHelper {
     public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
         List<AbstractControlNodeInstance> controlNodeInstances =
                 scenarioInstance.getEnabledControlNodeInstances();
-
-        ActivityInstance instance = (ActivityInstance)
-                controlNodeInstances.stream()
+        Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
                 .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
-                .findFirst().get();
+                .findFirst();
+        if (!instanceOptional.isPresent()) {
+            throw new IllegalArgumentException("Invalid activity name");
+        }
 
-        instance.terminate();
+        ActivityInstance instanceNamed = (ActivityInstance) instanceOptional.get();
+        instanceNamed.terminate();
     }
 
     /**

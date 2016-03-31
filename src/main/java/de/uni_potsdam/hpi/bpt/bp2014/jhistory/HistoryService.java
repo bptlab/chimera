@@ -7,46 +7,12 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransit
 import java.util.Map;
 
 /**
- * A class for returning Logs for a specific Scenario Instance.
+ * Access point for logs of a specific Scenario Instance.
  */
 public class HistoryService {
 	/**
 	 * Database Connection objects
 	 */
-	//    private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
-	//    private final DbControlNode dbControlNode = new DbControlNode();
-
-	//activityInstance
-	//
-
-	//    /**
-	//     * Gives all ids of terminated activities for a scenario instance id.
-	//     *
-	//     * @param scenarioInstanceId This is the id of the scenario instance.
-	//     * @return a list of int ids of the activities.
-	//     */
-	//    public LinkedList<Integer>
-	// getTerminatedActivitiesForScenarioInstance(int scenarioInstanceId) {
-	//        return dbActivityInstance.getTerminatedActivitiesForScenarioInstance(
-	// scenarioInstanceId);
-	//    }
-	//
-	//    /**
-	//     * Returns the Labels of terminated activities for a scenario instance id.
-	//     *
-	//     * @param scenarioInstanceId This is the id of the scenario instance.
-	//     * @return a Map. Keys are the activity ids. Values are the labels of the activities.
-	//     */
-	//    public HashMap<Integer, String>
-	// getTerminatedActivityLabelsForScenarioInstance(int scenarioInstanceId) {
-	//        LinkedList<Integer> ids =
-	// dbActivityInstance.getTerminatedActivitiesForScenarioInstance(scenarioInstanceId);
-	//        HashMap<Integer, String> labels = new HashMap<Integer, String>();
-	//        for (int id : ids) {
-	//            labels.put(id, dbControlNode.getLabel(id));
-	//        }
-	//        return labels;
-	//    }
 
 	/**
 	 * This method returns the DataObjectInstances log entries for a ScenarioInstance.
@@ -56,8 +22,7 @@ public class HistoryService {
 	 * @return a Map with a Map of the log entries' attribute names
 	 * 			as keys and their respective values.
 	 */
-	public Map<Integer, Map<String, Object>> getDataObjectLogEntriesForScenarioInstance(
-			int scenarioInstanceId) {
+	public Map<Integer, Map<String, Object>> getDataObjectEntries(int scenarioInstanceId) {
 		DbHistoryDataObjectTransition dbHistoryDataObjectTransition =
 				new DbHistoryDataObjectTransition();
 		return dbHistoryDataObjectTransition.getLogEntriesForScenarioInstance(
@@ -72,8 +37,7 @@ public class HistoryService {
 	 * @return a Map with a Map of the log entries' attribute names
 	 * 			as keys and their respective values.
 	 */
-	public Map<Integer, Map<String, Object>> getActivityInstanceLogEntriesForScenarioInstance(
-			int scenarioInstanceId) {
+	public Map<Integer, Map<String, Object>> getActivityInstanceEntries(int scenarioInstanceId) {
 		DbHistoryActivityTransition dbHistoryActivityTransition =
 				new DbHistoryActivityTransition();
 		return dbHistoryActivityTransition.getLogEntriesForScenarioInstance(
@@ -89,12 +53,10 @@ public class HistoryService {
 	 * 			as keys and their respective values.
 	 */
 	public Map<Integer, Map<String, Object>>
-	getSelectedActivityInstanceLogEntriesForScenarioInstance(
-			int scenarioInstanceId) {
-		DbHistoryActivityTransition dbHistoryActivityTransition =
-				new DbHistoryActivityTransition();
+    getTerminatedActivities(int scenarioInstanceId) {
+		DbHistoryActivityTransition dbHistoryActivityTransition = new DbHistoryActivityTransition();
 		return dbHistoryActivityTransition
-				.getterminatedLogEntriesForScenarioInstance(scenarioInstanceId);
+                .getterminatedLogEntriesForScenarioInstance(scenarioInstanceId);
 	}
 
 	/**
