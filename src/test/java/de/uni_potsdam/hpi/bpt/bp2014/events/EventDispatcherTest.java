@@ -92,4 +92,25 @@ public class EventDispatcherTest extends JerseyTest {
                 scenarioInstanceId, registeredEvent);
         base.path(route).request().post(Entity.json(""));
     }
+
+    @Test
+    public void testParseQuery() {
+        String path = "src/test/resources/EventScenarios/VariablesInQueries.json";
+        try {
+            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
+            assertEquals("The query was inadvertently modified",
+                    "SELECT * FROM data.path",
+                    EventDispatcher.parseQuery("SELECT * FROM data.path",
+                    scenarioInstance.getScenarioInstanceId(),
+                    scenarioInstance.getScenarioId()));
+            scenarioInstance.getDataAttributeInstances().get(1).setValue("AnEvent");
+            assertEquals("The query couldn't be resolved",
+                    "SELECT * FROM AnEvent",
+                    EventDispatcher.parseQuery("SELECT * FROM #data.path",
+                    scenarioInstance.getScenarioInstanceId(),
+                    scenarioInstance.getScenarioId()));
+        } catch (IOException e) {
+            assert (false);
+        }
+    }
 }

@@ -130,7 +130,7 @@ public final class EventDispatcher {
         return requestId;
     }
 
-    private static String parseQuery(String queryString, int scenarioInstanceId, int scenarioId) {
+    public static String parseQuery(String queryString, int scenarioInstanceId, int scenarioId) {
         //check whether parsing is necessary
         if (queryString.contains("#")) {
             ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
