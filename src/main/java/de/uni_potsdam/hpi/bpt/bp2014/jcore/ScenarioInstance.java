@@ -96,10 +96,12 @@ public class ScenarioInstance {
 	 * @param scenarioId This is the database id from the scenario.
 	 */
 	public ScenarioInstance(int scenarioId) {
-        this.dataManager = new DataManager(this);
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
-		this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+        this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+
+        // Initialize data manager after setting scenarioId
+        this.dataManager = new DataManager(this);
         this.terminationCondition = new TerminationCondition(this);
         this.initializeFragments();
 		this.startAutomaticControlNodes();

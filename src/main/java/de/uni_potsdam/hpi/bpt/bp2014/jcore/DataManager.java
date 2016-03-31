@@ -4,6 +4,7 @@ import com.sun.javaws.exceptions.InvalidArgumentException;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +14,8 @@ import java.util.Optional;
  */
 public class DataManager {
     private final ScenarioInstance scenarioInstance;
-
-
-    private List<DataObjectInstance> dataObjectInstances;
-    private List<DataObjectInstance> dataObjectInstancesOnChange;
+    private List<DataObjectInstance> dataObjectInstances = new ArrayList<>();
+    private List<DataObjectInstance> dataObjectInstancesOnChange = new ArrayList<>();
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
