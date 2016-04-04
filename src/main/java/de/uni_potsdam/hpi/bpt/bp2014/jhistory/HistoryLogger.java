@@ -3,12 +3,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryActivityTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataAttributeTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityState;
 
 /**
  * This class provides an abstraction layer for logging,
  * so that the actually logic can be put to the database.
  */
-public class Log {
+public class HistoryLogger {
 	/**
 	 * Database Connection objects.
 	 */
@@ -19,15 +20,8 @@ public class Log {
 	private DbHistoryDataAttributeTransition dbHistoryDataAttributeInstance =
 			new DbHistoryDataAttributeTransition();
 
-	/**
-	 * This method delegates a log entry containing an activity state transition
-	 * being saved into the database.
-	 *
-	 * @param id    the ID of the ActivityInstance that is changed.
-	 * @param state the new state of the ActivityInstance.
-	 */
-	public void logStateTransition(int id, String state) {
-		dbHistoryActivityTransition.createEntry(id, state);
+	public int logActivityTransition(int activityId, ActivityState newState) {
+        return dbHistoryActivityTransition.createEntry(activityId, newState.name());
 	}
 
 	/**
@@ -47,8 +41,7 @@ public class Log {
 	 * @param objectInstanceId the ID of the DataObjectInstance that is changed.
 	 * @param stateId           the new state of the DataObjectInstance.
 	 */
-	public void logDataobjectStateTransition(int objectInstanceId, int stateId, int activityId) {
-        int latestActivityEntry = dbHistoryActivityTransition.findLatestEntryFor(activityId);
+	public void logDataobjectStateTransition(int objectInstanceId, int stateId, int activityLogId) {
 		dbHistoryDataObjectTransition.createEntry(objectInstanceId, stateId);
 	}
 
@@ -80,7 +73,6 @@ public class Log {
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is created.
 	 */
 	public void logDataAttributeCreation(int dataAttributeInstanceId) {
-		dbHistoryDataAttributeInstance
-				.createNewDataAttributeInstanceEntry(dataAttributeInstanceId);
+		dbHistoryDataAttributeInstance.createNewDataAttributeInstanceEntry(dataAttributeInstanceId);
 	}
 }

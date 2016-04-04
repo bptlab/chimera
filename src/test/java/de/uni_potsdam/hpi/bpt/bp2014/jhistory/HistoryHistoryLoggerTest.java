@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class HistoryLogTest {
+public class HistoryHistoryLoggerTest {
 
     /**
      * This test loads an scenario with a single activity ChangeData which changes the state
