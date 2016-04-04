@@ -2,14 +2,6 @@
     // defining module within MVC pattern. here, we primary realize the controller action for the user interaction with all components of the JEngine
     var userIn = angular.module('userInteraction', []);
 
-    // create a directive for the scenario menu
-    userIn.directive('scenarioMenuEntry', function () {
-        return {
-            restrict: 'A',
-            templateUrl: 'asset/templates/scenarioMenuEntry.html',
-        };
-    });
-
     // create a controller for the scenario information
     userIn.controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
             function ($routeParams, $location, $http, $scope) {

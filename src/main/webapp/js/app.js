@@ -12,72 +12,78 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 (function () {
     // vars defining the URIs of the REST-APIs
     var jfrontend = angular.module('jfrontend', [
-        'ngRoute',
+        'ui.router',
         'adminConfiguration',
         'userInteraction']);
 
     // Defining Routes for the AngularJS App
-    jfrontend.config(['$routeProvider',
-        function ($routeProvider) {
-            $routeProvider.
+    jfrontend.config(
+        function ($stateProvider, $urlRouterProvider) {
+            $urlRouterProvider.otherwise('/otherwise');
+            $stateProvider.
                 // route for scenario view
-                when('/scenario', {
+                state('scenario', {
+                    url: '/scenario',
                     templateUrl: 'templates/scenario.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 }).
                 // route for scenario detail view
-                when('/scenario/:id', {
+                state('scenario{id}', {
+                    url: '/scenario/:id',
                     templateUrl: 'templates/scenarioDetails.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 }).
-                // route for scenario instance view
-                when('/scenario/:id/instance', {
-                    templateUrl: 'templates/scenarioInstance.html',
-                    controller: 'ScenarioInstanceController',
-                    controllerAs: 'instanceCtrl'
-                }).
                 // route for scenario instance detail view
-                when('/scenario/:id/instance/:instanceId', {
+                state('scenario{id}instance{instanceId}', {
+                    url: '/scenario/:id/instance/:instanceId',
                     templateUrl: 'templates/scenarioInstanceDetails.html',
                     controller: 'ScenarioInstanceController',
                     controllerAs: 'instanceCtrl'
                 }).
                 // route for mail task configuration
-                when('/admin/mail/', {
+                state('adminMail', {
+                    url: '/admin/mail',
                     templateUrl: 'templates/mailConfigDetails.html',
                     controller: 'mailConfig',
                     controllerAs: 'mailC'
                 }).
                 // route for web service task configuration
-                when('/admin/webservice/', {
+                state('adminWebservice', {
+                    url: '/admin/webservice/',
                     templateUrl: 'templates/webserviceConfigDetails.html',
                     controller: 'webserviceConfig',
                     controllerAs: 'webserviceC'
                 }).
                 // route for jcore configuration
-                when('/admin/core/', {
+                state('adminCore', {
+                    url: '/admin/core/',
                     templateUrl: 'templates/jcoreConfig.html',
                     controller: 'jcoreConfig',
                     controllerAs: 'jcoreC'
                 }).
                 // route for JUserManagemetn configuration
-                when('/admin/userMgmt/', {
+                state('adminUserMgmt', {
+                    url: '/admin/userMgmt/',
                     templateUrl: 'templates/userMgmtConfig.html',
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
                 // route for user dashboard
-                when('/admin/user/', {
+                state('adminUser', {
+                    url: '/admin/user/',
                     templateUrl: 'templates/user.html',
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
                 // default route
-                otherwise({
-                    redirectTo: '/scenario'
+                state('otherwise', {
+                    url: '/otherwise',
+                    templateUrl: 'templates/scenario.html',
+                    controller: 'ScenarioController',
+                    controllerAs: 'scenarioCtrl'
                 });
         }
-    ]);
+    );
 })();
