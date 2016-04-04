@@ -24,10 +24,7 @@ public class DbDataAttributeInstance extends DbObject {
 				+ "FROM dataattribute WHERE id = "
 				+ dataAttributeId + "), " + dataObjectInstanceId + ", "
 				+ dataAttributeId + ")";
-		int id = this.executeInsertStatement(sql);
-        HistoryLogger log = new HistoryLogger();
-		log.logDataAttributeCreation(id);
-		return id;
+		return this.executeInsertStatement(sql);
 	}
 
 	/**

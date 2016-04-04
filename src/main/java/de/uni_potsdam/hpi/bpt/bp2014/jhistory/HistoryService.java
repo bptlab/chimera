@@ -67,8 +67,7 @@ public class HistoryService {
 	 * @return a Map with a Map of the log entries' attribute names
 	 * 			as keys and their respective values.
 	 */
-	public Map<Integer, Map<String, Object>>
-	getDataAttributeInstanceLogEntriesForScenarioInstance(
+	public Map<Integer, Map<String, Object>> getDataattributeEntries(
 			int scenarioInstanceId) {
 		DbHistoryDataAttributeTransition dbHistoryDataAttributeInstance =
 				new DbHistoryDataAttributeTransition();

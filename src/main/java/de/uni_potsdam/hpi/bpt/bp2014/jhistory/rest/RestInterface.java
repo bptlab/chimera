@@ -115,7 +115,7 @@ import java.util.Map;
 
 		Map<Integer, Map<String, Object>> attributeLog;
 		attributeLog = historyService
-				.getDataAttributeInstanceLogEntriesForScenarioInstance(
+				.getDataattributeEntries(
 						scenarioInstanceID);
 		return Response.ok().type(MediaType.APPLICATION_JSON)
 				.entity(new JSONObject(attributeLog).toString()).build();

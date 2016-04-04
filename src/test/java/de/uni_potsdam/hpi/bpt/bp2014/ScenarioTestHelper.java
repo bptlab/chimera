@@ -40,6 +40,19 @@ public class ScenarioTestHelper {
         }
     }
 
+    public static ActivityInstance getActivityInstanceByName(
+            String activityName, ScenarioInstance scenarioInstance) {
+        List<AbstractControlNodeInstance> controlNodeInstances =
+                scenarioInstance.getEnabledControlNodeInstances();
+        Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
+                .filter(ActivityInstance.class::isInstance)
+                .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
+                .findFirst();
+        if (!instanceOptional.isPresent()) {
+            throw new IllegalArgumentException("Invalid activity name");
+        }
+        return (ActivityInstance) instanceOptional.get();
+    }
     /**
      * Finds an activity instance by name and terminates the activity instance
      * in the given scenario instance.
@@ -47,17 +60,8 @@ public class ScenarioTestHelper {
      * @param scenarioInstance the scenario instance containing the activity instance.
      */
     public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
-        List<AbstractControlNodeInstance> controlNodeInstances =
-                scenarioInstance.getEnabledControlNodeInstances();
-        Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
-                .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
-                .findFirst();
-        if (!instanceOptional.isPresent()) {
-            throw new IllegalArgumentException("Invalid activity name");
-        }
-
-        ActivityInstance instanceNamed = (ActivityInstance) instanceOptional.get();
-        instanceNamed.terminate();
+        ActivityInstance instance = getActivityInstanceByName(activityName, scenarioInstance);
+        instance.terminate();
     }
 
     /**
