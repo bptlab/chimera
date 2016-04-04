@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryActivityTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataAttributeTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransition;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityState;
 
 /**
  * This class provides an abstraction layer for logging,

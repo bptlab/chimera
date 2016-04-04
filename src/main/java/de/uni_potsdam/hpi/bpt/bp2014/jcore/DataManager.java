@@ -1,11 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
+
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +34,7 @@ public class DataManager {
         Optional<DataObjectInstance> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
-            Log scenarioLog = new Log();
+            HistoryLogger scenarioLog = new HistoryLogger();
             scenarioLog.logDataobjectStateTransition(
                     dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityId);
             return true;

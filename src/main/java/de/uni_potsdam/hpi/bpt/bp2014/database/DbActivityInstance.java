@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -32,9 +32,7 @@ public class DbActivityInstance extends DbObject {
 	 * @param state This is the state in which an activity should be after executing setState.
 	 */
 	public void setState(int id, AbstractStateMachine.STATE state) {
-		Log log = new Log();
-		log.logStateTransition(id, state.name());
-		String sql = "UPDATE activityinstance "
+        String sql = "UPDATE activityinstance "
 				+ "SET activity_state = '" + state.name() + "' "
 				+ "WHERE id = " + id;
 		this.executeUpdateStatement(sql);
@@ -58,10 +56,7 @@ public class DbActivityInstance extends DbObject {
 						+ "VALUES ("	+ controlNodeInstanceId + ", '"
 						+ activityType + "', 1,'"
 						+ activityState	+ "', 'init')";
-		int id = this.executeInsertStatement(sql);
-		Log log = new Log();
-		log.logActivityCreation(controlNodeInstanceId);
-		return id;
+		return this.executeInsertStatement(sql);
 	}
 
 	/**

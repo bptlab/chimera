@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
-
 /**
  * This class is the representation of a dataObject instance in the database.
  * It provides the functionality to check for existing instances or create new ones.
@@ -49,10 +47,7 @@ public class DbDataObjectInstance extends DbObject {
 						+ "scenarioinstance_id, state_id, dataobject_id) "
 						+ "VALUES (" + scenarioInstanceId + ", "
 						+ stateId + ", " + dataObjectId + ")";
-		int id = this.executeInsertStatement(sql);
-		Log log = new Log();
-		log.logDataObjectCreation(id);
-		return id;
+		return this.executeInsertStatement(sql);
 	}
 
 	/**

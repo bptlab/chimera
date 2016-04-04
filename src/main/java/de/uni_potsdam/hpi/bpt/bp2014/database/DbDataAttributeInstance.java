@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.Log;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 /**
  * This class is the representation of a DataAttribute instance in the database.
@@ -25,7 +25,7 @@ public class DbDataAttributeInstance extends DbObject {
 				+ dataAttributeId + "), " + dataObjectInstanceId + ", "
 				+ dataAttributeId + ")";
 		int id = this.executeInsertStatement(sql);
-		Log log = new Log();
+        HistoryLogger log = new HistoryLogger();
 		log.logDataAttributeCreation(id);
 		return id;
 	}
@@ -98,9 +98,7 @@ public class DbDataAttributeInstance extends DbObject {
 	 * @param value                    This is the desired value for the DataAttributeinstance.
 	 */
 	public void setValue(int dataAttributeInstanceId, Object value) {
-		Log log = new Log();
-		log.logDataAttributeTransition(dataAttributeInstanceId, value);
-		String sql = "UPDATE dataattributeinstance SET value = '" + value + "' WHERE id = "
+        String sql = "UPDATE dataattributeinstance SET value = '" + value + "' WHERE id = "
 				+ dataAttributeInstanceId;
 		executeUpdateStatement(sql);
 	}
