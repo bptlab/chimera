@@ -44,19 +44,19 @@ public final class PropertyLoader {
 			}
 		}
 	}
-	
-/*	
+
+/*
 //    static Logger log = Logger.getLogger(PropertyReader.class);
 
-	
+
 	public PropertyLoader() {
 		loadProperties();
 	}
-	
+
 	private Properties loadProperties() {
-		
+
 		String path = PROPERTIES_FOLDER + File.separator + PROPERTIES_FILE;
-		
+
 		InputStream is = null;
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -74,7 +74,7 @@ public final class PropertyLoader {
 				}
 			}
 		}
-		
+
 		return props;
 	}
 */
@@ -85,7 +85,11 @@ public final class PropertyLoader {
 	 * @return the property
 	 */
 	public static String getProperty(String key) {
-		return props.getProperty(key);
+		if (!props.containsKey(key)) {
+            String errorMsg = String.format("Property %s was not present in property file", key);
+            throw new IllegalArgumentException(errorMsg);
+        }
+        return props.getProperty(key);
 	}
 
 }
