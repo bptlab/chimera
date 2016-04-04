@@ -40,7 +40,8 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 		super(activityInstanceId, scenarioInstance, controlNodeInstance);
 	}
 
-	@Override public void execute() {
+	@Override
+    public void execute() {
         WebTarget target = buildTarget();
 		Response response = executeWebserviceRequest(target);
         if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {

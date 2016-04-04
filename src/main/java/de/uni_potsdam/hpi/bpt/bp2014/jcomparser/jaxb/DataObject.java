@@ -31,6 +31,7 @@ public class DataObject {
      * The database Id of the scenario.
      */
     private int scenarioId = -1;
+
     /**
      * The database ID of the data Object.
      */
@@ -54,7 +55,6 @@ public class DataObject {
         this.dataClass = dataClass;
     }
 
-
     /**
      * Adds a new dataNode to the dataObject.
      * If the state has not been written to the database it will be added
@@ -64,7 +64,6 @@ public class DataObject {
     public void addDataNode(final DataNode dataNode) {
         dataNodes.add(dataNode);
     }
-
 
     public int save() {
         if (0 >= scenarioId) {
@@ -81,21 +80,18 @@ public class DataObject {
         return databaseId;
     }
 
+
     /**
      * Saves the data Nodes to the database.
      * Also the databaseID will be set for each node.
      */
     private void saveDataNodes() {
-        Connector connector = new Connector();
         initStateDatabaseId = this.dataClass.getStateToDatabaseId().get("init");
         for (DataNode dataNode : dataNodes) {
-            int stateDatabaseId = this.dataClass.getStateToDatabaseId().get(dataNode.getState());
-            int nodeId = connector.insertDataNodeIntoDatabase(
-                    scenarioId, stateDatabaseId,
-                    dataClass.getDataClassID(), databaseId, dataNode.getId());
-            dataNode.setDatabaseId(nodeId);
+            dataNode.save(this);
         }
     }
+
 
     /**
      * Sets the scenario id.
@@ -147,6 +143,14 @@ public class DataObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public DataClass getDataClass() {
+        return dataClass;
+    }
+
+    public int getScenarioId() {
+        return scenarioId;
     }
 
 }

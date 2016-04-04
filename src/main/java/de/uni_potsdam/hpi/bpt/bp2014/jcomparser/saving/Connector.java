@@ -377,6 +377,13 @@ public class Connector extends DbObject {
         this.executeInsertStatement(sql);
 	}
 
+	public void insertPathMappingIntoDatabase(int controlNodeId, int dataAttributeId, String jsonPathString) {
+		String sql = "INSERT INTO pathmapping (controlnode_id,"
+				+ "dataattribute_id, jsonpath) VALUES ("
+				+ controlNodeId + ", " + dataAttributeId + ", '" + jsonPathString + "')";
+		this.executeInsertStatement(sql);
+	}
+
 	/**
 	 * @param controlNodeId the id of a control node.
 	 * @return the key of the newly created email template.

@@ -1,9 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import org.json.JSONObject;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Optional;
 
 /**
  *
@@ -13,7 +18,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DataNode {
     @XmlAttribute
     private String id;
-
+    /**
+     * Id of a data object. This construct is used to express that a data object can
+     * occur multiple times in an BPMN process.
+     */
+    @XmlAttribute
+    private String dataObjectRef;
     /**
      * Name of the dataclass the dataobject/node refers to.
      */
@@ -25,14 +35,38 @@ public class DataNode {
     @XmlAttribute(name = "griffin:state")
     private String state;
     /**
-     * Id of a data object. This construct is used to express that a data object can
-     * occur multiple times in an BPMN process.
+     * JsonObject that might contain a jsonpath expression for each data attribute.
      */
-    @XmlAttribute
-    private String dataObjectRef;
-
+    @XmlAttribute(name = "griffin:jsonpath")
+    private String jsonPath;
 
     private int databaseId;
+
+    public void save(DataObject dataObject) {
+        Connector connector = new Connector();
+
+        int stateDatabaseId = dataObject.getDataClass().getStateToDatabaseId().get(this.state);
+        int nodeId = connector.insertDataNodeIntoDatabase(
+                dataObject.getScenarioId(), stateDatabaseId,
+                dataObject.getDataClass().getDataClassID(), dataObject.getDatabaseId(), this.getId());
+        this.setDatabaseId(nodeId);
+
+        insertPathMappingIntoDatabase(dataObject);
+    }
+
+
+    private void insertPathMappingIntoDatabase(DataObject dataObject) {
+        Connector connector = new Connector();
+        JSONObject pathObject = new JSONObject(jsonPath);
+        for(Object key : pathObject.keySet()) {
+            Optional<DataAttribute> dataAttribute = dataObject.getDataClass().getDataAttributeByName(key.toString());
+            if (dataAttribute.isPresent()) {
+                int dataAttributeId = dataAttribute.get().getDataAttributeID();
+                String jsonPathString = pathObject.getString(key.toString());
+                connector.insertPathMappingIntoDatabase(this.databaseId, dataAttributeId, jsonPathString);
+            }
+        }
+    }
 
     public String getState() {
         return state;
@@ -65,12 +99,20 @@ public class DataNode {
         this.dataObjectRef = dataObjectRef;
     }
 
-
     public int getDatabaseId() {
         return databaseId;
     }
 
+
     public void setDatabaseId(int databaseId) {
         this.databaseId = databaseId;
+    }
+
+    public String getJsonPath() {
+        return jsonPath;
+    }
+
+    public void setJsonPath(String jsonPath) {
+        this.jsonPath = jsonPath;
     }
 }

@@ -95,15 +95,22 @@ public class DataClass implements IPersistable {
 		}
 	}
 
-	/**
-	 * This method iterates through all dataAttributes and sets
-	 * the dataClass for them as well as calling the save method.
-	 */
+
 	private void saveDataAttributes() {
 		for (DataAttribute dataAttribute : dataAttributes) {
             dataAttribute.setDataClassID(dataClassID);
 			dataAttribute.save();
 		}
+	}
+
+
+	public Optional<DataAttribute> getDataAttributeByName(String attributeName) {
+		for (DataAttribute attribute : dataAttributes) {
+			if (attribute.getDataAttributeName().equals(attributeName)) {
+				return Optional.of(attribute);
+			}
+		}
+		return Optional.empty();
 	}
 
 	public int getDataClassID() {

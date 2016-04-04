@@ -92,7 +92,7 @@ public class ScenarioData {
 
         Map<String, DataObject> nameToDataObject = new HashMap<>();
         for (Fragment fragment : fragments) {
-            extractDataObjectsFromFragment(fragment, nameToDataObject, model);
+            associateDataNodesWithDataObjects(fragment, nameToDataObject, model);
         }
         return new ArrayList<>(nameToDataObject.values());
     }
@@ -105,7 +105,7 @@ public class ScenarioData {
         return nameToDataClass;
     }
 
-    private void extractDataObjectsFromFragment(
+    private void associateDataNodesWithDataObjects(
             Fragment fragment, Map<String, DataObject> nameToDataObject,
             DomainModel model) {
         Map<String, DataClass> nameToDataClass = extractNameToDataclass(model);
