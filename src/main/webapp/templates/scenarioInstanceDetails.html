@@ -23,11 +23,6 @@
             <h2 class="font-light m-b-xs">
                 Case {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
             </h2>
-
-            <!-- let the user choose on the view layout -->
-            Select a view:
-            <a type="checkbox" ng-click="new_view = true" class="btn btn-default btn-xs"> New </a>
-            <a type="checkbox" ng-click="new_view = false" class="btn btn-default btn-xs"> Old </a>
         </div>
         <!-- /. panel body -->
     </div>
@@ -37,12 +32,5 @@
 
 <div class="content animate-panel">
     <!-- in case user chooses new view we display it -->
-    <div ng-show="new_view">
-        <ng-include src="'asset/templates/views/new.html'"></ng-include>
-    </div>
-    <!-- /. ng-show="new_view" -->
-    <!-- otherwise we display the old one -->
-    <div ng-hide="new_view">
-        <ng-include src="'asset/templates/views/old.html'"></ng-include>
-    </div>
-    <!-- /. ng-hide="new_view" -->
+    <ng-include src="'asset/templates/scenarioInstancePanels.html'"></ng-include>
+</div>

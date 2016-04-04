@@ -44,12 +44,6 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
                     controller: 'ScenarioInstanceController',
                     controllerAs: 'instanceCtrl'
                 }).
-                // route for jcomparser control panel view
-                when('/admin/jcomparser/', {
-                    templateUrl: 'templates/jcomparser.html',
-                    controller: 'jcomparserMainView',
-                    controllerAs: 'jcomparserMV'
-                }).
                 // route for mail task configuration
                 when('/admin/mail/', {
                     templateUrl: 'templates/mailConfigDetails.html',
