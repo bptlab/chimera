@@ -74,7 +74,7 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (Task task : this.fragmentXml.getTasks()) {
+        for (Task task : this.fragmentXml.getAllActivities()) {
             sets.addAll(getOutputSetsForTask(task, idToDataNode));
         }
         return sets;
@@ -108,7 +108,7 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (Task task : this.fragmentXml.getTasks()) {
+        for (Task task : this.fragmentXml.getAllActivities()) {
             sets.addAll(getInputSetsForTask(task, idToDataNode));
         }
         return sets;
@@ -131,7 +131,7 @@ public class Fragment {
     }
 
     private Map<String, Task> createMapFromIdToTask() {
-        List<Task> tasks = this.fragmentXml.getTasks();
+        List<Task> tasks = this.fragmentXml.getAllActivities();
         Map<String, Task> idToNode = new HashMap<>();
         for (Task task : tasks) {
             idToNode.put(task.getId(), task);
@@ -147,7 +147,7 @@ public class Fragment {
     public List<AbstractControlNode> getControlNodes() {
         List<AbstractControlNode> nodes = new ArrayList<>();
         nodes.addAll(this.fragmentXml.getXorGateways());
-        nodes.addAll(this.fragmentXml.getTasks());
+        nodes.addAll(this.fragmentXml.getAllActivities());
         nodes.addAll(this.fragmentXml.getIntermediateEvents());
         nodes.addAll(this.fragmentXml.getBoundaryEvents());
         nodes.addAll(this.fragmentXml.getEventBasedGateways());
@@ -191,5 +191,13 @@ public class Fragment {
 
     public List<Task> getTasks() {
         return this.fragmentXml.getTasks();
+    }
+
+    public List<ServiceTask> getServiceTasks() {
+        return this.fragmentXml.getServiceTasks();
+    }
+
+    public List<Task> getAllActivities() {
+        return this.fragmentXml.getAllActivities();
     }
 }

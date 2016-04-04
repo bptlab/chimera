@@ -23,7 +23,7 @@ public class DbControlNodeTest extends AbstractDatabaseDependentTest {
     @Test
      public void testGetType(){
         DbControlNode dbControlNode = new DbControlNode();
-        assertEquals("Startevent", dbControlNode.getType(1));
+        assertEquals("StartEvent", dbControlNode.getType(1));
         assertEquals("Activity", dbControlNode.getType(2));
     }
 

@@ -28,7 +28,7 @@ public class EventTypeTest {
 
     @Test
     public void testEventType() throws JAXBException {
-        File file = new File("src/test/resources/EventScenarios/EventTypeScenario.json");
+        File file = new File("src/test/resources/Scenarios/EventTypeScenario.json");
         try {
             String json = FileUtils.readFileToString(file);
             ScenarioData scenario = new ScenarioData(json);

@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,7 +39,7 @@ public class DataNode {
      * JsonObject that might contain a jsonpath expression for each data attribute.
      */
     @XmlAttribute(name = "griffin:jsonpath")
-    private String jsonPath;
+    private String jsonPath = "";
 
     private int databaseId;
 
@@ -51,19 +52,23 @@ public class DataNode {
                 dataObject.getDataClass().getDataClassID(), dataObject.getDatabaseId(), this.getId());
         this.setDatabaseId(nodeId);
 
-        insertPathMappingIntoDatabase(dataObject);
+        if (!jsonPath.isEmpty()) {
+            insertPathMappingIntoDatabase(dataObject);
+        }
     }
 
 
     private void insertPathMappingIntoDatabase(DataObject dataObject) {
         Connector connector = new Connector();
-        JSONObject pathObject = new JSONObject(jsonPath);
+        String xmlEscapedPathObject = StringEscapeUtils.unescapeHtml4(jsonPath);
+        JSONObject pathObject = new JSONObject(xmlEscapedPathObject);
         for(Object key : pathObject.keySet()) {
             Optional<DataAttribute> dataAttribute = dataObject.getDataClass().getDataAttributeByName(key.toString());
             if (dataAttribute.isPresent()) {
                 int dataAttributeId = dataAttribute.get().getDataAttributeID();
                 String jsonPathString = pathObject.getString(key.toString());
-                connector.insertPathMappingIntoDatabase(this.databaseId, dataAttributeId, jsonPathString);
+                String escapedJsonPath = jsonPathString.replace("'", "''");
+                connector.insertPathMappingIntoDatabase(this.databaseId, dataAttributeId, escapedJsonPath);
             }
         }
     }

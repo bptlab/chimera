@@ -27,7 +27,7 @@ public class StartEventTest {
 
     @Test
 	public void testStartEventRegistration() {
-        String path = "src/test/resources/EventScenarios/StartEventWithQuery.json";
+        String path = "src/test/resources/Scenarios/StartEventWithQuery.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<AbstractControlNodeInstance> controlNodeInstances =
@@ -45,7 +45,7 @@ public class StartEventTest {
     // from the beginning.
     @Test
     public void testStartQueryWithoutEvent() {
-        String path = "src/test/resources/EventScenarios/StartEventWithoutQuery.json";
+        String path = "src/test/resources/Scenarios/StartEventWithoutQuery.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<AbstractControlNodeInstance> controlNodeInstances =

@@ -36,7 +36,7 @@ public class EventFactory {
             return new IntermediateEvent(controlNodeId, fragmentInstanceId, this.scenarioInstance);
         } else if ("BoundaryEvent".equals(eventType)) {
             return new BoundaryEvent(controlNodeId, fragmentInstanceId, this.scenarioInstance);
-        } else if ("Startevent".equals(eventType)) {
+        } else if ("StartEvent".equals(eventType)) {
             return new StartEvent(controlNodeId, fragmentInstanceId, this.scenarioInstance);
         } else if ("TimerEvent".equals(eventType)) {
             return new TimerEventInstance(controlNodeId, fragmentInstanceId, this.scenarioInstance);

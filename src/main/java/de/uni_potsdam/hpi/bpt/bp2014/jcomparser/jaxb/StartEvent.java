@@ -27,9 +27,9 @@ public class StartEvent extends AbstractControlNode {
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "Startevent", this.getFragmentId(), this.id);
+                this.getName(), "StartEvent", this.getFragmentId(), this.id);
 
-        connector.insertEventIntoDatabase("Startevent", this.eventQuery,
+        connector.insertEventIntoDatabase("StartEvent", this.eventQuery,
             this.fragmentId, this.id, this.databaseId);
 
         return this.databaseId;

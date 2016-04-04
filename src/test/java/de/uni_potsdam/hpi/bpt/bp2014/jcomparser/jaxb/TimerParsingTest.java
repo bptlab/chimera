@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class TimerTest {
+public class TimerParsingTest {
     @After
     public void teardown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
@@ -53,7 +53,7 @@ public class TimerTest {
 
     @Test
     public void testTimerSaving() throws JAXBException {
-        File file = new File("src/test/resources/TimerScenario.json");
+        File file = new File("src/test/resources/Scenarios/TimerEventScenario.json");
 
         try {
             String json = FileUtils.readFileToString(file);

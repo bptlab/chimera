@@ -49,9 +49,9 @@ public abstract class AbstractOutgoingBehavior {
 			controlNodeInstance = new ActivityInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
-		case "Endevent":
+		case "EndEvent":
 			controlNodeInstance = new EventInstance(
-					fragmentInstanceId, scenarioInstance, "Endevent");
+					fragmentInstanceId, scenarioInstance, "EndEvent");
 			break;
 		case "XOR":
 			controlNodeInstance = new XorGatewayInstance(

@@ -83,7 +83,6 @@ public class Task extends AbstractControlNode {
 
     @Override
     public int save() {
-        //TODO Handle webtasks correctly
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "Activity", this.getFragmentId(), this.id);

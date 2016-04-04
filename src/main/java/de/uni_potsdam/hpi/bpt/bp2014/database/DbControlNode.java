@@ -26,7 +26,7 @@ public class DbControlNode extends DbObject {
 	 */
 	public int getStartEventID(int fragmentId) {
 		String sql = "SELECT id FROM controlnode "
-				+ "WHERE type = 'Startevent' "
+				+ "WHERE type = 'StartEvent' "
 				+ "AND fragment_id = " + fragmentId;
 		log.info(sql);
 		return this.executeStatementReturnsInt(sql, "id");

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class ExclusiveJoinTest {
     @Test
     public void testExclusiveJoin() throws InterruptedException {
-        String path = "src/test/resources/EventScenarios/ExclusiveJoinScenario.json";
+        String path = "src/test/resources/Scenarios/ExclusiveJoinScenario.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             Thread.sleep(2000);

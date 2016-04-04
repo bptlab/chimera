@@ -46,7 +46,7 @@ public class ParallelGatewayJoinBehavior extends AbstractIncomingBehavior {
 						.getControlNodeId());
 		//if a start Event ist before this Gateway it is enabled
 		if (predecessors.size() == 1 && dbControlNode.getType(predecessors.get(0))
-				.equals("Startevent")) {
+				.equals("StartEvent")) {
 			return true;
 		}
 		//looks that all predecessors are terminated

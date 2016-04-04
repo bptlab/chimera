@@ -41,7 +41,7 @@ public class EventGatewayTest extends JerseyTest {
 
     @Test
     public void testBoundaryDisablementWhenTerminatingActivity() {
-        String path = "src/test/resources/EventScenarios/EventGatewayScenario.json";
+        String path = "src/test/resources/Scenarios/EventGatewayScenario.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
@@ -58,7 +58,7 @@ public class EventGatewayTest extends JerseyTest {
     // Test whether all outgoing events are initialized from event based gateway
     @Test
     public void testEventEnablement() {
-        String path = "src/test/resources/EventScenarios/EventGatewayScenario.json";
+        String path = "src/test/resources/Scenarios/EventGatewayScenario.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();

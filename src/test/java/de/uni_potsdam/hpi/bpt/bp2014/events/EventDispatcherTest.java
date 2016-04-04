@@ -48,7 +48,7 @@ public class EventDispatcherTest extends JerseyTest {
 
     @Test
     public void testActivateEvent() {
-        String path = "src/test/resources/EventScenarios/StartEventWithQuery.json";
+        String path = "src/test/resources/Scenarios/StartEventWithQuery.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<AbstractControlNodeInstance> activatedBeforeEvent =
@@ -70,7 +70,7 @@ public class EventDispatcherTest extends JerseyTest {
 
     @Test
     public void testRemovalAfterActivation() {
-        String path = "src/test/resources/EventScenarios/StartEventWithQuery.json";
+        String path = "src/test/resources/Scenarios/StartEventWithQuery.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEventKeysBeforeEvent = scenarioInstance.getRegisteredEventKeys();

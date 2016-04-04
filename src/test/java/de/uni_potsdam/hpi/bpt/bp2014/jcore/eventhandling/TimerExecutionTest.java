@@ -14,15 +14,15 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class TimerEventTest {
+public class TimerExecutionTest {
     @After
     public void teardown() {
 
     }
 
     @Test
-    public void testTimerEvent() {
-        String path = "src/test/resources/EventScenarios/TimerScenario.json";
+    public void testTimerEventExecution() {
+        String path = "src/test/resources/Scenarios/TimerEventScenario.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();

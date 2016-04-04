@@ -38,7 +38,7 @@ public class FragmentValidator {
      */
     private static void validateOlc(Map<String, Olc> olcs, Fragment fragment) {
         Map<String, DataNode> idToDataNode = getIdToDataNode(fragment.getDataNodes());
-        for (Task task : fragment.getTasks()) {
+        for (Task task : fragment.getAllActivities()) {
             Map<String, List<String>> incomingDataobjectStates =
                     getIncomingStatesPerDataobject(task, idToDataNode);
             Map<String, List<String>> outgoingDataobjectStates =

@@ -700,19 +700,19 @@
 //            this.controlNodes.put(controlNode.modelID, controlNode);
 //            Assert.assertTrue("ControlNodeID smaller than 1", controlNode.id > 0);
 //        }
-//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(1, "", "Startevent", fragments.get("FragmentA").id, 1069345757L)));
+//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(1, "", "StartEvent", fragments.get("FragmentA").id, 1069345757L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(2, "Ref", "Activity", fragments.get("FragmentA").id, 8267903230L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(3, "A1", "WebServiceTask", fragments.get("FragmentA").id, 517729148L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(4, "", "AND", fragments.get("FragmentA").id, 1569336784L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(5, "", "AND", fragments.get("FragmentA").id, 2081480666L)));
-//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(6, "", "Endevent", fragments.get("FragmentA").id, 1914825610L)));
+//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(6, "", "EndEvent", fragments.get("FragmentA").id, 1914825610L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(9, "Ref", "Activity", fragments.get("FragmentB").id, 8267903231L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(7, "", "XOR", fragments.get("FragmentB").id, 564114893L)));
-//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(8, "", "Endevent", fragments.get("FragmentB").id, 2136115766L)));
+//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(8, "", "EndEvent", fragments.get("FragmentB").id, 2136115766L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(10, "", "XOR", fragments.get("FragmentB").id, 1689490932L)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(11, "B2", "EmailTask", fragments.get("FragmentB").id, 1821614206)));
 //        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(12, "B1", "Activity", fragments.get("FragmentB").id, 1407636184)));
-//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(13, "", "Startevent", fragments.get("FragmentB").id, 509231813L)));
+//        Assert.assertTrue("ControlNode in table 'controlnode' not inserted correctly", this.controlNodes.values().contains(new DbControlNode(13, "", "StartEvent", fragments.get("FragmentB").id, 509231813L)));
 //        Assert.assertTrue("Too many controlNodes have been inserted", this.controlNodes.size() == 13);
 //        controlNodes.close();
 //    }

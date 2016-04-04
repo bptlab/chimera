@@ -4,6 +4,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -59,6 +60,15 @@ public class FragmentXmlWrapper {
         return this.bpmnProcessXml.getIntermediateEvents();
     }
 
+    public List<ServiceTask> getServiceTasks() {
+        return this.bpmnProcessXml.getServiceTasks();
+    }
+
+    public List<Task> getAllActivities() {
+        List<Task> allActivities = this.bpmnProcessXml.getTasks();
+        allActivities.addAll(this.bpmnProcessXml.getServiceTasks());
+        return allActivities;
+    }
 }
 
 

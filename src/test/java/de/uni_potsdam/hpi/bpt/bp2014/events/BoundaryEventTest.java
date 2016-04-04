@@ -28,7 +28,7 @@ public class BoundaryEventTest {
     //
     @Test
     public void testEventDisablementWhenTerminatingActivity() {
-        String path = "src/test/resources/EventScenarios/BoundaryEvent.json";
+        String path = "src/test/resources/Scenarios/BoundaryEvent.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             ActivityInstance activity = (ActivityInstance)
@@ -45,7 +45,7 @@ public class BoundaryEventTest {
 
     @Test
     public void testActivityCancellation() {
-        String path = "src/test/resources/EventScenarios/BoundaryEvent.json";
+        String path = "src/test/resources/Scenarios/BoundaryEvent.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             ActivityInstance activity = (ActivityInstance)

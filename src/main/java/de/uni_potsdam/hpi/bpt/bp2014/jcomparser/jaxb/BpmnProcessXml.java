@@ -28,6 +28,9 @@ public class BpmnProcessXml {
     @XmlElement(name = "bpmn:task")
     private List<Task> tasks = new ArrayList<>();
 
+    @XmlElement(name = "bpmn:serviceTask")
+    private List<ServiceTask> serviceTasks = new ArrayList<>();
+
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataNode> dataNodes = new ArrayList<>();
 
@@ -114,5 +117,9 @@ public class BpmnProcessXml {
 
     public List<EventBasedGateway> getEventBasedGateways() {
         return this.eventBasedGateways;
+    }
+
+    public List<ServiceTask> getServiceTasks() {
+        return serviceTasks;
     }
 }

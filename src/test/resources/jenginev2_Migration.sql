@@ -22,19 +22,19 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 (13, 9, '');
 
 INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALUES
-(1, '', 'Startevent', 1, 1069345757),
+(1, '', 'StartEvent', 1, 1069345757),
 (2, 'Ref', 'Activity', 1, 826790323),
 (3, 'A1', 'WebServiceTask', 1, 517729148),
 (4, '', 'AND', 1, 1569336784),
 (5, '', 'AND', 1, 2081480666),
-(6, '', 'Endevent', 1, 1914825610),
+(6, '', 'EndEvent', 1, 1914825610),
 (7, '', 'XOR', 2, 564114893),
-(8, '', 'Endevent', 2, 2136115766),
+(8, '', 'EndEvent', 2, 2136115766),
 (9, 'Ref', 'Activity', 2, 826790323),
 (10, '', 'XOR', 2, 1689490932),
 (11, 'B2', 'EmailTask', 2, 1821614206),
 (12, 'B1', 'Activity', 2, 1407636184),
-(13, '', 'Startevent', 2, 509231813);
+(13, '', 'StartEvent', 2, 509231813);
 
 INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinstance_id`) VALUES
 (1, 'AND', 4, 1),
