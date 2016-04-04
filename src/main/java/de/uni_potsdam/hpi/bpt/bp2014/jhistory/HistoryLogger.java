@@ -20,7 +20,7 @@ public class HistoryLogger {
 			new DbHistoryDataAttributeTransition();
 
 	public int logActivityTransition(int activityId, ActivityState newState) {
-        return dbHistoryActivityTransition.createEntry(activityId, newState.name());
+        return dbHistoryActivityTransition.logActivityStateTransition(activityId, newState.name());
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class HistoryLogger {
 	 * @param id the ID of the ActivityInstance that is created.
 	 */
 	public void logActivityCreation(int id) {
-		dbHistoryActivityTransition.createNewActivityEntry(id);
+		dbHistoryActivityTransition.logActivityCreation(id);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class HistoryLogger {
 	 * @param stateId           the new state of the DataObjectInstance.
 	 */
 	public void logDataobjectStateTransition(int objectInstanceId, int stateId, int activityLogId) {
-		dbHistoryDataObjectTransition.createEntry(objectInstanceId, stateId);
+		dbHistoryDataObjectTransition.logDataobjectStateTransition(objectInstanceId, stateId);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class HistoryLogger {
 	 * @param id the ID of the DataObjectInstance that is created.
 	 */
 	public void logDataObjectCreation(int id) {
-		dbHistoryDataObjectTransition.createNewDataObjectInstanceEntry(id);
+		dbHistoryDataObjectTransition.logDataObjectCreation(id);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class HistoryLogger {
 	 * @param value                    the new value of the DataAttributeInstance.
 	 */
 	public void logDataAttributeTransition(int dataAttributeInstanceId, Object value) {
-		dbHistoryDataAttributeInstance.createEntry(dataAttributeInstanceId, value);
+		dbHistoryDataAttributeInstance.logDataAttributeTransition(dataAttributeInstanceId, value);
 	}
 
 	/**
@@ -72,6 +72,6 @@ public class HistoryLogger {
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is created.
 	 */
 	public void logDataAttributeCreation(int dataAttributeInstanceId) {
-		dbHistoryDataAttributeInstance.createNewDataAttributeInstanceEntry(dataAttributeInstanceId);
+		dbHistoryDataAttributeInstance.logDataattributeCreation(dataAttributeInstanceId);
 	}
 }

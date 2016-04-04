@@ -17,7 +17,7 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 	 * @param value                      the new value of the DataAttributeInstance.
 	 * @return the generated key for the insert statement.
 	 */
-	public int createEntry(int dataAttributeInstanceId, Object value) {
+	public int logDataAttributeTransition(int dataAttributeInstanceId, Object value) {
 		String sql =
 				"INSERT INTO `historydataattributeinstance` ("
 						+ "`scenarioinstance_id`,"
@@ -47,7 +47,7 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is created.
 	 * @return the generated key for the insert statement.
 	 */
-	public int createNewDataAttributeInstanceEntry(int dataAttributeInstanceId) {
+	public int logDataattributeCreation(int dataAttributeInstanceId) {
 		String sql =
 				"INSERT INTO `historydataattributeinstance` ("
 						+ "`scenarioinstance_id`,"

@@ -17,7 +17,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 	 * @param stateId           the new state of the DataObjectInstance.
 	 * @return the generated key for the insert statement.
 	 */
-	public int createEntry(int objectInstanceId, int stateId) {
+	public int logDataobjectStateTransition(int objectInstanceId, int stateId) {
 		String sql =
 				"INSERT INTO `historydataobjectinstance` ("
 						+ "`scenarioinstance_id`,`dataobjectinstance_id`,"
@@ -41,7 +41,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 	 * @param objectInstanceId the ID of the DataObjectInstance that is created.
 	 * @return the generated key for the insert statement.
 	 */
-	public int createNewDataObjectInstanceEntry(int objectInstanceId) {
+	public int logDataObjectCreation(int objectInstanceId) {
 		String sql =
 				"INSERT INTO `historydataobjectinstance` (`scenarioinstance_id`,"
 						+ "`dataobjectinstance_id`,`newstate_id`) "

@@ -17,7 +17,7 @@ public class DbHistoryActivityTransition extends DbObject {
 	 * @param state the new state of the ActivityInstance.
 	 * @return the generated key for the insert statement.
 	 */
-	public int createEntry(int id, String state) {
+	public int logActivityStateTransition(int id, String state) {
 		String sql =
 				"INSERT INTO historyactivityinstance(`activityinstance_id`, `oldstate`,"
 						+ " `newstate`, `scenarioinstance_id`)"
@@ -36,16 +36,14 @@ public class DbHistoryActivityTransition extends DbObject {
 		return this.executeInsertStatement(sql);
 	}
 
-    public int findLatestEntryFor(int activityId) {
-        throw new NotImplementedException("Implement me");
-    }
+
 	/**
 	 * This method saves a log entry of a newly created ActivityInstance into the database.
 	 *
 	 * @param id the ID of the ActivityInstance that is created.
 	 * @return the generated key for the insert statement.
 	 */
-	public int createNewActivityEntry(int id) {
+	public int logActivityCreation(int id) {
 		String sql =
 				"INSERT INTO historyactivityinstance(`activityinstance_id`, "
 						+ "`newstate`, `scenarioinstance_id`) "
@@ -70,7 +68,7 @@ public class DbHistoryActivityTransition extends DbObject {
 	 * @return a Map with a Map of the log entries' attribute names as keys with their values.
 	 */
 	public Map<Integer, Map<String, Object>> getLogEntriesForScenarioInstance(
-			int scenarioInstanceId) {
+            int scenarioInstanceId) {
 		String sql =
 				"SELECT h.id, h.scenarioinstance_id, cn.label, "
 						+ "h.activityinstance_id, h.oldstate, "
@@ -89,10 +87,12 @@ public class DbHistoryActivityTransition extends DbObject {
 	}
 
 	/**
-	 * This method returns the terminated Activity log entries for a ScenarioInstance.
-	 *
+	 * This method returns log entries from transitions to the terminated state
+	 * TODO create class for this map
+     *
 	 * @param scenarioInstanceId ID of a ScenarioInstance.
-	 * @return a Map with a Map of the log entries' attribute names as keys with their values.
+	 * @return Map from log entry id to Map of the log entries' attribute names as keys with
+     * their values. keys are activityinstance_id, controlnode, newstate
 	 */
 	public Map<Integer, Map<String, Object>> getterminatedLogEntriesForScenarioInstance(
 			int scenarioInstanceId) {
