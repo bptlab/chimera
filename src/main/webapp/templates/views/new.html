@@ -442,31 +442,11 @@
                             {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'],
                             attributeConfiguration['value'])}}
                             <td>{{attributeConfiguration['name']}}</td>
-                            <td ng-switch="attributeConfiguration['type']">
+                            <td>
                                 <!-- within the input every 1000 ms the content will be submitted if ng-change applies -->
-
-                                <!-- Number input for integers -->
-                                <input ng-switch-when="Integer" type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
+                                <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
                                        ng-model="attributeConfiguration['value']"
-                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"
-                                       pattern="([0-9])+">
-
-                                <!-- Floating point input for doubles -->
-                                <input ng-switch-when="Double" type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
-                                       ng-model="attributeConfiguration['value']"
-                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"
-                                       pattern="([0-9])+[,|.]([0-9])+">
-
-                                <!-- Checkbox input for booleans -->
-                                <input ng-switch-when="Boolean" type="checkbox" ng-name="key3" ng-model-options='{ debounce: 1000 }'
-                                       ng-model="attributeConfiguration['value']"
-                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])">
-
-                                <!-- Text input for strings and anything else (i.e. enums, class references) -->
-                                <input ng-switch-default type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
-                                       ng-model="attributeConfiguration['value']"
-                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"
-                                       pattern="^([a-zA-Z\d]|[a-zA-Z\d](?!.*[ _]{2})[a-zA-Z\d _]*?[a-zA-Z\d])$">
+                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"><br>
                                 <span ng-show="form.key3.$pending">tipping...</span>
                             </td>
                         </tr>
@@ -495,7 +475,7 @@
                             <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['state']}}</td>
                             <td>
                                 <button type="button"
-                                        ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['setId']);"
+                                        ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['set_id']);"
                                         data-dismiss="modal" class="taskcompleted btn btn-danger">Terminate
                                 </button>
                             </td>
