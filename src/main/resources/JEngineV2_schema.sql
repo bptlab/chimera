@@ -490,7 +490,7 @@ CREATE TABLE IF NOT EXISTS `pathmapping` (
   -- controlnode-id of the node receiving a JSON object,
   -- e.g. WebServiceTask or MessageEvent
   `controlnode_id` int(11) NOT NULL,
-  `datanode_id` int(11) NOT NULL,
+  `dataattribute_id` int(11) NOT NULL,
   `jsonpath` varchar(256)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
