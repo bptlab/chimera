@@ -74,13 +74,13 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (Task task : this.fragmentXml.getAllActivities()) {
+        for (AbstractTask task : this.fragmentXml.getAllActivities()) {
             sets.addAll(getOutputSetsForTask(task, idToDataNode));
         }
         return sets;
     }
 
-    private List<OutputSet> getOutputSetsForTask(Task task, Map<String, DataNode> idToDataNode) {
+    private List<OutputSet> getOutputSetsForTask(AbstractTask task, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
@@ -108,13 +108,13 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (Task task : this.fragmentXml.getAllActivities()) {
+        for (AbstractTask task : this.fragmentXml.getAllActivities()) {
             sets.addAll(getInputSetsForTask(task, idToDataNode));
         }
         return sets;
     }
 
-    public List<InputSet> getInputSetsForTask(Task task, Map<String, DataNode> idToDataNode) {
+    public List<InputSet> getInputSetsForTask(AbstractTask task, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         for (DataInputAssociation assoc : task.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
@@ -131,10 +131,10 @@ public class Fragment {
     }
 
     private Map<String, Task> createMapFromIdToTask() {
-        List<Task> tasks = this.fragmentXml.getAllActivities();
+        List<AbstractTask> tasks = this.fragmentXml.getAllActivities();
         Map<String, Task> idToNode = new HashMap<>();
-        for (Task task : tasks) {
-            idToNode.put(task.getId(), task);
+        for (AbstractTask task : tasks) {
+            idToNode.put(task.getId(), (Task) task);
         }
 
         return idToNode;
@@ -197,7 +197,7 @@ public class Fragment {
         return this.fragmentXml.getWebServiceTasks();
     }
 
-    public List<Task> getAllActivities() {
+    public List<AbstractTask> getAllActivities() {
         return this.fragmentXml.getAllActivities();
     }
 }

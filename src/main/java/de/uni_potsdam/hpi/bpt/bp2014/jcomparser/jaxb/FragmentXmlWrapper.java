@@ -1,7 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
+
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,10 +65,11 @@ public class FragmentXmlWrapper {
         return this.bpmnProcessXml.getWebServiceTasks();
     }
 
-    public List<Task> getAllActivities() {
-        List<Task> allActivities = this.bpmnProcessXml.getTasks();
+    public List<AbstractTask> getAllActivities() {
+        List<? super AbstractTask> allActivities = new ArrayList<>();
+        allActivities.addAll(this.bpmnProcessXml.getTasks());
         allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
-        return allActivities;
+        return (List<AbstractTask>) allActivities;
     }
 }
 

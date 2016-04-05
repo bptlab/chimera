@@ -17,75 +17,12 @@ import java.util.List;
  */
 @XmlRootElement(name = "bpmn:task")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Task extends AbstractControlNode {
-    @XmlAttribute(name = "id")
-    private String id;
-    @XmlAttribute(name = "name")
-    private String name = "";
-    @XmlElement(name = "bpmn:incoming")
-    private String incoming = "";
-    @XmlElement(name = "bpmn:outgoing")
-    private String outgoing = "";
-    @XmlElement(name = "bpmn:dataOutputAssociation")
-    private List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
-    @XmlElement(name = "bpmn:dataInputAssociation")
-    private List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIncoming() {
-        return incoming;
-    }
-
-    public void setIncoming(String incoming) {
-        this.incoming = incoming;
-    }
-
-    public String getOutgoing() {
-        return outgoing;
-    }
-
-    public void setOutgoing(String outgoing) {
-        this.outgoing = outgoing;
-    }
-
-    public List<DataOutputAssociation> getDataOutputAssociations() {
-        return dataOutputAssociations;
-    }
-
-    public void setDataOutputAssociations(List<DataOutputAssociation> dataOutputAssociations) {
-        this.dataOutputAssociations = dataOutputAssociations;
-    }
-
-    public List<DataInputAssociation> getDataInputAssociations() {
-        return dataInputAssociations;
-    }
-
-    public void setDataInputAssociations(List<DataInputAssociation> dataInputAssociations) {
-        this.dataInputAssociations = dataInputAssociations;
-    }
-
-
+public class Task extends AbstractTask {
     @Override
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "Activity", this.getFragmentId(), this.id);
+                this.getName(), "Activity", this.getFragmentId(), this.getId());
         return this.databaseId;
     }
 }

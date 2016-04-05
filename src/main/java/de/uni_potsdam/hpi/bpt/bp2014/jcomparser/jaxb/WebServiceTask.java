@@ -1,9 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class used to read in a Service Task from BPMN standard.
@@ -15,7 +18,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement(name = "bpmn:serviceTask")
 @XmlAccessorType(XmlAccessType.NONE)
-public class WebServiceTask extends Task{
+public class WebServiceTask extends AbstractTask {
 
     @XmlAttribute(name = "griffin:webserviceurl")
     String webServiceUrl = "";
@@ -37,4 +40,5 @@ public class WebServiceTask extends Task{
                 this.webServiceBody);
         return this.databaseId;
     }
+
 }
