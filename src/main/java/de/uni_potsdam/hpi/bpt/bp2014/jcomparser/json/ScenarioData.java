@@ -70,7 +70,7 @@ public class ScenarioData {
         FragmentInserter inserter = new FragmentInserter();
         for (Fragment fragment : fragments) {
             fragment.setScenarioId(this.scenarioDbId);
-            inserter.save(fragment, domainModel);
+            inserter.save(fragment, this.dataObjects);
         }
 
         setTerminationCondition(scenarioJson);

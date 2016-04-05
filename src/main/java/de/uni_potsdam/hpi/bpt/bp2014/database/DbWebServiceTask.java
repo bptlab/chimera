@@ -6,10 +6,7 @@ import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class implements the WebServiceTask.
@@ -23,10 +20,10 @@ public class DbWebServiceTask extends DbObject {
 	 * @param controlNodeId The controlnode_id of the webservice task.
 	 * @return a String with the url.
 	 */
-	public String getLinkForControlNode(int controlNodeId) {
-		String sql = "SELECT link FROM webservicetasklink "
+	public String getUrl(int controlNodeId) {
+		String sql = "SELECT url FROM webservicetask "
 				+ "WHERE controlnode_id = " + controlNodeId;
-		return this.executeStatementReturnsString(sql, "link");
+		return this.executeStatementReturnsString(sql, "url");
 	}
 
     private Map<String, String> retrieve(String sql) {
@@ -44,29 +41,15 @@ public class DbWebServiceTask extends DbObject {
 
     /**
 	 * Get a List with all ids from the attributes which get changed by the webservice task.
-	 *
+	 * TODO check usage of this method
 	 * @param controlNodeId The controlnode_id of the webservice task.
 	 * @return a List with all Attribute ids for the webservice task.
 	 */
-	public LinkedList<Integer> getAttributeIdsForControlNode(int controlNodeId) {
+	public List<Integer> getAttributeIdsForControlNode(int controlNodeId) {
 		String sql =
 				"SELECT DISTINCT dataattribute_id FROM `webservicetaskattribute` "
 						+ "WHERE `controlnode_id` = " + controlNodeId;
 		return this.executeStatementReturnsListInt(sql, "dataattribute_id");
-	}
-
-	/**
-	 * Get the keys for the JSON for a webservice task and a data attribute.
-	 *
-	 * @param controlNodeId   The controlnode_id of the webservice task.
-	 * @param dataattributeId The id of the data attribute.
-	 * @return a List of the keys for the JSON
-	 */
-	public LinkedList<String> getKeys(int controlNodeId, int dataattributeId) {
-		String sql = "SELECT `key` FROM `webservicetaskattribute` WHERE `controlnode_id` = "
-				+ controlNodeId + " AND `dataattribute_id` = " + dataattributeId
-				+ " ORDER BY `order` ASC";
-		return this.executeStatementReturnsListString(sql, "key");
 	}
 
 	/**
@@ -87,7 +70,7 @@ public class DbWebServiceTask extends DbObject {
 
 	/**
 	 * Insert a entry in the database table webservicetasklink.
-	 *
+	 * TODO refactor to new structure
 	 * @param controlNodeID The controlnode_id of the webservice task.
 	 * @param link          The Link for the webservice task.
 	 * @param method        The method GET/PUT/POST.
@@ -101,7 +84,7 @@ public class DbWebServiceTask extends DbObject {
 
 	/**
 	 * Insert a entry in the database table webservicetaskpost.
-	 *
+     * TODO refactor to new structure
 	 * @param controlNodeID The controlnode_id of the webservice task.
 	 * @param post          A JSON that is used by the PUT/POST.
 	 */
@@ -113,7 +96,7 @@ public class DbWebServiceTask extends DbObject {
 
 	/**
 	 * Updates the link for the given webservice task.
-	 *
+     * TODO refactor to new structure
 	 * @param controlNodeID The controlnode_id of the webservice task.
 	 * @param link          The Link for the webservice task.
 	 */
@@ -126,7 +109,7 @@ public class DbWebServiceTask extends DbObject {
 
 	/**
 	 * Updates the method for the given webservice task.
-	 *
+     * TODO refactor to new structure
 	 * @param controlNodeID The controlnode_id of the webservice task.
 	 * @param method        The method GET/PUT/POST.
 	 */
@@ -140,7 +123,7 @@ public class DbWebServiceTask extends DbObject {
 
 	/**
 	 * Updates the post for the given webservice task.
-	 *
+     * TODO refactor to new structure
 	 * @param controlNodeID The controlnode_id of the webservice task.
 	 * @param post          A JSON that is used by the PUT/POST.
 	 */
@@ -154,7 +137,7 @@ public class DbWebServiceTask extends DbObject {
 	/**
 	 * Deletes all entries in the database table webservicetaskattribute
 	 * for the given webservice task and the given data attribute.
-	 *
+     * TODO refactor to new structure
 	 * @param controlNodeID   The controlnode_id of the webservice task.
 	 * @param dataAttributeID The id of the data attribute.
 	 */
@@ -211,7 +194,7 @@ public class DbWebServiceTask extends DbObject {
 	 */
 	public String getMethod(int controlNodeId) {
 		String sql =
-				"SELECT method FROM webservicetasklink "
+				"SELECT method FROM webservicetask "
 						+ "WHERE `controlnode_id` = " +	controlNodeId;
 		return this.executeStatementReturnsString(sql, "method");
 	}

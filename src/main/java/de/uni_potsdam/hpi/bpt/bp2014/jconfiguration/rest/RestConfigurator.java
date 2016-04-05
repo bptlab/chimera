@@ -195,7 +195,7 @@ import java.util.Set;
 		Map<String, Object> response = new HashMap<>();
 		response.put("attributes", list);
 		response.put("method", webService.getMethod(webserviceID));
-		response.put("link", webService.getLinkForControlNode(webserviceID));
+		response.put("link", webService.getUrl(webserviceID));
 		response.put("body", webService.getPOST(webserviceID));
 		response.put("allAttributes", attributes);
 

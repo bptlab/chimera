@@ -54,7 +54,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 
     private WebTarget buildTarget() {
         String link = dbWebServiceTask
-                .getLinkForControlNode(getControlNodeInstance().getControlNodeId());
+                .getUrl(getControlNodeInstance().getControlNodeId());
         String replacedLink = insertDataobjectValues(link,
                 new ArrayList<>(this.getScenarioInstance().getDataAttributeInstances().values()));
 

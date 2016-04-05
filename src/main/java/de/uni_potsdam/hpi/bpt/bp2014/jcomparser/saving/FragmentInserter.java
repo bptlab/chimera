@@ -1,11 +1,18 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.BoundaryEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.SequenceFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * This class is responsible for maintaining the correct order to insert elements
@@ -22,11 +29,14 @@ public class FragmentInserter {
      * @return return database Id of the inserted fragment
      */
 
-    public int save(Fragment fragment, DomainModel domainModel) {
+    public int save(Fragment fragment, List<DataObject> dataObjects) {
         int fragmentDatabaseId = fragment.save();
         Map<String, Integer> nodeToDatabaseId = saveControlNodes(fragmentDatabaseId, fragment);
         saveControlFlow(fragment, nodeToDatabaseId);
         saveDataFlow(fragment);
+        // this has to be saved after saving the data flow
+        // because we need the data sets to link data nodes to their preceding control nodes
+        savePathMapping(fragment, dataObjects);
         return fragmentDatabaseId;
     }
 
@@ -74,5 +84,18 @@ public class FragmentInserter {
         }
     }
 
+    private void savePathMapping(Fragment fragment, List<DataObject> dataObjects) {
+        for (DataNode dataNode : fragment.getDataNodes()) {
+            int dataObjectId = new DbDataNode()
+                    .getDataObjectIdForDataNode(dataNode.getDatabaseId());
+            Optional<DataObject> dataObject = findDataObjectById(dataObjects, dataObjectId);
+            if (dataObject.isPresent()) {
+                dataNode.insertPathMappingIntoDatabase(dataObject.get());
+            }
+        }
+    }
 
+    private Optional<DataObject> findDataObjectById(List<DataObject> dataObjects, int dataObjectId) {
+        return dataObjects.stream().filter(x -> x.getDatabaseId() == dataObjectId).findFirst();
+    }
 }

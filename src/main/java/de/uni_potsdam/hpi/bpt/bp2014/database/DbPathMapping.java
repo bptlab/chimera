@@ -26,4 +26,6 @@ public class DbPathMapping extends DbObject {
                     + "controlnode_id = %d;", controlNodeId);
         return executeStatementReturnsMap(retrievePaths, "dataattribute_id", "jsonpath");
     }
+
+
 }

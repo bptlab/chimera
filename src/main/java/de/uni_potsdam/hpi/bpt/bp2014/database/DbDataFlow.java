@@ -39,4 +39,11 @@ public class DbDataFlow extends DbObject {
 						+ "AND controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsListInt(sql, "dataset_id");
 	}
+
+    public int getPrecedingControlNode(int datanodeId) {
+        String sql = "SELECT d.controlnode_id as cn_id " +
+                "FROM datanode as n, datasetconsistsofdatanode as s, dataflow as d " +
+                "WHERE n.id = s.datanode_id AND d.dataset_id = s.dataset_id AND n.id = %d;";
+        return this.executeStatementReturnsInt(String.format(sql, datanodeId), "cn_id");
+    }
 }

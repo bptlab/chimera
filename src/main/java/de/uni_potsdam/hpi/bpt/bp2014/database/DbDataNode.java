@@ -47,6 +47,12 @@ public class DbDataNode extends DbObject {
 		return this.executeStatementReturnsListInt(sql, "state_id");
 	}
 
+    public int getDataObjectIdForDataNode(int dataNodeId) {
+        String sql = "SELECT dataobject_id FROM datanode " +
+                "WHERE datanode.id = %d";
+        return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "dataobject_id");
+    }
+
 	/**
 	 * This method returns all database data objects a dataSet can have.
 	 *

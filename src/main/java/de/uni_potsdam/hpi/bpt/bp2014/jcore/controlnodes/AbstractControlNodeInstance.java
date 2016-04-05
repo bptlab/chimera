@@ -20,7 +20,7 @@ public abstract class AbstractControlNodeInstance {
 
 	public void enableControlFlow() {
 		incomingBehavior.enableControlFlow();
-	}
+    }
 
 	/**
 	 * Skips the control node.

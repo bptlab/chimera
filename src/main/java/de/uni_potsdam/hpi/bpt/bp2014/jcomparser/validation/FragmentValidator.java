@@ -1,9 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataInputAssociation;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataOutputAssociation;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.Task;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
@@ -38,7 +35,7 @@ public class FragmentValidator {
      */
     private static void validateOlc(Map<String, Olc> olcs, Fragment fragment) {
         Map<String, DataNode> idToDataNode = getIdToDataNode(fragment.getDataNodes());
-        for (Task task : fragment.getAllActivities()) {
+        for (AbstractTask task : fragment.getAllActivities()) {
             Map<String, List<String>> incomingDataobjectStates =
                     getIncomingStatesPerDataobject(task, idToDataNode);
             Map<String, List<String>> outgoingDataobjectStates =
@@ -79,8 +76,8 @@ public class FragmentValidator {
     }
 
 
-    private static Map<String, List<String>> getIncomingStatesPerDataobject(
-            Task task, Map<String, DataNode> idToDataNode) {
+    private Map<String, List<String>> getIncomingStatesPerDataobject(
+            AbstractTask task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> incomingStatesPerDataobject = new HashMap<>();
         for (DataInputAssociation assoc : task.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
@@ -92,8 +89,8 @@ public class FragmentValidator {
         return incomingStatesPerDataobject;
     }
 
-    private static Map<String, List<String>> getOutgoingStatesPerDataobject(
-            Task task, Map<String, DataNode> idToDataNode) {
+    private Map<String, List<String>> getOutgoingStatesPerDataobject(
+            AbstractTask task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> outgoingStatesPerDataobject = new HashMap<>();
         for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());

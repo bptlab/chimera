@@ -56,7 +56,6 @@ public class WebServiceAcceptanceTest  {
         String json = FileUtils.readFileToString(new File(path));
 
         stubFor(get(urlEqualTo("/my/resource"))
-                .withHeader("Accept", equalTo("text/xml"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -75,7 +74,7 @@ public class WebServiceAcceptanceTest  {
 
         // Terminating the manual task starts the automatic task
         ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
-        long setDataattributes = dataAttributes.stream().filter(x -> x.getValue() == "foo").count();
+        long setDataattributes = dataAttributes.stream().filter(x -> "foo".equals(x.getValue())).count();
         assertEquals(1L, setDataattributes);
     }
 }
