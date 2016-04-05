@@ -29,9 +29,9 @@ public class DbWebServiceTask extends DbObject {
     private Map<String, String> retrieve(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Map<String, String> webserviceMapping = new HashMap<>();
-        try(Statement stat = conn.createStatement(); ResultSet rs =  stat.executeQuery(sql);) {
+        try(Statement stat = conn.createStatement(); ResultSet rs =  stat.executeQuery(sql)) {
             while (rs.next()) {
-                webserviceMapping.put(rs.getString("dataattributeid"), rs.getString("jsonpath"));
+                webserviceMapping.put(rs.getString("dataattribute_id"), rs.getString("jsonpath"));
             }
         } catch (SQLException e) {
             log.error(e);
@@ -205,11 +205,11 @@ public class DbWebServiceTask extends DbObject {
 	 * @param controlNodeId The controlnode_id of the webservice task.
 	 * @return The JSON String for the POST/PUT.
 	 */
-	public String getPOST(int controlNodeId) {
+	public String getPOSTBody(int controlNodeId) {
 		String sql =
-				"SELECT post FROM webservicetaskpost "
+				"SELECT body FROM webservicetask "
 						+ "WHERE `controlnode_id` = " + controlNodeId;
-		return this.executeStatementReturnsString(sql, "post");
+		return this.executeStatementReturnsString(sql, "body");
 	}
 
 	/**

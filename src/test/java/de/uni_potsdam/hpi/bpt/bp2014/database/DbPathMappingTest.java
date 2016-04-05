@@ -27,7 +27,7 @@ public class DbPathMappingTest {
     @Test
     public void testMappingSaving() {
         try {
-            ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/JsonPathWebserviceScenario.json");
+            ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/JsonPathWebserviceScenarioGet.json");
             Map<Integer, String> expectedPathMap = buildExpectedPathMap();
             DbPathMapping dbPathMapping = new DbPathMapping();
 

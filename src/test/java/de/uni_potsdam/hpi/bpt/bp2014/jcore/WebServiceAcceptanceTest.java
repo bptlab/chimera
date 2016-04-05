@@ -4,26 +4,14 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
-import javax.ws.rs.core.Application;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertArrayEquals;
@@ -37,44 +25,67 @@ import static org.junit.Assert.assertEquals;
  */
 public class WebServiceAcceptanceTest  {
 
+    String json;
+
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(8089);
 
-
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
+    @After
+    public void resetDatabase() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
 
-    /**
-     * T
-     * @throws IOException
-     */
-    @Test
-    public void testWebserviceIntegration() throws IOException {
-        String path = "src/test/resources/json/jsonPathExample.json";
-        String json = FileUtils.readFileToString(new File(path));
+    @Before
+    public void setUp() throws IOException {
+        String path ="src/test/resources/json/jsonPathExample.json";
+        json = FileUtils.readFileToString(new File(path));
+    }
 
+    @Test
+    public void testWebServiceIntegrationGet() throws IOException {
         stubFor(get(urlEqualTo("/my/resource"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody(json)));
 
-
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
-                "src/test/resources/Scenarios/JsonPathWebserviceScenario.json");
+                "src/test/resources/Scenarios/JsonPathWebserviceScenarioGet.json");
         Collection<DataAttributeInstance> dataAttributes =
                 instance.getDataAttributeInstances().values();
+        assertDataAttributeInstancesEmpty(dataAttributes);
+        // Terminating the manual task starts the automatic task
+        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
+        assertDataAttributeInstanceHasValue(dataAttributes);
+    }
 
+    @Test
+    public void testWebServiceIntegrationPost() throws IOException {
+        stubFor(post(urlEqualTo("/my/resource"))
+                .withHeader("Accept", matching("application/json"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(json)));
+
+        ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
+                "src/test/resources/Scenarios/JsonPathWebserviceScenarioPost.json");
+        Collection<DataAttributeInstance> dataAttributes =
+                instance.getDataAttributeInstances().values();
+        assertDataAttributeInstancesEmpty(dataAttributes);
+        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
+        assertDataAttributeInstanceHasValue(dataAttributes);
+    }
+
+    private void assertDataAttributeInstancesEmpty(Collection<DataAttributeInstance> dataAttributes) {
         // Before executing the webservice task none of the data attributes has a value
         for (DataAttributeInstance dataAttribute : dataAttributes) {
             assertEquals("",  dataAttribute.getValue());
         }
+    }
 
-        // Terminating the manual task starts the automatic task
-        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
-        long setDataattributes = dataAttributes.stream().filter(x -> "foo".equals(x.getValue())).count();
-        assertEquals(1L, setDataattributes);
+    private void assertDataAttributeInstanceHasValue(Collection<DataAttributeInstance> dataAttributes) {
+        long amountOfDataAttributesWithValues = dataAttributes.stream().filter(x -> "foo".equals(x.getValue())).count();
+        assertEquals(1L, amountOfDataAttributesWithValues);
     }
 }

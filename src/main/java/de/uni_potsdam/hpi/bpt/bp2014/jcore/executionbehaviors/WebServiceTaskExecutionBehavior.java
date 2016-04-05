@@ -98,9 +98,9 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 
         String method = dbWebServiceTask.getMethod(getControlNodeInstance().getControlNodeId());
         if ("POST".equals(method) || "PUT".equals(method)) {
-            String post = dbWebServiceTask.getPOST(getControlNodeInstance().getControlNodeId());
-            String insertedPost = insertDataobjectValues(post, dataAttributeInstances);
-            return invocationBuilder.post(Entity.json(insertedPost));
+            String post = dbWebServiceTask.getPOSTBody(getControlNodeInstance().getControlNodeId());
+            String bodyWithAttributeValues = insertDataobjectValues(post, dataAttributeInstances);
+            return invocationBuilder.post(Entity.json(bodyWithAttributeValues));
         } else {
             return invocationBuilder.get();
         }

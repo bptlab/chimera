@@ -196,7 +196,7 @@ import java.util.Set;
 		response.put("attributes", list);
 		response.put("method", webService.getMethod(webserviceID));
 		response.put("link", webService.getUrl(webserviceID));
-		response.put("body", webService.getPOST(webserviceID));
+		response.put("body", webService.getPOSTBody(webserviceID));
 		response.put("allAttributes", attributes);
 
 		String jsonResponse = JsonUtil.jsonWrapperHashMapOnly(response);
