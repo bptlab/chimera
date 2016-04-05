@@ -26,56 +26,56 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
                 // route for scenario view
                 state('scenario', {
                     url: '/scenario',
-                    templateUrl: 'views/scenario.html',
+                    templateUrl: 'app/views/scenario.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 }).
                 // route for scenario detail view
                 state('scenario', {
                     url: '/scenario/:id',
-                    templateUrl: 'views/scenarioDetails.html',
+                    templateUrl: 'app/views/scenarioDetails.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 }).
                 // route for scenario instance detail view
                 state('scenarioInstanceId', {
                     url: '/scenario/:id/instance/:instanceId',
-                    templateUrl: 'views/scenarioInstanceDetails.html',
+                    templateUrl: 'app/views/scenarioInstanceDetails.html',
                     controller: 'ScenarioInstanceController',
                     controllerAs: 'instanceCtrl'
                 }).
                 // route for mail task configuration
                 state('adminMail', {
                     url: '/admin/mail',
-                    templateUrl: 'views/mailConfigDetails.html',
+                    templateUrl: 'app/views/mailConfigDetails.html',
                     controller: 'mailConfig',
                     controllerAs: 'mailC'
                 }).
                 // route for web service task configuration
                 state('adminWebservice', {
                     url: '/admin/webservice/',
-                    templateUrl: 'views/webserviceConfigDetails.html',
+                    templateUrl: 'app/views/webserviceConfigDetails.html',
                     controller: 'webserviceConfig',
                     controllerAs: 'webserviceC'
                 }).
                 // route for JUserManagemetn configuration
                 state('adminUserMgmt', {
                     url: '/admin/userMgmt/',
-                    templateUrl: 'views/userMgmtConfig.html',
+                    templateUrl: 'app/views/userMgmtConfig.html',
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
                 // route for user dashboard
                 state('adminUser', {
                     url: '/admin/user/',
-                    templateUrl: 'views/user.html',
+                    templateUrl: 'app/views/user.html',
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
                 // default route
                 state('otherwise', {
                     url: '/otherwise',
-                    templateUrl: 'views/scenario.html',
+                    templateUrl: 'app/views/scenario.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 });
