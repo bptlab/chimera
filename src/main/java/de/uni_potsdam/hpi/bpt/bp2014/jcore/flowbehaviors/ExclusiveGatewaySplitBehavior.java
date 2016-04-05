@@ -80,7 +80,9 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 
 	@Override public void terminate() {
 		this.checkAfterTermination();
-		this.runAfterTermination();
+		// we don't want to start automatic control nodes, because
+		// the user can still decide to start another exclusive task
+		// thus, we do not run this.runAfterTermination();
 	}
 
 	/**
