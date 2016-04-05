@@ -27,18 +27,18 @@ public class DbPathMappingTest {
     @Test
     public void testMappingSaving() {
         try {
-            ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/JsonPathScenario.json");
+            ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/JsonPathWebserviceScenario.json");
             Map<Integer, String> expectedPathMap = buildExpectedPathMap();
             DbPathMapping dbPathMapping = new DbPathMapping();
 
             DbObject dbConn = new DbObject();
-            int dataNodeId = dbConn.executeStatementReturnsInt(
-                    String.format("SELECT * FROM datanode WHERE model_id = '%s'", "DataObjectReference_1eyhyyg"),
+            int serviceTaskNodeId = dbConn.executeStatementReturnsInt(
+                    String.format("SELECT * FROM controlnode WHERE model_id = '%s'", "ServiceTask_165z0yh"),
                     "id");
 
             assertEquals("The jsonpath mapping has not been saved correctly.",
                     expectedPathMap,
-                    dbPathMapping.getPathsForAttributesOfControlNode(dataNodeId));
+                    dbPathMapping.getPathsForAttributesOfControlNode(serviceTaskNodeId));
         } catch (IOException e) {
             fail("File could not be read.");
         }

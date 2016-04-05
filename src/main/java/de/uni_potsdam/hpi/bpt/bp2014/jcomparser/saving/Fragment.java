@@ -193,8 +193,8 @@ public class Fragment {
         return this.fragmentXml.getTasks();
     }
 
-    public List<ServiceTask> getServiceTasks() {
-        return this.fragmentXml.getServiceTasks();
+    public List<WebServiceTask> getWebServiceTasks() {
+        return this.fragmentXml.getWebServiceTasks();
     }
 
     public List<Task> getAllActivities() {

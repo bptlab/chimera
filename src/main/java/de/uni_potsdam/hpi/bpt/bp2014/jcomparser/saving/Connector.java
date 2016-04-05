@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.HttpMethod;
 import org.apache.log4j.Logger;
 
 import java.util.Collections;
@@ -381,6 +382,14 @@ public class Connector extends DbObject {
 		String sql = "INSERT INTO pathmapping (controlnode_id,"
 				+ "dataattribute_id, jsonpath) VALUES ("
 				+ controlNodeId + ", " + dataAttributeId + ", '" + jsonPathString + "')";
+		this.executeInsertStatement(sql);
+	}
+
+	public void insertWebServiceTaskIntoDatabase(int controlNodeId, String url, String method, String body) {
+		String sql = String.format(
+				"INSERT INTO webservicetask (controlnode_id, url, method, body) "
+						+ "VALUES (%d, '%s', '%s', '%s')",
+				controlNodeId, url, method, body);
 		this.executeInsertStatement(sql);
 	}
 

@@ -487,8 +487,10 @@ CREATE TABLE IF NOT EXISTS `janalyticsresults` (
 --
 
 CREATE TABLE IF NOT EXISTS `pathmapping` (
-  `dataattribute_id` int(11) NOT NULL,
+  -- controlnode-id of the node receiving a JSON object,
+  -- e.g. WebServiceTask or MessageEvent
   `controlnode_id` int(11) NOT NULL,
+  `datanode_id` int(11) NOT NULL,
   `jsonpath` varchar(256)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -661,44 +663,21 @@ CREATE TABLE IF NOT EXISTS `userismemberofrole` (
   PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `webservicetaskattribute`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetaskattribute` (
-  `order` int(11) NOT NULL,
-  `controlnode_id` int(11) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL,
-  `key` varchar(512) NOT NULL,
-  PRIMARY KEY (`order`,`controlnode_id`,`dataattribute_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `webservicetasklink`
+-- Table structure for table `webservicetask`
 --
 
-CREATE TABLE IF NOT EXISTS `webservicetasklink` (
+CREATE TABLE IF NOT EXISTS `webservicetask` (
   `controlnode_id` int(11) NOT NULL DEFAULT '0',
-  `link` varchar(2048) NOT NULL,
+  `url` varchar(2048) NOT NULL,
   `method` varchar(64) NOT NULL DEFAULT 'GET',
+  `body` text,
   PRIMARY KEY (`controlnode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `webservicetaskpost`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetaskpost` (
-  `controlnode_id` int(11) NOT NULL,
-  `post` text NOT NULL,
-  PRIMARY KEY (`controlnode_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
