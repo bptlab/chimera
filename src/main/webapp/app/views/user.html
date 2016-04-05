@@ -1,23 +1,17 @@
-<div class="normalheader transition animated fadeIn">
-    <div class="hpanel">
+<div>
+    <div>
         <div class="panel-body">
-            <a class="small-header-action" href="">
-                <div class="clip-header">
-                    <i class="fa fa-arrow-up"></i>
-                </div>
-            </a>
-
-            <div id="hbreadcrumb" class="pull-right m-t-lg">
-                <ol class="hbreadcrumb breadcrumb">
+            <div class="pull-right">
+                <ol class="breadcrumb">
                     <li>
-                        <a href="index.html#/">Dashboard</a>
+                        <a ui-sref="scenario">Dashboard</a>
                     </li>
                     <li class="active">
                         <span>User Overview</span>
                     </li>
                 </ol>
             </div>
-            <h2 class="font-light m-b-xs">
+            <h2>
                 User Overview
             </h2>
 
@@ -28,7 +22,7 @@
 </div>
 <!-- /. normalheader -->
 
-<div class="content animate-panel">
+<div>
 
     <div class="row">
         <div class="pull-right">
@@ -40,15 +34,14 @@
     <div class="row">
         <div style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']"
              ng-show="!searchText || value['username'].indexOf(searchText) > -1">
-            <div style="animation-delay: 0.2s;" class="col-lg-3 animated-panel zoomIn">
-                <div class="hpanel hgreen contact-panel">
+            <div style="animation-delay: 0.2s;" class="col-lg-3">
+                <div class="">
                     <div class="panel-body">
                         <span class="label label-success pull-right">NEW</span>
-                        <img alt="avatar" class="img-circle m-b" src="asset/images/profile.jpg">
 
                         <h3><a href=""> {{value['username']}} </a></h3>
 
-                        <div class="text-muted font-bold m-b-xs">{{value['description']}}</div>
+                        <div class="text-muted">{{value['description']}}</div>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae
                             ultrices
@@ -57,16 +50,16 @@
                         </p>
                     </div>
                     <!-- /. panel body -->
-                    <div class="panel-footer contact-footer">
+                    <div class="panel-footer">
                         <div class="row">
-                            <div style="animation-delay: 0.3s;" class="col-md-4 border-right animated-panel zoomIn">
-                                <div class="contact-stat"><span>Projects: </span> <strong>200</strong></div>
+                            <div style="animation-delay: 0.3s;" class="col-md-4">
+                                <div><span>Projects: </span> <strong>200</strong></div>
                             </div>
-                            <div style="animation-delay: 0.4s;" class="col-md-4 border-right animated-panel zoomIn">
-                                <div class="contact-stat"><span>Messages: </span> <strong>300</strong></div>
+                            <div style="animation-delay: 0.4s;" class="col-md-4">
+                                <div><span>Messages: </span> <strong>300</strong></div>
                             </div>
-                            <div style="animation-delay: 0.5s;" class="col-md-4 animated-panel zoomIn">
-                                <div class="contact-stat"><span>Views: </span> <strong>400</strong></div>
+                            <div style="animation-delay: 0.5s;" class="col-md-4">
+                                <div><span>Views: </span> <strong>400</strong></div>
                             </div>
                         </div>
                     </div>

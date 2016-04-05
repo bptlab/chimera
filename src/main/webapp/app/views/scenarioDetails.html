@@ -1,23 +1,23 @@
-<div class="normalheader transition animated fadeIn">
-    <div class="hpanel">
+<div>
+    <div>
         <div class="panel-body">
-            <a class="small-header-action" href="">
-                <div class="clip-header">
+            <a href="">
+                <div class="">
                     <i class="fa fa-arrow-up"></i>
                 </div>
             </a>
 
-            <div id="hbreadcrumb" class="pull-right m-t-lg">
-                <ol class="hbreadcrumb breadcrumb">
+            <div class="pull-right">
+                <ol class="breadcrumb">
                     <li>
-                        <a href="index.html#/">Dashboard</a>
+                        <a ui-sref="scenario">Dashboard</a>
                     </li>
                     <li class="active">
                         <span>Scenario {{scenarioCtrl.currentScenario['id']}} - {{scenarioCtrl.currentScenario['details']['name']}}</span>
                     </li>
                 </ol>
             </div>
-            <h2 class="font-light m-b-xs">
+            <h2>
                 Scenario {{scenarioCtrl.currentScenario['details']['name']}}
             </h2>
 
@@ -27,14 +27,14 @@
     <!-- /.hpanel -->
 </div> <!-- /. normalheader -->
 
-<div class="content animate-panel">
+<div>
 
     <div class="row">
 
         <!-- scenario details -->
-        <div style="animation-delay: 1.4s;" class="col-lg-6 animated-panel zoomIn">
-            <div class="hpanel">
-                <div class="panel-heading hbuilt">
+        <div class="col-lg-6">
+            <div>
+                <div class="panel-heading">
                     <div class="pull-right">
                         <a type="button" data-toggle="modal" data-target="#createInstance"
                            class="btn btn-success btn-xs">
@@ -53,7 +53,7 @@
                 <!-- /. class="panel-heading hbuilt" -->
                 <div class="panel-body">
                     <!-- display Meta information about this scenario -->
-                    <div class="responsive-table pull-left">
+                    <div class="pull-left">
                         <table class="table table-striped">
                             <tr>
                                 <th>Scenario ID</th>
@@ -92,15 +92,15 @@
         <!-- /. class="col-lg-6 animated-panel zoomIn" -->
 
         <!-- display a list of instances for this scenario -->
-        <div style="animation-delay: 0.2s;" class="col-lg-6 animated-panel zoomIn">
-            <div class="hpanel">
-                <div class="panel-heading hbuilt">
+        <div class="col-lg-6">
+            <div>
+                <div class="panel-heading">
                     <div class="row">
-                        <div style="animation-delay: 1.6s;" class="col-md-6 animated-panel zoomIn">
+                        <div class="col-md-6">
                             Overview of Instances
                         </div>
-                        <div style="animation-delay: 1.7s;" class="col-md-6 animated-panel zoomIn">
-                            <input ng-model="searchText" placeholder="SearchTerm" class="form-control input-xs">
+                        <div class="col-md-6">
+                            <input ng-model="searchText" placeholder="SearchTerm" class="form-control">
                         </div>
                     </div>
                     <!-- /. row -->

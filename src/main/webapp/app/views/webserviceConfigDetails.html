@@ -1,16 +1,10 @@
-<div class="normalheader transition animated fadeIn">
-    <div class="hpanel">
+<div>
+    <div>
         <div class="panel-body">
-            <a class="small-header-action" href="">
-                <div class="clip-header">
-                    <i class="fa fa-arrow-up"></i>
-                </div>
-            </a>
-
-            <div id="hbreadcrumb" class="pull-right m-t-lg">
-                <ol class="hbreadcrumb breadcrumb">
+            <div class="pull-right">
+                <ol class="breadcrumb">
                     <li>
-                        <a href="index.html#/">Dashboard</a>
+                        <a ui-sref="scenario">Dashboard</a>
                     </li>
                     <li class="active">
                         <span>Web Service Task Configuration</span>
@@ -18,7 +12,7 @@
                 </ol>
             </div>
             <!-- /. id="hbreadcrumb" -->
-            <h2 class="font-light m-b-xs">
+            <h2>
                 Web Service Task Configuration
             </h2>
 
@@ -28,15 +22,14 @@
     <!-- /. hpanel -->
 </div> <!-- /. normalheader -->
 
-<div class="content animate-panel">
-
+<div>
     <div class="row">
         <!-- filtering scenarios  -->
-        <div style="animation-delay: 0.2s;" class="col-lg-12 animated-panel zoomIn">
-            <div class="hpanel">
-                <div class="panel-heading hbuilt">
+        <div class="col-lg-12">
+            <div>
+                <div class="panel-heading">
                     <div class="pull-right">
-                        <select class="form-control m-b" data-ng-options="k as v for (k, v) in webserviceC.scenarioIDs"
+                        <select class="form-control" data-ng-options="k as v for (k, v) in webserviceC.scenarioIDs"
                                 ng-model="selectedScenario"
                                 data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)">
                             <option value="">Select Scenario</option>
@@ -50,7 +43,7 @@
                 <div class="panel-body">
                     <!-- if a scenario is selected -> display all available mail tasks within it -->
                     <div ng-if="selectedScenario">
-                        <div class="tabs-left">
+                        <div class="">
                             <ul class="nav nav-tabs">
                                 <li class="active" ng-repeat="(key, value) in webserviceC.webserviceIDs">
                                     <a data-toggle="tab" ng-click="webserviceC.getDetails(value, selectedScenario)">
@@ -295,7 +288,7 @@
     <!-- /.modal -->
 
     <!-- 2. modal for showing successful update -->
-    <div id="update-success" class="modal fade">
+    <div class="modal fade">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">

@@ -1,14 +1,14 @@
-<div class="normalheader transition animated fadeIn" ng-init="new_view = true;">
-    <div class="hpanel">
+<div>
+    <div>
         <div class="panel-body">
-            <a class="small-header-action" href="">
-                <div class="clip-header">
+            <a href="">
+                <div>
                     <i class="fa fa-arrow-up"></i>
                 </div>
             </a>
 
-            <div id="hbreadcrumb" class="pull-right m-t-lg">
-                <ol class="hbreadcrumb breadcrumb">
+            <div class="pull-right">
+                <ol class="breadcrumb">
                     <li><a ui-sref="scenario">Dashboard</a></li>
                     <li>
                         <a ui-sref="scenario({ id: instanceCtrl.instanceDetails['scenarioId'] })">Scenario</a>
@@ -20,7 +20,7 @@
                 </ol>
             </div>
             <!-- /. id="hbreadcrumb" -->
-            <h2 class="font-light m-b-xs">
+            <h2>
                 Case {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
             </h2>
         </div>
@@ -30,7 +30,6 @@
 </div>
 <!-- /.normalheader -->
 
-<div class="content animate-panel">
-    <!-- in case user chooses new view we display it -->
+<div>
     <ng-include src="'templates/scenarioInstancePanels.html'"></ng-include>
 </div>
