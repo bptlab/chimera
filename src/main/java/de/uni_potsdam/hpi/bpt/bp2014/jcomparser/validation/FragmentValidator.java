@@ -76,7 +76,7 @@ public class FragmentValidator {
     }
 
 
-    private Map<String, List<String>> getIncomingStatesPerDataobject(
+    private static Map<String, List<String>> getIncomingStatesPerDataobject(
             AbstractTask task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> incomingStatesPerDataobject = new HashMap<>();
         for (DataInputAssociation assoc : task.getDataInputAssociations()) {
@@ -89,7 +89,7 @@ public class FragmentValidator {
         return incomingStatesPerDataobject;
     }
 
-    private Map<String, List<String>> getOutgoingStatesPerDataobject(
+    private static Map<String, List<String>> getOutgoingStatesPerDataobject(
             AbstractTask task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> outgoingStatesPerDataobject = new HashMap<>();
         for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
