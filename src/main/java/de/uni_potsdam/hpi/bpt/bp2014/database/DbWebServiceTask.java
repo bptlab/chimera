@@ -26,123 +26,63 @@ public class DbWebServiceTask extends DbObject {
 		return this.executeStatementReturnsString(sql, "url");
 	}
 
-    private Map<String, String> retrieve(String sql) {
-        java.sql.Connection conn = Connection.getInstance().connect();
-        Map<String, String> webserviceMapping = new HashMap<>();
-        try(Statement stat = conn.createStatement(); ResultSet rs =  stat.executeQuery(sql)) {
-            while (rs.next()) {
-                webserviceMapping.put(rs.getString("dataattribute_id"), rs.getString("jsonpath"));
-            }
-        } catch (SQLException e) {
-            log.error(e);
-        }
-        return webserviceMapping;
-    }
-
     /**
 	 * Get a List with all ids from the attributes which get changed by the webservice task.
-	 * TODO check usage of this method
 	 * @param controlNodeId The controlnode_id of the webservice task.
 	 * @return a List with all Attribute ids for the webservice task.
 	 */
 	public List<Integer> getAttributeIdsForControlNode(int controlNodeId) {
 		String sql =
-				"SELECT DISTINCT dataattribute_id FROM `webservicetaskattribute` "
-						+ "WHERE `controlnode_id` = " + controlNodeId;
+				"SELECT DISTINCT dataattribute_id FROM pathmapping "
+						+ "WHERE controlnode_id = " + controlNodeId;
 		return this.executeStatementReturnsListInt(sql, "dataattribute_id");
 	}
 
 	/**
-	 * Insert a entry in the database table webservicetaskattribute.
-	 *
-	 * @param order           The order of the entries.
-	 * @param controlNodeID   The controlnode_id of the webservice task.
-	 * @param dataAttributeID The id of the data attribute.
-	 * @param key             The Key to get information from the JSON.
+	 * Updates the url for the given webservice task.
+	 * @param controlNodeId The controlnode_id of the webservice task.
+	 * @param url          The Link for the webservice task.
 	 */
-	public void insertWebServiceTaskAttributeIntoDatabase(int order, int controlNodeID,
-			int dataAttributeID, String key) {
-		String sql = "INSERT INTO webservicetaskattribute VALUES ("
-				+ order + ", " + controlNodeID + ", "
-				+ dataAttributeID + ", '" + key + "')";
-		executeUpdateStatement(sql);
-	}
-
-	/**
-	 * Insert a entry in the database table webservicetasklink.
-	 * TODO refactor to new structure
-	 * @param controlNodeID The controlnode_id of the webservice task.
-	 * @param link          The Link for the webservice task.
-	 * @param method        The method GET/PUT/POST.
-	 */
-	public void insertWebServiceTaskLinkIntoDatabase(int controlNodeID, String link,
-			String method) {
-		String sql = "INSERT INTO webservicetasklink VALUES ("
-				+ controlNodeID + ", '" + link + "', '" + method + "')";
-		executeUpdateStatement(sql);
-	}
-
-	/**
-	 * Insert a entry in the database table webservicetaskpost.
-     * TODO refactor to new structure
-	 * @param controlNodeID The controlnode_id of the webservice task.
-	 * @param post          A JSON that is used by the PUT/POST.
-	 */
-	public void insertWebServiceTaskPOSTIntoDatabase(int controlNodeID, String post) {
-		String sql = "INSERT INTO webservicetaskpost VALUES ("
-				+ controlNodeID + ", '" + post + "')";
-		executeUpdateStatement(sql);
-	}
-
-	/**
-	 * Updates the link for the given webservice task.
-     * TODO refactor to new structure
-	 * @param controlNodeID The controlnode_id of the webservice task.
-	 * @param link          The Link for the webservice task.
-	 */
-	public void updateWebServiceTaskLink(int controlNodeID, String link) {
-		String sql = "UPDATE webservicetasklink "
-				+ "SET link = '" + link
-				+ "' WHERE controlnode_id = " + controlNodeID;
+	public void updateWebServiceTaskUrl(int controlNodeId, String url) {
+		String sql = "UPDATE webservicetask "
+				+ "SET url = '" + url
+				+ "' WHERE controlnode_id = " + controlNodeId;
 		executeUpdateStatement(sql);
 	}
 
 	/**
 	 * Updates the method for the given webservice task.
-     * TODO refactor to new structure
-	 * @param controlNodeID The controlnode_id of the webservice task.
+	 * @param controlNodeId The controlnode_id of the webservice task.
 	 * @param method        The method GET/PUT/POST.
 	 */
-	public void updateWebServiceTaskMethod(int controlNodeID, String method) {
+	public void updateWebServiceTaskMethod(int controlNodeId, String method) {
 		String sql =
-				"UPDATE webservicetasklink "
+				"UPDATE webservicetask "
 						+ "SET method = '" + method
-						+ "' WHERE controlnode_id = " + controlNodeID;
+						+ "' WHERE controlnode_id = " + controlNodeId;
 		executeUpdateStatement(sql);
 	}
 
 	/**
 	 * Updates the post for the given webservice task.
-     * TODO refactor to new structure
-	 * @param controlNodeID The controlnode_id of the webservice task.
-	 * @param post          A JSON that is used by the PUT/POST.
+	 * @param controlNodeId The controlnode_id of the webservice task.
+	 * @param body          A JSON that is used by the PUT/POST.
 	 */
-	public void updateWebServiceTaskPOST(int controlNodeID, String post) {
-		String sql = "UPDATE webservicetaskpost "
-				+ "SET post = '" + post
-				+ "' WHERE controlnode_id = " + controlNodeID;
-		executeUpdateStatement(sql);
+	public void updateWebServiceTaskBody(int controlNodeId, String body) {
+		String sql = "UPDATE webservicetask "
+				+ "SET body = '%s' "
+				+ "WHERE controlnode_id = %d";
+		executeUpdateStatement(String.format(sql, body, controlNodeId));
 	}
 
 	/**
 	 * Deletes all entries in the database table webservicetaskattribute
 	 * for the given webservice task and the given data attribute.
-     * TODO refactor to new structure
 	 * @param controlNodeID   The controlnode_id of the webservice task.
 	 * @param dataAttributeID The id of the data attribute.
 	 */
 	public void deleteWebServiceTaskAtribute(int controlNodeID, int dataAttributeID) {
-		String sql = "DELETE FROM webservicetaskattribute "
+		String sql = "DELETE FROM pathmapping "
 				+ "WHERE controlnode_id = " + controlNodeID
 				+ " AND dataattribute_id = " + dataAttributeID;
 		executeUpdateStatement(sql);
@@ -161,29 +101,6 @@ public class DbWebServiceTask extends DbObject {
 				+ "AND fragment.scenario_id = " + scenarioID + " "
 				+ "AND controlnode.type = 'WebServiceTask'";
 		return executeStatementReturnsListInt(sql, "controlnode.id");
-	}
-
-	/**
-	 * Returns the whole database table webservicetaskattribute in a Map.
-	 *
-	 * @return a Map with the whole database table webservicetaskattribute.
-	 */
-	public ArrayList<Map<String, Object>> getAllWebServiceTaskAttributeFancy() {
-		String sql = "SELECT *  FROM webservicetaskattribute";
-		return executeStatementReturnsHashMap(sql);
-	}
-
-	/**
-	 * Returns a Map with all entries in the database for the given webservice task.
-	 *
-	 * @param controlnodeId The id of the webservice task.
-	 * @return a Map with all database entries for the given webservice task.
-	 */
-	public ArrayList<Map<String, Object>> getComplexAttributeMap(int controlnodeId) {
-		String sql =
-				"SELECT *  FROM webservicetaskattribute "
-						+ "WHERE controlnode_id = " + controlnodeId;
-		return executeStatementReturnsHashMap(sql);
 	}
 
 	/**
@@ -213,54 +130,32 @@ public class DbWebServiceTask extends DbObject {
 	}
 
 	/**
-	 * Checks if there are entries in the table WebServiceTaskLink in the database.
+	 * Checks if the webServiceTask has a body that is used in a POST/PUT request.
 	 *
 	 * @param controlNodeId The id of the webservice task.
-	 * @return true if there is entry. false if not.
+	 * @return true if it has a body, false if not.
 	 */
-	public boolean existWebServiceTaskIDinLink(int controlNodeId) {
-		String sql = "Select controlnode_id from webservicetasklink WHERE controlnode_id = "
-				+ controlNodeId;
-		return executeExistStatement(sql);
-	}
-
-	/**
-	 * Checks if there are entries in the table WebServiceTaskPost in the database.
-	 *
-	 * @param controlNodeId The id of the webservice task.
-	 * @return true if there is entry. false if not.
-	 */
-	public boolean existWebServiceTaskIDinPost(int controlNodeId) {
-		String sql = "SELECT controlnode_id FROM webservicetaskpost "
-				+ "WHERE controlnode_id = " + controlNodeId;
-		return executeExistStatement(sql);
+	public boolean doesWebServiceTaskHaveBody(int controlNodeId) {
+		String sql = "SELECT * FROM webservicetask "
+				+ "WHERE controlnode_id = %d "
+				+ "AND body <> NULL "
+				+ "AND body <> ''";
+		return executeExistStatement(String.format(sql, controlNodeId));
 	}
 
 	/**
 	 * Return a list of all dataattribute IDs and their names that are accessible
 	 * in any dataobject of the outputset of the webserviceTask.
 	 *
-	 * @param webserviceID The controlnode_id of the webservice task.
+	 * @param webserviceNodeId The controlnode_id of the webservice task.
 	 * @return A map of all dataattributeIDs and its names
 	 */
-	public Map<Integer, String> getOutputAttributesForWebservice(int webserviceID) {
-		String sql = "SELECT name, id  FROM dataattribute WHERE dataclass_id IN"
-				+ "(SELECT DISTINCT dataclass_id FROM datanode WHERE id IN"
-				+ "(SELECT DISTINCT datanode_id FROM datasetconsistsofdatanode "
-				+ "WHERE dataset_id IN "
-				+ "(SELECT DISTINCT dataset_id FROM dataflow "
-				+ "WHERE input = 0 AND controlnode_id = " + webserviceID + " )))";
-		return executeStatementReturnsMap(sql, "id", "name");
-	}
-
-	/**
-	 * Deletes all Attribute entries for the webservice Task.
-	 *
-	 * @param webserviceID The controlnode_id of the webservice task.
-	 */
-	public void deleteAllAttributes(int webserviceID) {
-		String sql = "DELETE FROM webservicetaskattribute "
-				+ "WHERE controlnode_id = " + webserviceID;
-		executeUpdateStatement(sql);
+	public Map<Integer, String> getOutputAttributesForWebservice(int webserviceNodeId) {
+		// TODO
+		String sql = "SELECT dataattribute.id as did, dataattribute.name as dname"
+				+ " FROM pathmapping, dataattribute "
+				+ "WHERE pathmapping.controlnode_id = %d "
+				+ "AND dataattribute.id = pathmapping.dataattribute_id";
+		return executeStatementReturnsMap(sql, "did", "dname");
 	}
 }
