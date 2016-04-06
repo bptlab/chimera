@@ -79,10 +79,10 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	}
 
 	@Override public void terminate() {
-		this.checkAfterTermination();
-		// we don't want to start automatic control nodes, because
-		// the user can still decide to start another exclusive task
-		// thus, we do not run this.runAfterTermination();
+        ScenarioInstance scenarioInstance = this.getScenarioInstance();
+        scenarioInstance.updateDataFlow();
+        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+		// Automatic tasks are not started, because the user can still for another task
 	}
 
 	/**
@@ -140,6 +140,8 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		if (type == null || this.getControlNodeId() != controlNodeId) {
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
+        // TODO check if this is still legit.
+        // Xor Gateways can only be skipped by activities or events
 		if (("AND".equals(type)) || ("XOR".equals(type))) {
 			return false;
 		}

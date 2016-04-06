@@ -212,7 +212,7 @@ public class ScenarioInstance {
 	/**
 	 * Checks if the control flow enabled control nodes can set to data flow enabled.
 	 */
-	public void checkDataFlowEnabled() {
+	public void updateDataFlow() {
 		for (AbstractControlNodeInstance activityInstance
 				: controlFlowEnabledControlNodeInstances) {
 			if (activityInstance.getClass() == ActivityInstance.class) {
@@ -222,12 +222,13 @@ public class ScenarioInstance {
 	}
 
 	/**
-	 * Checks if a executing gateway can terminate.
-	 *
-	 * @param controlNodeId the Id of a control node.
+	 * Checks if terminated control node triggers an xor gateway.
+	 * @param controlNodeId id of the terminated control node which could cause a gateway
+     *                      to terminate
 	 */
-	@SuppressWarnings("unchecked") public void checkExecutingGateways(int controlNodeId) {
-		for (GatewayInstance gatewayInstance : (
+	@SuppressWarnings("unchecked") public void checkXorGatewaysForTermination(int controlNodeId) {
+		// Cast to List is necessary because of clone returns Object
+        for (GatewayInstance gatewayInstance : (
 				(LinkedList<GatewayInstance>) executingGateways.clone())) {
 			if (gatewayInstance.checkTermination(controlNodeId)) {
 				gatewayInstance.terminate();

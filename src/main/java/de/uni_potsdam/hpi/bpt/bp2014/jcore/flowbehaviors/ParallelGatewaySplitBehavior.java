@@ -1,10 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
-
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 
 /**
  *
@@ -25,13 +20,15 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
-		this.gatewayInstance = gatewayInstance;
 	}
 
 	@Override public void terminate() {
-		this.checkAfterTermination();
-		this.enableFollowing();
-		this.runAfterTermination();
+        ScenarioInstance scenarioInstance = this.getScenarioInstance();
+        scenarioInstance.updateDataFlow();
+        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+
+        this.enableFollowing();
+		this.runAutomaticTasks();
 	}
 
 	@Override protected AbstractControlNodeInstance createFollowingNodeInstance(

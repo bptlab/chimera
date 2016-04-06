@@ -15,8 +15,11 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
     }
 
     @Override public void terminate() {
-        this.checkAfterTermination();
+        ScenarioInstance scenarioInstance = this.getScenarioInstance();
+        scenarioInstance.updateDataFlow();
+        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+
         this.enableFollowing();
-        this.runAfterTermination();
+        this.runAutomaticTasks();
     }
 }

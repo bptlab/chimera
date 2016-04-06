@@ -336,5 +336,4 @@ public class ActivityInstance extends AbstractControlNodeInstance {
                 this.getOutgoingBehavior();
         out.cancel();
     }
-
 }

@@ -48,9 +48,13 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 */
 	public void terminate(int outputSetId) {
 		setDataStates(outputSetId);
-		this.checkAfterTermination();
+
+        ScenarioInstance scenarioInstance = this.getScenarioInstance();
+        scenarioInstance.updateDataFlow();
+        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+
 		this.enableFollowing();
-		this.runAfterTermination();
+		this.runAutomaticTasks();
 	}
 
     /**
