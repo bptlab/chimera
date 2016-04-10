@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.LinkedList;
 
@@ -62,10 +63,13 @@ public class DataObjectInstance {
 	private void initializeAttributes() {
 		LinkedList<Integer> dataAttributeIds = dbDataObject
 				.getAllDataAttributesForDataObject(dataObjectId);
-		for (int dataAttributeId : dataAttributeIds) {
+        HistoryLogger logger = new HistoryLogger();
+        for (int dataAttributeId : dataAttributeIds) {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
 					dataAttributeId, dataObjectInstanceId, this);
-			dataAttributeInstances.add(dataAttributeInstance);
+            logger.logDataAttributeCreation(dataAttributeInstance.getDataAttributeInstanceId());
+
+            dataAttributeInstances.add(dataAttributeInstance);
 			scenarioInstance.getDataAttributeInstances()
 					.put(dataAttributeInstance.getDataAttributeInstanceId(),
 							dataAttributeInstance);

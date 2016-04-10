@@ -27,10 +27,10 @@ public class HistoryLogger {
 	 * This method delegates a log entry of a newly created ActivityInstance
 	 * being saved into the database.
 	 *
-	 * @param id the ID of the ActivityInstance that is created.
+	 * @param instanceId the ID of the ActivityInstance that is created.
 	 */
-	public void logActivityCreation(int id) {
-		dbHistoryActivityTransition.logActivityCreation(id);
+	public void logActivityCreation(int instanceId) {
+		dbHistoryActivityTransition.logActivityCreation(instanceId);
 	}
 
 	/**
@@ -48,10 +48,10 @@ public class HistoryLogger {
 	 * This method delegates a log entry of a newly created DataObjectInstance
 	 * being saved into the database.
 	 *
-	 * @param id the ID of the DataObjectInstance that is created.
+	 * @param instanceId the ID of the DataObjectInstance that is created.
 	 */
-	public void logDataObjectCreation(int id) {
-		dbHistoryDataObjectTransition.logDataObjectCreation(id);
+	public void logDataObjectCreation(int instanceId) {
+		dbHistoryDataObjectTransition.logDataObjectCreation(instanceId);
 	}
 
 	/**

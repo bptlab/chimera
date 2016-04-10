@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 /**
  * This class represents generic outgoing behavior.
@@ -41,8 +42,10 @@ public abstract class AbstractOutgoingBehavior {
 		case "WebServiceTask":
 			controlNodeInstance = new ActivityInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
-			break;
-		case "EndEvent":
+            HistoryLogger logger = new HistoryLogger();
+            logger.logActivityCreation(controlNodeInstance.getControlNodeInstanceId());
+            break;
+		case "Endevent":
 			controlNodeInstance = new EventInstance(
 					fragmentInstanceId, scenarioInstance, "EndEvent");
 			break;

@@ -1,12 +1,17 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import org.apache.commons.lang3.NotImplementedException;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +21,36 @@ import static org.junit.Assert.assertEquals;
  *
  */
 public class HistoryHistoryLoggerTest {
+    @After
+    public void teardown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
+
+    @Test
+    public void testCreationUponInitialization() throws IOException {
+        HistoryService service = new HistoryService();
+        String path = "src/test/resources/history/HistoryExample.json";
+        ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        // After instantiating a scenario the creation of an activity instance should be logged
+        assertEquals(1, service.getActivityInstanceEntries(
+                instance.getScenarioInstanceId()).size());
+
+        assertEquals(1, service.getDataObjectEntries(
+                instance.getScenarioInstanceId()).size());
+
+        assertEquals(1, service.getDataattributeEntries(
+                instance.getScenarioInstanceId()).size());
+    }
+
+    @Test
+    public void testDataobjectCreation() {
+        throw new NotImplementedException("");
+    }
+    @Test
+    public void testDataattributeCreation() {
+        throw new NotImplementedException("");
+    }
+
 
     /**
      * This test loads an scenario with a single activity ChangeData which changes the state

@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +52,7 @@ public class DataManager {
      * Initializes all data objects for the scenario instance.
      */
     private void initializeDataObjects() {
+        HistoryLogger logger = new HistoryLogger();
         DbDataObject dbDataObject = new DbDataObject();
         int scenarioId = this.scenarioInstance.getScenarioId();
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
@@ -61,7 +61,7 @@ public class DataManager {
         for (Integer dataObject : data) {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
-
+            logger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
             //checks if dataObjectInstance is locked
             if (dataObjectInstance.getOnChange()) {
                 dataObjectInstancesOnChange.add(dataObjectInstance);

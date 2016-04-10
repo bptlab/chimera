@@ -35,7 +35,13 @@
           ]
         },
         "_id": "56fd3073a774ca8e0edb770d",
-        "attributes": []
+        "attributes": [
+          {
+            "name": "Temperature",
+            "_id": "56ae3855973e910e65885f62",
+            "datatype": "String"
+          }
+        ]
       }
     ]
   },
