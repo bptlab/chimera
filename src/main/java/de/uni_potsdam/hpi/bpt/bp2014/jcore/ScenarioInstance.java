@@ -299,9 +299,9 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-		for (AbstractControlNodeInstance controlNodeInstance : (
-				(LinkedList<AbstractControlNodeInstance>)
-						enabledControlNodeInstances
+		/*
+        for (AbstractControlNodeInstance controlNodeInstance : (
+				(LinkedList<AbstractControlNodeInstance>) enabledControlNodeInstances
 				.clone())) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class
 					&& ((ActivityInstance) controlNodeInstance)
@@ -309,6 +309,8 @@ public class ScenarioInstance {
 				((ActivityInstance) controlNodeInstance).begin();
 			}
 		}
+		 */
+        // Don't execute tasks at the moment.
 	}
 
 	/**
