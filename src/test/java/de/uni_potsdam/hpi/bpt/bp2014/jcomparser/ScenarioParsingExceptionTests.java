@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,5 +53,32 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(422, response.getStatus());
         assertEquals("Data node foo references an invalid data class", response.readEntity(String.class));
+    }
+
+    @Test
+    public void testInvalidTerminationConditionReference() throws IOException {
+        String path = "src/test/resources/jcomparser/" +
+                "ScenarioParsingExceptionTests/InvalidTerminationCondition.json";
+        File file = new File(path);
+        String json = FileUtils.readFileToString(file);
+        Response response = base.path("scenario").request().post(Entity.json(json));
+        assertEquals(422, response.getStatus());
+        assertEquals("Termination condition references invalid data class Default",
+                response.readEntity(String.class));
+    }
+
+    @Test
+    public void testValidNames() {
+        Assert.fail();
+    }
+
+    @Test
+    public void testFragmentsPresent() {
+        Assert.fail();
+    }
+
+    @Test
+    public void checkDomainModelPresent() {
+        Assert.fail();
     }
 }

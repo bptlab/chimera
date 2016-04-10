@@ -42,10 +42,10 @@ public class TerminationCondition {
      * @param dataClassName name of the dataClass
      * @return DataObject that has the given class
      */
-    private static DataObject findDataObjectByClass(String dataClassName, List<DataObject> dataObjects) {
+    private static Optional<DataObject> findDataObjectByClass(String dataClassName, List<DataObject> dataObjects) {
         return dataObjects.stream()
                 .filter(a -> a.getDataClassName().equals(dataClassName))
-                .findFirst().get();
+                .findFirst();
     }
 
 
@@ -76,6 +76,7 @@ public class TerminationCondition {
         return conditions;
     }
 
+    // TODO refactor this method
     private static TerminationCondition parseTerminationConditionString(
             String conditionString, List<DataObject> dataObjects, int scenarioId,
             Map<String, Integer> stateToDatabaseId) {
@@ -87,10 +88,15 @@ public class TerminationCondition {
             if (match.find()) {
                 String dataClassString = match.group(1);
                 String stateString = match.group(2);
-
-                int dataObjectId = findDataObjectByClass(dataClassString, dataObjects).getDatabaseId();
-                int stateId = stateToDatabaseId.get(stateString);
-                condition.addCondition(dataObjectId, stateId);
+                Optional<DataObject> dataObject = findDataObjectByClass(dataClassString, dataObjects);
+                if (dataObject.isPresent()) {
+                    int dataObjectId = dataObject.get().getDatabaseId();
+                    int stateId = stateToDatabaseId.get(stateString);
+                    condition.addCondition(dataObjectId, stateId);
+                } else {
+                    String errorMsg = "Termination condition references invalid data class %s";
+                    throw new IllegalArgumentException(String.format(errorMsg, dataClassString));
+                }
             } else {
                 throw new IllegalArgumentException(String.format(
                         "Malformed termination String %s", tcString));
