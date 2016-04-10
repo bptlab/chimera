@@ -2,8 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import org.junit.After;
 import org.junit.Test;
 
@@ -37,5 +37,5 @@ public class ExclusiveGatewayTest {
         enabledControlNodes = instance.getEnabledControlNodeInstances();
         assertEquals(0, enabledControlNodes.size());
     }
-    
+
 }

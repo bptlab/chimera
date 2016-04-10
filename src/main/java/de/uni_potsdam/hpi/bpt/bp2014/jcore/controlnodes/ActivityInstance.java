@@ -162,8 +162,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior()).startReferences();
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior())
 					.setDataObjectInstancesOnChange();
-			scenarioInstance.checkDataFlowEnabled();
-			scenarioInstance.checkExecutingGateways(getControlNodeId());
+			scenarioInstance.updateDataFlow();
+			scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
 			taskExecutionBehavior.execute();
             enableAttachedEvents();
             if (isAutomaticTask) {

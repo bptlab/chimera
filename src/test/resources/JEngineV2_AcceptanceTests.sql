@@ -30194,6 +30194,7 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `timestamp`,
 CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
 `id` int(11) NOT NULL,
   `dataattributeinstance_id` int(11) NOT NULL,
+  `activityinstance_id` int(11) DEFAULT NULL,
   `oldvalue` varchar(256) DEFAULT NULL,
   `newvalue` varchar(256) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -30435,6 +30436,7 @@ INSERT INTO `historydataattributeinstance` (`id`, `dataattributeinstance_id`, `o
 CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
 `id` int(11) NOT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
+  `activityinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dataobjectinstance_id` int(11) NOT NULL,
   `oldstate_id` int(11) DEFAULT NULL,

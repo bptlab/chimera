@@ -24,6 +24,7 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
+        this.gatewayInstance = gatewayInstance;
 	}
 
 	@Override public void terminate() {
