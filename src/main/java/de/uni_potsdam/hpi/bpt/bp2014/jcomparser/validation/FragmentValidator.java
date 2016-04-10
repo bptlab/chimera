@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,6 +14,11 @@ import java.util.stream.Stream;
  *
  */
 public class FragmentValidator {
+
+    /**
+     * Hide public default constructor
+     */
+    private FragmentValidator() { }
 
     /**
      * For a given fragment and its corresponding domain model, checks if
@@ -25,13 +31,27 @@ public class FragmentValidator {
     public static void validateFragment(Fragment fragment, DomainModel domainModel) {
         validateDataReferences(fragment, domainModel);
         validateOlc(domainModel.getOlcs(), fragment);
+        validateNames(fragment);
     }
 
+    private static void validateNames(Fragment fragment) {
+        for (AbstractTask task : fragment.getTasks()) {
+            if (!StringUtils.isAlphanumeric(task.getName()) && !"".equals(task.getName())) {
+                throw new IllegalArgumentException(String.format("%s is not a valid task name",
+                        task.getName()));
+            }
+        }
+        for (DataNode dataNode : fragment.getDataNodes()) {
+            if (!StringUtils.isAlphanumeric(dataNode.getName()) && !"".equals(dataNode.getName())) {
+                throw new IllegalArgumentException(String.format("%s is not a valid data node name",
+                        dataNode.getName()));
+            }
+        }
+    }
     /**
      * This method validates a fragment against the given OLCs. Note that in case there is no OLC
      * for a given DataClass all transitions for this class are considered valid.
      * @param olcs A map of DataClasses (identified by name) to their respective OLCs.
-     * @return true if the fragment matches all given OLCs (false if there is a violation)
      */
     private static void validateOlc(Map<String, Olc> olcs, Fragment fragment) {
         Map<String, DataNode> idToDataNode = getIdToDataNode(fragment.getDataNodes());

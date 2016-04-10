@@ -68,9 +68,18 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
     }
 
     @Test
-    public void testValidNames() {
-        Assert.fail();
+    public void testValidDataclassNames() throws IOException {
+        String path = "src/test/resources/jcomparser/" +
+                "ScenarioParsingExceptionTests/InvalidDataClassNames.json";
+        File file = new File(path);
+        String json = FileUtils.readFileToString(file);
+        Response response = base.path("scenario").request().post(Entity.json(json));
+        assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
+        assertEquals("Data@DROP*FROM EVERYTHING[changed] is not a valid data class name",
+                response.readEntity(String.class));
     }
+
+
 
     @Test
     public void testFragmentsPresent() {

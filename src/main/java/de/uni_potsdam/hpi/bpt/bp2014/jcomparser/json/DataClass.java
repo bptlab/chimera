@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +50,10 @@ public class DataClass implements IPersistable {
         try {
             this.dataClassJson = new JSONObject(element);
             this.dataClassName = this.dataClassJson.getString("name");
+            if (!StringUtils.isAlphanumeric(dataClassName)) {
+                String errorMsg = "%s is not a valid data class name";
+                throw new IllegalArgumentException(String.format(errorMsg, dataClassName));
+            }
             this.dataClassModelID = this.dataClassJson.getString("_id");
             generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
 			if (this.dataClassJson.has("olc")) {
