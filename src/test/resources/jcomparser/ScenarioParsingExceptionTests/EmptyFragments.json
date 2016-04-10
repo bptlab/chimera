@@ -1,0 +1,27 @@
+{
+  "domainmodel": {
+    "__v": 1,
+    "_id": "56c59cf44eb21bb86ec0f9fe",
+    "name": "SimpleScenario",
+    "revision": 2,
+    "dataclasses": [
+      {
+        "name": "Data",
+        "is_event": false,
+        "_id": "570a3c9dc97a7c163efc6528",
+        "attributes": [
+
+        ]
+      }
+    ]
+  },
+  "name": "SimpleScenario",
+  "revision": 2,
+  "_id": "56c59cf44eb21bb86ec0f9fd",
+  "__v": 1,
+  "fragments": [
+  ],
+  "terminationconditions": [
+    "Data[changed]"
+  ]
+}

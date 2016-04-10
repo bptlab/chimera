@@ -36,13 +36,13 @@ public class FragmentValidator {
 
     private static void validateNames(Fragment fragment) {
         for (AbstractTask task : fragment.getTasks()) {
-            if (!StringUtils.isAlphanumeric(task.getName()) && !"".equals(task.getName())) {
+            if (!StringUtils.isAlphanumericSpace(task.getName()) && !"".equals(task.getName())) {
                 throw new IllegalArgumentException(String.format("%s is not a valid task name",
                         task.getName()));
             }
         }
         for (DataNode dataNode : fragment.getDataNodes()) {
-            if (!StringUtils.isAlphanumeric(dataNode.getName()) && !"".equals(dataNode.getName())) {
+            if (!StringUtils.isAlphanumericSpace(dataNode.getName()) && !"".equals(dataNode.getName())) {
                 throw new IllegalArgumentException(String.format("%s is not a valid data node name",
                         dataNode.getName()));
             }
@@ -72,7 +72,9 @@ public class FragmentValidator {
                     if (!olcForDataobject.allowedStateTransitions.containsKey(state)) {
                         throw new InvalidDataTransitionException("Invalid OLC transition found ");
                     }
-                    if (olcForDataobject.allowedStateTransitions.get(state).containsAll(outputStates)) {
+                    List<String> allowedTransitionsForState =
+                            olcForDataobject.allowedStateTransitions.get(state);
+                    if (!allowedTransitionsForState.containsAll(outputStates)) {
                         throw new InvalidDataTransitionException("Invalid OLC transition found ");
                     }
                 }

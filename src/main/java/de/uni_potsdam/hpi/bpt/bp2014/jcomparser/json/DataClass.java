@@ -50,7 +50,7 @@ public class DataClass implements IPersistable {
         try {
             this.dataClassJson = new JSONObject(element);
             this.dataClassName = this.dataClassJson.getString("name");
-            if (!StringUtils.isAlphanumeric(dataClassName)) {
+            if (!StringUtils.isAlphanumericSpace(dataClassName)) {
                 String errorMsg = "%s is not a valid data class name";
                 throw new IllegalArgumentException(String.format(errorMsg, dataClassName));
             }

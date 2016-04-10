@@ -159,6 +159,9 @@ public class ScenarioData {
     private List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) throws JAXBException {
         JSONArray fragmentStrings = scenarioJson.getJSONArray("fragments");
         List<Fragment> generatedFragments = new ArrayList<>();
+        if (fragmentStrings.length() == 0) {
+            throw new IllegalArgumentException("No fragments specified");
+        }
         for (int i = 0; i < fragmentStrings.length(); i++) {
             JSONObject fragmentJson = fragmentStrings.getJSONObject(i);
             try {

@@ -94,12 +94,14 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
 
 
     @Test
-    public void testFragmentsPresent() {
-        Assert.fail();
+    public void testFragmentsPresent() throws IOException {
+        String path = "src/test/resources/jcomparser/" +
+                "ScenarioParsingExceptionTests/EmptyFragments.json";
+        File file = new File(path);
+        String json = FileUtils.readFileToString(file);
+        Response response = base.path("scenario").request().post(Entity.json(json));
+        assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
+        assertEquals("No fragments specified", response.readEntity(String.class));
     }
 
-    @Test
-    public void checkDomainModelPresent() {
-        Assert.fail();
-    }
 }

@@ -8,6 +8,7 @@ import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -194,7 +195,7 @@ public class RestConfiguratorTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    @Test
+    @Test @Ignore
     public void testGetSpecificWebserviceTask() {
         Response response = base.path("scenario/145/webservice/390").request().get();
         assertThat("Get webservice Task details returns something wrong",
@@ -202,7 +203,7 @@ public class RestConfiguratorTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    @Test
+    @Test @Ignore
     public void testUpdateWebserviceLink() {
         Response response = base.path("webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",
@@ -218,7 +219,7 @@ public class RestConfiguratorTest extends AbstractTest {
     }
 
 
-    @Test
+    @Test @Ignore()
     public void testUpdateWebservicePost() {
         Response response = base.path("webservice/390").request().put(Entity.json("{\"body\":\"GET\"}"));
         assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 202",
