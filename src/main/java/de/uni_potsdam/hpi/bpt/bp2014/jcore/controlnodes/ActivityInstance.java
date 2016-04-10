@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskOutgoingControlFlowBehavior;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -212,7 +213,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could set to terminated. false if the activity couldn't set.
 	 */
 	@Override public boolean terminate() {
-		return this.terminate(-1);
+        return this.terminate(-1);
 	}
 
 	/**
@@ -224,7 +225,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public boolean terminate(int outputSetId) {
 		if (canTerminate) {
-			boolean workingFine = getStateMachine().terminate();
+            HistoryLogger logger = new HistoryLogger();
+            logger.logActivityTransition(this.getControlNodeInstanceId(), "terminated");
+            boolean workingFine = getStateMachine().terminate();
 			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
 					.terminateReferences();
 			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
@@ -336,4 +339,5 @@ public class ActivityInstance extends AbstractControlNodeInstance {
                 this.getOutgoingBehavior();
         out.cancel();
     }
+
 }

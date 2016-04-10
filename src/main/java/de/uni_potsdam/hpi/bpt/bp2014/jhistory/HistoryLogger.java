@@ -40,8 +40,10 @@ public class HistoryLogger {
 	 * @param objectInstanceId the ID of the DataObjectInstance that is changed.
 	 * @param stateId           the new state of the DataObjectInstance.
 	 */
-	public void logDataobjectStateTransition(int objectInstanceId, int stateId, int activityLogId) {
-		dbHistoryDataObjectTransition.logDataobjectStateTransition(objectInstanceId, stateId);
+	public void logDataobjectStateTransition(
+            int objectInstanceId, int stateId, int activityInstanceId) {
+		dbHistoryDataObjectTransition.logStateTransition(
+                objectInstanceId, stateId, activityInstanceId);
 	}
 
 	/**
@@ -60,11 +62,12 @@ public class HistoryLogger {
 	 *
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is changed.
 	 * @param value                    the new value of the DataAttributeInstance.
-	 */
+	 * @param activityInstanceId the id of the activity which caused the log entry.
+     */
 	public void logDataAttributeTransition(
-            int dataAttributeInstanceId, Object value, int activityId) {
+            int dataAttributeInstanceId, Object value, int activityInstanceId) {
 		dbHistoryDataAttributeInstance.logDataAttributeTransition(
-                dataAttributeInstanceId, value, activityId);
+                dataAttributeInstanceId, value, activityInstanceId);
 	}
 
 	/**

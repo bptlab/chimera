@@ -57,8 +57,7 @@ public class HistoryHistoryLoggerTest {
         HistoryService service = new HistoryService();
         Map<Integer, Map<String, Object>> activityEntries =
                 service.getActivityInstanceEntries(instance.getScenarioInstanceId());
-        assertEquals(2, activityEntries.size());
-        assertEquals(2, activityEntries.get(2).get("h.activityinstance_id"));
+        assertEquals(3, activityEntries.size());
     }
 
 
@@ -82,8 +81,50 @@ public class HistoryHistoryLoggerTest {
         ActivityInstance activity = ScenarioTestHelper.getActivityInstanceByName(
                 "ChangeData", instance);
 
+        changeDataattributeValues(instance, activity);
+        HistoryService service = new HistoryService();
+        Map<Integer, Map<String, Object>> dataattributeEntries
+                = service.getDataattributeEntries(instance.getScenarioInstanceId());
+        assertEquals(2, dataattributeEntries.size());
+    }
+
+    /**
+     * All logs which are caused by one activityInstance should have and entry pointing to that
+     * activity instance.
+     */
+    @Test
+    public void testCorrectLinking() throws IOException {
+        String path = "src/test/resources/history/HistoryExample.json";
+        ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
+        ActivityInstance activity = ScenarioTestHelper.getActivityInstanceByName(
+                "ChangeData", scenarioInstance);
+        changeDataattributeValues(scenarioInstance, activity);
+        activity.terminate();
+        HistoryService service = new HistoryService();
+
+        Map<Integer, Map<String, Object>> dataObjectEntries =
+                service.getDataObjectEntries(scenarioInstance.getScenarioInstanceId());
+
+        Map<Integer, Map<String, Object>> dataattributeEntries
+                = service.getDataattributeEntries(scenarioInstance.getScenarioInstanceId());
+
+        Map<Integer, Map<String, Object>> activityEntries =
+                service.getActivityInstanceEntries(scenarioInstance.getScenarioInstanceId());
+
+        assertEquals(activity.getControlNodeInstanceId(),
+                activityEntries.get(2).get("h.activityinstance_id"));
+
+        assertEquals(activity.getControlNodeInstanceId(),
+                dataObjectEntries.get(2).get("h.activityinstance_id"));
+
+        assertEquals(activity.getControlNodeInstanceId(),
+                dataattributeEntries.get(2).get("h.activityinstance_id"));
+    }
+
+    private void changeDataattributeValues(
+            ScenarioInstance scenarioInstance, ActivityInstance activity) {
         Map<Integer, String> idToChangedValue = new HashMap<>();
-        for (DataAttributeInstance attribute : instance.getDataAttributeInstances().values()) {
+        for (DataAttributeInstance attribute : scenarioInstance.getDataAttributeInstances().values()) {
             idToChangedValue.put(attribute.getDataAttributeInstanceId(), "bar");
         }
         assert(idToChangedValue.size() > 0);
@@ -91,10 +132,5 @@ public class HistoryHistoryLoggerTest {
         activity.begin();
         activity.setDataAttributeValues(idToChangedValue);
 
-        HistoryService service = new HistoryService();
-        Map<Integer, Map<String, Object>> dataattributeEntries
-                = service.getDataattributeEntries(instance.getScenarioInstanceId());
-        assertEquals(2, dataattributeEntries.size());
     }
-
 }

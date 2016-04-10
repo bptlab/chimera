@@ -15,13 +15,14 @@ public class DbHistoryDataObjectTransition extends DbObject {
 	 *
 	 * @param objectInstanceId the ID of the DataObjectInstance that is changed.
 	 * @param stateId           the new state of the DataObjectInstance.
-	 * @return the generated key for the insert statement.
+	 * @param activityInstanceId
+     * @return the generated key for the insert statement.
 	 */
-	public int logDataobjectStateTransition(int objectInstanceId, int stateId) {
+	public int logStateTransition(int objectInstanceId, int stateId, int activityInstanceId) {
 		String sql =
 				"INSERT INTO `historydataobjectinstance` ("
 						+ "`scenarioinstance_id`,`dataobjectinstance_id`,"
-						+ "`oldstate_id`,`newstate_id`) "
+						+ "`oldstate_id`,`newstate_id`, `activityinstance_id`) "
 						+ "SELECT (SELECT `scenarioinstance_id` "
 						+ "FROM `dataobjectinstance` "
 						+ "WHERE `id` = " + objectInstanceId
@@ -29,8 +30,8 @@ public class DbHistoryDataObjectTransition extends DbObject {
 						+ "(SELECT `state_id` FROM `dataobjectinstance` "
 						+ "WHERE `id` = " + objectInstanceId
 						+ ") AS `oldstate_id`, "
-						+ stateId + " AS `newstate_id` "
-						+ "FROM `dataobjectinstance` "
+						+ stateId + " AS `newstate_id`, " + activityInstanceId
+						+ " FROM `dataobjectinstance` "
 						+ "WHERE `id` = " + objectInstanceId;
 		return this.executeInsertStatement(sql);
 	}
@@ -67,7 +68,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 			int scenarioInstanceId) {
 		String sql =
 				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldstate_id, "
-						+ "h.newstate_id, h.dataobjectinstance_id, "
+						+ "h.newstate_id, h.dataobjectinstance_id, h.activityinstance_id, "
 						+ "do.name, ns.name AS newstate_name "
 						// + ", os.name AS oldstate_name "
 						+ "FROM historydataobjectinstance AS h, "
@@ -83,7 +84,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 						+ "ORDER BY timestamp DESC";
 		return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id",
 				"h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp",
-				"h.dataobjectinstance_id", "newstate_name");
+				"h.dataobjectinstance_id", "newstate_name", "h.activityinstance_id");
 	    // "oldstate_name",
     }
 
