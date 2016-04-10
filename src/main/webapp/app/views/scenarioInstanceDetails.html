@@ -1,17 +1,11 @@
 <div>
-    <div>
+    <div class="panel panel-default">
         <div class="panel-body">
-            <a href="">
-                <div>
-                    <i class="fa fa-arrow-up"></i>
-                </div>
-            </a>
-
             <div class="pull-right">
                 <ol class="breadcrumb">
-                    <li><a ui-sref="scenario">Dashboard</a></li>
+                    <li><a href="#/scenario">Dashboard</a></li>
                     <li>
-                        <a ui-sref="scenario({ id: instanceCtrl.instanceDetails['scenarioId'] })">Scenario</a>
+                        <a ng-href="#/scenario/{{instanceCtrl.instanceDetails['scenarioId']}}">Scenario</a>
                     </li>
                     </li>
                     <li class="active">
@@ -21,15 +15,36 @@
             </div>
             <!-- /. id="hbreadcrumb" -->
             <h2>
-                Case {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
+                Case: {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
             </h2>
         </div>
         <!-- /. panel body -->
     </div>
-    <!-- /. hpanel -->
 </div>
 <!-- /.normalheader -->
 
-<div>
-    <ng-include src="'templates/scenarioInstancePanels.html'"></ng-include>
-</div>
+<div class="row">
+    <!-- old Panel for Dataobjects -->
+    <data-object-status></data-object-status>
+
+    <!--  Panel for ToDos -->
+    <open-tasks></open-tasks>
+
+    <!-- Panel for unassigned Tasks -->
+    <unassigned-tasks></unassigned-tasks>
+</div> <!-- ./ row -->
+
+<div class="row">
+    <!-- Panel for all Logs via dropdown -->
+    <logs></logs>
+
+    <!-- Panel for termination condition -->
+    <termination-condition></termination-condition>
+</div> <!-- ./ row -->
+
+<!--___________________________________ MODALS ___________________________________-->
+<!-- modal for beginning an activity -->
+<modal-begin-activity></modal-begin-activity>
+
+<!-- A model as a dialog for terminating an activity -->
+<modal-terminate-activity></modal-terminate-activity>

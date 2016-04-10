@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('jfrontend')
-adminCon.controller('webserviceConfig', ['$routeParams', '$location', '$http', '$scope',
+    .controller('webserviceConfig', ['$routeParams', '$location', '$http', '$scope',
     function ($routeParams, $location, $http, $scope) {
         var webserviceC = this;
 

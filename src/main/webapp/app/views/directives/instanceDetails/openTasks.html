@@ -1,0 +1,34 @@
+<div class="col-lg-6" ng-init="todo_terminated = false">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: todo_terminated==false}"><a aria-expanded="true" data-toggle="tab"
+                                                                   ng-click="todo_terminated = false">Open Tasks</a>
+                </li>
+            </ul>
+            <!-- ./nav tabs options -->
+        </div>
+        <!-- ./ panel heading -->
+        <div class="panel-body">
+            <div class="tab-content">
+                <div ng-if="!todo_terminated">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
+                            <td>{{value['label']}}</td>
+                            <td><a type="button" data-toggle="modal"
+                                   ng-click="instanceCtrl.getOutputAndOutputsets(value['id'])"
+                                   data-target="{{'#modalTerminate' + value['id']}}"><i
+                                    class="fa fa-check"></i></a></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- ./ tab content -->
+        </div>
+        <!-- ./ panel body -->
+    </div>
+</div>
+<!-- ./ col-lg-6 -->

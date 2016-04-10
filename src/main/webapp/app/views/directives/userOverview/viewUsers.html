@@ -1,0 +1,36 @@
+<div class="row">
+    <div style="cursor: pointer" ng-repeat="(key, value) in userMgmtC.Details['user']"
+         ng-show="!searchText || value['username'].indexOf(searchText) > -1">
+        <div style="animation-delay: 0.2s;" class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <span class="label label-success pull-right">NEW</span>
+
+                    <h3><a href=""> {{value['username']}} </a></h3>
+
+                    <div class="text-muted">{{value['description']}}</div>
+                    <p>
+                        Role Id: {{value['role_id']}}
+                    </p>
+                </div>
+                <!-- /. panel body -->
+                <div class="row">
+                    <div style="animation-delay: 0.3s;" class="col-md-4">
+                        <div><span>Projects: </span> <strong>200</strong></div>
+                    </div>
+                    <div style="animation-delay: 0.4s;" class="col-md-4">
+                        <div><span>Messages: </span> <strong>300</strong></div>
+                    </div>
+                    <div style="animation-delay: 0.5s;" class="col-md-4">
+                        <div><span>Views: </span> <strong>400</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.class="col-lg-3 animated-panel zoomIn" -->
+    </div>
+    <!-- /. panel -->
+</div>
+<!-- /. ng-repeat -->
+</div>
+<!-- /. row -->

@@ -1,0 +1,90 @@
+<div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities'] track by $index"
+     id="{{'modalTerminate' + value['id']}}" class="modal fade">
+    <div class="modal-backdrop fade in"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line "></div>
+            <!-- Header of the Modal -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Terminate activity?</h4>
+            </div>
+            <!-- /.modal header -->
+            <!-- Body of the Modal -->
+            <div class="modal-body">
+                <!-- display all attributes and let the user edit them -->
+                <div ng-repeat="(key2, outputset) in instanceCtrl.scenario['outputsets'][instanceCtrl.activityOutput[value['id']][0]['id']] track by $index">
+                    <b>"{{outputset['label']}}" in state "{{outputset['state']}}"</b>
+                    <br>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Content</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(key3, attributeConfiguration) in outputset['attributeConfiguration'] track by $index">
+                            <!-- here we are setting the current attribute which we are editing for handling the submit option -->
+                            {{instanceCtrl.setCurrentAttributeObject(attributeConfiguration['id'],
+                            attributeConfiguration['value'])}}
+                            <td>{{attributeConfiguration['name']}}</td>
+                            <td>
+                                <!-- within the input every 1000 ms the content will be submitted if ng-change applies -->
+                                <input type="text" ng-name="key3" ng-model-options='{ debounce: 1000 }'
+                                       ng-model="attributeConfiguration['value']"
+                                       ng-change="instanceCtrl.setAttribute(attributeConfiguration['id'], attributeConfiguration['value'], value['id'])"><br>
+                                <span ng-show="form.key3.$pending">typing...</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ./ ng-repeat -->
+                <br><br><br>
+                <!-- if outputsets are present display them with the option for termination -->
+                <div ng-show="instanceCtrl.scenario['outputsetsLength'].length">
+                    <hr>
+                    <b>Please choose one of the following possibilities</b>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>State</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(key4, output_terminate) in instanceCtrl.activityOutput[value['id']] track by $index">
+                            <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['id']}}</td>
+                            <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['label']}}</td>
+                            <td>{{instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['state']}}</td>
+                            <td>
+                                <button type="button"
+                                        ng-click="instanceCtrl.terminateActivityWithOutputset(value['id'], instanceCtrl.scenario['outputsets'][output_terminate['id']][0]['set_id']);"
+                                        data-dismiss="modal" class="btn btn-danger">Terminate
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /. ng-show="instanceCtrl.scenario['outputsetsLength'].length" -->
+            </div> <!-- /.modal body -->
+            <!-- Footer of the Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <span ng-hide="instanceCtrl.scenario['outputsetsLength'].length">
+                    <button type="button" ng-click="instanceCtrl.terminateActivity(value['id']);" data-dismiss="modal"
+                            class="btn btn-danger">Terminate
+                    </button>
+                </span>
+            </div>
+            <!-- /.modal footer -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /. modal-dialog -->
+</div><!-- /.modal -->

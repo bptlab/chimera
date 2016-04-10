@@ -1,10 +1,10 @@
 <div>
-    <div>
+    <div class="panel panel-default">
         <div class="panel-body">
             <div class="pull-right">
                 <ol class="breadcrumb">
                     <li>
-                        <a ui-sref="scenario">Dashboard</a>
+                        <a ng-href="#/scenario">Dashboard</a>
                     </li>
                     <li class="active">
                         <span>Web Service Task Configuration</span>
@@ -15,30 +15,11 @@
             <h2>
                 Web Service Task Configuration
             </h2>
-
         </div>
-        <!-- /. panel body -->
     </div>
-    <!-- /. hpanel -->
 </div> <!-- /. normalheader -->
 
 <div>
-    <div class="row">
-        <!-- filtering scenarios  -->
-        <div class="col-lg-12">
-            <div>
-                <div class="panel-heading">
-                    <div class="pull-right">
-                        <select class="form-control" data-ng-options="k as v for (k, v) in webserviceC.scenarioIDs"
-                                ng-model="selectedScenario"
-                                data-ng-change="webserviceC.getAllWebservicetaskForScenarioID(selectedScenario)">
-                            <option value="">Select Scenario</option>
-                        </select>
-                        </span>
-                    </div>
-                    Web Service Tasks
-                </div>
-                <!-- /.  panel-heading hbuilt-->
 
                 <div class="panel-body">
                     <!-- if a scenario is selected -> display all available mail tasks within it -->
@@ -154,7 +135,6 @@
                     </div>
                 </div>
                 <!-- /.  panel body -->
-                <div class="panel-footer"></div>
             </div>
             <!-- /.  hpanel -->
         </div>

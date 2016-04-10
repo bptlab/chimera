@@ -1,0 +1,74 @@
+<div class="col-lg-6" ng-init="logSelection = 'activities'">
+    <div class="panel panel-default">
+        <!-- Header of the Panel -->
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li ng-class="{active: logSelection=='activities'}"><a aria-expanded="true" data-toggle="tab"
+                                                                       ng-click="logSelection = 'activities'">Activity Log</a>
+                </li>
+                <li ng-class="{active: logSelection=='dataobject'}"><a aria-expanded="true" data-toggle="tab"
+                                                                       ng-click="logSelection = 'dataobject'">Dataobject Log</a>
+                </li>
+                <li ng-class="{active: logSelection=='attributes'}"><a aria-expanded="true" data-toggle="tab"
+                                                                       ng-click="logSelection = 'attributes'">Attribute Log</a>
+                </li>
+            </ul>
+            <!-- ./nav tabs options -->
+        </div>
+        <!-- ./ heading -->
+        <!-- Body of the Panel -->
+        <div class="panel-body">
+            <div class="tab-content">
+
+                <small>Here you find the log of {{logSelection}} for this instance.</small>
+                <br>
+                <div ng-switch on="logSelection">
+                    <!-- depending of the option of the dropdown: here display activity log -->
+                    <div ng-switch-default>
+                        <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
+                            <div class="">
+                                <h3 class="text-success">{{value['cn.label']}}</h3>
+                                <small>{{value['h.oldstate']}} -> {{value['h.newstate']}}</small>
+                                <div class="pull-right">{{value['h.timestamp']}}<i
+                                        class="fa fa-level-up text-success"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./switch case -->
+                    <!-- depending of the option of the dropdown: here display dataobject log -->
+                    <div ng-switch-when="dataobject">
+                        <div class="">
+                            <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
+                                <div class="">
+                                    <h3 class="text-success">{{value['do.name']}}</h3>
+                                    <small>{{value['oldstate_name']}} -> {{value['newstate_name']}}</small>
+                                    <div class="pull-right">{{value['h.timestamp']}}<i
+                                            class="fa fa-level-up text-success"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./switch case -->
+                    <!-- depending of the option of the dropdown: here display attribute log -->
+                    <div ng-switch-when="attributes">
+                        <div class="">
+                            <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
+                                <div class="">
+                                    <h3 class="no-margins">{{value['da.name']}}</h3>
+                                    <i>Value updated</i><br>
+                                    <big>"{{value['h.oldvalue']}}" -> "{{value['h.newvalue']}}"</big>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./switch case -->
+                </div>
+                <!-- ./switch container -->
+            </div>
+            <!-- ./tab content -->
+        </div>
+        <!-- ./modal body -->
+    </div>
+    <!-- ./ hpanel -->
+</div>
+<!-- ./ col-lg-6 -->

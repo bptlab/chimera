@@ -24,9 +24,9 @@
 		<!-- build:js(.) scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="app/bower_components/jquery/dist/jquery.min.js"></script>
-		<script src="app/bower_components/angular/angular.min.js"></script>
+		<script src="app/bower_components/angular/angular.js"></script>
 		<script src="app/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script src="app/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<script src="app/bower_components/angular-route/angular-route.js"></script>
 		<script src="app/bower_components/json3/lib/json3.min.js"></script>
 		<script src="app/bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
 		<script src="app/bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
@@ -35,19 +35,47 @@
 		<script src="app/bower_components/Chart.js/Chart.min.js"></script>
 		<!-- endbower -->
 		<!-- endbuild -->
+		<script>document.write("<base href=\"" + document.location + "\">")</script>
 
 		<!-- build:js({.tmp,app}) scripts/scripts.js -->
-		<script src="app/scripts/app.js"></script>
 		<script src="app/js/sb-admin-2.js"></script>
+		<script src="app/scripts/app.js"></script>
+		<script src="app/scripts/adminConfiguration.js"></script>
+		<!-- load controllers -->
+		<script src="app/scripts/controllers/mailConfig.js"></script>
+		<script src="app/scripts/controllers/scenarioController.js"></script>
+		<script src="app/scripts/controllers/scenarioInstanceController.js"></script>
+		<script src="app/scripts/controllers/userMgmtController.js"></script>
+		<script src="app/scripts/controllers/webServiceConfig.js"></script>
+
+		<!-- load directives -->
+		<script src="app/scripts/directives/mailConfig/modals.js"></script>
+		<script src="app/scripts/directives/mailConfig/mailTasks.js"></script>
+		<script src="app/scripts/directives/scenarioDetails/instanceOverview.js"></script>
+		<script src="app/scripts/directives/scenarioDetails/scenarioMetaData.js"></script>
+		<script src="app/scripts/directives/scenarioDetails/modals.js"></script>
+		<script src="app/scripts/directives/userMgmt/roleManagement.js"></script>
+		<script src="app/scripts/directives/userMgmt/userManagement.js"></script>
+		<script src="app/scripts/directives/userMgmt/modals.js"></script>
+		<script src="app/scripts/directives/userOverview/viewUsers.js"></script>
+		<script src="app/scripts/directives/instanceDetails/dataObjectStatus.js"></script>
+		<script src="app/scripts/directives/instanceDetails/logs.js"></script>
+		<script src="app/scripts/directives/instanceDetails/modals.js"></script>
+		<script src="app/scripts/directives/instanceDetails/openTasks.js"></script>
+		<script src="app/scripts/directives/instanceDetails/terminationCondition.js"></script>
+		<script src="app/scripts/directives/instanceDetails/unassignedTasks.js"></script>
+
+
 
 		<!-- endbuild -->
 
+	<base href="/Chimera">
 	</head>
 	<body>
 		<!-- Content: Side Menu -->
 		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
-				<a class="navbar-brand" ui-sref="scenario">Chimera</a>
+				<a class="navbar-brand" ng-href="#/scenario">Chimera</a>
 			</div>
 		</nav>
 
@@ -58,35 +86,30 @@
 				<ul class="nav" id="side-menu">
 					<li>
 						<!-- Creates Menu Entries for the Scenarios -->
-						<a ui-sref="scenario"><i class="fa fa-check-square-o fa-fw"></i>
+						<a href="#/scenario"><i class="fa fa-check-square-o fa-fw"></i>
 							Scenarios
 							<span class="fa arrow"></span>
 						</a>
 						<!-- iterate over all scenario items within the scenarioCtrl and display them with ID and name as list -->
 						<ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
 							<li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
-								<a ui-sref="scenario({ id: key })">{{key + ': ' + value}}</a>
+								<a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
 							</li>
 						</ul>
 					</li>
 
 					<li>
-						<a ui-sref="scenario"><i class="fa fa-dashboard fa-fw"></i> Admin<span class="fa arrow"></span></a>
+						<a ng-href="#/scenario"><i class="fa fa-dashboard fa-fw"></i> Admin<span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
-							<li><a ui-sref="adminMail"><i class="fa fa-envelope-o fa-fw"></i> Mail Configuration</a></li>
-							<li><a ui-sref="adminWebservice"><i class="fa fa-cog fa-fw"></i> Webservice Configuration</a></li>
-							<li><a ui-sref="adminUserMgmt"><i class="fa fa-users fa-fw"></i> User Management</a></li>
-							<li><a ui-sref="adminUser"><i class="fa fa-user fa-fw"></i> User</a></li>
+							<li><a href="#/admin/mail"><i class="fa fa-envelope-o fa-fw"></i> Mail Configuration</a></li>
+							<li><a href="#/admin/userMgmt"><i class="fa fa-users fa-fw"></i> User Management</a></li>
+							<li><a href="#/admin/user"><i class="fa fa-user fa-fw"></i> User Overview</a></li>
 						</ul>
 					</li>
 				</ul>
 			</div>
 		</div>
-		<!--div ui-view class="container" id="page-wrapper"></div-->
-		<ui-view></ui-view>
-		<!--div id="page-wrapper" class="content"-->
-			<!-- Begin of the Main Content -->
-			<!--ui-view>Select something</ui-view>
-		</div-->
+		<ng-view></ng-view>
+		<div ng-view id="page-wrapper"></div>
 	</body>
 </html>

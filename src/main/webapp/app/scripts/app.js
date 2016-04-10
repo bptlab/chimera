@@ -13,72 +13,52 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 
 (function () {
     var jfrontend = angular.module('jfrontend', [
-        'ui.router',
+        'ngRoute',
         'adminConfiguration'
         ]);
 
     // Defining Routes for the AngularJS App
-    jfrontend.config(['$stateProvider', '$urlRouterProvider',
-        function ($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise('/otherwise');
-
-            $stateProvider.
+    jfrontend.config(['$routeProvider',
+        function ($routeProvider) {
+            $routeProvider.
                 // route for scenario view
-                state('scenario', {
-                    url: '/scenario',
+                when('/scenario', {
                     templateUrl: 'app/views/scenario.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 }).
                 // route for scenario detail view
-                state('scenario', {
-                    url: '/scenario/:id',
+                when('/scenario/:id', {
                     templateUrl: 'app/views/scenarioDetails.html',
                     controller: 'ScenarioController',
                     controllerAs: 'scenarioCtrl'
                 }).
                 // route for scenario instance detail view
-                state('scenarioInstanceId', {
-                    url: '/scenario/:id/instance/:instanceId',
+                when('/scenario/:id/instance/:instanceId', {
                     templateUrl: 'app/views/scenarioInstanceDetails.html',
                     controller: 'ScenarioInstanceController',
                     controllerAs: 'instanceCtrl'
                 }).
                 // route for mail task configuration
-                state('adminMail', {
-                    url: '/admin/mail',
+                when('/admin/mail', {
                     templateUrl: 'app/views/mailConfigDetails.html',
                     controller: 'mailConfig',
                     controllerAs: 'mailC'
                 }).
-                // route for web service task configuration
-                state('adminWebservice', {
-                    url: '/admin/webservice/',
-                    templateUrl: 'app/views/webserviceConfigDetails.html',
-                    controller: 'webserviceConfig',
-                    controllerAs: 'webserviceC'
-                }).
                 // route for JUserManagemetn configuration
-                state('adminUserMgmt', {
-                    url: '/admin/userMgmt/',
+                when('/admin/userMgmt', {
                     templateUrl: 'app/views/userMgmtConfig.html',
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
                 // route for user dashboard
-                state('adminUser', {
-                    url: '/admin/user/',
+                when('/admin/user', {
                     templateUrl: 'app/views/user.html',
                     controller: 'userMgmtController',
                     controllerAs: 'userMgmtC'
                 }).
                 // default route
-                state('otherwise', {
-                    url: '/otherwise',
-                    templateUrl: 'app/views/scenario.html',
-                    controller: 'ScenarioController',
-                    controllerAs: 'scenarioCtrl'
-                });
+                otherwise({redirectTo: '/scenario'});
         }
     ]);
 })();

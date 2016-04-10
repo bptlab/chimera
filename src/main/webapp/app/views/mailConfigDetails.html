@@ -1,199 +1,33 @@
 <div>
-    <div>
+    <div class="panel panel-default">
         <div class="panel-body">
-            <a href="">
-                <div >
-                    <i class="fa fa-arrow-up"></i>
-                </div>
-            </a>
-
             <div class="pull-right">
                 <ol class="breadcrumb">
                     <li>
-                        <a ui-sref="scenario">Dashboard</a>
+                        <a href="#/scenario">Dashboard</a>
                     </li>
                     <li class="active">
-                        <span>eMail Task Configuration</span>
+                        <span>E-Mail Task Configuration</span>
                     </li>
                 </ol>
             </div>
             <!-- /.  id="hbreadcrumb" -->
             <h2>
-                eMail Task Configuration
+                E-Mail Task Configuration
             </h2>
 
         </div>
-        <!-- /. panel body -->
     </div>
 </div> <!-- /. normalheader -->
 
 <div>
-
-    <div class="row">
-        <!-- filtering scenarios  -->
-        <div class="col-lg-12">
-            <div>
-                <div class="panel-heading">
-                    <div class="pull-right">
-                        <select class="form-control" data-ng-options="k as v for (k, v) in mailC.scenarioIDs"
-                                ng-model="selectedScenario"
-                                data-ng-change="mailC.getAllMailtaskForScenarioID(selectedScenario)">
-                            <option value="">Select Scenario</option>
-                        </select>
-                        </span>
-                        <!-- /. data-ng-options="k as v for (k, v) in mailC.scenarioIDs" -->
-                    </div>
-                    eMail Tasks
-                </div>
-                <!-- /. panel-heading hbuilt-->
-                <div class="panel-body">
-                    <!-- if a scenario is selected -> display all available mail tasks within it -->
-                    <div ng-if="selectedScenario">
-                        <div>
-                            <ul class="nav nav-tabs">
-                                <li class="active" ng-repeat="(key, value) in mailC.emailtaskIDs">
-                                    <a data-toggle="tab" ng-click="mailC.getDetails(value, selectedScenario)">
-                                        {{value}}</a>
-                                </li>
-                            </ul>
-                            <!-- /. nav tabs options -->
-                            <div class="tab-content ">
-                                <span ng-show="mailC.emailtaskIDs.length"> 
-                                  <h3>eMail Task - {{mailC.workingID}}</h3>
-                                   <form name="myForm" ng-submit="mailC.submitMyForm()">
-                                       <div class="pull-left">
-                                           <table class="table table-striped">
-                                               <!--<thead>
-                                               <tr>
-                                                   <th>Field</th>
-                                                   <th>Content</th>
-                                               </tr>
-                                               </thead>-->
-                                               <tbody>
-                                               <tr>
-                                                   <td>Receiver</td>
-                                                   <td><input type="text" ng-model="form.receiver" size="50"/></td>
-                                               </tr>
-                                               <tr>
-                                                   <td>Subject</td>
-                                                   <td><input type="text" ng-model="form.subject" size="50"/></td>
-                                               </tr>
-                                               <tr>
-                                                   <td>Message</td>
-                                                   <td><input type="text" ng-model="form.message" size="50"/></td>
-                                               </tr>
-                                               <tr>
-                                                   <td>Action</td>
-                                                   <td>
-                                                       <button type="submit" data-toggle="modal"
-                                                               data-target="#update-success"
-                                                               class="btn btn-success btn-xs">Change eMail
-                                                           Settings
-                                                       </button>
-                                                   </td>
-                                               </tbody>
-                                           </table>
-                                       </div>
-                                       <br>
-
-                                   </form>
-                                 </span>
-                                <!-- /.  ng-show="mailC.emailtaskIDs.length" -->
-                                <span ng-show="!mailC.emailtaskIDs.length">
-                                     There are not any eMail Tasks within this scenario.
-                                </span>
-                           </div>
-                            <!-- /. tab-content -->
-                        </div>
-                        <!-- /. tabs-left -->
-                    </div>
-                    <div ng-if="!selectedScenario">
-                        Please select a scenario in the upper right corner.
-                    </div>
-                </div>
-                <!-- /. panel body -->
-                <div class="panel-footer"></div>
-            </div>
-            <!-- /. hpanel -->
-        </div>
-        <!-- /. col-lg-12 -->
-
-    </div>
-    <!-- /. row -->
-
-
+    <mail-tasks></mail-tasks>
     <!-- ___________________________ modals ___________________________ -->
 
     <!-- 1. modal for editing a mail tasks -->
-    <div id="{{'editMailConfig' + id}}" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Edit Mail Config of {{mailC.workingID}}</h4>
-                </div>
-                <!-- /. modal header -->
-                <div class="modal-body">
-                    <form name="myForm" ng-submit="mailC.submitMyForm()">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Field</th>
-                                <th>Content</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Receiver</td>
-                                <td><input type="text" ng-model="form.receiver" size="50"/></td>
-                            </tr>
-                            <tr>
-                                <td>Subject</td>
-                                <td><input type="text" ng-model="form.subject" size="50"/></td>
-                            </tr>
-                            <tr>
-                                <td>Message</td>
-                                <td><input type="text" ng-model="form.message" size="50"/></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <button type="submit" class="btn btn-default demo2">Submit</button>
-                    </form>
-                </div>
-                <!-- /.modal body -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+    <modal-edit-mail-task></modal-edit-mail-task>
+
 
     <!-- 2. modal for showing successful update -->
-    <div class="modal fade">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Successful</h4>
-                </div>
-                <!-- /.modal header -->
-                <div class="modal-body">
-                    The Mail Task {{mailC.workingID}} was updated successfully.<br>
-                    <button class="btn btn-success btn-circle" type="button"><i class="fa fa-check"></i></button>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+    <modal-show-mail-update></modal-show-mail-update>
 </div>
