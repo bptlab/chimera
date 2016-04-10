@@ -7,6 +7,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,14 +37,17 @@ public class FragmentValidator {
     }
 
     private static void validateNames(Fragment fragment) {
+        String pattern =
+                "^([a-zA-Z\\d\\n]|[a-zA-Z\\d\\n](?!.*[ _]{2})[a-zA-Z\\d\\n _]*?[a-zA-Z\\d\\n])$";
+        Pattern compiledPattern = Pattern.compile(pattern);
         for (AbstractTask task : fragment.getTasks()) {
-            if (!StringUtils.isAlphanumericSpace(task.getName()) && !"".equals(task.getName())) {
+            if (!compiledPattern.matcher(task.getName()).matches() && !"".equals(task.getName())) {
                 throw new IllegalArgumentException(String.format("%s is not a valid task name",
                         task.getName()));
             }
         }
         for (DataNode dataNode : fragment.getDataNodes()) {
-            if (!StringUtils.isAlphanumericSpace(dataNode.getName()) && !"".equals(dataNode.getName())) {
+            if (!compiledPattern.matcher(dataNode.getName()).matches() && !"".equals(dataNode.getName())) {
                 throw new IllegalArgumentException(String.format("%s is not a valid data node name",
                         dataNode.getName()));
             }

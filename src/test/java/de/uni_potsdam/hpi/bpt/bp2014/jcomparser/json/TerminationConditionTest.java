@@ -36,7 +36,7 @@ public class TerminationConditionTest {
     @Test
     public void testTerminationCondition() {
         try {
-            String path = "src/test/resources/TerminationConditionScenario.json";
+            String path = "src/test/resources/Scenarios/TerminationConditionScenario.json";
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             assertEquals(false, scenarioInstance.checkTerminationCondition());
 
@@ -53,7 +53,7 @@ public class TerminationConditionTest {
     @Test
     public void testMultiTerminationCondition() {
         try {
-            String path = "src/test/resources/TerminationConditionScenario.json";
+            String path = "src/test/resources/Scenarios/TerminationConditionScenario.json";
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             assertEquals(false, scenarioInstance.checkTerminationCondition());
 

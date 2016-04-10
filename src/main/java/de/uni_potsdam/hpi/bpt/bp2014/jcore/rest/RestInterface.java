@@ -5,6 +5,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.InvalidDataTransitionException;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.InvalidDataclassReferenceExeption;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
@@ -281,6 +283,16 @@ import java.util.LinkedList;
             return Response.status(400)
                     .type(MediaType.TEXT_PLAIN)
                     .entity("Invalid xml " + e.getMessage())
+                    .build();
+        } catch (InvalidDataTransitionException e) {
+            return Response.status(422)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (InvalidDataclassReferenceExeption e) {
+            return Response.status(422)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(e.getMessage())
                     .build();
         }
     }
