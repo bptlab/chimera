@@ -6,6 +6,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -108,9 +112,7 @@ public final class EventDispatcher {
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
         DbEventMapping eventMapping = new DbEventMapping();
-        DbControlNode controlNode = new DbControlNode();
         EventFactory factory = new EventFactory(instance);
-        DbFragmentInstance fragmentInstance = new DbFragmentInstance();
 
         int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
         int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
@@ -131,16 +133,14 @@ public final class EventDispatcher {
     }
 
     public static String parseQuery(String queryString, int scenarioInstanceId, int scenarioId) {
-        //check whether parsing is necessary
         if (queryString.contains("#")) {
-            ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-            for (DataAttributeInstance dataAttributeInstance : instance
+            ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
+            for (DataAttributeInstance attribute : scenario
                     .getDataAttributeInstances().values()) {
-                queryString = queryString.replace("#"
-                        + (dataAttributeInstance.getDataObjectInstance()).getName()
-                        + "."
-                        + dataAttributeInstance.getName(),
-                        dataAttributeInstance.getValue().toString());
+                String dataattributePath = String.format("#%s.%s",
+                        attribute.getDataObjectInstance().getName(), attribute.getName());
+                queryString = queryString.replace(dataattributePath,
+                        attribute.getValue().toString());
             }
         }
         return queryString;
