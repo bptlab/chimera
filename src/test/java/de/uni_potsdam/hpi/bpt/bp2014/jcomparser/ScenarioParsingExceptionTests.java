@@ -79,6 +79,18 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
                 response.readEntity(String.class));
     }
 
+    @Test
+    public void testTaskNameValidation() throws IOException {
+        String path = "src/test/resources/jcomparser/" +
+                "ScenarioParsingExceptionTests/InvalidTaskName.json";
+        File file = new File(path);
+        String json = FileUtils.readFileToString(file);
+        Response response = base.path("scenario").request().post(Entity.json(json));
+        assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
+        assertEquals("DROP * FROM EVERYTHING is not a valid task name",
+                response.readEntity(String.class));
+
+    }
 
 
     @Test

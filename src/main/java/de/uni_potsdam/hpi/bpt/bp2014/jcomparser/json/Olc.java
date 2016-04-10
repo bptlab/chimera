@@ -28,8 +28,10 @@ public class Olc {
         try {
             JSONObject olcJson = new JSONObject(element);
             parseStates(olcJson);
-            parseSequenceFlows(olcJson);
-            allowedStateTransitions = replaceIdsWithNames(olcJson);
+            if (olcJson.has("sequenceFlow")) {
+                parseSequenceFlows(olcJson);
+                allowedStateTransitions = replaceIdsWithNames(olcJson);
+            }
         } catch (JSONException e) {
             log.error(e);
             throw new JSONException("Illegal OLC JSON");
@@ -37,6 +39,9 @@ public class Olc {
     }
 
     private void parseStates(JSONObject olcJson) {
+        if (!olcJson.has("state")) {
+            throw new IllegalArgumentException("Invalid olc json found");
+        }
         JSONArray states = olcJson.getJSONArray("state");
         for (int i = 0; i < states.length(); i++) {
             JSONObject state = states.getJSONObject(i);
@@ -45,6 +50,7 @@ public class Olc {
     }
 
     private void parseSequenceFlows(JSONObject olcJson) {
+
         JSONArray sequenceFlow = olcJson.getJSONArray("sequenceFlow");
         for (int i = 0; i < sequenceFlow.length(); i++) {
             JSONObject flow = sequenceFlow.getJSONObject(i);

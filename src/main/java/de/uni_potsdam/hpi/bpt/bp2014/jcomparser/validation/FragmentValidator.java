@@ -69,7 +69,10 @@ public class FragmentValidator {
                 List<String> outputStates = outgoingDataobjectStates.get(dataobjectName);
                 Olc olcForDataobject = olcs.get(dataobjectName);
                 for (String state : inputStates) {
-                    if (!olcForDataobject.allowedStateTransitions.get(state).containsAll(outputStates)) {
+                    if (!olcForDataobject.allowedStateTransitions.containsKey(state)) {
+                        throw new InvalidDataTransitionException("Invalid OLC transition found ");
+                    }
+                    if (olcForDataobject.allowedStateTransitions.get(state).containsAll(outputStates)) {
                         throw new InvalidDataTransitionException("Invalid OLC transition found ");
                     }
                 }
