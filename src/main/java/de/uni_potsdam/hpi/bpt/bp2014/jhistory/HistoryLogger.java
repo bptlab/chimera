@@ -61,8 +61,10 @@ public class HistoryLogger {
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is changed.
 	 * @param value                    the new value of the DataAttributeInstance.
 	 */
-	public void logDataAttributeTransition(int dataAttributeInstanceId, Object value) {
-		dbHistoryDataAttributeInstance.logDataAttributeTransition(dataAttributeInstanceId, value);
+	public void logDataAttributeTransition(
+            int dataAttributeInstanceId, Object value, int activityId) {
+		dbHistoryDataAttributeInstance.logDataAttributeTransition(
+                dataAttributeInstanceId, value, activityId);
 	}
 
 	/**

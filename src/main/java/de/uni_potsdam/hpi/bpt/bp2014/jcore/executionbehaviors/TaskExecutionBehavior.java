@@ -1,9 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import org.apache.commons.lang3.NotImplementedException;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  */
 public class TaskExecutionBehavior {
 	private final ScenarioInstance scenarioInstance;
-	protected final int activityInstanceId;
+	private final int activityInstanceId;
 	private final AbstractControlNodeInstance controlNodeInstance;
 
 	/**
@@ -33,7 +34,6 @@ public class TaskExecutionBehavior {
 	 * Executes the behavior of the activity.
 	 */
 	public void execute() {
-        // TODO find out if this should be abstract
 	}
 
 	/**
@@ -47,7 +47,19 @@ public class TaskExecutionBehavior {
 	 * @param values a Map of Keys and Values.
 	 */
 	public void setDataAttributeValues(Map<Integer, String> values) {
-	}
+        for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
+            HistoryLogger logger = new HistoryLogger();
+            Integer dataattributeInstanceId = attributeInstanceIdToValue.getKey();
+            String value = attributeInstanceIdToValue.getValue();
+            Integer activityInstanceId = this.getControlNodeInstance().getControlNodeInstanceId();
+            logger.logDataAttributeTransition(dataattributeInstanceId, value, activityInstanceId);
+
+            DataAttributeInstance dataAttributeInstance = getScenarioInstance()
+                    .getDataAttributeInstances().get(dataattributeInstanceId);
+            dataAttributeInstance.setValue(value);
+        }
+        this.setCanTerminate(true);
+    }
 
 	public ScenarioInstance getScenarioInstance() {
 		return scenarioInstance;

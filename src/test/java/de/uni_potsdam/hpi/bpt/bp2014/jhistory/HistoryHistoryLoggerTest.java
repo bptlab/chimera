@@ -42,16 +42,6 @@ public class HistoryHistoryLoggerTest {
                 instance.getScenarioInstanceId()).size());
     }
 
-    @Test
-    public void testDataobjectCreation() {
-        throw new NotImplementedException("");
-    }
-    @Test
-    public void testDataattributeCreation() {
-        throw new NotImplementedException("");
-    }
-
-
     /**
      * This test loads an scenario with a single activity ChangeData which changes the state
      * data object data from init to changed. Therefore an activity log should be present as well
@@ -67,7 +57,8 @@ public class HistoryHistoryLoggerTest {
         HistoryService service = new HistoryService();
         Map<Integer, Map<String, Object>> activityEntries =
                 service.getActivityInstanceEntries(instance.getScenarioInstanceId());
-        assertEquals(1, activityEntries.size());
+        assertEquals(2, activityEntries.size());
+        assertEquals(2, activityEntries.get(2).get("h.activityinstance_id"));
     }
 
 
@@ -81,7 +72,7 @@ public class HistoryHistoryLoggerTest {
 
         Map<Integer, Map<String, Object>> dataObjectEntries =
                 service.getDataObjectEntries(instance.getScenarioInstanceId());
-        assertEquals(1, dataObjectEntries.size());
+        assertEquals(2, dataObjectEntries.size());
     }
 
     @Test
@@ -96,12 +87,14 @@ public class HistoryHistoryLoggerTest {
             idToChangedValue.put(attribute.getDataAttributeInstanceId(), "bar");
         }
         assert(idToChangedValue.size() > 0);
+        // Begin activity so that it can alter the values of data attributes
+        activity.begin();
         activity.setDataAttributeValues(idToChangedValue);
 
         HistoryService service = new HistoryService();
         Map<Integer, Map<String, Object>> dataattributeEntries
                 = service.getDataattributeEntries(instance.getScenarioInstanceId());
-        assertEquals(1, dataattributeEntries.size());
+        assertEquals(2, dataattributeEntries.size());
     }
 
 }

@@ -6,7 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TaskExecutionBehavior;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -65,15 +65,6 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 			}
 		}
 		return false;
-	}
-
-	@Override public void setDataAttributeValues(Map<Integer, String> values) {
-		for (Integer i : values.keySet()) {
-			DataAttributeInstance dataAttributeInstance = getScenarioInstance()
-					.getDataAttributeInstances().get(i);
-			dataAttributeInstance.setValue(values.get(i));
-		}
-		this.setCanTerminate(true);
 	}
 
 }
