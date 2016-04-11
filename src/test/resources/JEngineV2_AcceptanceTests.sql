@@ -30444,6 +30444,26 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=197 ;
 
 --
+-- Table structure for table `eventmapping`
+--
+
+CREATE TABLE IF NOT EXISTS `eventmapping` (
+  `fragmentInstanceId` int(11) NOT NULL,
+  `eventControlNodeId` int(11) NOT NULL,
+  `eventKey` VARCHAR(512) NOT NULL,
+  `notificationRuleId` VARCHAR(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+--
+-- Table structure for table `boundaryeventref`
+CREATE TABLE IF NOT EXISTS `boundaryeventref` (
+  `controlnode_id` INTEGER NOT NULL,
+  `attachedtoref` INTEGER NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+--
 -- Daten für Tabelle `historydataobjectinstance`
 --
 

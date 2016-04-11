@@ -104,11 +104,10 @@ public class EventDispatcherTest extends JerseyTest {
                     scenarioInstance.getScenarioInstanceId(),
                     scenarioInstance.getScenarioId()));
             scenarioInstance.getDataAttributeInstances().get(1).setValue("AnEvent");
-            assertEquals("The query couldn't be resolved",
-                    "SELECT * FROM AnEvent",
-                    EventDispatcher.parseQuery("SELECT * FROM #data.path",
+            String replacedQuery = EventDispatcher.parseQuery("SELECT * FROM #data.path",
                     scenarioInstance.getScenarioInstanceId(),
-                    scenarioInstance.getScenarioId()));
+                    scenarioInstance.getScenarioId());
+            assertEquals("SELECT * FROM AnEvent", replacedQuery);
         } catch (IOException e) {
             assert (false);
         }

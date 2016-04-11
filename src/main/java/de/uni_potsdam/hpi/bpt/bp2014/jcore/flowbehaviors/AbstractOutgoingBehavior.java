@@ -45,7 +45,7 @@ public abstract class AbstractOutgoingBehavior {
             HistoryLogger logger = new HistoryLogger();
             logger.logActivityCreation(controlNodeInstance.getControlNodeInstanceId());
             break;
-		case "Endevent":
+		case "EndEvent":
 			controlNodeInstance = new EventInstance(
 					fragmentInstanceId, scenarioInstance, "EndEvent");
 			break;

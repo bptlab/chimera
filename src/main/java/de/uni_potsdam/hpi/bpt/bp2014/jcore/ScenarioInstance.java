@@ -72,7 +72,6 @@ public class ScenarioInstance {
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
 
-        this.dataManager = new DataManager(this);
         if (dbScenarioInstance.existScenario(scenarioId, scenarioInstanceId)) {
 			//creates an existing Scenario Instance using the database information
 			this.scenarioInstanceId = scenarioInstanceId;
@@ -85,6 +84,8 @@ public class ScenarioInstance {
 		if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
 			this.initializeFragments();
 		}
+        
+        this.dataManager = new DataManager(this);
 		this.startAutomaticControlNodes();
         canTerminate = checkTerminationCondition();
 	}
@@ -287,7 +288,7 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-		/*
+
         for (AbstractControlNodeInstance controlNodeInstance : (
 				(LinkedList<AbstractControlNodeInstance>) enabledControlNodeInstances
 				.clone())) {
@@ -297,7 +298,7 @@ public class ScenarioInstance {
 				((ActivityInstance) controlNodeInstance).begin();
 			}
 		}
-		 */
+
         // Don't execute tasks at the moment.
 	}
 
