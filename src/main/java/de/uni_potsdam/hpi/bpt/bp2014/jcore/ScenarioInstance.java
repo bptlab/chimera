@@ -76,17 +76,18 @@ public class ScenarioInstance {
 			//creates an existing Scenario Instance using the database information
 			this.scenarioInstanceId = scenarioInstanceId;
 		} else {
-			//creates a new Scenario Instance also in database,
-			// using autoincrement to getting the scenario instances id
 			this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
 					scenarioId);
 		}
-		if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
+        // Create the data manager after setting the scenario instance id but before
+        // initializing fragments
+        this.dataManager = new DataManager(this);
+
+        if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
 			this.initializeFragments();
 		}
-        
-        this.dataManager = new DataManager(this);
-		this.startAutomaticControlNodes();
+
+        this.startAutomaticControlNodes();
         canTerminate = checkTerminationCondition();
 	}
 
