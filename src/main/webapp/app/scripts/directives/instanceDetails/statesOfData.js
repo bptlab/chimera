@@ -1,8 +1,8 @@
 angular.module('jfrontend')
-    .directive('dataObjectStatus', function() {
+    .directive('statesOfData', function() {
         return {
             restrict: 'AE',
-            templateUrl: 'app/views/directives/instanceDetails/dataObjectStatus.html',
+            templateUrl: 'app/views/directives/instanceDetails/statesOfData.html',
             controller: 'ScenarioInstanceController',
             controllerAs: 'instanceCtrl'
         };

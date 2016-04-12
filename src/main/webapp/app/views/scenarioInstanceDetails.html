@@ -22,29 +22,29 @@
     </div>
 </div>
 <!-- /.normalheader -->
+<div>
+    <div class="row">
+        <!-- old Panel for Dataobjects -->
+        <states-of-data></states-of-data>
+        <!--  Panel for ToDos -->
+        <open-tasks></open-tasks>
 
-<div class="row">
-    <!-- old Panel for Dataobjects -->
-    <data-object-status></data-object-status>
+        <!-- Panel for unassigned Tasks -->
+        <unassigned-tasks></unassigned-tasks>
+    </div> <!-- ./ row -->
 
-    <!--  Panel for ToDos -->
-    <open-tasks></open-tasks>
+    <div class="row">
+        <!-- Panel for all Logs via dropdown -->
+        <logs></logs>
 
-    <!-- Panel for unassigned Tasks -->
-    <unassigned-tasks></unassigned-tasks>
-</div> <!-- ./ row -->
+        <!-- Panel for termination condition -->
+        <termination-condition></termination-condition>
+    </div> <!-- ./ row -->
 
-<div class="row">
-    <!-- Panel for all Logs via dropdown -->
-    <logs></logs>
+    <!--___________________________________ MODALS ___________________________________-->
+    <!-- modal for beginning an activity -->
+    <modal-begin-activity></modal-begin-activity>
 
-    <!-- Panel for termination condition -->
-    <termination-condition></termination-condition>
-</div> <!-- ./ row -->
-
-<!--___________________________________ MODALS ___________________________________-->
-<!-- modal for beginning an activity -->
-<modal-begin-activity></modal-begin-activity>
-
-<!-- A model as a dialog for terminating an activity -->
-<modal-terminate-activity></modal-terminate-activity>
+    <!-- A model as a dialog for terminating an activity -->
+    <modal-terminate-activity></modal-terminate-activity>
+</div>
