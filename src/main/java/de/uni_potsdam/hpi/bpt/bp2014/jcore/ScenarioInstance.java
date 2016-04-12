@@ -79,15 +79,15 @@ public class ScenarioInstance {
 			this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
 					scenarioId);
 		}
-        // Create the data manager after setting the scenario instance id but before
-        // initializing fragments
-        this.dataManager = new DataManager(this);
+        this.startAutomaticControlNodes();
 
-        if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
+		this.dataManager = new DataManager(this);
+
+		if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
 			this.initializeFragments();
 		}
 
-        this.startAutomaticControlNodes();
+		this.startAutomaticControlNodes();
         canTerminate = checkTerminationCondition();
 	}
 
