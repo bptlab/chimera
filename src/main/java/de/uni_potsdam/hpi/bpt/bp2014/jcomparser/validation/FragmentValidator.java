@@ -25,10 +25,11 @@ public class FragmentValidator {
     /**
      * For a given fragment and its corresponding domain model, checks if
      * all data objects belong to a data class, and if all state transitions are modeled
-     * in the OLC and thus valid.
+     * in the OLC and thus valid. Additionally, all tasks and DataNodes need valid names
+     * and the fragment needs to be structural sound.
      * Throws an exception if these conditions are not fulfilled.
-     * @param fragment
-     * @param domainModel
+     * @param fragment This is a fragment.
+     * @param domainModel This is the corresponding DomainModel for the fragment.
      */
     public static void validateFragment(Fragment fragment, DomainModel domainModel) {
         validateDataReferences(fragment, domainModel);
@@ -37,17 +38,17 @@ public class FragmentValidator {
         validateStructuralSoundness(fragment);
     }
 
-    private static Map<String, Set<String>> validateStructuralSoundness(Fragment fragment) {
+    private static void validateStructuralSoundness(Fragment fragment) {
         Map<String, Set<String>> graph = buildGraphFromFragment(fragment);
         Map<String, Set<String>> reverseGraph = buildReverseGraph(graph);
-        checkOnlyOneIn(graph, reverseGraph);
-        checkOnlyOneOut(graph, reverseGraph);
-        // Set<String> reachableFromStart = Breitensuche(start, graph);
-        // Set<String> reachableFromEnd = Breitensuche(end, reversedGraph);
-        // assert (reachableFromStart.size() = reachableFromEnd.size());
+        String start = checkOnlyOneIn(graph, reverseGraph);
+        String end = checkOnlyOneOut(graph, reverseGraph);
+        Set<String> reachableFromStart = getReachableNodes(start, graph);
+        Set<String> reachableFromEnd = getReachableNodes(end, reverseGraph);
+        assert reachableFromStart.size() == reachableFromEnd.size() : "The fragment is not sound";
     }
 
-    public static Map<String, Set<String>> buildGraphFromFragment(Fragment fragment) {
+    private static Map<String, Set<String>> buildGraphFromFragment(Fragment fragment) {
         Map<String, Set<String>> graph = new HashMap<>();
         for (AbstractControlNode node : fragment.getControlNodes()) {
             for (String currentIncoming : node.getIncoming()) {
@@ -79,20 +80,42 @@ public class FragmentValidator {
         return reverseGraph;
     }
 
-    private static void checkOnlyOneIn(
+    private static String checkOnlyOneIn(
         Map<String, Set<String>> graph, Map<String, Set<String>> reverseGraph) {
-        Set<String> inputPlaces = new HashSet<>();
-        //TODO: Find all places with only outgoing edges.
-
-        assert (inputPlaces.size() == 1) : "There is not exactly one input place";
+        //idea: a place with outgoing but no incoming edges must be an input place.
+        Set<String> possibleInputPlaces = new HashSet<>();
+        possibleInputPlaces.addAll(graph.keySet());
+        reverseGraph.keySet().forEach(possibleInputPlaces::remove);
+        assert possibleInputPlaces.size() == 1 : "There is not exactly one input place";
+        return possibleInputPlaces.iterator().next();
     }
 
-    private static void checkOnlyOneOut(
+    private static String checkOnlyOneOut(
             Map<String, Set<String>> graph, Map<String, Set<String>> reverseGraph) {
-        Set<String> outputPlaces = new HashSet<>();
-        //TODO: Find all places with only incoming edges.
+        Set<String> possibleOutputPlaces = new HashSet<>();
+        //idea: a place with ingoing but no outgoing edges must be an output place.
+        possibleOutputPlaces.addAll(reverseGraph.keySet());
+        graph.keySet().forEach(possibleOutputPlaces::remove);
+        assert (possibleOutputPlaces.size() == 1) : "There is not exactly one output place";
+        return possibleOutputPlaces.iterator().next();
+    }
 
-        assert (outputPlaces.size() == 1) : "There is not exactly one output place";
+    private static Set<String> getReachableNodes(String start, Map<String, Set<String>> graph) {
+        Queue<String> queue = new LinkedList<>();
+        Set<String> reachableNodes = new HashSet<>();
+        queue.add(start);
+        reachableNodes.add(start);
+        while (!queue.isEmpty()) {
+            String node = queue.remove();
+            graph.get(node).stream().filter(
+                    //avoid cycles
+                    child -> !reachableNodes.contains(child)).forEach(
+                    child -> {
+                queue.add(child);
+                reachableNodes.add(child);
+            });
+        }
+        return reachableNodes;
     }
 
     private static void validateNames(Fragment fragment) {
