@@ -96,8 +96,8 @@ public class ScenarioTestHelper {
         }
     }
 
-    public static int triggerEventInScenario(ScenarioInstance scenarioInstance,
-                                              WebTarget base, String body) {
+    public static int triggerEventInScenario(
+            ScenarioInstance scenarioInstance, WebTarget base, String body) {
         int scenarioId = scenarioInstance.getScenarioId();
         int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
         List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
@@ -109,7 +109,6 @@ public class ScenarioTestHelper {
         int eventNodeId = eventMapping.getEventControlNodeId(registeredEvent);
 
         base.path(route).request().post(Entity.json(body));
-
         return eventNodeId;
     }
 }
