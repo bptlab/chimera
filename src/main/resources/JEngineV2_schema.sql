@@ -330,20 +330,6 @@ CREATE TABLE IF NOT EXISTS `eventtypeattribute` (
 
 -- --------------------------------------------------------
 
-
---
--- Table structure for table `eventtype`
---
-
-CREATE TABLE IF NOT EXISTS `eventtype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `ExclusiveEvents`
 --

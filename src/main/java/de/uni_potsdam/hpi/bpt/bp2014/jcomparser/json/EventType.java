@@ -28,10 +28,9 @@ public class EventType extends DataClass implements IPersistable {
                     + PropertyLoader.getProperty("unicorn.path.deploy")
                     + PropertyLoader.getProperty("unicorn.path.eventtype");
 
-    private final int isEvent = 1;
-
     public EventType(final String element) {
         super(element);
+        this.isEvent = 1;
         registerEventType();
     }
 

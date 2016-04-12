@@ -42,7 +42,7 @@ public class DataClass implements IPersistable {
 	 */
 	protected Olc olc;
 
-	protected final int isEvent = 0;
+	protected int isEvent = 0;
 
     protected Map<String, Integer> stateToDatabaseId = new HashMap<>();
 

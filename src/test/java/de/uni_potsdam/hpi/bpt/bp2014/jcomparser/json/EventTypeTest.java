@@ -35,17 +35,13 @@ public class EventTypeTest {
             scenario.save();
 
             // Test saving of event type
-            String sql = "SELECT * FROM eventtype WHERE scenario_id = 0";
+            String sql = "SELECT * FROM dataclass WHERE id = 1 AND is_event = 1";
             DbObject dbObject = new DbObject();
             String dbName = dbObject.executeStatementReturnsString(sql, "name");
-            assertEquals(dbName, "Customer");
-
-            // get the id of the event type
-            int eventTypeId = dbObject.executeStatementReturnsInt(sql, "id");
-
+            assertEquals("Customer", dbName);
 
             // Test saving of attributes
-            String sql2 = "SELECT * FROM eventtypeattribute WHERE eventtype_id = " + eventTypeId;
+            String sql2 = "SELECT * FROM dataattribute WHERE dataclass_id = 1";
             String dbAttributeName = dbObject.executeStatementReturnsString(sql2, "name");
             assertEquals(dbAttributeName, "Name");
 
