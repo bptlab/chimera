@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.validation.constraints.AssertTrue;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import java.io.IOException;
@@ -61,16 +62,7 @@ public class PathMappingDatabaseTest extends JerseyTest {
             Map<Integer, String> paths = dbPathMapping
                     .getPathsForAttributesOfControlNode(eventNodeId);
 
-            boolean isPathSaved = false;
-            for (String path : paths.values()) {
-                if ("{ \"foo\": \"bar\"}".equals(path)) {
-                    isPathSaved = true;
-                    break;
-                }
-            }
-
-            assertTrue(isPathSaved);
-
+            assertTrue(paths.values().contains("$.foo"));
 
         } catch (IOException e) {
             fail("Failed to read scenario json: " + e.getMessage());

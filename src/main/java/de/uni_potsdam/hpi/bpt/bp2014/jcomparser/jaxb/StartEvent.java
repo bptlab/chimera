@@ -10,18 +10,10 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement(name = "bpmn:startEvent")
 @XmlAccessorType(XmlAccessType.NONE)
-public class StartEvent extends AbstractControlNode {
-    @XmlAttribute(name = "id")
-    private String id;
-
-    @XmlAttribute(name = "name")
-    private String name = "";
+public class StartEvent extends AbstractDataControlNode {
 
     @XmlAttribute(name = "griffin:eventquery")
     private String eventQuery = "";
-
-    @XmlElement(name = "bpmn:outgoing")
-    private String outgoing;
 
     @Override
     public int save() {
@@ -37,32 +29,6 @@ public class StartEvent extends AbstractControlNode {
 
     public String getEventQuery() {
         return this.eventQuery;
-    }
-
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getOutgoing() {
-        return outgoing;
-    }
-
-    public void setOutgoing(String outgoing) {
-        this.outgoing = outgoing;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setEventQuery(String eventQuery) {

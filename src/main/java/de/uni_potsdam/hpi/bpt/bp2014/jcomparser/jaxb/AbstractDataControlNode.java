@@ -11,19 +11,19 @@ import java.util.List;
  */
 @XmlTransient
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class AbstractTask extends AbstractControlNode {
+public abstract class AbstractDataControlNode extends AbstractControlNode {
     @XmlAttribute(name = "id")
-    private String id;
+    protected String id;
     @XmlAttribute(name = "name")
-    private String name = "";
+    protected String name = "";
     @XmlElement(name = "bpmn:incoming")
-    private String incoming = "";
+    protected String incoming = "";
     @XmlElement(name = "bpmn:outgoing")
-    private String outgoing = "";
+    protected String outgoing = "";
     @XmlElement(name = "bpmn:dataOutputAssociation")
-    private List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
+    protected List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
     @XmlElement(name = "bpmn:dataInputAssociation")
-    private List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
+    protected List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
 
     @Override
     public String getId() {

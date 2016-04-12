@@ -1,11 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class used to read in Activity from BPMN standard.
@@ -17,7 +14,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "bpmn:task")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Task extends AbstractTask {
+public class Task extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();

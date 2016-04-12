@@ -1,8 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
-
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +63,27 @@ public class FragmentXmlWrapper {
         return this.bpmnProcessXml.getWebServiceTasks();
     }
 
-    public List<AbstractTask> getAllActivities() {
-        List<? super AbstractTask> allActivities = new ArrayList<>();
+    public List<AbstractDataControlNode> getAllActivities() {
+        List<? super AbstractDataControlNode> allActivities = new ArrayList<>();
         allActivities.addAll(this.bpmnProcessXml.getTasks());
         allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
-        return (List<AbstractTask>) allActivities;
+        return (List<AbstractDataControlNode>) allActivities;
+    }
+
+    public List<AbstractDataControlNode> getAllEvents() {
+        List<? super AbstractDataControlNode> allEvents = new ArrayList<>();
+        allEvents.add(this.bpmnProcessXml.getStartEvent());
+        allEvents.add(this.bpmnProcessXml.getEndEvent());
+        allEvents.addAll(this.bpmnProcessXml.getIntermediateEvents());
+        allEvents.addAll(this.bpmnProcessXml.getBoundaryEvents());
+        return (List<AbstractDataControlNode>) allEvents;
+    }
+
+    public List<AbstractDataControlNode> getAllDataControlNodes() {
+        List<AbstractDataControlNode> allNodes = new ArrayList<>();
+        allNodes.addAll(getAllActivities());
+        allNodes.addAll(getAllEvents());
+        return allNodes;
     }
 }
 

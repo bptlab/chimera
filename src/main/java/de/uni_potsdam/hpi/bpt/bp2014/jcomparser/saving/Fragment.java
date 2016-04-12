@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 
 import org.apache.log4j.Logger;
@@ -75,19 +74,16 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (AbstractTask task : this.fragmentXml.getAllActivities()) {
-            sets.addAll(getOutputSetsForTask(task, idToDataNode));
+        for (AbstractDataControlNode node : this.fragmentXml.getAllDataControlNodes()) {
+            sets.addAll(getOutputSetsForNode(node, idToDataNode));
         }
-
-        //TODO add event output sets... subclass again, see abstracttask
-        // and make fragmentXml return List<AbstractEvent> getAllEvents()
 
         return sets;
     }
 
-    private List<OutputSet> getOutputSetsForTask(AbstractTask task, Map<String, DataNode> idToDataNode) {
+    private List<OutputSet> getOutputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
-        for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
+        for (DataOutputAssociation assoc : node.getDataOutputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
             if(!dataNodeToStates.containsKey(dataNode.getName())) {
                 dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
@@ -98,7 +94,7 @@ public class Fragment {
                 new ArrayList<>(dataNodeToStates.values()));
 
         return datanodeCombinations.stream().map(combination ->
-                new OutputSet(task, combination)).collect(Collectors.toList());
+                new OutputSet(node, combination)).collect(Collectors.toList());
     }
 
 
@@ -113,17 +109,16 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (AbstractTask task : this.fragmentXml.getAllActivities()) {
-            sets.addAll(getInputSetsForTask(task, idToDataNode));
+        for (AbstractDataControlNode node : this.fragmentXml.getAllDataControlNodes()) {
+            sets.addAll(getInputSetsForNode(node, idToDataNode));
         }
 
-        //TODO add event input sets
         return sets;
     }
 
-    public List<InputSet> getInputSetsForTask(AbstractTask task, Map<String, DataNode> idToDataNode) {
+    public List<InputSet> getInputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
-        for (DataInputAssociation assoc : task.getDataInputAssociations()) {
+        for (DataInputAssociation assoc : node.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
             if(!dataNodeToStates.containsKey(dataNode.getName())) {
                 dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
@@ -134,13 +129,13 @@ public class Fragment {
                 new ArrayList<>(dataNodeToStates.values()));
 
         return datanodeCombinations.stream().map(combination ->
-                new InputSet(task, combination)).collect(Collectors.toList());
+                new InputSet(node, combination)).collect(Collectors.toList());
     }
 
     private Map<String, Task> createMapFromIdToTask() {
-        List<AbstractTask> tasks = this.fragmentXml.getAllActivities();
+        List<AbstractDataControlNode> tasks = this.fragmentXml.getAllActivities();
         Map<String, Task> idToNode = new HashMap<>();
-        for (AbstractTask task : tasks) {
+        for (AbstractDataControlNode task : tasks) {
             idToNode.put(task.getId(), (Task) task);
         }
 
@@ -204,7 +199,7 @@ public class Fragment {
         return this.fragmentXml.getWebServiceTasks();
     }
 
-    public List<AbstractTask> getAllActivities() {
+    public List<AbstractDataControlNode> getAllActivities() {
         return this.fragmentXml.getAllActivities();
     }
 }

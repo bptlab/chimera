@@ -4,10 +4,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,7 +38,7 @@ public class FragmentValidator {
         String pattern =
                 "^([a-zA-Z\\d\\n]|[a-zA-Z\\d\\n](?!.*[ _]{2})[a-zA-Z\\d\\n _]*?[a-zA-Z\\d\\n])$";
         Pattern compiledPattern = Pattern.compile(pattern);
-        for (AbstractTask task : fragment.getTasks()) {
+        for (AbstractDataControlNode task : fragment.getTasks()) {
             if (!compiledPattern.matcher(task.getName()).matches() && !"".equals(task.getName())) {
                 throw new IllegalArgumentException(String.format("%s is not a valid task name",
                         task.getName()));
@@ -60,7 +58,7 @@ public class FragmentValidator {
      */
     private static void validateOlc(Map<String, Olc> olcs, Fragment fragment) {
         Map<String, DataNode> idToDataNode = getIdToDataNode(fragment.getDataNodes());
-        for (AbstractTask task : fragment.getAllActivities()) {
+        for (AbstractDataControlNode task : fragment.getAllActivities()) {
             Map<String, List<String>> incomingDataobjectStates =
                     getIncomingStatesPerDataobject(task, idToDataNode);
             Map<String, List<String>> outgoingDataobjectStates =
@@ -107,7 +105,7 @@ public class FragmentValidator {
 
 
     private static Map<String, List<String>> getIncomingStatesPerDataobject(
-            AbstractTask task, Map<String, DataNode> idToDataNode) {
+            AbstractDataControlNode task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> incomingStatesPerDataobject = new HashMap<>();
         for (DataInputAssociation assoc : task.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
@@ -120,7 +118,7 @@ public class FragmentValidator {
     }
 
     private static Map<String, List<String>> getOutgoingStatesPerDataobject(
-            AbstractTask task, Map<String, DataNode> idToDataNode) {
+            AbstractDataControlNode task, Map<String, DataNode> idToDataNode) {
         Map<String, List<String>> outgoingStatesPerDataobject = new HashMap<>();
         for (DataOutputAssociation assoc : task.getDataOutputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());

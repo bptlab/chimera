@@ -11,20 +11,12 @@ import java.util.Map;
  */
 @XmlRootElement(name = "bpmn:boundaryEvent")
 @XmlAccessorType(XmlAccessType.NONE)
-public class BoundaryEvent extends AbstractControlNode {
-    @XmlAttribute(name = "id")
-    private String id;
-    @XmlAttribute(name = "name")
-    private String name;
-
+public class BoundaryEvent extends AbstractDataControlNode {
     /**
      * Stores the Id of the activity (or subprocess) the Event is attached to.
      */
     @XmlAttribute(name = "attachedToRef")
     private String attachedToRef;
-
-    @XmlElement(name = "bpmn:outgoing")
-    private String outgoing;
 
     @XmlAttribute(name = "griffin:eventquery")
     private String eventQuery;
@@ -52,36 +44,11 @@ public class BoundaryEvent extends AbstractControlNode {
     }
 
     @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "BoundaryEvent", this.getFragmentId(), this.getId());
         return this.getDatabaseId();
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOutgoing() {
-        return outgoing;
-    }
-
-    public void setOutgoing(String outgoing) {
-        this.outgoing = outgoing;
     }
 
     public String getEventQuery() {
