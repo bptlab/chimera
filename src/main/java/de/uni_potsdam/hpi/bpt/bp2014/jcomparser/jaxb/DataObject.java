@@ -72,9 +72,9 @@ public class DataObject {
 
         Connector connector = new Connector();
 
-        initStateDatabaseId = this.dataClass.getStateToDatabaseId().get("init");
+        initStateDatabaseId = this.dataClass.getStateToDatabaseId().getOrDefault("init", -1);
         databaseId = connector.insertDataObjectIntoDatabase(
-                this.dataClass.getDataClassName(), this.dataClass.getDataClassID(),
+                this.dataClass.getName(), this.dataClass.getDatabaseId(),
                 scenarioId, initStateDatabaseId);
         saveDataNodes();
         return databaseId;
@@ -138,7 +138,7 @@ public class DataObject {
     }
 
     public String getDataClassName() {
-        return dataClass.getDataClassName();
+        return dataClass.getName();
     }
 
     public void setId(String id) {

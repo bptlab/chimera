@@ -42,8 +42,6 @@ public class DomainModel implements IPersistable {
 	private JSONObject domainModelJson;
 
     private List<DataClass> dataClasses = new ArrayList<>();
-
-	private List<EventType> eventTypes = new ArrayList<>();
 	/**
 	 * A map with all known OLCs for DataClasses (identified by name).
 	 */
@@ -69,7 +67,7 @@ public class DomainModel implements IPersistable {
     public Map<String, DataClass> getMapFromIdToDataclass() {
         Map<String, DataClass> idToDataclass = new HashMap<>();
         for (DataClass dataClass : dataClasses) {
-            idToDataclass.put(dataClass.getDataClassModelID(), dataClass);
+            idToDataclass.put(dataClass.getModelId(), dataClass);
         }
         return idToDataclass;
     }
@@ -81,7 +79,7 @@ public class DomainModel implements IPersistable {
     public Map<String, DataClass> getMapFromNameToDataclass() {
         Map<String, DataClass> nameToDataclass = new HashMap<>();
         for (DataClass dataClass : dataClasses) {
-            nameToDataclass.put(dataClass.getDataClassName(), dataClass);
+            nameToDataclass.put(dataClass.getName(), dataClass);
         }
         return nameToDataclass;
     }
@@ -115,16 +113,16 @@ public class DomainModel implements IPersistable {
 				JSONObject currentObject = jsonDataClasses.getJSONObject(i);
 				if (currentObject.getBoolean("is_event")) {
 					EventType currentET = new EventType(currentObject.toString());
-					eventTypes.add(currentET);
+					dataClasses.add(currentET);
 				} else {
 					DataClass currentClass = new DataClass(currentObject.toString());
 					dataClasses.add(currentClass);
 					//In case we need a list of all OLCs we might as well create
 					//it on the fly by iterating over all data classes
 					//(basically like here)
-					if (currentClass.getDataClassOlc() != null) {
-						olcs.put(currentClass.getDataClassName(),
-								currentClass.getDataClassOlc());
+					if (currentClass.getOlc() != null) {
+						olcs.put(currentClass.getName(),
+								currentClass.getOlc());
 					}
 				}
 			}
@@ -144,7 +142,6 @@ public class DomainModel implements IPersistable {
 		conn.insertDomainModelIntoDatabase(this.domainModelEditorId, this.versionNumber,
 				this.scenarioID);
 		dataClasses.forEach(DataClass::save);
-		eventTypes.forEach(EventType::save);
 		aggregations.forEach(Aggregation::save);
 		return 1;
 	}
@@ -229,10 +226,6 @@ public class DomainModel implements IPersistable {
 
 	public List<DataClass> getDataClasses() {
 		return dataClasses;
-	}
-
-	public List<EventType> getEventTypes() {
-		return eventTypes;
 	}
 
 	public Map<String, Olc> getOlcs() {

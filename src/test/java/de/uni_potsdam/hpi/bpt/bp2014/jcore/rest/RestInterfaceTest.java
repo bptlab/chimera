@@ -1122,7 +1122,7 @@ public class RestInterfaceTest extends AbstractTest {
                 .request().get();
         assertEquals("The Response code of getInputDataAttributes was not 200",
                 200, response.getStatus());
-        assertEquals("getDataAttributes does not return a JSON",
+        assertEquals("getAttributes does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),

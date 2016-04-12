@@ -32,11 +32,4 @@ public class DataInputAssociation extends Edge {
         this.sourceRef = sourceRef;
     }
 
-
-    public int save(Map<String, Integer> nodeToDatabaseId) {
-        int sourceDatabaseId = nodeToDatabaseId.get(sourceRef);
-        Connector connector = new Connector();
-        connector.insertDataFlowIntoDatabase(sourceDatabaseId, setId, true);
-        return 0;
-    }
 }

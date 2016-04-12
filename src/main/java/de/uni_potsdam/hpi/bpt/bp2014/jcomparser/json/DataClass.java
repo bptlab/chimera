@@ -14,50 +14,52 @@ import java.util.*;
  * This class represents a DataClass.
  */
 public class DataClass implements IPersistable {
-    private static Logger logger = Logger.getLogger(EventType.class);
+    private static Logger logger = Logger.getLogger(DataClass.class);
 
     /**
 	 * This is the modelID of the dataClass.
 	 */
-	private String dataClassModelID;
+	protected String modelId;
 	/**
 	 * This is the databaseID of the dataClass.
 	 */
-	private int dataClassID;
+	protected int databaseId;
 
     /**
 	 * This is the name of the dataClass.
 	 */
-	private String dataClassName;
+	protected String name;
 	/**
-	 * This is a list containing all dataAttributes belonging to this dataClass.
+	 * This is a list containing all attributes belonging to this dataClass.
 	 */
-	private List<DataAttribute> dataAttributes = new LinkedList<>();
+	protected List<DataAttribute> attributes = new LinkedList<>();
 	/**
-	 * This contains the XML representation of the dataClass.
+	 * This contains the JSON representation of the dataClass.
 	 */
-	private JSONObject dataClassJson;
+	protected JSONObject jsonRepresentation;
 	/**
 	 * This contains the OLC of the dataClass (if one exists).
 	 */
-	private Olc dataClassOlc;
+	protected Olc olc;
 
-    private Map<String, Integer> stateToDatabaseId = new HashMap<>();
+	protected final int isEvent = 0;
 
-    private List<String> states = new ArrayList<>();
+    protected Map<String, Integer> stateToDatabaseId = new HashMap<>();
+
+    protected List<String> states = new ArrayList<>();
 
 	public DataClass(final String element) {
         try {
-            this.dataClassJson = new JSONObject(element);
-            this.dataClassName = this.dataClassJson.getString("name");
-            if (!StringUtils.isAlphanumericSpace(dataClassName)) {
+            this.jsonRepresentation = new JSONObject(element);
+            this.name = this.jsonRepresentation.getString("name");
+            if (!StringUtils.isAlphanumericSpace(name)) {
                 String errorMsg = "%s is not a valid data class name";
-                throw new IllegalArgumentException(String.format(errorMsg, dataClassName));
+                throw new IllegalArgumentException(String.format(errorMsg, name));
             }
-            this.dataClassModelID = this.dataClassJson.getString("_id");
-            generateDataAttributeList(this.dataClassJson.getJSONArray("attributes"));
-			if (this.dataClassJson.has("olc")) {
-				this.dataClassOlc = new Olc(this.dataClassJson.get("olc").toString());
+            this.modelId = this.jsonRepresentation.getString("_id");
+            generateDataAttributeList(this.jsonRepresentation.getJSONArray("attributes"));
+			if (this.jsonRepresentation.has("olc")) {
+				this.olc = new Olc(this.jsonRepresentation.get("olc").toString());
 			}
         } catch (JSONException e) {
             logger.trace(e);
@@ -72,45 +74,45 @@ public class DataClass implements IPersistable {
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
-		this.dataClassID = conn.insertDataClassIntoDatabase(this.dataClassName);
+		this.databaseId = conn.insertDataClassIntoDatabase(this.name, this.isEvent);
 		saveDataAttributes();
         Connector connector = new Connector();
         for (String state : this.states) {
-            int stateID = connector.insertStateIntoDatabase(state, this.dataClassID);
+            int stateID = connector.insertStateIntoDatabase(state, this.databaseId);
             stateToDatabaseId.put(state, stateID);
         }
 
-        return dataClassID;
+        return databaseId;
 	}
 
 	/**
-	 * This method gets all the dataAttributes from the JSON.
+	 * This method gets all the attributes from the JSON.
 	 * DataAttributes can only be alphanumerical.
 	 *
-	 * @param jsonAttributes This JSONArray contains all dataAttributes from the JSON.
+	 * @param jsonAttributes This JSONArray contains all attributes from the JSON.
 	 */
-	private void generateDataAttributeList(JSONArray jsonAttributes) {
+	protected void generateDataAttributeList(JSONArray jsonAttributes) {
 		int length = jsonAttributes.length();
 		for (int i = 0; i < length; i++) {
 			DataAttribute dataAttribute = new DataAttribute(
 					jsonAttributes.getJSONObject(i).getString("name"),
 					jsonAttributes.getJSONObject(i).getString("datatype")
 			);
-			this.dataAttributes.add(dataAttribute);
+			this.attributes.add(dataAttribute);
 		}
 	}
 
 
 	private void saveDataAttributes() {
-		for (DataAttribute dataAttribute : dataAttributes) {
-            dataAttribute.setDataClassID(dataClassID);
+		for (DataAttribute dataAttribute : attributes) {
+            dataAttribute.setDataClassID(databaseId);
 			dataAttribute.save();
 		}
 	}
 
 
 	public Optional<DataAttribute> getDataAttributeByName(String attributeName) {
-		for (DataAttribute attribute : dataAttributes) {
+		for (DataAttribute attribute : attributes) {
 			if (attribute.getDataAttributeName().equals(attributeName)) {
 				return Optional.of(attribute);
 			}
@@ -118,24 +120,24 @@ public class DataClass implements IPersistable {
 		return Optional.empty();
 	}
 
-	public int getDataClassID() {
-		return dataClassID;
+	public int getDatabaseId() {
+		return databaseId;
 	}
 
-	public String getDataClassName() {
-		return dataClassName;
+	public String getName() {
+		return name;
 	}
 
-	public List<DataAttribute> getDataAttributes() {
-		return dataAttributes;
+	public List<DataAttribute> getAttributes() {
+		return attributes;
 	}
 
-	public JSONObject getDataClassJson() {
-		return dataClassJson;
+	public JSONObject getJsonRepresentation() {
+		return jsonRepresentation;
 	}
 
-	public String getDataClassModelID() {
-		return dataClassModelID;
+	public String getModelId() {
+		return modelId;
 	}
 
     public Map<String, Integer> getStateToDatabaseId() {
@@ -154,15 +156,15 @@ public class DataClass implements IPersistable {
         this.states = states;
     }
 
-    public void setDataClassName(String dataClassName) {
-        this.dataClassName = dataClassName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-	public Olc getDataClassOlc() {
-		return this.dataClassOlc;
+	public Olc getOlc() {
+		return this.olc;
 	}
 
-	public void setDataClassOlc(Olc dataClassOlc) {
-		this.dataClassOlc = dataClassOlc;
+	public void setOlc(Olc olc) {
+		this.olc = olc;
 	}
 }

@@ -9,6 +9,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -23,6 +24,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -51,20 +53,32 @@ public final class EventDispatcher {
     public static Response receiveEvent(
             @PathParam("scenarioID") int scenarioId,
             @PathParam("instanceID") int scenarioInstanceId,
-            @PathParam("requestKey") String requestId) {
-        terminateEvent(requestId, scenarioId, scenarioInstanceId);
+            @PathParam("requestKey") String requestId,
+            String eventJson) {
+        AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
+        writeDataObjects(event, eventJson);
+        terminateEvent(event);
         return Response.accepted("Event received.").build();
     }
 
-    public static void terminateEvent(String mappingKey, int scenarioId, int scenarioInstanceId) {
-        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-        AbstractEvent event = getEvent(scenarioInstance, mappingKey);
+    public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
+        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
+        return getEvent(scenarioInstance, requestId);
+    }
+
+    private static void writeDataObjects(AbstractEvent event, String eventJson) {
+        DataAttributeWriter writer = new DataAttributeWriter(
+                event.getControlNodeId());
+        List<DataAttributeInstance> attributeInstances = new ArrayList<>(
+                event.getScenarioInstance().getDataAttributeInstances().values());
+        writer.writeDataAttributesFromJson(eventJson, attributeInstances);
+    }
+    public static void terminateEvent(AbstractEvent event) {
         event.terminate();
-        int fragmentInstanceId = event.getFragmentInstanceId();
         if (isExclusiveEvent(event)) {
             discardAllAlternatives(event);
         } else {
-            unregisterEvent(event.getControlNodeId(), fragmentInstanceId);
+            unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
         }
     }
 
@@ -170,7 +184,7 @@ public final class EventDispatcher {
         if (response.getStatus() != 200) {
             // throw new RuntimeException("Query could not be registered");
             logger.debug("Could not register Query");
-            return null;
+            return "-1";
         } else {
             // return the UUID of the Notification Rule
             // so that it can be removed later
@@ -181,10 +195,9 @@ public final class EventDispatcher {
     public static void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
         DbEventMapping eventMapping = new DbEventMapping();
         String notificationRuleId = eventMapping.getNotificationRuleId(eventControlNodeId);
+
         unregisterNotificationRule(notificationRuleId);
-
         eventMapping.removeEventMapping(fragmentInstanceId, eventControlNodeId);
-
     }
 
     private static void unregisterNotificationRule(String notificationRuleId) {

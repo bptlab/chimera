@@ -59,24 +59,24 @@ public class DataClassTest  {
     @Test
     public void testRootDataClass(){
         DataClass dClass = new DataClass(rootDataClass);
-        Assert.assertEquals("ID has not been set correctly", "801101005L", dClass.getDataClassModelID());
-        Assert.assertEquals("Name has not been set correctly", "Reise", dClass.getDataClassName());
-        Assert.assertEquals("Attributes have not been set correctly", 3, dClass.getDataAttributes().size());
+        Assert.assertEquals("ID has not been set correctly", "801101005L", dClass.getModelId());
+        Assert.assertEquals("Name has not been set correctly", "Reise", dClass.getName());
+        Assert.assertEquals("Attributes have not been set correctly", 3, dClass.getAttributes().size());
         String[] attribute = {"Beginn","Ende","Gesamtkosten"};
-        for(int i = 0; i < dClass.getDataAttributes().size(); i++){
-            Assert.assertEquals("Attribute" + i + "has not been set correctly", attribute[i], dClass.getDataAttributes().get(i).getDataAttributeName());
+        for(int i = 0; i < dClass.getAttributes().size(); i++){
+            Assert.assertEquals("Attribute" + i + "has not been set correctly", attribute[i], dClass.getAttributes().get(i).getDataAttributeName());
         }
     }
 
     @Test
     public void testNormalDataClass(){
         DataClass dClass = new DataClass(normalDataClass);
-        Assert.assertEquals("ID has not been set correctly", "679826034L", dClass.getDataClassModelID());
-        Assert.assertEquals("Name has not been set correctly", "Flug", dClass.getDataClassName());
-        Assert.assertEquals("Attributes have not been set correctly", 4, dClass.getDataAttributes().size());
+        Assert.assertEquals("ID has not been set correctly", "679826034L", dClass.getModelId());
+        Assert.assertEquals("Name has not been set correctly", "Flug", dClass.getName());
+        Assert.assertEquals("Attributes have not been set correctly", 4, dClass.getAttributes().size());
         String[] attribute = {"Abflugsdatum","Ankunftsdatum","StartFlughafen", "EndFlughafen"};
-        for(int i = 0; i < dClass.getDataAttributes().size(); i++){
-            Assert.assertEquals("Attribute" + i + "has not been set correctly", attribute[i], dClass.getDataAttributes().get(i).getDataAttributeName());
+        for(int i = 0; i < dClass.getAttributes().size(); i++){
+            Assert.assertEquals("Attribute" + i + "has not been set correctly", attribute[i], dClass.getAttributes().get(i).getDataAttributeName());
         }
     }
 }

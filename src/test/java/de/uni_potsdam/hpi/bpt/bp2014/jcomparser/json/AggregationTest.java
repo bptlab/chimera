@@ -99,7 +99,7 @@
 //    public void testSourceDataClass(){
 //        Assert.assertNotNull("ID has not been set correctly", dataClasses.get(801101005L));
 //        Assert.assertEquals("Name has not been set correctly", "Reise", dataClasses.get(801101005L).getDataClassName());
-//        Assert.assertEquals("Attributes have not been set correctly", 3, dataClasses.get(801101005L).getDataAttributes().size());
+//        Assert.assertEquals("Attributes have not been set correctly", 3, dataClasses.get(801101005L).getAttributes().size());
 //    }
 //    /**
 //     * Test deserialization of the dataClass that is aggregated is correct
@@ -108,7 +108,7 @@
 //    public void testTargetDataClass(){
 //        Assert.assertNotNull("ID has not been set correctly", dataClasses.get(679826034L));
 //        Assert.assertEquals("Name has not been set correctly", "Flug", dataClasses.get(679826034L).getDataClassName());
-//        Assert.assertEquals("Attributes have not been set correctly", 4, dataClasses.get(679826034L).getDataAttributes().size());
+//        Assert.assertEquals("Attributes have not been set correctly", 4, dataClasses.get(679826034L).getAttributes().size());
 //    }
 //    /**
 //     * Test deserialization of the aggregation is correct.

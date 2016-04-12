@@ -1,11 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.commons.io.FileUtils;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
@@ -91,5 +94,22 @@ public class ScenarioTestHelper {
             ActivityInstance casted = (ActivityInstance) activity.get();
             casted.begin();
         }
+    }
+
+    public static int triggerEventInScenario(ScenarioInstance scenarioInstance,
+                                              WebTarget base, String body) {
+        int scenarioId = scenarioInstance.getScenarioId();
+        int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
+        String registeredEvent = registeredEventKeys.get(0);
+        String route = String.format("scenario/%d/instance/%d/events/%s", scenarioId,
+                scenarioInstanceId, registeredEvent);
+
+        DbEventMapping eventMapping = new DbEventMapping();
+        int eventNodeId = eventMapping.getEventControlNodeId(registeredEvent);
+
+        base.path(route).request().post(Entity.json(body));
+
+        return eventNodeId;
     }
 }

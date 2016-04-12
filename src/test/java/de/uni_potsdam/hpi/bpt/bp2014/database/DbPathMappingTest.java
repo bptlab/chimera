@@ -33,7 +33,7 @@ public class DbPathMappingTest {
 
             DbObject dbConn = new DbObject();
             int serviceTaskNodeId = dbConn.executeStatementReturnsInt(
-                    String.format("SELECT * FROM controlnode WHERE model_id = '%s'", "ServiceTask_165z0yh"),
+                    String.format("SELECT * FROM controlnode WHERE modelid = '%s'", "ServiceTask_165z0yh"),
                     "id");
 
             assertEquals("The jsonpath mapping has not been saved correctly.",
@@ -49,13 +49,9 @@ public class DbPathMappingTest {
         int attrId1 = dbConn.executeStatementReturnsInt(
                 String.format("SELECT * FROM dataattribute WHERE name = '%s'", "attr1"),
                 "id");
-        int attrId2 = dbConn.executeStatementReturnsInt(
-                String.format("SELECT * FROM dataattribute WHERE name = '%s'", "attr2"),
-                "id");
 
         Map<Integer, String> pathMap = new HashMap<>();
-        pathMap.put(attrId1, "$.foo");
-        pathMap.put(attrId2, "$.bar['baz']");
+        pathMap.put(attrId1, "$.a[0].b.prop1");
         return pathMap;
     }
 

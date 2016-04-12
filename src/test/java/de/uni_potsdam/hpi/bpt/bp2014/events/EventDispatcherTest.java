@@ -54,7 +54,7 @@ public class EventDispatcherTest extends JerseyTest {
             List<AbstractControlNodeInstance> activatedBeforeEvent =
                     scenarioInstance.getEnabledControlNodeInstances();
             assertEquals(activatedBeforeEvent.size(), 0);
-            triggerEventInScenario(scenarioInstance);
+            ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, "");
             ScenarioInstance scenarioInstance2 = new ScenarioInstance(
                     scenarioInstance.getScenarioId(), scenarioInstance.getScenarioInstanceId());
             List<AbstractControlNodeInstance> activatedAfterEvent =
@@ -75,22 +75,12 @@ public class EventDispatcherTest extends JerseyTest {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEventKeysBeforeEvent = scenarioInstance.getRegisteredEventKeys();
             assertEquals(1, registeredEventKeysBeforeEvent.size());
-            triggerEventInScenario(scenarioInstance);
+            ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, "");
             List<String> registeredEventKeysAfterEvent = scenarioInstance.getRegisteredEventKeys();
             assertEquals(0, registeredEventKeysAfterEvent.size());
         } catch (IOException e) {
             assert (false);
         }
-    }
-
-    private void triggerEventInScenario(ScenarioInstance scenarioInstance) {
-        int scenarioId = scenarioInstance.getScenarioId();
-        int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
-        List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
-        String registeredEvent = registeredEventKeys.get(0);
-        String route = String.format("scenario/%d/instance/%d/events/%s", scenarioId,
-                scenarioInstanceId, registeredEvent);
-        base.path(route).request().post(Entity.json(""));
     }
 
     @Test

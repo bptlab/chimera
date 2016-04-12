@@ -100,7 +100,7 @@ public class ScenarioData {
     private Map<String, DataClass> extractNameToDataclass(DomainModel model) {
         Map<String, DataClass> nameToDataClass = new HashMap<>();
         for (DataClass dataClass : model.getDataClasses()) {
-            nameToDataClass.put(dataClass.getDataClassName(), dataClass);
+            nameToDataClass.put(dataClass.getName(), dataClass);
         }
         return nameToDataClass;
     }
@@ -147,7 +147,7 @@ public class ScenarioData {
     private Map<String, DataClass> getNameToDataclass(DomainModel domainModel) {
         Map<String, DataClass> dataClassNameToDatabaseId = new HashMap<>();
         for (DataClass dataClass : domainModel.getDataClasses()) {
-            dataClassNameToDatabaseId.put(dataClass.getDataClassName(), dataClass);
+            dataClassNameToDatabaseId.put(dataClass.getName(), dataClass);
         }
         return dataClassNameToDatabaseId;
     }

@@ -32,11 +32,4 @@ public class DataOutputAssociation extends Edge {
         this.targetRef = targetRef;
     }
 
-    public int save(Map<String, Integer> nodeToDatabaseId) {
-        int targetDatabaseId = nodeToDatabaseId.get(targetRef);
-        Connector connector = new Connector();
-        connector.insertDataFlowIntoDatabase(targetDatabaseId, setId, false);
-        return 0;
-    }
-
 }

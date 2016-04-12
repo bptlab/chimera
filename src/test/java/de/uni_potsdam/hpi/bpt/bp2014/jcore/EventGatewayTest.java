@@ -46,7 +46,7 @@ public class EventGatewayTest extends JerseyTest {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
             assertEquals(3, registeredEvents.size());
-            triggerEventInScenario(scenarioInstance);
+            ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, "");
             registeredEvents = scenarioInstance.getRegisteredEventKeys();
             assertEquals(0, registeredEvents.size());
         } catch (IOException e) {
@@ -69,15 +69,4 @@ public class EventGatewayTest extends JerseyTest {
         }
 
     }
-
-    private void triggerEventInScenario(ScenarioInstance scenarioInstance) {
-        int scenarioId = scenarioInstance.getScenarioId();
-        int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
-        List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
-        String registeredEvent = registeredEventKeys.get(0);
-        String route = String.format("scenario/%d/instance/%d/events/%s", scenarioId,
-                scenarioInstanceId, registeredEvent);
-        base.path(route).request().post(Entity.json(""));
-    }
-
 }

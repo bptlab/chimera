@@ -38,11 +38,11 @@ public class DataAttributeTest  {
     @Test
     public void testDataAttributeSetMethod(){
         DataClass dClass = new DataClass(dataClass);
-        for(DataAttribute attr : dClass.getDataAttributes()){
+        for(DataAttribute attr : dClass.getAttributes()){
             attr.setDataClassID(42);
         }
-        for(int i = 0; i < dClass.getDataAttributes().size(); i++){
-            Assert.assertEquals("DataClassID has not been set correctly", 42, dClass.getDataAttributes().get(i).getDataClassID());
+        for(int i = 0; i < dClass.getAttributes().size(); i++){
+            Assert.assertEquals("DataClassID has not been set correctly", 42, dClass.getAttributes().get(i).getDataClassID());
         }
     }
 
@@ -66,7 +66,7 @@ public class DataAttributeTest  {
     @Test
     public void testDataAttributeParsing(){
         DataClass dClass = new DataClass(dataClass);
-        DataAttribute dAttribute = dClass.getDataAttributes().get(0);
+        DataAttribute dAttribute = dClass.getAttributes().get(0);
         Assert.assertEquals("AttributeName has not been set correctly", "Beginn", dAttribute
                 .getDataAttributeName());
         Assert.assertEquals("AttributeType has not been set correctly", "String", dAttribute

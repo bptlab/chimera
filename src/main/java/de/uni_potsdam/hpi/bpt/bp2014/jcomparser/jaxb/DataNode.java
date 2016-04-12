@@ -50,7 +50,7 @@ public class DataNode {
         int stateDatabaseId = dataObject.getDataClass().getStateToDatabaseId().get(this.state);
         int nodeId = connector.insertDataNodeIntoDatabase(
                 dataObject.getScenarioId(), stateDatabaseId,
-                dataObject.getDataClass().getDataClassID(), dataObject.getDatabaseId(), this.getId());
+                dataObject.getDataClass().getDatabaseId(), dataObject.getDatabaseId(), this.getId());
         this.setDatabaseId(nodeId);
     }
 

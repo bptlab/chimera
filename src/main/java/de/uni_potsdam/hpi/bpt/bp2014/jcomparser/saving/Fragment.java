@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 
 import org.apache.log4j.Logger;
@@ -77,6 +78,10 @@ public class Fragment {
         for (AbstractTask task : this.fragmentXml.getAllActivities()) {
             sets.addAll(getOutputSetsForTask(task, idToDataNode));
         }
+
+        //TODO add event output sets... subclass again, see abstracttask
+        // and make fragmentXml return List<AbstractEvent> getAllEvents()
+
         return sets;
     }
 
@@ -111,6 +116,8 @@ public class Fragment {
         for (AbstractTask task : this.fragmentXml.getAllActivities()) {
             sets.addAll(getInputSetsForTask(task, idToDataNode));
         }
+
+        //TODO add event input sets
         return sets;
     }
 

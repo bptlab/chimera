@@ -153,10 +153,11 @@ public class Connector extends DbObject {
 	 * @param name the name of the Class.
 	 * @return the id of the newly created entry.
 	 */
-	public int insertDataClassIntoDatabase(final String name) {
-		String sql = "INSERT INTO dataclass (dataclass.name) "
-				+ "VALUES ('" + name + "')";
-		return performSQLInsertStatementWithAutoId(sql);
+	public int insertDataClassIntoDatabase(final String name, final int isEvent) {
+		String sql = "INSERT INTO dataclass (name, is_event) "
+				+ "VALUES ('%s', %d)";
+		return performSQLInsertStatementWithAutoId(
+				String.format(sql, name, isEvent));
 	}
 
 	/**
@@ -173,21 +174,6 @@ public class Connector extends DbObject {
 				+ "dataclass_id, dataattribute.type, dataattribute.default) "
 				+ "VALUES ('" + name + "', "
 				+ dataClassID + ", '" + type + "', '')";
-		return performSQLInsertStatementWithAutoId(sql);
-	}
-
-	public int insertEventTypeIntoDatabase(final String name, final int scenarioID) {
-		String sql = "INSERT INTO eventtype (eventtype.name, eventtype.scenario_id) "
-				+ "VALUES ('" + name + "', " + scenarioID + ")";
-		return performSQLInsertStatementWithAutoId(sql);
-	}
-
-	public int insertEventTypeAttributeIntoDatabase(final String name, final int eventTypeID,
-			final String type) {
-		String sql = "INSERT INTO eventtypeattribute (eventtypeattribute.name, "
-				+ "eventtypeattribute.eventtype_id, eventtypeattribute.type) "
-				+ "VALUES ('" + name + "', "
-				+ eventTypeID + ", '" + type + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 

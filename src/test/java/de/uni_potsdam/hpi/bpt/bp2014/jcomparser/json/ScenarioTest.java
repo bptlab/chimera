@@ -521,13 +521,13 @@
 //        Assert.assertEquals("DataObjectInstance not migrated properly", (int)scenario.getDataObjects().get("DO").getStates().get("state1"), dbDataObjectInstance.getStateID(2));
 //
 //        DataAttribute attr1 = null, attr2 = null, attr3 = null;
-//        for (DataAttribute attr : scenario.getDomainModel().getDataClasses().get(2068589604L).getDataAttributes()) {
+//        for (DataAttribute attr : scenario.getDomainModel().getDataClasses().get(2068589604L).getAttributes()) {
 //            if (attr.getDataAttributeName().equals("Attr1"))
 //                attr1 = attr;
 //            else if (attr.getDataAttributeName().equals("Attr2"))
 //                attr2 = attr;
 //        }
-//        for (DataAttribute attr : scenario.getDomainModel().getDataClasses().get(395565279L).getDataAttributes()) {
+//        for (DataAttribute attr : scenario.getDomainModel().getDataClasses().get(395565279L).getAttributes()) {
 //            if (attr.getDataAttributeName().equals("Attr3"))
 //                attr3 = attr;
 //        }
