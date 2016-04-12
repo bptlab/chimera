@@ -11,6 +11,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -125,24 +126,31 @@ public final class EventDispatcher {
     }
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
+        HistoryLogger logger = new HistoryLogger();
         DbEventMapping eventMapping = new DbEventMapping();
         EventFactory factory = new EventFactory(instance);
 
         int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
         int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
-
-        return factory.getEventForControlNodeId(eventControlNodeId,
+        AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
+        logger.logEventReceiving(event.getControlNodeInstanceId(),
+                instance.getScenarioInstanceId());
+        return event;
     }
 
-    public static String registerEvent(AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId,
-                              int scenarioId) {
+
+    public static String registerEvent(
+            AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         String query = parseQuery(event.getQueryString(), scenarioInstanceId, scenarioId);
         String notificationRuleId = sendQueryToEventService(
                 query, requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
+
+        HistoryLogger logger = new HistoryLogger();
+        logger.logEventRegistration(event.getControlNodeInstanceId(), scenarioInstanceId);
         return requestId;
     }
 

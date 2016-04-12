@@ -458,6 +458,21 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
 
 -- --------------------------------------------------------
 
+
+--
+-- Table structure for table `historyeventinstance`
+--
+
+CREATE TABLE IF NOT EXISTS `historyeventinstance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `eventid` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `state` varchar(256) NOT NULL,
+  `scenarioinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 --
 -- Table structure for table `janalyticsresults`
 --
