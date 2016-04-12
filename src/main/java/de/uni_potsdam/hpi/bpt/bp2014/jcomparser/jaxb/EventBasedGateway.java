@@ -18,32 +18,12 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class EventBasedGateway extends AbstractControlNode {
-    @XmlElement(name = "bpmn:incoming")
-    private String incoming;
-
-    @XmlAttribute(name = "id")
-    private String id;
-
-    @XmlElement(name = "bpmn:outgoing")
-    private List<String> outgoing = new ArrayList<>();
-
-    public List<String> getOutgoing() {
-        return outgoing;
-    }
-
-    public String getIncoming() {
-        return incoming;
-    }
-
-    public String getId() {
-        return this.id;
-    }
 
     @Override
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                "", "EventBasedGateway", this.getFragmentId(), this.id);
+                "", "EventBasedGateway", this.getFragmentId(), this.getId());
         return this.databaseId;
     }
 }

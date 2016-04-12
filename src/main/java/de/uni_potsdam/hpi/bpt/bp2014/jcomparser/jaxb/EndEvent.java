@@ -12,14 +12,15 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.NONE)
 public class EndEvent extends AbstractDataControlNode {
 
+
     @Override
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "EndEvent", this.getFragmentId(), this.id);
+                this.getName(), "EndEvent", this.getFragmentId(), this.getId());
 
         connector.insertEventIntoDatabase("EndEvent", "None",
-                this.fragmentId, this.id, this.databaseId);
+                this.fragmentId, this.getId(), this.databaseId);
 
         return this.databaseId;
     }

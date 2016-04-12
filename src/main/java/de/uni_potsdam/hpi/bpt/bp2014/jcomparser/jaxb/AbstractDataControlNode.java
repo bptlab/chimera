@@ -25,37 +25,12 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
     @XmlElement(name = "bpmn:dataInputAssociation")
     protected List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIncoming() {
-        return incoming;
-    }
-
-    public void setIncoming(String incoming) {
-        this.incoming = incoming;
-    }
-
-    public String getOutgoing() {
-        return outgoing;
-    }
-
-    public void setOutgoing(String outgoing) {
-        this.outgoing = outgoing;
     }
 
     public List<DataOutputAssociation> getDataOutputAssociations() {
@@ -72,6 +47,26 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 
     public void setDataInputAssociations(List<DataInputAssociation> dataInputAssociations) {
         this.dataInputAssociations = dataInputAssociations;
+    }
+
+    public void setFirstIncoming(String incoming) {
+        List<String> incomingList = new ArrayList<>();
+        incomingList.add(incoming);
+        this.setIncoming(incomingList);
+    }
+
+    public String getFirstIncoming() {
+        return getIncoming().get(0);
+    }
+
+    public void setFirstOutgoing(String incoming) {
+        List<String> outgoingList = new ArrayList<>();
+        outgoingList.add(incoming);
+        this.setIncoming(outgoingList);
+    }
+
+    public String getFirstOutgoing() {
+        return getOutgoing().get(0);
     }
 
 }

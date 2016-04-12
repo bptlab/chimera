@@ -7,6 +7,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -31,7 +34,8 @@ public class BoundaryEventTest {
             assertEquals("Task_0c9phqs", event.getAttachedToRef());
             assertEquals("BoundaryEvent_0dgouhn", event.getId());
             assertEquals("Fell asleep while drinking coffee", event.getName());
-            assertEquals("SequenceFlow_178gzyw", event.getOutgoing());
+            assertEquals(1, event.getOutgoing().size());
+            assertEquals("SequenceFlow_178gzyw", event.getOutgoing().get(0));
             assertEquals("querY", event.getEventQuery());
         } catch (JAXBException e) {
             e.printStackTrace();

@@ -28,8 +28,10 @@ public class IntermediateEventTest {
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             IntermediateEvent event = (IntermediateEvent) jaxbUnmarshaller.unmarshal(doc);
             assertEquals("IntermediateCatchEvent_1le8d7a", event.getId());
-            assertEquals("SequenceFlow_12g1b5j", event.getIncoming());
-            assertEquals("SequenceFlow_08s25px", event.getOutgoing());
+            assertEquals(1,event.getIncoming().size());
+            assertEquals("SequenceFlow_12g1b5j", event.getIncoming().get(0));
+            assertEquals(1,event.getOutgoing().size());
+            assertEquals("SequenceFlow_08s25px", event.getOutgoing().get(0));
             assertEquals("querY", event.getEventQuery());
         } catch (JAXBException e) {
             e.printStackTrace();

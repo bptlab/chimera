@@ -19,6 +19,7 @@ public class IntermediateEvent extends AbstractDataControlNode {
             "    </bpmn:intermediateCatchEvent>"
     */
 
+
     @XmlAttribute(name = "griffin:eventquery")
     private String eventQuery;
 
@@ -42,21 +43,20 @@ public class IntermediateEvent extends AbstractDataControlNode {
     private void saveIntermediateWithoutTimer() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "IntermediateEvent", this.fragmentId, this.id);
+                this.getName(), "IntermediateEvent", this.fragmentId, this.getId());
 
         connector.insertEventIntoDatabase("IntermediateEvent", this.eventQuery,
-                this.fragmentId, this.id, this.databaseId);
+                this.fragmentId, this.getId(), this.databaseId);
     }
 
     private void saveTimerIntermediate() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "TimerEvent", this.fragmentId, this.id);
+                this.getName(), "TimerEvent", this.fragmentId, this.getId());
         connector.insertEventIntoDatabase("TimerEvent", this.eventQuery,
-                this.fragmentId, this.id, this.databaseId);
+                this.fragmentId, this.getId(), this.databaseId);
         connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
     }
-
 
     public int getDatabaseId() {
         return databaseId;
@@ -76,16 +76,6 @@ public class IntermediateEvent extends AbstractDataControlNode {
 
     public TimerDefinition getTimer() {
         return timer;
-    }
-
-    @Override
-    public int getFragmentId() {
-        return fragmentId;
-    }
-
-    @Override
-    public void setFragmentId(int fragmentId) {
-        this.fragmentId = fragmentId;
     }
 
 }

@@ -3,9 +3,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,6 +34,65 @@ public class FragmentValidator {
         validateDataReferences(fragment, domainModel);
         validateOlc(domainModel.getOlcs(), fragment);
         validateNames(fragment);
+        validateStructuralSoundness(fragment);
+    }
+
+    private static Map<String, Set<String>> validateStructuralSoundness(Fragment fragment) {
+        Map<String, Set<String>> graph = buildGraphFromFragment(fragment);
+        Map<String, Set<String>> reverseGraph = buildReverseGraph(graph);
+        checkOnlyOneIn(graph, reverseGraph);
+        checkOnlyOneOut(graph, reverseGraph);
+        // Set<String> reachableFromStart = Breitensuche(start, graph);
+        // Set<String> reachableFromEnd = Breitensuche(end, reversedGraph);
+        // assert (reachableFromStart.size() = reachableFromEnd.size());
+    }
+
+    public static Map<String, Set<String>> buildGraphFromFragment(Fragment fragment) {
+        Map<String, Set<String>> graph = new HashMap<>();
+        for (AbstractControlNode node : fragment.getControlNodes()) {
+            for (String currentIncoming : node.getIncoming()) {
+                if (!graph.containsKey(currentIncoming)) {
+                    graph.put(currentIncoming, new HashSet<>());
+                }
+                graph.get(currentIncoming).add(node.getId());
+            }
+            for (String currentOutgoing : node.getOutgoing()) {
+                if (!graph.containsKey(node.getId())) {
+                    graph.put(node.getId(), new HashSet<>());
+                }
+                graph.get(node.getId()).add(currentOutgoing);
+            }
+        }
+        return graph;
+    }
+
+    private static Map<String, Set<String>> buildReverseGraph(Map<String, Set<String>> graph) {
+        Map<String, Set<String>> reverseGraph = new HashMap<>();
+        for (Map.Entry<String, Set<String>> entry : graph.entrySet()) {
+            for (String currentValue : entry.getValue()) {
+                if (!reverseGraph.containsKey(currentValue)) {
+                    reverseGraph.put(currentValue, new HashSet<>());
+                }
+                reverseGraph.get(currentValue).add(entry.getKey());
+            }
+        }
+        return reverseGraph;
+    }
+
+    private static void checkOnlyOneIn(
+        Map<String, Set<String>> graph, Map<String, Set<String>> reverseGraph) {
+        Set<String> inputPlaces = new HashSet<>();
+        //TODO: Find all places with only outgoing edges.
+
+        assert (inputPlaces.size() == 1) : "There is not exactly one input place";
+    }
+
+    private static void checkOnlyOneOut(
+            Map<String, Set<String>> graph, Map<String, Set<String>> reverseGraph) {
+        Set<String> outputPlaces = new HashSet<>();
+        //TODO: Find all places with only incoming edges.
+
+        assert (outputPlaces.size() == 1) : "There is not exactly one output place";
     }
 
     private static void validateNames(Fragment fragment) {

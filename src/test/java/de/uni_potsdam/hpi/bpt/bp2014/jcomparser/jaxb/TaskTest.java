@@ -46,8 +46,10 @@ public class TaskTest {
             Task task = (Task) jaxbUnmarshaller.unmarshal(doc);
             assertEquals("Task_1qp9gsh", task.getId());
             assertEquals("Do great work", task.getName());
-            assertEquals("SequenceFlow_1r09dad", task.getIncoming());
-            assertEquals("SequenceFlow_0306jnu", task.getOutgoing());
+            assertEquals(1, task.getIncoming().size());
+            assertEquals("SequenceFlow_1r09dad", task.getIncoming().get(0));
+            assertEquals(1, task.getOutgoing().size());
+            assertEquals("SequenceFlow_0306jnu", task.getOutgoing().get(0));
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -80,22 +82,4 @@ public class TaskTest {
         }
     }
 
-    @Test
-    public void testSerialization() {
-        Task task = new Task();
-        task.setId("Task_1qp9gsh");
-        task.setName("Do great work");
-        task.setIncoming("SequenceFlow_1r09dad");
-        task.setOutgoing("SequenceFlow_0306jnu");
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Task.class);
-            String output = XmlTestHelper.asString(jaxbContext, task);
-            org.hamcrest.Matcher<String> matcher =
-                    IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                    this.testString);
-            assert(matcher.matches(output));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-    }
 }

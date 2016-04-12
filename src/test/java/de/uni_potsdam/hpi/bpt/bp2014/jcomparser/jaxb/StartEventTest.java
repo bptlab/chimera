@@ -23,7 +23,8 @@ public class StartEventTest {
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             StartEvent startEvent = (StartEvent) jaxbUnmarshaller.unmarshal(doc);
             assertEquals("StartEvent_1jwyrhz", startEvent.getId());
-            assertEquals("SequenceFlow_1r09dad", startEvent.getOutgoing());
+            assertEquals(1,startEvent.getOutgoing().size());
+            assertEquals("SequenceFlow_1r09dad", startEvent.getOutgoing().get(0));
             assertEquals("querY" , startEvent.getEventQuery());
         } catch (JAXBException e) {
             e.printStackTrace();

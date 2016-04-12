@@ -20,27 +20,8 @@ import java.util.List;
 @XmlRootElement(name = "bpmn:exclusiveGateway")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ExclusiveGateway extends AbstractControlNode {
-    @XmlAttribute(name = "id")
-    private String id;
     @XmlAttribute(name = "name")
     private String name = "";
-    @XmlElement(name = "bpmn:incoming")
-    private List<String> incoming = new ArrayList<>();
-    @XmlElement(name = "bpmn:outgoing")
-    private List<String> outgoing = new ArrayList<>();
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public List<String> getOutgoing() {
-        return outgoing;
-    }
-
-    public List<String> getIncoming() {
-        return incoming;
-    }
 
     public String getName() {
         return name;
@@ -50,7 +31,7 @@ public class ExclusiveGateway extends AbstractControlNode {
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "XOR", this.getFragmentId(), this.id);
+                this.getName(), "XOR", this.getFragmentId(), this.getId());
         return this.databaseId;
     }
 }
