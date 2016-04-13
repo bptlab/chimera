@@ -11,6 +11,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachi
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.ActivityStateMachine;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -67,25 +68,16 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 * 			false if not.
 	 */
 	private Boolean checkInputObjects() {
-		LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
+		List<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
 				getControlNodeInstance().getControlNodeId());
-		Boolean loopCheck = true;
-		for (int inputSet : inputSets) {
-			LinkedList<DataObject> dataObjects =
-					dbDataNode.getDataObjectsForDataSets(inputSet);
-			for (DataObject dataObject : dataObjects) {
-				loopCheck = true;
-				if (!this.compareDataObjectState(
-						dataObject.getId(), dataObject.getStateID())) {
-					loopCheck = false;
-					break;
-				}
-			}
-			if (loopCheck) {
-				break;
-			}
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
+
+		for (Integer inputSet : inputSets) {
+            if (dataManager.checkInputSet(inputSet)) {
+                return true;
+            }
 		}
-		return loopCheck;
+		return false;
 	}
 
 	/**
@@ -102,13 +94,13 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	/**
 	 * Sets the data objects which are outputs of the activity to on change.
 	 */
-	public void setDataObjectInstancesOnChange() {
-		LinkedList<Integer> outputSets = dbDataFlow
-				.getOutputSetsForControlNode(
+	public void lockDataObjectInstances() {
+		List<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
 						getControlNodeInstance().getControlNodeId());
 		DataManager dataManager = this.getScenarioInstance().getDataManager();
-        for (int outputSet : outputSets) {
-			LinkedList<Integer> dataObjects = dbDataNode
+
+        for (int outputSet : inputSets) {
+			List<Integer> dataObjects = dbDataNode
 					.getDataObjectIdsForDataSets(outputSet);
 			for (int dataObject : dataObjects) {
                 dataManager.lockDataobject(dataObject);
@@ -117,23 +109,6 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	}
 
 
-	/**
-	 * Compares the state of a data object with the state from the data object in the scenario.
-	 *
-	 * @param dataObjectId This is the database id from the data object.
-	 * @param stateId      This is the database id from the state.
-	 * @return true if the data object has the same state. false if not
-	 */
-	public Boolean compareDataObjectState(int dataObjectId, int stateId) {
-        DataManager dataManager = getScenarioInstance().getDataManager();
-        for (DataObjectInstance dataObjectInstance : dataManager.getDataObjectInstances()) {
-			if (dataObjectInstance.getDataObjectId() == dataObjectId
-					&& dataObjectInstance.getStateId() == stateId) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * checks if the referenced controlNode can be started.

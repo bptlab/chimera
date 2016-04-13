@@ -47,12 +47,10 @@ public class DataObjectInstance {
 		this.name = dbDataObject.getName(dataObjectId);
 		if (dbDataObjectInstance
 				.existDataObjectInstance(scenarioInstanceId, dataObjectId)) {
-			//creates an existing DataObject Instance using the database information
 			dataObjectInstanceId = dbDataObjectInstance
 					.getDataObjectInstanceID(scenarioInstanceId, dataObjectId);
 			stateId = dbDataObjectInstance.getStateID(dataObjectInstanceId);
 		} else {
-			//creates a new DataObject Instance also in database
 			stateId = dbDataObject.getStartStateID(dataObjectId);
 			this.dataObjectInstanceId = dbDataObjectInstance
 					.createNewDataObjectInstance(
@@ -149,11 +147,17 @@ public class DataObjectInstance {
 	}
 
     public void lock() {
+        this.dbDataObjectInstance.setOnChange(this.dataObjectInstanceId, true);
         this.isLocked = true;
     }
 
     public void unlock() {
+        this.dbDataObjectInstance.setOnChange(this.dataObjectInstanceId, false);
         this.isLocked = false;
+    }
+
+    public boolean isLocked () {
+        return this.isLocked;
     }
 
 }
