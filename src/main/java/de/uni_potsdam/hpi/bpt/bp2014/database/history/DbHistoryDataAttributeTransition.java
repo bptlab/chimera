@@ -18,12 +18,12 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 	 * @return the generated key for the insert statement.
 	 */
 	public int logDataAttributeTransition(
-            int dataAttributeInstanceId, Object value, int activityInstanceId) {
+            int dataAttributeInstanceId, Object value, int nodeInstanceId) {
 		String sql =
 				"INSERT INTO `historydataattributeinstance` ("
 						+ "`scenarioinstance_id`,"
 						+ "`dataattributeinstance_id`,"
-						+ "`oldvalue`,`newvalue`, `controlnode_id`) "
+						+ "`oldvalue`,`newvalue`, `controlnodeinstance_id`) "
 						+ "SELECT (SELECT `scenarioinstance_id` "
 						+ "FROM `dataattributeinstance`, "
 						+ "dataobjectinstance "
@@ -36,7 +36,7 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 						+ "(SELECT `value` FROM `dataattributeinstance` "
 						+ "WHERE `id` = " + dataAttributeInstanceId
 						+ ") AS `oldvalue`, "
-						+ "(SELECT '" + value + "') AS `newvalue`,  " + activityInstanceId
+						+ "(SELECT '" + value + "') AS `newvalue`,  " + nodeInstanceId
 						+ " FROM `dataattributeinstance` "
 						+ "WHERE `id` = " + dataAttributeInstanceId;
 		return this.executeInsertStatement(sql);
@@ -80,7 +80,7 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 			int scenarioInstanceId) {
 		String sql =
 				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldvalue, "
-						+ "h.newvalue, h.dataattributeinstance_id, h.activityinstance_id, "
+						+ "h.newvalue, h.dataattributeinstance_id, h.controlnodeinstance_id, "
 						+ "da.name, do.name "
 						+ "FROM historydataattributeinstance AS h, "
 						+ "dataattributeinstance AS dai, "
@@ -97,6 +97,6 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 		return this.executeStatementReturnsMapWithMapWithKeys(
 				sql, "h.id", "h.scenarioinstance_id", "da.name", "h.timestamp",
 				"h.oldvalue", "h.newvalue",
-				"h.dataattributeinstance_id", "h.activityinstance_id", "do.name");
+				"h.dataattributeinstance_id", "h.controlnodeinstance_id", "do.name");
 	}
 }

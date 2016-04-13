@@ -47,8 +47,8 @@ public class TaskExecutionBehavior {
 	 * @param values a Map of Keys and Values.
 	 */
 	public void setDataAttributeValues(Map<Integer, String> values) {
-        for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
-            HistoryLogger logger = new HistoryLogger();
+		HistoryLogger logger = new HistoryLogger();
+		for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
             Integer dataattributeInstanceId = attributeInstanceIdToValue.getKey();
             String value = attributeInstanceIdToValue.getValue();
             Integer activityInstanceId = this.getControlNodeInstance().getControlNodeInstanceId();

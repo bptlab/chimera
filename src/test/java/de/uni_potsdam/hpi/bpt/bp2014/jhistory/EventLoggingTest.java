@@ -94,7 +94,7 @@ public class EventLoggingTest extends JerseyTest {
         Map<Integer, Map<String, Object>> dataattributeEntries =
                 service.getDataattributeEntries(instance.getScenarioInstanceId());
         assertEquals(eventControlNodeInstanceId,
-                dataattributeEntries.get(2).get("controlnode_id"));
+                dataattributeEntries.get(2).get("controlnodeinstance_id"));
 
         Map<Integer, Map<String, Object>> eventEntries=
                 service.getEventEntries(instance.getScenarioInstanceId());
@@ -130,10 +130,8 @@ public class EventLoggingTest extends JerseyTest {
                 new File("src/test/resources/history/exampleWebserviceJson.json"));
         ScenarioTestHelper.triggerEventInScenario(instance, base, json);
 
-        events.get(0).terminate();
-
         HistoryService service = new HistoryService();
-        Map<Integer, Map<String, Object>> eventEntries=
+        Map<Integer, Map<String, Object>> eventEntries =
                 service.getEventEntries(instance.getScenarioInstanceId());
         assertEquals("registered", eventEntries.get(1).get("state"));
         assertEquals("received", eventEntries.get(2).get("state"));

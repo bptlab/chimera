@@ -442,6 +442,24 @@ CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `historydataattributeinstance`
+--
+
+CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `controlnodeinstance_id` int(11) DEFAULT NULL,
+  `dataattributeinstance_id` int(11) NOT NULL,
+  `oldvalue` varchar(256) DEFAULT NULL,
+  `newvalue` varchar(256) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `scenarioinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 -- --------------------------------------------------------
 
 
