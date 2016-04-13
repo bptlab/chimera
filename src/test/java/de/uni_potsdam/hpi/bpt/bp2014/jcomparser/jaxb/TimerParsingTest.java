@@ -64,7 +64,7 @@ public class TimerParsingTest {
             String retrieveTimerDefinitions = "SELECT * FROM timerevent";
             List<String> timerDefinitions = dataObject.
                     executeStatementReturnsListString(retrieveTimerDefinitions, "timerDefinition");
-            assertEquals(2, timerDefinitions.size());
+            assertEquals("PT3S", timerDefinitions.get(0));
         } catch (IOException e) {
             fail();
         }
