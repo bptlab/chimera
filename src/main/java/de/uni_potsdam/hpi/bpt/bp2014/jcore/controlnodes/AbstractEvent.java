@@ -1,18 +1,20 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  */
 public abstract class AbstractEvent extends AbstractControlNodeInstance {
-    private static final String MQ_HOST = "bpt.hpi.uni-potsdam.de";
-    private static final String MQ_PORT = "61616";
-
     private int controlNodeId;
     private String queryString;
 
@@ -73,4 +75,13 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         outgoingBehavior.terminate();
         return true;
     }
+
+    public boolean terminate(String eventJson) {
+        EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
+                this.scenarioInstance, this.getFragmentInstanceId());
+        outgoingBehavior.terminate(eventJson);
+        return true;
+    }
+
+
 }

@@ -17,7 +17,7 @@ public class TimeEventJob implements Job {
         int scenarioId = data.getIntValue("scenarioId");
         int scenarioInstanceId = data.getIntValue("scenarioInstanceId");
         String mappingKey = data.getString("mappingKey");
-        EventDispatcher.terminateEvent(
+        EventDispatcher.unregisterEvent(
                 EventDispatcher.findEvent(mappingKey, scenarioId, scenarioInstanceId));
     }
 }

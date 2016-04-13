@@ -20,7 +20,8 @@ public class DataAttributeWriter {
      * @param controlNodeId The id of the webservice task or event, writes the data attributes.
      */
     public DataAttributeWriter(int controlNodeId) {
-        this.setAttributeIdToJsonPath(controlNodeId);
+        DbPathMapping pathMapping = new DbPathMapping();
+        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
     }
 
     public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
@@ -37,10 +38,5 @@ public class DataAttributeWriter {
 
     public void setAttributeIdToJsonPath(Map<Integer, String> attributeIdToJsonPath) {
         this.attributeIdToJsonPath = attributeIdToJsonPath;
-    }
-
-    public void setAttributeIdToJsonPath(int controlNodeId) {
-        DbPathMapping pathMapping = new DbPathMapping();
-        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
     }
 }
