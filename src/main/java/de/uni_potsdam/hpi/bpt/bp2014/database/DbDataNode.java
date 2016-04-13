@@ -1,11 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is the representation of a dataNode in the database.
@@ -53,6 +56,18 @@ public class DbDataNode extends DbObject {
         return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "dataobject_id");
     }
 
+
+    public List<Integer> getDataobjectIdsForSet(int dataSetId) {
+        String sql =
+                "SELECT dataobject_id, state_id "
+                        + "FROM datanode, datasetconsistsofdatanode "
+                        + "WHERE datanode.id = "
+                        + "datasetconsistsofdatanode.datanode_id "
+                        + "AND dataset_id = " + dataSetId
+                        + " ORDER BY dataobject_id";
+        return this.executeStatementReturnsListInt(sql, "dataobject_id");
+    }
+
 	/**
 	 * This method returns all database data objects a dataSet can have.
 	 *
@@ -76,6 +91,7 @@ public class DbDataNode extends DbObject {
 		}
 
 		try {
+
 			//Execute a query
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);

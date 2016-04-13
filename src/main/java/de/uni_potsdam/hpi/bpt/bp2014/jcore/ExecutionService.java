@@ -615,17 +615,13 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @return a list of the ids of data objects.
 	 */
-	public LinkedList<Integer> getAllDataObjectIDs(int scenarioInstanceId) {
-		LinkedList<Integer> dataObjectIDs = new LinkedList<>();
+	public List<Integer> getAllDataObjectIDs(int scenarioInstanceId) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		if (scenarioInstance != null) {
-            DataManager dataManager = scenarioInstance.getDataManager();
-            dataObjectIDs.addAll(dataManager.getDataObjectInstances().stream()
-                    .map(DataObjectInstance::getDataObjectId).collect(Collectors.toList()));
-            dataObjectIDs.addAll(dataManager.getDataObjectInstancesOnChange().stream()
-                    .map(DataObjectInstance::getDataObjectId).collect(Collectors.toList()));
-		}
-		return dataObjectIDs;
+        DataManager dataManager = scenarioInstance.getDataManager();
+
+		return dataManager.getDataObjectInstances().stream()
+                .map(DataObjectInstance::getDataObjectId)
+                .collect(Collectors.toList());
 	}
 
 	/**
@@ -634,22 +630,14 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @return a Map. Keys are the data objects ids. Values are the states of the data objects.
 	 */
-	public Map<Integer, String> getAllDataObjectStates(int scenarioInstanceId) {
+	public Map<Integer, String> getDataObjectStates(int scenarioInstanceId) {
 		DbState dbState = new DbState();
-		Map<Integer, String> dataObjectStates = new HashMap<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		if (scenarioInstance != null) {
-            DataManager dataManager = scenarioInstance.getDataManager();
-            for (DataObjectInstance dataObject : dataManager.getDataObjectInstances()) {
-				dataObjectStates.put(dataObject.getDataObjectId(),
-						dbState.getStateName(dataObject.getStateId()));
-			}
-			for (DataObjectInstance dataObject : dataManager.getDataObjectInstancesOnChange()) {
-				dataObjectStates.put(dataObject.getDataObjectId(),
-                        dbState.getStateName(dataObject.getStateId()));
-			}
-		}
-		return dataObjectStates;
+        DataManager dataManager = scenarioInstance.getDataManager();
+        return dataManager.getDataObjectInstances().stream().collect(Collectors.toMap(
+                DataObjectInstance::getDataObjectInstanceId,
+                x -> dbState.getStateName(x.getStateId()))
+        );
 	}
 
 	/**
@@ -660,20 +648,12 @@ public class ExecutionService /*implements Runnable*/ {
 	 */
 	public Map<Integer, String> getAllDataObjectNames(int scenarioInstanceId) {
 		DbDataObject dbDataObject = new DbDataObject();
-		Map<Integer, String> dataObjectNames = new HashMap<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		if (scenarioInstance != null) {
-            DataManager dataManager = scenarioInstance.getDataManager();
-            for (DataObjectInstance dataObject : dataManager.getDataObjectInstances()) {
-				dataObjectNames.put(dataObject.getDataObjectId(),
-						dbDataObject.getName(dataObject.getDataObjectId()));
-			}
-			for (DataObjectInstance dataObject : dataManager.getDataObjectInstancesOnChange()) {
-				dataObjectNames.put(dataObject.getDataObjectId(),
-						dbDataObject.getName(dataObject.getDataObjectId()));
-			}
-		}
-		return dataObjectNames;
+        DataManager dataManager = scenarioInstance.getDataManager();
+        return dataManager.getDataObjectInstances().stream().collect(Collectors.toMap(
+                DataObjectInstance::getDataObjectId,
+                x -> dbDataObject.getName(x.getDataObjectId())
+        ));
 	}
 
 	/**
@@ -804,38 +784,23 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	/**
-     * //TODO check this method for improvement
 	 * This method gets all dataObjectInstances for a specific set of a scenarioInstance.
 	 *
-	 * @param setID              This is the databaseID of a DataSet (either Input or Output).
+	 * @param setId              This is the databaseID of a DataSet (either Input or Output).
 	 * @param scenarioInstanceID This is the databaseID of a scenarioInstance.
 	 * @return an array of dataObjectInstances of dataObjects belonging to the dataSet.
 	 */
-	public DataObjectInstance[] getDataObjectInstancesForDataSetId(int setID,
+	public DataObjectInstance[] getDataObjectInstancesForDataSetId(int setId,
 			int scenarioInstanceID) {
 		DbDataNode dbDataNode = new DbDataNode();
-		LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
-		int j = 0;
-		DataObjectInstance[] dataObjectInstancesArray =
-				new DataObjectInstance[dataObjects.size()];
-		for (DataObject dataObject : dataObjects) {
-            DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceID).getDataManager();
-            List<DataObjectInstance> dataObjectInstances = dataManager.getDataObjectInstances();
-			for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-				if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
-					dataObjectInstancesArray[j] = dataObjectInstance;
-					j++;
-				}
-			}
-			dataObjectInstances = dataManager.getDataObjectInstancesOnChange();
-			for (DataObjectInstance dataObjectInstance : dataObjectInstances) {
-				if (dataObject.getId() == dataObjectInstance.getDataObjectId()) {
-					dataObjectInstancesArray[j] = dataObjectInstance;
-					j++;
-				}
-			}
-		}
-		return dataObjectInstancesArray;
+		List<Integer> dataObjectsInSet = dbDataNode.getDataobjectIdsForSet(setId);
+        DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceID).getDataManager();
+
+        List<DataObjectInstance> dataObjectInstances = dataManager.getDataObjectInstances()
+                .stream().filter(x -> dataObjectsInSet.contains(x.getDataObjectId()))
+                .collect(Collectors.toList());
+
+		return (DataObjectInstance[]) dataObjectInstances.toArray();
 	}
 
 	/**
@@ -914,7 +879,7 @@ public class ExecutionService /*implements Runnable*/ {
 				new RestInterface.DataAttributeJaxBean[dataObjectInstance
 				.getDataAttributeInstances().size()];
 		int i = 0;
-		LinkedList<DataAttributeInstance> dataAttributeInstances = dataObjectInstance
+		List<DataAttributeInstance> dataAttributeInstances = dataObjectInstance
 				.getDataAttributeInstances();
 		for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
 			RestInterface.DataAttributeJaxBean dataAttribute =

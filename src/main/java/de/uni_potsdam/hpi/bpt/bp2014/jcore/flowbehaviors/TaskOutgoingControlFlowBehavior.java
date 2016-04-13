@@ -10,6 +10,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  * Handles the behavior of a terminating activity instance.
@@ -68,7 +69,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         if (inputSets.size() > 0) {
             int inputSet = inputSets.getFirst();
             for (DataObject dataObject : dbDataNode.getDataObjectsForDataSets(inputSet)) {
-                this.setDataObjectInstanceToNotOnChange(dataObject.getId());
+                this.lockDataObjects(dataObject.getId());
             }
         }
     }
@@ -84,7 +85,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 			LinkedList<DataObject> dataObjects =
 					dbDataNode.getDataObjectsForDataSets(outputSet);
 			for (DataObject dataObject : dataObjects) {
-				this.setDataObjectInstanceToNotOnChange(dataObject.getId());
+				this.lockDataObjects(dataObject.getId());
 			}
 		}
 		if (outputSets.size() != 0) {
@@ -127,27 +128,14 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 
 	/**
 	 * Sets the data object to not on change.
-	 * Write this into the database.
-	 *
 	 * @param dataObjectId This is the database id from the data object.
-	 * @return true if the on change could been set. false if not.
 	 */
-	public Boolean setDataObjectInstanceToNotOnChange(int dataObjectId) {
+	public void lockDataObjects(int dataObjectId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-		DataObjectInstance dataObjectInstanceOnChange = null;
-		for (DataObjectInstance dataObjectInstance : dataManager.getDataObjectInstancesOnChange()) {
-			if (dataObjectInstance.getDataObjectId() == dataObjectId) {
-				dataObjectInstanceOnChange = dataObjectInstance;
-				break;
-			}
-		}
-		if (dataObjectInstanceOnChange != null) {
-            dataManager.getDataObjectInstancesOnChange().remove(dataObjectInstanceOnChange);
-            dataManager.getDataObjectInstances().add(dataObjectInstanceOnChange);
-			dataObjectInstanceOnChange.setOnChange(false);
-			return true;
-		}
-		return false;
+        Optional<DataObjectInstance> dataObjectInstance =
+                dataManager.getDataobjectInstanceForId(dataObjectId);
+        assert dataObjectInstance.isPresent(): "invalid data object id";
+        dataObjectInstance.get().unlock();
 	}
 
 	/**

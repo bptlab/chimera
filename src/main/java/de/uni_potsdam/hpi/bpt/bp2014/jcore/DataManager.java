@@ -13,7 +13,6 @@ import java.util.Optional;
 public class DataManager {
     private final ScenarioInstance scenarioInstance;
     private List<DataObjectInstance> dataObjectInstances = new ArrayList<>();
-    private List<DataObjectInstance> dataObjectInstancesOnChange = new ArrayList<>();
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
@@ -62,19 +61,30 @@ public class DataManager {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
             logger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
-            //checks if dataObjectInstance is locked
-            if (dataObjectInstance.getOnChange()) {
-                dataObjectInstancesOnChange.add(dataObjectInstance);
-            } else {
-                dataObjectInstances.add(dataObjectInstance);
-            }
+
         }
     }
+
     public List<DataObjectInstance> getDataObjectInstances() {
         return dataObjectInstances;
     }
 
-    public List<DataObjectInstance> getDataObjectInstancesOnChange() {
-        return dataObjectInstancesOnChange;
+
+    /**
+     * Sets the data object to on change.
+     * Write this into the database.
+     *
+     * @param dataObjectId This is the database id from the data object.
+     * @return true if the on change could been set. false if not.
+     */
+    public Boolean lockDataobject(int dataObjectId) {
+        Optional<DataObjectInstance> dataObjectInstance =
+                this.getDataobjectInstanceForId(dataObjectId);
+
+        if (dataObjectInstance.isPresent()) {
+            dataObjectInstance.get().lock();
+        }
+        return false;
     }
+
 }

@@ -11,6 +11,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachi
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.ActivityStateMachine;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  * This class implements incoming behavior for tasks.
@@ -105,37 +106,16 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 		LinkedList<Integer> outputSets = dbDataFlow
 				.getOutputSetsForControlNode(
 						getControlNodeInstance().getControlNodeId());
-		for (int outputSet : outputSets) {
+		DataManager dataManager = this.getScenarioInstance().getDataManager();
+        for (int outputSet : outputSets) {
 			LinkedList<Integer> dataObjects = dbDataNode
 					.getDataObjectIdsForDataSets(outputSet);
 			for (int dataObject : dataObjects) {
-				this.setDataObjectInstanceToOnChange(dataObject);
+                dataManager.lockDataobject(dataObject);
 			}
 		}
 	}
 
-	/**
-     * TODO look at this method again
-	 * Sets the data object to on change.
-	 * Write this into the database.
-	 *
-	 * @param dataObjectId This is the database id from the data object.
-	 * @return true if the on change could been set. false if not.
-	 */
-	public Boolean setDataObjectInstanceToOnChange(int dataObjectId) {
-		DataObjectInstance dataObjectInstanceOnChange = null;
-
-		if (dataObjectInstanceOnChange != null) {
-            DataManager dataManager = getScenarioInstance().getDataManager();
-            dataManager.getDataObjectInstances().remove(
-					dataObjectInstanceOnChange);
-            dataManager.getDataObjectInstancesOnChange().add(
-					dataObjectInstanceOnChange);
-			dataObjectInstanceOnChange.setOnChange(true);
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * Compares the state of a data object with the state from the data object in the scenario.

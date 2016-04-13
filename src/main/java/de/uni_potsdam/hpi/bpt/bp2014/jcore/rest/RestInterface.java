@@ -1348,10 +1348,10 @@ import java.util.LinkedList;
 		}
 
 		executionService.openExistingScenarioInstance(scenarioID, instanceID);
-		LinkedList<Integer> dataObjects =
+		List<Integer> dataObjects =
 				executionService.getAllDataObjectIDs(instanceID);
 		Map<Integer, String> states =
-				executionService.getAllDataObjectStates(instanceID);
+				executionService.getDataObjectStates(instanceID);
 		Map<Integer, String> labels =
 				executionService.getAllDataObjectNames(instanceID);
 		if (filterString != null && !filterString.isEmpty()) {
@@ -1413,10 +1413,10 @@ import java.util.LinkedList;
 			}
 		}
 		executionService.openExistingScenarioInstance(scenarioID, instanceID);
-		LinkedList<Integer> dataObjects =
+		List<Integer> dataObjects =
 				executionService.getAllDataObjectIDs(instanceID);
 		Map<Integer, String> states =
-				executionService.getAllDataObjectStates(instanceID);
+				executionService.getDataObjectStates(instanceID);
 		Map<Integer, String> labels =
 				executionService.getAllDataObjectNames(instanceID);
 		if (!dataObjects.contains(new Integer(dataObjectID))) {
@@ -1470,7 +1470,7 @@ import java.util.LinkedList;
 	 */
 	private JSONObject buildListForDataObjects(
 			UriInfo uriInfo,
-			LinkedList<Integer> dataObjectIds,
+			List<Integer> dataObjectIds,
 			Map<Integer, String> states,
 			Map<Integer, String> labels) {
 		JSONObject result = new JSONObject();
