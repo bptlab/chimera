@@ -424,20 +424,6 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `historydataattributeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `activityinstance_id` int(11) DEFAULT NULL,
-  `dataattributeinstance_id` int(11) NOT NULL,
-  `oldvalue` varchar(256) DEFAULT NULL,
-  `newvalue` varchar(256) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `scenarioinstance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -447,7 +433,7 @@ CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
 
 CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `activityinstance_id` int(11) DEFAULT NULL,
+  `controlnode_id` int(11) DEFAULT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dataobjectinstance_id` int(11) NOT NULL,

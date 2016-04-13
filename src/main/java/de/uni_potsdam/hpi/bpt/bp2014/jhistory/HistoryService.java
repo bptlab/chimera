@@ -45,8 +45,8 @@ public class HistoryService {
 				scenarioInstanceId);
 	}
 
-    public Map<Integer, Map<String, Object>> getEventEntries() {
-        return new DbHistoryEvent().getLogEntries();
+    public Map<Integer, Map<String, Object>> getEventEntries(int scenarioInstanceId) {
+        return new DbHistoryEvent().getLogEntries(scenarioInstanceId);
     }
 
 	/**

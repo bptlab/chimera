@@ -23,7 +23,7 @@ public class DbHistoryDataAttributeTransition extends DbObject {
 				"INSERT INTO `historydataattributeinstance` ("
 						+ "`scenarioinstance_id`,"
 						+ "`dataattributeinstance_id`,"
-						+ "`oldvalue`,`newvalue`, `activityinstance_id`) "
+						+ "`oldvalue`,`newvalue`, `controlnode_id`) "
 						+ "SELECT (SELECT `scenarioinstance_id` "
 						+ "FROM `dataattributeinstance`, "
 						+ "dataobjectinstance "
