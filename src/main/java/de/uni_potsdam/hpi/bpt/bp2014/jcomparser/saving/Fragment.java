@@ -125,11 +125,15 @@ public class Fragment {
             }
             dataNodeToStates.get(dataNode.getName()).add(dataNode);
         }
-        List<List<DataNode>> datanodeCombinations = CollectionUtil.computeCartesianProduct(
-                new ArrayList<>(dataNodeToStates.values()));
 
-        return datanodeCombinations.stream().map(combination ->
-                new InputSet(node, combination)).collect(Collectors.toList());
+        if (!dataNodeToStates.isEmpty()) {
+            List<List<DataNode>> datanodeCombinations = CollectionUtil.computeCartesianProduct(
+                    new ArrayList<>(dataNodeToStates.values()));
+            return datanodeCombinations.stream().map(combination ->
+                    new InputSet(node, combination)).collect(Collectors.toList());
+        } else {
+            return new ArrayList<InputSet>();
+        }
     }
 
     private Map<String, Task> createMapFromIdToTask() {
