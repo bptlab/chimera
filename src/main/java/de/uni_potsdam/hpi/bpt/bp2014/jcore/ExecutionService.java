@@ -799,8 +799,9 @@ public class ExecutionService /*implements Runnable*/ {
         List<DataObjectInstance> dataObjectInstances = dataManager.getDataObjectInstances()
                 .stream().filter(x -> dataObjectsInSet.contains(x.getDataObjectId()))
                 .collect(Collectors.toList());
-
-		return (DataObjectInstance[]) dataObjectInstances.toArray();
+        DataObjectInstance[] dataObjectInstanceArray =
+                dataObjectInstances.toArray(new DataObjectInstance[dataObjectInstances.size()]);
+		return dataObjectInstanceArray;
 	}
 
 	/**

@@ -103,9 +103,9 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 						getControlNodeInstance().getControlNodeId());
 		DataManager dataManager = this.getScenarioInstance().getDataManager();
 
-        for (int outputSet : inputSets) {
+        for (int inputSet : inputSets) {
 			List<Integer> dataObjects = dbDataNode
-					.getDataObjectIdsForDataSets(outputSet);
+					.getDataObjectIdsForDataSets(inputSet);
 			for (int dataObject : dataObjects) {
                 dataManager.lockDataobject(dataObject);
 			}

@@ -164,6 +164,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService = null;
         executionService = ExecutionService.getInstance(1);
         executionService.openExistingScenarioInstance(1, scenarioInstance);
+        Object[] enabled = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray();
         assertArrayEquals(new Integer[]{activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         int activity4instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
         //////executionService.setDataAttributeValues(scenarioInstance, activity4instance_id, new HashMap<Integer, String>());

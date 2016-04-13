@@ -77,19 +77,6 @@ public class DbDataObjectInstance extends DbObject {
 	}
 
 	/**
-	 * This method checks if the dataObject instance
-	 * is in a modified state to prevent concurrency.
-	 *
-	 * @param dataObjectInstanceId This is the database ID of a dataObject instance.
-	 * @return true if another activity is using this dataObject instance else false.
-	 */
-	public boolean getOnChange(int dataObjectInstanceId) {
-		String sql = "SELECT onchange FROM dataobjectinstance "
-				+ "WHERE id = " + dataObjectInstanceId;
-		return this.executeStatementReturnsBoolean(sql, "onchange");
-	}
-
-	/**
 	 * This method sets the dataObject instance to a modified state
 	 * so that no other activity can work with it.
 	 *
@@ -97,7 +84,7 @@ public class DbDataObjectInstance extends DbObject {
 	 * @param onChange This is the flag set to indicate if
 	 *                    the dataObject instance is being modified or not.
 	 */
-	public void setOnChange(int id, Boolean onChange) {
+	public void setLocked(int id, Boolean onChange) {
 		int onChangeAsInt;
 		if (onChange) {
 			onChangeAsInt = 1;
@@ -122,4 +109,10 @@ public class DbDataObjectInstance extends DbObject {
 						+ "WHERE id = " + dataObjectInstanceID;
 		return this.executeStatementReturnsInt(sql, "dataobject_id");
 	}
+
+    public boolean isLocked(int dataObjectInstanceId) {
+        String sql = "SELECT onchange FROM dataobjectinstance "
+                + "WHERE id = " + dataObjectInstanceId;
+        return this.executeStatementReturnsBoolean(sql, "onchange");
+    }
 }

@@ -50,6 +50,7 @@ public class DataObjectInstance {
 			dataObjectInstanceId = dbDataObjectInstance
 					.getDataObjectInstanceID(scenarioInstanceId, dataObjectId);
 			stateId = dbDataObjectInstance.getStateID(dataObjectInstanceId);
+            isLocked = dbDataObjectInstance.isLocked(dataObjectInstanceId);
 		} else {
 			stateId = dbDataObject.getStartStateID(dataObjectId);
 			this.dataObjectInstanceId = dbDataObjectInstance
@@ -147,12 +148,12 @@ public class DataObjectInstance {
 	}
 
     public void lock() {
-        this.dbDataObjectInstance.setOnChange(this.dataObjectInstanceId, true);
+        this.dbDataObjectInstance.setLocked(this.dataObjectInstanceId, true);
         this.isLocked = true;
     }
 
     public void unlock() {
-        this.dbDataObjectInstance.setOnChange(this.dataObjectInstanceId, false);
+        this.dbDataObjectInstance.setLocked(this.dataObjectInstanceId, false);
         this.isLocked = false;
     }
 
