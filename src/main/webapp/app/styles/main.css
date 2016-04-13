@@ -1,6 +1,7 @@
 /* Space out content a bit */
 body {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -79,5 +80,16 @@ body {
 
 .nav>li.active>a {
 text-decoration: none;
-background-color: #337ab7;
+  background-color: #4294e1;
+  color: #eee;
+}
+
+.nav>li> a {
+  background-color: #f8f8f8;
+  color: #337ab7;
+}
+
+/* Remove space that was used by search field */
+.sidebar {
+    margin-top: 0px;
 }
