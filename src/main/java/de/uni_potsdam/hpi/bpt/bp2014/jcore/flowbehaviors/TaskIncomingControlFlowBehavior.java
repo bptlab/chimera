@@ -70,14 +70,18 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	private Boolean checkInputObjects() {
 		List<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
 				getControlNodeInstance().getControlNodeId());
-        DataManager dataManager = this.getScenarioInstance().getDataManager();
+        // if the activity has no input set it is dataflow enabled
+        if (!inputSets.isEmpty()) {
+            DataManager dataManager = this.getScenarioInstance().getDataManager();
 
-		for (Integer inputSet : inputSets) {
-            if (dataManager.checkInputSet(inputSet)) {
-                return true;
+            for (Integer inputSet : inputSets) {
+                if (dataManager.checkInputSet(inputSet)) {
+                    return true;
+                }
             }
-		}
-		return false;
+            return false;
+        }
+        return true;
 	}
 
 	/**

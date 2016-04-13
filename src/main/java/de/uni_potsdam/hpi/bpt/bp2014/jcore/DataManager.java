@@ -94,8 +94,8 @@ public class DataManager {
         for (Integer dataObject : data) {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
+            this.dataObjectInstances.add(dataObjectInstance);
             logger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
-
         }
     }
 
