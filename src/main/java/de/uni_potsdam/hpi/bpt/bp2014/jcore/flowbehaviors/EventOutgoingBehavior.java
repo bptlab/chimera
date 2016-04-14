@@ -14,9 +14,12 @@ import java.util.Map;
  */
 public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
+    private final int controlNodeInstanceId;
+
     public EventOutgoingBehavior(int controlNodeId, ScenarioInstance scenarioInstance,
-                                 int fragmentInstanceId) {
+                                 int fragmentInstanceId, int controlNodeInstanceId) {
         this.setControlNodeId(controlNodeId);
+        this.controlNodeInstanceId = controlNodeInstanceId;
         this.setFragmentInstanceId(fragmentInstanceId);
         this.setScenarioInstance(scenarioInstance);
     }
@@ -36,28 +39,10 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
     }
 
     public void writeDataObjects(String eventJson) {
-        Map<Integer, DataAttributeInstance> attributeInstanceMap =
-                this.getScenarioInstance().getDataAttributeInstances();
-        logDataAttributeTransitions(attributeInstanceMap);
         DataAttributeWriter writer = new DataAttributeWriter(
-                this.getControlNodeId());
-        List<DataAttributeInstance> attributeInstances =
-                new ArrayList<>(attributeInstanceMap.values());
+                this.getControlNodeId(), controlNodeInstanceId);
+        List<DataAttributeInstance> attributeInstances = new ArrayList<>(
+                this.getScenarioInstance().getDataAttributeInstances().values());
         writer.writeDataAttributesFromJson(eventJson, attributeInstances);
-    }
-
-    private void logDataAttributeTransitions(
-            Map<Integer, DataAttributeInstance> attributeInstanceMap) {
-        HistoryLogger logger = new HistoryLogger();
-        for (Map.Entry<Integer, DataAttributeInstance> entry : attributeInstanceMap.entrySet()) {
-            Integer dataattributeInstanceId = entry.getKey();
-            String value = entry.getValue().getName();
-            Integer nodeInstanceId = getScenarioInstance()
-                    .getControlNodeInstanceForControlNodeId(
-                            this.getControlNodeId()).getControlNodeInstanceId();
-            logger.logDataAttributeTransition(dataattributeInstanceId, value, nodeInstanceId);
-
-        }
-
     }
 }

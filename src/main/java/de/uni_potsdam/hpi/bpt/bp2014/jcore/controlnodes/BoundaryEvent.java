@@ -28,7 +28,8 @@ public class BoundaryEvent extends AbstractEvent {
     @Override
     public boolean terminate() {
         BoundaryEventOutgoingBehavior outgoingBehavior = new BoundaryEventOutgoingBehavior(
-                this.getControlNodeId(), this.scenarioInstance, this.getFragmentInstanceId());
+                this.getControlNodeId(), this.scenarioInstance,
+                this.getFragmentInstanceId(), this.getControlNodeInstanceId());
         outgoingBehavior.terminate();
         return true;
     }

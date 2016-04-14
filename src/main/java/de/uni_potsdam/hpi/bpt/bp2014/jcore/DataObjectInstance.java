@@ -69,8 +69,6 @@ public class DataObjectInstance {
         for (int dataAttributeId : dataAttributeIds) {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
 					dataAttributeId, dataObjectInstanceId, this);
-            logger.logDataAttributeCreation(dataAttributeInstance.getDataAttributeInstanceId());
-
             dataAttributeInstances.add(dataAttributeInstance);
 			scenarioInstance.getDataAttributeInstances()
 					.put(dataAttributeInstance.getDataAttributeInstanceId(),

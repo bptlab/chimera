@@ -9,8 +9,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
  */
 public class BoundaryEventOutgoingBehavior extends EventOutgoingBehavior {
     public BoundaryEventOutgoingBehavior(int controlNodeId, ScenarioInstance scenarioInstance,
-                                 int fragmentInstanceId) {
-        super(controlNodeId, scenarioInstance, fragmentInstanceId);
+                                 int fragmentInstanceId, int controlNodeInstanceId) {
+        super(controlNodeId, scenarioInstance, fragmentInstanceId, controlNodeInstanceId);
     }
 
     @Override public void terminate() {

@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 /**
  *
@@ -29,14 +30,16 @@ public class DataAttributeInstance {
 		this.dataObjectInstanceId = dataObjectInstanceId;
 		this.dataObjectInstance = dataObjectInstance;
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
-		if (dbDataAttributeInstance
-				.existDataAttributeInstance(
+        HistoryLogger logger = new HistoryLogger();
+		if (dbDataAttributeInstance.existDataAttributeInstance(
 						dataAttributeId, dataObjectInstanceId)) {
 			//creates an existing Attribute Instance using the database information
 			this.dataAttributeInstanceId = dbDataAttributeInstance
 					.getDataAttributeInstanceID(
 							dataAttributeId, dataObjectInstanceId);
-		} else {
+            logger.logDataAttributeCreation(this.dataAttributeInstanceId);
+
+        } else {
 			//creates a new Attribute Instance also in database
 			this.dataAttributeInstanceId = dbDataAttributeInstance
 					.createNewDataAttributeInstance(

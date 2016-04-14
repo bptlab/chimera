@@ -28,7 +28,7 @@ public class StartEvent extends AbstractEvent {
     @Override
     public boolean terminate() {
         EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
-                this.scenarioInstance, this.getFragmentInstanceId());
+                this.scenarioInstance, this.getFragmentInstanceId(), this.getControlNodeInstanceId());
         outgoingBehavior.terminate();
         return true;
     }

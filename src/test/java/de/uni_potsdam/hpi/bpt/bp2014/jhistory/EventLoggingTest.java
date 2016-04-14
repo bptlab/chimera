@@ -103,7 +103,7 @@ public class EventLoggingTest extends JerseyTest {
     }
 
     @Test
-    public void testEventWritingLog() throws IOException {
+    public void testEventDataattributeWritingLog() throws IOException {
         String path = "src/test/resources/EventScenarios/EventLoggingScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeEvent", instance);
@@ -129,7 +129,6 @@ public class EventLoggingTest extends JerseyTest {
         String json = FileUtils.readFileToString(
                 new File("src/test/resources/history/exampleWebserviceJson.json"));
         ScenarioTestHelper.triggerEventInScenario(instance, base, json);
-
         HistoryService service = new HistoryService();
         Map<Integer, Map<String, Object>> eventEntries =
                 service.getEventEntries(instance.getScenarioInstanceId());
