@@ -7,7 +7,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 
 import java.util.*;
-import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,87 +34,7 @@ public class FragmentValidator {
         validateDataReferences(fragment, domainModel);
         validateOlc(domainModel.getOlcs(), fragment);
         validateNames(fragment);
-        validateStructuralSoundness(fragment);
-    }
-
-    private static void validateStructuralSoundness(Fragment fragment) {
-        Map<String, Set<String>> graph = buildGraphFromFragment(fragment);
-        Map<String, Set<String>> reverseGraph = buildReverseGraph(graph);
-        String start = checkOnlyOneIn(graph, reverseGraph);
-        String end = checkOnlyOneOut(graph, reverseGraph);
-        Set<String> reachableFromStart = getReachableNodes(start, graph);
-        Set<String> reachableFromEnd = getReachableNodes(end, reverseGraph);
-        assert reachableFromStart.size() == reachableFromEnd.size() : "The fragment is not sound";
-    }
-
-    private static Map<String, Set<String>> buildGraphFromFragment(Fragment fragment) {
-        Map<String, Set<String>> graph = new HashMap<>();
-        for (AbstractControlNode node : fragment.getControlNodes()) {
-            for (String currentIncoming : node.getIncoming()) {
-                if (!graph.containsKey(currentIncoming)) {
-                    graph.put(currentIncoming, new HashSet<>());
-                }
-                graph.get(currentIncoming).add(node.getId());
-            }
-            for (String currentOutgoing : node.getOutgoing()) {
-                if (!graph.containsKey(node.getId())) {
-                    graph.put(node.getId(), new HashSet<>());
-                }
-                graph.get(node.getId()).add(currentOutgoing);
-            }
-        }
-        return graph;
-    }
-
-    private static Map<String, Set<String>> buildReverseGraph(Map<String, Set<String>> graph) {
-        Map<String, Set<String>> reverseGraph = new HashMap<>();
-        for (Map.Entry<String, Set<String>> entry : graph.entrySet()) {
-            for (String currentValue : entry.getValue()) {
-                if (!reverseGraph.containsKey(currentValue)) {
-                    reverseGraph.put(currentValue, new HashSet<>());
-                }
-                reverseGraph.get(currentValue).add(entry.getKey());
-            }
-        }
-        return reverseGraph;
-    }
-
-    private static String checkOnlyOneIn(
-        Map<String, Set<String>> graph, Map<String, Set<String>> reverseGraph) {
-        //idea: a place with outgoing but no incoming edges must be an input place.
-        Set<String> possibleInputPlaces = new HashSet<>();
-        possibleInputPlaces.addAll(graph.keySet());
-        reverseGraph.keySet().forEach(possibleInputPlaces::remove);
-        assert possibleInputPlaces.size() == 1 : "There is not exactly one input place";
-        return possibleInputPlaces.iterator().next();
-    }
-
-    private static String checkOnlyOneOut(
-            Map<String, Set<String>> graph, Map<String, Set<String>> reverseGraph) {
-        Set<String> possibleOutputPlaces = new HashSet<>();
-        //idea: a place with ingoing but no outgoing edges must be an output place.
-        possibleOutputPlaces.addAll(reverseGraph.keySet());
-        graph.keySet().forEach(possibleOutputPlaces::remove);
-        assert (possibleOutputPlaces.size() == 1) : "There is not exactly one output place";
-        return possibleOutputPlaces.iterator().next();
-    }
-
-    private static Set<String> getReachableNodes(String start, Map<String, Set<String>> graph) {
-        Queue<String> queue = new LinkedList<>();
-        Set<String> reachableNodes = new HashSet<>();
-        queue.add(start);
-        reachableNodes.add(start);
-        while (!queue.isEmpty()) {
-            String node = queue.remove();
-            graph.get(node).stream().filter(
-                    //avoid cycles
-                    child -> !reachableNodes.contains(child)).forEach(
-                    child -> {
-                queue.add(child);
-                reachableNodes.add(child);
-            });
-        }
-        return reachableNodes;
+        SoundnessValidator.validateStructuralSoundness(fragment);
     }
 
     private static void validateNames(Fragment fragment) {
