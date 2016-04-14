@@ -114,10 +114,10 @@ public class HistoryHistoryLoggerTest {
                 activityEntries.get(2).get("h.activityinstance_id"));
 
         assertEquals(activity.getControlNodeInstanceId(),
-                dataObjectEntries.get(2).get("h.activityinstance_id"));
+                dataObjectEntries.get(2).get("h.controlnodeinstance_id"));
 
         assertEquals(activity.getControlNodeInstanceId(),
-                dataattributeEntries.get(2).get("h.activityinstance_id"));
+                dataattributeEntries.get(2).get("h.controlnodeinstance_id"));
     }
 
     private void changeDataattributeValues(

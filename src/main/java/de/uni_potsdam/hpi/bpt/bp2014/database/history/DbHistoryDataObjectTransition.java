@@ -22,7 +22,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 		String sql =
 				"INSERT INTO `historydataobjectinstance` ("
 						+ "`scenarioinstance_id`,`dataobjectinstance_id`,"
-						+ "`oldstate_id`,`newstate_id`, `activityinstance_id`) "
+						+ "`oldstate_id`,`newstate_id`, `controlnodeinstance_id`) "
 						+ "SELECT (SELECT `scenarioinstance_id` "
 						+ "FROM `dataobjectinstance` "
 						+ "WHERE `id` = " + objectInstanceId
@@ -68,7 +68,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 			int scenarioInstanceId) {
 		String sql =
 				"SELECT h.id, h.scenarioinstance_id, h.timestamp, h.oldstate_id, "
-						+ "h.newstate_id, h.dataobjectinstance_id, h.activityinstance_id, "
+						+ "h.newstate_id, h.dataobjectinstance_id, h.controlnodeinstance_id, "
 						+ "do.name, ns.name AS newstate_name "
 						// + ", os.name AS oldstate_name "
 						+ "FROM historydataobjectinstance AS h, "
@@ -84,7 +84,7 @@ public class DbHistoryDataObjectTransition extends DbObject {
 						+ "ORDER BY timestamp DESC";
 		return this.executeStatementReturnsMapWithMapWithKeys(sql, "h.id", "h.oldstate_id",
 				"h.newstate_id", "h.scenarioinstance_id", "do.name", "h.timestamp",
-				"h.dataobjectinstance_id", "newstate_name", "h.activityinstance_id");
+				"h.dataobjectinstance_id", "newstate_name", "h.controlnodeinstance_id");
 	    // "oldstate_name",
     }
 

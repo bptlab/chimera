@@ -433,7 +433,7 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
 
 CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `controlnode_id` int(11) DEFAULT NULL,
+  `controlnodeinstance_id` int(11) DEFAULT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dataobjectinstance_id` int(11) NOT NULL,
