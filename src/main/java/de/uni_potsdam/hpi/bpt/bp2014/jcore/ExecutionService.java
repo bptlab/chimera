@@ -13,6 +13,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -20,7 +21,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -873,17 +873,17 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param dataObjectInstance This is the dataObjectInstance.
 	 * @return an array of DataAttributeJaxBean belonging to this dataObjectInstance.
 	 */
-	public RestInterface.DataAttributeJaxBean[] getDataAttributesForDataObjectInstance(
+	public DataAttributeJaxBean[] getDataAttributesForDataObjectInstance(
 			DataObjectInstance dataObjectInstance) {
-		RestInterface.DataAttributeJaxBean[] dataAttributes =
-				new RestInterface.DataAttributeJaxBean[dataObjectInstance
+		DataAttributeJaxBean[] dataAttributes =
+				new DataAttributeJaxBean[dataObjectInstance
 				.getDataAttributeInstances().size()];
 		int i = 0;
 		List<DataAttributeInstance> dataAttributeInstances = dataObjectInstance
 				.getDataAttributeInstances();
 		for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
-			RestInterface.DataAttributeJaxBean dataAttribute =
-					new RestInterface.DataAttributeJaxBean();
+			DataAttributeJaxBean dataAttribute =
+					new DataAttributeJaxBean();
 			dataAttribute.setId(dataAttributeInstance.getDataAttributeInstanceId());
 			dataAttribute.setName(dataAttributeInstance.getName());
 			dataAttribute.setType(dataAttributeInstance.getType());
@@ -925,9 +925,4 @@ public class ExecutionService /*implements Runnable*/ {
 		return dbControlNodeInstance.existControlNodeInstance(activityID);
 	}
 
-    /*
-	@Override
-	public void run() {
-	}
-    */
 }

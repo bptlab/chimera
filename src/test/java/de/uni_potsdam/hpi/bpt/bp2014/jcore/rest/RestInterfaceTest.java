@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.NamedJaxBean;
 import net.javacrumbs.jsonunit.core.Option;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -106,7 +107,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a GET to {@link RestInterface#getScenario(UriInfo, int)} with an invalid id
      * a empty JSON with a 404 will be returned.
      */
     @Test
@@ -122,7 +122,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * If you send a GET to {@link RestInterface#getScenario(UriInfo, int)}  with an valid id
      * a JSON containing the id, name and modelversion will be returned.
      */
     @Test
@@ -189,7 +188,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#terminateScenarioInstance(int, int)}
      * with an valid scenario instance id
      * the scenario should be terminated and the response is a 201.
      */
@@ -201,7 +199,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#terminateScenarioInstance(int, int)}
      * with an invalid instance id
      * then the Response should be a 404 with an error message.
      */
@@ -233,7 +230,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -250,7 +246,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#startNewInstance(UriInfo, int)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
@@ -267,12 +262,11 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
     public void testStartNewInstanceWName() {
-        RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
+        NamedJaxBean newName = new NamedJaxBean();
         newName.setName("Dies ist ein Test");
         Response response = base.path("scenario/1/instance")
                 .request().put(Entity.json(newName));
@@ -288,12 +282,11 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Put to {@link RestInterface#startNewNamedInstance(UriInfo, int, RestInterface.NamedJaxBean)}
      * then the Response will be a 201 and a json object wit the new id will be returned.
      */
     @Test
     public void testStartInvalidInstanceWName() {
-        RestInterface.NamedJaxBean newName = new RestInterface.NamedJaxBean();
+        NamedJaxBean newName = new NamedJaxBean();
         newName.setName("Dies ist ein Test");
         Response response = base.path("scenario/9999/instance").request()
                 .put(Entity.json(newName));
@@ -308,7 +301,7 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#getScenarioInstance(UriInfo, int, int)}
+
      * with a correct scenario id and a correct instance id
      * the respond will be a 200 with a JSONObject
      */
@@ -326,7 +319,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Post to {@link RestInterface#getScenarioInstance(UriInfo, int, int)}
      * with a wrong scenario id and a correct instance id
      * the respond will be a 200 with a redirected URI.
      */
@@ -346,7 +338,6 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Post to {@link RestInterface#getScenarioInstance(UriInfo, int, int)}
      * with a wrong scenario id and a correct instance id
      * the respond will be a 404 with a redirected URI.
      */
@@ -364,8 +355,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
-     * with an wrong scenario ID the request should be redirected to the correct one.
      */
     @Test
     public void testGetActivitiesRedirects() {
@@ -381,7 +370,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an wrong scenario instance ID
      * then a 404 with error message (inside JSON) should be returned.
      */
@@ -399,7 +387,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -418,7 +405,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters, an invalid state but no filter
      * the request should return a 404 with error message
      */
@@ -439,7 +425,6 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state but no filter
      * then the request should return all activities with this state.
      */
@@ -458,7 +443,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters a state and a filter
      * then the request should return all activities with the state who fulfill the filter condition.
      */
@@ -478,7 +462,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with an correct parameters, an invalid state but no filter
      * the request should return a 404 with error message
      */
@@ -498,7 +481,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with correct instance and scenario
      * a 200 with json content will be returned.
      */
@@ -516,7 +498,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivitiesOfInstance(UriInfo, int, int, String, String)}
      * with a filter String
      * then only activities with a label like the filter String will be returned.
      */
@@ -534,7 +515,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with a correct instance id and a wrong scenario ID
      * you will be redirected automatically.
      */
@@ -552,7 +532,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * WHen you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an invalid instance
      * an 404 with error message will be returned
      */
@@ -570,7 +549,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an valid instance and scenario and no filter String
      * you will get a list of all DataObjects for this scenario.
      */
@@ -588,7 +566,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObjects(UriInfo, int, int, String)}
      * with an valid instance and scenario and an filter String
      * you will get a list of all DataObjects with labels like the filter String for this scenario.
      */
@@ -607,7 +584,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObject(int, int, int)}
      * with a correct scenario instance id but a wrong scenario id
      * you will be redirected
      */
@@ -626,7 +602,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObject(int, int, int)}
      * with correct instance and scenario id but a wrong dataobject id
      * you will get a 404 with an error message.
      */
@@ -644,7 +619,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObject(int, int, int)}
      * with correct scenario id but an incorrect instance id
      * you will get a 404 with an error message
      */
@@ -662,7 +636,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getDataObject(int, int, int)}
      * with correct instance, scenario and dataobject id
      * you will get a 200 with an json object.
      */
@@ -683,7 +656,6 @@ public class RestInterfaceTest extends AbstractTest {
 
 
     /**
-     * When you send a Get to {@link RestInterface#getTerminationCondition(int)}
      * with an valid id
      * then a JSON with the termination condition will be returned
      */
@@ -701,7 +673,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getTerminationCondition(int)}
      * with an invalid id
      * then a 404 with an error message should be returned
      */
@@ -719,7 +690,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getActivity(UriInfo, int, int, int)}
      * with valid arguments
      * then you should get a 200 response code and
      * a JSONObject with the id, label of the activity and a link to the outputSet and the inputSet.
@@ -737,7 +707,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with valid arguments
      * then you then you should get a 200 response code and a JSONObject with the id of the inputSet and
      * a link to get the dataObjectInstance with their dataAttributeInstance.
@@ -755,7 +724,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with valid arguments
      * then you then you should get a 200 response code and a JSONObject with the id of the outputSet and
      * a link to get the dataObjectInstance with their dataAttributeInstance.
@@ -771,7 +739,6 @@ public class RestInterfaceTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an invalid state
      * a bad request with an error message should be returned.
      */
@@ -808,7 +775,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state for an invalid activity.
      * a bad request with an error message should be returned.
      */
@@ -828,7 +794,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      *
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -857,7 +822,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link RestInterface#updateActivityState(int, int, int, String, int)}
      * with an valid state and valid activity
      * then a 201 will be returned with a message inside a JSON-Object.
      */
@@ -898,7 +862,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given is the Rest API
-     * When you send a POST to {@link RestInterface#terminateScenarioInstance(int, int)}
      * with an invalid scenario id or instance id
      * then a 400 will be returned with an error message
      */
@@ -917,7 +880,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given is the Rest API
-     * When you send a POST to {@link RestInterface#terminateScenarioInstance(int, int)}
      * with an valid scenario and instance id
      * the instance will be terminated.
      */
@@ -936,7 +898,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid scenario instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with an invalid scenario and instance id
      * a 404 with an error message is returned
      */
@@ -956,7 +917,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid activity instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with an invalid activity instance id
      * a 404 with an error message is returned
      */
@@ -976,7 +936,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an valid activity instance
-     * when you send a get to {@link RestInterface#getInputDataObjects(UriInfo, int, int, int)}
      * with a valid activity instance without input sets
      * a 404 with an error message will be returned
      */
@@ -996,7 +955,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid scenario instance
-     * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with an invalid scenario and instance id
      * a 404 with an error message is returned
      */
@@ -1016,7 +974,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an invalid activity instance
-     * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with an invalid activity instance id
      * a 404 with an error message is returned
      */
@@ -1036,7 +993,6 @@ public class RestInterfaceTest extends AbstractTest {
 
     /**
      * Given: Is an valid activity instance
-     * when you send a get to {@link RestInterface#getOutputDataObjects(UriInfo, int, int, int)}
      * with a valid activity instance without input sets
      * a 404 with an error message will be returned
      */
@@ -1054,7 +1010,6 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
-     *  when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
      *  with valid arguments
      *  a 200 is returned with a JSONArray with JSONObjects for each dataObjectInstance
      */
@@ -1075,7 +1030,6 @@ public class RestInterfaceTest extends AbstractTest {
         log.debug("Leave <<testGetOutputSetDataAttributes>>");
     }
     /**
-     * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
      * with an invalid scenario/Instance
      * a 404 with an error message is returned
      */
@@ -1094,7 +1048,6 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
-     * when you send a get to {@link RestInterface#getOutputDataObjectsAndAttributes(int, int, int)}
      * with an invalid ouptutSetID
      * a 404 with an error message is returned
      */
@@ -1112,7 +1065,6 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
-     *  when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
      *  with valid arguments
      *  a 200 is returned with a JSONArray with JSONObjects for each dataObjectInstance
      */
@@ -1130,7 +1082,6 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
     /**
-     * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
      * with an invalid scenario/Instance
      * a 404 with an error message is returned
      */
@@ -1148,7 +1099,6 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
     /**
-     * when you send a get to {@link RestInterface#getInputDataObjectsAndAttributes(int, int, int)}
      * with an invalid inputSetID
      * a 404 with an error message is returned
      */
