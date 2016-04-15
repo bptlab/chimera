@@ -140,8 +140,8 @@ public class EventLoggingTest extends JerseyTest {
         assertEquals(eventControlNodeInstanceId, eventEntries.get(1).get("eventid"));
         assertEquals(eventControlNodeInstanceId, eventEntries.get(2).get("eventid"));
 
-        assertEquals("", eventEntries.get(1).get("eventname"));
-        assertEquals("", eventEntries.get(2).get("eventname"));
+        assertEquals("SomeEvent", eventEntries.get(1).get("eventname"));
+        assertEquals("SomeEvent", eventEntries.get(2).get("eventname"));
     }
 
 }
