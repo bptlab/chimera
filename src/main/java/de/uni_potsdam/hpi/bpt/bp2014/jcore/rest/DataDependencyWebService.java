@@ -1,7 +1,8 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Response;
 /**
  *
  */
+@Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/")
 public class DataDependencyWebService {
     /**
      * This method responds to a GET request
@@ -19,10 +21,10 @@ public class DataDependencyWebService {
      * belonging to an inputSet.
      * The outcome is specified by:
      *
-     * @param scenarioID         This is the databaseID of the scenario.
-     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the
+     * @param scenarioId         This is the databaseID of the scenario.
+     * @param scenarioInstanceId This is the databaseID of the scenarioInstance of the
      *                              aforementioned scenario.
-     * @param inputsetID         This is the databaseID of an inputSet belonging to this
+     * @param inputsetId         This is the databaseID of an inputSet belonging to this
      *                              scenarioInstance.
      * @return a response consisting of:
      * an array of dataObjectsInstances with their dataAttributeInstances [also as an array].
@@ -32,26 +34,25 @@ public class DataDependencyWebService {
      * is non-existing & with an error message instead of the array.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}")
+    @Path("inputset/{inputsetId}")
     public Response getInputDataObjectsAndAttributes(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("inputsetID") int inputsetID) {
-
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService
-                .openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("inputsetId") int inputsetId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        if (!executionService.existScenarioInstance(scenarioId, scenarioInstanceId)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such "
                             + "scenario instance.\"}")
                     .build();
         }
-        if (executionService
-                .getDataObjectInstancesForDataSetId(
-                        inputsetID, scenarioInstanceID)	== null
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+
+        if (executionService.getDataObjectInstancesForDataSetId(
+                        inputsetId, scenarioInstanceId)	== null
                 || executionService
-                .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID)
+                .getDataObjectInstancesForDataSetId(inputsetId, scenarioInstanceId)
                 .length == 0) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
@@ -60,11 +61,11 @@ public class DataDependencyWebService {
                     .build();
         }
         DataObjectInstance[] dataObjectInstances = executionService
-                .getDataObjectInstancesForDataSetId(inputsetID, scenarioInstanceID);
+                .getDataObjectInstancesForDataSetId(inputsetId, scenarioInstanceId);
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
             DataObjectJaxBean dataObject = new DataObjectJaxBean();
-            dataObject.setSetId(inputsetID);
+            dataObject.setSetId(inputsetId);
             dataObject.setId(dataObjectInstances[i].getDataObjectInstanceId());
             dataObject.setLabel(dataObjectInstances[i].getName());
             dataObject.setState(executionService
@@ -85,7 +86,7 @@ public class DataDependencyWebService {
      * The outcome is specified by:
      *
      * @param scenarioID         This is the databaseID of the scenario.
-     * @param scenarioInstanceID This is the databaseID of the scenarioInstance of the
+     * @param scenarioInstanceId This is the databaseID of the scenarioInstance of the
      *                              aforementioned scenario.
      * @param outputsetID        This is the databaseID of an outputSet belonging to this
      *                              scenarioInstance.
@@ -97,25 +98,24 @@ public class DataDependencyWebService {
      * is non-existing with an error message instead of the array.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}")
+    @Path("outputset/{outputsetId}")
     public Response getOutputDataObjectsAndAttributes(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("outputsetID") int outputsetID) {
-
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("outputsetId") int outputsetID) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.openExistingScenarioInstance(
-                scenarioID, scenarioInstanceID)) {
+        if (!executionService.existScenarioInstance(
+                scenarioID, scenarioInstanceId)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such "
                             + "scenario instance.\"}")
                     .build();
         }
-
+        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceId);
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(
-                        outputsetID, scenarioInstanceID);
+                        outputsetID, scenarioInstanceId);
 
         if (dataObjectInstances == null || dataObjectInstances.length == 0) {
             return Response.status(Response.Status.NOT_FOUND)

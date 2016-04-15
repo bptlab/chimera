@@ -1,22 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectSetsJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.EmailConfigJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
-import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.*;
@@ -119,11 +112,6 @@ import java.util.Map;
 	}
 
 
-
-
-
-
-
 	/**
 	 * Method for checking whether an address specified in the griffin editor
 	 * links to a valid running chimera instance
@@ -160,8 +148,5 @@ import java.util.Map;
 		result.put(resultLabel, data);
 		return result;
 	}
-
-	// ************************* RootElement ********************************************/
-
 
 }

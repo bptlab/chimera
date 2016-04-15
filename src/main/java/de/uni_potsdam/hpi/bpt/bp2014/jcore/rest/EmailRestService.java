@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 /**
  *
  */
+@Path("interface/v2/scenario/{scenarioID}/emailtask")
 public class EmailRestService {
     /**
      * This method provides information about all email Tasks inside
@@ -20,13 +21,12 @@ public class EmailRestService {
      * A Json Object will be returned with an array of ids and a Map
      * from ids to labels.
      *
-     * @param scenarioID   The ID of the scenario, its mail tasks will be returned.
+     * @param scenarioID   The ID of the scenario, its mail tasks will be DataDependencyWebServiceTestreturned.
      * @param filterString A Filter String, only mail tasks with a label containing
      *                     this filter String will be returned.
      * @return The JSON Object with ids and labels.
      */
     @GET
-    @Path("scenario/{scenarioID}/emailtask")
     @Produces(MediaType.APPLICATION_JSON) public Response getAllEmailTasks(
             @PathParam("scenarioID") int scenarioID,
             @QueryParam("filter") String filterString) {
@@ -58,7 +58,7 @@ public class EmailRestService {
      * and a 200 (OK) with a JSON-Object if the emailTask was found.
      */
     @GET
-    @Path("scenario/{scenarioID}/emailtask/{emailTaskID}")
+    @Path("{emailTaskID}")
     @Produces(MediaType.APPLICATION_JSON) public Response getEmailTaskConfiguration(
             @PathParam("scenarioID") int scenarioID,
             @PathParam("emailTaskID") int mailTaskID) {
