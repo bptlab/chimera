@@ -30,7 +30,7 @@ public class DataDependencyWebServiceTest extends AbstractTest {
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
     }
-    
+
     @Override
     protected Application configure() {
         return new ResourceConfig(DataDependencyWebService.class);

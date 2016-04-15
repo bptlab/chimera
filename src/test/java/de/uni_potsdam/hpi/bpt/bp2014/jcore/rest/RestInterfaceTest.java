@@ -80,6 +80,24 @@ public class RestInterfaceTest extends AbstractTest {
                 null, new JSONObject(response.readEntity(String.class)));
     }
 
+
+    /**
+     * with a wrong scenario id and a correct instance id
+     * the respond will be a 404 with a redirected URI.
+     */
+    @Test
+    public void testGetScenarioInstanceWithWrongInstanceThrowsError() {
+        Response response = base.path("scenario/9999/instance/9999").request().get();
+        assertEquals("The Response code of getScenarioInstance was not 404",
+                404, response.getStatus());
+        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"There is no instance with the id 9999\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
     /**
      * When you sent a GET to {@link RestInterface#getScenarios(UriInfo, String)}
      * the returned JSON will contain the latest version of all Scenarios.
@@ -198,87 +216,9 @@ public class RestInterfaceTest extends AbstractTest {
                 200, response.getStatus());
     }
 
-    /**
-     * with an invalid instance id
-     * then the Response should be a 404 with an error message.
-     */
-    @Test
-    public void terminateScenarioInstanceInvalidId() {
-        Response response = base.path("scenario/1/instance/9999/terminate").request().post(Entity.json(null));
-        assertEquals("The Response code of terminating an instances was not 404",
-                404, response.getStatus());
-        assertEquals("The Media type of terminating an instance was not TEXT",
-                MediaType.TEXT_PLAIN, response.getMediaType().toString());
-        assertEquals("The content of the response was not as expected",
-                "Scenario or scenario instance does not exist",
-                response.readEntity(String.class));
-    }
 
 
-    /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
-     * with a valid scenario id and a filter
-     * only instances with names containing this string will be returned.
-     */
-    @Test
-    public void testGetScenarioInstancesWithFilter() {
-        Response response = base.path("scenario/1/instance").queryParam("filter", "noInstanceLikeThis").request().get();
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[],\"labels\":{},\"links\":{}}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 
-    /**
-     * then the Response will be a 201 and a json object wit the new id will be returned.
-     */
-    @Test
-    public void testStartNewInstanceWOName() {
-        Response response = base.path("scenario/1/instance").request().post(null);
-        assertEquals("The Response code of start new instances was not 201",
-                201, response.getStatus());
-        assertEquals("Start new isntance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":966,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/966\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    /**
-     * then the Response will be a 201 and a json object wit the new id will be returned.
-     */
-    @Test
-    public void testStartInvalidInstanceWOName() {
-        Response response = base.path("scenario/9999/instance").request().post(null);
-        assertEquals("The Response code of start new instances was not 400",
-                400, response.getStatus());
-        assertEquals("Start new isntance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"The Scenario could not be found!\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    /**
-     * then the Response will be a 201 and a json object wit the new id will be returned.
-     */
-    @Test
-    public void testStartNewInstanceWName() {
-        NamedJaxBean newName = new NamedJaxBean();
-        newName.setName("Dies ist ein Test");
-        Response response = base.path("scenario/1/instance")
-                .request().put(Entity.json(newName));
-        assertEquals("The Response code of start new instances was not 201",
-                201, response.getStatus());
-        assertEquals("Start new instance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":966,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/966\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 
 
     /**
@@ -300,59 +240,8 @@ public class RestInterfaceTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-
-     * with a correct scenario id and a correct instance id
-     * the respond will be a 200 with a JSONObject
-     */
-    @Test
-    public void testGetScenarioInstanceReturnsJSON() {
-        Response response = base.path("scenario/1/instance/72").request().get();
-        assertEquals("The Response code of getScenarioInstance was not 200",
-                200, response.getStatus());
-        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1,\"activities\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    /**
-     * with a wrong scenario id and a correct instance id
-     * the respond will be a 200 with a redirected URI.
-     */
-    @Test
-    public void testGetScenarioInstanceWithWrongScenarioRedirects() {
-        Response response = base.path("scenario/9999/instance/72").request().get();
-        assertEquals("The Response code of getScenarioInstance was not 200",
-                200, response.getStatus());
-        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1,\"activities\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 
 
-
-    /**
-     * with a wrong scenario id and a correct instance id
-     * the respond will be a 404 with a redirected URI.
-     */
-    @Test
-    public void testGetScenarioInstanceWithWrongInstanceThrowsError() {
-        Response response = base.path("scenario/9999/instance/9999").request().get();
-        assertEquals("The Response code of getScenarioInstance was not 404",
-                404, response.getStatus());
-        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"There is no instance with the id 9999\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 
     /**
      */

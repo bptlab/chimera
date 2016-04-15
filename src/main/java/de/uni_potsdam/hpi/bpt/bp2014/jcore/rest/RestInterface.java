@@ -44,7 +44,9 @@ import java.util.Map;
 	 * every Scenario.
 	 * Each Entry is a JSON-Object with a label and id of a scenario.
 	 */
-	@GET @Path("scenario") @Produces(MediaType.APPLICATION_JSON) public Response getScenarios(
+	@GET
+    @Path("scenario") @Produces(MediaType.APPLICATION_JSON)
+    public Response getScenarios(
 			@Context UriInfo uriInfo, @QueryParam("filter") String filterString) {
 		DbScenario scenario = new DbScenario();
 		Map<Integer, String> scenarios;
@@ -64,54 +66,7 @@ import java.util.Map;
 				.entity(jsonResult.toString())
 				.build();
 	}
-
-
-
-
-	/**
-	 * This method provides information about all instances of one scenario.
-	 * The scenario is specified by an given id.
-	 * If there is no scenario with the specific id a 404 response with a meaningful
-	 * error message will be returned.
-	 * If the Scenario exists a JSON-Array containing JSON-Objects with
-	 * important information about an instance of the scenario will be returned.
-	 *
-	 * @param uri Request URI.
-	 * @param scenarioID   The id of the scenario which instances should be returned.
-	 * @param filterString Specifies a search. Only scenarios which
-	 *                     name contain the specified string will be
-	 *                     returned.
-	 * @return A JSON-Object with an array of information about all instances of
-	 * one specified scenario. The information contains the id and name.
-	 */
-	@GET
-	@Path("scenario/{scenarioID}/instance")
-	@Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstances(
-			@Context UriInfo uri,
-			@PathParam("scenarioID") int scenarioID,
-			@QueryParam("filter") String filterString) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-		if (!executionService.existScenario(scenarioID)) {
-			return Response.status(Response.Status.NOT_FOUND)
-					.type(MediaType.APPLICATION_JSON)
-					.entity("{\"error\":\"Scenario not found!\"}")
-					.build();
-		}
-		DbScenarioInstance instance = new DbScenarioInstance();
-		JSONObject result = new JSONObject();
-		Map<Integer, String> data =
-				instance.getScenarioInstancesLike(scenarioID, filterString);
-		JSONObject links = new JSONObject();
-		for (int id : data.keySet()) {
-			links.put("" + id, uri.getAbsolutePath() + "/" + id);
-		}
-		result.put("ids", new JSONArray(data.keySet()));
-		result.put("labels", new JSONObject(data));
-		result.put("links", links);
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-	}
-
-
+    
 	/**
 	 * Method for checking whether an address specified in the griffin editor
 	 * links to a valid running chimera instance

@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.NamedJaxBean;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -15,13 +16,50 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  *
  */
+@Path("interface/v2/scenario/{scenarioId}/instance/")
 public class ScenarioInstanceRestService {
     private static Logger log = Logger.getLogger(RestInterface.class);
 
+    /**
+     * Creates a new instance of a specified scenario.
+     * This method assumes that the name of then new instance will be the same
+     * as the name of the scenario.
+     * Hence no additional information should be transmitted.
+     * The response will imply if the post was successful.
+     *
+     * @param uri        a context, which holds information about the server
+     * @param scenarioId the id of the scenario.
+     * @return The Response of the POST. The Response code will be
+     * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
+     * if the scenarioID was invalid.
+     * The content of the Response will be a JSON-Object containing information
+     * about the new instance.
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON) public Response startNewInstance(
+            @Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        if (executionService.existScenario(scenarioId)) {
+            int instanceId = executionService.startNewScenarioInstance();
+            return Response.status(Response.Status.CREATED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"id\":" + instanceId
+                            + ",\"link\":\"" + uri.getAbsolutePath()
+                            + "/" + instanceId + "\"}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"The Scenario could not be found!\"}")
+                    .build();
+        }
+    }
     /**
      * Creates a new instance of a specified scenario.
      * This method assumes that the new instance will be named.
@@ -41,11 +79,10 @@ public class ScenarioInstanceRestService {
      * about the new instance.
      */
     @PUT
-    @Path("scenario/{scenarioID}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON) public Response startNewNamedInstance(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
+            @PathParam("scenarioId") int scenarioID,
             NamedJaxBean name) {
         if (name == null) {
             return startNewInstance(uriInfo, scenarioID);
@@ -77,8 +114,8 @@ public class ScenarioInstanceRestService {
      *
      * @param uriInfo    Contains the context information, is used to build
      *                   links to other resources.
-     * @param scenarioID The ID of the scenario.
-     * @param instanceID The ID of the instance.
+     * @param scenarioId The ID of the scenario.
+     * @param instanceId The ID of the instance.
      * @return Will return a Response with a JSON-Object body, containing
      * the information about the instance.
      * If the instance ID or both are incorrect 404 (NOT_FOUND) will be
@@ -89,31 +126,31 @@ public class ScenarioInstanceRestService {
      * will be returned.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}")
+    @Path("{instanceId}")
     @Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstance(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int instanceID) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int instanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         DbScenarioInstance instance = new DbScenarioInstance();
-        if (!executionService.existScenarioInstance(instanceID)) {
+        if (!executionService.existScenarioInstance(instanceId)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"message\":\"There is no instance "
-                            + "with the id " + instanceID + "\"}")
+                            + "with the id " + instanceId + "\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        } else if (!executionService.existScenario(scenarioID)) {
-            scenarioID = instance.getScenarioID(instanceID);
+        } else if (!executionService.existScenario(scenarioId)) {
+            scenarioId = instance.getScenarioID(instanceId);
             try {
                 return Response.seeOther(
-                        new URI("interface/v2/scenario/" + scenarioID
-                                + "/instance/" + instanceID))
+                        new URI("interface/v2/scenario/" + scenarioId
+                                + "/instance/" + instanceId))
                         .build();
             } catch (URISyntaxException e) {
                 log.error("Error:", e);
             }
         }
-        JSONObject result = new JSONObject(instance.getInstanceMap(instanceID));
+        JSONObject result = new JSONObject(instance.getInstanceMap(instanceId));
         result.put("activities", uriInfo.getAbsolutePath() + "/activity");
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
@@ -127,10 +164,11 @@ public class ScenarioInstanceRestService {
      * 400 if none is fulfilled, 404 if the scenario instance is not found.
      */
     @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/canTerminate")
+    @Path("{instanceId}/canTerminate")
     @Produces(MediaType.TEXT_PLAIN)
     public Response checkTermination(
-            @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int instanceId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         if (executionService.existScenario(scenarioId) && executionService
                 .existScenarioInstance(instanceId)) {
@@ -163,10 +201,10 @@ public class ScenarioInstanceRestService {
      * 404 if the scenario instance is not found.
      */
     @POST
-    @Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
+    @Path("{instanceId}/terminate")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response terminateScenarioInstance(
-            @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
+    public Response terminateScenarioInstance(@PathParam("scenarioId") int scenarioId,
+                                              @PathParam("instanceId") int instanceId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         if (executionService.existScenario(scenarioId) && executionService
                 .existScenarioInstance(instanceId)) {
@@ -192,42 +230,44 @@ public class ScenarioInstanceRestService {
     }
 
     /**
-     * Creates a new instance of a specified scenario.
-     * This method assumes that the name of then new instance will be the same
-     * as the name of the scenario.
-     * Hence no additional information should be transmitted.
-     * The response will imply if the post was successful.
+     * This method provides information about all instances of one scenario.
+     * The scenario is specified by an given id.
+     * If there is no scenario with the specific id a 404 response with a meaningful
+     * error message will be returned.
+     * If the Scenario exists a JSON-Array containing JSON-Objects with
+     * important information about an instance of the scenario will be returned.
      *
-     * @param uri        a context, which holds information about the server
-     * @param scenarioID the id of the scenario.
-     * @return The Response of the POST. The Response code will be
-     * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
-     * if the scenarioID was invalid.
-     * The content of the Response will be a JSON-Object containing information
-     * about the new instance.
+     * @param uri Request URI.
+     * @param scenarioId   The id of the scenario which instances should be returned.
+     * @param filterString Specifies a search. Only scenarios which
+     *                     name contain the specified string will be
+     *                     returned.
+     * @return A JSON-Object with an array of information about all instances of
+     * one specified scenario. The information contains the id and name.
      */
-    @POST
-    @Path("scenario/{scenarioID}/instance")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON) public Response startNewInstance(
-            @Context UriInfo uri, @PathParam("scenarioID") int scenarioID) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (executionService.existScenario(scenarioID)) {
-            int instanceId = executionService.startNewScenarioInstance();
-            return Response.status(Response.Status.CREATED)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstances(
+            @Context UriInfo uri,
+            @PathParam("scenarioId") int scenarioId,
+            @QueryParam("filter") String filterString) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        if (!executionService.existScenario(scenarioId)) {
+            return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"id\":" + instanceId
-                            + ",\"link\":\"" + uri.getAbsolutePath()
-                            + "/" + instanceId + "\"}")
-                    .build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The Scenario could not be found!\"}")
+                    .entity("{\"error\":\"Scenario not found!\"}")
                     .build();
         }
+        DbScenarioInstance instance = new DbScenarioInstance();
+        JSONObject result = new JSONObject();
+        Map<Integer, String> data =
+                instance.getScenarioInstancesLike(scenarioId, filterString);
+        JSONObject links = new JSONObject();
+        for (int id : data.keySet()) {
+            links.put("" + id, uri.getAbsolutePath() + "/" + id);
+        }
+        result.put("ids", new JSONArray(data.keySet()));
+        result.put("labels", new JSONObject(data));
+        result.put("links", links);
+        return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
-
-
-
 }
