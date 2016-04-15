@@ -28805,17 +28805,19 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `historyactivityinstance`
+-- Table structure for table `historyactivityinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `activityinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `oldstate` varchar(256) DEFAULT NULL,
   `newstate` varchar(256) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1362 ;
+  `scenarioinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 --
 -- Daten für Tabelle `historyactivityinstance`
@@ -30188,18 +30190,19 @@ INSERT INTO `historyactivityinstance` (`id`, `activityinstance_id`, `timestamp`,
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `historydataattributeinstance`
+-- Table structure for table `historydataattributeinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `controlnodeinstance_id` int(11) DEFAULT NULL,
   `dataattributeinstance_id` int(11) NOT NULL,
-  `activityinstance_id` int(11) DEFAULT NULL,
   `oldvalue` varchar(256) DEFAULT NULL,
   `newvalue` varchar(256) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=221 ;
+  `scenarioinstance_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=221 ;
 
 --
 -- Daten für Tabelle `historydataattributeinstance`
@@ -30430,18 +30433,20 @@ INSERT INTO `historydataattributeinstance` (`id`, `dataattributeinstance_id`, `o
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `historydataobjectinstance`
+-- Table structure for table `historydataobjectinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `controlnodeinstance_id` int(11) DEFAULT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
-  `activityinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dataobjectinstance_id` int(11) NOT NULL,
   `oldstate_id` int(11) DEFAULT NULL,
-  `newstate_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=197 ;
+  `newstate_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=196 ;
+
 
 --
 -- Table structure for table `eventmapping`
