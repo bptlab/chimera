@@ -16,8 +16,13 @@ public class StartEvent extends AbstractEvent {
      */
     public StartEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
-        super(controlNodeId, scenarioInstance);
+        super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.setFragmentInstanceId(fragmentInstanceId);
+    }
+
+    @Override
+    public String getType() {
+        return "StartEvent";
     }
 
     @Override

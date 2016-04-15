@@ -37,14 +37,13 @@ public class DataAttributeInstance {
 			this.dataAttributeInstanceId = dbDataAttributeInstance
 					.getDataAttributeInstanceID(
 							dataAttributeId, dataObjectInstanceId);
-            logger.logDataAttributeCreation(this.dataAttributeInstanceId);
-
         } else {
 			//creates a new Attribute Instance also in database
 			this.dataAttributeInstanceId = dbDataAttributeInstance
 					.createNewDataAttributeInstance(
 							dataAttributeId, dataObjectInstanceId);
-		}
+            logger.logDataAttributeCreation(this.dataAttributeInstanceId);
+        }
 		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
 		this.name = dbDataAttributeInstance.getName(dataAttributeId);
 	}

@@ -94,12 +94,12 @@ public class EventLoggingTest extends JerseyTest {
         Map<Integer, Map<String, Object>> dataattributeEntries =
                 service.getDataattributeEntries(instance.getScenarioInstanceId());
         assertEquals(eventControlNodeInstanceId,
-                dataattributeEntries.get(2).get("controlnodeinstance_id"));
+                dataattributeEntries.get(2).get("h.controlnodeinstance_id"));
 
         Map<Integer, Map<String, Object>> eventEntries=
                 service.getEventEntries(instance.getScenarioInstanceId());
         assertEquals(eventControlNodeInstanceId,
-                eventEntries.get(2).get("event_id"));
+                eventEntries.get(2).get("eventid"));
     }
 
     @Test
@@ -128,12 +128,18 @@ public class EventLoggingTest extends JerseyTest {
         assert (events.size() == 1): "Event was not registered properly";
         String json = FileUtils.readFileToString(
                 new File("src/test/resources/history/exampleWebserviceJson.json"));
+
         ScenarioTestHelper.triggerEventInScenario(instance, base, json);
         HistoryService service = new HistoryService();
         Map<Integer, Map<String, Object>> eventEntries =
                 service.getEventEntries(instance.getScenarioInstanceId());
         assertEquals("registered", eventEntries.get(1).get("state"));
         assertEquals("received", eventEntries.get(2).get("state"));
+
+        int eventControlNodeInstanceId = events.get(0).getControlNodeInstanceId();
+        assertEquals(eventControlNodeInstanceId, eventEntries.get(1).get("eventid"));
+        assertEquals(eventControlNodeInstanceId, eventEntries.get(2).get("eventid"));
+
         assertEquals("", eventEntries.get(1).get("eventname"));
         assertEquals("", eventEntries.get(2).get("eventname"));
     }

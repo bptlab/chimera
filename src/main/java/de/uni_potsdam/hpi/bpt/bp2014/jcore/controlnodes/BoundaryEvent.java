@@ -16,8 +16,13 @@ public class BoundaryEvent extends AbstractEvent {
      */
     public BoundaryEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
-        super(controlNodeId, scenarioInstance);
+        super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.setFragmentInstanceId(fragmentInstanceId);
+    }
+
+    @Override
+    public String getType() {
+        return "BoundaryEvent";
     }
 
     @Override

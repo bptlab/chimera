@@ -11,21 +11,30 @@ public class IntermediateEvent extends AbstractEvent {
 
     public IntermediateEvent(int controlNodeId, int fragmentInstanceId,
                              ScenarioInstance scenarioInstance) {
-        super(controlNodeId, scenarioInstance);
+        super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.setFragmentInstanceId(fragmentInstanceId);
 
         scenarioInstance.getControlNodeInstances().add(this);
-        saveToDatabase();
+        // saveToDatabase();
+    }
+
+    @Override
+    public String getType() {
+        return "IntermediateEvent";
     }
 
 
     private void saveToDatabase() {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 
-        this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(this.getControlNodeId(), "IntermediateEvent",
-                        this.getFragmentInstanceId()));
-
+        if (dbControlNodeInstance.existControlNodeInstance(this.getControlNodeInstanceId())) {
+            this.setControlNodeInstanceId(dbControlNodeInstance
+                    .createNewControlNodeInstance(this.getControlNodeId(), "IntermediateEvent",
+                            this.getFragmentInstanceId()));
+        } else {
+            this.setControlNodeInstanceId(dbControlNodeInstance.getControlNodeInstanceID(
+                    this.getControlNodeId(), this.getFragmentInstanceId()));
+        }
     }
     @Override
     public boolean skip() {
