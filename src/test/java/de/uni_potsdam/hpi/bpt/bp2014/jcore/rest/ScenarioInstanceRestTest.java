@@ -67,6 +67,25 @@ public class ScenarioInstanceRestTest extends AbstractTest {
 
 
     /**
+     * then the Response will be a 201 and a json object wit the new id will be returned.
+     */
+    @Test
+    public void testStartInvalidInstanceWName() {
+        NamedJaxBean newName = new NamedJaxBean();
+        newName.setName("Dies ist ein Test");
+        Response response = base.path("scenario/9999/instance").request()
+                .put(Entity.json(newName));
+        assertEquals("The Response code of start new instances was not 400",
+                400, response.getStatus());
+        assertEquals("Start new isntance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"The Scenario could not be found!\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    /**
      * with an invalid instance id
      * then the Response should be a 404 with an error message.
      */
@@ -166,4 +185,47 @@ public class ScenarioInstanceRestTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
+
+    /**
+     * with an valid scenario instance id
+     * the scenario should be terminated and the response is a 201.
+     */
+    @Test
+    public void terminateScenarioInstance() {
+        Response response = base.path("scenario/1/instance/47/terminate").request().post(Entity.json(null));
+        assertEquals("The Response code of terminating an instances was not 200",
+                200, response.getStatus());
+    }
+
+
+
+    /**
+     * with valid params and no filter
+     * then you get 200 a JSON Object.
+     */
+    @Test
+    public void testGetScenarioInstancesReturnsOkAndJSON() {
+        Response response = base.path("scenario/1/instance").request().get();
+        assertEquals("The Response code of get get instances was not 200",
+                200, response.getStatus());
+        assertEquals("Get instances returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    }
+
+    /**
+     * with an invalid scenario
+     * then you get 404 with an error message inside the returned JSON object
+     */
+    @Test
+    public void testGetScenarioInstancesInvalidScenario() {
+        Response response = base.path("scenario/9999/instance").request().get();
+        assertEquals("The Response code of get get instances was not 404",
+                404, response.getStatus());
+        assertEquals("Get instances returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON is invalid or does not contain the expected message",
+                "{\"error\":\"Scenario not found!\"}",
+                jsonEquals(response.readEntity(String.class)));
+    }
+
 }

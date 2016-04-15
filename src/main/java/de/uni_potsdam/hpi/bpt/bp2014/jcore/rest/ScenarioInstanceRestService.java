@@ -246,6 +246,7 @@ public class ScenarioInstanceRestService {
      * one specified scenario. The information contains the id and name.
      */
     @GET
+
     @Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstances(
             @Context UriInfo uri,
             @PathParam("scenarioId") int scenarioId,
