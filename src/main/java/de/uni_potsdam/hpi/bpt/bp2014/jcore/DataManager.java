@@ -27,16 +27,16 @@ public class DataManager {
      *
      * @param dataObjectId Id of the dataobject, to which the instance belongs
      * @param stateId Id of the new state
-     * @param activityId id of the activity which changed the dataobject
+     * @param activityInstanceId id of the activity instance which changed the dataobject
      * @return Returns if the state was successfully changed
      */
-    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityId) {
+    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityInstanceId) {
         Optional<DataObjectInstance> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
             HistoryLogger scenarioLog = new HistoryLogger();
             scenarioLog.logDataobjectStateTransition(
-                    dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityId);
+                    dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityInstanceId);
             return true;
         }
 
