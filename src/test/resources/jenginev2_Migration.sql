@@ -77,7 +77,7 @@ INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_st
 (1, 'SubDO', 2, 1, 1),
 (2, 'DO', 1, 1, 3);
 
-INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `onchange`) VALUES
+INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `locked`) VALUES
 (1, 1, 1, 1, 0),
 (2, 1, 4, 2, 0);
 

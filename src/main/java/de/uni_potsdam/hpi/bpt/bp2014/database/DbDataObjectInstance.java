@@ -81,18 +81,13 @@ public class DbDataObjectInstance extends DbObject {
 	 * so that no other activity can work with it.
 	 *
 	 * @param id       This is the database ID of a dataObject instance.
-	 * @param onChange This is the flag set to indicate if
+	 * @param locked This is the flag set to indicate if
 	 *                    the dataObject instance is being modified or not.
 	 */
-	public void setLocked(int id, Boolean onChange) {
-		int onChangeAsInt;
-		if (onChange) {
-			onChangeAsInt = 1;
-		} else {
-			onChangeAsInt = 0;
-		}
+	public void setLocked(int id, Boolean locked) {
+		int lockedInt = (locked) ? 1 : 0;
 		String sql =
-				"UPDATE dataobjectinstance SET onchange = " + onChangeAsInt
+				"UPDATE dataobjectinstance SET locked = " + lockedInt
 						+ " WHERE id = " + id;
 		this.executeUpdateStatement(sql);
 	}
@@ -111,8 +106,8 @@ public class DbDataObjectInstance extends DbObject {
 	}
 
     public boolean isLocked(int dataObjectInstanceId) {
-        String sql = "SELECT onchange FROM dataobjectinstance "
+        String sql = "SELECT locked FROM dataobjectinstance "
                 + "WHERE id = " + dataObjectInstanceId;
-        return this.executeStatementReturnsBoolean(sql, "onchange");
+        return this.executeStatementReturnsBoolean(sql, "locked");
     }
 }
