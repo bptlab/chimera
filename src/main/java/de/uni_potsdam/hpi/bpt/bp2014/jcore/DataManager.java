@@ -34,8 +34,8 @@ public class DataManager {
         Optional<DataObjectInstance> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
-            HistoryLogger scenarioLog = new HistoryLogger();
-            scenarioLog.logDataobjectStateTransition(
+            HistoryLogger stateLogger = new HistoryLogger();
+            stateLogger.logDataobjectStateTransition(
                     dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityInstanceId);
             return true;
         }
@@ -85,7 +85,7 @@ public class DataManager {
      * Initializes all data objects for the scenario instance.
      */
     private void initializeDataObjects() {
-        HistoryLogger logger = new HistoryLogger();
+        HistoryLogger dataObjectLogger = new HistoryLogger();
         DbDataObject dbDataObject = new DbDataObject();
         int scenarioId = this.scenarioInstance.getScenarioId();
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
@@ -95,7 +95,7 @@ public class DataManager {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
             this.dataObjectInstances.add(dataObjectInstance);
-            logger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
+            dataObjectLogger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
         }
     }
 

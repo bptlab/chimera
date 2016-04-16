@@ -31,14 +31,14 @@ public class DataAttributeWriter {
         Map<Integer, DataAttributeInstance> idToDataAttributeInstance = dataAttributeInstances
                 .stream().collect(Collectors.toMap(DataAttributeInstance::getDataAttributeInstanceId, x -> x));
 
-        HistoryLogger logger = new HistoryLogger();
+        HistoryLogger attributeLogger = new HistoryLogger();
 
         for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
             int dataAttributeInstanceId = idToPathEntry.getKey();
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
             String jsonPath = idToPathEntry.getValue();
             Object value = JsonPath.read(json, jsonPath);
-            logger.logDataAttributeTransition(
+            attributeLogger.logDataAttributeTransition(
                     instance.getDataAttributeInstanceId(), value, controlNodeInstanceId);
             instance.setValue(value);
         }

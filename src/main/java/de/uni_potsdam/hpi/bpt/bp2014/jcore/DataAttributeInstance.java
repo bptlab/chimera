@@ -30,7 +30,7 @@ public class DataAttributeInstance {
 		this.dataObjectInstanceId = dataObjectInstanceId;
 		this.dataObjectInstance = dataObjectInstance;
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
-        HistoryLogger logger = new HistoryLogger();
+        HistoryLogger attributeLogger = new HistoryLogger();
 		if (dbDataAttributeInstance.existDataAttributeInstance(
 						dataAttributeId, dataObjectInstanceId)) {
 			//creates an existing Attribute Instance using the database information
@@ -42,7 +42,7 @@ public class DataAttributeInstance {
 			this.dataAttributeInstanceId = dbDataAttributeInstance
 					.createNewDataAttributeInstance(
 							dataAttributeId, dataObjectInstanceId);
-            logger.logDataAttributeCreation(this.dataAttributeInstanceId);
+            attributeLogger.logDataAttributeCreation(this.dataAttributeInstanceId);
         }
 		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
 		this.name = dbDataAttributeInstance.getName(dataAttributeId);

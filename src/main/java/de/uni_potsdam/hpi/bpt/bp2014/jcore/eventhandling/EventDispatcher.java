@@ -119,7 +119,7 @@ public final class EventDispatcher {
     }
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
-        HistoryLogger logger = new HistoryLogger();
+        HistoryLogger eventLogger = new HistoryLogger();
         DbEventMapping eventMapping = new DbEventMapping();
         EventFactory factory = new EventFactory(instance);
 
@@ -127,7 +127,7 @@ public final class EventDispatcher {
         int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
         AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
-        logger.logEventReceiving(event.getControlNodeInstanceId(),
+        eventLogger.logEventReceiving(event.getControlNodeInstanceId(),
                 instance.getScenarioInstanceId());
         return event;
     }
@@ -140,10 +140,11 @@ public final class EventDispatcher {
         String notificationRuleId = sendQueryToEventService(
                 query, requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
-        mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
+        mapping.saveMappingToDatabase(
+                fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
 
-        HistoryLogger logger = new HistoryLogger();
-        logger.logEventRegistration(event.getControlNodeInstanceId(), scenarioInstanceId);
+        HistoryLogger eventLogger = new HistoryLogger();
+        eventLogger.logEventRegistration(event.getControlNodeInstanceId(), scenarioInstanceId);
         return requestId;
     }
 
