@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryActivityTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataAttributeTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryEvent;
 
 /**
  * This class provides an abstraction layer for logging,
@@ -33,6 +34,14 @@ public class HistoryLogger {
 		dbHistoryActivityTransition.logActivityCreation(instanceId);
 	}
 
+    public void logEventRegistration(int eventInstanceId, int scenarioInstanceid) {
+        new DbHistoryEvent().logEventRegistration(eventInstanceId, scenarioInstanceid);
+    }
+
+
+    public void logEventReceiving(int eventInstanceId, int scenarioInstanceid) {
+        new DbHistoryEvent().logEventReceiving(eventInstanceId, scenarioInstanceid);
+    }
 	/**
 	 * This method delegates a log entry containing a DataObjectInstance state transition
 	 * being saved into the database.
@@ -62,12 +71,12 @@ public class HistoryLogger {
 	 *
 	 * @param dataAttributeInstanceId the ID of the DataAttributeInstance that is changed.
 	 * @param value                    the new value of the DataAttributeInstance.
-	 * @param activityInstanceId the id of the activity which caused the log entry.
+	 * @param nodeInstanceId the id of the control node which caused the log entry.
      */
 	public void logDataAttributeTransition(
-            int dataAttributeInstanceId, Object value, int activityInstanceId) {
+            int dataAttributeInstanceId, Object value, int nodeInstanceId) {
 		dbHistoryDataAttributeInstance.logDataAttributeTransition(
-                dataAttributeInstanceId, value, activityInstanceId);
+                dataAttributeInstanceId, value, nodeInstanceId);
 	}
 
 	/**

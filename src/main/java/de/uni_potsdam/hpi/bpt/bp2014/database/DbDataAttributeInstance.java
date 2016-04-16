@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
-
 /**
  * This class is the representation of a DataAttribute instance in the database.
  * It provides the functionality to check for existing instances as well as creating new ones.

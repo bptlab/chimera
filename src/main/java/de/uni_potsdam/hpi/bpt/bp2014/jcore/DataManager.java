@@ -27,16 +27,16 @@ public class DataManager {
      *
      * @param dataObjectId Id of the dataobject, to which the instance belongs
      * @param stateId Id of the new state
-     * @param activityId id of the activity which changed the dataobject
+     * @param activityInstanceId id of the activity instance which changed the dataobject
      * @return Returns if the state was successfully changed
      */
-    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityId) {
+    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityInstanceId) {
         Optional<DataObjectInstance> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
-            HistoryLogger scenarioLog = new HistoryLogger();
-            scenarioLog.logDataobjectStateTransition(
-                    dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityId);
+            HistoryLogger stateLogger = new HistoryLogger();
+            stateLogger.logDataobjectStateTransition(
+                    dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityInstanceId);
             return true;
         }
 
@@ -85,7 +85,7 @@ public class DataManager {
      * Initializes all data objects for the scenario instance.
      */
     private void initializeDataObjects() {
-        HistoryLogger logger = new HistoryLogger();
+        HistoryLogger dataObjectLogger = new HistoryLogger();
         DbDataObject dbDataObject = new DbDataObject();
         int scenarioId = this.scenarioInstance.getScenarioId();
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
@@ -95,7 +95,7 @@ public class DataManager {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
             this.dataObjectInstances.add(dataObjectInstance);
-            logger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
+            dataObjectLogger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
         }
     }
 

@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.List;
 import java.util.Map;
@@ -13,34 +14,37 @@ import java.util.stream.Collectors;
  * or event.
  */
 public class DataAttributeWriter {
+    private final int controlNodeInstanceId;
     Map<Integer, String> attributeIdToJsonPath;
 
     /**
      * Creates
      * @param controlNodeId The id of the webservice task or event, writes the data attributes.
      */
-    public DataAttributeWriter(int controlNodeId) {
-        this.setAttributeIdToJsonPath(controlNodeId);
+    public DataAttributeWriter(int controlNodeId, int controlNodeInstanceId) {
+        DbPathMapping pathMapping = new DbPathMapping();
+        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
+        this.controlNodeInstanceId = controlNodeInstanceId;
     }
 
     public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
         Map<Integer, DataAttributeInstance> idToDataAttributeInstance = dataAttributeInstances
                 .stream().collect(Collectors.toMap(DataAttributeInstance::getDataAttributeInstanceId, x -> x));
+
+        HistoryLogger attributeLogger = new HistoryLogger();
+
         for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
             int dataAttributeInstanceId = idToPathEntry.getKey();
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
             String jsonPath = idToPathEntry.getValue();
             Object value = JsonPath.read(json, jsonPath);
+            attributeLogger.logDataAttributeTransition(
+                    instance.getDataAttributeInstanceId(), value, controlNodeInstanceId);
             instance.setValue(value);
         }
     }
 
     public void setAttributeIdToJsonPath(Map<Integer, String> attributeIdToJsonPath) {
         this.attributeIdToJsonPath = attributeIdToJsonPath;
-    }
-
-    public void setAttributeIdToJsonPath(int controlNodeId) {
-        DbPathMapping pathMapping = new DbPathMapping();
-        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
     }
 }

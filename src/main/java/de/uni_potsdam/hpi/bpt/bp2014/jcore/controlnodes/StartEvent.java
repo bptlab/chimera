@@ -16,21 +16,17 @@ public class StartEvent extends AbstractEvent {
      */
     public StartEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
-        super(controlNodeId, scenarioInstance);
+        super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.setFragmentInstanceId(fragmentInstanceId);
+    }
+
+    @Override
+    public String getType() {
+        return "StartEvent";
     }
 
     @Override
     public boolean skip() {
         return false;
     }
-
-    @Override
-    public boolean terminate() {
-        EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
-                this.scenarioInstance, this.getFragmentInstanceId());
-        outgoingBehavior.terminate();
-        return true;
-    }
-
 }

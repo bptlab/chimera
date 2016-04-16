@@ -25,7 +25,9 @@ public class DataAttributeWriterTest {
     @Test
     public void testWebserviceWriting() {
         int dummyControlNodeId = 0;
-        DataAttributeWriter mapping = new DataAttributeWriter(dummyControlNodeId);
+        int dummyControlNodeInstanceId = 0;
+        DataAttributeWriter mapping = new DataAttributeWriter(
+                dummyControlNodeId, dummyControlNodeInstanceId);
         List<DataAttributeInstance> attributeInstances = createExampleInstances();
         Map<Integer, String> jsonPathMap = createAttributeIdToJsonPathExample();
 

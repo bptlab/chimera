@@ -42,8 +42,8 @@ public abstract class AbstractOutgoingBehavior {
 		case "WebServiceTask":
 			controlNodeInstance = new ActivityInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
-            HistoryLogger logger = new HistoryLogger();
-            logger.logActivityCreation(controlNodeInstance.getControlNodeInstanceId());
+            HistoryLogger activityLogger = new HistoryLogger();
+            activityLogger.logActivityCreation(controlNodeInstance.getControlNodeInstanceId());
             break;
 		case "EndEvent":
 			controlNodeInstance = new EventInstance(

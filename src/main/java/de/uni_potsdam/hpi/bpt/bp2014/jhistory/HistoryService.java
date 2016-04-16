@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryActivityTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataAttributeTransition;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryDataObjectTransition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbHistoryEvent;
 
 import java.util.Map;
 
@@ -43,6 +44,10 @@ public class HistoryService {
 		return dbHistoryActivityTransition.getLogEntriesForScenarioInstance(
 				scenarioInstanceId);
 	}
+
+    public Map<Integer, Map<String, Object>> getEventEntries(int scenarioInstanceId) {
+        return new DbHistoryEvent().getLogEntries(scenarioInstanceId);
+    }
 
 	/**
 	 * This method returns the terminated Activity log entries for a ScenarioInstance.

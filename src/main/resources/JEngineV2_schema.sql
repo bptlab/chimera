@@ -424,13 +424,34 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
 
 -- --------------------------------------------------------
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `historydataobjectinstance`
+--
+
+CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `controlnodeinstance_id` int(11) DEFAULT NULL,
+  `scenarioinstance_id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dataobjectinstance_id` int(11) NOT NULL,
+  `oldstate_id` int(11) DEFAULT NULL,
+  `newstate_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `historydataattributeinstance`
 --
 
 CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `activityinstance_id` int(11) DEFAULT NULL,
+  `controlnodeinstance_id` int(11) DEFAULT NULL,
   `dataattributeinstance_id` int(11) NOT NULL,
   `oldvalue` varchar(256) DEFAULT NULL,
   `newvalue` varchar(256) NOT NULL,
@@ -441,23 +462,21 @@ CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
 
 -- --------------------------------------------------------
 
+
 --
--- Table structure for table `historydataobjectinstance`
+-- Table structure for table `historyeventinstance`
 --
 
-CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
+CREATE TABLE IF NOT EXISTS `historyeventinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `activityinstance_id` int(11) DEFAULT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
+  `eventid` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dataobjectinstance_id` int(11) NOT NULL,
-  `oldstate_id` int(11) DEFAULT NULL,
-  `newstate_id` int(11) NOT NULL,
+  `state` varchar(256) NOT NULL,
+  `scenarioinstance_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `janalyticsresults`
 --

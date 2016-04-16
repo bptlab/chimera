@@ -2,15 +2,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -24,7 +22,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -56,8 +53,8 @@ public final class EventDispatcher {
             @PathParam("requestKey") String requestId,
             String eventJson) {
         AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
-        writeDataObjects(event, eventJson);
-        terminateEvent(event);
+        event.terminate(eventJson);
+        unregisterEvent(event);
         return Response.accepted("Event received.").build();
     }
 
@@ -66,15 +63,8 @@ public final class EventDispatcher {
         return getEvent(scenarioInstance, requestId);
     }
 
-    private static void writeDataObjects(AbstractEvent event, String eventJson) {
-        DataAttributeWriter writer = new DataAttributeWriter(
-                event.getControlNodeId());
-        List<DataAttributeInstance> attributeInstances = new ArrayList<>(
-                event.getScenarioInstance().getDataAttributeInstances().values());
-        writer.writeDataAttributesFromJson(eventJson, attributeInstances);
-    }
-    public static void terminateEvent(AbstractEvent event) {
-        event.terminate();
+
+    public static void unregisterEvent(AbstractEvent event) {
         if (isExclusiveEvent(event)) {
             discardAllAlternatives(event);
         } else {
@@ -125,24 +115,32 @@ public final class EventDispatcher {
     }
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
+        HistoryLogger eventLogger = new HistoryLogger();
         DbEventMapping eventMapping = new DbEventMapping();
         EventFactory factory = new EventFactory(instance);
 
         int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
         int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
-
-        return factory.getEventForControlNodeId(eventControlNodeId,
+        AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
+        eventLogger.logEventReceiving(event.getControlNodeInstanceId(),
+                instance.getScenarioInstanceId());
+        return event;
     }
 
-    public static String registerEvent(AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId,
-                              int scenarioId) {
+
+    public static String registerEvent(
+            AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         String query = parseQuery(event.getQueryString(), scenarioInstanceId, scenarioId);
         String notificationRuleId = sendQueryToEventService(
                 query, requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
-        mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
+        mapping.saveMappingToDatabase(
+                fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
+
+        HistoryLogger eventLogger = new HistoryLogger();
+        eventLogger.logEventRegistration(event.getControlNodeInstanceId(), scenarioInstanceId);
         return requestId;
     }
 
