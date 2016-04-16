@@ -52,6 +52,7 @@ public class FragmentValidator {
         }
     }
     /**
+     * TODO break up this logic
      * This method validates a fragment against the given OLCs. Note that in case there is no OLC
      * for a given DataClass all transitions for this class are considered valid.
      * @param olcs A map of DataClasses (identified by name) to their respective OLCs.
@@ -69,6 +70,9 @@ public class FragmentValidator {
 
             for (String dataobjectName : dataObjectsNames) {
                 List<String> inputStates = incomingDataobjectStates.get(dataobjectName);
+                if (!outgoingDataobjectStates.containsKey(dataobjectName)) {
+                    continue;
+                }
                 List<String> outputStates = outgoingDataobjectStates.get(dataobjectName);
                 Olc olcForDataobject = olcs.get(dataobjectName);
                 for (String state : inputStates) {

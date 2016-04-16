@@ -13663,14 +13663,14 @@ CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
   `scenarioinstance_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataobject_id` int(11) NOT NULL,
-  `onchange` tinyint(1) NOT NULL DEFAULT '0'
+  `locked` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=744 ;
 
 --
 -- Daten für Tabelle `dataobjectinstance`
 --
 
-INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `onchange`) VALUES
+INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `locked`) VALUES
 (7, 62, 1, 1, 0),
 (8, 62, 5, 2, 0),
 (9, 63, 1, 1, 0),

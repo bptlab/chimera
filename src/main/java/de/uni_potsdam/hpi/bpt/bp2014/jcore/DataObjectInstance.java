@@ -4,7 +4,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents data object instances.
@@ -16,6 +18,7 @@ public class DataObjectInstance {
 	private final int scenarioId;
 	private final int scenarioInstanceId;
 	private final String name;
+
 	/**
 	 * Database Connection objects.
 	 */
@@ -23,8 +26,8 @@ public class DataObjectInstance {
 	private final DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
 	private final DbDataObject dbDataObject = new DbDataObject();
 	private int stateId;
-	private LinkedList<DataAttributeInstance> dataAttributeInstances = new LinkedList<>();
-
+	private List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
+    private boolean isLocked = false;
 	/**
 	 * Creates and initializes a new data object instance.
 	 * Reads the information for an existing data object instance from the database
@@ -44,12 +47,11 @@ public class DataObjectInstance {
 		this.name = dbDataObject.getName(dataObjectId);
 		if (dbDataObjectInstance
 				.existDataObjectInstance(scenarioInstanceId, dataObjectId)) {
-			//creates an existing DataObject Instance using the database information
 			dataObjectInstanceId = dbDataObjectInstance
 					.getDataObjectInstanceID(scenarioInstanceId, dataObjectId);
 			stateId = dbDataObjectInstance.getStateID(dataObjectInstanceId);
+            isLocked = dbDataObjectInstance.isLocked(dataObjectInstanceId);
 		} else {
-			//creates a new DataObject Instance also in database
 			stateId = dbDataObject.getStartStateID(dataObjectId);
 			this.dataObjectInstanceId = dbDataObjectInstance
 					.createNewDataObjectInstance(
@@ -85,24 +87,6 @@ public class DataObjectInstance {
 		this.stateId = stateId;
 		dbDataObjectInstance.setState(dataObjectInstanceId, stateId);
 		scenarioInstance.checkTerminationCondition();
-	}
-
-	/**
-	 * Checks if the data object get edited right now.
-	 *
-	 * @return true if the data object get edited right now. false if not.
-	 */
-	public boolean getOnChange() {
-		return dbDataObjectInstance.getOnChange(dataObjectInstanceId);
-	}
-
-	/**
-	 * Sets on change from the data object instance.
-	 *
-	 * @param onChange This the value on change get set to.
-	 */
-	public void setOnChange(boolean onChange) {
-		dbDataObjectInstance.setOnChange(dataObjectInstanceId, onChange);
 	}
 
 	/**
@@ -159,8 +143,22 @@ public class DataObjectInstance {
 	 * @return a list containing the Data Attribute Instances belonging
 	 * to this Data Object Instance.
 	 */
-	public LinkedList<DataAttributeInstance> getDataAttributeInstances() {
+	public List<DataAttributeInstance> getDataAttributeInstances() {
 		return dataAttributeInstances;
 	}
+
+    public void lock() {
+        this.dbDataObjectInstance.setLocked(this.dataObjectInstanceId, true);
+        this.isLocked = true;
+    }
+
+    public void unlock() {
+        this.dbDataObjectInstance.setLocked(this.dataObjectInstanceId, false);
+        this.isLocked = false;
+    }
+
+    public boolean isLocked () {
+        return this.isLocked;
+    }
 
 }

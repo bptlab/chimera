@@ -83,7 +83,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state update was successful, false if not.
 	 */
 	public boolean enableControlFlow() {
-		//String state = this.getState();
 		if (STATE.INIT.equals(getState())) {
 			this.setState(STATE.CONTROLFLOW_ENABLED);
 			getScenarioInstance().getControlFlowEnabledControlNodeInstances()
@@ -136,7 +135,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state could been updated. false if the state couldn't been updated.
 	 */
 	public boolean disableData() {
-		//String state = this.getState();
 		if (STATE.DATAFLOW_ENABLED.equals(getState())) {
 			this.setState(STATE.INIT);
 			getScenarioInstance().getDataEnabledControlNodeInstances()

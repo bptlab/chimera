@@ -161,7 +161,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			((ActivityStateMachine) getStateMachine()).begin();
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior()).startReferences();
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior())
-					.setDataObjectInstancesOnChange();
+					.lockDataObjectInstances();
 			scenarioInstance.updateDataFlow();
 			scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
 			taskExecutionBehavior.execute();

@@ -1,11 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The data manager
@@ -13,7 +15,6 @@ import java.util.Optional;
 public class DataManager {
     private final ScenarioInstance scenarioInstance;
     private List<DataObjectInstance> dataObjectInstances = new ArrayList<>();
-    private List<DataObjectInstance> dataObjectInstancesOnChange = new ArrayList<>();
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
@@ -49,6 +50,38 @@ public class DataManager {
     }
 
     /**
+     * Returns the states of data objects for a scenario instance id.
+     *
+     * @return a Map. Keys are the data objects ids. Values are the states of the data objects.
+     */
+    public Map<Integer, Integer> getDataObjectStates() {
+        return this.getDataObjectInstances().stream().collect(Collectors.toMap(
+                DataObjectInstance::getDataObjectId, DataObjectInstance::getStateId)
+        );
+    }
+
+    public boolean checkInputSet(int inputSetId) {
+        DbDataNode dbDataNode = new DbDataNode();
+        Map<Integer, Integer> dataObjectIdToStateId = getDataObjectStates();
+        Set<Integer> lockedDataObjectIds = dataObjectInstances.stream()
+                .filter(DataObjectInstance::isLocked)
+                .map(DataObjectInstance::getDataObjectId)
+                .collect(Collectors.toSet());
+        List<DataObject> inputSet = dbDataNode.getDataObjectsForDataSets(inputSetId);
+        for (DataObject dataObject : inputSet) {
+            Integer dataObjectId = dataObject.getId();
+            if (lockedDataObjectIds.contains(dataObjectId)) {
+                return false;
+            }
+            if (!(dataObjectIdToStateId.get(dataObjectId) == dataObject.getStateID())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
      * Initializes all data objects for the scenario instance.
      */
     private void initializeDataObjects() {
@@ -61,20 +94,31 @@ public class DataManager {
         for (Integer dataObject : data) {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
+            this.dataObjectInstances.add(dataObjectInstance);
             logger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
-            //checks if dataObjectInstance is locked
-            if (dataObjectInstance.getOnChange()) {
-                dataObjectInstancesOnChange.add(dataObjectInstance);
-            } else {
-                dataObjectInstances.add(dataObjectInstance);
-            }
         }
     }
+
     public List<DataObjectInstance> getDataObjectInstances() {
         return dataObjectInstances;
     }
 
-    public List<DataObjectInstance> getDataObjectInstancesOnChange() {
-        return dataObjectInstancesOnChange;
+
+    /**
+     * Sets the data object to on change.
+     * Write this into the database.
+     *
+     * @param dataObjectId This is the database id from the data object.
+     * @return true if the on change could been set. false if not.
+     */
+    public Boolean lockDataobject(int dataObjectId) {
+        Optional<DataObjectInstance> dataObjectInstance =
+                this.getDataobjectInstanceForId(dataObjectId);
+
+        if (dataObjectInstance.isPresent()) {
+            dataObjectInstance.get().lock();
+        }
+        return false;
     }
+
 }
