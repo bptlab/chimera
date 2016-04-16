@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Map;
  *
  */
 public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
+
+    static final Logger LOGGER = Logger.getLogger(EventOutgoingBehavior.class);
 
     private final int controlNodeInstanceId;
 
@@ -33,7 +36,11 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
     }
 
     public void terminate(String json) {
-        this.writeDataObjects(json);
+        if (json.isEmpty()) {
+            LOGGER.info("No event json present to write data attributes from.");
+        } else {
+            this.writeDataObjects(json);
+        }
         this.terminate();
     }
 

@@ -86,10 +86,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     @Override
     public boolean terminate() {
-        EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
-                this.scenarioInstance, this.getFragmentInstanceId(),  this.getControlNodeInstanceId());
-        outgoingBehavior.terminate();
-        return true;
+        return this.terminate("");
     }
 
     public boolean terminate(String eventJson) {

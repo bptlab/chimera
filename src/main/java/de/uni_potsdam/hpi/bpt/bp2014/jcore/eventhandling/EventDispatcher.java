@@ -53,11 +53,7 @@ public final class EventDispatcher {
             @PathParam("requestKey") String requestId,
             String eventJson) {
         AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
-        if ("".equals(eventJson)) {
-            event.terminate();
-        } else {
-            event.terminate(eventJson);
-        }
+        event.terminate(eventJson);
         unregisterEvent(event);
         return Response.accepted("Event received.").build();
     }
