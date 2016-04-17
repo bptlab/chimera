@@ -150,22 +150,6 @@ public class DataDependencyWebServiceTest extends AbstractTest {
         log.debug("Leave <<testGetOutputSetDataAttributes>>");
     }
 
-    /**
-     * with a wrong scenario id and a correct instance id
-     * the respond will be a 404 with a redirected URI.
-     */
-    @Test
-    public void testGetScenarioInstanceWithWrongInstanceThrowsError() {
-        Response response = base.path("scenario/9999/instance/9999").request().get();
-        assertEquals("The Response code of getScenarioInstance was not 404",
-                404, response.getStatus());
-        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"There is no instance with the id 9999\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 
 
 }

@@ -115,6 +115,41 @@ public class ScenarioInstanceRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
+    /**
+     * Given is the Rest API
+     * with an invalid scenario id or instance id
+     * then a 400 will be returned with an error message
+     */
+    @Test
+    public void testTerminateInvalidScenarioInstance() {
+        Response response = base.path("scenario/9999/instance/72/terminate")
+                .request().post(Entity.json(null));
+        assertEquals("The Response code of terminateScenarioInstance was not 404",
+                404, response.getStatus());
+        assertEquals("Get terminateScenarioInstance does not return TEXT",
+                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+        assertEquals("The returned TEXT does not contain the expected content",
+                "Scenario or scenario instance does not exist",
+                response.readEntity(String.class));
+    }
+
+    /**
+     * Given is the Rest API
+     * with an valid scenario and instance id
+     * the instance will be terminated.
+     */
+    @Test
+    public void testTerminateScenarioInstance() {
+        Response response = base.path("scenario/1/instance/72/terminate")
+                .request().post(Entity.json(null));
+        assertEquals("The Response code of terminateScenarioInstance was not 200",
+                200, response.getStatus());
+        assertEquals("terminateScenarioInstance does not return a TEXT",
+                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+        assertEquals("The returned TEXT does not contain the expected content",
+                "Instance has been terminated",
+                response.readEntity(String.class));
+    }
 
     /**
      * then the Response will be a 201 and a json object wit the new id will be returned.
@@ -226,5 +261,23 @@ public class ScenarioInstanceRestTest extends AbstractTest {
                 "{\"error\":\"Scenario not found!\"}",
                 jsonEquals(response.readEntity(String.class)));
     }
+    /**
+     * with a wrong scenario id and a correct instance id
+     * the respond will be a 404 with a redirected URI.
+     */
+    @Test
+    public void testGetScenarioInstanceWithWrongInstanceThrowsError() {
+        Response response = base.path("scenario/9999/instance/9999").request().get();
+        assertEquals("The Response code of getScenarioInstance was not 404",
+                404, response.getStatus());
+        assertEquals("getScenarioInstance returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"message\":\"There is no instance with the id 9999\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+
 
 }

@@ -27,8 +27,6 @@ import java.util.Map;
  * to access the database directly.
  */
 @Path("interface/v2") public class RestInterface {
-
-
 	/**
 	 * Method for checking whether an address specified in the griffin editor
 	 * links to a valid running chimera instance
@@ -46,4 +44,5 @@ import java.util.Map;
 						+ version + "\"}")
 				.build();
 	}
+}
 

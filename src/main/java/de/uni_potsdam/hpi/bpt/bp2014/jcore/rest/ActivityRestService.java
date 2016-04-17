@@ -23,6 +23,7 @@ import java.util.*;
 /**
  *
  */
+@Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/activity")
 public class ActivityRestService {
     private static Logger log = Logger.getLogger(RestInterface.class);
 
@@ -50,11 +51,10 @@ public class ActivityRestService {
      * be returned.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity")
     @Produces(MediaType.APPLICATION_JSON) public Response getActivitiesOfInstance(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int instanceID,
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int instanceID,
             @QueryParam("filter") String filterString,
             @QueryParam("state") String state) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
@@ -305,12 +305,12 @@ public class ActivityRestService {
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
+    @Path("{activityId}")
     public Response getActivity(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("activityID") int activityID) {
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService
@@ -359,12 +359,12 @@ public class ActivityRestService {
      * @return a json object containing the referenced activities
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references")
+    @Path("{activityId}/references")
     public Response getReferencesForActivity(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("activityID") int activityID) {
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("activityId") int activityID) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
 
@@ -415,11 +415,11 @@ public class ActivityRestService {
      * @return Status code with regard to its success / failure
      */
     @PUT
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
+    @Path("{activityId}")
     public Response setDataAttribute(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("activityID") int activityID,
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("activityId") int activityID,
             final DataAttributeUpdateJaxBean input) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
@@ -461,11 +461,11 @@ public class ActivityRestService {
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @POST
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}")
+    @Path("{activityId}")
     public Response updateActivityState(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("activityID") int activityID,
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("activityId") int activityID,
             @QueryParam("state") String state,
             @DefaultValue("-1") @QueryParam("outputset") int outputset) {
 
@@ -557,12 +557,12 @@ public class ActivityRestService {
      * instead of the array.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input")
+    @Path("{activityId}/input")
     public Response getInputDataObjects(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("activityID") int activityID) {
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.
@@ -639,12 +639,12 @@ public class ActivityRestService {
      * instead of the array.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output")
+    @Path("{activityId}/output")
     public Response getOutputDataObjects(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int scenarioInstanceID,
-            @PathParam("activityID") int activityID) {
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService
