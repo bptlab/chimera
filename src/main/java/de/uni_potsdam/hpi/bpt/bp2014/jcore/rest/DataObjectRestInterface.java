@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  *
  */
+@Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/dataobject/")
 public class DataObjectRestInterface {
     /**
      * This method provides detailed information about an data Object.
@@ -38,12 +39,12 @@ public class DataObjectRestInterface {
      * (REDIRECT) will be returned.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataObjectID}")
+    @Path("{dataObjectId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataObject(
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int instanceID,
-            @PathParam("dataObjectID") int dataObjectID) {
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int instanceID,
+            @PathParam("dataObjectId") int dataObjectID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.existScenarioInstance(instanceID)) {
@@ -108,11 +109,10 @@ public class DataObjectRestInterface {
      * And a 404 if the instance id is wrong.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{instanceID}/dataobject")
     @Produces(MediaType.APPLICATION_JSON) public Response getDataObjects(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioID") int scenarioID,
-            @PathParam("instanceID") int instanceID,
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int instanceID,
             @QueryParam("filter") String filterString) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);

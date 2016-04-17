@@ -102,7 +102,6 @@ public class ScenarioInstanceRestTest extends AbstractTest {
     }
 
     /**
-     * When you send a Get to {@link  RestInterface#getScenarioInstances(UriInfo, int, String)}
      * with a valid scenario id and a filter
      * only instances with names containing this string will be returned.
      */
