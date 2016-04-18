@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
  *
  */
 @Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/")
-public class DataDependencyWebService {
+public class DataDependencyWebService extends AbstractRestService {
     /**
      * This method responds to a GET request
      * by returning an array of dataObjectsInstances with their dataAttributeInstances
@@ -41,11 +41,8 @@ public class DataDependencyWebService {
             @PathParam("inputsetId") int inputsetId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         if (!executionService.existScenarioInstance(scenarioId, scenarioInstanceId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "scenario instance.\"}")
-                    .build();
+            return this.buildNotFoundResponse("{\"error\":\"There is no such "
+                    + "scenario instance.\"}");
         }
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         return buildDataSetResponse(inputsetId, executionService, "inputSet", scenarioInstanceId);
@@ -78,11 +75,8 @@ public class DataDependencyWebService {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         if (!executionService.existScenarioInstance(
                 scenarioID, scenarioInstanceId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "scenario instance.\"}")
-                    .build();
+            return this.buildNotFoundResponse("{\"error\":\"There is no such "
+                    + "scenario instance.\"}");
         }
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceId);
         return buildDataSetResponse(outputsetID, executionService, "outputSet", scenarioInstanceId);
@@ -95,11 +89,8 @@ public class DataDependencyWebService {
                         setId, scenarioInstanceId);
 
         if (dataObjectInstances == null || dataObjectInstances.length == 0) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such " + setType
-                            + " instance.\"}")
-                    .build();
+            return this.buildNotFoundResponse("{\"error\":\"There is no such " + setType
+                    + " instance.\"}");
         }
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
