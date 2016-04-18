@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
  * or event.
  */
 public class DataAttributeWriter {
+    static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
+
     private final int controlNodeInstanceId;
     Map<Integer, String> attributeIdToJsonPath;
 
@@ -40,7 +43,12 @@ public class DataAttributeWriter {
             Object value = JsonPath.read(json, jsonPath);
             attributeLogger.logDataAttributeTransition(
                     instance.getDataAttributeInstanceId(), value, controlNodeInstanceId);
-            instance.setValue(value);
+            try {
+                instance.setValue(value);
+            } catch (IllegalArgumentException e) {
+                LOGGER.error(e);
+            }
+
         }
     }
 

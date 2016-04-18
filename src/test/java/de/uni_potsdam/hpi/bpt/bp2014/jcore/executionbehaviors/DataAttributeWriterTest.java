@@ -26,7 +26,7 @@ public class DataAttributeWriterTest {
     public void testWebserviceWriting() {
         int dummyControlNodeId = 0;
         int dummyControlNodeInstanceId = 0;
-        DataAttributeWriter mapping = new DataAttributeWriter(
+        DataAttributeWriter writer = new DataAttributeWriter(
                 dummyControlNodeId, dummyControlNodeInstanceId);
         List<DataAttributeInstance> attributeInstances = createExampleInstances();
         Map<Integer, String> jsonPathMap = createAttributeIdToJsonPathExample();
@@ -35,8 +35,8 @@ public class DataAttributeWriterTest {
 
         try {
             String json = FileUtils.readFileToString(file);
-            mapping.setAttributeIdToJsonPath(jsonPathMap);
-            mapping.writeDataAttributesFromJson(json, attributeInstances);
+            writer.setAttributeIdToJsonPath(jsonPathMap);
+            writer.writeDataAttributesFromJson(json, attributeInstances);
 
             // Since $a[0].b.prop1 should evaluate to foo on the example, a setValue('foo') call
             // on the Dataattribute with id 67890 is expected.
