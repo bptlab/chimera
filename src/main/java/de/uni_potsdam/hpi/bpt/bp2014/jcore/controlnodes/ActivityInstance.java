@@ -249,10 +249,11 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 *
 	 * @param values values that the attributes should be set to.
 	 */
-	public void setDataAttributeValues(Map<Integer, String> values) {
+	public boolean  setDataAttributeValues(Map<Integer, String> values) {
 		if (AbstractStateMachine.STATE.RUNNING == getStateMachine().getState()) {
-			taskExecutionBehavior.setDataAttributeValues(values);
+			return taskExecutionBehavior.setDataAttributeValues(values);
 		}
+		return false;
 	}
 
 	/**

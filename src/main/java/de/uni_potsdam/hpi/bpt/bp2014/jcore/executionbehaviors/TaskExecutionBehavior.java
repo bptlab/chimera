@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
+import org.apache.log4j.Logger;
 
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import java.util.Map;
  * Performs the execution for one activity.
  */
 public class TaskExecutionBehavior {
+	final static Logger LOGGER = Logger.getLogger(TaskExecutionBehavior.class);
+
 	private final ScenarioInstance scenarioInstance;
 	private final int activityInstanceId;
 	private final AbstractControlNodeInstance controlNodeInstance;
@@ -46,8 +49,9 @@ public class TaskExecutionBehavior {
 	/**
 	 * @param values a Map of Keys and Values.
 	 */
-	public void setDataAttributeValues(Map<Integer, String> values) {
+	public boolean setDataAttributeValues(Map<Integer, String> values) {
 		HistoryLogger attributeLogger = new HistoryLogger();
+		boolean allValuesValid = true;
 		for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
             Integer dataattributeInstanceId = attributeInstanceIdToValue.getKey();
             String value = attributeInstanceIdToValue.getValue();
@@ -57,9 +61,15 @@ public class TaskExecutionBehavior {
 
             DataAttributeInstance dataAttributeInstance = getScenarioInstance()
                     .getDataAttributeInstances().get(dataattributeInstanceId);
-            dataAttributeInstance.setValue(value);
+			if (dataAttributeInstance.isValueAllowed(value)) {
+				dataAttributeInstance.setValue(value);
+			} else {
+				LOGGER.error("Attribute value could not be set because it has the wrong data type.");
+				allValuesValid = false;
+			}
         }
         this.setCanTerminate(true);
+		return allValuesValid;
     }
 
 	public ScenarioInstance getScenarioInstance() {

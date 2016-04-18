@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.createNiceMock;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class AttributeTypeValidationTest {
 
@@ -34,34 +33,21 @@ public class AttributeTypeValidationTest {
     @Test
     public void testSettingOfCorrectValues() {
         DataAttributeInstance[] instances = mockInstances();
-
-        try {
-            instances[0].setValue("aString");
-            instances[1].setValue(true);
-            instances[2].setValue(1337);
-            instances[3].setValue(3.14D);
-            instances[4].setValue("anEnum");
-            instances[5].setValue("aClass");
-            instances[6].setValue("a:Da:te:00");
-            assert(true);
-        } catch (Exception e) {
-            fail("Typecheck for data attribute values failed.");
-        }
+        assertTrue(instances[0].isValueAllowed("aString"));
+        assertTrue(instances[1].isValueAllowed(true));
+        assertTrue(instances[2].isValueAllowed(1337));
+        assertTrue(instances[3].isValueAllowed(3.14D));
+        assertTrue(instances[4].isValueAllowed("anEnum"));
+        assertTrue(instances[5].isValueAllowed("aClass"));
+        assertTrue(instances[6].isValueAllowed("a:Da:te:00"));
     }
 
     @Test
     public void testSettingOfWrongValues() {
         DataAttributeInstance[] instances = mockInstances();
-        int count = 0;
         for(DataAttributeInstance instance : instances) {
-            try {
-                instance.setValue(new Object());
-            } catch (IllegalArgumentException e) {
-                count++;
-            }
+            assertFalse(instance.isValueAllowed(new Object()));
         }
-        assertEquals("Typecheck for data attribute values allowed values "
-                + "that should not be allowed.", 7, count);
     }
 
 

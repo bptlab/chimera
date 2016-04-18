@@ -79,6 +79,20 @@ public class DataAttributeInstance {
 		dbDataAttributeInstance.setValue(dataAttributeInstanceId, value);
 	}
 
+	/**
+	 * Checks if a given value is allowed for this attribute instance,
+	 * e.g. if it fits to the data type.
+	 * @param value
+     */
+	public boolean isValueAllowed(Object value) {
+		try {
+			validateValueType(value);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
 	private void validateValueType(Object value) {
 		String excp = "Could not set data attribute value "
 				+ "because it did not have the correct data type.";

@@ -724,8 +724,7 @@ public class ExecutionService /*implements Runnable*/ {
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
 			if (nodeInstance.getControlNodeInstanceId() == activityInstanceID) {
-				((ActivityInstance) nodeInstance).setDataAttributeValues(values);
-				return true;
+				return ((ActivityInstance) nodeInstance).setDataAttributeValues(values);
 			}
 		}
 		return false;

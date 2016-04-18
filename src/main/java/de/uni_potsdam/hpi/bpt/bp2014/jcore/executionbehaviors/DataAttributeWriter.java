@@ -43,12 +43,11 @@ public class DataAttributeWriter {
             Object value = JsonPath.read(json, jsonPath);
             attributeLogger.logDataAttributeTransition(
                     instance.getDataAttributeInstanceId(), value, controlNodeInstanceId);
-            try {
+            if (instance.isValueAllowed(value)) {
                 instance.setValue(value);
-            } catch (IllegalArgumentException e) {
-                LOGGER.error(e);
+            } else {
+                LOGGER.error("Attribute value could not be set because it has the wrong data type.");
             }
-
         }
     }
 
