@@ -48,35 +48,7 @@ public class DataDependencyWebService {
                     .build();
         }
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-
-        if (executionService.getDataObjectInstancesForDataSetId(
-                        inputsetId, scenarioInstanceId)	== null
-                || executionService
-                .getDataObjectInstancesForDataSetId(inputsetId, scenarioInstanceId)
-                .length == 0) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "inputSet instance.\"}")
-                    .build();
-        }
-        DataObjectInstance[] dataObjectInstances = executionService
-                .getDataObjectInstancesForDataSetId(inputsetId, scenarioInstanceId);
-        DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
-        for (int i = 0; i < dataObjectInstances.length; i++) {
-            DataObjectJaxBean dataObject = new DataObjectJaxBean();
-            dataObject.setSetId(inputsetId);
-            dataObject.setId(dataObjectInstances[i].getDataObjectInstanceId());
-            dataObject.setLabel(dataObjectInstances[i].getName());
-            dataObject.setState(executionService
-                    .getStateNameForDataObjectInstanceInput(
-                            dataObjectInstances[i]));
-            dataObject.setAttributeConfiguration(executionService
-                    .getDataAttributesForDataObjectInstance(
-                            dataObjectInstances[i]));
-            dataObjects[i] = dataObject;
-        }
-        return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+        return buildDataSetResponse(inputsetId, executionService, "inputSet", scenarioInstanceId);
     }
 
     /**
@@ -113,32 +85,42 @@ public class DataDependencyWebService {
                     .build();
         }
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceId);
+        return buildDataSetResponse(outputsetID, executionService, "outputSet", scenarioInstanceId);
+    }
+
+    private Response buildDataSetResponse(
+            int setId, ExecutionService executionService, String setType, int scenarioInstanceId) {
         DataObjectInstance[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(
-                        outputsetID, scenarioInstanceId);
+                        setId, scenarioInstanceId);
 
         if (dataObjectInstances == null || dataObjectInstances.length == 0) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "outputSet instance.\"}")
+                    .entity("{\"error\":\"There is no such " + setType
+                            + " instance.\"}")
                     .build();
         }
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
-            DataObjectJaxBean dataObject = new DataObjectJaxBean();
-            dataObject.setSetId(outputsetID);
-            dataObject.setId(dataObjectInstances[i].getDataObjectInstanceId());
-            dataObject.setLabel(dataObjectInstances[i].getName());
-            dataObject.setState(executionService
-                    .getStateNameForDataObjectInstanceOutput(
-                            dataObjectInstances[i], outputsetID));
-            dataObject.setAttributeConfiguration(executionService
-                    .getDataAttributesForDataObjectInstance(
-                            dataObjectInstances[i]));
-            dataObjects[i] = dataObject;
+            dataObjects[i] = buildDataObjectJaxBean(setId, dataObjectInstances[i], executionService);
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    private DataObjectJaxBean buildDataObjectJaxBean(
+            int setId, DataObjectInstance dataObjectInstance, ExecutionService executionService) {
+        DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        dataObject.setSetId(setId);
+        dataObject.setId(dataObjectInstance.getDataObjectInstanceId());
+        dataObject.setLabel(dataObjectInstance.getName());
+        dataObject.setState(executionService
+                .getStateNameForDataObjectInstanceOutput(
+                        dataObjectInstance, setId));
+        dataObject.setAttributeConfiguration(executionService
+                .getDataAttributesForDataObjectInstance(dataObjectInstance));
+        return dataObject;
+
     }
 
 }

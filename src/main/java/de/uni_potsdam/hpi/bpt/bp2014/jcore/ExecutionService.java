@@ -14,6 +14,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInsta
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -835,7 +836,8 @@ public class ExecutionService /*implements Runnable*/ {
 		return "";
 	}
 
-	/**
+
+    /**
 	 * Returns a Map with all InputSets, DataObjects and Data States for activity instance.
 	 *
 	 * @param activityInstanceId The id of the activity instance.
