@@ -21,15 +21,11 @@ import static org.junit.Assert.assertThat;
  *
  */
 public class ActivityRestTest extends AbstractTest {
-    /**
-     * Sets up the seed file for the test database.
-     */
+
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
     }
-    /**
-     * The base url of the jcore rest interface.
-     */
+
     private WebTarget base;
 
     @Override
@@ -55,11 +51,6 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with valid arguments
-     * then you should get a 200 response code and
-     * a JSONObject with the id, label of the activity and a link to the outputSet and the inputSet.
-     */
     @Test
     public void testGetActivity(){
         Response response = base.path("scenario/135/instance/808/activity/4517").request().get();
@@ -72,12 +63,8 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with an wrong scenario instance ID
-     * then a 404 with error message (inside JSON) should be returned.
-     */
     @Test
-    public void testGetActivitiesInvalidInstance() {
+    public void testNotFoundInvalidScenarioInstanceId() {
         Response response = base.path("scenario/1/instance/9999/activity").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 404",
                 404, response.getStatus());
@@ -89,12 +76,23 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with an correct parameters a state but no filter
-     * then the request should return all activities with this state.
-     */
     @Test
-    public void testGetActivitiesWithState() {
+    public void testNotFoundForInvalidScenarioId() {
+        Response response = base.path("scenario/0/instance/0/activity/1/output")
+                .request().get();
+        assertEquals("The Response code of getOutputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getOutputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+
+    @Test
+    public void testGetActivitiesStateFilter() {
         Response response = base.path("scenario/1/instance/72/activity")
                 .queryParam("state", "ready(ControlFlow)").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
@@ -108,8 +106,7 @@ public class ActivityRestTest extends AbstractTest {
     }
 
     /**
-     * with an correct parameters, an invalid state but no filter
-     * the request should return a 404 with error message
+     * TODO should this be an invalid state and 404 is the right code not 400?
      */
     @Test
     public void testGetActivitiesWithInvalidState() {
@@ -126,13 +123,8 @@ public class ActivityRestTest extends AbstractTest {
     }
 
 
-
-    /**
-     * with an correct parameters a state but no filter
-     * then the request should return all activities with this state.
-     */
     @Test
-    public void testGetActivitiesWithStateTerminated() {
+    public void testGetTerminatedActivities() {
         Response response = base.path("scenario/1/instance/72/activity")
                 .queryParam("state", "terminated").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
@@ -145,10 +137,6 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with an correct parameters a state and a filter
-     * then the request should return all activities with the state who fulfill the filter condition.
-     */
     @Test @Ignore
     public void testGetActivitiesWithStateAndFilter() {
         Response response = base.path("scenario/1/instance/72/activity")
@@ -164,31 +152,8 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with an correct parameters, an invalid state but no filter
-     * the request should return a 404 with error message
-     */
     @Test
-    public void testGetActivitiesWithInvalidStateFilter() {
-        Response response = base.path("scenario/1/instance/72/activity")
-                .queryParam("state", "enabled")
-                .queryParam("filter", "1").request().get();
-        assertEquals("The Response code of getActivitiesOfInstance was not 404",
-                404, response.getStatus());
-        assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"The state is not allowed enabled\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    /**
-     * with correct instance and scenario
-     * a 200 with json content will be returned.
-     */
-    @Test
-    public void testGetActivitiesCorrect() {
+    public void testGetActivities() {
         Response response = base.path("scenario/1/instance/72/activity").request().get();
         assertEquals("The Response code of getActivitiesOfInstance was not 200",
                 200, response.getStatus());
@@ -200,10 +165,6 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with a filter String
-     * then only activities with a label like the filter String will be returned.
-     */
     @Test @Ignore
     public void testGetActivitiesWithFilter() {
         Response response = base.path("scenario/1/instance/72/activity").queryParam("filter", "2").request().get();
@@ -217,28 +178,17 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with valid arguments
-     * then you then you should get a 200 response code and a JSONObject with the id of the inputSet and
-     * a link to get the dataObjectInstance with their dataAttributeInstance.
-     */
     @Test
     public void testGetInputDataObjects(){
         Response response = base.path("scenario/135/instance/808/activity/4518/input").request().get();
         assertEquals("The response code of getInputDataObjects was not 200", 200, response.getStatus());
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
-        // String responseJson = response.readEntity(String.class);
         assertThat("The returned JSON does not contain the expected content",
                 "[{\"id\":139,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/inputset/139\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
     }
 
-    /**
-     * with valid arguments
-     * then you then you should get a 200 response code and a JSONObject with the id of the outputSet and
-     * a link to get the dataObjectInstance with their dataAttributeInstance.
-     */
     @Test
     public void testGetOutputDataObjects(){
         Response response = base.path("scenario/135/instance/808/activity/4518/output").request().get();
@@ -249,29 +199,26 @@ public class ActivityRestTest extends AbstractTest {
                 "[{\"id\":140,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/outputset/140\"}]",
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
     }
-    /**
-     * with an invalid state
-     * a bad request with an error message should be returned.
-     */
+
     @Test
-    public void testInvalidStateUpdateActivity() {
+    public void testStateUpdateToInvalidState() {
         Response response = base.path("scenario/1/instance/72/activity/105")
-                .queryParam("state", "complete").request().post(Entity.json("[]"));
+                .queryParam("state", "invalid").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"The state transition complete is unknown\"}",
+                "{\"error\":\"The state transition invalid is unknown\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     /**
-     *
+     * TODO improve this test because it relies on previous
      */
     @Test
-    public void testInvalidStateUpdateActivity2() {
+    public void testStateWasNotSetCorrectly() {
         Response response = base.path("scenario/1/instance/72/activity/105")
                 .request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
@@ -284,13 +231,9 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     *
-     * with an valid state for an invalid activity.
-     * a bad request with an error message should be returned.
-     */
     @Test
-    public void testInvalidActivityUpdateActivity() {
+    public void testInvalidStateTransition() {
+        // An activity which is running cannot be started again
         Response response = base.path("scenario/1/instance/72/activity/105")
                 .queryParam("state", "begin").request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
@@ -303,39 +246,7 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     *
-     * with an valid state and valid activity
-     * then a 201 will be returned with a message inside a JSON-Object.
-     */
-    //@Test
-    public void testUpdateActivity() {
-        Response response = base.path("scenario/1/instance/72/activity/186")
-                .queryParam("state", "begin").request().post(Entity.json("[]"));
-        assertEquals("The Response code of updateActivityState was not 202",
-                202, response.getStatus());
-        assertEquals("Get TerminationCondition does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"activity state changed.\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-        response = base.path("scenario/1/instance/72/activity/186")
-                .queryParam("state", "terminate").request().post(Entity.json("[]"));
-        assertEquals("The Response code of updateActivityState was not 202",
-                202, response.getStatus());
-        assertEquals("Get TerminationCondition does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"activity state changed.\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 
-    /**
-     * with an valid state and valid activity
-     * then a 201 will be returned with a message inside a JSON-Object.
-     */
     @Test
     public void testUpdateActivityWAttributes(){
         // TODO Find out what this does
@@ -371,11 +282,6 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * Given: Is an invalid scenario instance
-     * with an invalid scenario and instance id
-     * a 404 with an error message is returned
-     */
     @Test
     public void testGetInputForInvalidScenario() {
         Response response = base.path("scenario/9987/instance/1234/activity/1/input")
@@ -390,13 +296,8 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * Given: Is an invalid activity instance
-     * with an invalid activity instance id
-     * a 404 with an error message is returned
-     */
     @Test
-    public void testGetInputForInvalidActivity() {
+    public void testNotFoundInputInvalidActivityId() {
         Response response = base.path("scenario/1/instance/72/activity/9999/input")
                 .request().get();
         assertEquals("The Response code of getInputDataObjects was not 404",
@@ -409,13 +310,8 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * Given: Is an valid activity instance
-     * with a valid activity instance without input sets
-     * a 404 with an error message will be returned
-     */
     @Test
-    public void testGetInputForWOInputSets() {
+    public void testGetInputForActivityWithoutInput() {
         Response response = base.path("scenario/135/instance/808/activity/4517/input")
                 .request().get();
         assertEquals("The Response code of getInputDataObjects was not 404",
@@ -428,32 +324,8 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * Given: Is an invalid scenario instance
-     * with an invalid scenario and instance id
-     * a 404 with an error message is returned
-     */
     @Test
-    public void testGetOutputForInvalidScenario() {
-        Response response = base.path("scenario/0/instance/0/activity/1/output")
-                .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getOutputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    /**
-     * Given: Is an invalid activity instance
-     * with an invalid activity instance id
-     * a 404 with an error message is returned
-     */
-    @Test
-    public void testGetOutputInvalidActivity() {
+    public void testNotFoundInvalidActivityId() {
         Response response = base.path("scenario/1/instance/72/activity/9999/output")
                 .request().get();
         assertEquals("The Response code of getOutputDataObjects was not 404",
@@ -466,13 +338,8 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * Given: Is an valid activity instance
-     * with a valid activity instance without input sets
-     * a 404 with an error message will be returned
-     */
     @Test
-    public void testGetOutputForWOOutputSets() {
+    public void testGetOutputForActivityWithoutOutput() {
         Response response = base.path("scenario/118/instance/704/activity/3749/output")
                 .request().get();
         assertEquals("The Response code of getOutputDataObjects was not 404",
@@ -484,5 +351,4 @@ public class ActivityRestTest extends AbstractTest {
                 jsonEquals("{\"error\":\"There is no outputSet for this activity instance.\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
-
 }

@@ -22,10 +22,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 /**
- *
+ * Test methods of the ScenarioRestService {@link ScenarioRestService}
  */
 public class ScenarioRestTest extends AbstractTest {
-    static Logger log = Logger.getLogger(ScenarioRestService.class);
 
     /**
      * Sets up the seed file for the test database.
@@ -33,10 +32,7 @@ public class ScenarioRestTest extends AbstractTest {
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
     }
-    /**
-     * The base url of the jcore rest interface.
-     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
-     */
+
     private WebTarget base;
 
     @Override
@@ -50,9 +46,8 @@ public class ScenarioRestTest extends AbstractTest {
     }
 
     /**
-     * you use a Filter
-     * then the returned JSON will contain the latest version of all Scenarios with
-     * a name containing the filterString.
+     * When querying scenarios with a filter parameter the response should be a json string
+     * containing the links to the scenarios containing the filter string in the name.
      */
     @Test
     public void testGetScenarioContentWithFilter() {
@@ -62,10 +57,6 @@ public class ScenarioRestTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-
-    /**
-     * the returned JSON will contain the latest version of all Scenarios.
-     */
     @Test
     public void testGetScenarioContent() {
         Response response = base.path("scenario").request().get();
@@ -74,10 +65,6 @@ public class ScenarioRestTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-
-    /**
-     * the media type of the response will be JSON.
-     */
     @Test
     public void testGetScenarioProducesJson() {
         Response response = base.path("scenario").request().get();
@@ -88,6 +75,7 @@ public class ScenarioRestTest extends AbstractTest {
     }
 
     /**
+     * TODO fix this test
      * the entity of the response will be a valid JSON array.
      */
     @Test
@@ -100,7 +88,7 @@ public class ScenarioRestTest extends AbstractTest {
 
 
     /**
-     * a empty JSON with a 404 will be returned.
+     * {@link ScenarioRestService#getScenarios(UriInfo, String)}
      */
     @Test
     public void testGetScenarioInvalidId() {
@@ -114,10 +102,6 @@ public class ScenarioRestTest extends AbstractTest {
                 response.readEntity(String.class));
     }
 
-    /**
-     * with an valid id
-     * then a JSON with the termination condition will be returned
-     */
     @Test
     public void testGetTerminationCondition() {
         Response response = base.path("scenario/105/terminationcondition").request().get();
@@ -131,12 +115,9 @@ public class ScenarioRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * with an invalid id
-     * then a 404 with an error message should be returned
-     */
+
     @Test
-    public void testInvalidGetTerminationCondition() {
+    public void testTerminationConditionNotFound() {
         Response response = base.path("scenario/102/terminationcondition").request().get();
         assertEquals("The Response code of getTerminationCondition was not 404",
                 404, response.getStatus());
@@ -148,9 +129,6 @@ public class ScenarioRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    /**
-     * a JSON containing the id, name and modelversion will be returned.
-     */
     @Test
     public void testGetScenario() {
         Response response = base.path("scenario/1").request().get();

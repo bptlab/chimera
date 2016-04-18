@@ -21,26 +21,12 @@ import javax.ws.rs.core.UriInfo;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
 
-/**
- * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
- * to test the RestInterface of the JEngine core.
- * In order to do so it uses the functionality of the
- * {@link org.glassfish.jersey.test.JerseyTest}
- * There are test methods for every possible REST Call.
- * In order to stay independent from existing tests, the
- * database will be set up before and after the execution.
- * Define the database Properties inside the database_connection file.
- */
 public class RestInterfaceTest extends AbstractTest {
 
     static {
         TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
     }
 
-    /**
-     * The base url of the jcore rest interface.
-     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
-     */
     private WebTarget base;
 
     @Override
@@ -54,9 +40,6 @@ public class RestInterfaceTest extends AbstractTest {
     }
 
 
-    /**
-     * test that getVersion() gives a valid response.
-      */
     @Test
     public void testGetVersion() {
         Response response = base.path("version").request().get();
