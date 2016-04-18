@@ -18517,24 +18517,24 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
 
 INSERT INTO `dataattribute` (`id`, `name`, `type`, `default`, `dataclass_id`) VALUES
 (1, 'Fuellstand', 'String', 'voll', 43),
-(2, 'Milch', 'int', '2', 44),
-(3, 'Zucker', 'int', '5', 44),
-(4, 'Gehalt', 'int', '12500', 51),
-(5, 'Datum', 'int', '2015', 51),
+(2, 'Milch', 'String', '2', 44),
+(3, 'Zucker', 'String', '5', 44),
+(4, 'Gehalt', 'String', '12500', 51),
+(5, 'Datum', 'String', '2015', 51),
 (6, 'Vorname', 'String', 'Stephan', 51),
 (7, 'Nachname', 'String', 'Karphen', 51),
-(8, 'A', 'int', '2', 53),
-(9, 'B', 'int', '6', 53),
-(10, 'Schmutzgrad', '', '11', 56),
-(11, 'Fuellstand', '', '7', 57),
-(12, 'Attribut1', '', '', 58),
-(13, 'Attribut2', '', '', 58),
-(14, 'Attribut1', '', '', 59),
-(15, 'Attribut2', '', '', 59),
-(16, 'Attribut1', '', '', 60),
-(17, 'Attribut2', '', '', 60),
-(18, 'Preis', '', '', 61),
-(19, 'Artikel', '', '', 61);
+(8, 'A', 'String', '2', 53),
+(9, 'B', 'String', '6', 53),
+(10, 'Schmutzgrad', 'String', '11', 56),
+(11, 'Fuellstand', 'String', '7', 57),
+(12, 'Attribut1', 'String', '', 58),
+(13, 'Attribut2', 'String', '', 58),
+(14, 'Attribut1', 'String', '', 59),
+(15, 'Attribut2', 'String', '', 59),
+(16, 'Attribut1', 'String', '', 60),
+(17, 'Attribut2', 'String', '', 60),
+(18, 'Preis', 'String', '', 61),
+(19, 'Artikel', 'String', '', 61);
 
 -- --------------------------------------------------------
 

@@ -13234,9 +13234,9 @@ CREATE TABLE IF NOT EXISTS `dataattribute` (
 --
 
 INSERT INTO `dataattribute` (`ID`, `name`, `type`, `default`, `dataclass_id`) VALUES
-(1, 'Preis', '', '', 35),
-(2, 'Attribut1', '', '', -1),
-(3, 'Attribut2', '', '', -1);
+(1, 'Preis', 'String', '', 35),
+(2, 'Attribut1', 'String', '', -1),
+(3, 'Attribut2', 'String', '', -1);
 
 -- --------------------------------------------------------
 
