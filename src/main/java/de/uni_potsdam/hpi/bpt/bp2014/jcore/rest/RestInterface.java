@@ -1286,18 +1286,27 @@ import java.util.LinkedList;
 			values.put(input.getId(), input.getValue());
 		}
 
-		if (executionService
-				.setDataAttributeValues(scenarioInstanceID, activityID, values)) {
-			return Response.status(Response.Status.ACCEPTED)
-					.type(MediaType.APPLICATION_JSON)
-					.entity("{\"message\":\"attribute value was "
-							+ "changed successfully.\"}")
-					.build();
-		} else {
+		try {
+			if (executionService
+					.setDataAttributeValues(scenarioInstanceID, activityID, values)) {
+				return Response.status(Response.Status.ACCEPTED)
+						.type(MediaType.APPLICATION_JSON)
+						.entity("{\"message\":\"Attribute value was "
+								+ "changed successfully.\"}")
+						.build();
+			} else {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.type(MediaType.APPLICATION_JSON)
+						.entity("{\"error\":\"No running activity "
+								+ "with the given id found.\"}")
+						.build();
+			}
+		} catch (IllegalArgumentException e) {
+			log.error(e);
 			return Response.status(Response.Status.BAD_REQUEST)
 					.type(MediaType.APPLICATION_JSON)
-					.entity("{\"error\":\"error within the "
-							+ "update of attributes\"}")
+					.entity("{\"error\":\"Given value did not match "
+							+ "the attribute data type.\"}")
 					.build();
 		}
 	}

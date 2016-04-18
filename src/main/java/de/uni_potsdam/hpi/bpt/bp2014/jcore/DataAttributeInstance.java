@@ -3,6 +3,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
+import javax.transaction.NotSupportedException;
+import java.util.Date;
+
 /**
  *
  */
@@ -65,13 +68,46 @@ public class DataAttributeInstance {
 	}
 
 	/**
-	 * Sets the value of the data attribute instance. It get also written in the database.
+	 * Checks if the value has the correct type.
+	 * If so, sets the value of the data attribute instance. It get also written in the database.
 	 *
 	 * @param value to set.
 	 */
 	public void setValue(Object value) {
+		validateValueType(value);
 		this.value = value;
 		dbDataAttributeInstance.setValue(dataAttributeInstanceId, value);
+	}
+
+	private void validateValueType(Object value) {
+		String excp = "Could not set data attribute value "
+				+ "because it did not have the correct data type.";
+		switch(type) {
+			case "Integer":
+				if (!(value instanceof Integer))
+					throw new IllegalArgumentException(excp);
+				break;
+			case "Double":
+				if (!(value instanceof Double))
+					throw new IllegalArgumentException(excp);
+				break;
+			case "Boolean":
+				if (!(value instanceof Boolean))
+					throw new IllegalArgumentException(excp);
+				break;
+			case "Date":
+				if (!(value instanceof String) && !(value instanceof Date))
+					throw new IllegalArgumentException(excp);
+				break;
+			case "String":
+			case "Enum":
+			case "Class":
+				if (!(value instanceof String))
+					throw new IllegalArgumentException(excp);
+				break;
+			default:
+				throw new IllegalArgumentException("Attribute data type is not supported.");
+		}
 	}
 
 	/**
