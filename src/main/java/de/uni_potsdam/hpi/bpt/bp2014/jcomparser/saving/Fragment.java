@@ -153,6 +153,7 @@ public class Fragment {
     public List<AbstractControlNode> getControlNodes() {
         List<AbstractControlNode> nodes = new ArrayList<>();
         nodes.addAll(this.fragmentXml.getXorGateways());
+        nodes.addAll(this.fragmentXml.getAndGateways());
         nodes.addAll(this.fragmentXml.getAllActivities());
         nodes.addAll(this.fragmentXml.getIntermediateEvents());
         nodes.addAll(this.fragmentXml.getBoundaryEvents());

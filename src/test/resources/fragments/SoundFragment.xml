@@ -54,13 +54,13 @@
         <bpmn:sequenceFlow id="SequenceFlow_08rfwur" sourceRef="ParallelGateway_1kginh1" targetRef="ExclusiveGateway_06n0nba" />
         <bpmn:sequenceFlow id="SequenceFlow_1wck45k" sourceRef="ExclusiveGateway_06n0nba" targetRef="EndEvent_0cah2hq" />
         <bpmn:sequenceFlow id="SequenceFlow_0p0c7on" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_07yqw56" />
-        <!-- <bpmn:sequenceFlow id="SequenceFlow_0omr0ou" sourceRef="BoundaryEvent_1xpshoi" targetRef="ExclusiveGateway_06n0nba" /> -->
+         <bpmn:sequenceFlow id="SequenceFlow_0omr0ou" sourceRef="BoundaryEvent_1xpshoi" targetRef="ExclusiveGateway_06n0nba" />
         <bpmn:sequenceFlow id="SequenceFlow_000lc1j" sourceRef="Task_18yr7cq" targetRef="IntermediateCatchEvent_1b172nh" />
         <bpmn:sequenceFlow id="SequenceFlow_18c7woe" sourceRef="IntermediateCatchEvent_1b172nh" targetRef="ExclusiveGateway_06n0nba" />
-        <!-- <bpmn:boundaryEvent id="BoundaryEvent_1xpshoi" attachedToRef="Task_02d63f1">
+         <bpmn:boundaryEvent id="BoundaryEvent_1xpshoi" attachedToRef="Task_02d63f1">
             <bpmn:outgoing>SequenceFlow_0omr0ou</bpmn:outgoing>
             <bpmn:messageEventDefinition />
-        </bpmn:boundaryEvent> -->
+        </bpmn:boundaryEvent>
         <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1b172nh">
             <bpmn:incoming>SequenceFlow_000lc1j</bpmn:incoming>
             <bpmn:outgoing>SequenceFlow_18c7woe</bpmn:outgoing>
@@ -219,12 +219,12 @@
                     <dc:Bounds x="706.5" y="260" width="90" height="20" />
                 </bpmndi:BPMNLabel>
             </bpmndi:BPMNEdge>
-            <!-- <bpmndi:BPMNShape id="BoundaryEvent_1xpshoi_di" bpmnElement="BoundaryEvent_1xpshoi">
+             <bpmndi:BPMNShape id="BoundaryEvent_1xpshoi_di" bpmnElement="BoundaryEvent_1xpshoi">
                 <dc:Bounds x="689" y="187" width="36" height="36" />
                 <bpmndi:BPMNLabel>
                     <dc:Bounds x="662" y="223" width="90" height="20" />
                 </bpmndi:BPMNLabel>
-            </bpmndi:BPMNShape> -->
+            </bpmndi:BPMNShape>
             <bpmndi:BPMNShape id="IntermediateCatchEvent_1b172nh_di" bpmnElement="IntermediateCatchEvent_1b172nh">
                 <dc:Bounds x="535" y="252" width="36" height="36" />
                 <bpmndi:BPMNLabel>

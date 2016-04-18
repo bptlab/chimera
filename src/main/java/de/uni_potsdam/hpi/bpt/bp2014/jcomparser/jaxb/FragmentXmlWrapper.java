@@ -38,6 +38,10 @@ public class FragmentXmlWrapper {
         return this.bpmnProcessXml.getXorGateways();
     }
 
+    public List<ParallelGateway> getAndGateways() {
+        return this.bpmnProcessXml.getAndGateways();
+    }
+
 
     public EndEvent getEndEvent() {
         return this.bpmnProcessXml.getEndEvent();

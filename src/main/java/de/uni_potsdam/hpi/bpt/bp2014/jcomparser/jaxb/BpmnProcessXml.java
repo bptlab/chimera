@@ -19,6 +19,9 @@ public class BpmnProcessXml {
     @XmlElement(name = "bpmn:exclusiveGateway")
     private List<ExclusiveGateway> xorGateways = new ArrayList<>();
 
+    @XmlElement(name = "bpmn:parallelGateway")
+    private List<ParallelGateway> andGateways = new ArrayList<>();
+
     @XmlElement(name = "bpmn:startEvent")
     private StartEvent startEvent;
 
@@ -121,5 +124,13 @@ public class BpmnProcessXml {
 
     public List<WebServiceTask> getWebServiceTasks() {
         return webServiceTasks;
+    }
+
+    public List<ParallelGateway> getAndGateways() {
+        return andGateways;
+    }
+
+    public void setAndGateways(List<ParallelGateway> andGateways) {
+        this.andGateways = andGateways;
     }
 }
