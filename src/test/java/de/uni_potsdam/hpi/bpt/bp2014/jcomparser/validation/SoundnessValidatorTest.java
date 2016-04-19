@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  */
 public class SoundnessValidatorTest {
 
-    private Set<String> nodes = new HashSet<>(Arrays.asList("A", "B", "C", "D", "E", "F"));
+    private final Set<String> nodes = new HashSet<>(Arrays.asList("A", "B", "C", "D", "E", "F"));
 
     /**
      * Create a graph containing a cycle, multiple sinks and a detached node.
@@ -88,7 +88,7 @@ public class SoundnessValidatorTest {
     }
 
     @Test
-    public void testValidateStructuralSoundness2() throws Exception {
+    public void testValidateStructuralSoundness2() {
         String path = "src/test/resources/fragments/SoundFragment.xml";
         String path2 = "src/test/resources/fragments/SmallFragment.xml";
         try {
@@ -104,7 +104,7 @@ public class SoundnessValidatorTest {
     }
 
     @Test
-    public void testBuildGraphFromFragment() throws Exception {
+    public void testBuildGraphFromFragment() {
         String path = "src/test/resources/fragments/SmallFragment.xml";
         try {
             Fragment fragment = FragmentTestHelper.createFragment(path);
@@ -116,14 +116,14 @@ public class SoundnessValidatorTest {
     }
 
     @Test
-    public void testBuildReverseGraph() throws Exception {
+    public void testBuildReverseGraph() {
         assertEquals("The reverse graph wasn't build correctly", getReverseGraph(), SoundnessValidator.buildReverseGraph(getSampleGraph()));
         assertEquals("The reverse graph wasn't build correctly", getSampleGraph(),
                 SoundnessValidator.buildReverseGraph(SoundnessValidator.buildReverseGraph(getSampleGraph())));
     }
 
     @Test
-    public void testCheckOnlyOneEnd() throws Exception {
+    public void testCheckOnlyOneEnd() {
         Set<String> connectedNodes = nodes;
         connectedNodes.remove("C"); // C is not connected and thus not part of the graph
         assertFalse("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(connectedNodes, getSampleGraph()));
@@ -131,12 +131,12 @@ public class SoundnessValidatorTest {
     }
 
     @Test
-    public void testGetLastNode() throws Exception {
+    public void testGetLastNode() {
         assertEquals("Couldn't identify last node correctly", "A", SoundnessValidator.getLastNode(nodes, getReverseGraph()));
     }
 
     @Test
-    public void testGetReachableNodes() throws Exception {
+    public void testGetReachableNodes() {
         Set<String> expected = nodes;
         expected.remove("C"); // C is not connected and thus not reachable
         assertEquals("Reachable nodes weren't identified correctly",
