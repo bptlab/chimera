@@ -33,9 +33,7 @@ import static org.junit.Assert.*;
  * Define the database Properties inside the database_connection file.
  */
 public class RestInterfaceTest extends AbstractTest {
-
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JUserManagement.sql";
-
+    
     /**
      * The base url of the rest interface.
      * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.rest.RestInterface}.
@@ -46,7 +44,9 @@ public class RestInterfaceTest extends AbstractTest {
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+        runner.runScript(new FileReader(JUSERMANAGEMENT_SQL_FILE));
+        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+
     }
 
     @Override
