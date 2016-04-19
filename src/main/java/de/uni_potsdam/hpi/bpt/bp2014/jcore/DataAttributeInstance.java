@@ -96,7 +96,7 @@ public class DataAttributeInstance {
 	private void validateValueType(Object value) {
 		String excp = "Could not set data attribute value "
 				+ "because it did not have the correct data type.";
-		switch(type) {
+		switch(this.getType()) {
 			case "Integer":
 				if (!(value instanceof Integer))
 					throw new IllegalArgumentException(excp);

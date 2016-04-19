@@ -56,10 +56,12 @@ public class DataAttributeWriterTest {
     private List<DataAttributeInstance> createExampleInstances() {
         DataAttributeInstance firstDataAttributeInstance = createNiceMock(DataAttributeInstance.class);
         expect(firstDataAttributeInstance.getDataAttributeInstanceId()).andReturn(12345);
+        // expect(firstDataAttributeInstance.getType()).andReturn("String");
         replay(firstDataAttributeInstance);
 
         DataAttributeInstance secondDataAttributeInstance = createNiceMock(DataAttributeInstance.class);
         expect(secondDataAttributeInstance.getDataAttributeInstanceId()).andReturn(67890);
+        expect(secondDataAttributeInstance.isValueAllowed("foo")).andReturn(true);
         secondDataAttributeInstance.setValue("foo");
         EasyMock.expectLastCall().once();
         replay(secondDataAttributeInstance);

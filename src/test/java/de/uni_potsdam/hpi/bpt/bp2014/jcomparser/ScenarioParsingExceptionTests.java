@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.ScenarioRestService;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -29,7 +30,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(RestInterface.class);
+        return new ResourceConfig(ScenarioRestService.class);
     }
 
     @After
