@@ -46,7 +46,7 @@ public abstract class AbstractTest extends JerseyTest {
         try {
             //Execute a querystmt = conn.createStatement();
             stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE JUserManagement");
+            stmt.execute("DROP DATABASE IF EXISTS JUserManagement");
             stmt.execute("CREATE DATABASE JUserManagement");
         } catch (SQLException se) {
             //Handle errors for JDBC

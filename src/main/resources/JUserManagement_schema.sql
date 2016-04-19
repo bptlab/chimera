@@ -22,6 +22,8 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+CREATE DATABASE JUserManagement;
+USE JUserManagement;
 --
 -- Table structure for table `role`
 --

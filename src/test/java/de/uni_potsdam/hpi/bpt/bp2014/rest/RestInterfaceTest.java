@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
  * Define the database Properties inside the database_connection file.
  */
 public class RestInterfaceTest extends AbstractTest {
-    
+
     /**
      * The base url of the rest interface.
      * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.rest.RestInterface}.
