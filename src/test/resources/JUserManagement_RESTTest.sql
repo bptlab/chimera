@@ -20,20 +20,6 @@ SET time_zone = "+00:00";
 -- Database: `JUserManagement`
 --
 
--- --------------------------------------------------------
-
---
--- Table structure for table `role`
---
-
-CREATE TABLE IF NOT EXISTS `role` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rolename` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `admin_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
-
 --
 -- Dumping data for table `role`
 --
@@ -45,18 +31,6 @@ INSERT INTO `role` (`id`, `rolename`, `description`, `admin_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
---
-
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `role_id` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
-
---
 -- Dumping data for table `user`
 --
 
@@ -66,7 +40,3 @@ INSERT INTO `user` (`id`, `username`, `role_id`, `description`) VALUES
 (3, 'Lisa', 1, ''),
 (4, 'Steffi', 10, 'Manager'),
 (5, 'Rolf', 10, 'Top Manager');
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

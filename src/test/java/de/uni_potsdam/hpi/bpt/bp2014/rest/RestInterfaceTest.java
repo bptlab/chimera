@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
+package de.uni_potsdam.hpi.bpt.bp2014.rest;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
@@ -35,12 +35,7 @@ import static org.junit.Assert.*;
 public class RestInterfaceTest extends AbstractTest {
 
     private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JUserManagement.sql";
-    /**
-     * Sets up the seed file for the test database.
-     */
-    static {
-        TEST_SQL_SEED_FILE = "src/test/resources/JUserManagement_RESTTest.sql";
-    }
+
     /**
      * The base url of the rest interface.
      * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.rest.RestInterface}.

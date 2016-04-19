@@ -14,10 +14,11 @@ import java.sql.Statement;
  * An Abstract class for Rest Tests
  */
 public abstract class AbstractTest extends JerseyTest {
-    /**
-     * The Database Seed file.
-     */
-    public static String TEST_SQL_SEED_FILE = "src/test/resources/JUserManagement_RESTTest.sql";
+
+    protected static final String JUSERMANAGEMENT_SQL_FILE =
+            "src/main/resources/JUserManagement_schema.sql";
+    protected static final String TEST_SQL_SEED_FILE =
+            "src/test/resources/JUserManagement_RESTTest.sql";
 
     /**
      * Sets up the database for RestTests.
@@ -29,6 +30,7 @@ public abstract class AbstractTest extends JerseyTest {
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(JUSERMANAGEMENT_SQL_FILE));
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
 
