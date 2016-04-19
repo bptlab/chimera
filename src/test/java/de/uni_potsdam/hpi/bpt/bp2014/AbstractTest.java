@@ -37,6 +37,7 @@ public abstract class AbstractTest extends JerseyTest {
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
         ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
     
@@ -60,7 +61,7 @@ public abstract class AbstractTest extends JerseyTest {
             //Execute a querystmt = conn.createStatement();
             stmt = conn.createStatement();
             stmt.execute("DROP DATABASE " + TEST_DB_SCHEMA); 
-            stmt.execute("CREATE DATABASE " + TEST_DB_SCHEMA);
+            //stmt.execute("CREATE DATABASE " + TEST_DB_SCHEMA);
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
