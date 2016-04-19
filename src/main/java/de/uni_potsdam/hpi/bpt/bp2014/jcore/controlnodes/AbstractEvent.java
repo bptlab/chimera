@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private int controlNodeId;
     private String queryString;
-
+    private EventOutgoingBehavior outgoingBehavior;
     /**
      *
      * @param controlNodeId id of the abstract control node which represents the event.
@@ -28,6 +28,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
             int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance) {
         this.controlNodeId = controlNodeId;
         this.scenarioInstance = scenarioInstance;
+        this.setFragmentInstanceId(fragmentInstanceId);
 
         DbControlNodeInstance databaseNodeInstance = new DbControlNodeInstance();
         if (!databaseNodeInstance.existControlNodeInstance(controlNodeId, fragmentInstanceId)) {
@@ -38,7 +39,12 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
             this.setControlNodeInstanceId(databaseNodeInstance.getControlNodeInstanceID(
                     controlNodeId, fragmentInstanceId));
         }
+        outgoingBehavior = this.createOutgoingBehavior();
+    }
 
+    protected EventOutgoingBehavior createOutgoingBehavior() {
+        return new EventOutgoingBehavior(controlNodeId,
+                scenarioInstance, getFragmentInstanceId(), getControlNodeInstanceId());
     }
 
     public abstract String getType();
@@ -63,6 +69,11 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     @Override
     public void setControlNodeId(int controlNodeId) {
         this.controlNodeId = controlNodeId;
+    }
+
+    @Override
+    public EventOutgoingBehavior getOutgoingBehavior() {
+        return this.outgoingBehavior;
     }
 
     protected void registerEvent() {
@@ -90,11 +101,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     }
 
     public boolean terminate(String eventJson) {
-        EventOutgoingBehavior outgoingBehavior = new EventOutgoingBehavior(this.getControlNodeId(),
-                this.scenarioInstance, this.getFragmentInstanceId(), this.getControlNodeInstanceId());
         outgoingBehavior.terminate(eventJson);
         return true;
     }
-
-
 }

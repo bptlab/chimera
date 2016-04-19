@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.BoundaryEventOutgoingBehavior;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
 
 /**
  *
@@ -29,4 +30,11 @@ public class BoundaryEvent extends AbstractEvent {
     public boolean skip() {
         return false;
     }
+
+    @Override
+    protected EventOutgoingBehavior createOutgoingBehavior() {
+        return new BoundaryEventOutgoingBehavior(this.getControlNodeId(),
+                scenarioInstance, getFragmentInstanceId(), getControlNodeInstanceId());
+    }
+
 }
