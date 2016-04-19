@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation;
 
+import de.uni_potsdam.hpi.bpt.bp2014.FragmentTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
@@ -47,71 +48,91 @@ public class SoundnessValidatorTest {
         return reverseGraph;
     }
 
-    private Fragment getFragmentNotSound() {
-        //Since we need fragments in various tests, we should extract something like "createFragmentFromFile()"
-        String path = "src/test/resources/fragments/FragmentNotSound.xml";
-        File file = new File(path);
-        try {
-            String xml = FileUtils.readFileToString(file);
-            int versionNumber = 0;
-            String fragmentName = "aDummyName";
-            String fragmentId = "aDummyId";
-            return new Fragment(xml, versionNumber, fragmentName, fragmentId);
-
-        } catch (IOException | JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private Fragment getSoundFragment() {
-        //Since we need fragments in various tests, we should extract something like "createFragmentFromFile()"
-        String path = "src/test/resources/fragments/SoundFragment.xml";
-        File file = new File(path);
-        try {
-            String xml = FileUtils.readFileToString(file);
-            int versionNumber = 0;
-            String fragmentName = "aDummyName";
-            String fragmentId = "aDummyId";
-            return new Fragment(xml, versionNumber, fragmentName, fragmentId);
-
-        } catch (IOException | JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
+    /**
+     * Create a graph for "src/test/resources/fragments/SmallFragment.xml"
+     * @return the graph for the SmallFragment.
+     */
+    private Map<String, Set<String>> getComplexGraph() {
+        Map<String, Set<String>> graph = new HashMap<>();
+        graph.put("start", new HashSet<>(Collections.singletonList("startToAndSplit")));
+        graph.put("startToAndSplit", new HashSet<>(Collections.singletonList("andSplit")));
+        graph.put("andSplit", new HashSet<>(Arrays.asList("andSplitToA", "andSplitToXorSplit")));
+        graph.put("andSplitToA", new HashSet<>(Collections.singletonList("A")));
+        graph.put("A", new HashSet<>(Collections.singletonList("AToAndJoin")));
+        graph.put("AToAndJoin", new HashSet<>(Collections.singletonList("andJoin")));
+        graph.put("andSplitToXorSplit", new HashSet<>(Collections.singletonList("xorSplit")));
+        graph.put("xorSplit", new HashSet<>(Arrays.asList("xorSplitToB", "xorSplitToC")));
+        graph.put("xorSplitToB", new HashSet<>(Collections.singletonList("B")));
+        graph.put("B", new HashSet<>(Collections.singletonList("BToXorJoin")));
+        graph.put("BToXorJoin", new HashSet<>(Collections.singletonList("xorJoin")));
+        graph.put("xorSplitToC", new HashSet<>(Collections.singletonList("C")));
+        graph.put("C", new HashSet<>(Collections.singletonList("CToXorJoin")));
+        graph.put("CToXorJoin", new HashSet<>(Collections.singletonList("xorJoin")));
+        graph.put("xorJoin", new HashSet<>(Collections.singletonList("xorJoinToAndJoin")));
+        graph.put("xorJoinToAndJoin", new HashSet<>(Collections.singletonList("andJoin")));
+        graph.put("andJoin", new HashSet<>(Collections.singletonList("andJoinToEnd")));
+        graph.put("andJoinToEnd", new HashSet<>(Collections.singletonList("end")));
+        return graph;
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testValidateStructuralSoundness() throws Exception {
-        SoundnessValidator.validateStructuralSoundness(getFragmentNotSound());
+    public void testValidateStructuralSoundness() {
+        String path = "src/test/resources/fragments/FragmentNotSound.xml";
+        try {
+            Fragment fragment = FragmentTestHelper.createFragment(path);
+            SoundnessValidator.validateStructuralSoundness(fragment);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Couldn't load the test fragment.");
+        }
     }
 
     @Test
     public void testValidateStructuralSoundness2() throws Exception {
-        SoundnessValidator.validateStructuralSoundness(getSoundFragment());
-        assert true;
+        String path = "src/test/resources/fragments/SoundFragment.xml";
+        String path2 = "src/test/resources/fragments/SmallFragment.xml";
+        try {
+            Fragment fragment = FragmentTestHelper.createFragment(path);
+            SoundnessValidator.validateStructuralSoundness(fragment);
+            Fragment fragment2 = FragmentTestHelper.createFragment(path2);
+            SoundnessValidator.validateStructuralSoundness(fragment2);
+            assert true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Couldn't load the test fragment.");
+        }
+    }
+
+    @Test
+    public void testBuildGraphFromFragment() throws Exception {
+        String path = "src/test/resources/fragments/SmallFragment.xml";
+        try {
+            Fragment fragment = FragmentTestHelper.createFragment(path);
+            assertEquals("Couldn't build the graph correctly", getComplexGraph(), SoundnessValidator.buildGraphFromFragment(fragment));
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Couldn't load the test fragment.");
+        }
+    }
+
+    @Test
+    public void testBuildReverseGraph() throws Exception {
+        assertEquals("The reverse graph wasn't build correctly", getReverseGraph(), SoundnessValidator.buildReverseGraph(getSampleGraph()));
+        assertEquals("The reverse graph wasn't build correctly", getSampleGraph(),
+                SoundnessValidator.buildReverseGraph(SoundnessValidator.buildReverseGraph(getSampleGraph())));
+    }
+
+    @Test
+    public void testCheckOnlyOneEnd() throws Exception {
+        Set<String> connectedNodes = nodes;
+        connectedNodes.remove("C"); // C is not connected and thus not part of the graph
+        assertFalse("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(connectedNodes, getSampleGraph()));
+        assertTrue("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(connectedNodes, getReverseGraph()));
     }
 
     @Test
     public void testGetLastNode() throws Exception {
         assertEquals("Couldn't identify last node correctly", "A", SoundnessValidator.getLastNode(nodes, getReverseGraph()));
-    }
-
-    @Ignore @Test
-    public void testBuildGraphFromFragment() throws Exception {
-        //maybe we can use an invalid bpmn-diagram to simplify this test
-        //assertEquals("Couldn't build the graph correctly", getSampleGraph(), SoundnessValidator.buildGraphFromFragment(fragment));
-    }
-
-    @Test
-    public void testBuildReverseGraph() throws Exception {
-        assertEquals("The reverse graph wan't build correctly", getReverseGraph(), SoundnessValidator.buildReverseGraph(getSampleGraph()));
-    }
-
-    @Test
-    public void testCheckOnlyOneEnd() throws Exception {
-        assertFalse("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(nodes, getSampleGraph()));
-        assertTrue("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(nodes, getReverseGraph()));
     }
 
     @Test

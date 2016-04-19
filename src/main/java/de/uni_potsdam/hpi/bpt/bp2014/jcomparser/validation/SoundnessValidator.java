@@ -31,7 +31,7 @@ public class SoundnessValidator {
         String end = getLastNode(nodes, graph);
         Set<String> reachableFromStart = getReachableNodes(start, graph);
         Set<String> reachableFromEnd = getReachableNodes(end, reverseGraph);
-        if (reachableFromStart.size() == reachableFromEnd.size()) {
+        if (reachableFromStart.size() != reachableFromEnd.size()) {
             throw new IllegalArgumentException("The fragment is not structural sound");
         }
     }
@@ -68,15 +68,23 @@ public class SoundnessValidator {
         return reverseGraph;
     }
 
+    /**
+     * A place with no outgoing edges must be an output place,
+     * so we can check by subtracting nodes with outgoing edges from the list of all nodes.
+     * @param originalNodes A list of all nodes in the fragment.
+     * @param graph The graph of the fragment.
+     * @return a Boolean stating whether there is exactly one output place.
+     */
     public static Boolean checkOnlyOneEnd(
-            Set<String> nodes, Map<String, Set<String>> graph) {
-        //idea: a place with no outgoing edges must be an output place.
+            Set<String> originalNodes, Map<String, Set<String>> graph) {
+        Set<String> nodes = new HashSet<>(originalNodes);
         nodes.removeAll(graph.keySet());
         return nodes.size() == 1;
     }
 
     public static String getLastNode(
-            Set<String> nodes, Map<String, Set<String>> graph) {
+            Set<String> originalNodes, Map<String, Set<String>> graph) {
+        Set<String> nodes = new HashSet<>(originalNodes);
         nodes.removeAll(graph.keySet());
         return nodes.iterator().next();
     }

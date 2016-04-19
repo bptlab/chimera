@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 
 import javax.xml.bind.annotation.*;
-import java.util.Map;
+import java.util.*;
 
 /**
  * .
