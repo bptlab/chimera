@@ -98,7 +98,7 @@ public class DataObjectRestTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"ids\":[1,2],\"results\":{\"1\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/1\",\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/2\",\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class DataObjectRestTest extends AbstractTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"ids\":[1],\"results\":{\"1\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/1\",\"id\":1,\"label\":\"object1\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     @Test

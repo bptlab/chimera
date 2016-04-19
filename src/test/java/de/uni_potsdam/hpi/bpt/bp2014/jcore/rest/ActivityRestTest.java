@@ -46,7 +46,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":{\"6686\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,6686]}",
+                "{\"activities\":{\"6688\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"id\":6688,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,6688]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -100,7 +100,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[186,189,6685,6686],\"activities\":[{\"id\":186,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment1\"},{\"id\":189,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment2\"},{\"id\":6685,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6685\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment3\"},{\"id\":6686,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment4\"}]}",
+                "{\"ids\":[186,189,6686,6688],\"activities\":[{\"id\":186,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment1\"},{\"id\":189,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment2\"},{\"id\":6686,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment3\"},{\"id\":6688,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment4\"}]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -160,7 +160,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":{\"6686\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"id\":6686,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,6686]}",
+                "{\"activities\":{\"6688\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"id\":6688,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,6688]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
