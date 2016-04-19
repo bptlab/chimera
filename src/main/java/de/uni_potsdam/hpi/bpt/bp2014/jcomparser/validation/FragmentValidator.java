@@ -1,12 +1,18 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.AbstractDataControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataInputAssociation;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataOutputAssociation;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
