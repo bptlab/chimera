@@ -12,12 +12,14 @@
                 <li ng-class="{active: logSelection=='attributes'}"><a aria-expanded="true" data-toggle="tab"
                                                                        ng-click="logSelection = 'attributes'">Attribute Log</a>
                 </li>
+                <li class="pull-right"><button type="button" class="btn btn-default btn-xs" aria-expanded="false" data-toggle="collapse" data-target="#logs-collapse"><i class="fa fa-chevron-down"></i></button></li>
             </ul>
+
             <!-- ./nav tabs options -->
         </div>
         <!-- ./ heading -->
         <!-- Body of the Panel -->
-        <div class="panel-body">
+        <div class="panel-body" id="logs-collapse">
             <div class="tab-content">
 
                 <small>Here you find the log of {{logSelection}} for this instance.</small>
