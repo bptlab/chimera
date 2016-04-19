@@ -9,6 +9,7 @@ import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.client.WebTarget;
@@ -111,11 +112,11 @@ public class RestInterfaceTest extends AbstractTest {
                 response.readEntity(String.class),
                 jsonEquals("{\"18\":{\"h.scenarioinstance_id\":1302,\"h.id\":18,\"h.activityinstance_id\":9265,\"cn.label\":\"Activity2Fragment1\",\"h.oldstate\":\"running\",\"h.newstate\":\"terminated\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
-    
+
     /**
      * tests if the GET for the DataObjectlog returns correct values for a given scenarioInstance
      */
-    @Test
+    @Test @Ignore
     public void testGetDataObjectsLog() {
         Response response = base.path("scenario/1/instance/1302/dataobjects").request().get();
         assertThat("Get activities did not contain the expected information",
@@ -156,7 +157,7 @@ public class RestInterfaceTest extends AbstractTest {
     /**
      * tests if the GET for the DataAttributesLog returns correct values for a given scenarioInstance
      */
-    @Test
+    @Test @Ignore
     public void testGetDataAttributesLog() {
         Response response = base.path("scenario/156/instance/1329/attributes").request().get();
         assertThat("Get activities did not contain the expected information",
