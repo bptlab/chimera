@@ -18733,7 +18733,7 @@ ALTER TABLE dataclass
 -- Dumping data for table `dataclass`
 --
 
-INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
+INSERT INTO `dataclass` (`id`, `name`, `is_event`) VALUES
 (1, 'obejct1', 0),
 (2, 'object2', 0),
 (3, 'A', 0),
@@ -18793,7 +18793,7 @@ INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
 (58, 'DO', 0),
 (59, 'DO', 0),
 (60, 'DO', 0),
-(61, 'Bestellung', 1);
+(61, 'Bestellung', 0);
 
 -- --------------------------------------------------------
 
@@ -19017,7 +19017,7 @@ ALTER TABLE datanode
 -- Dumping data for table `datanode`
 --
 
-INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
+INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataobject_id`, `model_id`) VALUES
 (1, 1, 1, 1, 1, NULL),
 (2, 1, 2, 1, 1, NULL),
 (3, 1, 2, 1, 1, NULL),
@@ -29865,29 +29865,3 @@ INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_i
 (1, 7, 15, 105),
 (1, 17, 51, 115),
 (1, 18, 53, 116);
-
--- --------------------------------------------------------
-
---
--- Dumping data for table `webservicetaskattribute`
---
-
-INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute_id`, `key`) VALUES
-(1, 523, 12, 'ids'),
-(1, 523, 13, 'activities'),
-(1, 527, 14, 'id'),
-(2, 523, 13, '0'),
-(2, 527, 15, 'link'),
-(3, 523, 13, 'label');
-
--- --------------------------------------------------------
-
---
--- Dumping data for table `webservicetasklink`
---
-
-INSERT INTO `webservicetasklink` (`controlnode_id`, `link`, `method`) VALUES
-(523, 'http://localhost:9998/interface/v2/scenario/155/instance/1360/activity?state=terminated', 'GET'),
-(527, 'http://localhost:9998/interface/v2/scenario/156/instance', 'POST');
-
--- --------------------------------------------------------
