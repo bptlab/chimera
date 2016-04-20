@@ -76,7 +76,7 @@ public class SoundnessValidatorTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testValidateStructuralSoundness() {
+    public void testValidateFragmentThatIsNotStructuralSound() {
         String path = "src/test/resources/fragments/FragmentNotSound.xml";
         try {
             Fragment fragment = FragmentTestHelper.createFragment(path);
@@ -88,7 +88,7 @@ public class SoundnessValidatorTest {
     }
 
     @Test
-    public void testValidateStructuralSoundness2() {
+    public void testValidateStructuralSoundness() {
         String path = "src/test/resources/fragments/SoundFragment.xml";
         String path2 = "src/test/resources/fragments/SmallFragment.xml";
         try {
@@ -108,7 +108,8 @@ public class SoundnessValidatorTest {
         String path = "src/test/resources/fragments/SmallFragment.xml";
         try {
             Fragment fragment = FragmentTestHelper.createFragment(path);
-            assertEquals("Couldn't build the graph correctly", getComplexGraph(), SoundnessValidator.buildGraphFromFragment(fragment));
+            assertEquals("Couldn't build the graph correctly", getComplexGraph(),
+                    SoundnessValidator.buildGraphFromFragment(fragment));
         } catch (IOException e) {
             e.printStackTrace();
             fail("Couldn't load the test fragment.");
@@ -119,20 +120,34 @@ public class SoundnessValidatorTest {
     public void testBuildReverseGraph() {
         assertEquals("The reverse graph wasn't build correctly", getReverseGraph(), SoundnessValidator.buildReverseGraph(getSampleGraph()));
         assertEquals("The reverse graph wasn't build correctly", getSampleGraph(),
-                SoundnessValidator.buildReverseGraph(SoundnessValidator.buildReverseGraph(getSampleGraph())));
+                SoundnessValidator.buildReverseGraph(
+                        SoundnessValidator.buildReverseGraph(getSampleGraph())));
     }
 
     @Test
     public void testCheckOnlyOneEnd() {
         Set<String> connectedNodes = nodes;
         connectedNodes.remove("C"); // C is not connected and thus not part of the graph
-        assertFalse("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(connectedNodes, getSampleGraph()));
-        assertTrue("Couldn't identify end-nodes correctly", SoundnessValidator.checkOnlyOneEnd(connectedNodes, getReverseGraph()));
+        assertFalse("Couldn't identify end-nodes correctly",
+                SoundnessValidator.checkOnlyOneEnd(connectedNodes, getSampleGraph()));
+        assertTrue("Couldn't identify end-nodes correctly",
+                SoundnessValidator.checkOnlyOneEnd(connectedNodes, getReverseGraph()));
     }
 
     @Test
     public void testGetLastNode() {
-        assertEquals("Couldn't identify last node correctly", "A", SoundnessValidator.getLastNode(nodes, getReverseGraph()));
+        Set<String> connectedNodes = nodes;
+        connectedNodes.remove("C");
+        assertEquals("Couldn't identify last node correctly", "A",
+                SoundnessValidator.getLastNode(connectedNodes, getReverseGraph()));
+    }
+
+    @Test (expected = AssertionError.class)
+    public void testGetLastNodeWithMultipleNodes() {
+        Set<String> connectedNodes = nodes;
+        connectedNodes.remove("C");
+        assertEquals("Couldn't identify end-nodes correctly",
+                SoundnessValidator.getLastNode(connectedNodes, getSampleGraph()));
     }
 
     @Test

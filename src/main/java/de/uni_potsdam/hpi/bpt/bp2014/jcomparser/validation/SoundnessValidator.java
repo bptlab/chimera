@@ -22,6 +22,7 @@ public class SoundnessValidator {
         Map<String, Set<String>> reverseGraph = buildReverseGraph(graph);
         Set<String> nodes = fragment.getControlNodes().stream().map(
                 AbstractControlNode::getId).collect(Collectors.toSet());
+        // End of reverse graph == start of original graph
         Boolean hasOnlyOneStart = checkOnlyOneEnd(nodes, reverseGraph);
         Boolean hasOnlyOneEnd = checkOnlyOneEnd(nodes, graph);
         if (!hasOnlyOneStart || !hasOnlyOneEnd) {
@@ -86,6 +87,7 @@ public class SoundnessValidator {
             Set<String> originalNodes, Map<String, Set<String>> graph) {
         Set<String> nodes = new HashSet<>(originalNodes);
         nodes.removeAll(graph.keySet());
+        assert nodes.size() == 1 : "There is more than one end.";
         return nodes.iterator().next();
     }
 

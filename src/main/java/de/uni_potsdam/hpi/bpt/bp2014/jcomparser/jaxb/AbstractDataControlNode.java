@@ -49,24 +49,15 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
         this.dataInputAssociations = dataInputAssociations;
     }
 
-    public void setFirstIncoming(String incoming) {
+    public void setIncoming(String incoming) {
         List<String> incomingList = new ArrayList<>();
         incomingList.add(incoming);
         this.setIncoming(incomingList);
     }
 
-    public String getFirstIncoming() {
-        return getIncoming().get(0);
-    }
-
-    public void setFirstOutgoing(String incoming) {
+    public void setOutgoing(String incoming) {
         List<String> outgoingList = new ArrayList<>();
         outgoingList.add(incoming);
-        this.setIncoming(outgoingList);
+        this.setOutgoing(outgoingList);
     }
-
-    public String getFirstOutgoing() {
-        return getOutgoing().get(0);
-    }
-
 }
