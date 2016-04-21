@@ -23,9 +23,7 @@ public class DbLogEntryTest {
     @Test
     public void testLogActivity() throws Exception {
         DbLogEntry logEntry = new DbLogEntry();
-        int testActivityId = 1;
-        int testScenarioInstanceId = 1;
-        logEntry.logActivity(testActivityId, "running", testScenarioInstanceId);
+        logEntry.logActivity(0, "running", 0);
         String sql = "SELECT COUNT(*) as count FROM logentry;";
         int logCount = new DbObject().executeStatementReturnsInt(sql, "count");
         assertEquals(1, logCount);
@@ -34,12 +32,17 @@ public class DbLogEntryTest {
     @Test
     public void testLogDataAttributeTransition()  {
         DbLogEntry logEntry = new DbLogEntry();
-        int testDataAttributeInstanceId = 1;
-        String testValue = "testValue";
-        int testNodeInstanceId = 1;
-        int testScenarioInstanceId = 1;
-        logEntry.logDataAttributeTransition(testDataAttributeInstanceId,
-                testValue, testNodeInstanceId, testScenarioInstanceId);
+        // Make log entry with dummy values
+        logEntry.logDataAttributeTransition(0, "testValue", 0, 0);
+        String sql = "SELECT COUNT(*) as count FROM logentry;";
+        int logCount = new DbObject().executeStatementReturnsInt(sql, "count");
+        assertEquals(1, logCount);
+    }
+
+    @Test
+    public void testCreateEventLogEntry() {
+        DbLogEntry logEntry = new DbLogEntry();
+        logEntry.logEvent(0, 0, "received");
         String sql = "SELECT COUNT(*) as count FROM logentry;";
         int logCount = new DbObject().executeStatementReturnsInt(sql, "count");
         assertEquals(1, logCount);
@@ -47,6 +50,10 @@ public class DbLogEntryTest {
 
     @Test
     public void testGetLogEntriesForScenarioInstance() {
-
+        DbLogEntry logEntry = new DbLogEntry();
+        logEntry.logDataobjectTransition(0,0,0,0);
+        String sql = "SELECT COUNT(*) as count FROM logentry;";
+        int logCount = new DbObject().executeStatementReturnsInt(sql, "count");
+        assertEquals(1, logCount);
     }
 }
