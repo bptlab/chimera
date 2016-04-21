@@ -1,15 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.history;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Data Access object of the {@link LogEntry}
@@ -17,20 +14,17 @@ import java.util.Map;
 public class DbLogEntry extends DbObject {
     private final static String insertQuery =
             "INSERT INTO logentry (`scenarioinstance_id`, `logged_id`,"
-            + "`new_value`, `cause`, `label`, `type`) VALUES "
-            + "(%d, %d, '%s', %d, '%s', '%s');";
+            + "`new_value`, `cause`, `label`, `type`, `timestamp`) VALUES "
+            + "(?, ?, ?, ?, ?, ?, ?);";
     /**
      * This method saves a log entry of a newly created ActivityInstance into the database.
      *
      * @param activityInstanceId the ID of the ActivityInstance that is created.
-     * @return the generated key for the insert statement.
      */
-    public int logActivity(int activityInstanceId, String state, int scenarioInstanceId) {
+    public void logActivity(int activityInstanceId, String state, int scenarioInstanceId) {
         String label = new DbActivityInstance().getLabel(activityInstanceId);
-        String sql = String.format(insertQuery, scenarioInstanceId, activityInstanceId, state,
-                null, label, LogEntry.LogType.ACTIVITY.name());
-
-        return this.executeInsertStatement(sql);
+        this.insertLog(scenarioInstanceId, activityInstanceId, state,
+                Optional.empty(), label, LogEntry.LogType.ACTIVITY);
     }
 
     /**
@@ -40,17 +34,15 @@ public class DbLogEntry extends DbObject {
      * @param value                      the new value of the DataAttributeInstance.
      * @param causeInstanceId The Id of the control node which caused value change. Can be
      *                        an event or a activity
-     * @return the generated key for the insert statement.
      */
-    public int logDataAttributeTransition(int dataAttributeInstanceId, Object value,
+    public void logDataAttributeTransition(int dataAttributeInstanceId, Object value,
                                           int causeInstanceId, int scenarioInstanceId) {
 
         DbDataAttributeInstance attributeDao = new DbDataAttributeInstance();
         int dataattributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
         String label = attributeDao.getName(dataattributeId);
-        String sql = String.format(insertQuery, scenarioInstanceId, dataAttributeInstanceId, value,
-                causeInstanceId, label, LogEntry.LogType.DATA_ATTRIBUTE.name());
-        return this.executeInsertStatement(sql);
+        this.insertLog(scenarioInstanceId, dataAttributeInstanceId, value.toString(),
+                Optional.of(causeInstanceId), label, LogEntry.LogType.DATA_ATTRIBUTE);
     }
 
     /**
@@ -59,25 +51,22 @@ public class DbLogEntry extends DbObject {
      * @param objectInstanceId the ID of the DataObjectInstance that is changed.
      * @param stateId           the new state of the DataObjectInstance.
      * @param activityInstanceId
-     * @return the generated key for the insert statement.
      */
-    public int logDataobjectTransition(int objectInstanceId, int stateId,
+    public void logDataobjectTransition(int objectInstanceId, int stateId,
                                        int activityInstanceId, int scenarioInstanceId) {
         int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
         String label = new DbDataObject().getName(dataObjectId);
         String state = new DbState().getStateName(stateId);
-        String sql = String.format(insertQuery, scenarioInstanceId, objectInstanceId,
-                state, activityInstanceId, label, LogEntry.LogType.DATA_OBJECT);
-        return this.executeInsertStatement(sql);
+        this.insertLog(scenarioInstanceId, objectInstanceId,
+                state, Optional.of(activityInstanceId), label, LogEntry.LogType.DATA_OBJECT);
     }
 
 
-    public int logEvent(int eventInstanceId, int scenarioInstanceid, String status) {
+    public void logEvent(int eventInstanceId, int scenarioInstanceid, String status) {
         int controlNodeId = new DbControlNodeInstance().getControlNodeID(eventInstanceId);
         String label = new DbControlNode().getLabel(controlNodeId);
-        String sql = String.format(insertQuery, scenarioInstanceid, eventInstanceId, status, null,
+        this.insertLog(scenarioInstanceid, eventInstanceId, status, Optional.empty(),
                 label, LogEntry.LogType.EVENT);
-        return this.executeInsertStatement(sql);
     }
 
     /**
@@ -113,5 +102,26 @@ public class DbLogEntry extends DbObject {
             e.printStackTrace();
         }
         return entries;
+    }
+
+    private void insertLog(int scenarioInstanceId, int loggedId, String newValue,
+                           Optional<Integer> cause, String label, LogEntry.LogType type) {
+        java.sql.Connection con = Connection.getInstance().connect();
+        try (PreparedStatement stat = con.prepareStatement(insertQuery)) {
+            stat.setInt(1, scenarioInstanceId);
+            stat.setInt(2, loggedId);
+            stat.setString(3, newValue);
+            if (cause.isPresent()) {
+                stat.setInt(4, cause.get());
+            } else {
+                stat.setNull(4, Types.INTEGER);
+            }
+            stat.setString(5, label);
+            stat.setString(6, type.name());
+            stat.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
+            stat.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
