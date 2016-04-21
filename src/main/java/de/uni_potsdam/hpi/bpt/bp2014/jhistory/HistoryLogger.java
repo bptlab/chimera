@@ -20,8 +20,9 @@ public class HistoryLogger {
 	private DbHistoryDataAttributeTransition dbHistoryDataAttributeInstance =
 			new DbHistoryDataAttributeTransition();
 
-	public int logActivityTransition(int activityId, String newState) {
-        return dbHistoryActivityTransition.logActivityStateTransition(activityId, newState);
+	public int logActivityTransition(int activityId, String newState, int scenarioInstanceId) {
+        return dbHistoryActivityTransition.logActivityStateTransition(
+                activityId, newState, scenarioInstanceId);
 	}
 
 	/**

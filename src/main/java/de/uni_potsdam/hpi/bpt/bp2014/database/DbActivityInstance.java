@@ -261,4 +261,11 @@ public class DbActivityInstance extends DbObject {
 						+ " WHERE id = " + id;
 		this.executeUpdateStatement(sql);
 	}
+
+    public String getLabel(int activityInstanceId) {
+        String sql = "SELECT cn.label as label FROM controlnodeinstance as cni," +
+                "controlnode as cn WHERE cni.controlnode_id = cn.id AND cni.id = %d; ";
+        sql = String.format(sql, activityInstanceId);
+        return this.executeStatementReturnsString(sql, "label");
+    }
 }

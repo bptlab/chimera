@@ -15,16 +15,14 @@ public class DbHistoryActivityTransition extends DbObject {
 	 *
 	 * @param id    the ID of the ActivityInstance that is changed.
 	 * @param state the new state of the ActivityInstance.
-	 * @return the generated key for the insert statement.
+	 * @param scenarioInstanceId
+     * @return the generated key for the insert statement.
 	 */
-	public int logActivityStateTransition(int id, String state) {
+	public int logActivityStateTransition(int id, String state, int scenarioInstanceId) {
 		String sql =
-				"INSERT INTO historyactivityinstance(`activityinstance_id`, `oldstate`,"
-						+ " `newstate`, `scenarioinstance_id`)"
-						+ " SELECT `id`, (SELECT activity_state "
-						+ "FROM activityinstance WHERE id = " + id
-						+ ") AS `oldstate`, \""
-						+ state + "\" AS `newstate`, "
+				"INSERT INTO historyactivityinstance(" +
+                        "`id`, `state`,`scenarioinstance_id`, type)"
+						+ " SELECT `id`, " + state + ", "
 						+ "(SELECT scenarioinstance_id "
 						+ "FROM fragmentinstance, controlnodeinstance "
 						+ "WHERE fragmentinstance.id = "

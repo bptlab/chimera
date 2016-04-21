@@ -109,8 +109,8 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
     private void writeDataobjects(Response response) {
         String json = response.readEntity(String.class);
         AbstractControlNodeInstance node = this.getControlNodeInstance();
-        DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(
-                node.getControlNodeId(), node.getControlNodeInstanceId());
+        DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(node.getControlNodeId(),
+                node.getControlNodeInstanceId(), this.getScenarioInstance().getScenarioInstanceId());
         List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>(getScenarioInstance()
                 .getDataAttributeInstances().values());
         dataAttributeWriter.writeDataAttributesFromJson(json, dataAttributeInstances);

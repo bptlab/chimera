@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -46,7 +45,7 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
     public void writeDataObjects(String eventJson) {
         DataAttributeWriter writer = new DataAttributeWriter(
-                this.getControlNodeId(), controlNodeInstanceId);
+                this.getControlNodeId(), controlNodeInstanceId, this.getScenarioInstance().getScenarioInstanceId());
         List<DataAttributeInstance> attributeInstances = new ArrayList<>(
                 this.getScenarioInstance().getDataAttributeInstances().values());
         writer.writeDataAttributesFromJson(eventJson, attributeInstances);

@@ -226,7 +226,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public boolean terminate(int outputSetId) {
 		if (canTerminate) {
             HistoryLogger activityLogger = new HistoryLogger();
-            activityLogger.logActivityTransition(this.getControlNodeInstanceId(), "terminated");
+            int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+            activityLogger.logActivityTransition(
+                    this.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
             boolean workingFine = getStateMachine().terminate();
 			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
 					.terminateReferences();

@@ -19,16 +19,19 @@ public class DataAttributeWriter {
 
     private final int controlNodeInstanceId;
     private final HistoryLogger attributeLogger = new HistoryLogger();
+    private final int scenarioInstanceId;
     Map<Integer, String> attributeIdToJsonPath;
 
     /**
      * Creates
      * @param controlNodeId The id of the webservice task or event, writes the data attributes.
+     * @param scenarioInstanceId
      */
-    public DataAttributeWriter(int controlNodeId, int controlNodeInstanceId) {
+    public DataAttributeWriter(int controlNodeId, int controlNodeInstanceId, int scenarioInstanceId) {
         DbPathMapping pathMapping = new DbPathMapping();
         this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
         this.controlNodeInstanceId = controlNodeInstanceId;
+        this.scenarioInstanceId = scenarioInstanceId;
     }
 
     public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
@@ -40,8 +43,8 @@ public class DataAttributeWriter {
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
             String jsonPath = idToPathEntry.getValue();
             Object value = JsonPath.read(json, jsonPath);
-            attributeLogger.logDataAttributeTransition(
-                    instance.getDataAttributeInstanceId(), value, controlNodeInstanceId);
+            attributeLogger.logDataAttributeTransition(instance.getDataAttributeInstanceId(),
+                    value, controlNodeInstanceId);
             if (instance.isValueAllowed(value)) {
                 instance.setValue(value);
             } else {
