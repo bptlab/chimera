@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.CaseStartAttributeWriter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -175,7 +175,6 @@ public final class EventDispatcher {
     }
 
     private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
-        HistoryLogger eventLogger = new HistoryLogger();
         DbEventMapping eventMapping = new DbEventMapping();
         EventFactory factory = new EventFactory(instance);
 
@@ -183,8 +182,8 @@ public final class EventDispatcher {
         int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
         AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
-        eventLogger.logEventReceiving(event.getControlNodeInstanceId(),
-                instance.getScenarioInstanceId());
+        new DbLogEntry().logEvent(event.getControlNodeInstanceId(),
+                instance.getScenarioInstanceId(), "received");
         return event;
     }
 
@@ -199,9 +198,7 @@ public final class EventDispatcher {
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveMappingToDatabase(
                 fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
-
-        HistoryLogger eventLogger = new HistoryLogger();
-        eventLogger.logEventRegistration(event.getControlNodeInstanceId(), scenarioInstanceId);
+        new DbLogEntry().logEvent(event.getControlNodeInstanceId(), scenarioInstanceId, "registered");
         return requestId;
     }
 

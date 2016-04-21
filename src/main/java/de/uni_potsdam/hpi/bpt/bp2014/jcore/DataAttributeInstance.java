@@ -1,9 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
-import javax.transaction.NotSupportedException;
 import java.util.Date;
 
 /**
@@ -33,7 +32,6 @@ public class DataAttributeInstance {
 		this.dataObjectInstanceId = dataObjectInstanceId;
 		this.dataObjectInstance = dataObjectInstance;
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
-        HistoryLogger attributeLogger = new HistoryLogger();
 		if (dbDataAttributeInstance.existDataAttributeInstance(
 						dataAttributeId, dataObjectInstanceId)) {
 			//creates an existing Attribute Instance using the database information
@@ -45,7 +43,8 @@ public class DataAttributeInstance {
 			this.dataAttributeInstanceId = dbDataAttributeInstance
 					.createNewDataAttributeInstance(
 							dataAttributeId, dataObjectInstanceId);
-            attributeLogger.logDataAttributeCreation(this.dataAttributeInstanceId);
+            new DbLogEntry().logDataattributeCreation(dataObjectInstanceId, this.getValue(),
+                    dataObjectInstance.getScenarioInstanceId());
         }
 		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
 		this.name = dbDataAttributeInstance.getName(dataAttributeId);

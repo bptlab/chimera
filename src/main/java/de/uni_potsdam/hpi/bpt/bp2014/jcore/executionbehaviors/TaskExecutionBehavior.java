@@ -1,10 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
+
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -50,15 +51,12 @@ public class TaskExecutionBehavior {
 	 * @param values a Map of Keys and Values.
 	 */
 	public boolean setDataAttributeValues(Map<Integer, String> values) {
-		HistoryLogger attributeLogger = new HistoryLogger();
 		boolean allValuesValid = true;
 		for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
             Integer dataattributeInstanceId = attributeInstanceIdToValue.getKey();
             String value = attributeInstanceIdToValue.getValue();
-            Integer activityInstanceId = this.getControlNodeInstance().getControlNodeInstanceId();
-            attributeLogger.logDataAttributeTransition(
-					dataattributeInstanceId, value, activityInstanceId);
-
+            new DbLogEntry().logDataAttributeTransition(dataattributeInstanceId, value,
+                    activityInstanceId, scenarioInstance.getScenarioInstanceId());
             DataAttributeInstance dataAttributeInstance = getScenarioInstance()
                     .getDataAttributeInstances().get(dataattributeInstanceId);
 			if (dataAttributeInstance.isValueAllowed(value)) {

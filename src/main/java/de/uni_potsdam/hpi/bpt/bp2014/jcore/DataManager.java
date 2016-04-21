@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,14 +34,12 @@ public class DataManager {
         Optional<DataObjectInstance> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
-            HistoryLogger stateLogger = new HistoryLogger();
-            stateLogger.logDataobjectStateTransition(
-                    dataObjectInstance.get().getDataObjectInstanceId(), stateId, activityInstanceId);
+            int dataobjectInstanceId = dataObjectInstance.get().getDataObjectInstanceId();
+            new DbLogEntry().logDataobjectTransition(dataobjectInstanceId, stateId,
+                activityInstanceId, this.scenarioInstance.getScenarioInstanceId());
             return true;
         }
-
         return false;
-
     }
 
     public Optional<DataObjectInstance> getDataobjectInstanceForId(int dataObjectId) {
@@ -90,17 +88,17 @@ public class DataManager {
      * Initializes all data objects for the scenario instance.
      */
     private void initializeDataObjects() {
-        HistoryLogger dataObjectLogger = new HistoryLogger();
         DbDataObject dbDataObject = new DbDataObject();
         int scenarioId = this.scenarioInstance.getScenarioId();
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
-
         List<Integer> data = dbDataObject.getDataObjectsForScenario(scenarioId);
         for (Integer dataObject : data) {
             DataObjectInstance dataObjectInstance = new DataObjectInstance(
                     dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
             this.dataObjectInstances.add(dataObjectInstance);
-            dataObjectLogger.logDataObjectCreation(dataObjectInstance.getDataObjectInstanceId());
+            int dataobjectInstanceId = dataObjectInstance.getDataObjectInstanceId();
+            int stateId = dataObjectInstance.getStateId();
+            new DbLogEntry().logDataobjectCreation(dataobjectInstanceId, stateId, scenarioInstanceId);
         }
     }
 

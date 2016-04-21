@@ -61,11 +61,37 @@ public class DbLogEntry extends DbObject {
                 state, Optional.of(activityInstanceId), label, LogEntry.LogType.DATA_OBJECT);
     }
 
+    /**
+     *
+     * @param objectInstanceId
+     * @param stateId
+     * @param scenarioInstanceId
+     */
+    public void logDataobjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {
+        int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
+        String label = new DbDataObject().getName(dataObjectId);
+        String state = new DbState().getStateName(stateId);
+        this.insertLog(scenarioInstanceId, objectInstanceId,
+                state, Optional.empty(), label, LogEntry.LogType.DATA_OBJECT);
+    }
 
-    public void logEvent(int eventInstanceId, int scenarioInstanceid, String status) {
+    public void logDataattributeCreation(
+            int dataAttributeInstanceId, Object value, int scenarioInstanceId) {
+        DbDataAttributeInstance attributeDao = new DbDataAttributeInstance();
+        int dataattributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
+        String label = attributeDao.getName(dataattributeId);
+        if (null == value) {
+            value = "";
+        }
+        this.insertLog(scenarioInstanceId, dataAttributeInstanceId, value.toString(),
+                Optional.empty(), label, LogEntry.LogType.DATA_ATTRIBUTE);
+    }
+
+
+    public void logEvent(int eventInstanceId, int scenarioInstanceId, String status) {
         int controlNodeId = new DbControlNodeInstance().getControlNodeID(eventInstanceId);
         String label = new DbControlNode().getLabel(controlNodeId);
-        this.insertLog(scenarioInstanceid, eventInstanceId, status, Optional.empty(),
+        this.insertLog(scenarioInstanceId, eventInstanceId, status, Optional.empty(),
                 label, LogEntry.LogType.EVENT);
     }
 

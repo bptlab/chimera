@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class HistoryHistoryLoggerTest {
+public class HistoryLoggerTest {
     @After
     public void teardown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();

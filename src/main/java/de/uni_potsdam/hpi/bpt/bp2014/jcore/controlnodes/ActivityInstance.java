@@ -1,12 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskOutgoingControlFlowBehavior;
-import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -225,15 +225,12 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public boolean terminate(int outputSetId) {
 		if (canTerminate) {
-            HistoryLogger activityLogger = new HistoryLogger();
             int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
-            activityLogger.logActivityTransition(
+            new DbLogEntry().logActivity(
                     this.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
             boolean workingFine = getStateMachine().terminate();
-			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
-					.terminateReferences();
-			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior())
-					.terminate(outputSetId);
+			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).terminateReferences();
+			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).terminate(outputSetId);
 			cancelAttachedEvents();
             return workingFine;
 		}
