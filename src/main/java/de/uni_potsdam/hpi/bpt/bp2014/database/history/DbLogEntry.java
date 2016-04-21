@@ -103,8 +103,8 @@ public class DbLogEntry extends DbObject {
      */
     public List<LogEntry> getLogEntriesForScenarioInstance(
             int scenarioInstanceId, LogEntry.LogType type) {
-        String sql = "SELECT * FROM logentry AS WHERE scenarioinstance_id = %d AND type = %s;"
-                        + "ORDER BY timestamp DESC;";
+        String sql = "SELECT * FROM logentry WHERE scenarioinstance_id = %d AND type = '%s' "
+                        + "ORDER BY timestamp ASC;";
         return receiveLogEntries(String.format(sql, scenarioInstanceId, type.name()));
     }
 
@@ -117,11 +117,11 @@ public class DbLogEntry extends DbObject {
                 LogEntry entry = new LogEntry();
                 entry.setId(rs.getInt("id"));
                 entry.setCause(rs.getInt("cause"));
-                entry.setLoggedId(rs.getInt("loggedId"));
+                entry.setLoggedId(rs.getInt("logged_id"));
                 entry.setNewValue(rs.getString("new_value"));
                 entry.setScenarioInstanceId(rs.getInt("scenarioinstance_id"));
                 entry.setType(LogEntry.LogType.valueOf(rs.getString("type")));
-                entry.setTimeStamp(rs.getDate("timestamp"));
+                entry.setTimeStamp(rs.getTimestamp("timestamp"));
                 entries.add(entry);
             }
         } catch (SQLException e) {

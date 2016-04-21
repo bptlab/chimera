@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -54,7 +55,7 @@ public class HistoryLoggerTest {
         ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
-        Map<Integer, Map<String, Object>> activityEntries =
+        List<LogEntry> activityEntries =
                 service.getActivityInstanceEntries(instance.getScenarioInstanceId());
         assertEquals(3, activityEntries.size());
     }
@@ -69,7 +70,7 @@ public class HistoryLoggerTest {
 
         HistoryService service = new HistoryService();
 
-        Map<Integer, Map<String, Object>> dataObjectEntries =
+        List<LogEntry> dataObjectEntries =
                 service.getDataObjectEntries(instance.getScenarioInstanceId());
         assertEquals(2, dataObjectEntries.size());
     }
@@ -83,7 +84,7 @@ public class HistoryLoggerTest {
 
         changeDataattributeValues(instance, activity);
         HistoryService service = new HistoryService();
-        Map<Integer, Map<String, Object>> dataattributeEntries
+        List<LogEntry> dataattributeEntries
                 = service.getDataattributeEntries(instance.getScenarioInstanceId());
         assertEquals(2, dataattributeEntries.size());
     }
@@ -102,23 +103,23 @@ public class HistoryLoggerTest {
         activity.terminate();
         HistoryService service = new HistoryService();
 
-        Map<Integer, Map<String, Object>> dataObjectEntries =
+        List<LogEntry> dataObjectEntries =
                 service.getDataObjectEntries(scenarioInstance.getScenarioInstanceId());
 
-        Map<Integer, Map<String, Object>> dataattributeEntries
+        List<LogEntry> dataattributeEntries
                 = service.getDataattributeEntries(scenarioInstance.getScenarioInstanceId());
 
-        Map<Integer, Map<String, Object>> activityEntries =
+        List<LogEntry> activityEntries =
                 service.getActivityInstanceEntries(scenarioInstance.getScenarioInstanceId());
 
         assertEquals(activity.getControlNodeInstanceId(),
-                activityEntries.get(2).get("h.activityinstance_id"));
+                activityEntries.get(1).getLoggedId());
 
         assertEquals(activity.getControlNodeInstanceId(),
-                dataObjectEntries.get(2).get("h.controlnodeinstance_id"));
+                dataObjectEntries.get(1).getCause());
 
         assertEquals(activity.getControlNodeInstanceId(),
-                dataattributeEntries.get(2).get("h.controlnodeinstance_id"));
+                dataattributeEntries.get(1).getCause());
     }
 
     private void changeDataattributeValues(
