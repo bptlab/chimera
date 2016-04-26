@@ -1,20 +1,33 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import javax.xml.bind.annotation.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.Date;
 
 /**
  *
  */
+@XmlRootElement(name = "entry")
+@XmlAccessorType(XmlAccessType.NONE)
 public class LogEntry {
+
+
     private int id;
     private Date timeStamp;
     private LogType type;
     private String newValue;
-
-
     private String label;
+
     private int scenarioInstanceId;
+
 
     /**
      * This id is the controlnode id in case of activities and events
@@ -29,6 +42,108 @@ public class LogEntry {
      */
     private int cause;
 
+    @XmlType(name = "LogType")
+    @XmlEnum
+    public enum LogType {
+        @XmlEnumValue("DATA_ATTRIBUTE")
+        DATA_ATTRIBUTE,
+        @XmlEnumValue("DATA_OBJECT")
+        DATA_OBJECT,
+        @XmlEnumValue("ACTIVITY")
+        ACTIVITY,
+        @XmlEnumValue("EVENT")
+        EVENT
+    }
+
+    public LogEntry(int id, Date timeStamp, LogType type, String newValue, String label,
+                    int scenarioInstanceId, int loggedId, int cause) {
+        this.id = id;
+        this.timeStamp = timeStamp;
+        this.type = type;
+        this.newValue = newValue;
+        this.label = label;
+        this.scenarioInstanceId = scenarioInstanceId;
+        this.loggedId = loggedId;
+        this.cause = cause;
+    }
+
+    // Allow public default constructor to create more easily from database
+    public LogEntry() {};
+
+    public void createXml(Node traceElement) throws ParserConfigurationException {
+        Document doc = traceElement.getOwnerDocument();
+        Element logEntry = doc.createElement("LogEntry");
+        appendEntryId(logEntry);
+        appendTimeStamp(logEntry);
+        appendType(logEntry);
+        appendValue(logEntry);
+        appendLabel(logEntry);
+        appendLoggedId(logEntry);
+        appendCause(logEntry);
+        traceElement.appendChild(logEntry);
+    }
+
+
+    private void appendEntryId(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element timestampXml = doc.createElement("timestamp");
+        timestampXml.setAttribute("key", "timestamp");
+        timestampXml.setAttribute("value", timeStamp.toString());
+        traceElement.appendChild(timestampXml);
+    }
+
+    private void appendType(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element typeNode = doc.createElement("string");
+        typeNode.setAttribute("key", "type");
+        typeNode.setAttribute("value", type.name());
+        traceElement.appendChild(typeNode);
+    }
+
+    private void appendLabel(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element labelNode = doc.createElement("string");
+        labelNode.setAttribute("key", "label");
+        labelNode.setAttribute("value", label);
+        traceElement.appendChild(labelNode);
+    }
+
+    private void appendCause(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element causeNode = doc.createElement("string");
+        causeNode.setAttribute("key", "cause");
+        causeNode.setAttribute("value", String.valueOf(cause));
+        traceElement.appendChild(causeNode);
+    }
+
+    private void appendLoggedId(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element loggedIdNode = doc.createElement("string");
+        loggedIdNode.setAttribute("key", "id");
+        loggedIdNode.setAttribute("value", String.valueOf(loggedId));
+        traceElement.appendChild(loggedIdNode);
+    }
+
+    private void appendValue(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element valueNode = doc.createElement("string");
+        valueNode.setAttribute("key", "value");
+        valueNode.setAttribute("value", newValue);
+        traceElement.appendChild(valueNode);
+    }
+
+    private void appendTimeStamp(Node traceElement) {
+        Document doc = traceElement.getOwnerDocument();
+        Element id = doc.createElement("string");
+        id.setAttribute("key", "entryId");
+        id.setAttribute("value", newValue);
+        traceElement.appendChild(id);
+    }
+
+
+    public String getString() {
+        return this.newValue;
+    }
 
     public String getLabel() {
         return label;
@@ -92,12 +207,5 @@ public class LogEntry {
 
     public void setCause(int cause) {
         this.cause = cause;
-    }
-
-    public enum LogType {
-        DATA_ATTRIBUTE,
-        DATA_OBJECT,
-        ACTIVITY,
-        EVENT
     }
 }
