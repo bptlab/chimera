@@ -157,7 +157,10 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could started. false if the activity couldn't started.
 	 */
 	public boolean begin() {
-		if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
+        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
+        new DbLogEntry().logActivity(
+                this.getControlNodeInstanceId(), "running", scenarioInstanceId);
+        if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
 			((ActivityStateMachine) getStateMachine()).begin();
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior()).startReferences();
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior())

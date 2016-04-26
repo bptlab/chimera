@@ -1,7 +1,13 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +33,18 @@ public class HistoryService {
                 scenarioInstanceId, LogEntry.LogType.DATA_OBJECT);
 	}
 
+    public Document getTracesForScenarioId(int scenarioId) throws ParserConfigurationException {
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        Element rootElement = doc.createElementNS("http://www.xes-standard.org", "log");
+        doc.appendChild(rootElement);
+        List<Integer> scenarioInstances = new DbScenarioInstance().getScenarioInstances(scenarioId);
+        for (int instanceId : scenarioInstances) {
+            Trace trace = new Trace(instanceId);
+            trace.appendToLog(rootElement);
+        }
+        return doc;
+    }
+
 	/**
 	 * This method returns the Activity log entries for a ScenarioInstance.
 	 *
@@ -36,7 +54,8 @@ public class HistoryService {
 	 * 			as keys and their respective values.
 	 */
 	public List<LogEntry> getActivityInstanceEntries(int scenarioInstanceId) {
-		return new DbLogEntry().getLogEntriesForScenarioInstance(
+		StateTransitionLog.getStateTransitons(scenarioInstanceId);
+        return new DbLogEntry().getLogEntriesForScenarioInstance(
                 scenarioInstanceId, LogEntry.LogType.ACTIVITY);
 	}
 

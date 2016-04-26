@@ -108,6 +108,18 @@ public class DbLogEntry extends DbObject {
         return receiveLogEntries(String.format(sql, scenarioInstanceId, type.name()));
     }
 
+    /**
+     * This method returns the Activity log entries for a ScenarioInstance.
+     *
+     * @param scenarioInstanceId The database ID of a ScenarioInstance.
+     * @return a Map with a Map of the log entries' attribute names as keys with their values.
+     */
+    public List<LogEntry> getLogEntriesForScenarioInstance(int scenarioInstanceId) {
+        String sql = "SELECT * FROM logentry WHERE scenarioinstance_id = %d "
+                + "ORDER BY timestamp ASC;";
+        return receiveLogEntries(String.format(sql, scenarioInstanceId));
+    }
+
     private List<LogEntry> receiveLogEntries(String sql) {
         List<LogEntry> entries = new ArrayList<>();
         try (java.sql.Connection conn = Connection.getInstance().connect();

@@ -1,7 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.StateTransitionLog;
+import de.uni_potsdam.hpi.bpt.bp2014.util.XmlUtil;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
@@ -11,6 +16,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,25 +56,11 @@ import java.util.Map;
                             + "is incorrect\"}")
                     .build();
         }
-
-        Map<Integer, Map<String, Object>> activityLog;
-        if (state == null) {
-            state = "";
-        }
-        switch (state) {
-            case "terminated":
-                activityLog = historyService
-                        .getTerminatedActivities(
-                                instanceID);
-                break;
-            default:
-                activityLog = historyService
-                        .getActivityInstanceEntries(
-                                instanceID);
-                break;
-        }
+        List<StateTransitionLog> logEntries =
+                StateTransitionLog.getStateTransitons(instanceID, LogEntry.LogType.ACTIVITY);
+        JSONArray json = new JSONArray(logEntries);
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(new JSONObject(activityLog).toString()).build();
+                .entity(json.toString()).build();
     }
 
     /**
@@ -83,9 +84,7 @@ import java.util.Map;
                             + "is incorrect\"}")
                     .build();
         }
-        Map<Integer, Map<String, Object>> dataObjectLog;
-        dataObjectLog = historyService
-                .getDataObjectEntries(scenarioInstanceID);
+        List<LogEntry> dataObjectLog = historyService.getDataObjectEntries(scenarioInstanceID);
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONObject(dataObjectLog).toString()).build();
     }
@@ -113,13 +112,26 @@ import java.util.Map;
                     .build();
         }
 
-        Map<Integer, Map<String, Object>> attributeLog;
-        attributeLog = historyService
-                .getDataattributeEntries(
-                        scenarioInstanceID);
+        List<LogEntry> attributeLog = historyService.getDataattributeEntries(
+                scenarioInstanceID);
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONObject(attributeLog).toString()).build();
     }
 
+    @GET
+    @Path("export/{scenarioId}")
+    @Produces(MediaType.APPLICATION_XML)
+    public Response exportToXml(@PathParam("scenarioId") int scenarioId)
+            throws TransformerConfigurationException {
+        HistoryService service = new HistoryService();
+        try {
+            Document doc = service.getTracesForScenarioId(scenarioId);
+            return Response.status(200)
+                    .type(MediaType.APPLICATION_XML)
+                    .entity(doc).build();
+        } catch (ParserConfigurationException e) {
+            return Response.status(500).entity("Error processing the xml").build();
+        }
+    }
 
 }

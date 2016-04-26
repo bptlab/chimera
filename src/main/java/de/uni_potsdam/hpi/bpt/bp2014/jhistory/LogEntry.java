@@ -70,7 +70,7 @@ public class LogEntry {
     // Allow public default constructor to create more easily from database
     public LogEntry() {};
 
-    public void createXml(Node traceElement) throws ParserConfigurationException {
+    public void appendToTrace(Node traceElement) {
         Document doc = traceElement.getOwnerDocument();
         Element logEntry = doc.createElement("LogEntry");
         appendEntryId(logEntry);
