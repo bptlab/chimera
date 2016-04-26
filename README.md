@@ -2,14 +2,19 @@
 [![Coverage Status](https://coveralls.io/repos/BP2014W1/JEngine/badge.svg?branch=dev)](https://coveralls.io/r/BP2014W1/JEngine?branch=dev)
 
 
-# JEngine
+*Chimera* is an engine for executing case models developed at the Business Process Technology (BPT) group at the Hasso Plattner Institute (HPI). It is provided under the MIT free and open source software license (see LICENSE.md).
 
-The JEngine is a ProcessEngine to execute Production Case Management (PCM).
+## Getting started
 
-## License
+*Prerequisites*: To run an instance of Chimera on your machine, you need to have MySQL, Apache Tomcat7, Maven 3, git, and Java (> 7) installed.
 
-The source code of the JEngine is provided under [MIT License](license.md).
-Please notice, that the used [Antlr framework](https://github.com/antlr/antlr4) is published under the [BSD License](https://github.com/antlr/antlr4/blob/master/LICENSE.txt).
+1. clone the repository `git clone https://github.com/bptlab/chimera`
+2. initialize the git submodules `git submodule init` and `git submodule update`
+2. create a MySQL database `mysql -u USER_NAME -p PASSWORD -e "create schema SCHEMA_NAME"`
+3. run maven `mvn install -Ddb.user=USER_NAME -Ddb.password=PASSWORD -Ddb.schema=SCHEMA_NAME`
+  * alternativly run `mvn validate` and edit the file config.properties
+4. deploy the created war file to your tomcat by copying it to TOMCAT_DIR/webapps
+  * alternativly use `mvn tomcat7:deploy` (however, you need to have configured your tomcat credentials, see [this article](http://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/) ).
 
 ## Architecture
 
@@ -19,33 +24,6 @@ Please notice, that the used [Antlr framework](https://github.com/antlr/antlr4) 
 
 See the [documentation](https://github.com/BP2014W1/JEngine/raw/dev/docu/rest/JEngine_REST_Specs.pdf) inside the doc folder.
 
-## Setup
-
-Update APT 
-
-    sudo apt-get update
-
-Installing Tomcat, MySQL Server, Maven (>3,2), Java (>1,7), git
-
-    sudo apt-get install  tomcat7 mysql-server maven git default-jdk 
-
-Cloning of this repo
-
-    git clone https://github.com/BP2014W1/JEngine
-
-Further a MySQL Database should be created named "JEngineV2" and the SQL file needs to be imported
-
-    mysql -u username -p -h localhost JEngineV2 < JEngine\src\main\resources\JEngineV2_schema.sql
-
-Please be aware of the database settings inside the web.xml in
-
-    JEngine/src/main/resources/webapp/WEB-INF/web.xml
-
-For the tests you may want to adapt the database_connection in
-
-    JEngine/src/main/resources/database_connection
-
-After changing server IPs you may want to update the Config.java in the config package.
 
 ## Deployment
 
@@ -78,13 +56,10 @@ We are using a [AngularJS Template](https://wrapbootstrap.com/theme/homer-respon
    
 ## Features
 
-This JEngine supports the execution of
+The Chimera engine supports the execution of
 * email- ,
 * webservice- and
 * user-tasks
 
 within fragments of a scenario.
 
-## Addendum
-
-For further details we kindly refer to the [project site](https://bpt.hpi.uni-potsdam.de/Public/JEngineDoc)
