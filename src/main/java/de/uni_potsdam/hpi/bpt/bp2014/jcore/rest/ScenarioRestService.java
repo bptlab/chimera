@@ -71,24 +71,33 @@ public class ScenarioRestService {
         } catch (IllegalArgumentException e){
             return Response.status(422)
                     .type(MediaType.TEXT_PLAIN)
-                    .entity(e.getMessage())
+                    .entity(buildException(e.getMessage()))
                     .build();
         } catch (JAXBException e) {
             return Response.status(400)
                     .type(MediaType.TEXT_PLAIN)
-                    .entity("Invalid xml " + e.getMessage())
+                    .entity(buildException("Invalid xml " + e.getMessage()))
                     .build();
         } catch (InvalidDataTransitionException e) {
             return Response.status(422)
                     .type(MediaType.TEXT_PLAIN)
-                    .entity(e.getMessage())
+                    .entity(buildException(e.getMessage()))
                     .build();
         } catch (InvalidDataclassReferenceExeption e) {
             return Response.status(422)
                     .type(MediaType.TEXT_PLAIN)
-                    .entity(e.getMessage())
+                    .entity(buildException(e.getMessage()))
                     .build();
         }
+    }
+
+    private String buildException(String text) {
+        JSONArray result = new JSONArray();
+        JSONObject content = new JSONObject();
+        content.put("text", text);
+        content.put("type", "danger");
+        result.put(content);
+        return result.toString();
     }
 
     /**

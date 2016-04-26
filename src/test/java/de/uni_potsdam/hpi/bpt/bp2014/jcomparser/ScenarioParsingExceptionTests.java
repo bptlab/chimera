@@ -53,7 +53,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(422, response.getStatus());
-        assertEquals("Data node foo references an invalid data class", response.readEntity(String.class));
+        assertEquals("[{\"text\":\"Data node foo references an invalid data class\",\"type\":\"danger\"}]", response.readEntity(String.class));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(422, response.getStatus());
-        assertEquals("Termination condition references invalid data class Default",
+        assertEquals("[{\"text\":\"Termination condition references invalid data class Default\",\"type\":\"danger\"}]",
                 response.readEntity(String.class));
     }
 
@@ -76,7 +76,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
-        assertEquals("Data@DROP*FROM EVERYTHING is not a valid data class name",
+        assertEquals("[{\"text\":\"Data@DROP*FROM EVERYTHING is not a valid data class name\",\"type\":\"danger\"}]",
                 response.readEntity(String.class));
     }
 
@@ -88,7 +88,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
-        assertEquals("DROP * FROM EVERYTHING is not a valid task name",
+        assertEquals("[{\"text\":\"DROP * FROM EVERYTHING is not a valid task name\",\"type\":\"danger\"}]",
                 response.readEntity(String.class));
 
     }
@@ -102,7 +102,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
-        assertEquals("No fragments specified", response.readEntity(String.class));
+        assertEquals("[{\"text\":\"No fragments specified\",\"type\":\"danger\"}]", response.readEntity(String.class));
     }
 
 }
