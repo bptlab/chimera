@@ -1,13 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 
 //import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.ScriptRunner;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.junit.AfterClass;
+import org.glassfish.jersey.test.JerseyTest;
+import org.json.JSONArray;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,7 +19,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -27,7 +30,7 @@ import static org.junit.Assert.assertThat;
 
 /**
  * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
- * to test the RestInterface of the JEngine core.
+ * to test the HistoryRestService of the JEngine core.
  * In order to do so it uses the functionality of the
  * {@link org.glassfish.jersey.test.JerseyTest}
  * There are test methods for every possible REST Call.
@@ -37,14 +40,8 @@ import static org.junit.Assert.assertThat;
  *
  *
  */
-public class RestInterfaceTest extends AbstractTest {
+public class HistoryRestServiceTest extends JerseyTest {
 
-    /**
-     * Sets up the seed file for the test database.
-     */
-    static {
-        TEST_SQL_SEED_FILE = "src/test/resources/JEngineJHistoryRestTest.sql";
-    }
     /**
      * The base url of the jcore rest interface.
      * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface}.
@@ -53,7 +50,12 @@ public class RestInterfaceTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest.RestInterface.class);
+        return new ResourceConfig(HistoryRestService.class);
+    }
+
+    @After
+    public void tearDown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Before
@@ -65,11 +67,32 @@ public class RestInterfaceTest extends AbstractTest {
      * tests if the GET for the ActivitiesLog returns correct values for a given scenarioInstance
      */
     @Test
-    public void testGetActivitiesLog() {
-        Response response = base.path("scenario/1/instance/1302/activities").request().get();
+    public void testGetActivitiesLog() throws IOException {
+        String path = "src/test/resources/history/simpleScenario.json";
+        ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.beginActivityByName("Do something", instance);
+        ScenarioTestHelper.terminateActivityInstanceByName("Do something", instance);
+
+        int scenarioId = instance.getScenarioId();
+        int scenarioInstanceId = instance.getScenarioInstanceId();
+        String requestPath = String.format(
+                "scenario/%d/instance/%d/activities", scenarioId, scenarioInstanceId);
+        Response response = base.path(requestPath).request().get();
+        String expected =
+                "[" +
+                "  {" +
+                "    \"timeStamp\": \"15:17:52\"," +
+                "    \"newValue\": \"terminated\"," +
+                "    \"cause\": 0,\n" +
+                "    \"oldValue\": \"init\"," +
+                "    \"label\": \"Do something\"," +
+                "    \"loggedId\": 2" +
+                "  }" +
+                "]";
+        // Ignore vlaues in assertion because of timestamp
         assertThat("Get activities did not contain the expected information",
-                response.readEntity(String.class),
-                jsonEquals("{\"1\":{\"h.scenarioinstance_id\":1302,\"h.id\":1,\"h.activityinstance_id\":9261,\"cn.label\":\"Activity1Fragment1\",\"h.newstate\":\"init\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
+                response.readEntity(String.class), jsonEquals(expected)
+                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
     }
 
     /**
@@ -116,7 +139,7 @@ public class RestInterfaceTest extends AbstractTest {
     /**
      * tests if the GET for the DataObjectlog returns correct values for a given scenarioInstance
      */
-    @Test @Ignore
+    @Test
     public void testGetDataObjectsLog() {
         Response response = base.path("scenario/1/instance/1302/dataobjects").request().get();
         assertThat("Get activities did not contain the expected information",
@@ -157,7 +180,7 @@ public class RestInterfaceTest extends AbstractTest {
     /**
      * tests if the GET for the DataAttributesLog returns correct values for a given scenarioInstance
      */
-    @Test @Ignore
+    @Test
     public void testGetDataAttributesLog() {
         Response response = base.path("scenario/156/instance/1329/attributes").request().get();
         assertThat("Get activities did not contain the expected information",

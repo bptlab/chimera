@@ -56,6 +56,12 @@ public class ScenarioTestHelper {
 
     public static ActivityInstance findActivityInstanceInNodes(
             String activityName, List<AbstractControlNodeInstance> controlNodeInstances) {
+        return searchActivityFromList(activityName, controlNodeInstances);
+    }
+
+    private static ActivityInstance searchActivityFromList(
+            String activityName,
+            List<AbstractControlNodeInstance> controlNodeInstances) {
         Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
                 .filter(ActivityInstance.class::isInstance)
                 .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
@@ -67,12 +73,6 @@ public class ScenarioTestHelper {
     }
 
 
-    /**
-     * Finds an activity instance by name and terminates the activity instance
-     * in the given scenario instance.
-     * @param activityName name of the activity belonging to the activity instance.
-     * @param scenarioInstance the scenario instance containing the activity instance.
-     */
     public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
         ActivityInstance instance = findActivityInstanceInNodes(
                 activityName, scenarioInstance.getRunningControlNodeInstances());
