@@ -27,7 +27,7 @@ public class LogEntryTest {
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         Element trace = doc.createElement("traceElement");
         doc.appendChild(trace);
-        exampleLogEntry.createXml(trace);
+        exampleLogEntry.appendToTrace(trace);
         NodeList children = trace.getChildNodes();
         assertEquals(1, children.getLength());
 

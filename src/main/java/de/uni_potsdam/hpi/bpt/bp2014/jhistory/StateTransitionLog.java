@@ -2,6 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +18,7 @@ import java.util.List;
  * e.g. activity instance 1 changed from ready to running at time
  * These logs abstract from {@link LogEntry} and not stored in the database,
  */
+@XmlRootElement
 public class StateTransitionLog {
     private String oldValue;
     private String newValue;
@@ -21,16 +26,30 @@ public class StateTransitionLog {
     private Date timeStamp;
     private int cause;
 
+
+    String label;
+
     public static List<StateTransitionLog> getStateTransitons(
             int scenarioInstanceId, LogEntry.LogType type) {
         String sql =
-                "SELECT b.new_value as new_value, a.new_value as old_value, b.timestamp as timestamp, " +
+                "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
                 "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +
                 " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
                 " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
                 " WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
         return parseStateTransitions(String.format(sql, scenarioInstanceId, type.name()));
     }
+
+    public static List<StateTransitionLog> getStateTransitons(int scenarioInstanceId) {
+        String sql =
+                "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
+                        "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +
+                        " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
+                        " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
+                        " WHERE a.scenarioinstance_id = %d;";
+        return parseStateTransitions(String.format(sql, scenarioInstanceId));
+    }
+
 
     private static List<StateTransitionLog> parseStateTransitions(String sql) {
         java.sql.Connection con = Connection.getInstance().connect();
@@ -44,6 +63,7 @@ public class StateTransitionLog {
                 transitionLog.setNewValue(rs.getString("new_value"));
                 transitionLog.setOldValue(rs.getString("old_value"));
                 transitionLog.setTimeStamp(rs.getTime("timestamp"));
+                transitionLog.setLabel(rs.getString("label"));
                 transitionLogs.add(transitionLog);
             }
         } catch (SQLException e) {
@@ -91,7 +111,11 @@ public class StateTransitionLog {
         this.newValue = newValue;
     }
 
-    public static void getStateTransitons(int scenarioInstanceId) {
+    public String getLabel() {
+        return label;
+    }
 
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
