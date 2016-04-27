@@ -14,6 +14,9 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.File;
+import java.io.IOException;
+
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -64,6 +67,7 @@ public class ScenarioInstanceRestTest extends AbstractTest {
         assertEquals("The Response code of getScenarioInstance was not 200",
                 200, response.getStatus());
     }
+
 
     @Test
     public void testStartInvalidInstanceWName() {

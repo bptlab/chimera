@@ -77,6 +77,8 @@ public class XesExportTest extends JerseyTest {
         // There should be 4 log entries init, running, terminated and init again because the
         // fragment is restarted.
         assertEquals(4, logEntries.getLength());
+
+        System.out.println(XmlUtil.convertToString(doc));
     }
 
 

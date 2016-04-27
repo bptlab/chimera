@@ -90,4 +90,8 @@ public class StateTransitionLog {
     public void setNewValue(String newValue) {
         this.newValue = newValue;
     }
+
+    public static void getStateTransitons(int scenarioInstanceId) {
+
+    }
 }

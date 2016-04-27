@@ -71,22 +71,22 @@ public class ScenarioRestService {
             return Response.status(201).build();
         } catch (IllegalArgumentException e){
             return Response.status(422)
-                    .type(MediaType.TEXT_PLAIN)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(buildException(e.getMessage()))
                     .build();
         } catch (JAXBException e) {
             return Response.status(400)
-                    .type(MediaType.TEXT_PLAIN)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(buildException("Invalid xml " + e.getMessage()))
                     .build();
         } catch (InvalidDataTransitionException e) {
             return Response.status(422)
-                    .type(MediaType.TEXT_PLAIN)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(buildException(e.getMessage()))
                     .build();
         } catch (InvalidDataclassReferenceExeption e) {
             return Response.status(422)
-                    .type(MediaType.TEXT_PLAIN)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(buildException(e.getMessage()))
                     .build();
         }

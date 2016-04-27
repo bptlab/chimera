@@ -14,6 +14,7 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertEquals;
  * This class should contain tests which are used to find out if the
  * correct exception is thrown when sending and invalid scenario via Rest
  */
-public class ScenarioParsingExceptionTests extends JerseyTest {
+public class ScenarioParsingExceptionTest extends JerseyTest {
     WebTarget base;
 
     @Override
@@ -53,6 +54,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(422, response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
         assertEquals("[{\"text\":\"Data node foo references an invalid data class\",\"type\":\"danger\"}]", response.readEntity(String.class));
     }
 
@@ -64,6 +66,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(422, response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
         assertEquals("[{\"text\":\"Termination condition references invalid data class Default\",\"type\":\"danger\"}]",
                 response.readEntity(String.class));
     }
@@ -76,6 +79,7 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
+        assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
         assertEquals("[{\"text\":\"Data@DROP*FROM EVERYTHING is not a valid data class name\",\"type\":\"danger\"}]",
                 response.readEntity(String.class));
     }
@@ -88,9 +92,9 @@ public class ScenarioParsingExceptionTests extends JerseyTest {
         String json = FileUtils.readFileToString(file);
         Response response = base.path("scenario").request().post(Entity.json(json));
         assertEquals(Response.Status.Family.CLIENT_ERROR, response.getStatusInfo().getFamily());
+        assertEquals(MediaType.APPLICATION_JSON_TYPE, response.getMediaType());
         assertEquals("[{\"text\":\"DROP * FROM EVERYTHING is not a valid task name\",\"type\":\"danger\"}]",
                 response.readEntity(String.class));
-
     }
 
 
