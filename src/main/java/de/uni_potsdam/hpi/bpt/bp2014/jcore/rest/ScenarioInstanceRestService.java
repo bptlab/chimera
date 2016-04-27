@@ -16,6 +16,8 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -153,6 +155,26 @@ public class ScenarioInstanceRestService {
         JSONObject result = new JSONObject(instance.getInstanceMap(instanceId));
         result.put("activities", uriInfo.getAbsolutePath() + "/activity");
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+    }
+
+
+    @GET
+    @Path("{instanceId}/events")
+    @Produces(MediaType.APPLICATION_JSON) public Response getEvents(
+            @Context UriInfo uriInfo,
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int instanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        if (!executionService.existScenarioInstance(instanceId)) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"message\":\"There is no instance "
+                            + "with the id " + instanceId + "\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
+        List<String> eventKeys = scenarioInstance.getRegisteredEventKeys();
+        return Response.ok(MediaType.APPLICATION_JSON).entity(eventKeys).build();
     }
 
     /**
