@@ -55,6 +55,13 @@ public class BoundaryEvent extends AbstractDataControlNode {
         return this.eventQuery;
     }
 
+    @Override
+    public List<String> getIncoming() {
+        List<String> incoming = new ArrayList<>();
+        incoming.add(attachedToRef);
+        return incoming;
+    }
+
     public void setEventQuery(String eventQuery) {
         this.eventQuery = eventQuery;
     }
