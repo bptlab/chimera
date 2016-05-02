@@ -160,20 +160,15 @@ public class ScenarioInstanceRestTest extends AbstractTest {
     }
 
     /**
-     * TODO should this be allowed
      * Even if the scenarioId is not valid, the redirection of instances works correctly
      */
     @Test
-    public void testGetScenarioInstanceWithWrongScenarioRedirects() {
+    public void testGetScenarioInstanceNotFoundInvalidScenarioId() {
         Response response = base.path("scenario/9999/instance/72").request().get();
         assertEquals("The Response code of getScenarioInstance was not 200",
-                200, response.getStatus());
+                404, response.getStatus());
         assertEquals("getScenarioInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1,\"activities\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     @Test

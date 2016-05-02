@@ -44,16 +44,12 @@ public class DataObjectRestTest extends AbstractTest {
      * although the scenario id is wrong.
      */
     @Test
-    public void testGetDataObjectsRedirects() {
+    public void testDataObjectNotFoundInvalidScenarioId() {
         Response response = base.path("scenario/9999/instance/72/dataobject").request().get();
         assertEquals("The Response code of getDataObjects was not 200",
-                200, response.getStatus());
+                404, response.getStatus());
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[1,2],\"results\":{\"1\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/dataobject/1\",\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/dataobject/2\",\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     /**
@@ -61,21 +57,16 @@ public class DataObjectRestTest extends AbstractTest {
      * list of all data objects although the scenario id is wrong.
      */
     @Test
-    public void testGetDataObjectInstanceRedirect() {
+    public void testNotFoundInvalidScenarioId() {
         Response response = base.path("scenario/9999/instance/62/dataobject/1").request().get();
         assertEquals("The Response code of getDataObject was not 200",
-                200, response.getStatus());
+                404, response.getStatus());
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"setId\":0,\"id\":1,\"state\":\"init\"}",
-                jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER)
-                        .when(Option.IGNORING_EXTRA_FIELDS));
     }
 
     @Test
-    public void testGetDataObjectsInvalidScenarioId() {
+    public void testGetDataObjectsInvalidScenarioInstanceId() {
         Response response = base.path("scenario/9999/instance/9999/dataobject").request().get();
         assertEquals("The Response code of getDataObjects was not 404",
                 404, response.getStatus());
