@@ -26,8 +26,9 @@
                 de.uni_potsdam.hpi.bpt.bp2014
             </param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+       <load-on-startup>1</load-on-startup>
+   </servlet>
+
 
     <!-- SERVLET: REST -->
    <servlet-mapping>
