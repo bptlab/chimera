@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is the representation of a fragment in the database.
@@ -13,8 +13,16 @@ public class DbFragment extends DbObject {
 	 * @param scenarioId This is the database ID of a scenario.
 	 * @return a list of all ID's of all fragments belonging to the scenario.
 	 */
-	public LinkedList<Integer> getFragmentsForScenario(int scenarioId) {
+	public List<Integer> getFragmentsForScenario(int scenarioId) {
 		String sql = "SELECT id FROM fragment WHERE scenario_id = " + scenarioId;
 		return this.executeStatementReturnsListInt(sql, "id");
+	}
+
+	public List<String> getXmlStringsForScenario(int scenarioId) {
+		String sql = "SELECT xml FROM fragment, fragmentxml "
+				+ "WHERE fragment.scenario_id = %d "
+				+ "AND fragmentxml.fragment_id = fragment.id";
+		return this.executeStatementReturnsListString(
+				String.format(sql, scenarioId), "xml");
 	}
 }
