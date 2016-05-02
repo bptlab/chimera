@@ -38,11 +38,13 @@ public class Fragment {
     private String fragmentName;
     private String fragmentEditorId;
     private int versionNumber;
-    private FragmentXmlWrapper fragmentXml;
+    private String xmlString;
+    private FragmentXmlWrapper xmlWrapper;
 
-    public Fragment(String fragmentXml, int versionNumber, String fragmentName,
+    public Fragment(String xmlString, int versionNumber, String fragmentName,
                     String fragmentEditorId) throws JAXBException {
-        this.fragmentXml = buildFragment(fragmentXml);
+        this.xmlString = xmlString;
+        this.xmlWrapper = buildFragment(xmlString);
         this.fragmentName = fragmentName;
         this.versionNumber = versionNumber;
         this.fragmentEditorId = fragmentEditorId;
@@ -50,8 +52,10 @@ public class Fragment {
 
     public int save() {
         Connector connector = new Connector();
-        return connector.insertFragmentIntoDatabase(fragmentName,
+        int fragmentId = connector.insertFragmentIntoDatabase(fragmentName,
                 scenarioId, fragmentEditorId, versionNumber);
+        connector.insertXmlIntoDatabase(fragmentId, this.xmlString);
+        return fragmentId;
     }
 
     private FragmentXmlWrapper buildFragment(String fragmentXml) throws JAXBException {
@@ -83,7 +87,7 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (AbstractDataControlNode node : this.fragmentXml.getAllDataControlNodes()) {
+        for (AbstractDataControlNode node : this.xmlWrapper.getAllDataControlNodes()) {
             sets.addAll(getOutputSetsForNode(node, idToDataNode));
         }
 
@@ -121,7 +125,7 @@ public class Fragment {
             idToDataNode.put(dataNode.getId(), dataNode);
         }
 
-        for (AbstractDataControlNode node : this.fragmentXml.getAllDataControlNodes()) {
+        for (AbstractDataControlNode node : this.xmlWrapper.getAllDataControlNodes()) {
             sets.addAll(getInputSetsForNode(node, idToDataNode));
         }
 
@@ -149,7 +153,7 @@ public class Fragment {
     }
 
     private Map<String, Task> createMapFromIdToTask() {
-        List<AbstractDataControlNode> tasks = this.fragmentXml.getAllActivities();
+        List<AbstractDataControlNode> tasks = this.xmlWrapper.getAllActivities();
         Map<String, Task> idToNode = new HashMap<>();
         for (AbstractDataControlNode task : tasks) {
             idToNode.put(task.getId(), (Task) task);
@@ -164,29 +168,29 @@ public class Fragment {
      */
     public List<AbstractControlNode> getControlNodes() {
         List<AbstractControlNode> nodes = new ArrayList<>();
-        nodes.addAll(this.fragmentXml.getXorGateways());
-        nodes.addAll(this.fragmentXml.getAndGateways());
-        nodes.addAll(this.fragmentXml.getAllActivities());
-        nodes.addAll(this.fragmentXml.getReceiveTasks());
-        nodes.addAll(this.fragmentXml.getIntermediateEvents());
-        nodes.addAll(this.fragmentXml.getBoundaryEvents());
-        nodes.addAll(this.fragmentXml.getEventBasedGateways());
-        nodes.add(this.fragmentXml.getEndEvent());
-        nodes.add(this.fragmentXml.getStartEvent());
+        nodes.addAll(this.xmlWrapper.getXorGateways());
+        nodes.addAll(this.xmlWrapper.getAndGateways());
+        nodes.addAll(this.xmlWrapper.getAllActivities());
+        nodes.addAll(this.xmlWrapper.getReceiveTasks());
+        nodes.addAll(this.xmlWrapper.getIntermediateEvents());
+        nodes.addAll(this.xmlWrapper.getBoundaryEvents());
+        nodes.addAll(this.xmlWrapper.getEventBasedGateways());
+        nodes.add(this.xmlWrapper.getEndEvent());
+        nodes.add(this.xmlWrapper.getStartEvent());
         return nodes;
     }
 
     public List<BoundaryEvent> getBoundaryEventNodes() {
-        return this.fragmentXml.getBoundaryEvents();
+        return this.xmlWrapper.getBoundaryEvents();
     }
 
 
     public List<SequenceFlow> getSequenceFlow() {
-        return this.fragmentXml.getSequenceFlow();
+        return this.xmlWrapper.getSequenceFlow();
     }
 
     public List<DataNode> getDataNodes() {
-        return this.fragmentXml.getDataNodes();
+        return this.xmlWrapper.getDataNodes();
     }
 
     public void setScenarioId(int scenarioId) {
@@ -210,14 +214,14 @@ public class Fragment {
     }
 
     public List<Task> getTasks() {
-        return this.fragmentXml.getTasks();
+        return this.xmlWrapper.getTasks();
     }
 
     public List<WebServiceTask> getWebServiceTasks() {
-        return this.fragmentXml.getWebServiceTasks();
+        return this.xmlWrapper.getWebServiceTasks();
     }
 
     public List<AbstractDataControlNode> getAllActivities() {
-        return this.fragmentXml.getAllActivities();
+        return this.xmlWrapper.getAllActivities();
     }
 }
