@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  *
  */
-@Path("interface/v2/scenario/{scenarioId}/instance/")
+@Path("interface/v2")
 public class ScenarioInstanceRestService {
     private static Logger log = Logger.getLogger(RestInterface.class);
 
@@ -39,6 +39,7 @@ public class ScenarioInstanceRestService {
      * about the new instance.
      */
     @POST
+    @Path("scenario/{scenarioId}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON) public Response startNewInstance(
             @Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
@@ -71,6 +72,7 @@ public class ScenarioInstanceRestService {
      * about the new instance.
      */
     @PUT
+    @Path("scenario/{scenarioId}/instance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON) public Response startNewNamedInstance(
             @Context UriInfo uriInfo,
@@ -110,7 +112,7 @@ public class ScenarioInstanceRestService {
      * will be returned.
      */
     @GET
-    @Path("{instanceId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}")
     @Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstance(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
@@ -123,7 +125,7 @@ public class ScenarioInstanceRestService {
 
 
     @GET
-    @Path("{instanceId}/events")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/events")
     @Produces(MediaType.APPLICATION_JSON) public Response getEvents(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
@@ -142,7 +144,7 @@ public class ScenarioInstanceRestService {
      * 400 if none is fulfilled, 404 if the scenario instance is not found.
      */
     @GET
-    @Path("{instanceId}/canTerminate")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/canTerminate")
     @Produces(MediaType.TEXT_PLAIN)
     public Response checkTermination(
             @PathParam("scenarioId") int scenarioId,
@@ -170,7 +172,7 @@ public class ScenarioInstanceRestService {
      * 404 if the scenario instance is not found.
      */
     @POST
-    @Path("{instanceId}/terminate")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
     @Produces(MediaType.TEXT_PLAIN)
     public Response terminateScenarioInstance(@PathParam("scenarioId") int scenarioId,
                                               @PathParam("instanceId") int instanceId) {
@@ -206,7 +208,7 @@ public class ScenarioInstanceRestService {
      * one specified scenario. The information contains the id and name.
      */
     @GET
-
+    @Path("scenario/{scenarioId}/instance")
     @Produces(MediaType.APPLICATION_JSON) public Response getScenarioInstances(
             @Context UriInfo uri,
             @PathParam("scenarioId") int scenarioId,

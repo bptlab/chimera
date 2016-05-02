@@ -1,19 +1,26 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  *
  */
-@Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/")
+@Path("interface/v2")
 public class DataDependencyWebService extends AbstractRestService {
     /**
      * This method responds to a GET request
@@ -34,7 +41,7 @@ public class DataDependencyWebService extends AbstractRestService {
      * is non-existing & with an error message instead of the array.
      */
     @GET
-    @Path("inputset/{inputsetId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/inputset/{inputsetId}")
     public Response getInputDataObjectsAndAttributes(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
@@ -63,7 +70,7 @@ public class DataDependencyWebService extends AbstractRestService {
      * is non-existing with an error message instead of the array.
      */
     @GET
-    @Path("outputset/{outputsetId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/outputset/{outputsetId}")
     public Response getOutputDataObjectsAndAttributes(
             @PathParam("scenarioId") int scenarioID,
             @PathParam("instanceId") int scenarioInstanceId,

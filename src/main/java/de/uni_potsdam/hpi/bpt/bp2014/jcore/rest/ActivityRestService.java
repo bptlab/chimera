@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  *
  */
-@Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/activity")
+@Path("interface/v2")
 public class ActivityRestService extends AbstractRestService {
     private static Logger log = Logger.getLogger(RestInterface.class);
 
@@ -55,6 +55,7 @@ public class ActivityRestService extends AbstractRestService {
      * be returned.
      */
     @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity")
     @Produces(MediaType.APPLICATION_JSON) public Response getActivitiesOfInstance(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioID,
@@ -306,7 +307,7 @@ public class ActivityRestService extends AbstractRestService {
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
-    @Path("{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
     public Response getActivity(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
@@ -354,7 +355,7 @@ public class ActivityRestService extends AbstractRestService {
      * @return a json object containing the referenced activities
      */
     @GET
-    @Path("{activityId}/references")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/references")
     public Response getReferencesForActivity(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioID,
@@ -381,7 +382,7 @@ public class ActivityRestService extends AbstractRestService {
      * @return Status code with regard to its success / failure
      */
     @PUT
-    @Path("{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
     public Response setDataAttribute(
             @PathParam("scenarioId") int scenarioID,
             @PathParam("instanceId") int scenarioInstanceID,
@@ -420,7 +421,7 @@ public class ActivityRestService extends AbstractRestService {
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @POST
-    @Path("{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
     public Response updateActivityState(
             @PathParam("scenarioId") int scenarioID,
             @PathParam("instanceId") int scenarioInstanceID,
@@ -495,7 +496,7 @@ public class ActivityRestService extends AbstractRestService {
      * instead of the array.
      */
     @GET
-    @Path("{activityId}/input")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/input")
     public Response getInputDataObjects(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioID,
@@ -570,7 +571,7 @@ public class ActivityRestService extends AbstractRestService {
      * instead of the array.
      */
     @GET
-    @Path("{activityId}/output")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/output")
     public Response getOutputDataObjects(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioID,

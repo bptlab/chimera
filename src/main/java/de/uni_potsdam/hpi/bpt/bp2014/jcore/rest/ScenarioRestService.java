@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  *
  */
-@Path("interface/v2/scenario")
+@Path("interface/v2")
 public class ScenarioRestService {
     /**
      * This method provides information about the termination condition.
@@ -39,7 +39,7 @@ public class ScenarioRestService {
      * condition or an JSON object with the error message.
      */
     @GET
-    @Path("{scenarioId}/terminationcondition")
+    @Path("scenario/{scenarioId}/terminationcondition")
     @Produces(MediaType.APPLICATION_JSON) public Response getTerminationCondition(
             @PathParam("scenarioId") int scenarioID) {
         DbScenario dbScenario = new DbScenario();
@@ -62,6 +62,7 @@ public class ScenarioRestService {
 
 
     @POST
+    @Path("scenario")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postInstance(String scenario) {
         try {
@@ -115,7 +116,7 @@ public class ScenarioRestService {
      * and more.
      */
     @GET
-    @Path("{scenarioId}")
+    @Path("scenario/{scenarioId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenario(
             @Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
@@ -151,6 +152,7 @@ public class ScenarioRestService {
      * Each Entry is a JSON-Object with a label and id of a scenario.
      */
     @GET
+    @Path("scenario")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScenarios(
             @Context UriInfo uriInfo, @QueryParam("filter") String filterString) {

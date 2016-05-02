@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 /**
  *
  */
-@Path("interface/v2/scenario/{scenarioId}/emailtask")
+@Path("interface/v2")
 public class EmailRestService {
     /**
      * This method provides information about all email Tasks inside
@@ -27,6 +27,7 @@ public class EmailRestService {
      * @return The JSON Object with ids and labels.
      */
     @GET
+    @Path("scenario/{scenarioId}/emailtask")
     @Produces(MediaType.APPLICATION_JSON) public Response getAllEmailTasks(
             @PathParam("scenarioId") int scenarioId,
             @QueryParam("filter") String filterString) {
@@ -51,7 +52,7 @@ public class EmailRestService {
      * and a 200 (OK) with a JSON-Object if the emailTask was found.
      */
     @GET
-    @Path("{emailTaskId}")
+    @Path("scenario/{scenarioId}/emailtask/{emailTaskId}")
     @Produces(MediaType.APPLICATION_JSON) public Response getEmailTaskConfiguration(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("emailTaskId") int mailTaskId) {
@@ -68,5 +69,4 @@ public class EmailRestService {
         mailConfig.setSubject(mail.getSubject(mailTaskId));
         return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
-
 }

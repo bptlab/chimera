@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  *
  */
-@Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/dataobject/")
+@Path("interface/v2")
 public class DataObjectRestInterface {
     /**
      * This method provides detailed information about an data Object.
@@ -40,7 +40,7 @@ public class DataObjectRestInterface {
      * (REDIRECT) will be returned.
      */
     @GET
-    @Path("{dataObjectId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{dataObjectId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataObject(
             @PathParam("scenarioId") int scenarioID,
@@ -91,6 +91,7 @@ public class DataObjectRestInterface {
      * And a 404 if the instance id is wrong.
      */
     @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
     @Produces(MediaType.APPLICATION_JSON) public Response getDataObjects(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioID,
