@@ -140,11 +140,7 @@ angular.module('jfrontend')
                     instanceCtrl.instanceDetails['scenario_id'] = $routeParams.id;
                     instanceCtrl.instanceDetails['id'] = id;
                     if ($routeParams.instanceId) {
-                        instanceCtrl.initializeActivityInstances();
-                        instanceCtrl.initializeDataobjectInstances();
-                        instanceCtrl.initializeActivitylogInstances();
-                        instanceCtrl.initializeDataobjectlogInstances();
-                        instanceCtrl.initializeDataobjectAttributelogInstances();
+                        refreshPage();
                         instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
                     }
                 }).
@@ -219,11 +215,7 @@ angular.module('jfrontend')
                 success(function (data) {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
-                    instanceCtrl.initializeActivityInstances();
-                    instanceCtrl.initializeDataobjectInstances();
-                    instanceCtrl.initializeActivitylogInstances();
-                    instanceCtrl.initializeDataobjectlogInstances();
-                    instanceCtrl.initializeDataobjectAttributelogInstances();
+                    refreshPage();
                 }).
                 error(function () {
                     console.log('request failed');
@@ -239,11 +231,7 @@ angular.module('jfrontend')
                 success(function (data) {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
-                    instanceCtrl.initializeActivityInstances();
-                    instanceCtrl.initializeDataobjectInstances();
-                    instanceCtrl.initializeActivitylogInstances();
-                    instanceCtrl.initializeDataobjectlogInstances();
-                    instanceCtrl.initializeDataobjectAttributelogInstances();
+                    refreshPage();
                 }).
                 error(function () {
                     console.log('request failed');
@@ -258,11 +246,7 @@ angular.module('jfrontend')
                 success(function (data) {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
-                    instanceCtrl.initializeActivityInstances();
-                    instanceCtrl.initializeDataobjectInstances();
-                    instanceCtrl.initializeActivitylogInstances();
-                    instanceCtrl.initializeDataobjectlogInstances();
-                    instanceCtrl.initializeDataobjectAttributelogInstances();
+                    refreshPage();
                 }).
                 error(function () {
                     console.log('request failed');
@@ -396,5 +380,17 @@ angular.module('jfrontend')
                 });
             };
 
+            this.refreshPage = function() {
+                instanceCtrl.initializeActivityInstances();
+                instanceCtrl.initializeDataobjectInstances();
+                instanceCtrl.initializeActivitylogInstances();
+                instanceCtrl.initializeDataobjectlogInstances();
+                instanceCtrl.initializeDataobjectAttributelogInstances();
+            };
+
+            var source = new EventSource(InstanceName + '/api/sse');
+            source.onmessage = function(event) {
+                refreshPage();
+            };
         }
     ]);
