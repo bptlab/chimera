@@ -133,8 +133,7 @@ public class ExecutionService /*implements Runnable*/ {
 		if (scenarioInstanceMap.containsKey(scenarioInstanceId)) {
 			log.info("Open existing scenario instance with scenarioId=" + scenarioId
 					+ " and scenarioInstanceId=" + scenarioInstanceId + ".");
-			//else if (!sortedScenarioInstances.containsKey(scenarioInstanceId)) {
-		} else if (existScenarioInstance(scenarioInstanceId)) {
+		} else if (existScenarioInstance(scenarioId, scenarioInstanceId)) {
 			log.info("Load existing scenario instance with scenarioId=" + scenarioId
 					+ " and scenarioInstanceId="
 					+ scenarioInstanceId + " from database.");
@@ -142,12 +141,10 @@ public class ExecutionService /*implements Runnable*/ {
 					scenarioInstanceId);
 			scenarioInstances.add(scenarioInstance);
 			sortedScenarioInstances.put(scenarioInstanceId, scenarioInstance);
-			//scenarioInstanceMap.put(scenarioInstanceId, scenarioInstance);
 			addScenarioInstanceToMap(scenarioInstance);
 		} else {
 			return false;
 		}
-		//        }
 		updateHistory(scenarioInstanceId);
 		return true;
 	}

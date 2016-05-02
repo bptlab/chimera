@@ -48,7 +48,7 @@ public class DataObjectRestInterface {
             @PathParam("dataObjectId") int dataObjectID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.existScenarioInstance(instanceID)) {
+        if (!executionService.existScenarioInstance(scenarioID, instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no instance "
@@ -117,7 +117,7 @@ public class DataObjectRestInterface {
             @QueryParam("filter") String filterString) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.existScenarioInstance(instanceID)) {
+        if (!executionService.existScenarioInstance(scenarioID, instanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no instance "

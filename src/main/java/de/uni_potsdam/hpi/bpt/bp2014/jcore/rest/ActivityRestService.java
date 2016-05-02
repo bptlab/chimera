@@ -15,16 +15,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
  */
 @Path("interface/v2/scenario/{scenarioId}/instance/{instanceId}/activity")
-public class ActivityRestService {
+public class ActivityRestService extends AbstractRestService {
     private static Logger log = Logger.getLogger(RestInterface.class);
 
     /**
@@ -57,38 +55,24 @@ public class ActivityRestService {
             @PathParam("instanceId") int instanceID,
             @QueryParam("filter") String filterString,
             @QueryParam("state") String state) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.existScenarioInstance(instanceID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"There is no instance "
-                            + "with id " + instanceID + "\"}")
-                    .build();
-        } else if (!executionService.existScenario(scenarioID)) {
-            try {
-                return Response.seeOther(new URI("interface/v2/scenario/"
-                        + executionService
-                        .getScenarioIDForScenarioInstance(
-                                instanceID)
-                        + "/instance/" + instanceID + "/activity")).build();
-            } catch (URISyntaxException e) {
-                log.error("Error:", e);
-            }
+        if (!this.isScenarioAndInstanceValid(scenarioID, instanceID)) {
+            return this.buildNotFoundResponse(
+                    "{\"error\":\"scenario or scenario instance id invalid\"}");
         }
+
         if ((filterString == null || filterString.isEmpty()) && (state == null || state
                 .isEmpty())) {
             return getAllActivitiesOfInstance(scenarioID, instanceID, uriInfo);
-        } else if ((filterString == null || filterString.isEmpty())) {
+        } else if (filterString == null || filterString.isEmpty())
             return getAllActivitiesOfInstanceWithState(
                     scenarioID, instanceID, state, uriInfo);
-        } else if ((state == null || state.isEmpty())) {
+        else if (state == null || state.isEmpty()) {
             return getAllActivitiesOfInstanceWithFilter(
                     scenarioID, instanceID, filterString,
                     uriInfo);
         } else {
             return getAllActivitiesWithFilterAndState(
-                    scenarioID, instanceID, filterString, state,
-                    uriInfo);
+                    scenarioID, instanceID, filterString, state, uriInfo);
         }
     }
 
@@ -104,35 +88,38 @@ public class ActivityRestService {
      */
     private Response getAllActivitiesWithFilterAndState(int scenarioID, int instanceID,
                                                         String filterString, String state, UriInfo uriInfo) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, instanceID);
-        Collection<ActivityInstance> instances;
-        switch (state) {
-            case "ready":
-                instances = executionService.getEnabledActivities(instanceID);
-                break;
-            case "terminated":
-                instances = executionService.getTerminatedActivities(instanceID);
-                break;
-            case "running":
-                instances = executionService.getRunningActivities(instanceID);
-                break;
-            default:
-                return Response.status(Response.Status.NOT_FOUND)
-                        .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state is not allowed "
-                                + state + "\"}")
-                        .build();
+        Collection<ActivityInstance> instances = getActivitiesOfState(state, scenarioID, instanceID);
+        List<String> allowedStates = Arrays.asList("ready", "terminated", "running");
+        if (isLegalState(state)) {
+            this.buildNotFoundResponse("{\"error\":\"The state is not allowed "
+                    + state + "\"}");
         }
-        Collection<ActivityInstance> selection = new LinkedList<>();
-        for (ActivityInstance instance : instances) {
-            if (instance.getLabel().contains(filterString)) {
-                selection.add(instance);
-            }
-        }
+        Collection<ActivityInstance> selection = instances.stream()
+                .filter(instance -> instance.getLabel().contains(filterString))
+                .collect(Collectors.toList());
         JSONObject result = buildJSONObjectForActivities(selection, state, uriInfo);
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
+
+    private boolean isLegalState(String state) {
+        List<String> allowedStates = Arrays.asList("ready", "terminated", "running");
+        return allowedStates.contains(state);
+    }
+
+    private Collection<ActivityInstance> getActivitiesOfState(
+            String state, int scenarioId, int scenarioInstanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+        if ("ready".equals(state)) {
+            return executionService.getEnabledActivities(scenarioInstanceId);
+        } else if("terminated".equals(state)) {
+            return executionService.getTerminatedActivities(scenarioInstanceId);
+        } else if ("running".equals(state)) {
+            return executionService.getRunningActivities(scenarioInstanceId);
+        }
+        throw new IllegalArgumentException("State has to be one of ready, terminated or running");
+    }
+
 
     /**
      * Returns a Response Object.
@@ -149,26 +136,21 @@ public class ActivityRestService {
                                                           String filterString, UriInfo uriInfo) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
-        Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
-        instances.put("ready", executionService.getEnabledActivities(instanceID));
-        instances.put("running", executionService.getRunningActivities(instanceID));
-        instances.put("terminated", executionService.getTerminatedActivities(instanceID));
+        Map<String, Collection<ActivityInstance>> stateToActivities = new HashMap<>();
+        stateToActivities.put("ready", executionService.getEnabledActivities(instanceID));
+        stateToActivities.put("running", executionService.getRunningActivities(instanceID));
+        stateToActivities.put("terminated", executionService.getTerminatedActivities(instanceID));
+
         JSONArray ids = new JSONArray();
         JSONObject activities = new JSONObject();
-        for (Map.Entry<String, Collection<ActivityInstance>> entry : instances.entrySet()) {
+        for (Map.Entry<String, Collection<ActivityInstance>> entry : stateToActivities.entrySet()) {
+            String state = entry.getKey();
             for (ActivityInstance instance : entry.getValue()) {
                 if (instance.getLabel().contains(filterString)) {
                     ids.put(instance.getControlNodeInstanceId());
-                    JSONObject activityJSON = new JSONObject();
-                    activityJSON.put("id",
-                            instance.getControlNodeInstanceId());
-                    activityJSON.put("label", instance.getLabel());
-                    activityJSON.put("state", entry.getKey());
-                    activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                            + instance.getControlNodeInstanceId());
-                    activities.put(""
-                                    + instance.getControlNodeInstanceId(),
-                            activityJSON);
+                    JSONObject activityJson = buildActivityJson(state, instance, uriInfo);
+                    activities.put(String.valueOf(
+                            instance.getControlNodeInstanceId()), activityJson);
                 }
             }
         }
@@ -177,6 +159,18 @@ public class ActivityRestService {
         result.put("activities", activities);
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
+
+    private JSONObject buildActivityJson(String state, ActivityInstance instance, UriInfo uriInfo) {
+        JSONObject activityJSON = new JSONObject();
+        activityJSON.put("id",
+                instance.getControlNodeInstanceId());
+        activityJSON.put("label", instance.getLabel());
+        activityJSON.put("state", state);
+        activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
+                + instance.getControlNodeInstanceId());
+        return activityJSON;
+    }
+
     /**
      * This method creates a Response object for all specified activities.
      * The activities are specified by an scenario instance and a state.
@@ -377,32 +371,6 @@ public class ActivityRestService {
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
 
-    /**
-     * @param instances The Map containing information about the activity instances.
-     *                  We Assume that the key is a the id and the value is a Map
-     *                  from String to Object with the properties of the instance.
-     * @param uriInfo   Specifies the context. For example the uri
-     *                  of the request.
-     * @return			JSON Object containing activities and their references.
-     */
-    private JSONObject buildJSONObjectForReferencedActivities(
-            Collection<ActivityInstance> instances, UriInfo uriInfo) {
-        List<Integer> ids = new ArrayList<>(instances.size());
-        JSONArray activities = new JSONArray();
-        for (ActivityInstance instance : instances) {
-            JSONObject activityJSON = new JSONObject();
-            ids.add(instance.getControlNodeInstanceId());
-            activityJSON.put("id", instance.getControlNodeInstanceId());
-            activityJSON.put("label", instance.getLabel());
-            activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                    + instance.getControlNodeInstanceId());
-            activities.put(activityJSON);
-        }
-        JSONObject result = new JSONObject();
-        result.put("ids", new JSONArray(ids));
-        result.put("activities", activities);
-        return result;
-    }
 
     /**
      * This method updates the data attributes of a specific activity
@@ -431,17 +399,11 @@ public class ActivityRestService {
 
         if (executionService
                 .setDataAttributeValues(scenarioInstanceID, activityID, values)) {
-            return Response.status(Response.Status.ACCEPTED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"attribute value was "
-                            + "changed successfully.\"}")
-                    .build();
+            return this.buildAcceptedResponse("{\"message\":\"attribute value was "
+                    + "changed successfully.\"}");
         } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"error within the "
-                            + "update of attributes\"}")
-                    .build();
+            return this.buildBadRequestResponse("{\"error\":\"error within the "
+                    + "update of attributes\"}");
         }
     }
 
@@ -468,13 +430,9 @@ public class ActivityRestService {
             @PathParam("activityId") int activityID,
             @QueryParam("state") String state,
             @DefaultValue("-1") @QueryParam("outputset") int outputset) {
-
         boolean result;
         if (state == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The state is not set\"}")
-                    .build();
+            return this.buildBadRequestResponse("{\"error\":\"The state is not set\"}");
         }
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
@@ -485,22 +443,16 @@ public class ActivityRestService {
                 break;
             case "terminate":
                 if (outputset != -1) {
-                    result = executionService
-                            .terminateActivityInstance(
-                                    scenarioInstanceID,
-                                    activityID,
-                                    outputset);
+                    result = executionService.terminateActivityInstance(scenarioInstanceID,
+                            activityID, outputset);
                 } else {
                     result = executionService.terminateActivityInstance(
                             scenarioInstanceID, activityID);
                 }
                 break;
             default:
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"The state transition "
-                                + state + " is unknown\"}")
-                        .build();
+                return this.buildBadRequestResponse("{\"error\":\"The state transition "
+                        + state + " is unknown\"}");
         }
         if (result) {
             return Response.status(Response.Status.ACCEPTED)
@@ -508,25 +460,14 @@ public class ActivityRestService {
                     .entity("{\"message\":\"activity state changed.\"}")
                     .build();
         } else {
-            executionService
-                    .reloadScenarioInstanceFromDatabase(
+            executionService.reloadScenarioInstanceFromDatabase(
                             scenarioID, scenarioInstanceID);
             if ("begin".equals(state)) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"impossible to "
-                                + "start"
-                                + " activity with id "
-                                + activityID + "\"}")
-                        .build();
+                return this.buildBadRequestResponse("{\"error\":\"impossible to "
+                        + "start activity with id " + activityID + "\"}");
             } else {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"impossible to "
-                                + "terminate"
-                                + " activity with id "
-                                + activityID + "\"}")
-                        .build();
+                return this.buildBadRequestResponse("{\"error\":\"impossible to "
+                    + "terminate activity with id " + activityID + "\"}");
             }
 
         }
@@ -565,8 +506,7 @@ public class ActivityRestService {
             @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.
-                openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
+        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such "
@@ -647,35 +587,23 @@ public class ActivityRestService {
             @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService
-                .openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "scenario instance.\"}")
-                    .build();
+        if (!this.isScenarioAndInstanceValid(scenarioID, scenarioInstanceID)) {
+            return this.buildNotFoundResponse("{\"error\":\"There is no such "
+                    + "scenario instance.\"}");
         }
         if (!executionService.testActivityInstanceExists(activityID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "activity instance.\"}")
-                    .build();
+            return this.buildNotFoundResponse("{\"error\":\"There is no such "
+                    + "activity instance.\"}");
         }
         if (executionService.getOutputSetsForActivityInstance(activityID) == null
-                || executionService.
-                getOutputSetsForActivityInstance(activityID).size() == 0) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no outputSet for this "
-                            + "activity instance.\"}")
-                    .build();
+                || executionService.getOutputSetsForActivityInstance(activityID).size() == 0) {
+            return this.buildNotFoundResponse("{\"error\":\"There is no outputSet for this "
+                    + "activity instance.\"}");
         }
         Map<Integer, Map<String, String>> outputSetMap = executionService
                 .getOutputSetsForActivityInstance(activityID);
         int j = 0;
-        DataObjectSetsJaxBean[] outputSets = new DataObjectSetsJaxBean[outputSetMap.keySet()
-                .size()];
+        DataObjectSetsJaxBean[] outputSets = new DataObjectSetsJaxBean[outputSetMap.size()];
         for (Integer i : outputSetMap.keySet()) {
             DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
             outputSet.setId(i);
@@ -694,4 +622,30 @@ public class ActivityRestService {
         return Response.ok(outputSets, MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     * @param instances The Map containing information about the activity instances.
+     *                  We Assume that the key is a the id and the value is a Map
+     *                  from String to Object with the properties of the instance.
+     * @param uriInfo   Specifies the context. For example the uri
+     *                  of the request.
+     * @return			JSON Object containing activities and their references.
+     */
+    private JSONObject buildJSONObjectForReferencedActivities(
+            Collection<ActivityInstance> instances, UriInfo uriInfo) {
+        List<Integer> ids = new ArrayList<>(instances.size());
+        JSONArray activities = new JSONArray();
+        for (ActivityInstance instance : instances) {
+            JSONObject activityJSON = new JSONObject();
+            ids.add(instance.getControlNodeInstanceId());
+            activityJSON.put("id", instance.getControlNodeInstanceId());
+            activityJSON.put("label", instance.getLabel());
+            activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
+                    + instance.getControlNodeInstanceId());
+            activities.put(activityJSON);
+        }
+        JSONObject result = new JSONObject();
+        result.put("ids", new JSONArray(ids));
+        result.put("activities", activities);
+        return result;
+    }
 }
