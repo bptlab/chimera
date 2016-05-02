@@ -13,10 +13,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,21 +43,15 @@ public class ScenarioInstanceRestService {
     @Produces(MediaType.APPLICATION_JSON) public Response startNewInstance(
             @Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (executionService.existScenario(scenarioId)) {
-            int instanceId = executionService.startNewScenarioInstance();
-            return Response.status(Response.Status.CREATED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"id\":" + instanceId
-                            + ",\"link\":\"" + uri.getAbsolutePath()
-                            + "/" + instanceId + "\"}")
-                    .build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The Scenario could not be found!\"}")
-                    .build();
-        }
+        int instanceId = executionService.startNewScenarioInstance();
+        return Response.status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"id\":" + instanceId
+                        + ",\"link\":\"" + uri.getAbsolutePath()
+                        + "/" + instanceId + "\"}")
+                .build();
     }
+
     /**
      * Creates a new instance of a specified scenario.
      * This method assumes that the new instance will be named.
@@ -89,22 +79,14 @@ public class ScenarioInstanceRestService {
         if (name == null) {
             return startNewInstance(uriInfo, scenarioID);
         }
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (executionService.existScenario(scenarioID)) {
-            DbScenarioInstance instance = new DbScenarioInstance();
-            int instanceId = instance.createNewScenarioInstance(scenarioID, name.getName());
-            return Response.status(Response.Status.CREATED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"id\":" + instanceId
-                            + ",\"link\":\"" + uriInfo.getAbsolutePath()
-                            + "/" + instanceId + "\"}")
-                    .build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The Scenario could not be found!\"}")
-                    .build();
-        }
+        DbScenarioInstance instance = new DbScenarioInstance();
+        int instanceId = instance.createNewScenarioInstance(scenarioID, name.getName());
+        return Response.status(Response.Status.CREATED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"id\":" + instanceId
+                        + ",\"link\":\"" + uriInfo.getAbsolutePath()
+                        + "/" + instanceId + "\"}")
+                .build();
     }
 
 
@@ -133,25 +115,7 @@ public class ScenarioInstanceRestService {
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int instanceId) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         DbScenarioInstance instance = new DbScenarioInstance();
-        if (!executionService.existScenarioInstance(instanceId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"message\":\"There is no instance "
-                            + "with the id " + instanceId + "\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        } else if (!executionService.existScenario(scenarioId)) {
-            scenarioId = instance.getScenarioID(instanceId);
-            try {
-                return Response.seeOther(
-                        new URI("interface/v2/scenario/" + scenarioId
-                                + "/instance/" + instanceId))
-                        .build();
-            } catch (URISyntaxException e) {
-                log.error("Error:", e);
-            }
-        }
         JSONObject result = new JSONObject(instance.getInstanceMap(instanceId));
         result.put("activities", uriInfo.getAbsolutePath() + "/activity");
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
@@ -164,14 +128,6 @@ public class ScenarioInstanceRestService {
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int instanceId) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (!executionService.existScenarioInstance(instanceId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"message\":\"There is no instance "
-                            + "with the id " + instanceId + "\"}")
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        }
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
         List<String> eventKeys = scenarioInstance.getRegisteredEventKeys();
         return Response.ok(MediaType.APPLICATION_JSON).entity(eventKeys).build();
@@ -191,25 +147,16 @@ public class ScenarioInstanceRestService {
     public Response checkTermination(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int instanceId) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (executionService.existScenario(scenarioId) && executionService
-                .existScenarioInstance(instanceId)) {
-            ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
-            if (instance.canTerminate()) {
-                return Response.status(Response.Status.OK)
-                        .type(MediaType.TEXT_PLAIN)
-                        .entity("Instance can be deleted")
-                        .build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.TEXT_PLAIN)
-                        .entity("Termination condition is not fulfilled")
-                        .build();
-            }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND)
+        ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
+        if (instance.canTerminate()) {
+            return Response.status(Response.Status.OK)
                     .type(MediaType.TEXT_PLAIN)
-                    .entity("Scenario or scenario instance does not exist")
+                    .entity("Instance can be deleted")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity("Termination condition is not fulfilled")
                     .build();
         }
     }
@@ -227,26 +174,17 @@ public class ScenarioInstanceRestService {
     @Produces(MediaType.TEXT_PLAIN)
     public Response terminateScenarioInstance(@PathParam("scenarioId") int scenarioId,
                                               @PathParam("instanceId") int instanceId) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (executionService.existScenario(scenarioId) && executionService
-                .existScenarioInstance(instanceId)) {
-            ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
-            if (instance.canTerminate()) {
-                instance.terminate();
-                return Response.status(Response.Status.OK)
-                        .type(MediaType.TEXT_PLAIN)
-                        .entity("Instance has been terminated")
-                        .build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.TEXT_PLAIN)
-                        .entity("Termination condition is not fulfilled")
-                        .build();
-            }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND)
+        ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
+        if (instance.canTerminate()) {
+            instance.terminate();
+            return Response.status(Response.Status.OK)
                     .type(MediaType.TEXT_PLAIN)
-                    .entity("Scenario or scenario instance does not exist")
+                    .entity("Instance has been terminated")
+                    .build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity("Termination condition is not fulfilled")
                     .build();
         }
     }
@@ -273,13 +211,6 @@ public class ScenarioInstanceRestService {
             @Context UriInfo uri,
             @PathParam("scenarioId") int scenarioId,
             @QueryParam("filter") String filterString) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (!executionService.existScenario(scenarioId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"Scenario not found!\"}")
-                    .build();
-        }
         DbScenarioInstance instance = new DbScenarioInstance();
         JSONObject result = new JSONObject();
         Map<Integer, String> data =

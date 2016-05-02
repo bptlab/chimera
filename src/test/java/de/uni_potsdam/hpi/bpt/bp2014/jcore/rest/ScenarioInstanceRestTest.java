@@ -2,8 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.NamedJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
-import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,11 @@ public class ScenarioInstanceRestTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(ScenarioInstanceRestService.class);
+        ResourceConfig config = new ResourceConfig(ScenarioInstanceRestService.class);
+        config.register(AuthorizationRequestFilter.class);
+        System.out.println(config.getClasses());
+
+        return config;
     }
 
     @Before
@@ -75,7 +79,7 @@ public class ScenarioInstanceRestTest extends AbstractTest {
         assertEquals("Start new isntance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"The Scenario could not be found!\"}",
+                "{\"error\":\"There is no scenario with id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -95,24 +99,24 @@ public class ScenarioInstanceRestTest extends AbstractTest {
     public void testTerminateInvalidScenarioId() {
         Response response = base.path("scenario/9999/instance/72/terminate")
                 .request().post(Entity.json(null));
-        assertEquals("The Response code of terminateScenarioInstance was not 404",
-                404, response.getStatus());
+        assertEquals("The Response code of terminateScenarioInstance was not 400",
+                400, response.getStatus());
         assertEquals("Get terminateScenarioInstance does not return TEXT",
-                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertEquals("The returned TEXT does not contain the expected content",
-                "Scenario or scenario instance does not exist",
+                "{\"error\":\"There is no scenario with id 9999\"}",
                 response.readEntity(String.class));
     }
 
     @Test
     public void testTerminateInvalidInstanceId() {
         Response response = base.path("scenario/1/instance/9999/terminate").request().post(Entity.json(null));
-        assertEquals("The Response code of terminating an instances was not 404",
-                404, response.getStatus());
+        assertEquals("The Response code of terminating an instances was not 400",
+                400, response.getStatus());
         assertEquals("The Media type of terminating an instance was not TEXT",
-                MediaType.TEXT_PLAIN, response.getMediaType().toString());
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertEquals("The content of the response was not as expected",
-                "Scenario or scenario instance does not exist",
+                "{\"error\":\"There is no scenario instance with id 9999\"}",
                 response.readEntity(String.class));
     }
 
@@ -124,7 +128,7 @@ public class ScenarioInstanceRestTest extends AbstractTest {
         assertEquals("Start new isntance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"The Scenario could not be found!\"}",
+                "{\"error\":\"There is no scenario with id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -192,19 +196,19 @@ public class ScenarioInstanceRestTest extends AbstractTest {
         assertEquals("Get instances returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON is invalid or does not contain the expected message",
-                "{\"error\":\"Scenario not found!\"}",
+                "{\"error\":\"There is no scenario with id 9999\"}",
                 jsonEquals(response.readEntity(String.class)));
     }
 
     @Test
     public void testGetScenarioInstanceInvalidInstanceId() {
-        Response response = base.path("scenario/9999/instance/9999").request().get();
+        Response response = base.path("scenario/1/instance/9999").request().get();
         assertEquals("The Response code of getScenarioInstance was not 404",
                 404, response.getStatus());
         assertEquals("getScenarioInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"There is no instance with the id 9999\"}",
+                "{\"error\":\"There is no scenario instance with id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
