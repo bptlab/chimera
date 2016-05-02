@@ -48,6 +48,8 @@ public final class EventDispatcher {
 
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
+    private static Notifier notifier = new Notifier();
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
 
@@ -64,6 +66,7 @@ public final class EventDispatcher {
             event.terminate(eventJson);
         }
         unregisterEvent(event);
+        notifier.notifyEventOccurrance();
         return Response.accepted("Event received.").build();
     }
 
