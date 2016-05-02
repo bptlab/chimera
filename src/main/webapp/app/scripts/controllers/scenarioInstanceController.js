@@ -264,6 +264,38 @@ angular.module('jfrontend')
                 });
             };
 
+            // check whether the scenario instance can terminate
+            this.canTerminate = function () {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/canTerminate").
+                success(function () {
+                    instanceCtrl.instanceDetails.canTerminate = true;
+                }).
+                error(function () {
+                    instanceCtrl.instanceDetails.canTerminate = false;
+                    console.log('request failed');
+                });
+            };
+
+            // terminate the scenario instance
+            this.terminateInstance = function () {
+                $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/terminate").
+                success(function () {
+                    console.log('[DBG] request successful');
+                }).
+                error(function () {
+                    console.log('request failed');
+                });
+
+                // close SSE connection
+                $http.delete(JEngine_Server_URL + "/" + InstanceName + "/api/sse")
+                    .success(function() {
+                        console.log('[DBG] closing sse connection successful');
+                    })
+                    .error(function() {
+                        console.log('request failed');
+                    });
+            };
+
             this.getActivityReferences = function (activityID) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/references").
                 success(function (data) {
