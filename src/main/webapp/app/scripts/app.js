@@ -14,7 +14,8 @@ var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 (function () {
     var jfrontend = angular.module('jfrontend', [
         'ngRoute',
-        'adminConfiguration'
+        'adminConfiguration',
+        'ui.bootstrap'
         ]);
 
     // Defining Routes for the AngularJS App
