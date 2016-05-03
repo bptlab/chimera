@@ -585,6 +585,19 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `startquery`
+--
+
+CREATE TABLE IF NOT EXISTS `startquery` (
+  `query`            VARCHAR(512) NOT NULL,
+  `scenario_id`      INT(11)      NOT NULL,
+  `dataattribute_id` INT(11)      NOT NULL,
+  `jsonpath`         VARCHAR(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `state`
 --
 

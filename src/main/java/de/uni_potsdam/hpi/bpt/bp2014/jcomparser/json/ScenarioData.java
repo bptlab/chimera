@@ -31,6 +31,7 @@ public class ScenarioData {
     private List<TerminationCondition> terminationConditions;
     private List<DataObject> dataObjects;
     private DomainModel domainModel;
+    private StartQuery startQuery;
 
     private int scenarioDbId;
 
@@ -43,6 +44,10 @@ public class ScenarioData {
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
             this.domainModel = new DomainModel(domainModelJson.toString());
+
+            // JSONObject startQueryJson = scenarioJson.getJSONObject("startquery");
+            // this.startQuery = new StartQuery(startQueryJson);
+
             this.fragments = generateFragmentList(scenarioJson, domainModel);
 
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
@@ -53,6 +58,7 @@ public class ScenarioData {
             throw new JSONException("No valid scenario json provided");
         }
     }
+
 
     public int save() {
         this.scenarioDbId = saveScenario();
