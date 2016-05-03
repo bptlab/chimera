@@ -17,38 +17,38 @@ public class DataClass implements IPersistable {
     private static Logger logger = Logger.getLogger(DataClass.class);
 
     /**
-	 * This is the modelID of the dataClass.
-	 */
-	protected String modelId;
-	/**
-	 * This is the databaseID of the dataClass.
-	 */
-	protected int databaseId;
+     * This is the modelID of the dataClass.
+     */
+    protected String modelId;
+    /**
+     * This is the databaseID of the dataClass.
+     */
+    protected int databaseId;
 
     /**
-	 * This is the name of the dataClass.
-	 */
-	protected String name;
-	/**
-	 * This is a list containing all attributes belonging to this dataClass.
-	 */
-	protected List<DataAttribute> attributes = new LinkedList<>();
-	/**
-	 * This contains the JSON representation of the dataClass.
-	 */
-	protected JSONObject jsonRepresentation;
-	/**
-	 * This contains the OLC of the dataClass (if one exists).
-	 */
-	protected Olc olc;
+     * This is the name of the dataClass.
+     */
+    protected String name;
+    /**
+     * This is a list containing all attributes belonging to this dataClass.
+     */
+    protected List<DataAttribute> attributes = new LinkedList<>();
+    /**
+     * This contains the JSON representation of the dataClass.
+     */
+    protected JSONObject jsonRepresentation;
+    /**
+     * This contains the OLC of the dataClass (if one exists).
+     */
+    protected Olc olc;
 
-	protected int isEvent = 0;
+    protected int isEvent = 0;
 
     protected Map<String, Integer> stateToDatabaseId = new HashMap<>();
 
     protected List<String> states = new ArrayList<>();
 
-	public DataClass(final String element) {
+    public DataClass(final String element) {
         try {
             this.jsonRepresentation = new JSONObject(element);
             this.name = this.jsonRepresentation.getString("name");
@@ -58,24 +58,25 @@ public class DataClass implements IPersistable {
             }
             this.modelId = this.jsonRepresentation.getString("_id");
             generateDataAttributeList(this.jsonRepresentation.getJSONArray("attributes"));
-			if (this.jsonRepresentation.has("olc")) {
-				this.olc = new Olc(this.jsonRepresentation.get("olc").toString());
-			}
+            if (this.jsonRepresentation.has("olc")) {
+                this.olc = new Olc(this.jsonRepresentation.get("olc").toString());
+            }
         } catch (JSONException e) {
             logger.trace(e);
             throw new JSONException("Invalid class json");
         }
     }
 
-	/**
-	 * This method saves the dataClass to the database.
-	 *
-	 * @return the databaseID of the dataClass.
-	 */
-	@Override public int save() {
-		Connector conn = new Connector();
-		this.databaseId = conn.insertDataClassIntoDatabase(this.name, this.isEvent);
-		saveDataAttributes();
+    /**
+     * This method saves the dataClass to the database.
+     *
+     * @return the databaseID of the dataClass.
+     */
+    @Override
+    public int save() {
+        Connector conn = new Connector();
+        this.databaseId = conn.insertDataClassIntoDatabase(this.name, this.isEvent);
+        saveDataAttributes();
         Connector connector = new Connector();
         for (String state : this.states) {
             int stateID = connector.insertStateIntoDatabase(state, this.databaseId);
@@ -83,62 +84,63 @@ public class DataClass implements IPersistable {
         }
 
         return databaseId;
-	}
+    }
 
-	/**
-	 * This method gets all the attributes from the JSON.
-	 * DataAttributes can only be alphanumerical.
-	 *
-	 * @param jsonAttributes This JSONArray contains all attributes from the JSON.
-	 */
-	protected void generateDataAttributeList(JSONArray jsonAttributes) {
-		int length = jsonAttributes.length();
-		for (int i = 0; i < length; i++) {
-			DataAttribute dataAttribute = new DataAttribute(
-					jsonAttributes.getJSONObject(i).getString("name"),
-					jsonAttributes.getJSONObject(i).getString("datatype")
-			);
-			this.attributes.add(dataAttribute);
-		}
-	}
+    /**
+     * This method gets all the attributes from the JSON.
+     * DataAttributes can only be alphanumerical.
+     *
+     * @param jsonAttributes This JSONArray contains all attributes from the JSON.
+     */
+    protected void generateDataAttributeList(JSONArray jsonAttributes) {
+        int length = jsonAttributes.length();
+        for (int i = 0; i < length; i++) {
+            DataAttribute dataAttribute = new DataAttribute(
+                jsonAttributes.getJSONObject(i).getString("name"),
+                jsonAttributes.getJSONObject(i).getString("datatype"),
+                jsonAttributes.getJSONObject(i).getString("_id")
+            );
+            this.attributes.add(dataAttribute);
+        }
+    }
 
 
-	private void saveDataAttributes() {
-		for (DataAttribute dataAttribute : attributes) {
+    private void saveDataAttributes() {
+        for (DataAttribute dataAttribute : attributes) {
             dataAttribute.setDataClassID(databaseId);
-			dataAttribute.save();
-		}
-	}
+            dataAttribute.save();
+        }
+    }
 
 
-	public Optional<DataAttribute> getDataAttributeByName(String attributeName) {
-		for (DataAttribute attribute : attributes) {
-			if (attribute.getDataAttributeName().equals(attributeName)) {
-				return Optional.of(attribute);
-			}
-		}
-		return Optional.empty();
-	}
+    public Optional<DataAttribute> getDataAttributeByName(String attributeName) {
+        for (DataAttribute attribute : attributes) {
+            if (attribute.getDataAttributeName().equals(attributeName)) {
+                return Optional.of(attribute);
+            }
+        }
+        return Optional.empty();
+    }
 
-	public int getDatabaseId() {
-		return databaseId;
-	}
+    public int getDatabaseId() {
+        return databaseId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<DataAttribute> getAttributes() {
-		return attributes;
-	}
+    public List<DataAttribute> getAttributes() {
+        return attributes;
+    }
 
-	public JSONObject getJsonRepresentation() {
-		return jsonRepresentation;
-	}
+    public JSONObject getJsonRepresentation() {
+        return jsonRepresentation;
+    }
 
-	public String getModelId() {
-		return modelId;
-	}
+    public String getModelId() {
+        return modelId;
+    }
 
     public Map<String, Integer> getStateToDatabaseId() {
         return stateToDatabaseId;
@@ -160,11 +162,11 @@ public class DataClass implements IPersistable {
         this.name = name;
     }
 
-	public Olc getOlc() {
-		return this.olc;
-	}
+    public Olc getOlc() {
+        return this.olc;
+    }
 
-	public void setOlc(Olc olc) {
-		this.olc = olc;
-	}
+    public void setOlc(Olc olc) {
+        this.olc = olc;
+    }
 }
