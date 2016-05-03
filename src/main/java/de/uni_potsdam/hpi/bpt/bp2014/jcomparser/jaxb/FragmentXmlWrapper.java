@@ -67,19 +67,25 @@ public class FragmentXmlWrapper {
         return this.bpmnProcessXml.getWebServiceTasks();
     }
 
+    public List<ReceiveTask> getReceiveTasks() {
+        return this.bpmnProcessXml.getReceiveTasks();
+    }
+
     public List<AbstractDataControlNode> getAllActivities() {
-        List<? super AbstractDataControlNode> allActivities = new ArrayList<>();
+        List< ? super AbstractDataControlNode> allActivities = new ArrayList<>();
         allActivities.addAll(this.bpmnProcessXml.getTasks());
         allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
+        allActivities.addAll(this.bpmnProcessXml.getReceiveTasks());
         return (List<AbstractDataControlNode>) allActivities;
     }
 
     public List<AbstractDataControlNode> getAllEvents() {
-        List<? super AbstractDataControlNode> allEvents = new ArrayList<>();
+        List< ? super AbstractDataControlNode> allEvents = new ArrayList<>();
         allEvents.add(this.bpmnProcessXml.getStartEvent());
         allEvents.add(this.bpmnProcessXml.getEndEvent());
         allEvents.addAll(this.bpmnProcessXml.getIntermediateEvents());
         allEvents.addAll(this.bpmnProcessXml.getBoundaryEvents());
+        allEvents.addAll(this.bpmnProcessXml.getReceiveTasks());
         return (List<AbstractDataControlNode>) allEvents;
     }
 
