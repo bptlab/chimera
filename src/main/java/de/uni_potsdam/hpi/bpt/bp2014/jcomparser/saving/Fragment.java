@@ -164,6 +164,7 @@ public class Fragment {
         nodes.addAll(this.fragmentXml.getXorGateways());
         nodes.addAll(this.fragmentXml.getAndGateways());
         nodes.addAll(this.fragmentXml.getAllActivities());
+        nodes.addAll(this.fragmentXml.getReceiveTasks());
         nodes.addAll(this.fragmentXml.getIntermediateEvents());
         nodes.addAll(this.fragmentXml.getBoundaryEvents());
         nodes.addAll(this.fragmentXml.getEventBasedGateways());

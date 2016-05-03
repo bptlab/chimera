@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.*;
 
 /**
  * This class hides the logic of dispatching the type of event, by returning the appropriate
@@ -29,19 +28,22 @@ public class EventFactory {
         return this.getEventForControlNodeId(controlNodeId, fragmentInstanceId);
     }
 
-    public AbstractEvent getEventForControlNodeId(Integer controlNodeId, Integer fragmentInstanceId) {
+    public AbstractEvent getEventForControlNodeId(
+            Integer controlNodeId, Integer fragmentInstanceId) {
         DbControlNode dbControlNode = new DbControlNode();
         String eventType = dbControlNode.getType(controlNodeId);
-        if ("IntermediateEvent".equals(eventType)) {
-            return new IntermediateEvent(controlNodeId, fragmentInstanceId, this.scenarioInstance);
-        } else if ("BoundaryEvent".equals(eventType)) {
-            return new BoundaryEvent(controlNodeId, fragmentInstanceId, this.scenarioInstance);
-        } else if ("StartEvent".equals(eventType)) {
-            return new StartEvent(controlNodeId, fragmentInstanceId, this.scenarioInstance);
-        } else if ("TimerEvent".equals(eventType)) {
-            return new TimerEventInstance(controlNodeId, fragmentInstanceId, this.scenarioInstance);
-        } else {
-            throw new IllegalArgumentException("Unsupported Event Type");
+        switch (eventType) {
+            case "IntermediateEvent": return new IntermediateEvent(
+                    controlNodeId, fragmentInstanceId, this.scenarioInstance);
+            case "BoundaryEvent": return new BoundaryEvent(
+                    controlNodeId, fragmentInstanceId, this.scenarioInstance);
+            case "StartEvent": return new StartEvent(
+                    controlNodeId, fragmentInstanceId, this.scenarioInstance);
+            case "TimerEvent": return new TimerEventInstance(
+                    controlNodeId, fragmentInstanceId, this.scenarioInstance);
+            case "ReceiveActivity": return new ReceiveActivity(
+                    controlNodeId, fragmentInstanceId, this.scenarioInstance);
+            default: throw new IllegalArgumentException("Unsupported Event Type");
         }
     }
 }
