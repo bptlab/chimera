@@ -58,20 +58,24 @@ public abstract class AbstractOutgoingBehavior {
                     controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
         case "IntermediateEvent":
-            controlNodeInstance = new IntermediateEvent(controlNodeId, fragmentInstanceId,
-                    scenarioInstance);
+            controlNodeInstance = new IntermediateEvent(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
             break;
+		case "ReceiveActivity":
+			controlNodeInstance = new ReceiveActivity(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
+			break;
         case "TimerEvent":
-            controlNodeInstance = new TimerEventInstance(controlNodeId, fragmentInstanceId,
-                    scenarioInstance);
+            controlNodeInstance = new TimerEventInstance(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
             break;
         case "BoundaryEvent":
-            controlNodeInstance = new BoundaryEvent(controlNodeId, fragmentInstanceId,
-                    scenarioInstance);
+            controlNodeInstance = new BoundaryEvent(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
             break;
         case "EventBasedGateway":
-            controlNodeInstance = new EventBasedGatewayInstance(controlNodeId, fragmentInstanceId,
-                    scenarioInstance);
+            controlNodeInstance = new EventBasedGatewayInstance(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
             break;
         default:
 			break;
