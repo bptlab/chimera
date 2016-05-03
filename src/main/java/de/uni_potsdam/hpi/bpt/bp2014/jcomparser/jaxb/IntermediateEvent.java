@@ -26,10 +26,6 @@ public class IntermediateEvent extends AbstractDataControlNode {
     @XmlElement(name = "bpmn:timerEventDefinition")
     private TimerDefinition timer;
 
-    private int databaseId;
-
-    private int fragmentId;
-
     @Override
     public int save() {
         if (timer == null) {
@@ -56,14 +52,6 @@ public class IntermediateEvent extends AbstractDataControlNode {
         connector.insertEventIntoDatabase("TimerEvent", this.eventQuery,
                 this.fragmentId, this.getId(), this.databaseId);
         connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
-    }
-
-    public int getDatabaseId() {
-        return databaseId;
-    }
-
-    public void setDatabaseId(int databaseId) {
-        this.databaseId = databaseId;
     }
 
     public String getEventQuery() {
