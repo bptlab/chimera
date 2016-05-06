@@ -40,10 +40,6 @@ public class DataDependencyWebService extends AbstractRestService {
             @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("inputsetId") int inputsetId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (!executionService.existScenarioInstance(scenarioId, scenarioInstanceId)) {
-            return this.buildNotFoundResponse("{\"error\":\"There is no such "
-                    + "scenario instance.\"}");
-        }
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         return buildDataSetResponse(inputsetId, executionService, "inputSet", scenarioInstanceId);
     }
@@ -73,11 +69,6 @@ public class DataDependencyWebService extends AbstractRestService {
             @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("outputsetId") int outputsetID) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.existScenarioInstance(
-                scenarioID, scenarioInstanceId)) {
-            return this.buildNotFoundResponse("{\"error\":\"There is no such "
-                    + "scenario instance.\"}");
-        }
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceId);
         return buildDataSetResponse(outputsetID, executionService, "outputSet", scenarioInstanceId);
     }

@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 /**
  *
  */
-@Path("interface/v2/scenario/{scenarioID}/emailtask")
+@Path("interface/v2/scenario/{scenarioId}/emailtask")
 public class EmailRestService {
     /**
      * This method provides information about all email Tasks inside
@@ -21,26 +21,19 @@ public class EmailRestService {
      * A Json Object will be returned with an array of ids and a Map
      * from ids to labels.
      *
-     * @param scenarioID   The ID of the scenario, its mail tasks will be DataDependencyWebServiceTestreturned.
+     * @param scenarioId   The ID of the scenario, its mail tasks will be DataDependencyWebServiceTestreturned.
      * @param filterString A Filter String, only mail tasks with a label containing
      *                     this filter String will be returned.
      * @return The JSON Object with ids and labels.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON) public Response getAllEmailTasks(
-            @PathParam("scenarioID") int scenarioID,
+            @PathParam("scenarioID") int scenarioId,
             @QueryParam("filter") String filterString) {
-        DbScenario scenario = new DbScenario();
         DbEmailConfiguration mail = new DbEmailConfiguration();
-        if (!scenario.existScenario(scenarioID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
         String jsonRepresentation = JsonUtil
                 .jsonWrapperLinkedList(
-                        mail.getAllEmailTasksForScenario(scenarioID));
+                        mail.getAllEmailTasksForScenario(scenarioId));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -52,7 +45,7 @@ public class EmailRestService {
      * A Configuration contains a receiver, a subject and a content.
      * A Mail task is specified by:
      *
-     * @param scenarioID The ID of the scenario model.
+     * @param scenarioId The ID of the scenario model.
      * @param mailTaskID The control node ID of the mail Task.
      * @return Returns a 404 if the mail Task or scenario does not exist
      * and a 200 (OK) with a JSON-Object if the emailTask was found.
@@ -60,13 +53,12 @@ public class EmailRestService {
     @GET
     @Path("{emailTaskID}")
     @Produces(MediaType.APPLICATION_JSON) public Response getEmailTaskConfiguration(
-            @PathParam("scenarioID") int scenarioID,
+            @PathParam("scenarioID") int scenarioId,
             @PathParam("emailTaskID") int mailTaskID) {
-        DbScenario scenario = new DbScenario();
         DbEmailConfiguration mail = new DbEmailConfiguration();
         EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
         mailConfig.setReceiver(mail.getReceiverEmailAddress(mailTaskID));
-        if (!scenario.existScenario(scenarioID) || mailConfig.getReceiver().equals("")) {
+        if ("".equals(mailConfig.getReceiver())) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{}")

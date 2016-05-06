@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;
@@ -31,7 +32,9 @@ public class DataObjectRestTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(DataObjectRestInterface.class);
+        ResourceConfig config = new ResourceConfig(DataObjectRestInterface.class);
+        config.register(AuthorizationRequestFilter.class);
+        return config;
     }
 
     @Before
@@ -67,13 +70,13 @@ public class DataObjectRestTest extends AbstractTest {
 
     @Test
     public void testGetDataObjectsInvalidScenarioInstanceId() {
-        Response response = base.path("scenario/9999/instance/9999/dataobject").request().get();
+        Response response = base.path("scenario/1/instance/9999/dataobject").request().get();
         assertEquals("The Response code of getDataObjects was not 404",
                 404, response.getStatus());
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"There is no instance with the id 9999\"}",
+                "{\"error\":\"There is no scenario instance with id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -141,7 +144,7 @@ public class DataObjectRestTest extends AbstractTest {
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"There is no instance with the id 9999\"}",
+                "{\"error\":\"There is no scenario instance with id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }

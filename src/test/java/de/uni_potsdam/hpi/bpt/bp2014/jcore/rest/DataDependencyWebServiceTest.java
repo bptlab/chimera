@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -29,7 +30,9 @@ public class DataDependencyWebServiceTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(DataDependencyWebService.class);
+        ResourceConfig config = new ResourceConfig(DataDependencyWebService.class);
+        config.register(AuthorizationRequestFilter.class);
+        return config;
     }
 
     @Before
@@ -73,7 +76,7 @@ public class DataDependencyWebServiceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
@@ -101,7 +104,7 @@ public class DataDependencyWebServiceTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 

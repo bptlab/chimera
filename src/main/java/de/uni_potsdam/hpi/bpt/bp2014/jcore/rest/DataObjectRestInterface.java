@@ -48,25 +48,6 @@ public class DataObjectRestInterface {
             @PathParam("dataObjectId") int dataObjectID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.existScenarioInstance(scenarioID, instanceID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no instance "
-                            + "with the id " + instanceID + "\"}")
-                    .build();
-        } else if (!executionService.existScenario(scenarioID)) {
-            try {
-                return Response.seeOther(new URI("interface/v2/scenario/"
-                        + executionService
-                        .getScenarioIDForScenarioInstance(
-                                instanceID)
-                        + "/instance/" + instanceID
-                        + "/dataobject/" + dataObjectID))
-                        .build();
-            } catch (URISyntaxException e) {
-                return Response.serverError().build();
-            }
-        }
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         List<Integer> dataObjects =
                 executionService.getAllDataObjectIDs(instanceID);
@@ -74,7 +55,7 @@ public class DataObjectRestInterface {
                 executionService.getDataObjectStates(instanceID);
         Map<Integer, String> labels =
                 executionService.getAllDataObjectNames(instanceID);
-        if (!dataObjects.contains(new Integer(dataObjectID))) {
+        if (!dataObjects.contains(dataObjectID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no dataobject "
@@ -117,25 +98,6 @@ public class DataObjectRestInterface {
             @QueryParam("filter") String filterString) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.existScenarioInstance(scenarioID, instanceID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no instance "
-                            + "with the id " + instanceID + "\"}")
-                    .build();
-        } else if (!executionService.existScenario(scenarioID)) {
-            try {
-                return Response.seeOther(new URI("interface/v2/scenario/"
-                        + executionService
-                        .getScenarioIDForScenarioInstance(
-                                instanceID)
-                        + "/instance/" + instanceID + "/dataobject"))
-                        .build();
-            } catch (URISyntaxException e) {
-                return Response.serverError().build();
-            }
-        }
-
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         List<Integer> dataObjects =
                 executionService.getAllDataObjectIDs(instanceID);
@@ -161,34 +123,31 @@ public class DataObjectRestInterface {
     * The data objects will be created out of the information
     * received from the execution Service.
     * The array elements will be of type {@link DataObjectJaxBean ), hence JSON and
-            * XML can be generated automatically.
-        *
-        * @param uriInfo       A Context object of the server request
-        * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
-                * @param states        The states, mapped from dataobject database id to state (String)
-                * @param labels        The labels, mapped from dataobject database id to label (String)
-                * @return A array with a DataObject for each entry in dataObjectIds
-        */
-        private JSONObject buildListForDataObjects(
-                UriInfo uriInfo,
-                List<Integer> dataObjectIds,
-                Map<Integer, String> states,
-                Map<Integer, String> labels) {
-            JSONObject result = new JSONObject();
-            result.put("ids", dataObjectIds);
-            JSONObject results = new JSONObject();
-            for (Integer id : dataObjectIds) {
-                JSONObject dataObject = new JSONObject();
-                dataObject.put("id", id);
-                dataObject.put("label", labels.get(id));
-                dataObject.put("state", states.get(id));
-                dataObject.put("link", uriInfo.getAbsolutePath() + "/" + id);
-                results.put("" + id, dataObject);
-            }
-            result.put("results", results);
-            return result;
+    * XML can be generated automatically.
+    *
+    * @param uriInfo       A Context object of the server request
+    * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
+            * @param states        The states, mapped from dataobject database id to state (String)
+            * @param labels        The labels, mapped from dataobject database id to label (String)
+            * @return A array with a DataObject for each entry in dataObjectIds
+    */
+    private JSONObject buildListForDataObjects(
+            UriInfo uriInfo,
+            List<Integer> dataObjectIds,
+            Map<Integer, String> states,
+            Map<Integer, String> labels) {
+        JSONObject result = new JSONObject();
+        result.put("ids", dataObjectIds);
+        JSONObject results = new JSONObject();
+        for (Integer id : dataObjectIds) {
+            JSONObject dataObject = new JSONObject();
+            dataObject.put("id", id);
+            dataObject.put("label", labels.get(id));
+            dataObject.put("state", states.get(id));
+            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + id);
+            results.put("" + id, dataObject);
         }
-
-
-
+        result.put("results", results);
+        return result;
+    }
 }
