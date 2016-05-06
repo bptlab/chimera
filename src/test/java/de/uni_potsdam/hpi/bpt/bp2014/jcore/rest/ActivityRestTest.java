@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;
@@ -30,7 +31,9 @@ public class ActivityRestTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(ActivityRestService.class);
+        ResourceConfig config = new ResourceConfig(ActivityRestService.class);
+        config.register(AuthorizationRequestFilter.class);
+        return config;
     }
 
     @Before
@@ -67,7 +70,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"scenario or scenario instance id invalid\"}",
+                "{\"error\":\"There is no scenario instance with id 9999\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -82,7 +85,7 @@ public class ActivityRestTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                jsonEquals("{\"error\":\"There is no scenario with id 0\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
@@ -288,7 +291,7 @@ public class ActivityRestTest extends AbstractTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such scenario instance.\"}")
+                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 

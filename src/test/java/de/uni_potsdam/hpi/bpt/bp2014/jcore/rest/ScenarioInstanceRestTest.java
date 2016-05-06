@@ -33,8 +33,6 @@ public class ScenarioInstanceRestTest extends AbstractTest {
     protected Application configure() {
         ResourceConfig config = new ResourceConfig(ScenarioInstanceRestService.class);
         config.register(AuthorizationRequestFilter.class);
-        System.out.println(config.getClasses());
-
         return config;
     }
 

@@ -55,11 +55,6 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("instanceId") int instanceID,
             @QueryParam("filter") String filterString,
             @QueryParam("state") String state) {
-        if (!this.isScenarioAndInstanceValid(scenarioID, instanceID)) {
-            return this.buildNotFoundResponse(
-                    "{\"error\":\"scenario or scenario instance id invalid\"}");
-        }
-
         if ((filterString == null || filterString.isEmpty()) && (state == null || state
                 .isEmpty())) {
             return getAllActivitiesOfInstance(scenarioID, instanceID, uriInfo);
@@ -89,7 +84,6 @@ public class ActivityRestService extends AbstractRestService {
     private Response getAllActivitiesWithFilterAndState(int scenarioID, int instanceID,
                                                         String filterString, String state, UriInfo uriInfo) {
         Collection<ActivityInstance> instances = getActivitiesOfState(state, scenarioID, instanceID);
-        List<String> allowedStates = Arrays.asList("ready", "terminated", "running");
         if (isLegalState(state)) {
             this.buildNotFoundResponse("{\"error\":\"The state is not allowed "
                     + state + "\"}");
@@ -291,8 +285,8 @@ public class ActivityRestService extends AbstractRestService {
      * This means the label, id and a link for the input-/outputSets.
      *
      * @param uriInfo            A UriInfo object, which holds the server context.
-     * @param scenarioID         The databaseID of a scenario.
-     * @param scenarioInstanceID The databaseID of a scenarioInstance.
+     * @param scenarioId         The databaseID of a scenario.
+     * @param scenarioInstanceId The databaseID of a scenarioInstance.
      * @param activityID         The databaseID of an activityInstance.
      * @return a response Object with the status code:
      * 200 if everything was correct and holds the information about the activityInstance.
@@ -302,19 +296,11 @@ public class ActivityRestService extends AbstractRestService {
     @Path("{activityId}")
     public Response getActivity(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("activityId") int activityID) {
 
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService
-                .openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "scenario instance.\"}")
-                    .build();
-        }
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         if (!executionService.testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
@@ -324,9 +310,11 @@ public class ActivityRestService extends AbstractRestService {
         }
         ActivityJaxBean activity = new ActivityJaxBean();
         activity.setId(activityID);
-        LinkedList<AbstractControlNodeInstance> controlNodeInstances =
+        ExecutionService.getInstance(scenarioId).openExistingScenarioInstance(
+                scenarioId, scenarioInstanceId);
+        List<AbstractControlNodeInstance> controlNodeInstances =
                 executionService.getScenarioInstance(
-                        scenarioInstanceID).getControlNodeInstances();
+                        scenarioInstanceId).getControlNodeInstances();
         for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
             if (controlNodeInstance.getControlNodeInstanceId() == activityID) {
                 activity.setLabel(executionService
@@ -361,12 +349,9 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("activityId") int activityID) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-
         Collection<ActivityInstance> referencedActivities = executionService
                 .getReferentialEnabledActivities(scenarioInstanceID, activityID);
-
-        JSONObject result =
-                buildJSONObjectForReferencedActivities(
+        JSONObject result = buildJSONObjectForReferencedActivities(
                         referencedActivities, uriInfo);
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
@@ -397,8 +382,7 @@ public class ActivityRestService extends AbstractRestService {
             values.put(input.getId(), input.getValue());
         }
 
-        if (executionService
-                .setDataAttributeValues(scenarioInstanceID, activityID, values)) {
+        if (executionService.setDataAttributeValues(scenarioInstanceID, activityID, values)) {
             return this.buildAcceptedResponse("{\"message\":\"attribute value was "
                     + "changed successfully.\"}");
         } else {
@@ -506,13 +490,7 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "scenario instance.\"}")
-                    .build();
-        }
+
         if (!executionService.testActivityInstanceExists(activityID)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
@@ -587,10 +565,6 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("activityId") int activityID) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!this.isScenarioAndInstanceValid(scenarioID, scenarioInstanceID)) {
-            return this.buildNotFoundResponse("{\"error\":\"There is no such "
-                    + "scenario instance.\"}");
-        }
         if (!executionService.testActivityInstanceExists(activityID)) {
             return this.buildNotFoundResponse("{\"error\":\"There is no such "
                     + "activity instance.\"}");
