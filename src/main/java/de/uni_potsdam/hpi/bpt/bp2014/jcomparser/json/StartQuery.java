@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,5 +47,9 @@ public class StartQuery {
 
     public String getQuery() {
         return query;
+    }
+
+    public void register(int scenarioId) {
+        EventDispatcher.registerCaseStartEvent(this.query, scenarioId);
     }
 }

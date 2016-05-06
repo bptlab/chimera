@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
 import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbStartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 import org.apache.log4j.Logger;
@@ -11,24 +12,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class is used to update data attributes according to the result of a webservice task
- * or event.
+ *
  */
-public class DataAttributeWriter {
-    static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
+public class CaseStartAttributeWriter {
 
-    private final int controlNodeInstanceId;
-    private final HistoryLogger attributeLogger = new HistoryLogger();
+    static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
     Map<Integer, String> attributeIdToJsonPath;
 
-    /**
-     * Creates
-     * @param controlNodeId The id of the webservice task or event, writes the data attributes.
-     */
-    public DataAttributeWriter(int controlNodeId, int controlNodeInstanceId) {
-        DbPathMapping pathMapping = new DbPathMapping();
-        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
-        this.controlNodeInstanceId = controlNodeInstanceId;
+    public CaseStartAttributeWriter(int scenarioId) {
+        this.attributeIdToJsonPath = new DbStartQuery().getPathMappings(scenarioId);
     }
 
     public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
@@ -40,8 +32,6 @@ public class DataAttributeWriter {
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
             String jsonPath = idToPathEntry.getValue();
             Object value = JsonPath.read(json, jsonPath);
-            attributeLogger.logDataAttributeTransition(
-                    instance.getDataAttributeInstanceId(), value, controlNodeInstanceId);
             if (instance.isValueAllowed(value)) {
                 instance.setValue(value);
             } else {
@@ -49,8 +39,5 @@ public class DataAttributeWriter {
             }
         }
     }
-
-    public void setAttributeIdToJsonPath(Map<Integer, String> attributeIdToJsonPath) {
-        this.attributeIdToJsonPath = attributeIdToJsonPath;
-    }
 }
+

@@ -8,6 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.FragmentInserter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.FragmentValidator;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,8 @@ import org.json.JSONObject;
 
 import javax.xml.bind.JAXBException;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -45,8 +48,10 @@ public class ScenarioData {
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
             this.domainModel = new DomainModel(domainModelJson.toString());
 
-            // JSONObject startQueryJson = scenarioJson.getJSONObject("startquery");
-            // this.startQuery = new StartQuery(startQueryJson);
+            if (scenarioJson.has("startquery")) {
+                JSONObject startQueryJson = scenarioJson.getJSONObject("startquery");
+                this.startQuery = new StartQuery(startQueryJson);
+            }
 
             this.fragments = generateFragmentList(scenarioJson, domainModel);
 
@@ -66,6 +71,11 @@ public class ScenarioData {
 
 
         domainModel.save();
+        List<DataAttribute> dataAttributes = domainModel.getDataClasses().stream()
+                .map(DataClass::getAttributes)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
 
         for (DataObject dataObject : this.dataObjects) {
             dataObject.setScenarioId(this.scenarioDbId);
@@ -81,6 +91,11 @@ public class ScenarioData {
 
         setTerminationCondition(scenarioJson);
         terminationConditions.forEach(TerminationCondition::save);
+
+        if (startQuery != null) {
+            this.startQuery.save(dataAttributes, scenarioDbId);
+            this.startQuery.register(this.scenarioDbId);
+        }
 
         return this.scenarioDbId;
     }
