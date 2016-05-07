@@ -47,7 +47,11 @@ public class ScenarioInstance {
 	private LinkedList<AbstractControlNodeInstance> terminatedControlNodeInstances
 			= new LinkedList<>();
 
-	private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
+    public List<FragmentInstance> getFragmentInstances() {
+        return fragmentInstances;
+    }
+
+    private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
 	private LinkedList<AbstractControlNodeInstance> referentialRunningControlNodeInstances
 			= new LinkedList<>();
 	private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();

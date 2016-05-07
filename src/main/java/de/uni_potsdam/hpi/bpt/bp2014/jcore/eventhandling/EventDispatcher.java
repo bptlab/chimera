@@ -12,6 +12,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.glassfish.jersey.client.ClientProperties;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -22,9 +25,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -46,14 +51,18 @@ public final class EventDispatcher {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioID}/instance/{instanceID}/events/{requestKey}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
     public static Response receiveEvent(
-            @PathParam("scenarioID") int scenarioId,
-            @PathParam("instanceID") int scenarioInstanceId,
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("requestKey") String requestId,
             String eventJson) {
         AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
-        event.terminate(eventJson);
+        if (eventJson.isEmpty()) {
+            event.terminate();
+        } else {
+            event.terminate(eventJson);
+        }
         unregisterEvent(event);
         return Response.accepted("Event received.").build();
     }
@@ -61,6 +70,25 @@ public final class EventDispatcher {
     public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
         ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
         return getEvent(scenarioInstance, requestId);
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("scenario/{scenarioId}/instance/{instanceId}/events")
+    public static Response getRegisteredEvents(
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("scenarioId") int scenarioId) {
+        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+        List<Integer> fragmentIds = scenarioInstance.getFragmentInstances().stream()
+                .map(FragmentInstance::getFragmentId)
+                .collect(Collectors.toList());
+        DbEventMapping eventMapping = new DbEventMapping();
+        List<String> requestKeys = fragmentIds.stream()
+                .map(eventMapping::getRequestKeysForFragment).flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        JSONArray jsonArray = new JSONArray(requestKeys);
+        return Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonArray.toString()).build();
     }
 
 
@@ -176,17 +204,24 @@ public final class EventDispatcher {
         queryRequest.addProperty("notificationPath", notificationPath);
         Gson gson = new Gson();
         Client client = ClientBuilder.newClient();
+        client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
+        client.property(ClientProperties.READ_TIMEOUT, 1000);
         WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
-        Response response = target.request()
-                .post(Entity.json(gson.toJson(queryRequest)));
-        if (response.getStatus() != 200) {
-            // throw new RuntimeException("Query could not be registered");
+        try {
+            Response response = target.request()
+                    .post(Entity.json(gson.toJson(queryRequest)));
+            if (response.getStatus() != 200) {
+                // throw new RuntimeException("Query could not be registered");
+                logger.debug("Could not register Query");
+                return "-1";
+            } else {
+                // return the UUID of the Notification Rule
+                // so that it can be removed later
+                return response.readEntity(String.class);
+            }
+        } catch (ProcessingException e) {
             logger.debug("Could not register Query");
             return "-1";
-        } else {
-            // return the UUID of the Notification Rule
-            // so that it can be removed later
-            return response.readEntity(String.class);
         }
     }
 
@@ -200,9 +235,15 @@ public final class EventDispatcher {
 
     private static void unregisterNotificationRule(String notificationRuleId) {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
-        Response response = target.request().delete();
-        if(response.getStatus() != 200) {
+        client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
+        client.property(ClientProperties.READ_TIMEOUT, 1000);
+        try {
+            WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
+            Response response = target.request().delete();
+            if(response.getStatus() != 200) {
+                logger.debug("Could not unregister Query");
+            }
+        } catch (ProcessingException e) {
             logger.debug("Could not unregister Query");
         }
     }

@@ -77,25 +77,19 @@ public class PathMappingDatabaseTest extends JerseyTest {
 
             int eventNodeId = ScenarioTestHelper.triggerEventInScenario(
                     instance, base, "{ \"foo\": \"bar\"}");
-
-
             DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
             DbPathMapping dbPathMapping = new DbPathMapping();
             List<Integer> attributeIds = dbPathMapping
                     .getAttributeIdsForControlNode(eventNodeId);
-
             boolean isValueSaved = false;
-            for(Integer attributeId : attributeIds) {
+            for (Integer attributeId : attributeIds) {
                 if ("bar".equals(dbDataAttributeInstance.getValue(attributeId))) {
                     isValueSaved = true;
                     break;
                 }
             }
-
             assertTrue(isValueSaved);
-
-
         } catch (IOException e) {
             fail("Failed to read scenario json: " + e.getMessage());
         }
