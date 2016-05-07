@@ -10,6 +10,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,11 +76,12 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
     }
 
 	/**
+     * TODO improve this method
 	 * Sets the states of the data object to the output states of the activity.
 	 * Sets all this data object to not on change.
 	 */
 	private void setDataStates(int outputSetId) {
-		LinkedList<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
+		List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
 				this.getControlNodeId());
 		for (int outputSet : outputSets) {
 			LinkedList<DataObject> dataObjects =

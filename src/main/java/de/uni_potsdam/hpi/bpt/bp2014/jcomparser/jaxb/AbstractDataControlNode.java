@@ -30,18 +30,10 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
     public List<DataOutputAssociation> getDataOutputAssociations() {
         return dataOutputAssociations;
     }
-
-    public void setDataOutputAssociations(List<DataOutputAssociation> dataOutputAssociations) {
-        this.dataOutputAssociations = dataOutputAssociations;
-    }
-
     public List<DataInputAssociation> getDataInputAssociations() {
         return dataInputAssociations;
     }
 
-    public void setDataInputAssociations(List<DataInputAssociation> dataInputAssociations) {
-        this.dataInputAssociations = dataInputAssociations;
-    }
 
     public void setIncoming(String incoming) {
         List<String> incomingList = new ArrayList<>();
@@ -49,9 +41,9 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
         this.setIncoming(incomingList);
     }
 
-    public void setOutgoing(String incoming) {
+    public void setOutgoing(String outgoing) {
         List<String> outgoingList = new ArrayList<>();
-        outgoingList.add(incoming);
+        outgoingList.add(outgoing);
         this.setOutgoing(outgoingList);
     }
 }

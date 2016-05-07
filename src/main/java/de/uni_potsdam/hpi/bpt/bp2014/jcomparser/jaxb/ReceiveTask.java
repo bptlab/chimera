@@ -32,13 +32,4 @@ public class ReceiveTask extends AbstractDataControlNode {
 
         return this.databaseId;
     }
-
-    public String getEventQuery() {
-        return eventQuery;
-    }
-
-    public void setEventQuery(String eventQuery) {
-        this.eventQuery = eventQuery;
-    }
-
 }

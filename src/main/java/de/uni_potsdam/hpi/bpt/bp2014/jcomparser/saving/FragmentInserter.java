@@ -25,7 +25,6 @@ public class FragmentInserter {
     /**
      * Method which saves a fragment to the database.
      * @param fragment Fragment which should be inserted into the database.
-     * @param domainModel The data classes of the
      * @return return database Id of the inserted fragment
      */
 
