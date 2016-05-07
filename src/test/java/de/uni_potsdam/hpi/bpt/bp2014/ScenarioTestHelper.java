@@ -43,10 +43,19 @@ public class ScenarioTestHelper {
         }
     }
 
-    public static ActivityInstance getActivityInstanceByName(
-            String activityName, ScenarioInstance scenarioInstance) {
+    public static Optional<AbstractControlNodeInstance> findActivityInstanceByName(
+            String name, ScenarioInstance scenarioInstance) {
         List<AbstractControlNodeInstance> controlNodeInstances =
                 scenarioInstance.getEnabledControlNodeInstances();
+
+        return controlNodeInstances.stream()
+                .filter(ActivityInstance.class::isInstance)
+                .filter(a -> ((ActivityInstance) a).getLabel().equals(name))
+                .findFirst();
+    }
+
+    public static ActivityInstance getActivityInstanceByName(
+            String activityName, List<AbstractControlNodeInstance> controlNodeInstances) {
         Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
                 .filter(ActivityInstance.class::isInstance)
                 .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
@@ -56,6 +65,8 @@ public class ScenarioTestHelper {
         }
         return (ActivityInstance) instanceOptional.get();
     }
+
+
     /**
      * Finds an activity instance by name and terminates the activity instance
      * in the given scenario instance.
@@ -63,7 +74,8 @@ public class ScenarioTestHelper {
      * @param scenarioInstance the scenario instance containing the activity instance.
      */
     public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
-        ActivityInstance instance = getActivityInstanceByName(activityName, scenarioInstance);
+        ActivityInstance instance = getActivityInstanceByName(
+                activityName, scenarioInstance.getRunningControlNodeInstances());
         instance.terminate();
     }
 
@@ -76,24 +88,12 @@ public class ScenarioTestHelper {
         return activity.isPresent();
     }
 
-    public static Optional<AbstractControlNodeInstance> findActivityInstanceByName(
-            String name, ScenarioInstance scenarioInstance) {
-        List<AbstractControlNodeInstance> controlNodeInstances =
-                scenarioInstance.getEnabledControlNodeInstances();
 
-        return controlNodeInstances.stream()
-                .filter(ActivityInstance.class::isInstance)
-                .filter(a -> ((ActivityInstance) a).getLabel().equals(name))
-                .findFirst();
-    }
 
     public static void beginActivityByName(String name, ScenarioInstance scenarioInstance) {
-        Optional<AbstractControlNodeInstance> activity = findActivityInstanceByName(
-                name, scenarioInstance);
-        if (activity.isPresent()) {
-            ActivityInstance casted = (ActivityInstance) activity.get();
-            casted.begin();
-        }
+        ActivityInstance activity = getActivityInstanceByName(
+                name, scenarioInstance.getEnabledControlNodeInstances());
+        activity.begin();
     }
     public static int triggerEventInScenario(
             ScenarioInstance scenarioInstance, WebTarget base) {

@@ -78,7 +78,7 @@ public class HistoryHistoryLoggerTest {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ActivityInstance activity = ScenarioTestHelper.getActivityInstanceByName(
-                "ChangeData", instance);
+                "ChangeData", instance.getEnabledControlNodeInstances());
 
         changeDataattributeValues(instance, activity);
         HistoryService service = new HistoryService();
@@ -96,7 +96,7 @@ public class HistoryHistoryLoggerTest {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
         ActivityInstance activity = ScenarioTestHelper.getActivityInstanceByName(
-                "ChangeData", scenarioInstance);
+                "ChangeData", scenarioInstance.getEnabledControlNodeInstances());
         changeDataattributeValues(scenarioInstance, activity);
         activity.terminate();
         HistoryService service = new HistoryService();
