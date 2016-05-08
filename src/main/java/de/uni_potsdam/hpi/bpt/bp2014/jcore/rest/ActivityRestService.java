@@ -25,6 +25,12 @@ import java.util.stream.Collectors;
 public class ActivityRestService extends AbstractRestService {
     private static Logger log = Logger.getLogger(RestInterface.class);
 
+    private static final String READY = "ready";
+    private static final String READY_DATA = "ready(Data)";
+    private static final String READY_CF = "ready(ControlFlow)";
+    private static final String RUNNING = "running";
+    private static final String TERMINATED = "terminated";
+
     /**
      * Returns a JSON-Object containing information about all activity
      * instances of a specified scenario instance.
@@ -84,7 +90,7 @@ public class ActivityRestService extends AbstractRestService {
     private Response getAllActivitiesWithFilterAndState(int scenarioID, int instanceID,
                                                         String filterString, String state, UriInfo uriInfo) {
         Collection<ActivityInstance> instances = getActivitiesOfState(state, scenarioID, instanceID);
-        if (isLegalState(state)) {
+        if (!isLegalState(state)) {
             this.buildNotFoundResponse("{\"error\":\"The state is not allowed "
                     + state + "\"}");
         }
@@ -96,7 +102,8 @@ public class ActivityRestService extends AbstractRestService {
     }
 
     private boolean isLegalState(String state) {
-        List<String> allowedStates = Arrays.asList("ready", "terminated", "running");
+        List<String> allowedStates = Arrays.asList(
+                READY, READY_DATA, READY_CF, TERMINATED, RUNNING);
         return allowedStates.contains(state);
     }
 
@@ -104,12 +111,16 @@ public class ActivityRestService extends AbstractRestService {
             String state, int scenarioId, int scenarioInstanceId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-        if ("ready".equals(state)) {
+        if (READY.equals(state)) {
             return executionService.getEnabledActivities(scenarioInstanceId);
-        } else if("terminated".equals(state)) {
+        } else if(TERMINATED.equals(state)) {
             return executionService.getTerminatedActivities(scenarioInstanceId);
-        } else if ("running".equals(state)) {
+        } else if (RUNNING.equals(state)) {
             return executionService.getRunningActivities(scenarioInstanceId);
+        } else if (READY_DATA.equals(state)) {
+            return executionService.getDataEnabledActivities(scenarioInstanceId);
+        } else if (READY_CF.equals(state)) {
+            return executionService.getControlFlowEnabledActivities(scenarioInstanceId);
         }
         throw new IllegalArgumentException("State has to be one of ready, terminated or running");
     }
@@ -120,20 +131,22 @@ public class ActivityRestService extends AbstractRestService {
      * The Response Object will be a 200 with JSON content.
      * The Content will be a JSON Object, containing information about activities.
      * The Label of the activities mus correspond to the filter String and be
-     * part of the scenario instance specified by the instanceID.
+     * part of the scenario instance specified by the instanceId.
      *
-     * @param instanceID   The id of the scenario instance.
+     * @param instanceId   The id of the scenario instance.
      * @param filterString The string which will be the filter condition for the activity ids.
      * @return The created Response object with a 200 and a JSON.
      */
-    private Response getAllActivitiesOfInstanceWithFilter(int scenarioID, int instanceID,
+    private Response getAllActivitiesOfInstanceWithFilter(int scenarioId, int instanceId,
                                                           String filterString, UriInfo uriInfo) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, instanceID);
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, instanceId);
         Map<String, Collection<ActivityInstance>> stateToActivities = new HashMap<>();
-        stateToActivities.put("ready", executionService.getEnabledActivities(instanceID));
-        stateToActivities.put("running", executionService.getRunningActivities(instanceID));
-        stateToActivities.put("terminated", executionService.getTerminatedActivities(instanceID));
+        stateToActivities.put(READY, executionService.getEnabledActivities(instanceId));
+        stateToActivities.put(RUNNING, executionService.getRunningActivities(instanceId));
+        stateToActivities.put(TERMINATED, executionService.getTerminatedActivities(instanceId));
+        stateToActivities.put(READY_DATA, executionService.getDataEnabledActivities(instanceId));
+        stateToActivities.put(READY_CF, executionService.getControlFlowEnabledActivities(instanceId));
 
         JSONArray ids = new JSONArray();
         JSONObject activities = new JSONObject();
@@ -184,19 +197,19 @@ public class ActivityRestService extends AbstractRestService {
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Collection<ActivityInstance> instances;
         switch (state) {
-            case "ready":
+            case READY:
                 instances = executionService.getEnabledActivities(instanceID);
                 break;
-            case "terminated":
+            case TERMINATED:
                 instances = executionService.getTerminatedActivities(instanceID);
                 break;
-            case "running":
+            case RUNNING:
                 instances = executionService.getRunningActivities(instanceID);
                 break;
-            case "ready(ControlFlow)":
+            case READY_CF:
                 instances = executionService.getControlFlowEnabledActivities(instanceID);
                 break;
-            case "ready(Data)":
+            case READY_DATA:
                 instances = executionService.getDataEnabledActivities(instanceID);
                 break;
             default:
@@ -224,9 +237,9 @@ public class ActivityRestService extends AbstractRestService {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
-        instances.put("ready", executionService.getEnabledActivities(instanceID));
-        instances.put("running", executionService.getRunningActivities(instanceID));
-        instances.put("terminated", executionService.getTerminatedActivities(instanceID));
+        instances.put(READY, executionService.getEnabledActivities(instanceID));
+        instances.put(RUNNING, executionService.getRunningActivities(instanceID));
+        instances.put(TERMINATED, executionService.getTerminatedActivities(instanceID));
         JSONArray ids = new JSONArray();
         JSONObject activities = new JSONObject();
         for (Map.Entry<String, Collection<ActivityInstance>> entry : instances.entrySet()) {

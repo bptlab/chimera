@@ -28,7 +28,7 @@ public class EmailRestService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON) public Response getAllEmailTasks(
-            @PathParam("scenarioID") int scenarioId,
+            @PathParam("scenarioId") int scenarioId,
             @QueryParam("filter") String filterString) {
         DbEmailConfiguration mail = new DbEmailConfiguration();
         String jsonRepresentation = JsonUtil
@@ -46,26 +46,26 @@ public class EmailRestService {
      * A Mail task is specified by:
      *
      * @param scenarioId The ID of the scenario model.
-     * @param mailTaskID The control node ID of the mail Task.
+     * @param mailTaskId The control node ID of the mail Task.
      * @return Returns a 404 if the mail Task or scenario does not exist
      * and a 200 (OK) with a JSON-Object if the emailTask was found.
      */
     @GET
-    @Path("{emailTaskID}")
+    @Path("{emailTaskId}")
     @Produces(MediaType.APPLICATION_JSON) public Response getEmailTaskConfiguration(
-            @PathParam("scenarioID") int scenarioId,
-            @PathParam("emailTaskID") int mailTaskID) {
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("emailTaskId") int mailTaskId) {
         DbEmailConfiguration mail = new DbEmailConfiguration();
         EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
-        mailConfig.setReceiver(mail.getReceiverEmailAddress(mailTaskID));
+        mailConfig.setReceiver(mail.getReceiverEmailAddress(mailTaskId));
         if ("".equals(mailConfig.getReceiver())) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{}")
                     .build();
         }
-        mailConfig.setContent(mail.getMessage(mailTaskID));
-        mailConfig.setSubject(mail.getSubject(mailTaskID));
+        mailConfig.setContent(mail.getMessage(mailTaskId));
+        mailConfig.setSubject(mail.getSubject(mailTaskId));
         return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
     }
 
