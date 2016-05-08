@@ -75,7 +75,6 @@ public class FragmentXmlWrapper {
         List< ? super AbstractDataControlNode> allActivities = new ArrayList<>();
         allActivities.addAll(this.bpmnProcessXml.getTasks());
         allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
-        // allActivities.addAll(this.bpmnProcessXml.getReceiveTasks());
         return (List<AbstractDataControlNode>) allActivities;
     }
 

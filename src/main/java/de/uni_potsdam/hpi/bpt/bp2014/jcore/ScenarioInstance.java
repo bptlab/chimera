@@ -47,10 +47,6 @@ public class ScenarioInstance {
 	private LinkedList<AbstractControlNodeInstance> terminatedControlNodeInstances
 			= new LinkedList<>();
 
-    public List<FragmentInstance> getFragmentInstances() {
-        return fragmentInstances;
-    }
-
     private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
 	private LinkedList<AbstractControlNodeInstance> referentialRunningControlNodeInstances
 			= new LinkedList<>();
@@ -385,6 +381,10 @@ public class ScenarioInstance {
 	 */
 	public LinkedList<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
 		return terminatedControlNodeInstances;
+	}
+
+	public List<FragmentInstance> getFragmentInstances() {
+		return fragmentInstances;
 	}
 
 	/**

@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class ReceiveTaskIntegrationTask extends JerseyTest {
+public class ReceiveTaskIntegrationTest extends JerseyTest {
 
     @After
     public void resetDatabase() throws IOException, SQLException {
@@ -61,9 +61,6 @@ public class ReceiveTaskIntegrationTask extends JerseyTest {
         // Start scenario instance
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
-
-//        Response enabledActivities = base.path("interface/v2/scenario/1/instance/1/activity").request().get();
-//        System.out.println(enabledActivities.readEntity(String.class));
 
         Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2")
                 .queryParam("state", "begin").request().post(Entity.json("[]"));

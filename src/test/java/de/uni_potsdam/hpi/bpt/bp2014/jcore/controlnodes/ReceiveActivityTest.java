@@ -34,7 +34,7 @@ public class ReceiveActivityTest {
     public void testReceiveActivityTask() throws IOException {
         String path = "src/test/resources/Scenarios/ReceiveTaskScenario.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("BeforeReceiveTask", scenarioInstance);
+        ScenarioTestHelper.beginActivityInstanceByName("BeforeReceiveTask", scenarioInstance);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeReceiveTask", scenarioInstance);
         DataManager dataManager = scenarioInstance.getDataManager();
         // Since only one data object is present in the scenario

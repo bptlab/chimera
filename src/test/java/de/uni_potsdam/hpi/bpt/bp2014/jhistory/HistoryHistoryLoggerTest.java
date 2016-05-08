@@ -6,7 +6,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -51,7 +50,7 @@ public class HistoryHistoryLoggerTest {
     public void testActivityLog() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
+        ScenarioTestHelper.beginActivityInstanceByName("ChangeData", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
@@ -65,7 +64,7 @@ public class HistoryHistoryLoggerTest {
     public void testDataobjectChange() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
+        ScenarioTestHelper.beginActivityInstanceByName("ChangeData", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
@@ -79,7 +78,7 @@ public class HistoryHistoryLoggerTest {
     public void testDataattributeChange() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ActivityInstance activity = ScenarioTestHelper.getActivityInstanceByName(
+        ActivityInstance activity = ScenarioTestHelper.findActivityInstanceInNodes(
                 "ChangeData", instance.getEnabledControlNodeInstances());
 
         changeDataattributeValues(instance, activity);
@@ -97,7 +96,7 @@ public class HistoryHistoryLoggerTest {
     public void testCorrectLinking() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
-        ActivityInstance activity = ScenarioTestHelper.getActivityInstanceByName(
+        ActivityInstance activity = ScenarioTestHelper.findActivityInstanceInNodes(
                 "ChangeData", scenarioInstance.getEnabledControlNodeInstances());
         changeDataattributeValues(scenarioInstance, activity);
         activity.terminate();
