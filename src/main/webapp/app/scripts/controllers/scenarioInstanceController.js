@@ -23,6 +23,8 @@ angular.module('jfrontend')
                 this.alerts.splice(index, 1);
             };
 
+            this.fragmenXmlStrings = [];
+
             //post update for webservice tasks
             this.submitAttributeForm = function () {
                 //using the put
@@ -31,6 +33,14 @@ angular.module('jfrontend')
             }
 
             /* ____ BEGIN_INITIALIZATION ____ */
+            this.initializeFragmentXmlStrings = function() {
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + 'scenario/'
+                    + $routeParams.id + '/xml')
+                    .success(function(data) {
+                        instanceCtrl.fragmenXmlStrings = data.xml;
+                    })
+            }
+
             this.initializeActivityInstances = function () {
                 instanceCtrl.instanceDetails.activities = {};
                 ["ready", "terminated", "running"].forEach(function (state) {
@@ -142,6 +152,7 @@ angular.module('jfrontend')
                     if ($routeParams.instanceId) {
                         instanceCtrl.refreshPage();
                         instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
+                        instanceCtrl.initializeFragmentXmlStrings();
                     }
                 }).
                 error(function () {
