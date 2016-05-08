@@ -45,6 +45,7 @@ public class EventGatewayTest extends JerseyTest {
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEvents = scenarioInstance.getRegisteredEventKeys();
+            System.out.println("connection timeout");
             assertEquals(3, registeredEvents.size());
             ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, "");
             registeredEvents = scenarioInstance.getRegisteredEventKeys();

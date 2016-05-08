@@ -110,7 +110,7 @@ public class ScenarioRestTest extends AbstractTest {
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":1,\"state\":\"c\"}]},\"setIDs\":[\"1\"]}",
+                "{\"conditions\":{\"1\":[{\"data_object\":\"A\",\"set_id\":\"1\",\"state\":\"c\"}]},\"setIDs\":[\"1\"]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -140,7 +140,7 @@ public class ScenarioRestTest extends AbstractTest {
         assertNotEquals("Get scenarios did not respond with a valid JSON Array",
                 null, new JSONObject(responseEntity));
         assertThat("The content of the valid request is not as expected",
-                "{\"modelid\":0,\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
+                "{\"modelid\":\"0\",\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
                 jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
     }
 }

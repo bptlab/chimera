@@ -5,10 +5,12 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.ClientProperties;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -60,16 +62,19 @@ public class EventType extends DataClass implements IPersistable {
 
         String jsonString = gson.toJson(json);
         Client client = ClientBuilder.newClient();
-
-        Response response = client.target(getRegistrationUrl()).request()
-                .post(Entity.json(jsonString));
-
-        if (response.getStatus() != 200) {
-            logger.warn("Unexpected response while registering Event Type. Status:"
-                    + response.getStatus());
+        client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
+        client.property(ClientProperties.READ_TIMEOUT, 1000);
+        try {
+            Response response = client.target(getRegistrationUrl()).request()
+                    .post(Entity.json(jsonString));
+            if (response.getStatus() != 200) {
+                logger.warn("Unexpected response while registering Event Type. Status:"
+                        + response.getStatus());
+            }
+        } catch (ProcessingException e) {
+            logger.warn("Could not register event type");
         }
-
-;    }
+     }
 
     private String generateXsd() {
         StringBuffer buffer = new StringBuffer();

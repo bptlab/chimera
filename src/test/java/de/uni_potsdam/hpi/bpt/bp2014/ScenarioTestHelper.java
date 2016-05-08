@@ -43,40 +43,7 @@ public class ScenarioTestHelper {
         }
     }
 
-    public static ActivityInstance getActivityInstanceByName(
-            String activityName, ScenarioInstance scenarioInstance) {
-        List<AbstractControlNodeInstance> controlNodeInstances =
-                scenarioInstance.getEnabledControlNodeInstances();
-        Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
-                .filter(ActivityInstance.class::isInstance)
-                .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
-                .findFirst();
-        if (!instanceOptional.isPresent()) {
-            throw new IllegalArgumentException("Invalid activity name");
-        }
-        return (ActivityInstance) instanceOptional.get();
-    }
-    /**
-     * Finds an activity instance by name and terminates the activity instance
-     * in the given scenario instance.
-     * @param activityName name of the activity belonging to the activity instance.
-     * @param scenarioInstance the scenario instance containing the activity instance.
-     */
-    public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
-        ActivityInstance instance = getActivityInstanceByName(activityName, scenarioInstance);
-        instance.terminate();
-    }
-
-    /**
-     *
-     */
-    public static boolean isActivityActivated(String activityName, ScenarioInstance scenarioInstance) {
-        Optional<AbstractControlNodeInstance> activity = findActivityInstanceByName(
-                activityName, scenarioInstance);
-        return activity.isPresent();
-    }
-
-    public static Optional<AbstractControlNodeInstance> findActivityInstanceByName(
+    public static Optional<AbstractControlNodeInstance> findActivityInstanceInScenario(
             String name, ScenarioInstance scenarioInstance) {
         List<AbstractControlNodeInstance> controlNodeInstances =
                 scenarioInstance.getEnabledControlNodeInstances();
@@ -87,13 +54,46 @@ public class ScenarioTestHelper {
                 .findFirst();
     }
 
-    public static void beginActivityByName(String name, ScenarioInstance scenarioInstance) {
-        Optional<AbstractControlNodeInstance> activity = findActivityInstanceByName(
-                name, scenarioInstance);
-        if (activity.isPresent()) {
-            ActivityInstance casted = (ActivityInstance) activity.get();
-            casted.begin();
+    public static ActivityInstance findActivityInstanceInNodes(
+            String activityName, List<AbstractControlNodeInstance> controlNodeInstances) {
+        Optional<AbstractControlNodeInstance> instanceOptional = controlNodeInstances.stream()
+                .filter(ActivityInstance.class::isInstance)
+                .filter(a -> ((ActivityInstance) a).getLabel().equals(activityName))
+                .findFirst();
+        if (!instanceOptional.isPresent()) {
+            throw new IllegalArgumentException("Invalid activity name");
         }
+        return (ActivityInstance) instanceOptional.get();
+    }
+
+
+    /**
+     * Finds an activity instance by name and terminates the activity instance
+     * in the given scenario instance.
+     * @param activityName name of the activity belonging to the activity instance.
+     * @param scenarioInstance the scenario instance containing the activity instance.
+     */
+    public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
+        ActivityInstance instance = findActivityInstanceInNodes(
+                activityName, scenarioInstance.getRunningControlNodeInstances());
+        instance.terminate();
+    }
+
+    /**
+     *
+     */
+    public static boolean isActivityActivated(String activityName, ScenarioInstance scenarioInstance) {
+        Optional<AbstractControlNodeInstance> activity = findActivityInstanceInScenario(
+                activityName, scenarioInstance);
+        return activity.isPresent();
+    }
+
+
+
+    public static void beginActivityInstanceByName(String name, ScenarioInstance scenarioInstance) {
+        ActivityInstance activity = findActivityInstanceInNodes(
+                name, scenarioInstance.getEnabledControlNodeInstances());
+        activity.begin();
     }
     public static int triggerEventInScenario(
             ScenarioInstance scenarioInstance, WebTarget base) {

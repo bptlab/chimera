@@ -9,7 +9,6 @@ import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,6 +52,7 @@ public class EventLoggingTest extends JerseyTest {
 
         // Before reaching an event no event should be activated
         assertEquals(0, service.getEventEntries(instance.getScenarioInstanceId()).size());
+        ScenarioTestHelper.beginActivityInstanceByName("BeforeEvent", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeEvent", instance);
         assertEquals(1, service.getEventEntries(instance.getScenarioInstanceId()).size());
     }
@@ -62,6 +62,7 @@ public class EventLoggingTest extends JerseyTest {
         HistoryService service = new HistoryService();
         String path = "src/test/resources/EventScenarios/EventLoggingScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.beginActivityInstanceByName("BeforeEvent", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeEvent", instance);
         // Only the registration log should be in the database
 
@@ -81,6 +82,7 @@ public class EventLoggingTest extends JerseyTest {
     public void testEventLogLinking() throws IOException {
         String path = "src/test/resources/EventScenarios/EventLoggingScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.beginActivityInstanceByName("BeforeEvent", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeEvent", instance);
         List<AbstractEvent> events =  instance.getEventsForScenarioInstance();
         assert (events.size() == 1): "Event was not registered properly";
@@ -106,6 +108,7 @@ public class EventLoggingTest extends JerseyTest {
     public void testEventDataattributeWritingLog() throws IOException {
         String path = "src/test/resources/EventScenarios/EventLoggingScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.beginActivityInstanceByName("BeforeEvent", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeEvent", instance);
         List<AbstractEvent> events =  instance.getEventsForScenarioInstance();
         assert (events.size() == 1): "Event was not registered properly";
@@ -123,6 +126,7 @@ public class EventLoggingTest extends JerseyTest {
     public void testEventLogValues() throws IOException {
         String path = "src/test/resources/EventScenarios/EventLoggingScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.beginActivityInstanceByName("BeforeEvent", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeEvent", instance);
         List<AbstractEvent> events =  instance.getEventsForScenarioInstance();
         assert (events.size() == 1): "Event was not registered properly";

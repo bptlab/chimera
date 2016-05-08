@@ -1,6 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,9 @@ public class BpmnProcessXml {
 
     @XmlElement(name = "bpmn:serviceTask")
     private List<WebServiceTask> webServiceTasks = new ArrayList<>();
+
+    @XmlElement(name = "bpmn:receiveTask")
+    private List<ReceiveTask> receiveTasks = new ArrayList<>();
 
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataNode> dataNodes = new ArrayList<>();
@@ -132,5 +139,13 @@ public class BpmnProcessXml {
 
     public void setAndGateways(List<ParallelGateway> andGateways) {
         this.andGateways = andGateways;
+    }
+
+    public List<ReceiveTask> getReceiveTasks() {
+        return receiveTasks;
+    }
+
+    public void setReceiveTasks(List<ReceiveTask> receiveTasks) {
+        this.receiveTasks = receiveTasks;
     }
 }

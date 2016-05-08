@@ -97,7 +97,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     @Override
     public boolean terminate() {
-        return this.terminate("");
+        return terminate("");
     }
 
     public boolean terminate(String eventJson) {
