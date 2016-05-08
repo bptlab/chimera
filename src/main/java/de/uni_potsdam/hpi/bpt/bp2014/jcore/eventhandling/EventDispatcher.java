@@ -65,7 +65,7 @@ public final class EventDispatcher {
         }
         unregisterEvent(event);
         try {
-            SseNotifier.notifyRefresh("");
+            SseNotifier.notifyRefresh();
         } catch (IOException e) {
             logger.error(e);
         }

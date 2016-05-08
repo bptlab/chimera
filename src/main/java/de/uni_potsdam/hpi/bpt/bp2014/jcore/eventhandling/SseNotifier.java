@@ -24,8 +24,8 @@ public class SseNotifier extends HttpServlet {
         LOGGER.info("SSE target registered.");
     }
 
-    public static void notifyRefresh(String info) throws IOException {
-        target.send("refresh", info);
+    public static void notifyRefresh() throws IOException {
+        target.send("refresh", "");
         LOGGER.info("SSE event sent.");
     }
 }
