@@ -72,6 +72,6 @@ public class DataAttribute implements IPersistable {
 	}
 
     public String getEditorId() {
-        return "";
+        return this.editorId;
     }
 }

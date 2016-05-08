@@ -63,9 +63,10 @@ public class StartQuery {
     }
 
     public void save(int scenarioId) {
-        Map<String, Integer> editorToDbId = dataAttributes.stream()
-                .collect(Collectors.toMap(
-                        DataAttribute::getEditorId, DataAttribute::getDataAttributeID));
+        Map<String, Integer> editorToDbId = new HashMap<>();
+        for (DataAttribute dataAttribute : dataAttributes) {
+            editorToDbId.put(dataAttribute.getEditorId(), dataAttribute.getDataAttributeID());
+        }
 
         Connector connector = new Connector();
 

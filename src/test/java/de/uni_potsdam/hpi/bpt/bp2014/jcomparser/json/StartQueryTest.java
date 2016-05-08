@@ -1,8 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbStartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
@@ -10,6 +13,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -115,7 +120,14 @@ public class StartQueryTest {
     }
 
     @Test
-    public void testStartQueryScenarioIntegration() {
-        Assert.fail();
+    public void testStartQueryFromScenario() throws IOException, JAXBException {
+        String path = "src/test/resources/Scenarios/StartScenario.json";
+        String json = FileUtils.readFileToString(new File(path));
+        ScenarioData scenarioData = new ScenarioData(json);
+        scenarioData.save();
+
+        DbCaseStart caseStart = new DbCaseStart();
+        List<String> requestKeys =  caseStart.getRequestKeys(scenarioData.getScenarioDbId());
+        assertEquals(2, requestKeys.size());
     }
 }

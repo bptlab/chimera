@@ -6,45 +6,13 @@
     "_id": "572f75229f9d1ef84a299af0",
     "name": "SomeScenario",
     "revision": 5,
-    "startconditions": [
-      {
-        "condition": "Select * From anEvent",
-        "mapping": [
-          {
-            "class": "Data",
-            "attr": "Name",
-            "path": "$a.c"
-          },
-          {
-            "class": "Data",
-            "attr": "Age",
-            "path": "$bar.foo"
-          }
-        ]
-      },
-      {
-        "condition": "Select * From anotherEvent",
-        "mapping": [
-          {
-            "class": "Data",
-            "attr": "Name",
-            "path": "$a.b"
-          },
-          {
-            "class": "Data",
-            "attr": "Age",
-            "path": "$foo.bar"
-          }
-        ]
-      }
-    ],
     "dataclasses": [
       {
         "_id": "572f75d89f9d1ef84a299af2",
         "is_event": false,
         "name": "Data",
         "olc": {
-          "task": [
+          "state": [
             {
               "id": "Task_0ihw5ky",
               "name": "init"
@@ -79,5 +47,37 @@
   ],
   "terminationconditions": [
 
+  ],
+  "startqueries": [
+    {
+      "condition": "Select * From anEvent",
+      "mapping": [
+        {
+          "classname": "Data",
+          "attr": "Name",
+          "path": "$a.c"
+        },
+        {
+          "classname": "Data",
+          "attr": "Age",
+          "path": "$bar.foo"
+        }
+      ]
+    },
+    {
+      "condition": "Select * From anotherEvent",
+      "mapping": [
+        {
+          "classname": "Data",
+          "attr": "Name",
+          "path": "$a.b"
+        },
+        {
+          "classname": "Data",
+          "attr": "Age",
+          "path": "$foo.bar"
+        }
+      ]
+    }
   ]
 }

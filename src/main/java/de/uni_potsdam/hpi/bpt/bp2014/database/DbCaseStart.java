@@ -1,5 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  *
  */
@@ -33,5 +37,12 @@ public class DbCaseStart extends DbEventMapping {
         String sql = "SELECT * FROM casestart WHERE eventkey = '%s' AND scenario_id = %d";
         sql = String.format(sql, requestKey, scenarioId);
         return this.executeStatementReturnsString(sql, "notificationrule_id");
+    }
+
+    public List<String> getRequestKeys(int scenarioId) {
+        String sql = "SELECT * FROM casestart WHERE scenario_id = %d";
+        sql = String.format(sql, scenarioId);
+        List<String> requestKeys = executeStatementReturnsListString(sql, "eventkey");
+        return new ArrayList<>(new HashSet<>(requestKeys));
     }
 }
