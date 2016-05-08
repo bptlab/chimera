@@ -1,18 +1,22 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbStartQuery;
-import org.easymock.EasyMock;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -20,53 +24,98 @@ import static org.junit.Assert.*;
  */
 public class StartQueryTest {
 
-    static JSONObject startQueryJson;
+    static JSONArray startQueriesArray;
+
+    @After
+    public void tearDown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
 
     @BeforeClass
     public static void setUpStartQuery() {
-        startQueryJson = new JSONObject();
-        startQueryJson.put("query", "SELECT * FROM Event");
-        JSONObject pathMappings = new JSONObject();
-        pathMappings.put("anId", "$a.b");
-        pathMappings.put("anotherId", "$foo.bar");
-        startQueryJson.put("mappings", pathMappings);
+        startQueriesArray = new JSONArray();
+        JSONObject first = getSinglePathMapping("Data", "Name", "$a.b");
+        JSONObject second = getSinglePathMapping("Data", "Age", "$foo.bar");
+        startQueriesArray.put(getSingleStartQuery("SELECT * FROM anEvent", Arrays.asList(first, second)));
+        startQueriesArray.put(getSingleStartQuery("SELECT * FROM anotherEvent", Arrays.asList(first)));
+    }
+
+    private static JSONObject getSingleStartQuery(String condition, List<JSONObject> pathMappings) {
+        JSONObject startQuery = new JSONObject();
+        startQuery.put("condition", condition);
+        JSONArray pathMappingsAsJson = new JSONArray();
+        pathMappings.forEach(pathMappingsAsJson::put);
+        startQuery.put("mapping", pathMappings);
+        return startQuery;
+    }
+
+    private static JSONObject getSinglePathMapping(String clazz, String attr, String path) {
+        JSONObject pathMapping = new JSONObject();
+        pathMapping.put("classname", clazz);
+        pathMapping.put("attr", attr);
+        pathMapping.put("path", path);
+        return pathMapping;
     }
 
     @Test
     public void testStartQueryCreation() {
-        StartQuery startQuery = new StartQuery(startQueryJson);
+        StartQuery startQuery = createTestStartQuery();
         assertEquals(2, startQuery.getAttributeToJsonPath().size());
-        assertEquals("SELECT * FROM Event", startQuery.getQuery());
+        assertEquals("SELECT * FROM anEvent", startQuery.getQuery());
+    }
+
+    private StartQuery createTestStartQuery() {
+        JSONObject first = getSinglePathMapping("Data", "Name", "$a.b");
+        JSONObject second = getSinglePathMapping("Data", "Age", "$foo.bar");
+        JSONObject startQueryJson = getSingleStartQuery(
+                "SELECT * FROM anEvent", Arrays.asList(first, second));
+        List<DataClass> dataClasses = getTestDataclasses();
+        return new StartQuery(startQueryJson, dataClasses);
+    }
+
+    private List<DataClass> getTestDataclasses() {
+        List<DataAttribute> dataAttributes = MockProvider.mockDataAttributes(
+                Arrays.asList("Name", "Age"), Arrays.asList("1", "2"), Arrays.asList(1, 2));
+        return MockProvider.mockDataClasses(
+                Arrays.asList("Data"), Arrays.asList(dataAttributes));
     }
 
     @Test
     public void testStartQuerySaving() {
-        StartQuery startQuery = new StartQuery(startQueryJson);
-        List<DataAttribute> attributes = createDataAttributeMocks();
-        startQuery.save(attributes, 123451337);
-
+        StartQuery startQuery = createTestStartQuery();
+        int scenarioId = 123451337;
+        startQuery.save(scenarioId);
         DbStartQuery dbStartQuery = new DbStartQuery();
-        assertEquals("SELECT * FROM Event", dbStartQuery.getStartQuery(123451337));
-        Map<Integer, String> pathMapping = dbStartQuery.getPathMappings(123451337);
+        assertEquals(Arrays.asList("SELECT * FROM anEvent"), dbStartQuery.getStartQueries(123451337));
+        Map<String, Map<Integer, String>> pathMappings = dbStartQuery.getPathMappings(123451337);
+        assertEquals(1, pathMappings.size());
+        String queryId = pathMappings.keySet().iterator().next();
+        Map<Integer, String> pathMapping = pathMappings.get(queryId);
         assertEquals(2, pathMapping.size());
         assertEquals("$a.b", pathMapping.get(1));
         assertEquals("$foo.bar", pathMapping.get(2));
     }
 
     @Test
-    public void testStartQueryScenarioIntegration() {
-        Assert.fail();
+    public void testMultipleStartQueriesSaving() {
+        List<DataClass> dataClasses = getTestDataclasses();
+        List<StartQuery> startQueries = StartQuery.parseStartQueries(startQueriesArray, dataClasses);
+        assertEquals(2, startQueries.size());
+        int scenarioId = 12345;
+        startQueries.forEach(x -> x.save(scenarioId));
+
+        DbStartQuery dbStartQuery = new DbStartQuery();
+        List<String> expected = Arrays.asList("SELECT * FROM anEvent", "SELECT * FROM anotherEvent");
+        assertTrue(expected.containsAll(dbStartQuery.getStartQueries(12345))
+                && dbStartQuery.getStartQueries(12345).containsAll(expected));
+
+        // TODO also assert values
+        Map<String, Map<Integer, String>> pathMappings = dbStartQuery.getPathMappings(12345);
+        assertEquals(2, pathMappings.size());
     }
 
-    private List<DataAttribute> createDataAttributeMocks() {
-        DataAttribute attribute1 = EasyMock.createNiceMock(DataAttribute.class);
-        DataAttribute attribute2 = EasyMock.createNiceMock(DataAttribute.class);
-        expect(attribute1.getEditorId()).andReturn("anId").anyTimes();
-        expect(attribute1.getDataAttributeID()).andReturn(1).anyTimes();
-
-        expect(attribute2.getEditorId()).andReturn("anotherId").anyTimes();
-        expect(attribute2.getDataAttributeID()).andReturn(2).anyTimes();
-        replay(attribute1, attribute2);
-        return Arrays.asList(attribute1, attribute2);
+    @Test
+    public void testStartQueryScenarioIntegration() {
+        Assert.fail();
     }
 }

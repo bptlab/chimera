@@ -5,10 +5,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
  */
 public class DbCaseStart extends DbEventMapping {
     public void insertCaseStartMapping(
-            String requestId, int scenarioId, String notificationRuleId) {
-        String sql = "INSERT INTO casestart (eventkey, notificationrule_id, scenario_id)" +
-                " VALUES ('%s', '%s', %d)";
-        sql = String.format(sql, requestId, notificationRuleId, scenarioId);
+            String requestId, int scenarioId, String notificationRuleId, String queryId) {
+        String sql = "INSERT INTO casestart (eventkey, notificationrule_id, scenario_id, query_id)" +
+                " VALUES ('%s', '%s', %d, '%s')";
+        sql = String.format(sql, requestId, notificationRuleId, scenarioId, queryId);
         this.executeInsertStatement(sql);
     }
 
@@ -24,6 +24,11 @@ public class DbCaseStart extends DbEventMapping {
         return this.executeStatementReturnsInt(sql, "scenario_id");
     }
 
+    public String getQueryId(String requestKey) {
+        String sql = "SELECT * FROM casestart WHERE eventkey = %d";
+        sql = String.format(sql, requestKey);
+        return this.executeStatementReturnsString(sql, "query_id");
+    }
     public String getNotificationPath(int scenarioId, String requestKey) {
         String sql = "SELECT * FROM casestart WHERE eventkey = '%s' AND scenario_id = %d";
         sql = String.format(sql, requestKey, scenarioId);

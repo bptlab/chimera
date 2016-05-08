@@ -50,7 +50,7 @@ public class ScenarioData {
 
             if (scenarioJson.has("startquery")) {
                 JSONObject startQueryJson = scenarioJson.getJSONObject("startquery");
-                this.startQuery = new StartQuery(startQueryJson);
+                this.startQuery = new StartQuery(startQueryJson, this.domainModel.getDataClasses());
             }
 
             this.fragments = generateFragmentList(scenarioJson, domainModel);
@@ -93,7 +93,7 @@ public class ScenarioData {
         terminationConditions.forEach(TerminationCondition::save);
 
         if (startQuery != null) {
-            this.startQuery.save(dataAttributes, scenarioDbId);
+            this.startQuery.save(scenarioDbId);
             this.startQuery.register(this.scenarioDbId);
         }
 

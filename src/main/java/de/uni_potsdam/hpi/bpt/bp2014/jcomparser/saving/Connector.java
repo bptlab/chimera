@@ -694,9 +694,9 @@ public class Connector extends DbObject {
 	}
 
     public void insertStartQueryIntoDatabase(String query, int scenarioId,
-                                             int attributeId, String jsonpath) {
-        String sql = "INSERT INTO startquery (query, scenario_id, dataattribute_id, jsonpath) "
-                + "VALUES ('%s', %d, %d, '%s')";
-        executeInsertStatement(String.format(sql, query, scenarioId, attributeId, jsonpath));
+                                             int attributeId, String jsonpath, String id) {
+        String sql = "INSERT INTO startquery (query, scenario_id, dataattribute_id, jsonpath, id) "
+                + "VALUES ('%s', %d, %d, '%s', '%s')";
+        executeInsertStatement(String.format(sql, query, scenarioId, attributeId, jsonpath, id));
     }
 }

@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `boundaryeventref` (
 
 CREATE TABLE IF NOT EXISTS `casestart` (
   `eventkey` VARCHAR(512) NOT NULL,
+  `query_id` VARCHAR(512) NOT NULL,
   `notificationrule_id` VARCHAR(512) NOT NULL,
   `scenario_id` INT(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -602,6 +603,7 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 --
 
 CREATE TABLE IF NOT EXISTS `startquery` (
+  `id`               VARCHAR(512) NOT NULL,
   `query`            VARCHAR(512) NOT NULL,
   `scenario_id`      INT(11)      NOT NULL,
   `dataattribute_id` INT(11)      NOT NULL,

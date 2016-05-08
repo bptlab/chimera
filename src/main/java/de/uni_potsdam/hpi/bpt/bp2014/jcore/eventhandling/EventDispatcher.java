@@ -76,7 +76,8 @@ public final class EventDispatcher {
         ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
         List<DataAttributeInstance> dataAttributes =  new ArrayList<>(
                 instance.getDataManager().getAllDataAttributeInstances()) ;
-        CaseStartAttributeWriter attributeWriter = new CaseStartAttributeWriter(scenarioId);
+        String queryId = new DbCaseStart().getQueryId(requestKey);
+        CaseStartAttributeWriter attributeWriter = new CaseStartAttributeWriter(scenarioId, queryId);
         attributeWriter.writeDataAttributesFromJson(eventJson, dataAttributes);
         return Response.accepted("Event received.").build();
     }
@@ -121,12 +122,12 @@ public final class EventDispatcher {
         alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
     }
 
-    public static void registerCaseStartEvent(String eventQuery, int scenarioId) {
+    public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         String notificationPath = SELF_PATH_CASESTART;
         String notificationRuleId = _sendQueryToEventService(
                 eventQuery, requestId, notificationPath);
-        new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId);
+        new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
     }
 
     public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId,

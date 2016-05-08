@@ -29,10 +29,11 @@ public class DataClass implements IPersistable {
      * This is the name of the dataClass.
      */
     protected String name;
+
     /**
      * This is a list containing all attributes belonging to this dataClass.
      */
-    protected List<DataAttribute> attributes = new LinkedList<>();
+    protected List<DataAttribute> attributes = new ArrayList<>();
     /**
      * This contains the JSON representation of the dataClass.
      */
@@ -106,7 +107,7 @@ public class DataClass implements IPersistable {
 
 
     private void saveDataAttributes() {
-        for (DataAttribute dataAttribute : attributes) {
+        for (DataAttribute dataAttribute : this.getAttributes()) {
             dataAttribute.setDataClassID(databaseId);
             dataAttribute.save();
         }
@@ -114,7 +115,7 @@ public class DataClass implements IPersistable {
 
 
     public Optional<DataAttribute> getDataAttributeByName(String attributeName) {
-        for (DataAttribute attribute : attributes) {
+        for (DataAttribute attribute : this.getAttributes()) {
             if (attribute.getDataAttributeName().equals(attributeName)) {
                 return Optional.of(attribute);
             }
@@ -168,5 +169,9 @@ public class DataClass implements IPersistable {
 
     public void setOlc(Olc olc) {
         this.olc = olc;
+    }
+
+    public void setAttributes(List<DataAttribute> attributes) {
+        this.attributes = attributes;
     }
 }

@@ -19,8 +19,8 @@ public class CaseStartAttributeWriter {
     static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
     Map<Integer, String> attributeIdToJsonPath;
 
-    public CaseStartAttributeWriter(int scenarioId) {
-        this.attributeIdToJsonPath = new DbStartQuery().getPathMappings(scenarioId);
+    public CaseStartAttributeWriter(int scenarioId, String queryId) {
+        this.attributeIdToJsonPath = new DbStartQuery().getPathMappings(scenarioId).get(queryId);
     }
 
     public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
@@ -39,5 +39,6 @@ public class CaseStartAttributeWriter {
             }
         }
     }
+
 }
 

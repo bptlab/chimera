@@ -1,21 +1,41 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.util.List;
-import java.util.Map;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
 
 /**
  * .
  */
 public class DbStartQuery extends DbObject {
-    public String getStartQuery(int scenarioId) {
+    public List<String> getStartQueries(int scenarioId) {
         String sql = "SELECT * FROM startquery WHERE scenario_id = %d";
-        return executeStatementReturnsString(String.format(sql, scenarioId), "query");
+        List<String> queries = executeStatementReturnsListString(
+                String.format(sql, scenarioId), "query");
+        Set<String> uniqueQueries = new HashSet<>(queries);
+        return new ArrayList<>(uniqueQueries);
     }
 
-    public Map<Integer, String> getPathMappings(int scenarioId) {
+    public Map<String, Map<Integer, String>> getPathMappings(int scenarioId) {
         String sql = "SELECT * FROM startquery WHERE scenario_id = %d";
-        return executeStatementReturnsMap(
-                String.format(sql, scenarioId), "dataattribute_id", "jsonpath");
+        sql = String.format(sql, scenarioId);
+        java.sql.Connection connection = Connection.getInstance().connect();
+        Map<String, Map<Integer, String>> queryIdToJsonMapping = new HashMap<>();
+        try (Statement stat = connection.createStatement();
+             ResultSet rs = stat.executeQuery(sql)) {
+            while (rs.next()) {
+                String queryId = rs.getString("id");
+                if (!queryIdToJsonMapping.containsKey(queryId )) {
+                    queryIdToJsonMapping.put(queryId, new HashMap<>());
+                }
+                int dataattributeId = rs.getInt("dataattribute_id");
+                String jsonPath = rs.getString("jsonpath");
+                queryIdToJsonMapping.get(queryId).put(dataattributeId, jsonPath);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return queryIdToJsonMapping;
     }
-
 }
