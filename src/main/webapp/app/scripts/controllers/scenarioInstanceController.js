@@ -13,6 +13,16 @@ angular.module('jfrontend')
             this.activityOutput = {};
             this.changeAttributObject = {};
 
+            this.alerts = [];
+
+            this.addAlert = function(alert, type) {
+                this.alerts.push({msg: alert, type: type});
+            };
+
+            this.closeAlert = function(index) {
+                this.alerts.splice(index, 1);
+            };
+            
             //post update for webservice tasks
             this.submitAttributeForm = function () {
                 //using the put
