@@ -185,6 +185,11 @@
 			<!-- artifactId>jersey-container-servlet</artifactId -->
 		</dependency>
 		<dependency>
+			<groupId>info.macias</groupId>
+			<artifactId>jeasse-servlet3</artifactId>
+			<version>0.10.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-sse</artifactId>
 		</dependency>

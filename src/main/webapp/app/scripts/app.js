@@ -11,6 +11,9 @@ var JAnalytics_REST_Interface = InstanceName + "/api/analytics/v2";
 var JComparser_REST_Interface = InstanceName + "/api/jcomparser";
 var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 
+// SSE Event Receiver for reloading the page when an event occurs
+var source = new EventSource(JEngine_Server_URL + '/' + InstanceName + '/sse');
+
 (function () {
     var jfrontend = angular.module('jfrontend', [
         'ngRoute',

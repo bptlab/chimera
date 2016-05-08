@@ -27,7 +27,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.io.IOException;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -48,8 +48,6 @@ public final class EventDispatcher {
 
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
-    private static Notifier notifier = new Notifier();
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
 
@@ -66,7 +64,11 @@ public final class EventDispatcher {
             event.terminate(eventJson);
         }
         unregisterEvent(event);
-        notifier.notifyEventOccurrance();
+        try {
+            SseNotifier.notifyRefresh("");
+        } catch (IOException e) {
+            logger.error(e);
+        }
         return Response.accepted("Event received.").build();
     }
 

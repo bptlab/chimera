@@ -420,9 +420,9 @@ angular.module('jfrontend')
                 instanceCtrl.initializeDataobjectAttributelogInstances();
             };
 
-            var source = new EventSource('/api/sse');
-            source.onmessage = function(event) {
+            // Event Listener for receiving events from the backend and refreshing the page
+            source.addEventListener('refresh', function(event) {
                 instanceCtrl.refreshPage();
-            };
+            });
         }
     ]);

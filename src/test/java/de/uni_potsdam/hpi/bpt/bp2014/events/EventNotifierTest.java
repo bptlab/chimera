@@ -1,14 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.events;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.Notifier;
-import org.glassfish.jersey.media.sse.EventInput;
-import org.glassfish.jersey.media.sse.EventListener;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.SseNotifier;
 import org.glassfish.jersey.media.sse.EventSource;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -23,7 +16,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -33,12 +25,12 @@ public class EventNotifierTest extends JerseyTest {
 
     WebTarget base;
 
-    Notifier notifier;
+    SseNotifier notifier;
 
     @Before
     public void setUpBaseAndNotifier() {
         base = target("sse");
-        notifier = new Notifier();
+        notifier = new SseNotifier();
     }
 
 
@@ -49,19 +41,18 @@ public class EventNotifierTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(Notifier.class);
+        return new ResourceConfig(SseNotifier.class);
     }
 
     @Test
-    public void testActivateEvent() throws InterruptedException {
+    public void testActivateEvent() throws InterruptedException, IOException {
 
-        Client client = ClientBuilder.newBuilder().register(Notifier.class).build();
+        Client client = ClientBuilder.newBuilder().register(SseNotifier.class).build();
         MyEventSource eventSource = new MyEventSource(base);
 
         assertFalse(eventSource.isNotified);
 
-        boolean notificationSent = notifier.notifyEventOccurrance();
-        assertTrue(notificationSent);
+        notifier.notifyRefresh("");
 
         // wait for the event to be received
         Thread.sleep(1000);
