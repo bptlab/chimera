@@ -65,11 +65,7 @@ public final class EventDispatcher {
             event.terminate(eventJson);
         }
         unregisterEvent(event);
-        try {
-            SseNotifier.notifyRefresh();
-        } catch (IOException e) {
-            logger.error(e);
-        }
+        SseNotifier.notifyRefresh();
         return Response.accepted("Event received.").build();
     }
 

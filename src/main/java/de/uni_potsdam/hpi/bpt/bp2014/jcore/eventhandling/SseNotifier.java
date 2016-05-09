@@ -14,18 +14,24 @@ import java.io.IOException;
 @WebServlet(asyncSupported = true)
 public class SseNotifier extends HttpServlet {
 
-    private static Logger LOGGER = Logger.getLogger(SseNotifier.class);
+    private static Logger logger = Logger.getLogger(SseNotifier.class);
 
     private static EventTarget target;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         target = new ServletEventTarget(req).ok().open();
-        LOGGER.info("SSE target registered.");
+        logger.info("SSE target registered.");
     }
 
-    public static void notifyRefresh() throws IOException {
-        target.send("refresh", "");
-        LOGGER.info("SSE event sent.");
+    public static void notifyRefresh() {
+        if (null != target) {
+            try {
+                target.send("refresh", "");
+            } catch (IOException e) {
+                logger.warn(e.getMessage(), e);
+            }
+        }
+        logger.info("SSE event sent.");
     }
 }
