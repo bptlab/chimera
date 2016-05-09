@@ -2,11 +2,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.CaseStartAttributeWriter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryLogger;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
@@ -14,7 +16,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -25,10 +26,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.quartz.JobBuilder.newJob;
@@ -45,13 +43,15 @@ public final class EventDispatcher {
             + PropertyLoader.getProperty("unicorn.path.deploy");
     private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url")
             + PropertyLoader.getProperty("chimera.path.deploy");
-    private static final String SELF_PATH = PropertyLoader.getProperty("chimera.path.response");
+    private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/eventnode/%s";
+    private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/scenario/%d/casestart/%s";
 
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
+
+    @Path("scenario/{scenarioId}/instance/{instanceId}/eventnode/{requestKey}")
     public static Response receiveEvent(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
@@ -65,6 +65,28 @@ public final class EventDispatcher {
         }
         unregisterEvent(event);
         return Response.accepted("Event received.").build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("casestart/{requestKey}")
+    public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
+        int scenarioId = new DbCaseStart().getScenarioId(requestKey);
+        int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
+        ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+        List<DataAttributeInstance> dataAttributes =  new ArrayList<>(
+                instance.getDataManager().getAllDataAttributeInstances()) ;
+        String queryId = new DbCaseStart().getQueryId(requestKey);
+        CaseStartAttributeWriter attributeWriter = new CaseStartAttributeWriter(scenarioId, queryId);
+        if (eventJson.isEmpty() && attributeWriter.hasMapping()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("Could not write data from empty json")
+                    .build();
+        } else {
+            attributeWriter.writeDataAttributesFromJson(eventJson, dataAttributes);
+        }
+        return Response.ok("Event received.").build();
     }
 
     public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
@@ -107,6 +129,14 @@ public final class EventDispatcher {
         alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
     }
 
+    public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
+        final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
+        String notificationPath = SELF_PATH_CASESTART;
+        String notificationRuleId = sendQueryToEventService(
+                eventQuery, requestId, notificationPath);
+        new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
+    }
+
     public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId,
                                           int scenarioInstanceId, int scenarioId) {
         String mappingKey = registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
@@ -122,7 +152,7 @@ public final class EventDispatcher {
             sched.start();
             sched.scheduleJob(job, trigger);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
     }
@@ -160,7 +190,8 @@ public final class EventDispatcher {
     public static String registerEvent(
             AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-        String query = parseQuery(event.getQueryString(), scenarioInstanceId, scenarioId);
+        String query = insertAttributesIntoQueryString(
+                event.getQueryString(), scenarioInstanceId, scenarioId);
         String notificationRuleId = sendQueryToEventService(
                 query, requestId, scenarioInstanceId, scenarioId);
         DbEventMapping mapping = new DbEventMapping();
@@ -172,7 +203,8 @@ public final class EventDispatcher {
         return requestId;
     }
 
-    public static String parseQuery(String queryString, int scenarioInstanceId, int scenarioId) {
+    public static String insertAttributesIntoQueryString(
+            String queryString, int scenarioInstanceId, int scenarioId) {
         if (queryString.contains("#")) {
             ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
             for (DataAttributeInstance attribute : scenario
@@ -193,11 +225,16 @@ public final class EventDispatcher {
 
     private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId,
                                          int scenarioId) {
+        String notificationPath = String.format(SELF_PATH_NODES,
+                SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
+        return sendQueryToEventService(rawQuery, requestId, notificationPath);
+    }
+
+    private static String sendQueryToEventService(
+            String rawQuery, String requestId, String notificationPath) {
         // since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
         String query = StringEscapeUtils.unescapeHtml4(rawQuery);
         logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
-        String notificationPath = String.format(SELF_PATH,
-                SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
 
         JsonObject queryRequest = new JsonObject();
         queryRequest.addProperty("queryString", query);

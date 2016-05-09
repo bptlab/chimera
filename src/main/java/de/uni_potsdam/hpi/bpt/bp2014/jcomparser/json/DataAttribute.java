@@ -7,7 +7,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
  * This class represents a DataAttribute.
  */
 public class DataAttribute implements IPersistable {
-	/**
+    private final String editorId;
+
+    /**
 	 * This is the databaseID of the dataClass belonging to this attribute.
 	 */
 	private int dataClassID = -1;
@@ -25,31 +27,15 @@ public class DataAttribute implements IPersistable {
 	private int dataAttributeID;
 
 	/**
-	 * Constructor which sets the Name of the DataAttribute.
-	 *
-	 * @param name This is the name of the DataAttribute.
-	 */
-	public DataAttribute(String name) {
-		this.dataAttributeName = name;
-		this.dataAttributeType = "";
-	}
-
-	/**
 	 * Constructor which sets the Name and Type of the DataAttribute.
 	 *
 	 * @param name This is the name of the DataAttribute.
 	 * @param type This is the dataype of the DataAttribute.
 	 */
-	public DataAttribute(String name, String type) {
+	public DataAttribute(String name, String type, String editorId) {
 		this.dataAttributeName = name;
 		this.dataAttributeType = type;
-	}
-
-	/**
-	 * This constructor is only used for testCases
-	 * therefore, a connection to the server is not needed.
-	 */
-	public DataAttribute() {
+        this.editorId = editorId;
 	}
 
 	/**
@@ -84,4 +70,8 @@ public class DataAttribute implements IPersistable {
 	public String getDataAttributeName() {
 		return dataAttributeName;
 	}
+
+    public String getEditorId() {
+        return this.editorId;
+    }
 }

@@ -49,6 +49,11 @@ public class DataManager {
                 .filter(x -> x.getDataObjectId() == dataObjectId).findFirst();
     }
 
+    public List<DataAttributeInstance> getAllDataAttributeInstances() {
+        return dataObjectInstances.stream().map(DataObjectInstance::getDataAttributeInstances)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
     /**
      * Returns the states of data objects for a scenario instance id.
      *

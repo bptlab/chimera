@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import javax.xml.bind.JAXBException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -32,6 +33,9 @@ public class ScenarioData {
     private List<DataObject> dataObjects;
     private DomainModel domainModel;
 
+
+    private List<StartQuery> startQueries;
+
     private int scenarioDbId;
 
     public ScenarioData(final String element) throws JAXBException {
@@ -43,6 +47,15 @@ public class ScenarioData {
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
             this.domainModel = new DomainModel(domainModelJson.toString());
+
+            if (scenarioJson.has("startqueries")) {
+                JSONArray startQueryArray = scenarioJson.getJSONArray("startqueries");
+                this.startQueries = StartQuery.parseStartQueries(
+                        startQueryArray, domainModel.getDataClasses());
+            } else {
+                this.startQueries = new ArrayList<>();
+            }
+
             this.fragments = generateFragmentList(scenarioJson, domainModel);
 
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
@@ -54,12 +67,18 @@ public class ScenarioData {
         }
     }
 
+
     public int save() {
         this.scenarioDbId = saveScenario();
         domainModel.setScenarioID(this.scenarioDbId);
 
 
         domainModel.save();
+        List<DataAttribute> dataAttributes = domainModel.getDataClasses().stream()
+                .map(DataClass::getAttributes)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
 
         for (DataObject dataObject : this.dataObjects) {
             dataObject.setScenarioId(this.scenarioDbId);
@@ -75,6 +94,10 @@ public class ScenarioData {
 
         setTerminationCondition(scenarioJson);
         terminationConditions.forEach(TerminationCondition::save);
+
+        this.startQueries.forEach(x -> x.save(scenarioDbId));
+        this.startQueries.forEach(x -> x.register(this.scenarioDbId));
+
 
         return this.scenarioDbId;
     }
@@ -194,5 +217,12 @@ public class ScenarioData {
                 jsonTerminationConditions, this.dataObjects, scenarioDbId, stateToDatabaseId);
     }
 
+    public int getScenarioDbId() {
+        return scenarioDbId;
+    }
 
+
+    public List<StartQuery> getStartQueries() {
+        return startQueries;
+    }
 }

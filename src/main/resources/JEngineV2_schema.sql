@@ -78,6 +78,20 @@ CREATE TABLE IF NOT EXISTS `boundaryeventref` (
   `attachedtoref` INTEGER NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `casestart`
+--
+
+CREATE TABLE IF NOT EXISTS `casestart` (
+  `eventkey` VARCHAR(512) NOT NULL,
+  `query_id` VARCHAR(512) NOT NULL,
+  `notificationrule_id` VARCHAR(512) NOT NULL,
+  `scenario_id` INT(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `configuration`
@@ -585,6 +599,20 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `startquery`
+--
+
+CREATE TABLE IF NOT EXISTS `startquery` (
+  `id`               VARCHAR(512) NOT NULL,
+  `query`            VARCHAR(512) NOT NULL,
+  `scenario_id`      INT(11)      NOT NULL,
+  `dataattribute_id` INT(11)      NOT NULL,
+  `jsonpath`         VARCHAR(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `state`
 --
 
@@ -594,6 +622,7 @@ CREATE TABLE IF NOT EXISTS `state` (
   `olc_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 

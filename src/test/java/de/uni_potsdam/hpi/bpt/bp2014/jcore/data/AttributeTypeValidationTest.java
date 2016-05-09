@@ -55,43 +55,43 @@ public class AttributeTypeValidationTest {
         DataObjectInstance objectInstance = createNiceMock(DataObjectInstance.class);
         int dataObjectInstanceId = -1;
 
-        DataAttribute attribute0 = new DataAttribute("aName", "String");
+        DataAttribute attribute0 = new DataAttribute("aName", "String", "editorId1");
         int attributeDatabaseId0 = attribute0.save();
         attrDbIds.add(attributeDatabaseId0);
         DataAttributeInstance instance0 = new DataAttributeInstance(
                 attributeDatabaseId0, dataObjectInstanceId, objectInstance);
 
-        DataAttribute attribute1 = new DataAttribute("aName", "Boolean");
+        DataAttribute attribute1 = new DataAttribute("aName", "Boolean", "editorId2");
         int attributeDatabaseId1 = attribute1.save();
         attrDbIds.add(attributeDatabaseId1);
         DataAttributeInstance instance1 = new DataAttributeInstance(
                 attributeDatabaseId1, dataObjectInstanceId, objectInstance);
 
-        DataAttribute attribute2 = new DataAttribute("aName", "Integer");
+        DataAttribute attribute2 = new DataAttribute("aName", "Integer", "editorId3");
         int attributeDatabaseId2 = attribute2.save();
         attrDbIds.add(attributeDatabaseId2);
         DataAttributeInstance instance2 = new DataAttributeInstance(
                 attributeDatabaseId2, dataObjectInstanceId, objectInstance);
 
-        DataAttribute attribute3 = new DataAttribute("aName", "Double");
+        DataAttribute attribute3 = new DataAttribute("aName", "Double", "editorId4");
         int attributeDatabaseId3 = attribute3.save();
         attrDbIds.add(attributeDatabaseId3);
         DataAttributeInstance instance3 = new DataAttributeInstance(
                 attributeDatabaseId3, dataObjectInstanceId, objectInstance);
 
-        DataAttribute attribute4 = new DataAttribute("aName", "Enum");
+        DataAttribute attribute4 = new DataAttribute("aName", "Enum", "editorId5");
         int attributeDatabaseId4 = attribute4.save();
         attrDbIds.add(attributeDatabaseId4);
         DataAttributeInstance instance4 = new DataAttributeInstance(
                 attributeDatabaseId4, dataObjectInstanceId, objectInstance);
 
-        DataAttribute attribute5 = new DataAttribute("aName", "Class");
+        DataAttribute attribute5 = new DataAttribute("aName", "Class", "editorId6");
         int attributeDatabaseId5 = attribute5.save();
         attrDbIds.add(attributeDatabaseId5);
         DataAttributeInstance instance5 = new DataAttributeInstance(
                 attributeDatabaseId5, dataObjectInstanceId, objectInstance);
 
-        DataAttribute attribute6 = new DataAttribute("aName", "Date");
+        DataAttribute attribute6 = new DataAttribute("aName", "Date", "editorId7");
         int attributeDatabaseId6 = attribute6.save();
         attrDbIds.add(attributeDatabaseId6);
         DataAttributeInstance instance6 = new DataAttributeInstance(

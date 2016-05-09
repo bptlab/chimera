@@ -2,13 +2,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.StartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.HttpMethod;
 import org.apache.log4j.Logger;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Connector has methods to create entries inside the database.
@@ -682,34 +680,6 @@ public class Connector extends DbObject {
 	}
 
 	/**
-	 * Get the version of the domainModel that belongs to the specified scenario.
-	 *
-	 * @param scenarioID DatabaseID of the scenario
-	 * @return The version of the domainModel
-	 */
-	public int getDataModelVersion(int scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT datamodelversion "
-				+ "FROM scenario "
-				+ "WHERE id = " + scenarioID;
-		return dbDataObject.executeStatementReturnsInt(select, "datamodelversion");
-	}
-
-	/**
-	 * Get the modelID of the domainModel (from the XML) that belongs to the specified scenario.
-	 *
-	 * @param scenarioID DatabaseID of the scenario
-	 * @return The modelID of the domainModel
-	 */
-	public long getDataModelID(int scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT datamodelid "
-				+ "FROM scenario "
-				+ "WHERE id = " + scenarioID;
-		return dbDataObject.executeStatementReturnsListLong(select, "datamodelid").get(0);
-	}
-
-	/**
 	 * Find out if the scenario in the database is marked a s deleted.
 	 *
 	 * @param scenarioID DatabaseID of the scenario
@@ -722,4 +692,11 @@ public class Connector extends DbObject {
 				+ "WHERE id = " + scenarioID;
 		return dbDataObject.executeStatementReturnsInt(select, "deleted");
 	}
+
+    public void insertStartQueryIntoDatabase(String query, int scenarioId,
+                                             int attributeId, String jsonpath, String id) {
+        String sql = "INSERT INTO startquery (query, scenario_id, dataattribute_id, jsonpath, id) "
+                + "VALUES ('%s', %d, %d, '%s', '%s')";
+        executeInsertStatement(String.format(sql, query, scenarioId, attributeId, jsonpath, id));
+    }
 }
