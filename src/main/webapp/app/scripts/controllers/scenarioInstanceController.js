@@ -22,7 +22,7 @@ angular.module('jfrontend')
             this.closeAlert = function(index) {
                 this.alerts.splice(index, 1);
             };
-            
+
             //post update for webservice tasks
             this.submitAttributeForm = function () {
                 //using the put
@@ -285,15 +285,6 @@ angular.module('jfrontend')
                 error(function () {
                     console.log('request failed');
                 });
-
-                // close SSE connection
-                $http.delete(JEngine_Server_URL + "/" + InstanceName + "/api/sse")
-                    .success(function() {
-                        console.log('[DBG] closing sse connection successful');
-                    })
-                    .error(function() {
-                        console.log('request failed');
-                    });
             };
 
             this.getActivityReferences = function (activityID) {
