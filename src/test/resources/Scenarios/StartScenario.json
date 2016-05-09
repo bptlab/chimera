@@ -70,12 +70,12 @@
         {
           "classname": "Data",
           "attr": "Name",
-          "path": "$a.b"
+          "path": "$.a.b"
         },
         {
           "classname": "Data",
           "attr": "Age",
-          "path": "$foo.bar"
+          "path": "$.foo.bar"
         }
       ]
     }

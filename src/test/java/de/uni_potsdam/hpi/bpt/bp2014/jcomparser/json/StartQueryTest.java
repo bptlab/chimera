@@ -39,8 +39,8 @@ public class StartQueryTest {
     @BeforeClass
     public static void setUpStartQuery() {
         startQueriesArray = new JSONArray();
-        JSONObject first = getSinglePathMapping("Data", "Name", "$a.b");
-        JSONObject second = getSinglePathMapping("Data", "Age", "$foo.bar");
+        JSONObject first = getSinglePathMapping("Data", "Name", "$.a.b");
+        JSONObject second = getSinglePathMapping("Data", "Age", "$.foo.bar");
         startQueriesArray.put(getSingleStartQuery("SELECT * FROM anEvent", Arrays.asList(first, second)));
         startQueriesArray.put(getSingleStartQuery("SELECT * FROM anotherEvent", Arrays.asList(first)));
     }
@@ -70,8 +70,8 @@ public class StartQueryTest {
     }
 
     private StartQuery createTestStartQuery() {
-        JSONObject first = getSinglePathMapping("Data", "Name", "$a.b");
-        JSONObject second = getSinglePathMapping("Data", "Age", "$foo.bar");
+        JSONObject first = getSinglePathMapping("Data", "Name", "$.a.b");
+        JSONObject second = getSinglePathMapping("Data", "Age", "$.foo.bar");
         JSONObject startQueryJson = getSingleStartQuery(
                 "SELECT * FROM anEvent", Arrays.asList(first, second));
         List<DataClass> dataClasses = getTestDataclasses();

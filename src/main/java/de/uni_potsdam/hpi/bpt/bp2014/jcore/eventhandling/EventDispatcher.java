@@ -52,7 +52,7 @@ public final class EventDispatcher {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
 
-    @Path("scenario/{scenarioId}/instance/{instanceId}/eventnode/{requestKey}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
     public static Response receiveEvent(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
