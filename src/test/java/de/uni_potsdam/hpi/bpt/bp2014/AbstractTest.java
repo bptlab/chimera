@@ -22,7 +22,7 @@ public abstract class AbstractTest extends JerseyTest {
      * The Database Seed file.
      */
     public static String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
-    private static final String DEVELOPMENT_SQL_SEED_FILE = "src/main/resources/JEngineV2_schema.sql";
+    private static final String DEVELOPMENT_SQL_SEED_FILE = PropertyLoader.getProperty("database.schema.file");
     /**
      * TODO: The same database is used for testing and running (cf. CM-429 in Jira)
      */

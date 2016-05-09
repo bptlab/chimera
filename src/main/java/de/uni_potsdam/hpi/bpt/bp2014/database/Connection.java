@@ -31,7 +31,9 @@ public final class Connection {
   private String password;
   private String url;
   private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-  private static final String SCHEMA_DEFINITION_FILE = "JEngineV2_schema.sql";
+  private static final String SCHEMA_DEFINITION_PATH = PropertyLoader.getProperty("database.schema.file");
+  private static final int PATH_LENGTH = SCHEMA_DEFINITION_PATH.split("/").length;
+  private static final String SCHEMA_DEFINITION_FILE = SCHEMA_DEFINITION_PATH.split("/")[PATH_LENGTH - 1];
   private static Logger log = Logger.getLogger(Connection.class);
 
   /**
