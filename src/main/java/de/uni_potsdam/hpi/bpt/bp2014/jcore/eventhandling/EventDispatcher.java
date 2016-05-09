@@ -78,8 +78,15 @@ public final class EventDispatcher {
                 instance.getDataManager().getAllDataAttributeInstances()) ;
         String queryId = new DbCaseStart().getQueryId(requestKey);
         CaseStartAttributeWriter attributeWriter = new CaseStartAttributeWriter(scenarioId, queryId);
-        attributeWriter.writeDataAttributesFromJson(eventJson, dataAttributes);
-        return Response.accepted("Event received.").build();
+        if (eventJson.isEmpty() && attributeWriter.hasMapping()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("Could not write data from empty json")
+                    .build();
+        } else {
+            attributeWriter.writeDataAttributesFromJson(eventJson, dataAttributes);
+        }
+        return Response.ok("Event received.").build();
     }
 
     public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
@@ -125,7 +132,7 @@ public final class EventDispatcher {
     public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         String notificationPath = SELF_PATH_CASESTART;
-        String notificationRuleId = _sendQueryToEventService(
+        String notificationRuleId = sendQueryToEventService(
                 eventQuery, requestId, notificationPath);
         new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
     }
@@ -145,7 +152,7 @@ public final class EventDispatcher {
             sched.start();
             sched.scheduleJob(job, trigger);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
     }
@@ -220,10 +227,10 @@ public final class EventDispatcher {
                                          int scenarioId) {
         String notificationPath = String.format(SELF_PATH_NODES,
                 SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
-        return _sendQueryToEventService(rawQuery, requestId, notificationPath);
+        return sendQueryToEventService(rawQuery, requestId, notificationPath);
     }
 
-    private static String _sendQueryToEventService(
+    private static String sendQueryToEventService(
             String rawQuery, String requestId, String notificationPath) {
         // since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
         String query = StringEscapeUtils.unescapeHtml4(rawQuery);

@@ -40,5 +40,8 @@ public class CaseStartAttributeWriter {
         }
     }
 
+    public boolean hasMapping() {
+        return this.attributeIdToJsonPath.size() > 0;
+    }
 }
 

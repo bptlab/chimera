@@ -18,7 +18,9 @@ public class StartQuery {
      * Map from editor Id of data attribute to path mapping
      */
     private Map<String, String> attributeToJsonPath = new HashMap<>();
-    String id;
+
+
+    private String id;
     private List<DataAttribute> dataAttributes;
 
     public StartQuery(JSONObject startQueryJson, List<DataClass> dataClasses) {
@@ -85,6 +87,10 @@ public class StartQuery {
         return query;
     }
 
+
+    public String getId() {
+        return id;
+    }
 
     public Map<String, String> getAttributeToJsonPath() {
         return attributeToJsonPath;

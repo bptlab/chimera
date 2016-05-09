@@ -17,22 +17,29 @@ public class DbCaseStart extends DbEventMapping {
     }
 
     public void deleteCaseMapping(String requestKey) {
-        String sql = "DELETE FROM casestart WHERE eventkey = %d";
+        String sql = "SELECT * FROM casestart WHERE eventkey = '%s'";
         sql = String.format(sql, requestKey);
         this.executeUpdateStatement(sql);
     }
 
     public int getScenarioId(String requestKey) {
-        String sql = "SELECT * FROM casestart WHERE eventkey = %d";
+        String sql = "SELECT * FROM casestart WHERE eventkey = '%s'";
         sql = String.format(sql, requestKey);
         return this.executeStatementReturnsInt(sql, "scenario_id");
     }
 
     public String getQueryId(String requestKey) {
-        String sql = "SELECT * FROM casestart WHERE eventkey = %d";
+        String sql = "SELECT * FROM casestart WHERE eventkey = '%s'";
         sql = String.format(sql, requestKey);
         return this.executeStatementReturnsString(sql, "query_id");
     }
+
+    public String getEventKey(String queryId) {
+        String sql = "SELECT * FROM casestart WHERE query_id = '%s'";
+        sql = String.format(sql, queryId);
+        return executeStatementReturnsString(sql, "eventkey");
+    }
+
     public String getNotificationPath(int scenarioId, String requestKey) {
         String sql = "SELECT * FROM casestart WHERE eventkey = '%s' AND scenario_id = %d";
         sql = String.format(sql, requestKey, scenarioId);

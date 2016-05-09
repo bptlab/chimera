@@ -32,6 +32,8 @@ public class ScenarioData {
     private List<TerminationCondition> terminationConditions;
     private List<DataObject> dataObjects;
     private DomainModel domainModel;
+
+
     private List<StartQuery> startQueries;
 
     private int scenarioDbId;
@@ -50,6 +52,8 @@ public class ScenarioData {
                 JSONArray startQueryArray = scenarioJson.getJSONArray("startqueries");
                 this.startQueries = StartQuery.parseStartQueries(
                         startQueryArray, domainModel.getDataClasses());
+            } else {
+                this.startQueries = new ArrayList<>();
             }
 
             this.fragments = generateFragmentList(scenarioJson, domainModel);
@@ -91,10 +95,9 @@ public class ScenarioData {
         setTerminationCondition(scenarioJson);
         terminationConditions.forEach(TerminationCondition::save);
 
-        if (startQueries != null) {
-            this.startQueries.forEach(x -> x.save(scenarioDbId));
-            this.startQueries.forEach(x -> x.register(this.scenarioDbId));
-        }
+        this.startQueries.forEach(x -> x.save(scenarioDbId));
+        this.startQueries.forEach(x -> x.register(this.scenarioDbId));
+
 
         return this.scenarioDbId;
     }
@@ -216,5 +219,10 @@ public class ScenarioData {
 
     public int getScenarioDbId() {
         return scenarioDbId;
+    }
+
+
+    public List<StartQuery> getStartQueries() {
+        return startQueries;
     }
 }

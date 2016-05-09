@@ -97,8 +97,8 @@ public class StartQueryTest {
         String queryId = pathMappings.keySet().iterator().next();
         Map<Integer, String> pathMapping = pathMappings.get(queryId);
         assertEquals(2, pathMapping.size());
-        assertEquals("$a.b", pathMapping.get(1));
-        assertEquals("$foo.bar", pathMapping.get(2));
+        assertEquals("$.a.b", pathMapping.get(1));
+        assertEquals("$.foo.bar", pathMapping.get(2));
     }
 
     @Test
