@@ -48,9 +48,9 @@
   "terminationconditions": [
 
   ],
-  "startqueries": [
+  "startconditions": [
     {
-      "condition": "Select * From anEvent",
+      "query": "Select * From anEvent",
       "mapping": [
         {
           "classname": "Data",
@@ -65,7 +65,7 @@
       ]
     },
     {
-      "condition": "Select * From anotherEvent",
+      "query": "Select * From anotherEvent",
       "mapping": [
         {
           "classname": "Data",
