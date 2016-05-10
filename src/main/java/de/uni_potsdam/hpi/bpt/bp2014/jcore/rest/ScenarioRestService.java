@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
@@ -132,6 +133,24 @@ public class ScenarioRestService {
         data.put("instances", uri.getAbsolutePath() + "/instance");
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONObject(data).toString()).build();
+    }
+
+    /**
+     * Get the fragment bpmn-xml representations for all fragments of a scenario.
+     * @param scenarioId
+     * @return a JsonObject containing a JSONArray with all fragment xml strings.
+     */
+    @GET
+    @Path("{scenarioId}/xml")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFragmentXmlStrings(
+            @PathParam("scenarioId") int scenarioId) {
+        DbFragment dbFragment = new DbFragment();
+        List<String> xmls = dbFragment.getXmlStringsForScenario(scenarioId);
+        JSONObject xmlJson = new JSONObject();
+        xmlJson.put("xml", new JSONArray(xmls));
+        return Response.ok().type(MediaType.APPLICATION_JSON)
+                .entity(xmlJson.toString()).build();
     }
 
 
