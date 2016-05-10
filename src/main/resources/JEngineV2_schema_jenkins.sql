@@ -374,6 +374,17 @@ CREATE TABLE IF NOT EXISTS `fragment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fragmentxml`
+--
+
+CREATE TABLE IF NOT EXISTS `fragmentxml` (
+  `fragment_id` int(11) NOT NULL,
+  `xml` TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fragmentinstance`
 --
 

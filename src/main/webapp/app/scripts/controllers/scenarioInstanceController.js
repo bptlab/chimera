@@ -34,7 +34,7 @@ angular.module('jfrontend')
 
             /* ____ BEGIN_INITIALIZATION ____ */
             this.initializeFragmentXmlStrings = function() {
-                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + 'scenario/'
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/'
                     + $routeParams.id + '/xml')
                     .success(function(data) {
                         instanceCtrl.fragmenXmlStrings = data.xml;

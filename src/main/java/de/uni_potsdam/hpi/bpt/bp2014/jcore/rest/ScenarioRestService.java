@@ -141,7 +141,7 @@ public class ScenarioRestService {
      * @return a JsonObject containing a JSONArray with all fragment xml strings.
      */
     @GET
-    @Path("{scenarioId}/xml")
+    @Path("scenario/{scenarioId}/xml")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFragmentXmlStrings(
             @PathParam("scenarioId") int scenarioId) {
