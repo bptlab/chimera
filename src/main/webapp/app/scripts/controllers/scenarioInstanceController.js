@@ -40,11 +40,14 @@ angular.module('jfrontend')
                         instanceCtrl.fragmentXmlStrings = data.xml;
 
                         // hack to clear the div if this is executed multiple times
-                        $('#renderXml').html("");
+                        $('#xmlContainer').html("");
 
+                        var index = 0;
                         instanceCtrl.fragmentXmlStrings.forEach(function(xml) {
-                            var viewer = new BPMNViewer({container: '#renderXml'});
-
+                            var divId = 'renderXml' + index;
+                            $('#xmlContainer').append('<div id="' + divId + '"></div>');
+                            var divIdHash = '#' + divId;
+                            var viewer = new BPMNViewer({container: divIdHash});
                             viewer.importXML(xml);
                         });
 

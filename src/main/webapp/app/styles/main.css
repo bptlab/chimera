@@ -83,7 +83,7 @@ body {
     margin-top: 0px;
 }
 
-#renderXml {
+div[id^="renderXml"] {
   height: 400px;
   width: 100%;
 }
