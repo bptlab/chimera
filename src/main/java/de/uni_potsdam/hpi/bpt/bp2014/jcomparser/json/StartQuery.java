@@ -24,7 +24,7 @@ public class StartQuery {
     private List<DataAttribute> dataAttributes;
 
     public StartQuery(JSONObject startQueryJson, List<DataClass> dataClasses) {
-        this.query = startQueryJson.getString("condition");
+        this.query = startQueryJson.getString("query");
         JSONArray pathMappings = startQueryJson.getJSONArray("mapping");
         for (int i = 0; i < pathMappings.length(); i++) {
             JSONObject singleMapping = pathMappings.getJSONObject(i);

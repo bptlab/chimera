@@ -32,7 +32,7 @@ public class DataObjectRestTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        ResourceConfig config = new ResourceConfig(DataObjectRestInterface.class);
+        ResourceConfig config = new ResourceConfig(DataObjectRestService.class);
         config.register(AuthorizationRequestFilter.class);
         return config;
     }
