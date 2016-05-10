@@ -23,7 +23,7 @@ angular.module('jfrontend')
                 this.alerts.splice(index, 1);
             };
 
-            this.fragmenXmlStrings = [];
+            this.fragmentXmlStrings = [];
 
             //post update for webservice tasks
             this.submitAttributeForm = function () {
@@ -37,12 +37,15 @@ angular.module('jfrontend')
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/'
                     + $routeParams.id + '/xml')
                     .success(function(data) {
-                        instanceCtrl.fragmenXmlStrings = data.xml;
+                        instanceCtrl.fragmentXmlStrings = data.xml;
 
+                        // hack to clear the div if this is executed multiple times
+                        $('#renderXml').html("");
 
-                        instanceCtrl.fragmenXmlStrings.forEach(function(xml) {
+                        instanceCtrl.fragmentXmlStrings.forEach(function(xml) {
                             var viewer = new BPMNViewer({container: '#renderXml'});
-                            viewer.importXml(xml);
+
+                            viewer.importXML(xml);
                         });
 
                     });

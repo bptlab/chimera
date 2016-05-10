@@ -82,3 +82,8 @@ body {
 .sidebar {
     margin-top: 0px;
 }
+
+#renderXml {
+  height: 400px;
+  width: 100%;
+}
