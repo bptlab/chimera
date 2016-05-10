@@ -27,11 +27,11 @@
                 <div ng-switch on="logSelection">
                     <!-- depending of the option of the dropdown: here display activity log -->
                     <div ng-switch-default>
-                        <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activitylogs track by $index">
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.activitylogs track by $index">
                             <div class="">
-                                <h3 class="text-success">{{value['cn.label']}}</h3>
-                                <small>{{value['h.oldstate']}} -> {{value['h.newstate']}}</small>
-                                <div class="pull-right">{{value['h.timestamp']}}<i
+                                <h3 class="text-success">{{entry['label']}}</h3>
+                                <small>{{entry['oldValue']}} -> {{entry['newValue']}}</small>
+                                <div class="pull-right">{{entry['timestamp']}}<i
                                         class="fa fa-level-up text-success"></i></div>
                             </div>
                         </div>
@@ -40,11 +40,11 @@
                     <!-- depending of the option of the dropdown: here display dataobject log -->
                     <div ng-switch-when="dataobject">
                         <div class="">
-                            <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
+                            <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
                                 <div class="">
-                                    <h3 class="text-success">{{value['do.name']}}</h3>
-                                    <small>{{value['oldstate_name']}} -> {{value['newstate_name']}}</small>
-                                    <div class="pull-right">{{value['h.timestamp']}}<i
+                                    <h3 class="text-success">{{entry['label']}}</h3>
+                                    <small>{{entry['oldValue']}} -> {{entry['newValue']}}</small>
+                                    <div class="pull-right">{{entry['timestamp']}}<i
                                             class="fa fa-level-up text-success"></i></div>
                                 </div>
                             </div>
@@ -54,11 +54,11 @@
                     <!-- depending of the option of the dropdown: here display attribute log -->
                     <div ng-switch-when="attributes">
                         <div class="">
-                            <div ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
+                            <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
                                 <div class="">
-                                    <h3 class="no-margins">{{value['da.name']}}</h3>
+                                    <h3 class="no-margins">{{entry['label']}}</h3>
                                     <i>Value updated</i><br>
-                                    <big>"{{value['h.oldvalue']}}" -> "{{value['h.newvalue']}}"</big>
+                                    <big>"{{entry['oldValue']}}" -> "{{entry['newValue']}}"</big>
                                 </div>
                             </div>
                         </div>

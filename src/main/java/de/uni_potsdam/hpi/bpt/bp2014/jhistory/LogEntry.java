@@ -72,7 +72,7 @@ public class LogEntry {
 
     public void appendToTrace(Node traceElement) {
         Document doc = traceElement.getOwnerDocument();
-        Element logEntry = doc.createElement("LogEntry");
+        Element logEntry = doc.createElement("event");
         appendEntryId(logEntry);
         appendTimeStamp(logEntry);
         appendType(logEntry);
