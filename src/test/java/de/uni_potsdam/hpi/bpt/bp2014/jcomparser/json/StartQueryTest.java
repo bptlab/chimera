@@ -45,9 +45,9 @@ public class StartQueryTest {
         startQueriesArray.put(getSingleStartQuery("SELECT * FROM anotherEvent", Arrays.asList(first)));
     }
 
-    private static JSONObject getSingleStartQuery(String condition, List<JSONObject> pathMappings) {
+    private static JSONObject getSingleStartQuery(String query, List<JSONObject> pathMappings) {
         JSONObject startQuery = new JSONObject();
-        startQuery.put("condition", condition);
+        startQuery.put("query", query);
         JSONArray pathMappingsAsJson = new JSONArray();
         pathMappings.forEach(pathMappingsAsJson::put);
         startQuery.put("mapping", pathMappings);

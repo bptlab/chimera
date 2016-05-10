@@ -35,6 +35,19 @@ public class Connector extends DbObject {
 	}
 
 	/**
+	 * Inserts the XML belonging to a Fragment into the database.
+	 *
+	 * @param xml The xml-String of a fragment.
+	 * @return the database Auto-Increment-ID of the xml.
+     */
+	public int insertXmlIntoDatabase(final int fragmentId, final String xml) {
+		String sql = "Insert into fragmentxml (fragment_id, xml) "
+				+ "VALUES (%d, '%s')";
+		return performSQLInsertStatementWithAutoId(
+				String.format(sql, fragmentId, xml));
+	}
+
+	/**
 	 * Inserts a DatabaseFragment Into the Database.
 	 * The parameters contain all necessary information.
 	 *

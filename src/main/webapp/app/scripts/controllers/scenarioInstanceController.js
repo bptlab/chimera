@@ -23,14 +23,37 @@ angular.module('jfrontend')
                 this.alerts.splice(index, 1);
             };
 
+            this.fragmentXmlStrings = [];
+
             //post update for webservice tasks
             this.submitAttributeForm = function () {
                 //using the put
                 var data = $scope.form;
                 $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/webservice/" + webserviceC.workingID + "/?", data);
-            }
+            };
 
             /* ____ BEGIN_INITIALIZATION ____ */
+            this.initializeFragmentXmlStrings = function() {
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/'
+                    + $routeParams.id + '/xml')
+                    .success(function(data) {
+                        instanceCtrl.fragmentXmlStrings = data.xml;
+
+                        // hack to clear the div if this is executed multiple times
+                        $('#xmlContainer').html("");
+
+                        var index = 0;
+                        instanceCtrl.fragmentXmlStrings.forEach(function(xml) {
+                            var divId = 'renderXml' + index;
+                            $('#xmlContainer').append('<div id="' + divId + '"></div>');
+                            var divIdHash = '#' + divId;
+                            var viewer = new BPMNViewer({container: divIdHash});
+                            viewer.importXML(xml);
+                        });
+
+                    });
+            };
+
             this.initializeActivityInstances = function () {
                 instanceCtrl.instanceDetails.activities = {};
                 ["ready", "terminated", "running"].forEach(function (state) {
@@ -45,7 +68,7 @@ angular.module('jfrontend')
                         console.log('request failed');
                     });
                 });
-            }
+            };
 
             this.initializeDataobjectInstances = function () {
                 instanceCtrl.instanceDetails.dataobjects = {};
@@ -58,7 +81,7 @@ angular.module('jfrontend')
                 error(function () {
                     console.log('request failed');
                 });
-            }
+            };
             // activitylogs
             this.initializeActivitylogInstances = function () {
                 instanceCtrl.instanceDetails.dataobjects = {};
@@ -71,7 +94,7 @@ angular.module('jfrontend')
                 error(function () {
                     console.log('request failed');
                 });
-            }
+            };
             // dataobjectlogs
             this.initializeDataobjectlogInstances = function () {
                 instanceCtrl.instanceDetails.dataobjects = {};
@@ -84,7 +107,7 @@ angular.module('jfrontend')
                 error(function () {
                     console.log('request failed');
                 });
-            }
+            };
 
             // dataobjectattributeslogs
             this.initializeDataobjectAttributelogInstances = function () {
@@ -98,7 +121,7 @@ angular.module('jfrontend')
                 error(function () {
                     console.log('request failed');
                 });
-            }
+            };
 
             // if necessary initialize the specified Scenario
             this.initialize = function () {
@@ -142,12 +165,13 @@ angular.module('jfrontend')
                     if ($routeParams.instanceId) {
                         instanceCtrl.refreshPage();
                         instanceCtrl.getTerminationConditionOfScenario($routeParams.id);
+                        instanceCtrl.initializeFragmentXmlStrings();
                     }
                 }).
                 error(function () {
                     console.log('request failed');
                 });
-            }
+            };
 
             this.initialize();
             /* ____ END_INITIALIZATION ____ */
@@ -170,7 +194,7 @@ angular.module('jfrontend')
                 }).error(function () {
                     console.log('request failed');
                 });
-            }
+            };
 
             this.setAttribute = function (id, value, activityId) {
                 var data = {};

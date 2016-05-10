@@ -1,17 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.*;
-import org.apache.camel.util.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -43,7 +40,7 @@ public class ReceiveTaskIntegrationTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class, ScenarioInstanceRestService.class,
-                ActivityRestService.class, ScenarioRestService.class, DataObjectRestInterface.class);
+                ActivityRestService.class, ScenarioRestService.class, DataObjectRestService.class);
     }
 
     /**

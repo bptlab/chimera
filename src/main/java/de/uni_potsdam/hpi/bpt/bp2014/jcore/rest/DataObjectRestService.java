@@ -21,7 +21,7 @@ import java.util.Map;
  *
  */
 @Path("interface/v2")
-public class DataObjectRestInterface {
+public class DataObjectRestService {
     /**
      * This method provides detailed information about an data Object.
      * The information contain the id, parent scenario instance, label

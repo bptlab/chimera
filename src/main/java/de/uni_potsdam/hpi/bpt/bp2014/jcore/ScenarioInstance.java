@@ -113,7 +113,7 @@ public class ScenarioInstance {
 	 * Creates and initializes all fragments for the scenario.
 	 */
 	private void initializeFragments() {
-		LinkedList<Integer> fragmentIds = dbFragment.getFragmentsForScenario(scenarioId);
+		List<Integer> fragmentIds = dbFragment.getFragmentsForScenario(scenarioId);
 		for (int fragmentId : fragmentIds) {
 			this.initializeFragment(fragmentId);
 		}

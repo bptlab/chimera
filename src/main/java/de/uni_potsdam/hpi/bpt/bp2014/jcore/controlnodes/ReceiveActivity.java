@@ -34,9 +34,15 @@ public class ReceiveActivity extends AbstractEvent {
 
     @Override
     public boolean terminate() {
-         List<Integer> outputSets = new DbDataFlow().getOutputSetsForControlNode(
+        return this.terminate("");
+    }
+
+    @Override
+    public boolean terminate(String eventJson) {
+        super.terminate(eventJson);
+        List<Integer> outputSets = new DbDataFlow().getOutputSetsForControlNode(
                 this.getControlNodeId());
-        assert outputSets.size() == 1: "Receive tasks should have exactly one output set.";
+        assert outputSets.size() == 1 : "Receive tasks should have exactly one output set.";
         int outputSet = outputSets.get(0);
         List<DataObject> dataObjects = new DbDataNode().getDataObjectsForDataSets(outputSet);
         for (DataObject dataObject : dataObjects) {
