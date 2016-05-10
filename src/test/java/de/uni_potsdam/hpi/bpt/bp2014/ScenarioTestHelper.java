@@ -89,8 +89,7 @@ public class ScenarioTestHelper {
     }
 
 
-
-    public static void beginActivityInstanceByName(String name, ScenarioInstance scenarioInstance) {
+    public static void beginActivityByName(String name, ScenarioInstance scenarioInstance) {
         ActivityInstance activity = findActivityInstanceInNodes(
                 name, scenarioInstance.getEnabledControlNodeInstances());
         activity.begin();

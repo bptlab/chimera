@@ -127,28 +127,6 @@ public class HistoryRestServiceTest extends JerseyTest {
     }
 
     /**
-     * tests if the GET for the terminated entries in ActivitiesLog returns correct values for a given scenarioInstance
-     */
-    @Test
-    public void testGetActivitiesLogWithState() {
-        Response response = base.path("scenario/1/instance/1302/activities").queryParam("state", "terminated").request().get();
-        assertThat("Get activities did not contain the expected information",
-                response.readEntity(String.class),
-                jsonEquals("{\"18\":{\"h.scenarioinstance_id\":1302,\"h.id\":18,\"h.activityinstance_id\":9265,\"cn.label\":\"Activity2Fragment1\",\"h.oldstate\":\"running\",\"h.newstate\":\"terminated\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
-    }
-
-    /**
-     * tests if the GET for the DataObjectlog returns correct values for a given scenarioInstance
-     */
-    @Test
-    public void testGetDataObjectsLog() {
-        Response response = base.path("scenario/1/instance/1302/dataobjects").request().get();
-        assertThat("Get activities did not contain the expected information",
-                response.readEntity(String.class),
-                jsonEquals("{\"3\":{\"h.scenarioinstance_id\":1302,\"h.id\":3,\"h.oldstate_id\":1,\"h.newstate_id\":2,\"h.dataobjectinstance_id\":1058,\"newstate_name\":\"bearbeitet\",\"oldstate_name\":\"init\",\"do.name\":\"object1\"}}").when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
-    }
-
-    /**
      * tests if status Code is 404 when call fails
      */
     @Test

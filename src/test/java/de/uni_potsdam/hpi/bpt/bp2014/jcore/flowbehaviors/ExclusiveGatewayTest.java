@@ -33,7 +33,7 @@ public class ExclusiveGatewayTest {
         assertEquals(3, enabledControlNodes.size());
 
         // After terminating one of the activities all other activities are disabled
-        ScenarioTestHelper.beginActivityInstanceByName("A", instance);
+        ScenarioTestHelper.beginActivityByName("A", instance);
         enabledControlNodes = instance.getEnabledControlNodeInstances();
         assertEquals(0, enabledControlNodes.size());
     }

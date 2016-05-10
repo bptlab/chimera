@@ -86,7 +86,8 @@ public final class EventDispatcher {
                     .entity("Could not write data from empty json")
                     .build();
         } else {
-            attributeWriter.writeDataAttributesFromJson(eventJson, dataAttributes);
+            attributeWriter.writeDataAttributesFromJson(
+                    eventJson, dataAttributes, scenarioInstanceId);
         }
         return Response.ok("Event received.").build();
     }

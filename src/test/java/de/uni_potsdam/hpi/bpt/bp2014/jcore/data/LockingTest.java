@@ -20,7 +20,7 @@ public class LockingTest {
     public void reloadLockingTest() throws IOException {
         String path = "src/test/resources/core/LockingScenario.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityInstanceByName("FirstAlternative", scenarioInstance);
+        ScenarioTestHelper.beginActivityByName("FirstAlternative", scenarioInstance);
 
         int scenarioId = scenarioInstance.getScenarioId();
         int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
@@ -39,7 +39,7 @@ public class LockingTest {
 
         // Since both activities rely on the same data input object after starting one
         // the other one should not be enabled any more.
-        ScenarioTestHelper.beginActivityInstanceByName("FirstAlternative", scenarioInstance);
+        ScenarioTestHelper.beginActivityByName("FirstAlternative", scenarioInstance);
         assertEquals(0, scenarioInstance.getEnabledControlNodeInstances().size());
     }
 }

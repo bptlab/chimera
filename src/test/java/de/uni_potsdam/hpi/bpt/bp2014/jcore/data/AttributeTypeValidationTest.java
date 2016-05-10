@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.*;
 
 public class AttributeTypeValidationTest {
@@ -53,6 +55,8 @@ public class AttributeTypeValidationTest {
 
     private DataAttributeInstance[] mockInstances() {
         DataObjectInstance objectInstance = createNiceMock(DataObjectInstance.class);
+        expect(objectInstance.getScenarioInstanceId()).andReturn(1).anyTimes();
+        replay(objectInstance);
         int dataObjectInstanceId = -1;
 
         DataAttribute attribute0 = new DataAttribute("aName", "String", "editorId1");

@@ -51,7 +51,7 @@ public class HistoryLoggerTest {
     public void testActivityLog() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
@@ -65,7 +65,7 @@ public class HistoryLoggerTest {
     public void testDataobjectChange() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
         ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
