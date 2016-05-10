@@ -48,7 +48,8 @@ public class XesExportTest extends JerseyTest {
     }
 
     @After
-    public void tearDown() throws IOException, SQLException {
+    public void tearDown() throws Exception {
+        super.tearDown();
         AbstractDatabaseDependentTest.resetDatabase();
     }
 

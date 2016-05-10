@@ -28,7 +28,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class EventLoggingTest extends JerseyTest {
     @After
-    public void teardown() throws IOException, SQLException {
+    public void tearDown() throws Exception {
+        super.tearDown();
         AbstractDatabaseDependentTest.resetDatabase();
     }
     WebTarget base;
@@ -95,13 +96,15 @@ public class EventLoggingTest extends JerseyTest {
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries =
                 service.getDataattributeEntries(instance.getScenarioInstanceId());
+        assertEquals(2, dataattributeEntries.size());
+        // The change in data attribute has been caused by the event
         assertEquals(eventControlNodeInstanceId,
-                dataattributeEntries.get(2).getLoggedId());
+                dataattributeEntries.get(1).getCause());
 
-        Map<Integer, Map<String, Object>> eventEntries=
+        List<LogEntry> eventEntries=
                 service.getEventEntries(instance.getScenarioInstanceId());
         assertEquals(eventControlNodeInstanceId,
-                eventEntries.get(2).get("eventid"));
+                eventEntries.get(1).getLoggedId());
     }
 
     @Test
@@ -135,17 +138,16 @@ public class EventLoggingTest extends JerseyTest {
 
         ScenarioTestHelper.triggerEventInScenario(instance, base, json);
         HistoryService service = new HistoryService();
-        Map<Integer, Map<String, Object>> eventEntries =
+        List<LogEntry> eventEntries =
                 service.getEventEntries(instance.getScenarioInstanceId());
-        assertEquals("registered", eventEntries.get(1).get("state"));
-        assertEquals("received", eventEntries.get(2).get("state"));
+        assertEquals("received", eventEntries.get(1).getNewValue());
+        assertEquals("registered", eventEntries.get(0).getNewValue());
 
         int eventControlNodeInstanceId = events.get(0).getControlNodeInstanceId();
-        assertEquals(eventControlNodeInstanceId, eventEntries.get(1).get("eventid"));
-        assertEquals(eventControlNodeInstanceId, eventEntries.get(2).get("eventid"));
+        assertEquals(eventControlNodeInstanceId, eventEntries.get(0).getLoggedId());
+        assertEquals(eventControlNodeInstanceId, eventEntries.get(1).getLoggedId());
 
-        assertEquals("SomeEvent", eventEntries.get(1).get("eventname"));
-        assertEquals("SomeEvent", eventEntries.get(2).get("eventname"));
+        assertEquals("SomeEvent", eventEntries.get(0).getLabel());
+        assertEquals("SomeEvent", eventEntries.get(1).getLabel());
     }
-
 }

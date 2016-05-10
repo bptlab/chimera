@@ -57,7 +57,7 @@ public class HistoryLoggerTest {
         HistoryService service = new HistoryService();
         List<LogEntry> activityEntries =
                 service.getActivityInstanceEntries(instance.getScenarioInstanceId());
-        assertEquals(3, activityEntries.size());
+        assertEquals(4, activityEntries.size());
     }
 
 

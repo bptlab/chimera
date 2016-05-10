@@ -1,7 +1,5 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 
-//import com.ibatis.common.jdbc.ScriptRunner;
-
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
@@ -54,13 +52,16 @@ public class HistoryRestServiceTest extends JerseyTest {
     }
 
     @After
-    public void tearDown() throws IOException, SQLException {
+    public void tearDown() throws Exception {
+        super.tearDown();
         AbstractDatabaseDependentTest.resetDatabase();
     }
 
+
+
     @Before
     public void setUpBase() {
-        base = target("history/v2/");
+        base = target("history/v2");
     }
 
     /**
@@ -71,7 +72,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         String path = "src/test/resources/history/simpleScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("Do something", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("Do something", instance);
+        // ScenarioTestHelper.terminateActivityInstanceByName("Do something", instance);
 
         int scenarioId = instance.getScenarioId();
         int scenarioInstanceId = instance.getScenarioInstanceId();
@@ -82,7 +83,7 @@ public class HistoryRestServiceTest extends JerseyTest {
                 "[" +
                 "  {" +
                 "    \"timeStamp\": \"15:17:52\"," +
-                "    \"newValue\": \"terminated\"," +
+                "    \"newValue\": \"begin\"," +
                 "    \"cause\": 0,\n" +
                 "    \"oldValue\": \"init\"," +
                 "    \"label\": \"Do something\"," +

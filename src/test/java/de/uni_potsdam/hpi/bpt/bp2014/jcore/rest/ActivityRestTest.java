@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class ActivityRestTest extends AbstractTest {
     public void setUpBase() {
         base = target("interface/v2");
     }
+
 
     @Test
     public void testGetActivitiesRedirects() {

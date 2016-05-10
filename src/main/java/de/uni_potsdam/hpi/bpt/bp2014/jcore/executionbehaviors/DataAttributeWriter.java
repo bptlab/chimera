@@ -18,7 +18,7 @@ public class DataAttributeWriter {
     static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
 
     private final int controlNodeInstanceId;
-    private final HistoryLogger attributeLogger = new HistoryLogger();
+    private final HistoryLogger attributeLogger = new aaHistoryLogger();
     private final int scenarioInstanceId;
     Map<Integer, String> attributeIdToJsonPath;
 

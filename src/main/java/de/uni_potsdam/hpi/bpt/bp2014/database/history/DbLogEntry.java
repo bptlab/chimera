@@ -131,6 +131,7 @@ public class DbLogEntry extends DbObject {
                 entry.setCause(rs.getInt("cause"));
                 entry.setLoggedId(rs.getInt("logged_id"));
                 entry.setNewValue(rs.getString("new_value"));
+                entry.setLabel(rs.getString("label"));
                 entry.setScenarioInstanceId(rs.getInt("scenarioinstance_id"));
                 entry.setType(LogEntry.LogType.valueOf(rs.getString("type")));
                 entry.setTimeStamp(rs.getTimestamp("timestamp"));
