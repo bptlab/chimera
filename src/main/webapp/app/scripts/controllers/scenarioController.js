@@ -151,13 +151,5 @@ angular.module('jfrontend')
                     });
                 }
             };
-
-            /* ____ BEGIN_INITIALIZATION ____ */
-            this.initialize = function () {
-                console.info('initializing...'); // not really needed but for some debug purposes always good.
-            }
-
-            this.initialize();
-            /* ____ END_INITIALIZATION ____ */
         }]
     );

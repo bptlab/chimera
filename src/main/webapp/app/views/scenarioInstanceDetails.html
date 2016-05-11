@@ -1,25 +1,21 @@
-<div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="pull-right">
-                <ol class="breadcrumb">
-                    <li><a href="#/scenario">Dashboard</a></li>
-                    <li>
-                        <a ng-href="#/scenario/{{instanceCtrl.instanceDetails['scenarioId']}}">Scenario</a>
-                    </li>
-                    </li>
-                    <li class="active">
-                        <span>Case {{instanceCtrl.instanceDetails['id']}}</span>
-                    </li>
-                </ol>
-            </div>
-            <!-- /. id="hbreadcrumb" -->
-            <h2>
-                Case: {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
-            </h2>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="pull-right">
+            <ol class="breadcrumb">
+                <li><a href="#/scenario">Dashboard</a></li>
+                <li>
+                    <a ng-href="#/scenario/{{instanceCtrl.instanceDetails['scenarioId']}}">Scenario</a>
+                </li>
+                <li class="active">
+                    <span>Case {{instanceCtrl.instanceDetails['id']}}</span>
+                </li>
+            </ol>
         </div>
-        <!-- /. panel body -->
+        <h2>
+            Case: {{instanceCtrl.instanceDetails['id']}} - {{instanceCtrl.instanceDetails['instance_name']}}
+        </h2>
     </div>
+    <!-- /. panel body -->
 </div>
 <!-- /.normalheader -->
 <div>
