@@ -516,6 +516,22 @@ CREATE TABLE IF NOT EXISTS `janalyticsresults` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `logentry`
+--
+
+CREATE TABLE IF NOT EXISTS `logentry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `logged_id` int(11) NOT NULL,
+  `timestamp` TIMESTAMP(6) NOT NULL,
+  `label` VARCHAR(256) NOT NULL,
+  `type` VARCHAR(256) NOT NULL,
+  `new_value` VARCHAR(256),
+  `scenarioinstance_id` int(11) NOT NULL,
+  `cause` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
 -- Table structure for table `pathmapping`
 --
 
