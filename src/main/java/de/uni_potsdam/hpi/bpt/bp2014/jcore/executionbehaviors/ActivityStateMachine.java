@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 

@@ -1,4 +1,7 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

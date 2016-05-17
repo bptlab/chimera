@@ -1,20 +1,21 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -432,18 +433,6 @@ public class ExecutionService /*implements Runnable*/ {
 		}
 		Collection<ActivityInstance> activities = new LinkedList<>();
 		List<ActivityInstance> enabledActivities = new LinkedList<>(allEnabledActivities);
-		for (ActivityInstance activityInstance : allEnabledActivities) {
-			if (!activities.contains(activityInstance)) {
-				Collection<ActivityInstance> references = this
-						.getReferentialEnabledActivities(
-								scenarioInstanceId,
-								activityInstance
-								.getControlNodeInstanceId()
-						);
-				enabledActivities.removeAll(references);
-				activities.addAll(references);
-			}
-		}
 		return enabledActivities;
 	}
 
@@ -487,37 +476,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return allDataEnabledActivities;
 	}
 
-	/**
-	 * Returns information about all referential Activities
-	 * of a given scenario instance and activity instance.
-	 *
-	 * @return a Collection of referential Activity instances for an Activity,
-	 * which are enabled and part of the specified scenario instance.
-	 * @param scenarioInstanceId The id which specifies the scenario
-	 * @param activityInstanceId The id which specifies the activity
-	 */
-	public Collection<ActivityInstance> getReferentialEnabledActivities(int scenarioInstanceId,
-			int activityInstanceId) {
-		Collection<ActivityInstance> enabledActivities = new LinkedList<>();
-		DbReference dbReference = new DbReference();
-		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-		LinkedList<Integer> references = dbReference.getReferenceActivitiesForActivity(
-				dbControlNodeInstance.getControlNodeID(activityInstanceId));
-		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getControlFlowEnabledControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				for (int id : references) {
-					if (id == nodeInstance.getControlNodeId()) {
-						enabledActivities.add(
-								(ActivityInstance) nodeInstance);
-					}
-				}
-			}
-		}
-		return enabledActivities;
-	}
 
 	/**
 	 * Returns information about all Activities of a given scenario instance.

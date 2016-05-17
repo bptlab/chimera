@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import org.apache.commons.lang3.StringEscapeUtils;

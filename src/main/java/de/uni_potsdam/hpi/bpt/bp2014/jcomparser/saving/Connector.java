@@ -1,9 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.StartQuery;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.HttpMethod;
 import org.apache.log4j.Logger;
 
 import java.util.*;

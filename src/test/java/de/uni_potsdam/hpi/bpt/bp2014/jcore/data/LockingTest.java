@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.junit.Test;
 

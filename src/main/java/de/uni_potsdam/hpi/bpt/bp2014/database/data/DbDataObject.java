@@ -1,4 +1,6 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.data;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.util.LinkedList;
 

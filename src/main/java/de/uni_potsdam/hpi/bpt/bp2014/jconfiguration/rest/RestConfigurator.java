@@ -2,11 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbWebServiceTask;
 import de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.Execution;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,10 +19,8 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class implements the REST interface of the JEngine core.

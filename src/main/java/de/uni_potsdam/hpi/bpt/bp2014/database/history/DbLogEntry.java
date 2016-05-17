@@ -2,6 +2,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.history;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 
 import java.sql.*;

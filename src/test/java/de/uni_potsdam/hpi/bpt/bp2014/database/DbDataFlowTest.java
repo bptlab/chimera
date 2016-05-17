@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -1,13 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.BoundaryEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.SequenceFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 
 import java.util.HashMap;
 import java.util.List;

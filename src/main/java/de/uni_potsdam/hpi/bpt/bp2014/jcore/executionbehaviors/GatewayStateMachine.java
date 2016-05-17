@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbGatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbGatewayInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;

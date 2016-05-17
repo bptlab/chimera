@@ -1,11 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.junit.After;
 import org.junit.Test;
 

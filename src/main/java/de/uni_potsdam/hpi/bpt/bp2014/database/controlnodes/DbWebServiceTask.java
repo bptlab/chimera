@@ -1,11 +1,8 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.EventType;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import org.apache.log4j.Logger;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 /**

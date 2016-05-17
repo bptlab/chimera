@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import org.json.JSONArray;
@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * A Class representing a TerminationCondition,

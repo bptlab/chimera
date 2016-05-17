@@ -2,14 +2,12 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbStartQuery;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbStartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

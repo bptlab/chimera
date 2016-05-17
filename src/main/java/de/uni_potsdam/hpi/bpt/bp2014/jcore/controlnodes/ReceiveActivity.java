@@ -1,12 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataManager;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**

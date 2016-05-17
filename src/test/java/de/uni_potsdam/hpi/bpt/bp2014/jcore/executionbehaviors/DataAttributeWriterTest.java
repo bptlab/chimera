@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import org.apache.commons.io.FileUtils;
 import org.easymock.EasyMock;
 import org.junit.Test;

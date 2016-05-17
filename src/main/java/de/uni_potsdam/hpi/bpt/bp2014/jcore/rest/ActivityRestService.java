@@ -344,32 +344,6 @@ public class ActivityRestService extends AbstractRestService {
 
     }
 
-    /**
-     * This method implements the REST call for retrieving.
-     * reference information for a specific activity
-     *
-     * @param uriInfo            A UriInfo object, which holds the server context.
-     * @param scenarioID         The databaseID of a scenario.
-     * @param scenarioInstanceID The databaseID of a scenarioInstance.
-     * @param activityID         The databaseID of an activityInstance.
-     * @return a json object containing the referenced activities
-     */
-    @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/references")
-    public Response getReferencesForActivity(
-            @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-        Collection<ActivityInstance> referencedActivities = executionService
-                .getReferentialEnabledActivities(scenarioInstanceID, activityID);
-        JSONObject result = buildJSONObjectForReferencedActivities(
-                        referencedActivities, uriInfo);
-        return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-    }
-
 
     /**
      * This method updates the data attributes of a specific activity

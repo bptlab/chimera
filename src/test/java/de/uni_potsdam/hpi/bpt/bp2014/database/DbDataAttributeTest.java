@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 import org.json.JSONArray;

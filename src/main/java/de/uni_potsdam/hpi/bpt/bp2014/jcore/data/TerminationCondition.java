@@ -1,6 +1,7 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.HashSet;
 import java.util.List;

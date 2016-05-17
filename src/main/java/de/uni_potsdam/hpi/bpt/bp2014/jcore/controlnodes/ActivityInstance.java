@@ -1,6 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbBoundaryEvent;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
@@ -25,10 +29,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 	private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
 	private final DbControlNode dbControlNode = new DbControlNode();
-	private final DbReference dbReference = new DbReference();
 	private TaskExecutionBehavior taskExecutionBehavior;
 	private boolean isAutomaticTask;
-	private LinkedList<Integer> references;
 	private boolean automaticExecution;
 	private boolean canTerminate;
 
@@ -46,7 +48,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		this.label = dbControlNode.getLabel(controlNodeId);
-		this.references = dbReference.getReferenceActivitiesForActivity(controlNodeId);
 		scenarioInstance.getControlNodeInstances().add(this);
 		//creates a new Activity Instance also in database
 		this.setControlNodeInstanceId(dbControlNodeInstance
@@ -97,7 +98,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		this.label = dbControlNode.getLabel(controlNodeId);
-		this.references = dbReference.getReferenceActivitiesForActivity(controlNodeId);
 		scenarioInstance.getControlNodeInstances().add(this);
 		if (instanceId == -1) {
 			setControlNodeInstanceId(dbControlNodeInstance
@@ -162,7 +162,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
                 this.getControlNodeInstanceId(), "running", scenarioInstanceId);
         if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
 			((ActivityStateMachine) getStateMachine()).begin();
-			((TaskIncomingControlFlowBehavior) getIncomingBehavior()).startReferences();
 			((TaskIncomingControlFlowBehavior) getIncomingBehavior())
 					.lockDataObjectInstances();
 			scenarioInstance.updateDataFlow();
@@ -232,7 +231,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
             new DbLogEntry().logActivity(
                     this.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
             boolean workingFine = getStateMachine().terminate();
-			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).terminateReferences();
 			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).terminate(outputSetId);
 			cancelAttachedEvents();
             return workingFine;
@@ -291,13 +289,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public String getLabel() {
 		return label;
-	}
-
-	/**
-	 * @return the References
-	 */
-	public LinkedList<Integer> getReferences() {
-		return references;
 	}
 
 	/**

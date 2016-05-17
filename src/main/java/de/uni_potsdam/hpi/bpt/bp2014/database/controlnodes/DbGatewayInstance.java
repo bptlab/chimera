@@ -1,5 +1,6 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 
 /**

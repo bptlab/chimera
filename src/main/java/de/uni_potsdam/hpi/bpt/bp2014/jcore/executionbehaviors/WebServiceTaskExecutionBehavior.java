@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbWebServiceTask;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbWebServiceTask;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import org.apache.log4j.Logger;

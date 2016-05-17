@@ -1,15 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.TerminationCondition;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -2,9 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataManager;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.junit.After;
 import org.junit.Test;

@@ -1,21 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
-import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  *

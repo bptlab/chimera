@@ -1,4 +1,7 @@
-package de.uni_potsdam.hpi.bpt.bp2014.database;
+package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,7 +9,7 @@ import java.util.List;
 /**
  *
  */
-public class DbEvent extends DbObject{
+public class DbEvent extends DbObject {
     /**
      *
      * @return Searches Event in the database and returns control Node Id

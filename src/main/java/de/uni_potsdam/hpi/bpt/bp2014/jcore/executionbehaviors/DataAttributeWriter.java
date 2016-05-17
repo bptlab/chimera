@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import org.apache.log4j.Logger;
 
 import java.util.List;

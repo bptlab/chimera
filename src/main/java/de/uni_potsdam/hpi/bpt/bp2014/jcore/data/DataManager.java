@@ -1,10 +1,10 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.*;
 import java.util.stream.Collectors;

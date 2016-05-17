@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.FragmentInserter;

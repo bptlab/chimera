@@ -1,6 +1,6 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
 import java.util.Date;
@@ -11,7 +11,6 @@ import java.util.Date;
 public class DataAttributeInstance {
 	private final int dataAttributeInstanceId;
 	private final int dataAttributeId;
-	private final int dataObjectInstanceId;
 
 	private final DataObjectInstance dataObjectInstance;
 	private final String type;
@@ -29,7 +28,6 @@ public class DataAttributeInstance {
 	public DataAttributeInstance(int dataAttributeId, int dataObjectInstanceId,
 			DataObjectInstance dataObjectInstance) {
 		this.dataAttributeId = dataAttributeId;
-		this.dataObjectInstanceId = dataObjectInstanceId;
 		this.dataObjectInstance = dataObjectInstance;
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
 		if (dbDataAttributeInstance.existDataAttributeInstance(

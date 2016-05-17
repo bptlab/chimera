@@ -2,21 +2,15 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.validation.constraints.AssertTrue;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import java.io.IOException;

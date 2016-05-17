@@ -1,18 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.ActivityStateMachine;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This class implements incoming behavior for tasks.
@@ -82,17 +80,6 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
             return false;
         }
         return true;
-	}
-
-	/**
-	 * Starts all referential activities of the activity.
-	 */
-	public void startReferences() {
-		for (int activityId : ((ActivityInstance) getControlNodeInstance())
-				.getReferences()) {
-			this.beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(
-					getControlNodeInstance().getControlNodeId(), activityId);
-		}
 	}
 
 	/**
