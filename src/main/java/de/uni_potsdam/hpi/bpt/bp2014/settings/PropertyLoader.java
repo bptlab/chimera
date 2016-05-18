@@ -45,40 +45,6 @@ public final class PropertyLoader {
 		}
 	}
 
-/*
-//    static Logger log = Logger.getLogger(PropertyReader.class);
-
-
-	public PropertyLoader() {
-		loadProperties();
-	}
-
-	private Properties loadProperties() {
-
-		String path = PROPERTIES_FOLDER + File.separator + PROPERTIES_FILE;
-
-		InputStream is = null;
-		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			is = classLoader.getResourceAsStream(PROPERTIES_FILE);
-			props.load(is);
-		} catch (IOException e) {
-			System.err.println("Could not read configuration file " + path);
-			e.printStackTrace();
-		} finally {
-			if(is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return props;
-	}
-*/
-
 	/**
 	 *
 	 * @param key Key for the Property to be returned
@@ -90,6 +56,19 @@ public final class PropertyLoader {
             throw new IllegalArgumentException(errorMsg);
         }
         return props.getProperty(key);
+	}
+
+	/**
+	 * Changing Properties for tests, e.g. the unicorn server url.
+	 * @param key
+	 * @param value
+     */
+	public static void setProperty(String key, String value) {
+		if (!props.containsKey(key)) {
+			String errorMsg = String.format("Property %s was not present in property file", key);
+			throw new IllegalArgumentException(errorMsg);
+		}
+		props.setProperty(key, value);
 	}
 
 }
