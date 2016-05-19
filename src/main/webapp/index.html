@@ -63,8 +63,8 @@
 	</head>
 	<body>
 	<div ng-controller="ScenarioInstanceController as instanceCtrl">
+        <!-- usage: instanceCtrl.addAlert('testAlert','success') -->
 		<uib-alert ng-repeat="alert in instanceCtrl.alerts" type="{{alert.type}}" close="instanceCtrl.closeAlert($index)" dismiss-on-timeout="10000">{{alert.msg}}</uib-alert>
-		<button type="button" class="btn btn-default" ng-click="instanceCtrl.addAlert('testAlert','success')">Add test alert</button>
 	</div>
 
 	<!-- Content: Side Menu -->
