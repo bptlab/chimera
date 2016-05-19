@@ -84,9 +84,10 @@ import java.util.Map;
                             + "is incorrect\"}")
                     .build();
         }
-        List<LogEntry> dataObjectLog = historyService.getDataObjectEntries(scenarioInstanceID);
+        List<StateTransitionLog> dataobjectLog = StateTransitionLog.getStateTransitons(
+                scenarioInstanceID, LogEntry.LogType.DATA_OBJECT);
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(new JSONObject(dataObjectLog).toString()).build();
+                .entity(new JSONArray(dataobjectLog).toString()).build();
     }
 
     /**
@@ -112,10 +113,10 @@ import java.util.Map;
                     .build();
         }
 
-        List<LogEntry> attributeLog = historyService.getDataattributeEntries(
-                scenarioInstanceID);
+        List<StateTransitionLog> attributeLog = StateTransitionLog.getStateTransitons(
+                scenarioInstanceID, LogEntry.LogType.DATA_ATTRIBUTE);
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(new JSONObject(attributeLog).toString()).build();
+                .entity(new JSONArray(attributeLog).toString()).build();
     }
 
     @GET

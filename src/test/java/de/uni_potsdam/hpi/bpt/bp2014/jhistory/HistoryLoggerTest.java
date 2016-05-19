@@ -69,7 +69,6 @@ public class HistoryLoggerTest {
         ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
-
         List<LogEntry> dataObjectEntries =
                 service.getDataObjectEntries(instance.getScenarioInstanceId());
         assertEquals(2, dataObjectEntries.size());
