@@ -1,11 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObjectInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,7 +23,6 @@ public class DataObjectInstance {
 	 */
 	private final ScenarioInstance scenarioInstance;
 	private final DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
-	private final DbDataObject dbDataObject = new DbDataObject();
 	private int stateId;
 	private List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
     private boolean isLocked = false;
@@ -44,15 +42,14 @@ public class DataObjectInstance {
 		this.dataObjectId = dataObjectId;
 		this.scenarioId = scenarioId;
 		this.scenarioInstanceId = scenarioInstanceId;
-		this.name = dbDataObject.getName(dataObjectId);
-		if (dbDataObjectInstance
-				.existDataObjectInstance(scenarioInstanceId, dataObjectId)) {
+        DbDataClass dataClass = new DbDataClass();
+		this.name = dataClass.getName(dataObjectId);
+		if (dbDataObjectInstance.existDataObjectInstance(scenarioInstanceId, dataObjectId)) {
 			dataObjectInstanceId = dbDataObjectInstance
 					.getDataObjectInstanceID(scenarioInstanceId, dataObjectId);
-			stateId = dbDataObjectInstance.getStateID(dataObjectInstanceId);
+			this.stateId = dbDataObjectInstance.getStateID(dataObjectInstanceId);
             isLocked = dbDataObjectInstance.isLocked(dataObjectInstanceId);
 		} else {
-			stateId = dbDataObject.getStartStateID(dataObjectId);
 			this.dataObjectInstanceId = dbDataObjectInstance
 					.createNewDataObjectInstance(
 							scenarioInstanceId,
@@ -63,8 +60,9 @@ public class DataObjectInstance {
 	}
 
 	private void initializeAttributes() {
-		LinkedList<Integer> dataAttributeIds = dbDataObject
-				.getAllDataAttributesForDataObject(dataObjectId);
+        DbDataClass dataClass = new DbDataClass();
+        List<Integer> dataAttributeIds = dataClass
+				.getDataAttributesForDataObject(dataObjectId);
         for (int dataAttributeId : dataAttributeIds) {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
 					dataAttributeId, dataObjectInstanceId, this);

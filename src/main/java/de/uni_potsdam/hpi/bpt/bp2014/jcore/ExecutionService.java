@@ -3,10 +3,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbReference;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
@@ -603,12 +602,12 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @return a Map. Keys are the data objects ids. Values are the names of the data objects.
 	 */
 	public Map<Integer, String> getAllDataObjectNames(int scenarioInstanceId) {
-		DbDataObject dbDataObject = new DbDataObject();
+		DbDataClass dataClass = new DbDataClass();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
         DataManager dataManager = scenarioInstance.getDataManager();
         return dataManager.getDataObjectInstances().stream().collect(Collectors.toMap(
                 DataObjectInstance::getDataObjectId,
-                x -> dbDataObject.getName(x.getDataObjectId())
+                x -> dataClass.getName(x.getDataObjectId())
         ));
 	}
 
@@ -717,7 +716,7 @@ public class ExecutionService /*implements Runnable*/ {
 			int activityInstanceId) {
 		DbDataFlow dbDataFlow = new DbDataFlow();
 		DbDataNode dbDataNode = new DbDataNode();
-		DbDataObject dbDataObject = new DbDataObject();
+		DbDataClass dbDataObject = new DbDataClass();
 		DbState dbState = new DbState();
 		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 		int controlNodeId = dbControlNodeInstance.getControlNodeID(activityInstanceId);
@@ -802,7 +801,7 @@ public class ExecutionService /*implements Runnable*/ {
 			int activityInstanceId) {
 		DbDataFlow dbDataFlow = new DbDataFlow();
 		DbDataNode dbDataNode = new DbDataNode();
-		DbDataObject dbDataObject = new DbDataObject();
+		DbDataClass dbDataObject = new DbDataClass();
 		DbState dbState = new DbState();
 		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 		int controlNodeId = dbControlNodeInstance.getControlNodeID(activityInstanceId);

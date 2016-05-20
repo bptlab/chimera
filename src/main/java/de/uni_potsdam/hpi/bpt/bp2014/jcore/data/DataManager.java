@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
@@ -18,7 +17,6 @@ public class DataManager {
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
-        initializeDataObjects();
     }
 
     /**
@@ -81,26 +79,6 @@ public class DataManager {
             }
         }
         return true;
-    }
-
-
-    /**
-     * Initializes all data objects for the scenario instance.
-     */
-    private void initializeDataObjects() {
-        DbDataObject dbDataObject = new DbDataObject();
-        int scenarioId = this.scenarioInstance.getScenarioId();
-        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
-        List<Integer> data = dbDataObject.getDataObjectsForScenario(scenarioId);
-        for (Integer dataObject : data) {
-            DataObjectInstance dataObjectInstance = new DataObjectInstance(
-                    dataObject, scenarioId, scenarioInstanceId, scenarioInstance);
-            this.dataObjectInstances.add(dataObjectInstance);
-            int dataobjectInstanceId = dataObjectInstance.getDataObjectInstanceId();
-            int stateId = dataObjectInstance.getStateId();
-            String state = new DbState().getStateName(stateId);
-            new DbLogEntry().logDataobjectCreation(dataobjectInstanceId, state, scenarioInstanceId);
-        }
     }
 
     public List<DataObjectInstance> getDataObjectInstances() {

@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -389,252 +389,18 @@ public class Connector extends DbObject {
 	}
 
 	/**
-	 * @param controlNodeId the id of a control node.
-	 * @return the key of the newly created email template.
-	 */
-	public int createEMailTemplate(int controlNodeId) {
-		String sql = "INSERT INTO emailconfiguration "
-				+ "(receivermailaddress, sendmailaddress, subject,"
-				+ " message, controlnode_id) SELECT "
-				+ "receivermailaddress, sendmailaddress, subject, message, "
-				+ controlNodeId
-				+ " FROM emailconfiguration WHERE id = -1";
-		return performSQLInsertStatementWithAutoId(sql);
-	}
-
-	/**
-	 * Get the version of a fragment which is in the database.
-	 *
-	 * @param scenarioID databaseID of the scenario the fragment belongs to
-	 * @param modelID    modelID of the fragment
-	 * @return version of the specified fragment (return -1 if there is no fragment of this id)
-	 */
-	public int getFragmentVersion(int scenarioID, long modelID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT modelversion FROM fragment "
-				+ "WHERE scenario_id = " + scenarioID
-				+ " AND modelid = " + modelID;
-		LinkedList<Integer> versions = dbDataObject.executeStatementReturnsListInt(select,
-				"modelversion");
-		if (versions.isEmpty()) {
-			return -1;
-		}
-		return versions.get(0);
-	}
-
-	/**
-	 * Get the version of a scenario which is in the database.
-	 *
-	 * @param scenarioID databaseID of the scenario
-	 * @return the version of the scenario with the scenarioID (Error: -1).
-	 */
-	public int getScenarioVersion(int scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT modelversion FROM scenario "
-				+ "WHERE id = " + scenarioID;
-		LinkedList<Integer> versions = dbDataObject
-				.executeStatementReturnsListInt(select, "modelversion");
-		if (versions.isEmpty()) {
-			return -1;
-		}
-		return versions.get(0);
-	}
-
-	/**
-	 * Get the newest scenarioID for its modelId.
-	 *
-	 * @param scenarioID modelID of the scenario
-	 * @return the databaseID of the scenario for the LATEST version
-	 * (we assume that the scenario with the largest id is the one of the newest version)
-	 */
-	public int getScenarioID(long scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id FROM scenario "
-				+ "WHERE modelid = " + scenarioID;
-		LinkedList<Integer> ids = dbDataObject.executeStatementReturnsListInt(select, "id");
-		if (!ids.isEmpty()) {
-			return Collections.max(ids);
-		} else {
-			return -1;
-		}
-	}
-
-	/**
-	 * Change all oldScenarioIDs to newScenarioIDs of all running instances
-	 * with oldScenarioID in table "scenarioinstance".
-	 *
-	 * @param oldScenarioID scenarioID that gets updated by newScenarioId
-	 * @param newScenarioID new scenarioID that overwrites oldScenarioId
-	 * @return List of all IDs that running scenarioinstances of oldScenarioID hold
-	 */
-	public List<Integer> migrateScenarioInstance(int oldScenarioID, int newScenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id "
-				+ "FROM scenarioinstance "
-				+ "WHERE scenarioinstance.terminated = 0 "
-				+ "AND scenario_id = " + oldScenarioID;
-		List<Integer> runningInstances =
-				dbDataObject.executeStatementReturnsListInt(select, "id");
-		String update = "UPDATE scenarioinstance "
-				+ "SET scenario_id = " + newScenarioID
-				+ " WHERE scenarioinstance.terminated = 0 "
-				+ "AND scenario_id = " + oldScenarioID;
-		dbDataObject.executeUpdateStatement(update);
-		return runningInstances;
-	}
-
-	/**
-	 * Get the databaseId for the specified fragment in table "fragment".
-	 *
-	 * @param scenarioID the shbaseID for which the fragment is selected
-	 * @param modelID    the modelId of the fragment
-	 * @return the databaseID of the selected fragment
-	 */
-	public int getFragmentID(int scenarioID, long modelID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id "
-				+ "FROM fragment "
-				+ "WHERE scenario_id = " + scenarioID
-				+ " AND modelid = " + modelID;
-		return dbDataObject.executeStatementReturnsInt(select, "id");
-	}
-
-	/**
-	 * Change all oldFragmentIDs to newFragmentIDs of all running instances
-	 * with oldFragmentID in table "fragmentinstance".
-	 *
-	 * @param oldFragmentID fragmentID that gets updated by newFragmentId
-	 * @param newFragmentID new fragmentID that overwrites oldFragmentId
-	 */
-	public void migrateFragmentInstance(int oldFragmentID, int newFragmentID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE fragmentinstance "
-				+ "SET fragment_id = " + newFragmentID
-				+ " WHERE fragment_id = " + oldFragmentID;
-		dbDataObject.executeUpdateStatement(update);
-	}
-
-	/**
-	 * Insert a running instance of a fragment in table "fragmentinstance".
-	 *
-	 * @param fragmentID specifies a fragment the instance is running on
-	 * @param instanceID specifies a scenarioinstance the fragmentinstance belongs to
-	 */
-	public void insertFragmentInstance(int fragmentID, int instanceID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String insert = "INSERT INTO fragmentinstance "
-				+ "(fragmentinstance.terminated, "
-				+ "fragment_id, scenarioinstance_id) "
-				+ "VALUES (" + 0 + ", " + fragmentID + ", " + instanceID + ")";
-		dbDataObject.executeUpdateStatement(insert);
-
-	}
-
-	/**
-	 * Get the databaseId for specified controlnode in table "controlnode".
-	 *
-	 * @param fragmentID the databaseID of the fragment the controlNode belongs to
-	 * @param modelID    the modelId of the controlnode
-	 * @return the databaseID of the selected controlnode
-	 */
-	public int getControlNodeID(int fragmentID, String modelID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id "
-				+ "FROM controlnode "
-				+ "WHERE fragment_id = " + fragmentID
-				+ " AND modelid = " + modelID;
-		return dbDataObject.executeStatementReturnsInt(select, "id");
-
-	}
-
-	/**
-	 * Change all oldControlNodeIDs to newControlNodeIDs in table "controlnodeinstance".
-	 *
-	 * @param oldControlNodeID controlNodeID that gets updated by newControlNodeID
-	 * @param newControlNodeID new controlNodeID that overwrites oldControlNodeID
-	 */
-	public void migrateControlNodeInstance(int oldControlNodeID, int newControlNodeID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE controlnodeinstance "
-				+ "SET controlnode_id = " + newControlNodeID
-				+ " WHERE controlnode_id = " + oldControlNodeID;
-		dbDataObject.executeUpdateStatement(update);
-	}
-
-	/**
-	 * Get the dataobjectID of the specified dataObject in table "dataobject".
-	 *
-	 * @param scenarioID     the scenarioDatabaseID for which the dataobjectID is selected
-	 * @param dataObjectName the name of the dataObject (we assume that
-	 *                          a scenario can't hold dataObjects with the same name)
-	 * @return the dataobject_id of the selected dataObject
-	 */
-	public int getDataObjectID(int scenarioID, String dataObjectName) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id "
-				+ "FROM dataobject "
-				+ "WHERE scenario_id = " + scenarioID
-				+ " AND name = '" + dataObjectName + "'";
-		return dbDataObject.executeStatementReturnsInt(select, "id");
-	}
-
-	/**
-	 * Change all oldDataObjectIDs to newDataObjectIDs in table "dataobjectinstance".
-	 *
-	 * @param oldDataObjectID dataobject_id that gets updated by newDataObjectID
-	 * @param newDataObjectID new dataobject_id that overwrites oldDataObjectID
-	 */
-	public void migrateDataObjectInstance(int oldDataObjectID, int newDataObjectID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE dataobjectinstance "
-				+ "SET dataobject_id = " + newDataObjectID
-				+ " WHERE dataobject_id = " + oldDataObjectID;
-		dbDataObject.executeUpdateStatement(update);
-		String sql =
-				"SELECT state_id FROM dataobjectinstance "
-						+ "WHERE dataobject_id = " + newDataObjectID;
-		List<Integer> stateIds = dbDataObject.executeStatementReturnsListInt(
-				sql, "state_id");
-		for (int stateId : stateIds) {
-			update = "UPDATE dataobjectinstance SET state_id = "
-					+ "(SELECT state.id FROM state WHERE olc_id = "
-					+ "(SELECT `dataclass_id` FROM `dataobject` "
-					+ "WHERE `id` = " + newDataObjectID + ") "
-					+ "AND name = (SELECT state.name FROM state "
-					+ "WHERE state.id = " + stateId + ")) "
-					+ "WHERE dataobject_id = " + newDataObjectID
-					+ " AND state_id = " + stateId;
-			dbDataObject.executeUpdateStatement(update);
-		}
-	}
-
-	/**
-	 * Get all modelIDs of the fragments for one scenario.
-	 *
-	 * @param scenarioID databaseID of the scenario
-	 * @return List of all modelIDs of all fragments that belong to the scenario
-	 */
-	public List<Long> getFragmentModelIDs(int scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT modelid "
-				+ "FROM fragment "
-				+ "WHERE scenario_id = " + scenarioID;
-		return dbDataObject.executeStatementReturnsListLong(select, "modelid");
-	}
-
-	/**
 	 * Get the databaseIDs of all dataClasses that belong to one scenario.
 	 *
 	 * @param scenarioID databaseID of the scenario
 	 * @return List of all databaseIDs that belong to the scenario specified by scenarioID
 	 */
 	public List<Integer> getDataClassIDs(int scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
+		DbDataClass dataClass = new DbDataClass();
 		String select = "SELECT dataclass_id "
 				+ "FROM dataobject "
 				+ "WHERE scenario_id = " + scenarioID;
 		// temporaryDataClassIDs might contain duplicate entries
-		List<Integer> temporaryDataClassIDs = dbDataObject
+		List<Integer> temporaryDataClassIDs = dataClass
 				.executeStatementReturnsListInt(select, "dataclass_id");
 		List<Integer> resultDataClassIDs = new LinkedList<>();
 		for (int entry : temporaryDataClassIDs) {
@@ -645,69 +411,7 @@ public class Connector extends DbObject {
 		return resultDataClassIDs;
 	}
 
-	/**
-	 * Get the name of the dataClass specified by its ID.
-	 *
-	 * @param dataClassID DatabaseID of the dataClass
-	 * @return Name of the dataClass as String
-	 */
-	public String getDataClassName(int dataClassID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT name "
-				+ "FROM dataclass "
-				+ "WHERE id = " + dataClassID;
-		return dbDataObject.executeStatementReturnsString(select, "name");
-	}
-
-	/**
-	 * Get a map of all dataAttribute-database-IDs to their name.
-	 *
-	 * @param dataClassID DatabaseID of the dataClass to which the dataAttributes belong
-	 * @return A map of all dataAttribute-database-IDs to their name
-	 */
-	public Map<Integer, String> getDataAttributes(int dataClassID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT id, name "
-				+ "FROM dataattribute "
-				+ "WHERE dataclass_id = " + dataClassID;
-		return dbDataObject.executeStatementReturnsMap(select, "id", "name");
-
-	}
-
-	/**
-	 * Change all oldDataAttributeIDs to newDataAttributeID
-	 * for all specified dataattributeinstances.
-	 *
-	 * @param oldDataAttributeID DataAttributeID that gets updated by newDataAttributeID
-	 * @param newDataAttributeID new dataAttributeID that overwrites oldDataAttributeID
-	 */
-	public void migrateDataAttributeInstance(Integer oldDataAttributeID,
-			Integer newDataAttributeID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String update = "UPDATE dataattributeinstance "
-				+ "SET dataattribute_id = " + newDataAttributeID
-				+ " WHERE dataattribute_id = " + oldDataAttributeID;
-		dbDataObject.executeUpdateStatement(update);
-	}
-
-	/**
-	 * Find out if the scenario in the database is marked a s deleted.
-	 *
-	 * @param scenarioID DatabaseID of the scenario
-	 * @return The value of the deleted flag (1 if scenario is deleted; 0 otherwise)
-	 */
-	public int isScenarioDeleted(int scenarioID) {
-		DbDataObject dbDataObject = new DbDataObject();
-		String select = "SELECT deleted "
-				+ "FROM scenario "
-				+ "WHERE id = " + scenarioID;
-		return dbDataObject.executeStatementReturnsInt(select, "deleted");
-	}
-
-    public void insertStartQueryIntoDatabase(String query, int scenarioId,
-                                             int attributeId, String jsonpath, String id) {
-        String sql = "INSERT INTO startquery (query, scenario_id, dataattribute_id, jsonpath, id) "
-                + "VALUES ('%s', %d, %d, '%s', '%s')";
-        executeInsertStatement(String.format(sql, query, scenarioId, attributeId, jsonpath, id));
+    public void insertStartQueryIntoDatabase(String query, int scenarioId, int attributeDbId, String value, String id) {
+        throw new UnsupportedOperationException("Implement me");
     }
 }
