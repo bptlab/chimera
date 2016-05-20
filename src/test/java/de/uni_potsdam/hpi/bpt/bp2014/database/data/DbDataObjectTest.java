@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -103,6 +104,17 @@ public class DbDataObjectTest {
         DbDataObject dataObjectDao = new DbDataObject();
         dataObjectDao.loadFromDb(dataObject);
         verify(dataObject);
+    }
+
+    @Test
+    public void testGetDataobjectIds() {
+        insertExampleObject();
+        insertExampleObject();
+        DbDataObject dbDataObject = new DbDataObject();
+        List<Integer> dataObjectIds = dbDataObject.getDataObjectIds(1);
+        assertEquals(2, dataObjectIds.size());
+        assertEquals(1, dataObjectIds.get(0).intValue());
+        assertEquals(2, dataObjectIds.get(1).intValue());
     }
 
     private void insertExampleObject() {

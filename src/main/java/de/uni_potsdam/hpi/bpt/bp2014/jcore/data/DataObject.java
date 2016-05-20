@@ -13,8 +13,6 @@ import java.util.List;
 public class DataObject {
 
 	private final int id;
-
-
     private int dataClassId;
 	private int scenarioId;
 	private int scenarioInstanceId;

@@ -68,7 +68,6 @@ public class ScenarioInstance {
 	 * @param scenarioInstanceId This is the database id from the scenario instance.
 	 */
 	public ScenarioInstance(int scenarioId, int scenarioInstanceId) {
-
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
@@ -92,6 +91,9 @@ public class ScenarioInstance {
         canTerminate = checkTerminationCondition();
 	}
 
+    private void reloadFromDatabase() {
+
+    }
 	/**
 	 * Creates and initializes a new scenario instance.
 	 * Also save this new instance in database.

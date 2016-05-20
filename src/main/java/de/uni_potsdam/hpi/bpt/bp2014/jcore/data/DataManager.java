@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
@@ -16,6 +17,15 @@ public class DataManager {
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
+    }
+
+    public void loadDataObjects() {
+        DbDataObject dbDataObject = new DbDataObject();
+        List<Integer> dataObjectIds = dbDataObject.getDataObjectIds(
+                scenarioInstance.getScenarioInstanceId());
+        for (Integer dataObjectId : dataObjectIds) {
+            this.dataObjects.add(new DataObject(dataObjectId, scenarioInstance));
+        }
     }
 
     /**

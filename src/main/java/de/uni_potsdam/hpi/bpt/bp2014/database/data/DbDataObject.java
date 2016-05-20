@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 
 /**
@@ -45,6 +46,11 @@ public class DbDataObject extends DbObject {
 		return this.executeInsertStatement(sql);
 	}
 
+    public List<Integer> getDataObjectIds(int scenarioInstanceId) {
+        String sql = "SELECT id FROM dataobject WHERE scenarioinstance_id = %d;";
+        sql = String.format(sql, scenarioInstanceId);
+        return this.executeStatementReturnsListInt(sql, "id");
+    }
 
 	/**
 	 * This method returns the state ID of a given data object.
