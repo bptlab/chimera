@@ -117,6 +117,23 @@ public class HistoryRestServiceTest extends JerseyTest {
     }
 
     @Test
+    public void testGetCompleteLog() throws IOException {
+        int scenarioInstanceId = 1;
+        int scenarioId = 1;
+
+        String path = "src/test/resources/history/HistoryExample.json";
+        ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
+        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+
+        String requestPath = String.format(
+                "scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
+        Response response = base.path(requestPath).request().get();
+        JSONArray resp = new JSONArray(response.readEntity(String.class));
+        assertEquals(4, resp.length());
+    }
+
+    @Test
     public void testDataObjectRest() throws IOException {
         int scenarioInstanceId = 1;
         int scenarioId = 1;

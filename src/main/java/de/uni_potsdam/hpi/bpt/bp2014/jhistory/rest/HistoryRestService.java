@@ -90,6 +90,28 @@ import java.util.Map;
                 .entity(new JSONArray(dataobjectLog).toString()).build();
     }
 
+
+    /**
+     * This method gives the log entries for all dataObjects for a specific scenario instance.
+     *
+     * @param scenarioID The id of the scenario belonging to the instance.
+     * @param scenarioInstanceID The id of the scenario instance.
+     * @return a JSON-Object with the log entries.
+     */
+    @GET
+    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCompleteLog(
+            @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
+            @DefaultValue("0") @PathParam("scenarioInstanceID")
+            int scenarioInstanceID) {
+
+        List<StateTransitionLog> log = StateTransitionLog.getStateTransitons(
+                scenarioInstanceID);
+        return Response.ok().type(MediaType.APPLICATION_JSON)
+                .entity(new JSONArray(log).toString()).build();
+    }
+    
     /**
      * This method gives the log entries for all DataAttributeInstances
      * for a specific scenario instance.
