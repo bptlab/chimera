@@ -7,7 +7,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 
@@ -56,13 +56,13 @@ public class DbLogEntry extends DbObject {
     /**
      * This method saves a log entry with a DataAttributeInstance value change in the database.
      *
-     * @param objectInstanceId the ID of the DataObjectInstance that is changed.
-     * @param stateId           the new state of the DataObjectInstance.
+     * @param objectInstanceId the ID of the DataObject that is changed.
+     * @param stateId           the new state of the DataObject.
      * @param activityInstanceId
      */
     public void logDataobjectTransition(int objectInstanceId, int stateId,
                                        int activityInstanceId, int scenarioInstanceId) {
-        int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
+        int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
         String label = new DbDataClass().getName(dataObjectId);
         String state = new DbState().getStateName(stateId);
         this.insertLog(scenarioInstanceId, objectInstanceId,
@@ -75,8 +75,8 @@ public class DbLogEntry extends DbObject {
      * @param state
      * @param scenarioInstanceId
      */
-    public void logDataobjectCreation(int objectInstanceId, String state, int scenarioInstanceId) {
-        int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
+    public void logDataobjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {
+        int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
         String label = new DbDataClass().getName(dataObjectId);
         String state = new DbState().getStateName(stateId);
         this.insertLog(scenarioInstanceId, objectInstanceId,

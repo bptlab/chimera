@@ -31,12 +31,12 @@ public class TerminationCondition {
      * If there are no termination conditions present, assume they are always fullfilled.
      * @return true if the condition is true. false if not.
      */
-    public boolean checkTerminationCondition(List<DataObjectInstance> dataObjectInstances) {
+    public boolean checkTerminationCondition(List<DataObject> dataObjects) {
         if (this.terminationParts.isEmpty()) {
             return true;
         }
         for (TerminationPart terminationPart : this.terminationParts) {
-            if (terminationPart.checkTermination(dataObjectInstances)) {
+            if (terminationPart.checkTermination(dataObjects)) {
                 return true;
             }
         }

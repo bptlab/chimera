@@ -25,8 +25,8 @@ public class LockingTest {
         int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
         ScenarioInstance reloaded = new ScenarioInstance(scenarioId, scenarioInstanceId);
 
-        Long locked = reloaded.getDataManager().getDataObjectInstances()
-                 .stream().filter(DataObjectInstance::isLocked).count();
+        Long locked = reloaded.getDataManager().getDataObjects()
+                 .stream().filter(DataObject::isLocked).count();
         assertEquals(1, locked.intValue());
     }
 

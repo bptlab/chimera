@@ -1,10 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -575,9 +573,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService.terminateActivity(scenarioInstance, activity541, 208);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        List<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjectInstances();
+        List<DataObject> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjects();
         boolean loopCheck = false;
-        for(DataObjectInstance d : doI){
+        for(DataObject d : doI){
            if (d.getStateId() == 157) {
                loopCheck = true;
                break;
@@ -611,9 +609,9 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService.terminateActivity(scenarioInstance, activity541, 209);
         assertArrayEquals(new Integer[]{activity543}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        List<DataObjectInstance> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjectInstances();
+        List<DataObject> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjects();
         boolean loopCheck = false;
-        for(DataObjectInstance d : doI){
+        for(DataObject d : doI){
             if (d.getStateId() == 159) {
                 loopCheck = true;
                 break;

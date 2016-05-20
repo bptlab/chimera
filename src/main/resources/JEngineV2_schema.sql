@@ -226,24 +226,10 @@ CREATE TABLE IF NOT EXISTS `datanode` (
 
 CREATE TABLE IF NOT EXISTS `dataobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(256) NOT NULL,
-  `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `start_state_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `dataobjectinstance`
---
-
-CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scenarioinstance_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
+  `dataclass_id` int(11) NOT NULL,
   `locked` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -541,19 +527,6 @@ CREATE TABLE IF NOT EXISTS `pathmapping` (
   `controlnode_id` int(11) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
   `jsonpath` varchar(256)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reference`
---
-
-CREATE TABLE IF NOT EXISTS `reference` (
-  `controlnode_id1` int(11) NOT NULL,
-  `controlnode_id2` int(11) NOT NULL,
-  PRIMARY KEY (`controlnode_id1`,`controlnode_id2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

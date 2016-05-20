@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
+import org.easymock.EasyMock;
 
 import java.util.ArrayList;
 import java.util.List;

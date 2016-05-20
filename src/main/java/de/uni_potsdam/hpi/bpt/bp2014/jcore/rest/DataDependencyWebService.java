@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 
@@ -75,7 +75,7 @@ public class DataDependencyWebService extends AbstractRestService {
 
     private Response buildDataSetResponse(
             int setId, ExecutionService executionService, String setType, int scenarioInstanceId) {
-        DataObjectInstance[] dataObjectInstances = executionService
+        DataObject[] dataObjectInstances = executionService
                 .getDataObjectInstancesForDataSetId(
                         setId, scenarioInstanceId);
 
@@ -91,10 +91,10 @@ public class DataDependencyWebService extends AbstractRestService {
     }
 
     private DataObjectJaxBean buildDataObjectJaxBean(
-            int setId, DataObjectInstance dataObjectInstance, ExecutionService executionService) {
+            int setId, DataObject dataObjectInstance, ExecutionService executionService) {
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
         dataObject.setSetId(setId);
-        dataObject.setId(dataObjectInstance.getDataObjectInstanceId());
+        dataObject.setId(dataObjectInstance.getId());
         dataObject.setLabel(dataObjectInstance.getName());
         dataObject.setState(executionService
                 .getStateNameForDataObjectInstanceOutput(

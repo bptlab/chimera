@@ -13,8 +13,8 @@ public class DbHistoryDataObjectTransition extends DbObject {
 	/**
 	 * This method saves a log entry with a DataAttributeInstance value change in the database.
 	 *
-	 * @param objectInstanceId the ID of the DataObjectInstance that is changed.
-	 * @param stateId           the new state of the DataObjectInstance.
+	 * @param objectInstanceId the ID of the DataObject that is changed.
+	 * @param stateId           the new state of the DataObject.
 	 * @param activityInstanceId
      * @return the generated key for the insert statement.
 	 */
@@ -37,9 +37,9 @@ public class DbHistoryDataObjectTransition extends DbObject {
 	}
 
 	/**
-	 * This method saves a log entry of a newly created DataObjectInstance into the database.
+	 * This method saves a log entry of a newly created DataObject into the database.
 	 *
-	 * @param objectInstanceId the ID of the DataObjectInstance that is created.
+	 * @param objectInstanceId the ID of the DataObject that is created.
 	 * @return the generated key for the insert statement.
 	 */
 	public int logDataObjectCreation(int objectInstanceId) {

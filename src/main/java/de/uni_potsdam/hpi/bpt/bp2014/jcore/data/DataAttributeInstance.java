@@ -12,7 +12,7 @@ public class DataAttributeInstance {
 	private final int dataAttributeInstanceId;
 	private final int dataAttributeId;
 
-	private final DataObjectInstance dataObjectInstance;
+	private final DataObject dataObject;
 	private final String type;
 	private final String name;
 	private Object value;
@@ -23,12 +23,12 @@ public class DataAttributeInstance {
 	 *                              instance.
 	 * @param dataObjectInstanceId	The ID of the Data Object Instance belonging to
 	 *                              this instance.
-	 * @param dataObjectInstance	The Data Object Instance belonging to this instance.
+	 * @param dataObject	The Data Object Instance belonging to this instance.
 	 */
 	public DataAttributeInstance(int dataAttributeId, int dataObjectInstanceId,
-			DataObjectInstance dataObjectInstance) {
+			DataObject dataObject) {
 		this.dataAttributeId = dataAttributeId;
-		this.dataObjectInstance = dataObjectInstance;
+		this.dataObject = dataObject;
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
 		if (dbDataAttributeInstance.existDataAttributeInstance(
 						dataAttributeId, dataObjectInstanceId)) {
@@ -42,7 +42,7 @@ public class DataAttributeInstance {
 					.createNewDataAttributeInstance(
 							dataAttributeId, dataObjectInstanceId);
             new DbLogEntry().logDataattributeCreation(dataObjectInstanceId, this.getValue(),
-                    dataObjectInstance.getScenarioInstanceId());
+                    dataObject.getScenarioInstanceId());
         }
 		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
 		this.name = dbDataAttributeInstance.getName(dataAttributeId);
@@ -145,7 +145,7 @@ public class DataAttributeInstance {
 	/**
 	 * @return the Data Object Instance.
 	 */
-	public DataObjectInstance getDataObjectInstance() {
-		return dataObjectInstance;
+	public DataObject getDataObject() {
+		return dataObject;
 	}
 }

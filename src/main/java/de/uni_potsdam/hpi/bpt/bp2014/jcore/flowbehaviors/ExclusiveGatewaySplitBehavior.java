@@ -6,7 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInsta
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
@@ -238,22 +238,22 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance()
 				.getDataAttributeInstances().values()) {
 			left = left.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance())
+					"#" + (dataAttributeInstance.getDataObject())
 							.getName() + "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 			right = right.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance())
+					"#" + (dataAttributeInstance.getDataObject())
 							.getName() + "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 		}
-		for (DataObjectInstance dataObjectInstance
-				: this.getScenarioInstance().getDataManager().getDataObjectInstances()) {
-			left = left.replace("#" + dataObjectInstance.getName(),
-					dbState.getStateName(dataObjectInstance.getStateId()));
-			right = right.replace("#" + dataObjectInstance.getName(),
-					dbState.getStateName(dataObjectInstance.getStateId()));
+		for (DataObject dataObject
+				: this.getScenarioInstance().getDataManager().getDataObjects()) {
+			left = left.replace("#" + dataObject.getName(),
+					dbState.getStateName(dataObject.getStateId()));
+			right = right.replace("#" + dataObject.getName(),
+					dbState.getStateName(dataObject.getStateId()));
 		}
 		try {
 			switch (comparison) {

@@ -10,10 +10,10 @@ public class DbDataAttributeInstance extends DbObject {
 
 	/**
 	 * This method creates and saves a new DataAttributeInstance to the database
-	 * into the context of a DataObjectInstance and saves a log entry into the database.
+	 * into the context of a DataObject and saves a log entry into the database.
 	 *
 	 * @param dataAttributeId      This is the database ID of the DataAttribute.
-	 * @param dataObjectInstanceId This is the database ID of the DataObjectInstance
+	 * @param dataObjectInstanceId This is the database ID of the DataObject
 	 *                             the AttributeInstance belongs to.
 	 * @return the database ID of the newly created DataAttributeInstance (Error: -1).
 	 */
@@ -30,7 +30,7 @@ public class DbDataAttributeInstance extends DbObject {
 	/**
 	 *
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
-	 * @param dataObjectInstanceId	This is the database ID of the DataObjectInstance
+	 * @param dataObjectInstanceId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
 	 * @return as a boolean whether the given dataAttribute exists
 	 */
@@ -44,7 +44,7 @@ public class DbDataAttributeInstance extends DbObject {
 	/**
 	 *
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
-	 * @param dataObjectInstanceId	This is the database ID of the DataObjectInstance
+	 * @param dataObjectInstanceId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
 	 * @return the database ID of a DataAttributeInstance (Error: -1).
 	 */

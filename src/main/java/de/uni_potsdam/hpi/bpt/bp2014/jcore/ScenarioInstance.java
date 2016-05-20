@@ -266,7 +266,7 @@ public class ScenarioInstance {
 	 */
 	public boolean checkTerminationCondition() {
         this.canTerminate = this.terminationCondition.
-                checkTerminationCondition(this.dataManager.getDataObjectInstances());
+                checkTerminationCondition(this.dataManager.getDataObjects());
         return this.canTerminate;
 	}
 

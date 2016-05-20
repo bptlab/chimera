@@ -5,7 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.StartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -75,8 +75,8 @@ public class StartQueryIntegrationTest extends JerseyTest {
         // TODO inspect data objects via Rest call
         ScenarioInstance scenarioInstance = new ScenarioInstance(1, 1);
         List<DataAttributeInstance> dataAttributeInstances = scenarioInstance.getDataManager()
-                .getDataObjectInstances().stream()
-                .map(DataObjectInstance::getDataAttributeInstances)
+                .getDataObjects().stream()
+                .map(DataObject::getDataAttributeInstances)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         assertEquals(1L, dataAttributeInstances.stream().filter(
                 x -> x.getValue().equals("someValue")).count());

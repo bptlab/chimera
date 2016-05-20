@@ -210,7 +210,7 @@ public final class EventDispatcher {
             for (DataAttributeInstance attribute : scenario
                     .getDataAttributeInstances().values()) {
                 String dataattributePath = String.format("#%s.%s",
-                        attribute.getDataObjectInstance().getName(), attribute.getName());
+                        attribute.getDataObject().getName(), attribute.getName());
                 queryString = queryString.replace(dataattributePath,
                         attribute.getValue().toString());
             }

@@ -57,7 +57,7 @@ public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
 	private boolean dataObjectHasAttributes(DataObject dataObject) {
 		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 				.getDataAttributeInstances().values()) {
-			if (dataAttributeInstance.getDataObjectInstance().getDataObjectId()
+			if (dataAttributeInstance.getDataObject().getDataClassId()
 					== dataObject.getId()) {
 				return true;
 			}

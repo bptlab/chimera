@@ -1,12 +1,11 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.LinkedList;
@@ -69,7 +68,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
                 this.getControlNodeId());
         if (inputSets.size() > 0) {
             int inputSet = inputSets.getFirst();
-            for (DataObject dataObject : dbDataNode.getDataObjectsForDataSets(inputSet)) {
+            for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dbDataNode.getDataObjectsForDataSets(inputSet)) {
                 this.lockDataObjects(dataObject.getId());
             }
         }
@@ -84,9 +83,9 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 		List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
 				this.getControlNodeId());
 		for (int outputSet : outputSets) {
-			LinkedList<DataObject> dataObjects =
+			LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects =
 					dbDataNode.getDataObjectsForDataSets(outputSet);
-			for (DataObject dataObject : dataObjects) {
+			for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
 				this.lockDataObjects(dataObject.getId());
 			}
 		}
@@ -95,9 +94,9 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 			if (outputSets.size() > 1) {
 				outputSet = outputSetId;
 			}
-			LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(
+			LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(
 					outputSet);
-			for (DataObject dataObject : dataObjects) {
+			for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
 				this.changeDataObjectInstanceState(
 						dataObject.getId(), dataObject.getStateID());
 			}
@@ -124,7 +123,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 */
 	public void lockDataObjects(int dataObjectId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        Optional<DataObjectInstance> dataObjectInstance =
+        Optional<DataObject> dataObjectInstance =
                 dataManager.getDataobjectInstanceForId(dataObjectId);
         assert dataObjectInstance.isPresent(): "invalid data object id";
         dataObjectInstance.get().unlock();

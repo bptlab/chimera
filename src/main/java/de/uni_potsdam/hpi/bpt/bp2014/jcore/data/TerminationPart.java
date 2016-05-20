@@ -16,9 +16,9 @@ public class TerminationPart {
         this.dataobjectIdToState = dbTerminationCondition.retrieveDataobjectIdToStateId(key);
     }
 
-    public boolean checkTermination(List<DataObjectInstance> dataObjectInstances) {
-        for (DataObjectInstance instance : dataObjectInstances) {
-            Integer dataObjectId = instance.getDataObjectId();
+    public boolean checkTermination(List<DataObject> dataObjects) {
+        for (DataObject instance : dataObjects) {
+            Integer dataObjectId = instance.getDataClassId();
             // Data objects which are not present in this termination condition part don't matter
             if (!dataobjectIdToState.containsKey(dataObjectId)) {
                 continue;

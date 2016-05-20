@@ -81,7 +81,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
     private String insertDataobjectValues(String toReplace, List<DataAttributeInstance> dataAttributes) {
         String replacedLink = toReplace;
         for (DataAttributeInstance dataAttributeInstance : dataAttributes) {
-            replacedLink = replacedLink.replace("#" + (dataAttributeInstance.getDataObjectInstance())
+            replacedLink = replacedLink.replace("#" + (dataAttributeInstance.getDataObject())
                             .getName() + "."
                             + dataAttributeInstance.getName(),
                     dataAttributeInstance.getValue().toString());

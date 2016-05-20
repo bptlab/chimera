@@ -50,7 +50,7 @@ public class AttributeTypeValidationTest {
 
 
     private DataAttributeInstance[] mockInstances() {
-        DataObjectInstance objectInstance = createNiceMock(DataObjectInstance.class);
+        DataObject objectInstance = createNiceMock(DataObject.class);
         expect(objectInstance.getScenarioInstanceId()).andReturn(1).anyTimes();
         replay(objectInstance);
         int dataObjectInstanceId = -1;

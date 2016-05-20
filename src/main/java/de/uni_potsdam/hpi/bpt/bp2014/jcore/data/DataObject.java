@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.ArrayList;
@@ -10,63 +10,74 @@ import java.util.List;
 /**
  * Represents data object instances.
  */
-public class DataObjectInstance {
+public class DataObject {
 
-	private final int dataObjectInstanceId;
-	private final int dataObjectId;
-	private final int scenarioId;
-	private final int scenarioInstanceId;
-	private final String name;
+	private final int id;
 
-	/**
-	 * Database Connection objects.
-	 */
-	private final ScenarioInstance scenarioInstance;
-	private final DbDataObjectInstance dbDataObjectInstance = new DbDataObjectInstance();
+
+    private int dataClassId;
+	private int scenarioId;
+	private int scenarioInstanceId;
+	private String name;
+
+	private ScenarioInstance scenarioInstance;
+	private final DbDataObject dbDataObject = new DbDataObject();
 	private int stateId;
 	private List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
     private boolean isLocked = false;
-	/**
-	 * Creates and initializes a new data object instance.
-	 * Reads the information for an existing data object instance from the database
-	 * or creates a new one if no one exist in the database.
+
+    /**
+	 * Constructor to create a new DataObject.
 	 *
-	 * @param dataObjectId       This is the database id from the data object instance.
+	 * @param dataClassId       This is the database id from the data object instance.
 	 * @param scenarioId         This is the database id from the scenario.
 	 * @param scenarioInstanceId This is the database id from the scenario instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
 	 */
-	public DataObjectInstance(int dataObjectId, int scenarioId, int scenarioInstanceId,
-			ScenarioInstance scenarioInstance) {
-		this.scenarioInstance = scenarioInstance;
-		this.dataObjectId = dataObjectId;
-		this.scenarioId = scenarioId;
-		this.scenarioInstanceId = scenarioInstanceId;
-        DbDataClass dataClass = new DbDataClass();
-		this.name = dataClass.getName(dataObjectId);
-		if (dbDataObjectInstance.existDataObjectInstance(scenarioInstanceId, dataObjectId)) {
-			dataObjectInstanceId = dbDataObjectInstance
-					.getDataObjectInstanceID(scenarioInstanceId, dataObjectId);
-			this.stateId = dbDataObjectInstance.getStateID(dataObjectInstanceId);
-            isLocked = dbDataObjectInstance.isLocked(dataObjectInstanceId);
-		} else {
-			this.dataObjectInstanceId = dbDataObjectInstance
-					.createNewDataObjectInstance(
-							scenarioInstanceId,
-							stateId,
-							dataObjectId);
-		}
-		this.initializeAttributes();
+	public DataObject(int dataClassId, int scenarioId, int scenarioInstanceId,
+                      ScenarioInstance scenarioInstance) {
+        this.id = dbDataObject.createDataObject(scenarioId, scenarioInstanceId, stateId, dataClassId);
+        initialize(dataClassId, scenarioInstance);
+
 	}
+
+    /**
+     * Use this constructor when initializing a data object which is already present in the
+     * database.
+     * @param dataObjectId database id of data object.
+     */
+    public DataObject (int dataObjectId, ScenarioInstance scenarioInstance) {
+        DbDataObject dbDataObject = new DbDataObject();
+        this.id = dataObjectId;
+        this.scenarioInstance = scenarioInstance;
+        dbDataObject.loadFromDb(this);
+    }
+
+    /**
+     * Use this method to set values to a DataObject. This can either be done when
+     * creating a new data object or when loading one from the database.
+     * @param dataClassId Database Id of the dataclass, of which data object is instance
+     */
+    public void initialize(int dataClassId, ScenarioInstance scenarioInstance) {
+        DbDataClass dataClass = new DbDataClass();
+        this.name = dataClass.getName(dataClassId);
+        this.scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+        this.dataClassId = dataClassId;
+        this.scenarioId = scenarioInstance.getScenarioId();
+        this.scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        this.initializeAttributes();
+    }
+
 
 	private void initializeAttributes() {
         DbDataClass dataClass = new DbDataClass();
         List<Integer> dataAttributeIds = dataClass
-				.getDataAttributesForDataObject(dataObjectId);
+				.getDataAttributesForDataObject(dataClassId);
         for (int dataAttributeId : dataAttributeIds) {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
-					dataAttributeId, dataObjectInstanceId, this);
+					dataAttributeId, id, this);
             dataAttributeInstances.add(dataAttributeInstance);
+            // TODO remove this method
 			scenarioInstance.getDataAttributeInstances()
 					.put(dataAttributeInstance.getDataAttributeInstanceId(),
 							dataAttributeInstance);
@@ -80,7 +91,7 @@ public class DataObjectInstance {
 	 */
 	public void setState(int stateId) {
 		this.stateId = stateId;
-		dbDataObjectInstance.setState(dataObjectInstanceId, stateId);
+		dbDataObject.setState(id, stateId);
 		scenarioInstance.checkTerminationCondition();
 	}
 
@@ -109,15 +120,15 @@ public class DataObjectInstance {
 	/**
 	 * @return the ID of the Data Object.
 	 */
-	public int getDataObjectId() {
-		return dataObjectId;
+	public int getDataClassId() {
+		return dataClassId;
 	}
 
 	/**
 	 * @return the ID of this Data Object Instance.
 	 */
-	public int getDataObjectInstanceId() {
-		return dataObjectInstanceId;
+	public int getId() {
+		return id;
 	}
 
 	/**
@@ -143,12 +154,12 @@ public class DataObjectInstance {
 	}
 
     public void lock() {
-        this.dbDataObjectInstance.setLocked(this.dataObjectInstanceId, true);
+        this.dbDataObject.setLocked(this.id, true);
         this.isLocked = true;
     }
 
     public void unlock() {
-        this.dbDataObjectInstance.setLocked(this.dataObjectInstanceId, false);
+        this.dbDataObject.setLocked(this.id, false);
         this.isLocked = false;
     }
 
@@ -156,4 +167,8 @@ public class DataObjectInstance {
         return this.isLocked;
     }
 
+
+    public void setDataClassId(int dataClassId) {
+        this.dataClassId = dataClassId;
+    }
 }

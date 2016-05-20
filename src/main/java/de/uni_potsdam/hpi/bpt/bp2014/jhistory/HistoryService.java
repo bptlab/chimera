@@ -24,7 +24,7 @@ public class HistoryService {
 	 * This method returns the DataObjectInstances log entries for a ScenarioInstance.
 	 *
 	 * @param scenarioInstanceId ID of the ScenarioInstance for which the
-	 *                           DataObjectInstance log entries shall be returned.
+	 *                           DataObject log entries shall be returned.
 	 * @return a Map with a Map of the log entries' attribute names
 	 * 			as keys and their respective values.
 	 */

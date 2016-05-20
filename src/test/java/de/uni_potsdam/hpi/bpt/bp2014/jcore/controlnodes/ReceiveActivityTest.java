@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.junit.After;
 import org.junit.Test;
@@ -38,14 +38,14 @@ public class ReceiveActivityTest {
         ScenarioTestHelper.terminateActivityInstanceByName("BeforeReceiveTask", scenarioInstance);
         DataManager dataManager = scenarioInstance.getDataManager();
         // Since only one data object is present in the scenario
-        DataObjectInstance dataObject = dataManager.getDataObjectInstances().get(0);
+        DataObject dataObject = dataManager.getDataObjects().get(0);
         assertEquals("init", new DbState().getStateName(dataObject.getStateId()));
 
         List<AbstractEvent> events = scenarioInstance.getEventsForScenarioInstance();
         assertEquals(1, events.size());
         events.get(0).terminate();
 
-        dataObject = dataManager.getDataObjectInstances().get(0);
+        dataObject = dataManager.getDataObjects().get(0);
         assertEquals("changed", new DbState().getStateName(dataObject.getStateId()));
     }
 }
