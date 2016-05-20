@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,20 +13,13 @@ import java.util.stream.Collectors;
  * The data manager
  */
 public class DataManager {
+    private Logger log = Logger.getLogger(DataManager.class);
     private final ScenarioInstance scenarioInstance;
-    private List<DataObject> dataObjects = new ArrayList<>();
+    private DataState dataState;
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
-    }
-
-    public void loadDataObjects() {
-        DbDataObject dbDataObject = new DbDataObject();
-        List<Integer> dataObjectIds = dbDataObject.getDataObjectIds(
-                scenarioInstance.getScenarioInstanceId());
-        for (Integer dataObjectId : dataObjectIds) {
-            this.dataObjects.add(new DataObject(dataObjectId, scenarioInstance));
-        }
+        this.dataState = new DataState(instance);
     }
 
     /**
@@ -38,60 +32,31 @@ public class DataManager {
      * @return Returns if the state was successfully changed
      */
     public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityInstanceId) {
-        Optional<DataObject> dataObjectInstance = getDataobjectInstanceForId(dataObjectId);
+        Optional<DataObject> dataObjectInstance = getDataobjectForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
-            int dataobjectInstanceId = dataObjectInstance.get().getId();
-            new DbLogEntry().logDataobjectTransition(dataobjectInstanceId, stateId,
+            int dataobjectId = dataObjectInstance.get().getId();
+            new DbLogEntry().logDataobjectTransition(dataobjectId, stateId,
                 activityInstanceId, this.scenarioInstance.getScenarioInstanceId());
             return true;
         }
         return false;
     }
 
-    public Optional<DataObject> getDataobjectInstanceForId(int dataObjectId) {
-        return this.dataObjects.stream()
-                .filter(x -> x.getDataClassId() == dataObjectId).findFirst();
+    public Optional<DataObject> getDataobjectForId(int dataObjectId) {
+        return this.dataState.getDataObjects().stream()
+                .filter(x -> x.getId() == dataObjectId).findFirst();
     }
 
     public List<DataAttributeInstance> getAllDataAttributeInstances() {
-        return dataObjects.stream().map(DataObject::getDataAttributeInstances)
+        return this.getDataObjects().stream().map(DataObject::getDataAttributeInstances)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
-    /**
-     * Returns the states of data objects for a scenario instance id.
-     *
-     * @return a Map. Keys are the data objects ids. Values are the states of the data objects.
-     */
-    public Map<Integer, Integer> getDataObjectStates() {
-        return this.getDataObjects().stream().collect(Collectors.toMap(
-                DataObject::getDataClassId, DataObject::getStateId)
-        );
-    }
 
-    public boolean checkInputSet(int inputSetId) {
-        DbDataNode dbDataNode = new DbDataNode();
-        Map<Integer, Integer> dataObjectIdToStateId = getDataObjectStates();
-        Set<Integer> lockedDataObjectIds = dataObjects.stream()
-                .filter(DataObject::isLocked)
-                .map(DataObject::getDataClassId)
-                .collect(Collectors.toSet());
-        List<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> inputSet = dbDataNode.getDataObjectsForDataSets(inputSetId);
-        for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : inputSet) {
-            Integer dataObjectId = dataObject.getId();
-            if (lockedDataObjectIds.contains(dataObjectId)) {
-                return false;
-            }
-            if (!(dataObjectIdToStateId.get(dataObjectId) == dataObject.getStateID())) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     public List<DataObject> getDataObjects() {
-        return dataObjects;
+        return this.dataState.getDataObjects();
     }
 
 
@@ -103,13 +68,19 @@ public class DataManager {
      * @return true if the on change could been set. false if not.
      */
     public Boolean lockDataobject(int dataObjectId) {
-        Optional<DataObject> dataObjectInstance =
-                this.getDataobjectInstanceForId(dataObjectId);
+        Optional<DataObject> dataObject =
+                this.getDataobjectForId(dataObjectId);
 
-        if (dataObjectInstance.isPresent()) {
-            dataObjectInstance.get().lock();
+        if (dataObject.isPresent()) {
+            dataObject.get().lock();
+            return true;
         }
+
+        log.warn("Data object could not be locked");
         return false;
     }
 
+    public boolean checkInputSet(Integer inputSet) {
+        return this.dataState.checkInputSet(inputSet);
+    }
 }

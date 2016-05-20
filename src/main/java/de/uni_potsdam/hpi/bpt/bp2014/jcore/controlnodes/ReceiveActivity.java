@@ -59,6 +59,7 @@ public class ReceiveActivity extends AbstractEvent {
      */
     private void changeDataObjectInstanceState(int dataObjectId, int stateId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
+        // TODO change this to new structure
         dataManager.changeDataObjectInstanceState(dataObjectId, stateId,
                 this.getControlNodeInstanceId());
     }

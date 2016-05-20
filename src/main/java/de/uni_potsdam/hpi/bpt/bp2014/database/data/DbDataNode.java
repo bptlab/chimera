@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataSet;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -50,6 +51,10 @@ public class DbDataNode extends DbObject {
 						+ " ORDER BY dataobject_id";
 		return this.executeStatementReturnsListInt(sql, "state_id");
 	}
+
+    public DataSet getInputSetFor(int inputSetId) {
+        throw new RuntimeException("To be implemented");
+    }
 
     public int getDataObjectIdForDataNode(int dataNodeId) {
         String sql = "SELECT dataobject_id FROM datanode " +

@@ -43,7 +43,6 @@ public class DataManagerTest {
         replay(scenarioInstance);
 
         DataManager dataManager = new DataManager(scenarioInstance);
-        dataManager.loadDataObjects();
         assertEquals(2, dataManager.getDataObjects().size());
         assertEquals(1, dataManager.getDataObjects().get(0).getDataClassId());
         assertEquals(2, dataManager.getDataObjects().get(1).getDataClassId());
@@ -69,10 +68,6 @@ public class DataManagerTest {
         Assert.fail();
     }
 
-    @Test
-    public void testCheckInputSet() {
-        Assert.fail();
-    }
 
     @Test
     public void testGetDataObjects() {
