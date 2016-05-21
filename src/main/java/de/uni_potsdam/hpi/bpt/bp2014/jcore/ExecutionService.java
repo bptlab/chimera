@@ -739,7 +739,7 @@ public class ExecutionService /*implements Runnable*/ {
 	/**
 	 * This method gets all dataObjectInstances for a specific set of a scenarioInstance.
 	 *
-	 * @param setId              This is the databaseID of a DataSet (either Input or Output).
+	 * @param setId              This is the databaseID of a DataConditions (either Input or Output).
 	 * @param scenarioInstanceID This is the databaseID of a scenarioInstance.
 	 * @return an array of dataObjectInstances of dataObjects belonging to the dataSet.
 	 */
@@ -773,7 +773,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 * This method is used to get the stateName corresponding to a dataObjectInstance.
 	 *
 	 * @param dataObjectInstance This is an object of the DataObject class.
-	 * @param setID This is the databaseID of a DataSet (either Input or Output).
+	 * @param setID This is the databaseID of a DataConditions (either Input or Output).
 	 * @return the name of the state of the dataObjectInstance as a String.
 	 */
 	public String getStateNameForDataObjectInstanceOutput(DataObject dataObjectInstance,

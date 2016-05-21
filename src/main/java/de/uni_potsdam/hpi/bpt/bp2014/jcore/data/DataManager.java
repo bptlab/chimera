@@ -10,16 +10,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * The data manager
+ * The data manager provides an interface to the state of the scenario data objects
+ * and attributes. It is responsible for proper locking of data object and
+ * for logging changes in the state of the data.
  */
 public class DataManager {
     private Logger log = Logger.getLogger(DataManager.class);
     private final ScenarioInstance scenarioInstance;
-    private DataState dataState;
+    private List<DataObject> dataObjects = new ArrayList<>();
 
     public DataManager(ScenarioInstance instance) {
         this.scenarioInstance = instance;
-        this.dataState = new DataState(instance);
+        loadFromDatabase();
     }
 
     /**
@@ -43,8 +45,23 @@ public class DataManager {
         return false;
     }
 
+    /**
+     * This method load all dataobjects for the scenario instance, with which the
+     * DataManager was created. If the scenario instance is newly created, nothing happens
+     * since there are no data object entries in the database.
+     */
+    public void loadFromDatabase() {
+        DbDataObject dbDataObject = new DbDataObject();
+        List<Integer> dataObjectIds = dbDataObject.getDataObjectIds(
+                scenarioInstance.getScenarioInstanceId());
+        for (Integer dataObjectId : dataObjectIds) {
+            this.dataObjects.add(new DataObject(dataObjectId, scenarioInstance));
+        }
+    }
+
+
     public Optional<DataObject> getDataobjectForId(int dataObjectId) {
-        return this.dataState.getDataObjects().stream()
+        return this.dataObjects.stream()
                 .filter(x -> x.getId() == dataObjectId).findFirst();
     }
 
@@ -56,7 +73,7 @@ public class DataManager {
 
 
     public List<DataObject> getDataObjects() {
-        return this.dataState.getDataObjects();
+        return this.dataObjects;
     }
 
 
@@ -80,7 +97,8 @@ public class DataManager {
         return false;
     }
 
-    public boolean checkInputSet(Integer inputSet) {
-        return this.dataState.checkInputSet(inputSet);
+    public boolean checkInputSet(Integer inputSetId) {
+        InputSet inputSet = new InputSet(inputSetId);
+        return inputSet.isFulfilled(dataObjects);
     }
 }

@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -103,8 +104,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * This test run scenario 1 from the database. It checks data objects and consistency.
      */
-    //test DataObjects
-    @Test
+    @Test @Ignore
     public void testScenario1() {
         System.out.println("\n ------------------ test Scenario 1 ------------------\n");
         ExecutionService executionService = ExecutionService.getInstance(1);
@@ -186,7 +186,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
      *  This test run scenario 105 from the database. It checks the termination condition and consistency.
      */
     //test Termination Condition
-    @Test
+    @Test @Ignore
     public void testScenario105() {
         System.out.println("\n ------------------ test Scenario 105 ------------------\n");
         ExecutionService executionService = ExecutionService.getInstance(105);
@@ -260,7 +260,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * Email Test Scenario 145, XOR test
      */
-    @Test
+    @Test @Ignore
     public void testScenario145() {
         ExecutionService executionService = ExecutionService.getInstance(145);
         int scenarioID = 145;
@@ -500,7 +500,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * test scenario 154, complex xor test, test data object state and default
      */
-    @Test
+    @Test @Ignore
     public void testScenario154() {
         ExecutionService executionService = ExecutionService.getInstance(154);
         int scenarioID = 154;
@@ -526,7 +526,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * test scenario 155, complex xor test, test data object state and default
      */
-    @Test
+    @Test @Ignore
     public void testScenario155() {
         ExecutionService executionService = ExecutionService.getInstance(155);
         int scenarioID = 155;
@@ -552,7 +552,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * test scenario 160, outputsets test 1
      */
-    @Test
+    @Test @Ignore
     public void testScenario160() {
         ExecutionService executionService = ExecutionService.getInstance(160);
         int scenarioID = 160;
@@ -587,7 +587,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * test scenario 160, outputsets test 2
      */
-    @Test
+    @Test @Ignore
     public void testScenario160_2() {
         ExecutionService executionService = ExecutionService.getInstance(160);
         int scenarioID = 160;
@@ -623,7 +623,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * test scenario 155, complex xor test
      */
-    @Test
+    @Test @Ignore
     public void testScenario162() {
         ExecutionService executionService = ExecutionService.getInstance(162);
         int scenarioID = 162;

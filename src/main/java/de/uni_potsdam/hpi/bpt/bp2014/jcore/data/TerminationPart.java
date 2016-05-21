@@ -9,32 +9,15 @@ import java.util.Map;
  * TerminationPart is one set of dataobjects and their respective state which can lead to
  * termination.
  */
-public class TerminationPart {
-    Map<Integer, Integer> dataobjectIdToState;
+public class TerminationPart extends DataConditions {
+
     public TerminationPart(String key) {
         DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
-        this.dataobjectIdToState = dbTerminationCondition.retrieveDataobjectIdToStateId(key);
+        // TODO implement
+        // this.dataobjectIdToState = dbTerminationCondition.retrieveDataobjectIdToStateId(key);
     }
 
     public boolean checkTermination(List<DataObject> dataObjects) {
-        for (DataObject instance : dataObjects) {
-            Integer dataObjectId = instance.getDataClassId();
-            // Data objects which are not present in this termination condition part don't matter
-            if (!dataobjectIdToState.containsKey(dataObjectId)) {
-                continue;
-            }
-            if (dataobjectIdToState.get(dataObjectId) != instance.getStateId()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public Map<Integer, Integer> getDataobjectToState() {
-        return dataobjectIdToState;
-    }
-
-    public void setDataobjectToState(Map<Integer, Integer> dataobjectToState) {
-        this.dataobjectIdToState = dataobjectToState;
+        return super.checkConditions(dataObjects);
     }
 }
