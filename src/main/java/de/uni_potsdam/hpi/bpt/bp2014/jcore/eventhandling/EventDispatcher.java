@@ -10,7 +10,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.CaseStartAttributeWriter;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.CaseStarter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -76,18 +76,16 @@ public final class EventDispatcher {
         int scenarioId = new DbCaseStart().getScenarioId(requestKey);
         int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
         ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-        List<DataAttributeInstance> dataAttributes =  new ArrayList<>(
-                instance.getDataManager().getAllDataAttributeInstances()) ;
         String queryId = new DbCaseStart().getQueryId(requestKey);
-        CaseStartAttributeWriter attributeWriter = new CaseStartAttributeWriter(scenarioId, queryId);
-        if (eventJson.isEmpty() && attributeWriter.hasMapping()) {
+        CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
+        try {
+            caseStarter.startInstance(eventJson, instance);
+        } catch (IllegalStateException e) {
+            logger.error("Could not start case from query", e);
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("Could not write data from empty json")
+                    .entity(e.getMessage())
                     .build();
-        } else {
-            attributeWriter.writeDataAttributesFromJson(
-                    eventJson, dataAttributes, scenarioInstanceId);
         }
         return Response.ok("Event received.").build();
     }

@@ -27,16 +27,20 @@ public class DataObject {
     /**
 	 * Constructor to create a new DataObject.
 	 *
-	 * @param dataClassId       This is the database id from the data object instance.
-	 * @param scenarioId         This is the database id from the scenario.
-	 * @param scenarioInstanceId This is the database id from the scenario instance.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+	 * @param dataClassId This is the database id from the data object instance.
+	 * @param stateId This is the database id from the scenario.
+	 * @param scenarioInstance This is an instance from the class ScenarioInstance.
 	 */
-	public DataObject(int dataClassId, int scenarioId, int scenarioInstanceId,
-                      ScenarioInstance scenarioInstance) {
+	public DataObject(int dataClassId, ScenarioInstance scenarioInstance, int stateId) {
         this.id = dbDataObject.createDataObject(scenarioId, scenarioInstanceId, stateId, dataClassId);
-        initialize(dataClassId, scenarioInstance);
+        DbDataClass dataClass = new DbDataClass();
 
+        this.name = dataClass.getName(dataClassId);
+        this.scenarioInstance = scenarioInstance;
+        this.dataClassId = dataClassId;
+        this.scenarioId = scenarioInstance.getScenarioId();
+        this.scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        this.initializeAttributes();
 	}
 
     /**
@@ -45,32 +49,16 @@ public class DataObject {
      * @param dataObjectId database id of data object.
      */
     public DataObject (int dataObjectId, ScenarioInstance scenarioInstance) {
-        DbDataObject dbDataObject = new DbDataObject();
         this.id = dataObjectId;
         this.scenarioInstance = scenarioInstance;
         dbDataObject.loadFromDb(this);
     }
 
-    /**
-     * Use this method to set values to a DataObject. This can either be done when
-     * creating a new data object or when loading one from the database.
-     * @param dataClassId Database Id of the dataclass, of which data object is instance
-     */
-    public void initialize(int dataClassId, ScenarioInstance scenarioInstance) {
-        DbDataClass dataClass = new DbDataClass();
-        this.name = dataClass.getName(dataClassId);
-        this.scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-        this.dataClassId = dataClassId;
-        this.scenarioId = scenarioInstance.getScenarioId();
-        this.scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
-        this.initializeAttributes();
-    }
-
-
 	private void initializeAttributes() {
         DbDataClass dataClass = new DbDataClass();
         List<Integer> dataAttributeIds = dataClass
-				.getDataAttributesForDataObject(dataClassId);
+				.getDataAttributes(dataClassId);
+
         for (int dataAttributeId : dataAttributeIds) {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
 					dataAttributeId, id, this);

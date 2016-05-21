@@ -411,7 +411,11 @@ public class Connector extends DbObject {
 		return resultDataClassIDs;
 	}
 
-    public void insertStartQueryIntoDatabase(String query, int scenarioId, int attributeDbId, String value, String id) {
-        throw new UnsupportedOperationException("Implement me");
+    public void insertStartQueryIntoDatabase(String query, int scenarioId,
+                                             int attributeDbId, String jsonPath, String id) {
+        String sql = "INSERT INTO startquery (query, scenario_id, dataattribute_id, jsonpath, id) " +
+                "VALUES ('%s', %d, %d, '%s', '%s');";
+        sql = String.format(sql, query, scenarioId, attributeDbId, jsonPath, id);
+        this.executeInsertStatement(sql);
     }
 }

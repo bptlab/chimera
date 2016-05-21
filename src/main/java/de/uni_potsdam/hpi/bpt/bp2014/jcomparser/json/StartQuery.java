@@ -71,7 +71,6 @@ public class StartQuery {
         }
 
         Connector connector = new Connector();
-
         for (Map.Entry<String, String> entry : this.attributeToJsonPath.entrySet()) {
             int attributeDbId = editorToDbId.get(entry.getKey());
             connector.insertStartQueryIntoDatabase(

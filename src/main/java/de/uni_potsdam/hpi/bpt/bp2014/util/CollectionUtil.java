@@ -1,8 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,5 +22,24 @@ public class CollectionUtil {
             combinationWithExtra.add(extra);
             return combinationWithExtra;
         })).collect(Collectors.toList());
+    }
+
+    /**
+     * This method can be used when searching for the key of a value in a mapping
+     * where each key points to a list of values. It is assumed that each value can
+     * only occur for one key.
+     * @param mapping Map from key to the List of values
+     * @return Inverted Map from value to it's respective key
+     */
+    public static Map<Integer, Integer> invertMapping(Map<Integer,
+            ? extends Collection<Integer>> mapping) {
+        Map<Integer, Integer> newMap = new HashMap<>();
+        for (Map.Entry<Integer, ? extends Collection<Integer>> entry : mapping.entrySet()) {
+            for (int i : entry.getValue()) {
+                assert !newMap.containsKey(i);
+                newMap.put(i, entry.getKey());
+            }
+        }
+        return newMap;
     }
 }

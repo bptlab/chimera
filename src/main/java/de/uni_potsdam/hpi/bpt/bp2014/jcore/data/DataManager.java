@@ -101,4 +101,9 @@ public class DataManager {
         InputSet inputSet = new InputSet(inputSetId);
         return inputSet.isFulfilled(dataObjects);
     }
+
+    public void initializeDataObject(int dataclassId) {
+        this.dataObjects.add(new DataObject(dataclassId, scenarioInstance));
+
+    }
 }
