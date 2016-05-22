@@ -56,10 +56,10 @@ public class DbDataNode extends DbObject {
         throw new RuntimeException("To be implemented");
     }
 
-    public int getDataObjectIdForDataNode(int dataNodeId) {
-        String sql = "SELECT dataobject_id FROM datanode " +
+    public int getDataClassIdForDataNode(int dataNodeId) {
+        String sql = "SELECT dataclass_id FROM datanode " +
                 "WHERE datanode.id = %d";
-        return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "dataobject_id");
+        return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "dataclass_id");
     }
 
 

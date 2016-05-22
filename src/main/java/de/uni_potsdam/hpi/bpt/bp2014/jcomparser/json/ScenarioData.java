@@ -6,7 +6,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.FragmentInserter;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.FragmentValidator;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -30,9 +29,7 @@ public class ScenarioData {
 
     List<Fragment> fragments;
     private List<TerminationCondition> terminationConditions;
-    private List<DataObject> dataObjects;
     private DomainModel domainModel;
-
 
     private List<StartQuery> startQueries;
 
@@ -59,7 +56,7 @@ public class ScenarioData {
             this.fragments = generateFragmentList(scenarioJson, domainModel);
 
             associateStatesWithDataClasses(fragments, getNameToDataclass(domainModel));
-            this.dataObjects = extractDataObjects(fragments, domainModel);
+            associateDataNodesWithDataClasses(fragments, domainModel);
         } catch (JSONException e) {
             logger.fatal("Invalid scenario json provided");
             logger.trace(e);
@@ -70,18 +67,13 @@ public class ScenarioData {
 
     public int save() {
         this.scenarioDbId = saveScenario();
-        domainModel.setScenarioID(this.scenarioDbId);
+        domainModel.setScenarioId(this.scenarioDbId);
         domainModel.save();
-
-        for (DataObject dataObject : this.dataObjects) {
-            dataObject.setScenarioId(this.scenarioDbId);
-            dataObject.save();
-        }
 
         FragmentInserter inserter = new FragmentInserter();
         for (Fragment fragment : fragments) {
             fragment.setScenarioId(this.scenarioDbId);
-            inserter.save(fragment, this.dataObjects);
+            inserter.save(fragment, this.domainModel.getDataClasses());
         }
 
         setTerminationCondition(scenarioJson);
@@ -90,26 +82,7 @@ public class ScenarioData {
         this.startQueries.forEach(x -> x.save(scenarioDbId));
         this.startQueries.forEach(x -> x.register(this.scenarioDbId));
 
-
         return this.scenarioDbId;
-    }
-
-
-    /**
-     * Looks if a DataObject for the given DataNodes in the fragment already exists.
-     * If so, adds the DataNodes to the DataObject.
-     * If not, creates a new DataObject and adds the DataNodes afterwards.
-     * @param fragments List of all Fragments
-     * @param model the DomainModel containing all DataClasses
-     * @return List of all DataObjects
-     */
-    private List<DataObject> extractDataObjects(List<Fragment> fragments, DomainModel model) {
-
-        Map<String, DataObject> nameToDataObject = new HashMap<>();
-        for (Fragment fragment : fragments) {
-            associateDataNodesWithDataObjects(fragment, nameToDataObject, model);
-        }
-        return new ArrayList<>(nameToDataObject.values());
     }
 
     private Map<String, DataClass> extractNameToDataclass(DomainModel model) {
@@ -120,25 +93,17 @@ public class ScenarioData {
         return nameToDataClass;
     }
 
-    private void associateDataNodesWithDataObjects(
-            Fragment fragment, Map<String, DataObject> nameToDataObject,
-            DomainModel model) {
+    private void associateDataNodesWithDataClasses(List<Fragment> fragments, DomainModel model) {
         Map<String, DataClass> nameToDataClass = extractNameToDataclass(model);
-        List<DataNode> dataNodes = fragment.getDataNodes();
+        List<DataNode> dataNodes = fragments.stream().map(Fragment::getDataNodes)
+                .flatMap(Collection::stream).collect(Collectors.toList());
         for (DataNode node : dataNodes) {
             if (!nameToDataClass.containsKey(node.getName())) {
                 throw new IllegalArgumentException(String.format(
                         "Data node %s references invalid dataclass", node.getName()));
             }
-
-            if (!nameToDataObject.containsKey(node.getName())) {
-
-                DataClass belongingDataClass = nameToDataClass.get(node.getName());
-                DataObject dataObject = new DataObject(belongingDataClass);
-                nameToDataObject.put(node.getName(), dataObject);
-            }
-            DataObject dataObject = nameToDataObject.get(node.getName());
-            dataObject.addDataNode(node);
+            DataClass dataClass = nameToDataClass.get(node.getName());
+            dataClass.addDataNode(node);
         }
     }
 
@@ -206,7 +171,7 @@ public class ScenarioData {
         JSONArray jsonTerminationConditions = scenarioJson.getJSONArray("terminationconditions");
         Map<String, Integer> stateToDatabaseId = new DbState().getStateToIdMap();
         this.terminationConditions = TerminationCondition.parseTerminationConditions(
-                jsonTerminationConditions, this.dataObjects, scenarioDbId, stateToDatabaseId);
+                jsonTerminationConditions, domainModel.getDataClasses(), scenarioDbId, stateToDatabaseId);
     }
 
     public int getScenarioDbId() {

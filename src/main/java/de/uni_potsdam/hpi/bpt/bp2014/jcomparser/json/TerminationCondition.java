@@ -3,12 +3,12 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import org.json.JSONArray;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A Class representing a TerminationCondition,
@@ -37,18 +37,6 @@ public class TerminationCondition {
     }
 
     /**
-     * Find a DataObject by the name of its Data Class.
-     * @param dataClassName name of the dataClass
-     * @return DataObject that has the given class
-     */
-    private static Optional<DataObject> findDataObjectByClass(String dataClassName, List<DataObject> dataObjects) {
-        return dataObjects.stream()
-                .filter(a -> a.getDataClassName().equals(dataClassName))
-                .findFirst();
-    }
-
-
-    /**
      * Find the id of a DataNode State by the name.
      * @param stateName name of the state
      * @return id of the state
@@ -61,48 +49,73 @@ public class TerminationCondition {
     /**
      * @param jsonTerminationConditions Json Array of termination Strings in the format of
      *                                  DataClass[State1], DataClass[State2]
+     * @param dataClasses
      * @return List of parsed termination conditions.
      */
     public static List<TerminationCondition> parseTerminationConditions(
-            JSONArray jsonTerminationConditions, List<DataObject> dataObjects, int scenarioId,
+            JSONArray jsonTerminationConditions, List<DataClass> dataClasses, int scenarioId,
             Map<String, Integer> stateToDatabaseId) {
         List<TerminationCondition> conditions = new ArrayList<>();
         for (int i = 0; i < jsonTerminationConditions.length(); i++) {
             String condition = jsonTerminationConditions.getString(i);
             conditions.add(parseTerminationConditionString(
-                    condition, dataObjects, scenarioId, stateToDatabaseId));
+                    condition, dataClasses, scenarioId, stateToDatabaseId));
         }
         return conditions;
     }
 
-    // TODO refactor this method
+    /**
+     * Parses the Input from the editor to a termination condition.
+     * Since a termination condition references dataclasses and states, which
+     * need to be met to fulfill it, those have to be saved before.
+     *
+     * @param conditions String in the format "A[state], B[state2], ..."
+     * @param dataClasses List of saved data class objects.
+     * @param scenarioId Database id of the scenario. This means the scenario has
+     *                   to be saved to call this method.
+     * @param stateToDatabaseId Map from state name to it's database id.
+     * @return Termination condition object
+     * @throws IllegalArgumentException If invalid data class is referenced IllegalArgumentException is thrown.
+     */
     private static TerminationCondition parseTerminationConditionString(
-            String conditionString, List<DataObject> dataObjects, int scenarioId,
+            String conditions, List<DataClass> dataClasses, int scenarioId,
             Map<String, Integer> stateToDatabaseId) {
         TerminationCondition condition = new TerminationCondition(scenarioId);
+        Map<String, Integer> dataClassNameToId = dataClasses.stream()
+                .collect(Collectors.toMap(DataClass::getName, DataClass::getDatabaseId));
 
-        for (String tcString : conditionString.split(",")) {
-            Pattern pattern = Pattern.compile("\\s?(.*)\\[(.*?)\\]");
-            Matcher match = pattern.matcher(tcString);
-            if (match.find()) {
-                String dataClassString = match.group(1);
-                String stateString = match.group(2);
-                Optional<DataObject> dataObject = findDataObjectByClass(dataClassString, dataObjects);
-                if (dataObject.isPresent()) {
-                    int dataObjectId = dataObject.get().getDatabaseId();
-                    int stateId = stateToDatabaseId.get(stateString);
-                    condition.addCondition(dataObjectId, stateId);
-                } else {
-                    String errorMsg = "Termination condition references invalid data class %s";
-                    throw new IllegalArgumentException(String.format(errorMsg, dataClassString));
-                }
-            } else {
-                throw new IllegalArgumentException(String.format(
-                        "Malformed termination String %s", tcString));
+        for (String tcString : conditions.split(",")) {
+            Matcher match = findTerminationCondition(tcString);
+            String dataClassString = match.group(1);
+            String stateString = match.group(2);
+            if (!dataClassNameToId.containsKey(dataClassString)) {
+                String errorMsg = "Termination condition references invalid data class %s";
+                throw new IllegalArgumentException(String.format(errorMsg, dataClassString));
             }
+            int dataClassId = dataClassNameToId.get(dataClassString);
+            int stateId = stateToDatabaseId.get(stateString);
+            condition.addCondition(dataClassId, stateId);
         }
 
         return condition;
+    }
+
+    /**
+     * Creates match object for termination condition String. First matching group
+     * will be the name of the data class. The second one is the name of the state.
+     * @param terminationCondition String in the format A[state]
+     * @return Matcher object with the respective data class and state as matching groups
+     * @throws IllegalArgumentException If the String is not in the specified format
+     */
+    private static Matcher findTerminationCondition(String terminationCondition) {
+        Pattern pattern = Pattern.compile("\\s?(.*)\\[(.*?)\\]");
+        Matcher match = pattern.matcher(terminationCondition);
+        if (match.find()) {
+            return match;
+        } else {
+            throw new IllegalArgumentException(String.format(
+                    "Malformed termination String %s", terminationCondition));
+        }
     }
 
     public void save() {

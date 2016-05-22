@@ -213,8 +213,6 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `scenario_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `model_id` VARCHAR(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -656,12 +654,9 @@ CREATE TABLE IF NOT EXISTS `successor` (
 
 CREATE TABLE IF NOT EXISTS `terminationcondition` (
   `conditionset_id` VARCHAR(512) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
+  `dataclass_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`),
-  KEY `dataobject_id` (`dataobject_id`),
-  KEY `state_id` (`state_id`)
+  `scenario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

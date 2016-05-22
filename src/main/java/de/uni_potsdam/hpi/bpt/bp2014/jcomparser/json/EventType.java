@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 /**
  * This class represents an EventType.
  */
-public class EventType extends DataClass implements IPersistable {
+public class EventType extends DataClass {
     private static Logger logger = Logger.getLogger(EventType.class);
 
     private final static String REGISTRATION_URL =

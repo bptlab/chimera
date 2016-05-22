@@ -41,8 +41,9 @@ public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testAttributeSaving() {
+        int testScenarioId = 1;
         DataClass dClass = new DataClass(dataclassString);
-        dClass.save();
+        dClass.save(testScenarioId);
         DataAttribute attribute = dClass.getAttributes().get(0);
         DbDataAttributeInstance instance = new DbDataAttributeInstance();
         String dbType = instance.getType(attribute.getDataAttributeID());

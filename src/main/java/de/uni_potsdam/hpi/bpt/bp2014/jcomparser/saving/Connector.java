@@ -87,20 +87,19 @@ public class Connector extends DbObject {
 
 	/**
 	 * This method inserts a termination condition into the database.
-	 * Information necessary for the insertion are given to
-	 * the database.
 	 *
-	 * @param dataObjectId The Id of the dataObj. as a part of the condition.
+	 * @param dataClassId The Id of the data class. as a part of the condition.
 	 * @param stateId      The State id of the condition.
 	 * @param scenarioId   The Id of the scenario which has the term. condition.
+     * @param conditionSetId Id which groups multiple parts of one termination condition together.
 	 */
 	public void insertTerminationConditionIntoDatabase(
-            final int dataObjectId, final int stateId, final int scenarioId,
+            final int dataClassId, final int stateId, final int scenarioId,
             final String conditionSetId) {
 		String sql = "INSERT INTO terminationcondition "
-				+ "(dataobject_id, state_id, scenario_id, conditionset_id)"
+				+ "(dataclass_id, state_id, scenario_id, conditionset_id)"
 				+ " VALUES (%d, %d, %d, '%s');";
-        String insertTerminationCondition = String.format(sql, dataObjectId, stateId,
+        String insertTerminationCondition = String.format(sql, dataClassId, stateId,
                 scenarioId, conditionSetId);
 		this.executeInsertStatement(insertTerminationCondition);
 	}
@@ -120,26 +119,6 @@ public class Connector extends DbObject {
 				+ "VALUES (" + sourceID + ", "
 				+ targetID + ", '" + condition + "')";
         this.executeInsertStatement(sql);
-	}
-
-	/**
-	 * Inserts a DataObject into the database.
-	 * The necessary information will be given as parameters.
-	 *
-	 * @param name         The name of the DataObject.
-	 * @param dataClassID  The database Id of the class, which
-	 *                     describes the DataObject.
-	 * @param scenarioID   The database id of the scenario.
-	 * @param startStateID the database id of the initial State.
-	 * @return the id of the newly created dataobject entry.
-	 */
-	public int insertDataObjectIntoDatabase(final String name, final int dataClassID,
-			final int scenarioID, final int startStateID) {
-		String sql = "INSERT INTO dataobject"
-				+ "(dataobject.name, dataclass_id, scenario_id, start_state_id) "
-				+ "VALUES ('" + name + "', " + dataClassID + ", "
-				+ scenarioID + ", " + startStateID + ")";
-		return performSQLInsertStatementWithAutoId(sql);
 	}
 
 	/**
@@ -268,20 +247,17 @@ public class Connector extends DbObject {
 	 * This Methods inserts a new DataNode into the Database.
 	 * All necessary information are given as a parameter.
 	 *
-	 * @param scenarioID   The database Id of the corresponding scenario.
-	 * @param stateID      The database Id of the state of the Node.
-	 * @param dataClassID  The data class which describes the data object.
-	 * @param dataObjectID The data Object which is represented by the node.
-	 * @param modelID      The modelID of the dataNode in the XML.
+	 * @param scenarioId   The database Id of the corresponding scenario.
+	 * @param stateId      The database Id of the state of the Node.
+	 * @param dataClassId  The data class which describes the data object.
 	 * @return the autoincrement id of the newly created entry.
 	 */
-	public int insertDataNodeIntoDatabase(final int scenarioID, final int stateID,
-			final int dataClassID, final int dataObjectID, final String modelID) {
-		String sql = "INSERT INTO datanode "
-				+ "(scenario_id, state_id, dataclass_id, dataobject_id, model_id)"
-				+ " VALUES (" + scenarioID + ", " + stateID + ", "
-				+ dataClassID + ", " + dataObjectID + ", '" + modelID + "')";
-		return performSQLInsertStatementWithAutoId(sql);
+	public int insertDataNodeIntoDatabase(final int scenarioId, final int stateId,
+			final int dataClassId) {
+		String sql = "INSERT INTO datanode (scenario_id, state_id, dataclass_id)"
+				+ " VALUES (%d, %d, %d);";
+        sql = String.format(sql, scenarioId, stateId, dataClassId);
+        return performSQLInsertStatementWithAutoId(sql);
 	}
 
 	/**

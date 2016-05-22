@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 import org.easymock.EasyMock;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,7 @@ public class MockProvider {
             DataClass dataClass = createNiceMock(DataClass.class);
             expect(dataClass.getName()).andReturn(names.get(i)).anyTimes();
             expect(dataClass.getAttributes()).andReturn(dataAttributes.get(i)).anyTimes();
+            expect(dataClass.getDatabaseId()).andReturn(i).anyTimes();
             for (DataAttribute dataAttribute : dataAttributes.get(i)) {
                 String dataAttributeName = dataAttribute.getDataAttributeName();
                 Optional<DataAttribute> dataAttributeOptional = Optional.of(dataAttribute);
@@ -53,5 +55,13 @@ public class MockProvider {
             dataClasses.add(dataClass);
         }
         return dataClasses;
+    }
+
+    public static List<DataClass> mockDataClasses(List<String> names) {
+        List<List<DataAttribute>> emptyAttributes = new ArrayList<>();
+        for (int i = 0; i < names.size(); i++) {
+            emptyAttributes.add(new ArrayList<>());
+        }
+        return mockDataClasses(names, emptyAttributes);
     }
 }

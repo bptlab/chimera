@@ -30,7 +30,7 @@ public class DomainModel implements IPersistable {
 	/**
 	 * The databaseID of the corresponding scenario.
 	 */
-	private int scenarioID;
+	private int scenarioId;
 
     /**
 	 * A List of all aggregation between the dataClasses belonging to this domainModel.
@@ -88,16 +88,8 @@ public class DomainModel implements IPersistable {
 	 *
 	 * @param id databaseID of the corresponding scenario.
 	 */
-	public void setScenarioID(final int id) {
-		this.scenarioID = id;
-	}
-
-	/**
-	 * This method generates a List of aggregates from the XML.
-	*/
-	private List<Aggregation> generateAggregations() {
-		// TODO check every attribute if its name equals one of the data classes' name
-		throw new NotImplementedException("Aggregations cannot be parsed.");
+	public void setScenarioId(final int id) {
+		this.scenarioId = id;
 	}
 
 	/**
@@ -140,8 +132,8 @@ public class DomainModel implements IPersistable {
 	@Override public int save() {
 		Connector conn = new Connector();
 		conn.insertDomainModelIntoDatabase(this.domainModelEditorId, this.versionNumber,
-				this.scenarioID);
-		dataClasses.forEach(DataClass::save);
+				this.scenarioId);
+		dataClasses.forEach(x -> x.save(scenarioId));
 		aggregations.forEach(Aggregation::save);
 		return 1;
 	}
@@ -150,8 +142,8 @@ public class DomainModel implements IPersistable {
 		return aggregations;
 	}
 
-	public int getScenarioID() {
-		return scenarioID;
+	public int getScenarioId() {
+		return scenarioId;
 	}
 
 	public int getVersionNumber() {
