@@ -98,7 +98,8 @@ public class DataManager {
             this.dataObjectInstances.add(dataObjectInstance);
             int dataobjectInstanceId = dataObjectInstance.getDataObjectInstanceId();
             int stateId = dataObjectInstance.getStateId();
-            new DbLogEntry().logDataobjectCreation(dataobjectInstanceId, stateId, scenarioInstanceId);
+            String state = new DbState().getStateName(stateId);
+            new DbLogEntry().logDataobjectCreation(dataobjectInstanceId, state, scenarioInstanceId);
         }
     }
 

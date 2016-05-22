@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,9 +48,23 @@ public class StateTransitionLog {
                         " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
                         " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
                         " WHERE a.scenarioinstance_id = %d;";
-        return parseStateTransitions(String.format(sql, scenarioInstanceId));
+        sql = String.format(sql, scenarioInstanceId);
+        List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
+        addInitialTransitions(transitionLogs);
+        return transitionLogs;
     }
 
+    /**
+     * This method is used to add an created transition to each logged object.
+     * e.g. When having an activity which has a transition init -> running logged.
+     * a transition from null -> init would be added to represent creation.
+     *
+     * @param transitions Transitions created from database join
+     */
+    private static void addInitialTransitions(List<StateTransitionLog> transitions) {
+        DbLogEntry logEntry = new DbLogEntry();
+
+    }
 
     private static List<StateTransitionLog> parseStateTransitions(String sql) {
         java.sql.Connection con = Connection.getInstance().connect();

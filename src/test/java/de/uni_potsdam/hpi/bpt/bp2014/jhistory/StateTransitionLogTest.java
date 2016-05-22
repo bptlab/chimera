@@ -31,6 +31,20 @@ public class StateTransitionLogTest {
 
         List<StateTransitionLog> logs =
                 StateTransitionLog.getStateTransitons(testScenarioInstanceId, LogEntry.LogType.ACTIVITY);
-        assertEquals(2, logs.size());
+        assertEquals(3, logs.size());
+    }
+
+    @Test
+    public void testInitialLog() {
+        DbLogEntry logEntry = new DbLogEntry();
+        int testActivityInstanceId = 1;
+        int testScenarioInstanceId = 1;
+        logEntry.logActivity(testActivityInstanceId, "init", testScenarioInstanceId);
+        logEntry.logActivity(testActivityInstanceId, "running", testScenarioInstanceId);
+        logEntry.logActivity(testActivityInstanceId, "terminated", testScenarioInstanceId);
+        StateTransitionLog first = StateTransitionLog.getStateTransitons(
+                testScenarioInstanceId).get(0);
+        assertEquals(null, first.getOldValue());
+        assertEquals("init", first.getNewValue());
     }
 }

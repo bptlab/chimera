@@ -6,16 +6,17 @@ import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 /**
  * Data Access object of the {@link LogEntry}
  */
 public class DbLogEntry extends DbObject {
+
     private final static String insertQuery =
             "INSERT INTO logentry (`scenarioinstance_id`, `logged_id`,"
             + "`new_value`, `cause`, `label`, `type`, `timestamp`) VALUES "
             + "(?, ?, ?, ?, ?, ?, ?);";
+
     /**
      * This method saves a log entry of a newly created ActivityInstance into the database.
      *
@@ -64,13 +65,12 @@ public class DbLogEntry extends DbObject {
     /**
      *
      * @param objectInstanceId
-     * @param stateId
+     * @param state
      * @param scenarioInstanceId
      */
-    public void logDataobjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {
+    public void logDataobjectCreation(int objectInstanceId, String state, int scenarioInstanceId) {
         int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
         String label = new DbDataObject().getName(dataObjectId);
-        String state = new DbState().getStateName(stateId);
         this.insertLog(scenarioInstanceId, objectInstanceId,
                 state, Optional.empty(), label, LogEntry.LogType.DATA_OBJECT);
     }
@@ -105,7 +105,7 @@ public class DbLogEntry extends DbObject {
             int scenarioInstanceId, LogEntry.LogType type) {
         String sql = "SELECT * FROM logentry WHERE scenarioinstance_id = %d AND type = '%s' "
                         + "ORDER BY timestamp ASC;";
-        return receiveLogEntries(String.format(sql, scenarioInstanceId, type.name()));
+        return retrieveLogEntries(String.format(sql, scenarioInstanceId, type.name()));
     }
 
     /**
@@ -117,10 +117,25 @@ public class DbLogEntry extends DbObject {
     public List<LogEntry> getLogEntriesForScenarioInstance(int scenarioInstanceId) {
         String sql = "SELECT * FROM logentry WHERE scenarioinstance_id = %d "
                 + "ORDER BY timestamp ASC;";
-        return receiveLogEntries(String.format(sql, scenarioInstanceId));
+        return retrieveLogEntries(String.format(sql, scenarioInstanceId));
     }
 
-    private List<LogEntry> receiveLogEntries(String sql) {
+    /**
+     * This method receives for each logged object the first entry in which this
+     * object appeared.
+     * @return List of log entries, where each logged id only occurs one with the min timestamp.
+     */
+    public List<LogEntry> getCreationLogEntries(int scenarioInstanceId) {
+        String sql = "SELECT l1.* FROM logentry l1 " +
+        "INNER JOIN (SELECT logged_id, MIN(timestamp) as timestamp FROM logentry GROUP BY logged_id) l2 " +
+        "ON l1.logged_id = l2.logged_id WHERE l1.timestamp = l2.timestamp " +
+        "AND l1.scenarioinstance_id = %d;";
+
+        sql = String.format(sql, scenarioInstanceId);
+        return retrieveLogEntries(sql);
+    }
+
+    private List<LogEntry> retrieveLogEntries(String sql) {
         List<LogEntry> entries = new ArrayList<>();
         try (java.sql.Connection conn = Connection.getInstance().connect();
              Statement statement = conn.createStatement();
