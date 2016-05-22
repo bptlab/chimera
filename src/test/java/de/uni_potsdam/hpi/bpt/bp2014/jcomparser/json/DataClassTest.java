@@ -93,4 +93,9 @@ public class DataClassTest  {
             Assert.assertEquals("Attribute" + i + "has not been set correctly", attribute[i], dClass.getAttributes().get(i).getDataAttributeName());
         }
     }
+
+    @Test
+    public void testSaving() {
+        Assert.fail();
+    }
 }

@@ -94,7 +94,7 @@ public class Fragment {
         return sets;
     }
 
-    private List<OutputSet> getOutputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
+    public List<OutputSet> getOutputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         if (node.getDataOutputAssociations().isEmpty()) {
             return new ArrayList<>();
@@ -148,18 +148,8 @@ public class Fragment {
             return datanodeCombinations.stream().map(combination ->
                     new InputSet(node, combination)).collect(Collectors.toList());
         } else {
-            return new ArrayList<InputSet>();
+            return new ArrayList<>();
         }
-    }
-
-    private Map<String, Task> createMapFromIdToTask() {
-        List<AbstractDataControlNode> tasks = this.xmlWrapper.getAllActivities();
-        Map<String, Task> idToNode = new HashMap<>();
-        for (AbstractDataControlNode task : tasks) {
-            idToNode.put(task.getId(), (Task) task);
-        }
-
-        return idToNode;
     }
 
     /**

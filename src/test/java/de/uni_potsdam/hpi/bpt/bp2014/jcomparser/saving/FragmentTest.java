@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
+package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.After;
@@ -13,29 +13,39 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class ScenarioDataTest {
+public class FragmentTest {
     @After
     public void tearDown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void testSave() {
         Assert.fail();
     }
 
     @Test
-    public void testAssociateDataNodesWithDataClasses() {
+    public void testGetOutputSets() {
         Assert.fail();
     }
 
     @Test
-    public void testAssociateStatesWithDataClasses() {
+    public void testGetOutputSetsForNode() {
         Assert.fail();
     }
 
     @Test
-    public void testGenerateFragmentList() {
+    public void testGetInputSets() {
+        Assert.fail();
+    }
+
+    @Test
+    public void testGetInputSetsForNode() {
+        Assert.fail();
+    }
+
+    @Test
+    public void testGetAllActivities() {
         Assert.fail();
     }
 }

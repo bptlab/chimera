@@ -93,7 +93,7 @@ public class ScenarioData {
         return nameToDataClass;
     }
 
-    private void associateDataNodesWithDataClasses(List<Fragment> fragments, DomainModel model) {
+    public void associateDataNodesWithDataClasses(List<Fragment> fragments, DomainModel model) {
         Map<String, DataClass> nameToDataClass = extractNameToDataclass(model);
         List<DataNode> dataNodes = fragments.stream().map(Fragment::getDataNodes)
                 .flatMap(Collection::stream).collect(Collectors.toList());
@@ -107,7 +107,7 @@ public class ScenarioData {
         }
     }
 
-    private void associateStatesWithDataClasses(List<Fragment> fragments,
+    public void associateStatesWithDataClasses(List<Fragment> fragments,
                                                 Map<String, DataClass> nameToDataclass) {
         for (Fragment fragment : fragments) {
             List<DataNode> dataNodes = fragment.getDataNodes();
@@ -136,7 +136,7 @@ public class ScenarioData {
     /**
      * Generates a List of Fragments from the Json object.
      */
-    private List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) throws JAXBException {
+    public List<Fragment> generateFragmentList(JSONObject scenarioJson, DomainModel domainModel) throws JAXBException {
         JSONArray fragmentStrings = scenarioJson.getJSONArray("fragments");
         List<Fragment> generatedFragments = new ArrayList<>();
         if (fragmentStrings.length() == 0) {
