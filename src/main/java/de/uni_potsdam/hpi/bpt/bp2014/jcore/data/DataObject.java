@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.ArrayList;
@@ -122,6 +123,10 @@ public class DataObject {
 	 */
 	public int getStateId() {
 		return stateId;
+	}
+
+	public String getStateName() {
+		return new DbState().getStateName(this.stateId);
 	}
 
 	/**

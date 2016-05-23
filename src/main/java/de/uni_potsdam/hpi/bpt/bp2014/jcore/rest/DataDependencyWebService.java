@@ -192,13 +192,10 @@ public class DataDependencyWebService extends AbstractRestService {
         dataObject.setSetId(setId);
         dataObject.setId(dataObjectInstance.getId());
         dataObject.setLabel(dataObjectInstance.getName());
-        dataObject.setState(executionService
-                .getStateNameForDataObjectInstanceOutput(
-                        dataObjectInstance, setId));
+        dataObject.setState(dataObjectInstance.getStateName());
         dataObject.setAttributeConfiguration(executionService
                 .getDataAttributesForDataObjectInstance(dataObjectInstance));
         return dataObject;
-
     }
 
 

@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataDependency;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
@@ -8,8 +9,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -22,6 +23,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 */
 	private final DbDataNode dbDataNode = new DbDataNode();
 	private final DbDataFlow dbDataFlow = new DbDataFlow();
+	private final DbDataDependency dbDataDependency = new DbDataDependency();
 
 	/**
 	 * Initializes the TaskOutgoingControlFlowBehavior.
@@ -62,15 +64,15 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
     /**
      * Since at the moment each output set can only contain the same data objects with different
      * states it is enough to look only at one output set and free all data objects in this.
+	 * TODO is it really enough to only look at one?
      */
     public void cancel() {
-        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
+        List<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
                 this.getControlNodeId());
         if (inputSets.size() > 0) {
-            int inputSet = inputSets.getFirst();
-            for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dbDataNode.getDataObjectsForDataSets(inputSet)) {
-                this.lockDataObjects(dataObject.getId());
-            }
+            int inputSet = inputSets.get(0);
+			dbDataNode.getDataObjectIdsForDataSets(inputSet)
+					.forEach(this::lockDataObjects);
         }
     }
 
@@ -80,28 +82,15 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * Sets all this data object to not on change.
 	 */
 	private void setDataStates(int outputSetId) {
-		List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
-				this.getControlNodeId());
-		for (int outputSet : outputSets) {
-			LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects =
-					dbDataNode.getDataObjectsForDataSets(outputSet);
-			for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
-				this.lockDataObjects(dataObject.getId());
-			}
-		}
-		if (outputSets.size() != 0) {
-			int outputSet = outputSets.get(0);
-			if (outputSets.size() > 1) {
-				outputSet = outputSetId;
-			}
-			LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(
-					outputSet);
-			for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
-				this.changeDataObjectInstanceState(
-						dataObject.getId(), dataObject.getStateID());
-			}
-		}
+		List<Integer> dataObjectIds =
+				dbDataNode.getDataObjectIdsForDataSets(outputSetId);
+		dataObjectIds.forEach(this::lockDataObjects);
 
+		Map<Integer, Integer> idToState = dbDataNode.getDataObjectIdToState(outputSetId);
+		for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
+			this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
+		}
+		//idToState.forEach(this::changeDataObjectInstanceState); does this work?
 	}
 
 	/**

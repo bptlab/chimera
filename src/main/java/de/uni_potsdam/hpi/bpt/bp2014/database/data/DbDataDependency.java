@@ -26,7 +26,7 @@ public class DbDataDependency {
         Map<Integer, Set<Integer>> inputIdToStateIds = new HashMap<>();
         DbDataNode dbDataNode = new DbDataNode();
         for (Integer inputSetId : setIds) {
-            Map<Integer, Integer> inputSet = dbDataNode.getDataObjectsForDataSets(inputSetId);
+            Map<Integer, Integer> inputSet = dbDataNode.getDataObjectIdToState(inputSetId);
             for (Map.Entry<Integer, Integer> entry : inputSet.entrySet()) {
                 if (!inputIdToStateIds.containsKey(entry.getKey())) {
                     inputIdToStateIds.put(entry.getKey(), new HashSet<>());

@@ -1,12 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -42,11 +42,11 @@ public class ReceiveActivity extends AbstractEvent {
         List<Integer> outputSets = new DbDataFlow().getOutputSetsForControlNode(
                 this.getControlNodeId());
         assert outputSets.size() == 1 : "Receive tasks should have exactly one output set.";
-        int outputSet = outputSets.get(0);
-        List<DataObject> dataObjects = new DbDataNode().getDataObjectsForDataSets(outputSet);
-        for (DataObject dataObject : dataObjects) {
+        int outputSetId = outputSets.get(0);
+        Map<Integer, Integer> idToState = new DbDataNode().getDataObjectIdToState(outputSetId);
+        for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
             this.changeDataObjectInstanceState(
-                    dataObject.getId(), dataObject.getStateID());
+                    entry.getKey(), entry.getValue());
         }
         return true;
     }

@@ -70,13 +70,7 @@ public class DbDataNode extends DbObject {
         return this.executeStatementReturnsListInt(sql, "dataobject_id");
     }
 
-	/**
-	 * This method returns all database data objects a dataSet can have.
-	 *
-	 * @param dataSetId This is the database ID of a dataSet.
-	 * @return a list of all instances from DataObject.
-	 */
-	public Map<Integer, Integer> getDataObjectsForDataSets(int dataSetId) {
+	public Map<Integer, Integer> getDataObjectIdToState(int dataSetId) {
 		String sql = "SELECT dataobject_id, state_id "
 						+ "FROM datanode, datasetconsistsofdatanode "
 						+ "WHERE datanode.id = "
