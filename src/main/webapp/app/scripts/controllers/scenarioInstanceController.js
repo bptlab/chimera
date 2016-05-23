@@ -399,11 +399,12 @@ angular.module('jfrontend')
             source.addEventListener('refresh', function(event) {
                 instanceCtrl.refreshPage();
             });
-             source.addEventListener('warn', function(event) {
+            
+            source.addEventListener('warning', function(event) {
                 instanceCtrl.addAlert(event.msg, 'warning');
             });
             
-            source.addEventListener('err', function(event) {
+            source.addEventListener('error', function(event) {
                 instanceCtrl.addAlert(event.msg, 'danger');
             })
    

@@ -18,6 +18,10 @@ public class SseNotifier extends HttpServlet {
 
     private static EventTarget target;
 
+    private static final String ERROR = "error";
+    private static final String WARNING = "warning";
+    private static final String REFRESH = "refresh";
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         target = new ServletEventTarget(req).ok().open();
@@ -25,13 +29,27 @@ public class SseNotifier extends HttpServlet {
     }
 
     public static void notifyRefresh() {
+        sendNotification(REFRESH, "");
+    }
+
+    public static void notifyError(String errorMessage) {
+        sendNotification(ERROR, errorMessage);
+    }
+
+    public static void notifyWarning(String errorMessage) {
+        sendNotification(WARNING, errorMessage);
+    }
+
+    private static void sendNotification(String type, String message) {
         if (null != target) {
             try {
-                target.send("refresh", "");
+                target.send(type, message);
+                logger.info("SSE event sent.");
             } catch (IOException e) {
                 logger.warn(e.getMessage(), e);
             }
+        } else {
+            logger.warn("No SSE target registered.");
         }
-        logger.info("SSE event sent.");
     }
 }
