@@ -148,4 +148,12 @@ public class BpmnProcessXml {
     public void setReceiveTasks(List<ReceiveTask> receiveTasks) {
         this.receiveTasks = receiveTasks;
     }
+
+    public List<SendTask> getSendTasks() {
+        return sendTasks;
+    }
+
+    public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
+        return intermediateThrowEvents;
+    }
 }

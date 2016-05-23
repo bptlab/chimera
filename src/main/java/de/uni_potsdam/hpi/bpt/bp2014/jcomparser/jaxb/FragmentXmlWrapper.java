@@ -62,6 +62,9 @@ public class FragmentXmlWrapper {
     public List<IntermediateEvent> getIntermediateEvents() {
         return this.bpmnProcessXml.getIntermediateEvents();
     }
+    public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
+        return this.bpmnProcessXml.getIntermediateThrowEvents();
+    }
 
     public List<WebServiceTask> getWebServiceTasks() {
         return this.bpmnProcessXml.getWebServiceTasks();
@@ -69,6 +72,10 @@ public class FragmentXmlWrapper {
 
     public List<ReceiveTask> getReceiveTasks() {
         return this.bpmnProcessXml.getReceiveTasks();
+    }
+
+    public List<SendTask> getSendTasks() {
+        return this.bpmnProcessXml.getSendTasks();
     }
 
     public List<AbstractDataControlNode> getAllActivities() {
@@ -85,6 +92,8 @@ public class FragmentXmlWrapper {
         allEvents.addAll(this.bpmnProcessXml.getIntermediateEvents());
         allEvents.addAll(this.bpmnProcessXml.getBoundaryEvents());
         allEvents.addAll(this.bpmnProcessXml.getReceiveTasks());
+        allEvents.addAll(this.bpmnProcessXml.getSendTasks());
+        allEvents.addAll(this.bpmnProcessXml.getIntermediateThrowEvents());
         return (List<AbstractDataControlNode>) allEvents;
     }
 

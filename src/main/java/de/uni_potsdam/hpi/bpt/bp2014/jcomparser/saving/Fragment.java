@@ -160,7 +160,9 @@ public class Fragment {
         nodes.addAll(this.xmlWrapper.getAndGateways());
         nodes.addAll(this.xmlWrapper.getAllActivities());
         nodes.addAll(this.xmlWrapper.getReceiveTasks());
-        nodes.addAll(this.xmlWrapper.getIntermediateEvents());
+        nodes.addAll(this.xmlWrapper.getSendTasks());
+        nodes.addAll(this.xmlWrapper.getIntermediateCatchEvents());
+        nodes.addAll(this.xmlWrapper.getIntermediateThrowEvents());
         nodes.addAll(this.xmlWrapper.getBoundaryEvents());
         nodes.addAll(this.xmlWrapper.getEventBasedGateways());
         nodes.add(this.xmlWrapper.getEndEvent());
