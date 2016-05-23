@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
@@ -42,9 +43,10 @@ public class StateTransitionLogTest {
         logEntry.logActivity(testActivityInstanceId, "init", testScenarioInstanceId);
         logEntry.logActivity(testActivityInstanceId, "running", testScenarioInstanceId);
         logEntry.logActivity(testActivityInstanceId, "terminated", testScenarioInstanceId);
-        StateTransitionLog first = StateTransitionLog.getStateTransitons(
-                testScenarioInstanceId).get(0);
-        assertEquals(null, first.getOldValue());
+        List<StateTransitionLog> stateTransitions = StateTransitionLog.getStateTransitons(
+                testScenarioInstanceId);
+        StateTransitionLog first = stateTransitions.get(0);
+        assertEquals(JSONObject.NULL, first.getOldValue());
         assertEquals("init", first.getNewValue());
     }
 }

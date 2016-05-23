@@ -111,7 +111,7 @@ import java.util.Map;
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONArray(log).toString()).build();
     }
-    
+
     /**
      * This method gives the log entries for all DataAttributeInstances
      * for a specific scenario instance.
@@ -137,8 +137,11 @@ import java.util.Map;
 
         List<StateTransitionLog> attributeLog = StateTransitionLog.getStateTransitons(
                 scenarioInstanceID, LogEntry.LogType.DATA_ATTRIBUTE);
+        JSONArray log = new JSONArray(attributeLog);
+
+        String json = log.toString();
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(new JSONArray(attributeLog).toString()).build();
+                .entity(log.toString()).build();
     }
 
     @GET

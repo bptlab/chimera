@@ -75,8 +75,9 @@ public class HistoryRestServiceTest extends JerseyTest {
         String requestPath = String.format(
                 "scenario/%d/instance/%d/activities", scenarioId, scenarioInstanceId);
         Response response = base.path(requestPath).request().get();
+        JSONArray json = new JSONArray(response.readEntity(String.class));
+
         String expected =
-                "[" +
                 "  {" +
                 "    \"timeStamp\": \"15:17:52\"," +
                 "    \"newValue\": \"begin\"," +
@@ -84,12 +85,11 @@ public class HistoryRestServiceTest extends JerseyTest {
                 "    \"oldValue\": \"init\"," +
                 "    \"label\": \"Do something\"," +
                 "    \"loggedId\": 2" +
-                "  }" +
-                "]";
+                "  }";
         // Ignore vlaues in assertion because of timestamp
         assertThat("Get activities did not contain the expected information",
-                response.readEntity(String.class), jsonEquals(expected)
-                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
+                json.getJSONObject(1).toString(), jsonEquals(expected)
+                        .when(Option.IGNORING_VALUES));
     }
 
     @Test
@@ -105,15 +105,18 @@ public class HistoryRestServiceTest extends JerseyTest {
         Response response = base.path(requestPath).request().get();
         JSONArray resp = new JSONArray(response.readEntity(String.class));
 
-        JSONObject first = resp.getJSONObject(0);
-        assertEquals(first.getString("oldValue"), "val");
-        assertEquals(first.getString("newValue"), "foo");
+        assertEquals(3, resp.length());
+        JSONObject creation = resp.getJSONObject(0);
+        assertEquals(JSONObject.NULL, creation.get("oldValue"));
+        assertEquals("val", creation.get("newValue"));
 
-        JSONObject second = resp.getJSONObject(1);
-        assertEquals(second.getString("oldValue"), "foo");
-        assertEquals(second.getString("newValue"), "bar");
+        JSONObject first = resp.getJSONObject(1);
+        assertEquals(first.get("oldValue"), "val");
+        assertEquals(first.get("newValue"), "foo");
 
-        assertEquals(2, resp.length());
+        JSONObject second = resp.getJSONObject(2);
+        assertEquals(second.get("oldValue"), "foo");
+        assertEquals(second.get("newValue"), "bar");
     }
 
     @Test
@@ -130,7 +133,7 @@ public class HistoryRestServiceTest extends JerseyTest {
                 "scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
         Response response = base.path(requestPath).request().get();
         JSONArray resp = new JSONArray(response.readEntity(String.class));
-        assertEquals(4, resp.length());
+        assertEquals(7, resp.length());
     }
 
     @Test
@@ -148,10 +151,11 @@ public class HistoryRestServiceTest extends JerseyTest {
         Response response = base.path(requestPath).request().get();
         JSONArray resp = new JSONArray(response.readEntity(String.class));
 
-
-        JSONObject first = resp.getJSONObject(0);
-        assertEquals("init", first.getString("oldValue"));
-        assertEquals("changed", first.getString("newValue"));
+        // The second entry is the one indicating a change the other ones correspond
+        // To the initialization.
+        JSONObject first = resp.getJSONObject(2);
+        assertEquals("init", first.get("oldValue"));
+        assertEquals("changed", first.get("newValue"));
     }
 
     @Test

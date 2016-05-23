@@ -2,10 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
+import org.json.JSONObject;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,8 +19,8 @@ import java.util.List;
  */
 @XmlRootElement
 public class StateTransitionLog {
-    private String oldValue;
-    private String newValue;
+    private Object oldValue;
+    private Object newValue;
     private int loggedId;
     private Date timeStamp;
     private int cause;
@@ -38,7 +36,10 @@ public class StateTransitionLog {
                 " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
                 " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
                 " WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
-        return parseStateTransitions(String.format(sql, scenarioInstanceId, type.name()));
+        sql = String.format(sql, scenarioInstanceId, type.name());
+        List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
+        addInitialTransitions(transitionLogs, scenarioInstanceId);
+        return transitionLogs;
     }
 
     public static List<StateTransitionLog> getStateTransitons(int scenarioInstanceId) {
@@ -50,7 +51,7 @@ public class StateTransitionLog {
                         " WHERE a.scenarioinstance_id = %d;";
         sql = String.format(sql, scenarioInstanceId);
         List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
-        addInitialTransitions(transitionLogs);
+        addInitialTransitions(transitionLogs, scenarioInstanceId);
         return transitionLogs;
     }
 
@@ -61,9 +62,21 @@ public class StateTransitionLog {
      *
      * @param transitions Transitions created from database join
      */
-    private static void addInitialTransitions(List<StateTransitionLog> transitions) {
-        DbLogEntry logEntry = new DbLogEntry();
-
+    private static void addInitialTransitions(
+            List<StateTransitionLog> transitions, int scenarioInstanceId) {
+        DbLogEntry logEntryDao = new DbLogEntry();
+        List<LogEntry> logEntries = logEntryDao.getCreationLogEntries(scenarioInstanceId);
+        for (LogEntry logEntry : logEntries) {
+            StateTransitionLog stateTransition = new StateTransitionLog();
+            stateTransition.setCause(logEntry.getCause());
+            stateTransition.setLoggedId(logEntry.getLoggedId());
+            stateTransition.setLabel(logEntry.getLabel());
+            stateTransition.setNewValue(logEntry.getNewValue());
+            stateTransition.setOldValue(JSONObject.NULL);
+            stateTransition.setTimeStamp(logEntry.getTimeStamp());
+            transitions.add(stateTransition);
+        }
+        transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
     }
 
     private static List<StateTransitionLog> parseStateTransitions(String sql) {
@@ -77,7 +90,7 @@ public class StateTransitionLog {
                 transitionLog.setLoggedId(rs.getInt("logged_id"));
                 transitionLog.setNewValue(rs.getString("new_value"));
                 transitionLog.setOldValue(rs.getString("old_value"));
-                transitionLog.setTimeStamp(rs.getTime("timestamp"));
+                transitionLog.setTimeStamp(rs.getTimestamp("timestamp"));
                 transitionLog.setLabel(rs.getString("label"));
                 transitionLogs.add(transitionLog);
             }
@@ -95,11 +108,11 @@ public class StateTransitionLog {
         this.timeStamp = timeStamp;
     }
 
-    public String getOldValue() {
+    public Object getOldValue() {
         return oldValue;
     }
 
-    public void setOldValue(String oldValue) {
+    public void setOldValue(Object oldValue) {
         this.oldValue = oldValue;
     }
 
@@ -111,7 +124,7 @@ public class StateTransitionLog {
         this.loggedId = loggedId;
     }
 
-    public String getNewValue() {
+    public Object getNewValue() {
         return newValue;
     }
     public int getCause() {

@@ -71,20 +71,12 @@ public class ScenarioData {
     public int save() {
         this.scenarioDbId = saveScenario();
         domainModel.setScenarioID(this.scenarioDbId);
-
-
         domainModel.save();
-        List<DataAttribute> dataAttributes = domainModel.getDataClasses().stream()
-                .map(DataClass::getAttributes)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
 
         for (DataObject dataObject : this.dataObjects) {
             dataObject.setScenarioId(this.scenarioDbId);
             dataObject.save();
         }
-
 
         FragmentInserter inserter = new FragmentInserter();
         for (Fragment fragment : fragments) {
