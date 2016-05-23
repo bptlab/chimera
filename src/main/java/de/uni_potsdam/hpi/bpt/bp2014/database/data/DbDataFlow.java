@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is the representation of the dataFlow in the database.
@@ -18,7 +19,7 @@ public class DbDataFlow extends DbObject {
 	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return a list of database IDs of dataSets for the inputSet of this controlNode.
 	 */
-	public LinkedList<Integer> getInputSetsForControlNode(int controlNodeId) {
+	public List<Integer> getInputSetsForControlNode(int controlNodeId) {
 		String sql =
 				"Select dataset_id FROM dataflow "
 						+ "WHERE dataflow.input = 1 "
@@ -34,7 +35,7 @@ public class DbDataFlow extends DbObject {
 	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return a list of database IDs of dataSets in the outputSet of this controlNode.
 	 */
-	public LinkedList<Integer> getOutputSetsForControlNode(int controlNodeId) {
+	public List<Integer> getOutputSetsForControlNode(int controlNodeId) {
 		String sql =
 				"Select dataset_id FROM dataflow "
 						+ "WHERE dataflow.input = 0 "

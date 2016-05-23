@@ -18,8 +18,10 @@ import java.util.Map;
 public class DbDataClass extends DbObject {
     private static Logger log = Logger.getLogger(DbDataClass.class);
 
-    public String getName(int dataObjectId) {
-        return null;
+    public String getName(int dataClassId) {
+        String sql = "SELECT * FROM dataclass WHERE id = %d;";
+        sql = String.format(sql, dataClassId);
+        return this.executeStatementReturnsString(sql, "name");
     }
 
     public List<Integer> getDataAttributes(int classId) {

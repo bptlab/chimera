@@ -705,36 +705,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return attributeInstances;
 	}
 
-	/**
-	 * Returns a Map with all OutputSets, DataOjects and Data States for activity instance.
-	 *
-	 * @param activityInstanceId The id of the activity instance.
-	 * @return a Map with outputsets.
-	 */
-	public Map<Integer, Map<String, String>> getOutputSetsForActivityInstance(
-			int activityInstanceId) {
-		DbDataFlow dbDataFlow = new DbDataFlow();
-		DbDataNode dbDataNode = new DbDataNode();
-		DbDataClass dbDataObject = new DbDataClass();
-		DbState dbState = new DbState();
-		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-		int controlNodeId = dbControlNodeInstance.getControlNodeID(activityInstanceId);
-
-		Map<Integer, Map<String, String>> allOutputSets = new HashMap<>();
-		LinkedList<Integer> outputSets =
-				dbDataFlow.getOutputSetsForControlNode(controlNodeId);
-		for (int outputSet : outputSets) {
-			LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects =
-					dbDataNode.getDataObjectsForDataSets(outputSet);
-			for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
-				allOutputSets.put(outputSet, new HashMap<String, String>());
-				allOutputSets.get(outputSet).put(
-						dbDataObject.getName(dataObject.getId()),
-						dbState.getStateName(dataObject.getStateID()));
-			}
-		}
-		return allOutputSets;
-	}
 
 	/**
 	 * This method gets all dataObjectInstances for a specific set of a scenarioInstance.
@@ -769,58 +739,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return dbState.getStateName(dataObject.getStateId());
 	}
 
-	/**
-	 * This method is used to get the stateName corresponding to a dataObjectInstance.
-	 *
-	 * @param dataObjectInstance This is an object of the DataObject class.
-	 * @param setID This is the databaseID of a DataConditions (either Input or Output).
-	 * @return the name of the state of the dataObjectInstance as a String.
-	 */
-	public String getStateNameForDataObjectInstanceOutput(DataObject dataObjectInstance,
-			int setID) {
-		DbState dbState = new DbState();
-		DbDataNode dbDataNode = new DbDataNode();
-		LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(setID);
-		for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
-			if (dataObject.getId() == dataObjectInstance.getDataClassId()) {
-				return dbState.getStateName(dataObject.getStateID());
-			}
-		}
-		return "";
-	}
-
-
-    /**
-	 * Returns a Map with all InputSets, DataObjects and Data States for activity instance.
-	 *
-	 * @param activityInstanceId The id of the activity instance.
-	 * @return a Map with inputsets.
-	 */
-	public Map<Integer, Map<String, String>> getInputSetsForActivityInstance(
-			int activityInstanceId) {
-		DbDataFlow dbDataFlow = new DbDataFlow();
-		DbDataNode dbDataNode = new DbDataNode();
-		DbDataClass dbDataObject = new DbDataClass();
-		DbState dbState = new DbState();
-		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-		int controlNodeId = dbControlNodeInstance.getControlNodeID(activityInstanceId);
-
-		Map<Integer, Map<String, String>> allInputSets = new HashMap<>();
-		LinkedList<Integer> inputSets =
-				dbDataFlow.getInputSetsForControlNode(controlNodeId);
-		for (int inputSet : inputSets) {
-			LinkedList<de.uni_potsdam.hpi.bpt.bp2014.database.DataObject> dataObjects =
-					dbDataNode.getDataObjectsForDataSets(inputSet);
-			for (de.uni_potsdam.hpi.bpt.bp2014.database.DataObject dataObject : dataObjects) {
-				allInputSets.put(inputSet, new HashMap<String, String>());
-				allInputSets.get(inputSet).put(
-						dbDataObject.getName(dataObject.getId()),
-						dbState.getStateName(dataObject.getStateID()));
-			}
-		}
-		return allInputSets;
-
-	}
 
 	/**
 	 * This method generates an array of all dataAttributes for a given dataObject.

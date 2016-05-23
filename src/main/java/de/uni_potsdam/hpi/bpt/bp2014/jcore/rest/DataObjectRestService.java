@@ -46,7 +46,6 @@ public class DataObjectRestService {
             @PathParam("scenarioId") int scenarioID,
             @PathParam("instanceId") int instanceID,
             @PathParam("dataObjectId") int dataObjectID) {
-
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         List<Integer> dataObjects =
@@ -118,6 +117,7 @@ public class DataObjectRestService {
         JSONObject result = buildListForDataObjects(uriInfo, dataObjects, states, labels);
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
+
 
     /**
     * Creates an array of DataObjects.
