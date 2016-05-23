@@ -3,6 +3,7 @@
 angular.module('jfrontend')
     .controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
         function ($routeParams, $location, $http, $scope) {
+            
             // For accessing data from inside the $http context
             var instanceCtrl = this;
 
@@ -12,7 +13,7 @@ angular.module('jfrontend')
             this.scenario = {};
             this.activityOutput = {};
             this.changeAttributObject = {};
-
+            
             this.alerts = [];
 
             this.addAlert = function(alert, type) {
@@ -38,10 +39,7 @@ angular.module('jfrontend')
                     + $routeParams.id + '/xml')
                     .success(function(data) {
                         instanceCtrl.fragmentXmlStrings = data.xml;
-
-                        // hack to clear the div if this is executed multiple times
-                        $('#xmlContainer').html("");
-
+                    
                         var index = 0;
                         instanceCtrl.fragmentXmlStrings.forEach(function(xml) {
                             var divId = 'renderXml' + index;
@@ -125,6 +123,7 @@ angular.module('jfrontend')
 
             // if necessary initialize the specified Scenario
             this.initialize = function () {
+                
                 if ($routeParams.instanceId) {
                     // initialize if necessary the specified instance
                     // The scenario and instance is specified by the routeParams
