@@ -399,7 +399,14 @@ angular.module('jfrontend')
             source.addEventListener('refresh', function(event) {
                 instanceCtrl.refreshPage();
             });
+             source.addEventListener('warn', function(event) {
+                instanceCtrl.addAlert(event.msg, 'warning');
+            });
             
+            source.addEventListener('err', function(event) {
+                instanceCtrl.addAlert(event.msg, 'danger');
+            })
+   
             this.selectDataObject = function (dclassname, dobjectid, attrconfiguration) {
                 instanceCtrl.activityInputAttributes[dclassname] = attrconfiguration;
                 instanceCtrl.selectedDataObjectIds[dclassname] = dobjectid;
@@ -408,5 +415,5 @@ angular.module('jfrontend')
             this.selectState = function(dclass, dstate) {
                 instanceCtrl.selectedStates[dclass] = dstate;
             }
-        }
+          }
     ]);
