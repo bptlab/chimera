@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL,
+  `dataobject_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -437,15 +437,15 @@ CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `historydataobjectinstance`
+-- Table structure for table `historydataobject`
 --
 
-CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
+CREATE TABLE IF NOT EXISTS `historydataobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `controlnodeinstance_id` int(11) DEFAULT NULL,
   `scenarioinstance_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dataobjectinstance_id` int(11) NOT NULL,
+  `dataobject_id` int(11) NOT NULL,
   `oldstate_id` int(11) DEFAULT NULL,
   `newstate_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)

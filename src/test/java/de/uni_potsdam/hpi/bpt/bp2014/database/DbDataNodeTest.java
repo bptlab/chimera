@@ -17,8 +17,8 @@ public class DbDataNodeTest extends AbstractDatabaseDependentTest {
     @Test
     public void testGetDataObjectIdsForDataSets(){
         DbDataNode dbDataNode = new DbDataNode();
-        assertEquals(3, (int)dbDataNode.getDataObjectIdsForDataSets(11).get(0));
-        assertEquals(4, (int)dbDataNode.getDataObjectIdsForDataSets(11).get(1));
+        assertEquals(3, (int)dbDataNode.getDataClassIdsForDataSets(11).get(0));
+        assertEquals(4, (int)dbDataNode.getDataClassIdsForDataSets(11).get(1));
     }
 
     /**

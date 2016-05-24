@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL,
+  `dataobject_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -213,8 +213,6 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `scenario_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `model_id` VARCHAR(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -226,24 +224,10 @@ CREATE TABLE IF NOT EXISTS `datanode` (
 
 CREATE TABLE IF NOT EXISTS `dataobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(256) NOT NULL,
-  `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `start_state_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `dataobjectinstance`
---
-
-CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scenarioinstance_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
+  `dataclass_id` int(11) NOT NULL,
   `locked` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -432,76 +416,6 @@ CREATE TABLE IF NOT EXISTS `gatewayinstance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `historyactivityinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `activityinstance_id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `oldstate` varchar(256) DEFAULT NULL,
-  `newstate` varchar(256) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `historydataobjectinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `controlnodeinstance_id` int(11) DEFAULT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dataobjectinstance_id` int(11) NOT NULL,
-  `oldstate_id` int(11) DEFAULT NULL,
-  `newstate_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `historydataattributeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `controlnodeinstance_id` int(11) DEFAULT NULL,
-  `dataattributeinstance_id` int(11) NOT NULL,
-  `oldvalue` varchar(256) DEFAULT NULL,
-  `newvalue` varchar(256) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `scenarioinstance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
-
---
--- Table structure for table `historyeventinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historyeventinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `eventid` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `state` varchar(256) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
 --
 -- Table structure for table `janalyticsresults`
 --
@@ -532,6 +446,22 @@ CREATE TABLE IF NOT EXISTS `logentry` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
+-- Table structure for table `logentry`
+--
+
+CREATE TABLE IF NOT EXISTS `logentry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `logged_id` int(11) NOT NULL,
+  `timestamp` TIMESTAMP(6) NOT NULL,
+  `label` VARCHAR(256) NOT NULL,
+  `type` VARCHAR(256) NOT NULL,
+  `new_value` VARCHAR(256),
+  `scenarioinstance_id` int(11) NOT NULL,
+  `cause` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
 -- Table structure for table `pathmapping`
 --
 
@@ -541,19 +471,6 @@ CREATE TABLE IF NOT EXISTS `pathmapping` (
   `controlnode_id` int(11) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
   `jsonpath` varchar(256)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reference`
---
-
-CREATE TABLE IF NOT EXISTS `reference` (
-  `controlnode_id1` int(11) NOT NULL,
-  `controlnode_id2` int(11) NOT NULL,
-  PRIMARY KEY (`controlnode_id1`,`controlnode_id2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -683,12 +600,9 @@ CREATE TABLE IF NOT EXISTS `successor` (
 
 CREATE TABLE IF NOT EXISTS `terminationcondition` (
   `conditionset_id` VARCHAR(512) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
+  `dataclass_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`),
-  KEY `dataobject_id` (`dataobject_id`),
-  KEY `state_id` (`state_id`)
+  `scenario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

@@ -321,34 +321,6 @@ public class Connector extends DbObject {
         this.executeInsertStatement(sql);
 	}
 
-	/**
-	 * inserts a new Reference into the Database.
-	 * The references describe the equivalence relation
-	 * between tasks.
-	 *
-	 * @param controlNodeID1 the id of the first node.
-	 * @param controlNodeID2 the id of the second node.
-	 */
-	public void insertReferenceIntoDatabase(
-			final int controlNodeID1, final int controlNodeID2) {
-		insertReferenceOneSideIntoDatabase(controlNodeID1, controlNodeID2);
-		insertReferenceOneSideIntoDatabase(controlNodeID2, controlNodeID1);
-	}
-
-	/**
-	 * Inserts one reference into the database.
-	 *
-	 * @param sourceNodeId source node id of the reference.
-	 * @param targetNodeId target node id of the reference.
-	 */
-	private void insertReferenceOneSideIntoDatabase(final int sourceNodeId,
-			final int targetNodeId) {
-		String sql = "INSERT INTO reference (controlnode_id1,"
-				+ " controlnode_id2) VALUES ("
-				+ sourceNodeId + ", " + targetNodeId + ")";
-        this.executeInsertStatement(sql);
-	}
-
 	public void insertPathMappingIntoDatabase(int controlNodeId, int dataAttributeId, String jsonPathString) {
 		String sql = "INSERT INTO pathmapping (controlnode_id,"
 				+ "dataattribute_id, jsonpath) VALUES ("
@@ -362,29 +334,6 @@ public class Connector extends DbObject {
 						+ "VALUES (%d, '%s', '%s', '%s')",
 				controlNodeId, url, method, body);
 		this.executeInsertStatement(sql);
-	}
-
-	/**
-	 * Get the databaseIDs of all dataClasses that belong to one scenario.
-	 *
-	 * @param scenarioID databaseID of the scenario
-	 * @return List of all databaseIDs that belong to the scenario specified by scenarioID
-	 */
-	public List<Integer> getDataClassIDs(int scenarioID) {
-		DbDataClass dataClass = new DbDataClass();
-		String select = "SELECT dataclass_id "
-				+ "FROM dataobject "
-				+ "WHERE scenario_id = " + scenarioID;
-		// temporaryDataClassIDs might contain duplicate entries
-		List<Integer> temporaryDataClassIDs = dataClass
-				.executeStatementReturnsListInt(select, "dataclass_id");
-		List<Integer> resultDataClassIDs = new LinkedList<>();
-		for (int entry : temporaryDataClassIDs) {
-			if (!resultDataClassIDs.contains(entry)) {
-				resultDataClassIDs.add(entry);
-			}
-		}
-		return resultDataClassIDs;
 	}
 
     public void insertStartQueryIntoDatabase(String query, int scenarioId,

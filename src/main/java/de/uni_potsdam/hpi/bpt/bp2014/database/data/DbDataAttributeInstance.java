@@ -13,16 +13,16 @@ public class DbDataAttributeInstance extends DbObject {
 	 * into the context of a DataObject and saves a log entry into the database.
 	 *
 	 * @param dataAttributeId      This is the database ID of the DataAttribute.
-	 * @param dataObjectInstanceId This is the database ID of the DataObject
+	 * @param dataObjectId This is the database ID of the DataObject
 	 *                             the AttributeInstance belongs to.
 	 * @return the database ID of the newly created DataAttributeInstance (Error: -1).
 	 */
-	public int createNewDataAttributeInstance(int dataAttributeId, int dataObjectInstanceId) {
+	public int createNewDataAttributeInstance(int dataAttributeId, int dataObjectId) {
 		String sql = "INSERT INTO dataattributeinstance ("
-				+ "value, dataobjectinstance_id, dataattribute_id) "
+				+ "value, dataobject_id, dataattribute_id) "
 				+ "VALUES ((SELECT dataattribute.default "
 				+ "FROM dataattribute WHERE id = "
-				+ dataAttributeId + "), " + dataObjectInstanceId + ", "
+				+ dataAttributeId + "), " + dataObjectId + ", "
 				+ dataAttributeId + ")";
 		return this.executeInsertStatement(sql);
 	}
@@ -30,13 +30,13 @@ public class DbDataAttributeInstance extends DbObject {
 	/**
 	 *
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
-	 * @param dataObjectInstanceId	This is the database ID of the DataObject
+	 * @param dataObjectId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
 	 * @return as a boolean whether the given dataAttribute exists
 	 */
-	public Boolean existDataAttributeInstance(int dataAttributeId, int dataObjectInstanceId) {
+	public Boolean existDataAttributeInstance(int dataAttributeId, int dataObjectId) {
 		String sql = "SELECT id FROM dataattributeinstance "
-				+ "WHERE dataobjectinstance_id = " + dataObjectInstanceId + " "
+				+ "WHERE dataobject_id = " + dataObjectId + " "
 				+ "AND dataattribute_id = " + dataAttributeId;
 		return this.executeExistStatement(sql);
 	}
@@ -44,13 +44,13 @@ public class DbDataAttributeInstance extends DbObject {
 	/**
 	 *
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
-	 * @param dataObjectInstanceId	This is the database ID of the DataObject
+	 * @param dataObjectId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
 	 * @return the database ID of a DataAttributeInstance (Error: -1).
 	 */
-	public int getDataAttributeInstanceID(int dataAttributeId, int dataObjectInstanceId) {
+	public int getDataAttributeInstanceID(int dataAttributeId, int dataObjectId) {
 		String sql = "SELECT id FROM dataattributeinstance "
-				+ "WHERE dataobjectinstance_id = " + dataObjectInstanceId + " "
+				+ "WHERE dataobject_id = " + dataObjectId + " "
 				+ "AND dataattribute_id = " + dataAttributeId;
 		return this.executeStatementReturnsInt(sql, "id");
 	}

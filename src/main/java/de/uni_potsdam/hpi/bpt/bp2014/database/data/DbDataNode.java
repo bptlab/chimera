@@ -22,14 +22,14 @@ public class DbDataNode extends DbObject {
 	 * @param dataSetId This is the database ID of a dataSet.
 	 * @return a list of database ID's of all dataObjects belonging to this dataSet.
 	 */
-	public LinkedList<Integer> getDataObjectIdsForDataSets(int dataSetId) {
+	public List<Integer> getDataClassIdsForDataSets(int dataSetId) {
 		String sql =
-				"Select dataobject_id FROM datanode, datasetconsistsofdatanode "
+				"Select dataclass_id FROM datanode, datasetconsistsofdatanode "
 						+ "WHERE datanode.id = "
 						+ "datasetconsistsofdatanode.datanode_id "
 						+ "AND dataset_id = " + dataSetId
-						+ " ORDER BY dataobject_id";
-		return this.executeStatementReturnsListInt(sql, "dataobject_id");
+						+ " ORDER BY dataclass_id";
+		return this.executeStatementReturnsListInt(sql, "dataclass_id");
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class DbDataNode extends DbObject {
 						+ "WHERE datanode.id = "
 						+ "datasetconsistsofdatanode.datanode_id "
 						+ "AND dataset_id = " + dataSetId
-						+ " ORDER BY dataobject_id";
+						+ " ORDER BY dataclass_id";
 		return this.executeStatementReturnsListInt(sql, "state_id");
 	}
 
@@ -58,25 +58,13 @@ public class DbDataNode extends DbObject {
         return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "dataclass_id");
     }
 
-
-    public List<Integer> getDataobjectIdsForSet(int dataSetId) {
-        String sql =
-                "SELECT dataobject_id, state_id "
-                        + "FROM datanode, datasetconsistsofdatanode "
-                        + "WHERE datanode.id = "
-                        + "datasetconsistsofdatanode.datanode_id "
-                        + "AND dataset_id = " + dataSetId
-                        + " ORDER BY dataobject_id";
-        return this.executeStatementReturnsListInt(sql, "dataobject_id");
-    }
-
-	public Map<Integer, Integer> getDataObjectIdToState(int dataSetId) {
-		String sql = "SELECT dataobject_id, state_id "
+	public Map<Integer, Integer> getDataClassIdToState(int dataSetId) {
+		String sql = "SELECT dataclass_id, state_id "
 						+ "FROM datanode, datasetconsistsofdatanode "
 						+ "WHERE datanode.id = "
 						+ "datasetconsistsofdatanode.datanode_id "
 						+ "AND dataset_id = " + dataSetId
-						+ " ORDER BY dataobject_id";
-		return executeStatementReturnsMapIntInt(sql, "dataobject_id", "state_id");
+						+ " ORDER BY dataclass_id";
+		return executeStatementReturnsMapIntInt(sql, "dataclass_id", "state_id");
     }
 }

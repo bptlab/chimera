@@ -102,11 +102,27 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
                 this.getControlNodeId());
         if (inputSets.size() > 0) {
             int inputSet = inputSets.get(0);
-			dbDataNode.getDataObjectIdsForDataSets(inputSet)
+			dbDataNode.getDataClassIdsForDataSets(inputSet)
 					.forEach(this::lockDataObjects);
         }
     }
 
+	/**
+     * TODO improve this method
+	 * Sets the states of the data object to the output states of the activity.
+	 * Sets all this data object to not on change.
+	 */
+	private void setDataStates(int outputSetId) {
+		List<Integer> dataObjectIds =
+				dbDataNode.getDataClassIdsForDataSets(outputSetId);
+		dataObjectIds.forEach(this::lockDataObjects);
+
+		Map<Integer, Integer> idToState = dbDataNode.getDataClassIdToState(outputSetId);
+		for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
+			this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
+		}
+		//idToState.forEach(this::changeDataObjectInstanceState); does this work?
+	}
 
 	/**
 	 * Change the state of the given data object.

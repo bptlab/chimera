@@ -20,17 +20,6 @@ public class DbTerminationCondition extends DbObject {
         return this.executeStatementReturnsListString(retrieveMappingKeys, "conditionset_id");
     }
 
-    /**
-     * @param mappingKey
-     * @return
-     */
-    public Map<Integer, Integer> retrieveDataobjectIdToStateId(String mappingKey) {
-        String sql = "SELECT * FROM terminationcondition WHERE conditionset_id = '%s';";
-        String retrieveDataObjectMap = String.format(sql, mappingKey);
-        return this.executeStatementReturnsMapIntInt(
-                retrieveDataObjectMap, "dataobject_id", "state_id");
-    }
-
 	/**
 	 * Returns a list of Hashmap with all the information
 	 * of a Termination Condition of one specific Scenario.
@@ -43,9 +32,9 @@ public class DbTerminationCondition extends DbObject {
 	public Map<String, List<Map<String, Object>>> getDetailedConditionsForScenario(
 			int scenarioID) {
 		String sql = "SELECT t.conditionset_id AS set_id, "
-				+ "s.name AS state, d.name AS data_object "
-				+ "FROM terminationcondition AS t, dataobject AS d, state AS s "
-				+ "WHERE t.dataobject_id = d.id AND t.state_id = s.id "
+				+ "s.name AS state, c.name AS data_object "
+				+ "FROM terminationcondition AS t, dataclass AS c, state AS s "
+				+ "WHERE t.dataclass_id = c.id AND t.state_id = s.id "
 				+ "AND t.scenario_id = " + scenarioID;
 		return this.executeStatementReturnsMapOfListOfMapsWithKeys(
 				sql, "state", "data_object", "set_id");

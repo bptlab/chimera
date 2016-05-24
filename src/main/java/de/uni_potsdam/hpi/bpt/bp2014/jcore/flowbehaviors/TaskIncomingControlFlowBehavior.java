@@ -1,11 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.ActivityStateMachine;
@@ -87,39 +85,12 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	 */
 	public void lockDataObjectInstances(List<Integer> dataObjectIds) {
 		DataManager dataManager = this.getScenarioInstance().getDataManager();
-        dataObjectIds.forEach(dataManager::lockDataobject);
-	}
-
-
-
-	/**
-	 * checks if the referenced controlNode can be started.
-	 * The referenced controlNode have to be control flow enabled
-	 * and data flow enabled or must have the same data output.
-	 *
-	 * @param controlNodeId           This is the database id from a control node.
-	 * @param referencedControlNodeId This is the database id from a control node.
-	 */
-	public void beginEnabledReferenceControlNodeInstanceForControlNodeInstanceID(
-			int controlNodeId, int referencedControlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance : getScenarioInstance()
-				.getControlFlowEnabledControlNodeInstances()) {
-			if (controlNodeInstance.getControlNodeId() == referencedControlNodeId) {
-				if (controlNodeInstance.getClass() == ActivityInstance.class) {
-					DbControlNode dbControlNode = new DbControlNode();
-					if (getScenarioInstance().getEnabledControlNodeInstances()
-							.contains(controlNodeInstance)
-							|| dbControlNode
-							.controlNodesHaveSameOutputs(controlNodeId,
-									referencedControlNodeId)) {
-						((ActivityInstance) controlNodeInstance)
-								.referenceStarted();
-						return;
-					}
-				}
+        for (int inputSet : inputSets) {
+			List<Integer> dataObjects = dbDataNode
+					.getDataClassIdsForDataSets(inputSet);
+			for (int dataObject : dataObjects) {
+                dataManager.lockDataobject(dataObject);
 			}
 		}
-
 	}
-
 }

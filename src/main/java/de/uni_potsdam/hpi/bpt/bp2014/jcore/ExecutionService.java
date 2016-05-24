@@ -712,7 +712,7 @@ public class ExecutionService /*implements Runnable*/ {
 	public DataObject[] getDataObjectInstancesForDataSetId(int setId,
                                                            int scenarioInstanceID) {
 		DbDataNode dbDataNode = new DbDataNode();
-		List<Integer> dataObjectsInSet = dbDataNode.getDataobjectIdsForSet(setId);
+		List<Integer> dataObjectsInSet = dbDataNode.getDataClassIdsForDataSets(setId);
         DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceID).getDataManager();
 
         List<DataObject> dataObjects = dataManager.getDataObjects()
