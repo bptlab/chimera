@@ -235,6 +235,19 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dataobjectselection`
+--
+
+
+CREATE TABLE IF NOT EXISTS `dataobjectselection` (
+  scenarioinstance_id INT(11) NOT NULL,
+  activityinstance_id INT(11) NOT NULL,
+  dataobject_id INT(11) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `dataset`
 --
 

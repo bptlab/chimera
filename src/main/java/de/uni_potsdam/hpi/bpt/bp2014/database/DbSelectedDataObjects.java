@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * This class is used to save and retrieve which dataobjects an activity works with.
  */
-public class DbWorkItems extends DbObject {
-    public void saveWorkingItems(
+public class DbSelectedDataObjects extends DbObject {
+    public void saveDataObjectSeletion(
             int scenarioInstanceId,int activityInstanceId, List<Integer> dataobjectIds) {
-        String insertTemplate = "INSERT INTO workitem " +
+        String insertTemplate = "INSERT INTO dataobjectselection " +
                 "(scenarioinstance_id, activityinstance_id, dataobject_id) VALUES " +
                 "(%d, %d, %d);";
         for (Integer dataobjectId : dataobjectIds) {
@@ -18,8 +18,8 @@ public class DbWorkItems extends DbObject {
         }
     }
 
-    public List<Integer> getWorkingItems(int scenarioInstanceId, int activityInstanceId) {
-        String getWorkingItems = "Select * FROM workitem WHERE scenarioinstance_id = %d AND " +
+    public List<Integer> getDataObjectSelection(int scenarioInstanceId, int activityInstanceId) {
+        String getWorkingItems = "Select * FROM dataobjectselection WHERE scenarioinstance_id = %d AND " +
                 "activityinstance_id = %d;";
         getWorkingItems = String.format(getWorkingItems, scenarioInstanceId, activityInstanceId);
         return this.executeStatementReturnsListInt(getWorkingItems, "dataobject_id");

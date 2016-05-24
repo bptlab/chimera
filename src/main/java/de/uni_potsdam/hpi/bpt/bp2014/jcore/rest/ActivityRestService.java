@@ -421,7 +421,7 @@ public class ActivityRestService extends AbstractRestService {
         if (succesful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"activity state changed.\"}")
+                    .entity("{\"message\":\"activity begun.\"}")
                     .build();
         } else {
                 return this.buildBadRequestResponse("{\"error\":\"impossible to "
@@ -440,12 +440,27 @@ public class ActivityRestService extends AbstractRestService {
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         boolean succesful;
         if (postBody.length() == 0) {
-//            executionService.terminateActivityInstance(scenarioInstanceId,
-//                    activityId, outputset);
-//            scenarioInstanceId, activityId);
+            Map<String, String> dataclassNameToState = new HashMap<>();
+            for (Object dataclassName : postBody.keySet()) {
+                dataclassNameToState.put((String) dataclassName, postBody.getString(
+                        (String) dataclassName));
+
+            }
+            succesful = executionService.terminateActivity(
+                    scenarioInstanceId, activityId, dataclassNameToState);
+        } else {
+            succesful = executionService.terminateActivity(scenarioInstanceId, activityId);
         }
-        return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                + "terminate activity with id " + activityId + "\"}");
+        if (succesful) {
+            return Response.status(Response.Status.ACCEPTED)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"message\":\"activity terminated.\"}")
+                    .build();
+        } else {
+            return this.buildBadRequestResponse("{\"error\":\"impossible to "
+                    + "terminate activity with id " + activityId + "\"}");
+
+        }
 
     }
 
