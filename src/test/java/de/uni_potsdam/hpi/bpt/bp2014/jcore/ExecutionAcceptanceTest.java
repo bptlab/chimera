@@ -549,76 +549,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
     }
 
-    /**
-     * test scenario 160, outputsets test 1
-     */
-    @Test @Ignore
-    public void testScenario160() {
-        ExecutionService executionService = ExecutionService.getInstance(160);
-        int scenarioID = 160;
-        int scenarioInstance = executionService.startNewScenarioInstance();
-        int activity541 = 541;
-        int activity545 = 545;
-        System.out.println("Start Scenario "+scenarioID);
 
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity541, activity545}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-
-        //do activity 541
-        System.out.println("do activity " + activity541);
-        executionService.beginActivity(scenarioInstance, activity541);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
-        executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
-        executionService.terminateActivity(scenarioInstance, activity541, 208);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        List<DataObject> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjects();
-        boolean loopCheck = false;
-        for(DataObject d : doI){
-           if (d.getStateId() == 157) {
-               loopCheck = true;
-               break;
-           }
-        }
-        assertTrue("DataObject has the wrong state",loopCheck);
-    }
-
-    /**
-     * test scenario 160, outputsets test 2
-     */
-    @Test @Ignore
-    public void testScenario160_2() {
-        ExecutionService executionService = ExecutionService.getInstance(160);
-        int scenarioID = 160;
-        int scenarioInstance = executionService.startNewScenarioInstance();
-        int activity541 = 541;
-        int activity545 = 545;
-        int activity543 = 543;
-        System.out.println("Start Scenario "+scenarioID);
-
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity541, activity545}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-
-        //do activity 541
-        System.out.println("do activity " + activity541);
-        executionService.beginActivity(scenarioInstance, activity541);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
-        executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
-        executionService.terminateActivity(scenarioInstance, activity541, 209);
-        assertArrayEquals(new Integer[]{activity543}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        List<DataObject> doI = executionService.getScenarioInstance(scenarioInstance).getDataManager().getDataObjects();
-        boolean loopCheck = false;
-        for(DataObject d : doI){
-            if (d.getStateId() == 159) {
-                loopCheck = true;
-                break;
-            }
-        }
-        assertTrue("DataObject has the wrong state",loopCheck);
-    }
 
     /**
      * test scenario 155, complex xor test

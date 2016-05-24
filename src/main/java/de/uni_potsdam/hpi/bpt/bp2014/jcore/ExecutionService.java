@@ -16,11 +16,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
 import org.apache.log4j.Logger;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -361,12 +357,13 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param activityInstanceId Specifies the activity instance id.
 	 * @return Indicates the success. True if the activity has been started, else false.
 	 */
-	public boolean beginActivityInstance(int scenarioInstanceId, int activityInstanceId) {
+	public boolean beginActivityInstance(int scenarioInstanceId, int activityInstanceId,
+                                         List<Integer> usedDataObjects) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getEnabledControlNodeInstances()) {
 			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
-				return ((ActivityInstance) nodeInstance).begin();
+				return ((ActivityInstance) nodeInstance).begin(usedDataObjects);
 			}
 		}
 		return false;
@@ -398,16 +395,15 @@ public class ExecutionService /*implements Runnable*/ {
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @param activityInstanceId Specifies the activity instance id.
-	 * @param outputSetId This is the id of the output set.
 	 * @return Indicates the success. True if the activity has been started, else false.
 	 */
 	public boolean terminateActivityInstance(int scenarioInstanceId, int activityInstanceId,
-			int outputSetId) {
+                                             Map<String, String> dataClassNameToState) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
 			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
-				return ((ActivityInstance) nodeInstance).terminate(outputSetId);
+				return ((ActivityInstance) nodeInstance).terminate(dataClassNameToState);
 			}
 		}
 		return false;
@@ -542,12 +538,12 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @return true if the activity could been terminated. false if not.
 	 */
 	public boolean terminateActivity(
-			int scenarioInstanceId, int activityId, int outputSetId) {
+			int scenarioInstanceId, int activityId, Map<String, String> map) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
 			if (nodeInstance.getControlNodeId() == activityId) {
-				return ((ActivityInstance) nodeInstance).terminate(outputSetId);
+				return ((ActivityInstance) nodeInstance).terminate(map);
 			}
 		}
 		return false;

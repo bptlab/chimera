@@ -12,8 +12,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskOutgoingControlFlowBehavior;
 
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents the activity instance.
@@ -158,13 +157,11 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public boolean begin() {
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
-        new DbLogEntry().logActivity(
-                this.getControlNodeInstanceId(), "running", scenarioInstanceId);
         if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
 			((ActivityStateMachine) getStateMachine()).begin();
-			((TaskIncomingControlFlowBehavior) getIncomingBehavior())
-					.lockDataObjectInstances();
-			scenarioInstance.updateDataFlow();
+			new DbLogEntry().logActivity(
+                    this.getControlNodeInstanceId(), "running", scenarioInstanceId);
+            scenarioInstance.updateDataFlow();
 			scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
 			taskExecutionBehavior.execute();
             enableAttachedEvents();
@@ -176,6 +173,26 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			return false;
 		}
 	}
+
+    /**
+     *
+     * @param workingItems Ids of the data objects used by this activity
+     * @return Whether the activity could have been started.
+     */
+    public boolean begin(List<Integer> workingItems) {
+        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
+
+        if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
+            ((ActivityStateMachine) getStateMachine()).begin();
+            new DbLogEntry().logActivity(
+                    this.getControlNodeInstanceId(), "running", scenarioInstanceId);
+
+            ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
+                    .lockDataObjectInstances(workingItems);
+            return true;
+        }
+        return false;
+    }
 
     private void enableAttachedEvents() {
         DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
@@ -215,23 +232,24 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could set to terminated. false if the activity couldn't set.
 	 */
 	@Override public boolean terminate() {
-        return this.terminate(-1);
+        return this.terminate(new HashMap<>());
 	}
 
 	/**
 	 * Terminates a running activity.
 	 * Enables the following control nodes and sets the data outputs.
 	 *
-	 * @param outputSetId ID of the output set of the activity.
+	 * @param dataClassNameToStateName ids of the data o
 	 * @return true if the activity could set to terminated. false if the activity couldn't set.
 	 */
-	public boolean terminate(int outputSetId) {
+	public boolean terminate(Map<String, String> dataClassNameToStateName) {
 		if (canTerminate) {
             int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
             new DbLogEntry().logActivity(
                     this.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
             boolean workingFine = getStateMachine().terminate();
-			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).terminate(outputSetId);
+			((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).terminate(
+                    dataClassNameToStateName);
 			cancelAttachedEvents();
             return workingFine;
 		}

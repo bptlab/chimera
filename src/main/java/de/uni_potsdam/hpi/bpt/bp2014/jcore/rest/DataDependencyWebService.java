@@ -197,6 +197,4 @@ public class DataDependencyWebService extends AbstractRestService {
                 .getDataAttributesForDataObjectInstance(dataObjectInstance));
         return dataObject;
     }
-
-
 }

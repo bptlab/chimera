@@ -91,6 +91,19 @@ public class DbDataObject extends DbObject {
 		return this.executeStatementReturnsInt(sql, "dataclass_id");
 	}
 
+    /**
+     * This method returns the name of a dataObject.
+     *
+     * @param dataObjectId Id of the dataObject.
+     * @return Dataobject_id.
+     */
+    public String getName(int dataObjectId) {
+        String sql = "SELECT name FROM dataobject, dataclass " +
+                "WHERE id = %d AND dataobject.dataclass_id = dataclass.id;";
+        sql = String.format(sql, dataObjectId);
+        return this.executeStatementReturnsString(sql, "name");
+    }
+
     public boolean isLocked(int dataObjectId) {
         String sql = "SELECT locked FROM dataobject "
                 + "WHERE id = " + dataObjectId;

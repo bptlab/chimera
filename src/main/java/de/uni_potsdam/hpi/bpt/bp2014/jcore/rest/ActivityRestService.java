@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.lang.annotation.ElementType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -384,78 +385,79 @@ public class ActivityRestService extends AbstractRestService {
      * The state will be changed to the specified one.
      * The activity Instance is specified by:
      *
-     * @param scenarioID         The id of a scenario model.
-     * @param scenarioInstanceID the id of an scenario instance.
-     * @param activityID         the control node id of the activity.
-     * @param state              the new state of the activity.
-     * @param outputset			 the outputset of the activity.
+     * @param scenarioId         The id of a scenario model.
+     * @param scenarioInstanceId the id of an scenario instance.
+     * @param activityId         the control node id of the activity.
+     * @param postBody           Json Object containing the target state and the
+     *                           data object id's if needed
      * @return Returns a Response, the response code implies the
      * outcome of the PUT-Request.
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @POST
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/begin")
     public Response updateActivityState(
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID,
-            @QueryParam("state") String state,
-            @DefaultValue("-1") @QueryParam("outputset") int outputset) {
-        boolean result;
-        if (state == null) {
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("activityId") int activityId,
+            JSONObject postBody) {
+        boolean succesful;
+        if (!postBody.has("state")) {
             return this.buildBadRequestResponse("{\"error\":\"The state is not set\"}");
         }
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-        switch (state) {
-            case "begin":
-                result = executionService
-                        .beginActivityInstance(scenarioInstanceID, activityID);
-                break;
-            case "terminate":
-                if (outputset != -1) {
-                    result = executionService.terminateActivityInstance(scenarioInstanceID,
-                            activityID, outputset);
-                } else {
-                    result = executionService.terminateActivityInstance(
-                            scenarioInstanceID, activityID);
-                }
-                break;
-            default:
-                return this.buildBadRequestResponse("{\"error\":\"The state transition "
-                        + state + " is unknown\"}");
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+        List<Integer> usedDataObjects = new ArrayList<>();
+        if (!postBody.has("dataobjects")) {
+            JSONArray dataobjectsJson = postBody.getJSONArray("dataobjects");
+            for (int i = 0; i < dataobjectsJson.length(); i++) {
+                usedDataObjects.add(dataobjectsJson.getInt(i));
+            }
         }
-        if (result) {
+        succesful = executionService.beginActivityInstance(
+                scenarioInstanceId, activityId, usedDataObjects);
+        if (succesful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"message\":\"activity state changed.\"}")
                     .build();
         } else {
-            executionService.reloadScenarioInstanceFromDatabase(
-                            scenarioID, scenarioInstanceID);
-            if ("begin".equals(state)) {
                 return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                        + "start activity with id " + activityID + "\"}");
-            } else {
-                return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                    + "terminate activity with id " + activityID + "\"}");
-            }
-
+                        + "start activity with id " + activityId + "\"}");
         }
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/terminate")
+    public Response terminateActivity(@PathParam("scenarioId") int scenarioId,
+                                  @PathParam("instanceId") int scenarioInstanceId,
+                                  @PathParam("activityId") int activityId,
+                                  JSONObject postBody) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+        boolean succesful;
+        if (postBody.length() == 0) {
+//            executionService.terminateActivityInstance(scenarioInstanceId,
+//                    activityId, outputset);
+//            scenarioInstanceId, activityId);
+        }
+        return this.buildBadRequestResponse("{\"error\":\"impossible to "
+                + "terminate activity with id " + activityId + "\"}");
+
+    }
 
 
-
-    /**
-     * @param instances The Map containing information about the activity instances.
-     *                  We Assume that the key is a the id and the value is a Map
-     *                  from String to Object with the properties of the instance.
-     * @param uriInfo   Specifies the context. For example the uri
-     *                  of the request.
-     * @return			JSON Object containing activities and their references.
-     */
+        /**
+         * @param instances The Map containing information about the activity instances.
+         *                  We Assume that the key is a the id and the value is a Map
+         *                  from String to Object with the properties of the instance.
+         * @param uriInfo   Specifies the context. For example the uri
+         *                  of the request.
+         * @return			JSON Object containing activities and their references.
+         */
     private JSONObject buildJSONObjectForReferencedActivities(
             Collection<ActivityInstance> instances, UriInfo uriInfo) {
         List<Integer> ids = new ArrayList<>(instances.size());
