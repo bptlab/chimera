@@ -5,7 +5,7 @@ import java.util.*;
 /**
  *
  */
-public class DbDataDependency {
+public class DbDataConditions {
 
     /**
      *

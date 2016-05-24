@@ -404,13 +404,10 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("activityId") int activityId,
             JSONObject postBody) {
         boolean succesful;
-        if (!postBody.has("state")) {
-            return this.buildBadRequestResponse("{\"error\":\"The state is not set\"}");
-        }
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         List<Integer> usedDataObjects = new ArrayList<>();
-        if (!postBody.has("dataobjects")) {
+        if (postBody.has("dataobjects")) {
             JSONArray dataobjectsJson = postBody.getJSONArray("dataobjects");
             for (int i = 0; i < dataobjectsJson.length(); i++) {
                 usedDataObjects.add(dataobjectsJson.getInt(i));

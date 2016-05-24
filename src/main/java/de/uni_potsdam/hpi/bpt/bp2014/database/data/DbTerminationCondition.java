@@ -14,6 +14,13 @@ import java.util.*;
 public class DbTerminationCondition extends DbObject {
 	private static Logger log = Logger.getLogger(DbTerminationCondition.class);
 
+	public Map<Integer, Integer> getDataClassToState(String conditionSetId) {
+		String sql = "SELECT dataclass_id, state_id FROM terminationcondition WHERE conditionset_id = %s";
+		return this.executeStatementReturnsMapIntInt(
+				String.format(sql, conditionSetId),
+				"dataclass_id", "state_id");
+	}
+
     public List<String> getConditionSetKeysForScenario(int scenarioId) {
         String sql = "SELECT * FROM terminationcondition WHERE scenario_id = %d;";
         String retrieveMappingKeys = String.format(sql, scenarioId);

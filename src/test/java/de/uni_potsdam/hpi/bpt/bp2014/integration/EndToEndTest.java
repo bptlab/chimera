@@ -9,6 +9,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.ScenarioInstanceRestService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.ScenarioRestService;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class EndToEndTest extends AbstractTest {
+public class EndToEndTest extends JerseyTest {
 
 
     @After
@@ -53,12 +54,12 @@ public class EndToEndTest extends AbstractTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2")
-                .queryParam("state", "begin").request().post(Entity.json("[]"));
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
+                .request().post(Entity.json("[]"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2")
-                .queryParam("state", "terminate").request().post(Entity.json("[]"));
+        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/terminate")
+                .request().post(Entity.json("[]"));
         assertEquals(202, termianteFirstActivity.getStatus());
 
         Response inputSets = base.path("interface/v2/scenario/1/instance/1/activity/2/input")

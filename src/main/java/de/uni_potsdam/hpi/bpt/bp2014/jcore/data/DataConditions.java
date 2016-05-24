@@ -11,18 +11,22 @@ import java.util.*;
  * For each data class specified by this
  */
 public class DataConditions {
-    private Map<Integer, Integer> dataclassToState;
+    protected Map<Integer, Integer> dataClassToState;
 
-    public Map<Integer, Integer> getDataclassToState() {
-        return dataclassToState;
+    public Map<Integer, Integer> getDataClassToState() {
+        return dataClassToState;
     }
 
     public boolean checkConditions(List<DataObject> dataObjects) {
-        Map<Integer, Set<Integer>> dataClassIdToStateId = getAvailableDataClassStates(dataObjects);
-        for (Map.Entry<Integer, Integer> cond : dataclassToState.entrySet()) {
-            Set<Integer> availableStates = dataClassIdToStateId.get(cond.getKey());
-            if (!(availableStates.contains(cond.getValue()))) {
-                return false;
+        Map<Integer, Set<Integer>> possibleStatesForDataClasses = getPossibleDataClassStates(dataObjects);
+        for (Map.Entry<Integer, Integer> condition : dataClassToState.entrySet()) {
+            int dataClassId = condition.getKey();
+            int stateId = condition.getValue();
+            if (possibleStatesForDataClasses.containsKey(dataClassId)) {
+                Set<Integer> possibleStatesOfClass = possibleStatesForDataClasses.get(condition.getKey());
+                if (!(possibleStatesOfClass.contains(stateId))) {
+                    return false;
+                }
             }
         }
         return true;
@@ -34,7 +38,7 @@ public class DataConditions {
      * @return Map from dataclass id to set of states of data objects from this class.
      *         If there is no data object for a data class there is no entry for this class.
      */
-    public Map<Integer, Set<Integer>> getAvailableDataClassStates(List<DataObject> dataObjects) {
+    public Map<Integer, Set<Integer>> getPossibleDataClassStates(List<DataObject> dataObjects) {
         Map<Integer, Set<Integer>> dataclassToStates = new HashMap<>();
         for (DataObject dataObject : dataObjects) {
             int dataClassId = dataObject.getDataClassId();

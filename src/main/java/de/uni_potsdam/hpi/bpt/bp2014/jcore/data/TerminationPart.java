@@ -11,10 +11,9 @@ import java.util.Map;
  */
 public class TerminationPart extends DataConditions {
 
-    public TerminationPart(String key) {
+    public TerminationPart(String conditionSetId) {
         DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
-        // TODO implement
-        // this.dataobjectIdToState = dbTerminationCondition.retrieveDataobjectIdToStateId(key);
+        this.dataClassToState = dbTerminationCondition.getDataClassToState(conditionSetId);
     }
 
     public boolean checkTermination(List<DataObject> dataObjects) {

@@ -1,10 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataDependency;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectSetsJaxBean;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -136,7 +135,7 @@ public class DataDependencyWebService extends AbstractRestService {
                             + "activity instance.\"}")
                     .build();
         }
-        Map<String, Set<String>> inputSets = new DbDataDependency().loadInputSets(activityInstanceId);
+        Map<String, Set<String>> inputSets = new DbDataConditions().loadInputSets(activityInstanceId);
         return Response.ok(inputSets, MediaType.APPLICATION_JSON).build();
     }
 
@@ -179,7 +178,7 @@ public class DataDependencyWebService extends AbstractRestService {
             return this.buildNotFoundResponse("{\"error\":\"There is no such "
                     + "activity instance.\"}");
         }
-        Map<String, Set<String>> outputSets = new DbDataDependency()
+        Map<String, Set<String>> outputSets = new DbDataConditions()
                 .loadOutputSets(activityInstanceId);
         return Response.ok(outputSets, MediaType.APPLICATION_JSON).build();
     }
