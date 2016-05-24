@@ -156,8 +156,12 @@ public class FragmentValidator {
             Set<String> incomingDataobjects,
             Set<String> outgoingDataObjects,
             Set<String> dataObjectsWithOlc) {
-        return Stream.concat(incomingDataobjects.stream(), outgoingDataObjects.stream())
-                .distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
+        if (!incomingDataobjects.isEmpty()) {
+            return Stream.concat(incomingDataobjects.stream(), outgoingDataObjects.stream())
+                    .distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
+        }
+        // this is the case with Activities that write data objects
+        return new ArrayList<>();
     }
 
 }

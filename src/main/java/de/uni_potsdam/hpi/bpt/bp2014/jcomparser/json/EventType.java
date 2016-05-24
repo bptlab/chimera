@@ -48,8 +48,8 @@ public class EventType extends DataClass {
         String timestampName = "";
 
         for(DataAttribute attr : this.getAttributes()) {
-            if("timestamp".equals(attr.getDataAttributeName())) {
-                timestampName = "timestamp";
+            if("timestamp".equalsIgnoreCase(attr.getDataAttributeName())) {
+                timestampName = attr.getDataAttributeName();
                 break;
             }
         }

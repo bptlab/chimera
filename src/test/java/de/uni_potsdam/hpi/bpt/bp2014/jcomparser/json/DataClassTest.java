@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;

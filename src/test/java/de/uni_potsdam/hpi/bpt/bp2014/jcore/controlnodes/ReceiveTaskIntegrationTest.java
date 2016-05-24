@@ -27,12 +27,6 @@ import static org.junit.Assert.assertEquals;
 public class ReceiveTaskIntegrationTest extends JerseyTest {
 
     @After
-    public void resetDatabase() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-
-    @After
     public void teardown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
