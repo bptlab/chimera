@@ -5,7 +5,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInsta
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectSetsJaxBean;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +14,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.lang.annotation.ElementType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -413,7 +411,7 @@ public class ActivityRestService extends AbstractRestService {
                 usedDataObjects.add(dataobjectsJson.getInt(i));
             }
         }
-        succesful = executionService.beginActivityInstance(
+        succesful = executionService.beginActivity(
                 scenarioInstanceId, activityId, usedDataObjects);
         if (succesful) {
             return Response.status(Response.Status.ACCEPTED)
@@ -436,15 +434,15 @@ public class ActivityRestService extends AbstractRestService {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         boolean succesful;
-        if (postBody.length() == 0) {
-            Map<String, String> dataclassNameToState = new HashMap<>();
-            for (Object dataclassName : postBody.keySet()) {
-                dataclassNameToState.put((String) dataclassName, postBody.getString(
-                        (String) dataclassName));
+        if (postBody.length() != 0) {
+            Map<String, String> dataClassNameToState = new HashMap<>();
+            for (Object dataClassName : postBody.keySet()) {
+                dataClassNameToState.put((String) dataClassName, postBody.getString(
+                        (String) dataClassName));
 
             }
             succesful = executionService.terminateActivity(
-                    scenarioInstanceId, activityId, dataclassNameToState);
+                    scenarioInstanceId, activityId, dataClassNameToState);
         } else {
             succesful = executionService.terminateActivity(scenarioInstanceId, activityId);
         }

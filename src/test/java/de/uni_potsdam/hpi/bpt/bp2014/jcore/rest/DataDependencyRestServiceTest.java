@@ -1,10 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
-import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +18,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DataDependencyWebServiceTest extends AbstractTest {
+public class DataDependencyRestServiceTest extends AbstractTest {
 
     private WebTarget base;
 
@@ -30,7 +28,7 @@ public class DataDependencyWebServiceTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        ResourceConfig config = new ResourceConfig(DataDependencyWebService.class);
+        ResourceConfig config = new ResourceConfig(DataDependencyRestService.class);
         config.register(AuthorizationRequestFilter.class);
         return config;
     }

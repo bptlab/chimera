@@ -354,15 +354,15 @@ public class ExecutionService /*implements Runnable*/ {
 	 * The state will only be changed if the activity is enabled.
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityInstanceId Specifies the activity instance id.
+	 * @param activityId Specifies the activity id.
 	 * @return Indicates the success. True if the activity has been started, else false.
 	 */
-	public boolean beginActivityInstance(int scenarioInstanceId, int activityInstanceId,
-                                         List<Integer> usedDataObjects) {
+	public boolean beginActivity(int scenarioInstanceId, int activityId,
+								 List<Integer> usedDataObjects) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getEnabledControlNodeInstances()) {
-			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
+			if (nodeInstance.getControlNodeId() == activityId) {
 				return ((ActivityInstance) nodeInstance).begin(usedDataObjects);
 			}
 		}
@@ -534,16 +534,15 @@ public class ExecutionService /*implements Runnable*/ {
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @param activityId         This is the id of the activity.
-	 * @param outputSetId		 This is the id of the output set.
 	 * @return true if the activity could been terminated. false if not.
 	 */
 	public boolean terminateActivity(
-			int scenarioInstanceId, int activityId, Map<String, String> map) {
+			int scenarioInstanceId, int activityId, Map<String, String> classToState) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
 			if (nodeInstance.getControlNodeId() == activityId) {
-				return ((ActivityInstance) nodeInstance).terminate(map);
+				return ((ActivityInstance) nodeInstance).terminate(classToState);
 			}
 		}
 		return false;

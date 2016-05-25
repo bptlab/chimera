@@ -15,7 +15,7 @@ public class DbTerminationCondition extends DbObject {
 	private static Logger log = Logger.getLogger(DbTerminationCondition.class);
 
 	public Map<Integer, Integer> getDataClassToState(String conditionSetId) {
-		String sql = "SELECT dataclass_id, state_id FROM terminationcondition WHERE conditionset_id = %s";
+		String sql = "SELECT dataclass_id, state_id FROM terminationcondition WHERE conditionset_id = '%s'";
 		return this.executeStatementReturnsMapIntInt(
 				String.format(sql, conditionSetId),
 				"dataclass_id", "state_id");

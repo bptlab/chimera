@@ -1,29 +1,28 @@
 package de.uni_potsdam.hpi.bpt.bp2014.integration;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.ActivityRestService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.DataObjectRestService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.ScenarioInstanceRestService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.ScenarioRestService;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.*;
+import net.javacrumbs.jsonunit.core.Option;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
 
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertThat;
 /**
  *
  */
@@ -38,7 +37,8 @@ public class EndToEndTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class, ScenarioInstanceRestService.class,
-                ActivityRestService.class, ScenarioRestService.class, DataObjectRestService.class);
+                ActivityRestService.class, ScenarioRestService.class, DataObjectRestService.class,
+                DataDependencyRestService.class);
     }
 
     @Test
@@ -54,22 +54,42 @@ public class EndToEndTest extends JerseyTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/1/begin")
                 .request().post(Entity.json("[]"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/terminate")
+        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/1/terminate")
                 .request().post(Entity.json("[]"));
-        assertEquals(202, termianteFirstActivity.getStatus());
+        assertEquals(202, terminateFirstActivity.getStatus());
 
         Response inputSets = base.path("interface/v2/scenario/1/instance/1/activity/2/input")
-                .request().get();
+                .request(MediaType.APPLICATION_JSON).get();
         assertEquals(200, inputSets.getStatus());
-        String inputSetMap = buildInputSetMap();
-        assertEquals(inputSetMap, inputSets.readEntity(String.class));
+        assertThat(buildInputSetMap(), jsonEquals(inputSets.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+
+        Response outputSets = base.path("interface/v2/scenario/1/instance/1/activity/2/output")
+                .request(MediaType.APPLICATION_JSON).get();
+        assertEquals(200, outputSets.getStatus());
+        assertThat(buildOutputSetMap(), jsonEquals(outputSets.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
+
+        Response startActivityUsingInputSet = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
+                .request().post(Entity.json("[]"));
+        assertEquals(202, startActivityUsingInputSet.getStatus());
+
+        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activity/2/terminate")
+                .request().post(Entity.json(buildOutputSetSelection()));
+        assertEquals(202, terminateActivityUsingOutputSet.getStatus());
     }
 
     private String buildInputSetMap() {
-        return "";
+        return "{\"Order\":[\"init\"],\"Customer\":[\"init\"]}";
+    }
+
+    private String buildOutputSetMap() {
+        return "{\"Order\":[\"accepted\", \"rejected\"],\"Customer\":[\"accepted\", \"rejected\"]}";
+    }
+
+    private String buildOutputSetSelection() {
+        return "{\"Order\":\"accepted\",\"Customer\":\"accepted\"}";
     }
 }

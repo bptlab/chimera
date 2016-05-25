@@ -4,6 +4,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,7 +21,7 @@ import java.util.Set;
  *
  */
 @Path("interface/v2")
-public class DataDependencyWebService extends AbstractRestService {
+public class DataDependencyRestService extends AbstractRestService {
     /**
      * This method responds to a GET request
      * by returning an array of dataObjectsInstances with their dataAttributeInstances
@@ -136,7 +138,7 @@ public class DataDependencyWebService extends AbstractRestService {
                     .build();
         }
         Map<String, Set<String>> inputSets = new DbDataConditions().loadInputSets(activityInstanceId);
-        return Response.ok(inputSets, MediaType.APPLICATION_JSON).build();
+        return Response.ok(buildIOJson(inputSets), MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -180,7 +182,7 @@ public class DataDependencyWebService extends AbstractRestService {
         }
         Map<String, Set<String>> outputSets = new DbDataConditions()
                 .loadOutputSets(activityInstanceId);
-        return Response.ok(outputSets, MediaType.APPLICATION_JSON).build();
+        return Response.ok(buildIOJson(outputSets), MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -195,5 +197,13 @@ public class DataDependencyWebService extends AbstractRestService {
         dataObject.setAttributeConfiguration(executionService
                 .getDataAttributesForDataObjectInstance(dataObjectInstance));
         return dataObject;
+    }
+
+    private String buildIOJson(Map<String, Set<String>> ioSets) {
+        JSONObject object = new JSONObject();
+        for (Map.Entry<String, Set<String>> entry : ioSets.entrySet()) {
+            object.put(entry.getKey(), new JSONArray(entry.getValue()));
+        }
+        return object.toString();
     }
 }
