@@ -33,7 +33,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	private boolean automaticExecution;
 	private boolean canTerminate;
 
-	/**
+    /**
 	 * Creates and initializes a new activity instance.
 	 * Creates a new entry in the database for the new activity instance.
 	 *
@@ -203,27 +203,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
             event.enableControlFlow();
         }
     }
-	/**
-	 * Sets an activity to referential running.
-	 *
-	 * @return true if the activity could set to referential running.
-	 * false if the activity couldn't set.
-	 */
-	public boolean referenceStarted() {
-		return ((ActivityStateMachine) getStateMachine()).referenceStarted();
-	}
-
-	/**
-	 * Terminates a referential running activity.
-	 * Enables the following control nodes.
-	 *
-	 * @return true if the activity could set to terminated. false if the activity couldn't set.
-	 */
-	public boolean referenceTerminated() {
-		boolean workFine = ((ActivityStateMachine) getStateMachine()).referenceTerminated();
-		((TaskOutgoingControlFlowBehavior) getOutgoingBehavior()).enableFollowing();
-		return workFine;
-	}
 
 	/**
 	 * Terminates a running activity.
@@ -352,4 +331,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         out.cancel();
     }
 
+    public AbstractStateMachine.STATE getState() {
+        return this.getStateMachine().getState();
+    }
 }

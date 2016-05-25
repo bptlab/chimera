@@ -124,7 +124,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         ////executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity6, activity4, activity2}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -138,7 +138,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService = ExecutionService.getInstance(1);
         executionService.openExistingScenarioInstance(1, scenarioInstance);
         assertArrayEquals(new Integer[]{activity4, activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity2instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity2instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //////executionService.setDataAttributeValues(scenarioInstance, activity2instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity2);
         System.out.println("--- restart Service ---");
@@ -164,7 +164,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         executionService.openExistingScenarioInstance(1, scenarioInstance);
         Object[] enabled = executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray();
         assertArrayEquals(new Integer[]{activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity4instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity4instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //////executionService.setDataAttributeValues(scenarioInstance, activity4instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity4);
         assertArrayEquals(new Integer[]{activity6, activity3}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -174,7 +174,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity3);
         executionService.beginActivity(scenarioInstance, activity3);
         assertArrayEquals(new Integer[]{activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity3instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity3instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //////executionService.setDataAttributeValues(scenarioInstance, activity3instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity3);
         assertArrayEquals(new Integer[]{activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -204,7 +204,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         ////executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity4, activity2}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -214,7 +214,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity2);
         executionService.beginActivity(scenarioInstance, activity2);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity2instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity2instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         ////executionService.setDataAttributeValues(scenarioInstance, activity2instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity2);
         assertArrayEquals(new Integer[]{activity3}, ((LinkedList<Integer>) executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance)).toArray());
@@ -224,7 +224,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity3);
         executionService.beginActivity(scenarioInstance, activity3);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity3instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity3instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         ////executionService.setDataAttributeValues(scenarioInstance, activity3instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity3);
         assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -234,7 +234,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity1);
         executionService.beginActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int newActivity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int newActivity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         ////executionService.setDataAttributeValues(scenarioInstance, newActivity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity1);
         assertArrayEquals(new Integer[]{activity4, activity2}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -244,7 +244,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity4);
         executionService.beginActivity(scenarioInstance, activity4);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity4instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity4instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         ////executionService.setDataAttributeValues(scenarioInstance, activity4instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity4);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -285,7 +285,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity399);
         executionService.beginActivity(scenarioInstance, activity399);
         assertArrayEquals(new Integer[]{activity389, activity396, activity407}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity399instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity399instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity399instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity399);
         assertArrayEquals(new Integer[]{activity389, activity396, activity407, activity401}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -301,7 +301,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity389);
         executionService.beginActivity(scenarioInstance, activity389);
         assertArrayEquals(new Integer[]{activity396, activity401, activity407}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity389instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity389instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity389instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity389);
         assertArrayEquals(new Integer[]{activity396, activity401, activity407, activity404}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -317,7 +317,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity404);
         executionService.beginActivity(scenarioInstance, activity404);
         assertArrayEquals(new Integer[]{activity396, activity407}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity404instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity404instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity404instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity404);
         assertArrayEquals(new Integer[]{activity396, activity407, activity389}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -333,7 +333,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity407);
         executionService.beginActivity(scenarioInstance, activity407);
         assertArrayEquals(new Integer[]{activity389, activity396}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity407instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity407instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity407instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity407);
         assertArrayEquals(new Integer[]{activity389, activity396, activity408, activity411, activity412}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -350,7 +350,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity396);
         executionService.beginActivity(scenarioInstance, activity396);
         assertArrayEquals(new Integer[]{activity389, activity408, activity411, activity412}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity396instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity396instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity396instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity396);
         assertArrayEquals(new Integer[]{activity389, activity408, activity411, activity412, activity393, activity397}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -366,7 +366,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity408);
         executionService.beginActivity(scenarioInstance, activity408);
         assertArrayEquals(new Integer[]{activity389, activity393, activity397}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity408instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity408instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity408instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity408);
         assertArrayEquals(new Integer[]{activity389, activity393, activity397, activity407}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -382,7 +382,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity407);
         executionService.beginActivity(scenarioInstance, activity407);
         assertArrayEquals(new Integer[]{activity389, activity393, activity397}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int newActivity407instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int newActivity407instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, newActivity407instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity407);
         assertArrayEquals(new Integer[]{activity389, activity393, activity397, activity408, activity411, activity412}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -398,7 +398,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity412);
         executionService.beginActivity(scenarioInstance, activity412);
         assertArrayEquals(new Integer[]{activity389, activity393, activity397}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity412instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity412instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity412instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity412);
         assertArrayEquals(new Integer[]{activity389, activity393, activity397, activity407}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -516,7 +516,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity510);
         executionService.beginActivity(scenarioInstance, activity510);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity510);
         assertArrayEquals(new Integer[]{activity507}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -542,7 +542,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity513);
         executionService.beginActivity(scenarioInstance, activity513);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         //executionService.setDataAttributeValues(scenarioInstance, activity1instance_id, new HashMap<Integer, String>());
         executionService.terminateActivity(scenarioInstance, activity513);
         assertArrayEquals(new Integer[]{activity515}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
@@ -569,7 +569,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity566);
         executionService.beginActivity(scenarioInstance, activity566);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        int activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         int attributeInstanceId = executionService.getAllDataAttributeInstances(scenarioInstance).keySet().iterator().next();
         HashMap<Integer, String> values = new HashMap<>();
         values.put(attributeInstanceId, "2");
@@ -582,8 +582,8 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("do activity " + activity566);
         executionService.beginActivity(scenarioInstance, activity566);
         assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        assertNotEquals(executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId(), activity1instance_id);
-        activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().getFirst().getControlNodeInstanceId();
+        assertNotEquals(executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId(), activity1instance_id);
+        activity1instance_id = executionService.getScenarioInstance(scenarioInstance).getRunningControlNodeInstances().get(0).getControlNodeInstanceId();
         attributeInstanceId = executionService.getAllDataAttributeInstances(scenarioInstance).keySet().iterator().next();
         values = new HashMap<>();
         values.put(attributeInstanceId, "3");
