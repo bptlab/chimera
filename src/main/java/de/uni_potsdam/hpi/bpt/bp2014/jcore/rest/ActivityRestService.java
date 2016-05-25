@@ -400,13 +400,14 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("activityId") int activityId,
-            JSONObject postBody) {
+            String postBody) {
         boolean succesful;
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         List<Integer> usedDataObjects = new ArrayList<>();
-        if (postBody.has("dataobjects")) {
-            JSONArray dataobjectsJson = postBody.getJSONArray("dataobjects");
+        JSONObject postJson = new JSONObject(postBody);
+        if (postJson.has("dataobjects")) {
+            JSONArray dataobjectsJson = postJson.getJSONArray("dataobjects");
             for (int i = 0; i < dataobjectsJson.length(); i++) {
                 usedDataObjects.add(dataobjectsJson.getInt(i));
             }
@@ -430,14 +431,15 @@ public class ActivityRestService extends AbstractRestService {
     public Response terminateActivity(@PathParam("scenarioId") int scenarioId,
                                   @PathParam("instanceId") int scenarioInstanceId,
                                   @PathParam("activityId") int activityId,
-                                  JSONObject postBody) {
+                                  String postBody) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         boolean succesful;
-        if (postBody.length() != 0) {
+        JSONObject postJson = new JSONObject(postBody);
+        if (postJson.length() != 0) {
             Map<String, String> dataClassNameToState = new HashMap<>();
-            for (Object dataClassName : postBody.keySet()) {
-                dataClassNameToState.put((String) dataClassName, postBody.getString(
+            for (Object dataClassName : postJson.keySet()) {
+                dataClassNameToState.put((String) dataClassName, postJson.getString(
                         (String) dataClassName));
 
             }

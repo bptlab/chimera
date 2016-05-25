@@ -55,11 +55,11 @@ public class EndToEndTest extends JerseyTest {
         assertEquals(201, startScenario.getStatus());
 
         Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/1/begin")
-                .request().post(Entity.json("[]"));
+                .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
         Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/1/terminate")
-                .request().post(Entity.json("[]"));
+                .request().post(Entity.json("{}"));
         assertEquals(202, terminateFirstActivity.getStatus());
 
         Response inputSets = base.path("interface/v2/scenario/1/instance/1/activity/2/input")
@@ -72,13 +72,17 @@ public class EndToEndTest extends JerseyTest {
         assertEquals(200, outputSets.getStatus());
         assertThat(buildOutputSetMap(), jsonEquals(outputSets.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
 
-        Response startActivityUsingInputSet = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
-                .request().post(Entity.json("[]"));
-        assertEquals(202, startActivityUsingInputSet.getStatus());
+        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
+                .request().post(Entity.json("{}"));
+        assertEquals(202, startSecondActivity.getStatus());
 
         Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activity/2/terminate")
                 .request().post(Entity.json(buildOutputSetSelection()));
         assertEquals(202, terminateActivityUsingOutputSet.getStatus());
+
+        Response startActivityUsingInputSet = base.path("interface/v2/scenario/1/instance/1/activity/3/begin")
+                .request().post(Entity.json(buildInputSetSelection()));
+        assertEquals(202, startActivityUsingInputSet.getStatus());
     }
 
     private String buildInputSetMap() {
@@ -91,5 +95,9 @@ public class EndToEndTest extends JerseyTest {
 
     private String buildOutputSetSelection() {
         return "{\"Order\":\"accepted\",\"Customer\":\"accepted\"}";
+    }
+
+    private String buildInputSetSelection() {
+        return "{\"dataobjects\" : [3, 5]}";
     }
 }
