@@ -33,7 +33,7 @@ public class DataManager {
      * @param activityInstanceId id of the activity instance which changed the dataobject
      * @return Returns if the state was successfully changed
      */
-    public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId, int activityInstanceId) {
+    public Boolean changeDataObjectState(int dataObjectId, int stateId, int activityInstanceId) {
         Optional<DataObject> dataObjectInstance = getDataobjectForId(dataObjectId);
         if (dataObjectInstance.isPresent()) {
             dataObjectInstance.get().setState(stateId);
@@ -102,8 +102,8 @@ public class DataManager {
         return inputSet.isFulfilled(dataObjects);
     }
 
-    public void initializeDataObject(int dataclassId) {
-        this.dataObjects.add(new DataObject(dataclassId, scenarioInstance));
+    public void initializeDataObject(int dataClassId) {
+        this.dataObjects.add(new DataObject(dataClassId, scenarioInstance));
 
     }
 }

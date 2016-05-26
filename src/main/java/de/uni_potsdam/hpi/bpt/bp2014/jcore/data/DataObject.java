@@ -28,7 +28,7 @@ public class DataObject {
     /**
 	 * Constructor to create a new DataObject.
 	 *
-	 * @param dataClassId This is the database id from the data object instance.
+	 * @param dataClassId This is the database id from the data class.
 	 * @param stateId This is the database id from the scenario.
 	 * @param scenarioInstance This is an instance from the class ScenarioInstance.
 	 */

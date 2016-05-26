@@ -283,14 +283,14 @@ public class Connector extends DbObject {
 	 * Inserts a relation of a datanode to a dataset.
 	 * All necessary information are given as a parameter.
 	 *
-	 * @param dataSetID  the database id of the dataset.
-	 * @param dataNodeID the database id of the datanode.
+	 * @param dataSetId  the database id of the dataset.
+	 * @param dataNodeId the database id of the datanode.
 	 */
-	public void insertDataSetConsistOfDataNodeIntoDatabase(final int dataSetID,
-			final int dataNodeID) {
+	public void insertDataSetConsistOfDataNodeIntoDatabase(final int dataSetId,
+			final int dataNodeId) {
 		String sql = "INSERT INTO datasetconsistsofdatanode "
 				+ "(dataset_id, datanode_id) "
-				+ "VALUES (" + dataSetID + ", " + dataNodeID + ")";
+				+ "VALUES (" + dataSetId + ", " + dataNodeId + ")";
         this.executeInsertStatement(sql);
 	}
 

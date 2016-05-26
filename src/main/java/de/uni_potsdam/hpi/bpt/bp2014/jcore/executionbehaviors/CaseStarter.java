@@ -48,8 +48,8 @@ public class CaseStarter {
         Map<Integer, Integer> attributeToclass = CollectionUtil.invertMapping(classToAttributes);
         DataManager dataManager = scenarioInstance.getDataManager();
         for (int dataAttributeId : attributeIdToJsonPath.keySet()) {
-            int dataclassId = attributeToclass.get(dataAttributeId);
-            dataManager.initializeDataObject(dataclassId);
+            int dataClassId = attributeToclass.get(dataAttributeId);
+            dataManager.initializeDataObject(dataClassId);
         }
     }
 

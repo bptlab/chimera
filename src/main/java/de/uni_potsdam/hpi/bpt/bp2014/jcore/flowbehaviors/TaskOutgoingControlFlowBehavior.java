@@ -45,9 +45,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         Map<Integer, Integer> dataClassIdToStateId = translate(
                 usedDataObjects, dataClassNameToStateName);
 
-        for (Map.Entry<Integer, Integer> entry : dataClassIdToStateId.entrySet()) {
-            this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
-        }
+        createOrUpdateDataObjects(dataClassIdToStateId);
 
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
@@ -55,6 +53,30 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 		this.enableFollowing();
 		this.runAutomaticTasks();
 	}
+
+    /**
+     * Creates a new dataobject in the database for dataobjects in the output,
+     * that were not given as an input.
+     * Updates the state of input dataobjects to fit to the output state.
+     *
+     * @param classIdToStateId Map from dataclass id to object state id
+     */
+    private void createOrUpdateDataObjects(Map<Integer, Integer> classIdToStateId) {
+        DbDataFlow dataFlow = new DbDataFlow();
+        List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
+
+        // TODO if no map classIdToStateId given use defaults
+        for (Map.Entry<Integer, Integer> entry : classIdToStateId.entrySet()) {
+            if (inputClassIds.contains(entry.getKey())) {
+                this.changeDataObjectState(entry.getKey(), entry.getValue());
+            } else {
+                // TODO what to do with this
+                new DataObject(entry.getKey(), this.getScenarioInstance(), entry.getValue());
+            }
+        }
+
+
+    }
 
     /**
      * Converts map from data class name to state name to it's respective database
@@ -108,9 +130,9 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * @param stateId      This is the database id from the state.
 	 * @return true if the data object state could been changed. false if not
 	 */
-	public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId) {
+	public Boolean changeDataObjectState(int dataObjectId, int stateId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        return dataManager.changeDataObjectInstanceState(dataObjectId, stateId,
+        return dataManager.changeDataObjectState(dataObjectId, stateId,
                 activityInstance.getControlNodeInstanceId());
 	}
 

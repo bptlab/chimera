@@ -9,16 +9,16 @@ public class DbDataConditions {
 
     /**
      *
-     * @param activityInstanceId
+     * @param activityId
      */
-    public Map<String, Set<String>> loadInputSets(int activityInstanceId) {
-        List<Integer> inputSetIds = new DbDataFlow().getInputSetsForControlNode(activityInstanceId);
+    public Map<String, Set<String>> loadInputSets(int activityId) {
+        List<Integer> inputSetIds = new DbDataFlow().getInputSetsForControlNode(activityId);
         return loadDataDependency(inputSetIds);
     }
 
-    public Map<String, Set<String>> loadOutputSets(int activityInstanceId) {
+    public Map<String, Set<String>> loadOutputSets(int activityId) {
         List<Integer> outputSetIds = new DbDataFlow()
-                .getOutputSetsForControlNode(activityInstanceId);
+                .getOutputSetsForControlNode(activityId);
         return loadDataDependency(outputSetIds);
     }
 

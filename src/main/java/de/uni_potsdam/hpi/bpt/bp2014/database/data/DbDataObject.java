@@ -80,10 +80,10 @@ public class DbDataObject extends DbObject {
 	}
 
 	/**
-	 * This method returns the dataobject_id of a dataObject.
+	 * This method returns the dataclass_id of a dataObject.
 	 *
 	 * @param dataObjectId Id of the dataObject.
-	 * @return Dataobject_id.
+	 * @return dataclass_id.
 	 */
 	public int getDataClassId(int dataObjectId) {
 		String sql = "SELECT dataclass_id FROM dataobject "
@@ -95,7 +95,7 @@ public class DbDataObject extends DbObject {
      * This method returns the name of a dataObject.
      *
      * @param dataObjectId Id of the dataObject.
-     * @return Dataobject_id.
+     * @return the name.
      */
     public String getName(int dataObjectId) {
         String sql = "SELECT name FROM dataobject, dataclass " +
