@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -10,10 +11,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -23,6 +27,13 @@ public class ActivityInstanceTest {
     @After
     public void tearDown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
+    }
+
+    private DataManager createExampleDM() {
+        DataManager instance = EasyMock.createNiceMock(DataManager.class);
+        expect(instance.getDataObjects()).andReturn(new ArrayList<>()).anyTimes();
+        replay(instance);
+        return instance;
     }
 
     private ScenarioInstance createExample(int controlNodeId, int scenarioInstanceId) {
@@ -38,6 +49,9 @@ public class ActivityInstanceTest {
         expect(instance.getDataEnabledControlNodeInstances()).andReturn(
                 new ArrayList<>()).anyTimes();
         expect(instance.getEnabledControlNodeInstances()).andReturn(new ArrayList<>()).anyTimes();
+        expect(instance.getRunningControlNodeInstances()).andReturn(new ArrayList<>()).anyTimes();
+        expect(instance.getTerminatedControlNodeInstances()).andReturn(new ArrayList<>()).anyTimes();
+        expect(instance.getDataManager()).andReturn(createExampleDM()).anyTimes();
         replay(instance);
         return instance;
     }
@@ -79,7 +93,10 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
+        activity.setCanTerminate(true);
+        activity.getStateMachine().setState(AbstractStateMachine.STATE.RUNNING);
         activity.terminate();
+        assertEquals("Couldn't correctly terminate activity", AbstractStateMachine.STATE.TERMINATED, activity.getState());
     }
 
     @Test
@@ -90,7 +107,10 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
-        activity.terminate(new HashMap<String, String>());
+        activity.setCanTerminate(true);
+        activity.getStateMachine().setState(AbstractStateMachine.STATE.RUNNING);
+        activity.terminate(new HashMap<>());
+        assertEquals("Couldn't correctly terminate activity", AbstractStateMachine.STATE.TERMINATED, activity.getState());
     }
 
     @Test

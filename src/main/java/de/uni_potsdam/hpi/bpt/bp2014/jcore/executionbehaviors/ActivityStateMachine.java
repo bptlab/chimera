@@ -209,7 +209,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to running. (else false).
 	 */
 	public boolean begin() {
-		//String state = this.getState();
 		if (STATE.READY.equals(getState())) {
 			this.setState(STATE.RUNNING);
 			getScenarioInstance().getRunningControlNodeInstances()
@@ -232,7 +231,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to terminated. (else false).
 	 */
 	@Override public boolean terminate() {
-		//String state = this.getState();
 		if (STATE.RUNNING.equals(getState())) {
 			this.setState(STATE.TERMINATED);
 			getScenarioInstance().getRunningControlNodeInstances()
