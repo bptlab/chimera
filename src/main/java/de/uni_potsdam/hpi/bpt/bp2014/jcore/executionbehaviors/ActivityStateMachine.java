@@ -295,8 +295,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state is ready, ready(ControlFlow) or ready(data).
 	 */
 	private boolean isReady(STATE state) {
-		return STATE.READY.equals(state) || STATE.CONTROLFLOW_ENABLED.equals(state) ||
-                STATE.DATAFLOW_ENABLED.equals(state);
+		return STATE.READY.equals(state) || STATE.CONTROLFLOW_ENABLED.equals(state)
+				|| STATE.DATAFLOW_ENABLED.equals(state);
 	}
 
 	/**
@@ -306,6 +306,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 *
 	 * @param state This is the new state.
 	 */
+	@Override
 	public void setState(STATE state) {
 		super.setState(state);
 		dbActivityInstance.setState(getControlNodeInstanceId(), state);

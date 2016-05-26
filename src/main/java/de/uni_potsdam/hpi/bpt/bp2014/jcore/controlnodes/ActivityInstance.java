@@ -240,7 +240,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
 		// if activity has attached event
 		if (boundaryEventId > 0) {
-			EventDispatcher.unregisterEvent(boundaryEventId, this.getFragmentInstanceId());
+			EventDispatcher.unregisterEvent(
+					boundaryEventId, this.getFragmentInstanceId());
 		}
     }
 
@@ -248,8 +249,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * sets the dataAttributes for an activity.
 	 *
 	 * @param values values that the attributes should be set to.
+	 * @return true if the dataAttributes could be set.
 	 */
-	public boolean  setDataAttributeValues(Map<Integer, String> values) {
+	public boolean setDataAttributeValues(Map<Integer, String> values) {
 		if (AbstractStateMachine.STATE.RUNNING == getStateMachine().getState()) {
 			return taskExecutionBehavior.setDataAttributeValues(values);
 		}
@@ -275,13 +277,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public TaskExecutionBehavior getTaskExecutionBehavior() {
 		return taskExecutionBehavior;
-	}
-
-	/**
-	 * @return the Scenario Instance
-	 */
-	public ScenarioInstance getScenarioInstance() {
-		return scenarioInstance;
 	}
 
 	/**

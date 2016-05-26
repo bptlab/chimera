@@ -132,6 +132,7 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
+        activity.getStateMachine().setState(AbstractStateMachine.STATE.RUNNING);
         activity.cancel();
         assertEquals(AbstractStateMachine.STATE.CANCEL, activity.getState());
     }

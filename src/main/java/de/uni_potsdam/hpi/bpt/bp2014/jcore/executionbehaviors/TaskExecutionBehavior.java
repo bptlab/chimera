@@ -14,7 +14,7 @@ import java.util.Map;
  * Performs the execution for one activity.
  */
 public class TaskExecutionBehavior {
-	final static Logger LOGGER = Logger.getLogger(TaskExecutionBehavior.class);
+	private static final Logger LOGGER = Logger.getLogger(TaskExecutionBehavior.class);
 
 	private final ScenarioInstance scenarioInstance;
 	private final int activityInstanceId;
@@ -38,6 +38,7 @@ public class TaskExecutionBehavior {
 	 * Executes the behavior of the activity.
 	 */
 	public void execute() {
+		//handled by implementers
 	}
 
 	/**
@@ -49,6 +50,7 @@ public class TaskExecutionBehavior {
 
 	/**
 	 * @param values a Map of Keys and Values.
+	 * @return true if all values could be set.
 	 */
 	public boolean setDataAttributeValues(Map<Integer, String> values) {
 		boolean allValuesValid = true;
@@ -62,7 +64,8 @@ public class TaskExecutionBehavior {
 			if (dataAttributeInstance.isValueAllowed(value)) {
 				dataAttributeInstance.setValue(value);
 			} else {
-				LOGGER.error("Attribute value could not be set because it has the wrong data type.");
+				LOGGER.error("Attribute value could not be set "
+						+ "because it has the wrong data type.");
 				allValuesValid = false;
 			}
         }
