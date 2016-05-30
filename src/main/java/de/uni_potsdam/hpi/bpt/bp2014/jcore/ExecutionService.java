@@ -76,24 +76,6 @@ public class ExecutionService /*implements Runnable*/ {
 	/**
 	 * Starts a new scenario instance for the given scenario id.
 	 *
-	 * @param scenarioId This is the id of the scenario.
-	 * @return the id of the new scenario instance.
-	 * @deprecated please use startNewScenarioInstanceStatic instead.
-	 */
-	@Deprecated public int startNewScenarioInstance(int scenarioId) {
-		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId);
-		scenarioInstances.add(scenarioInstance);
-		//scenarioInstanceMap.put(scenarioInstance
-		// 	.getScenarioInstanceId(), scenarioInstance);
-		addScenarioInstanceToMap(scenarioInstance);
-		sortedScenarioInstances.put(
-				scenarioInstance.getScenarioInstanceId(), scenarioInstance);
-		return scenarioInstance.getScenarioInstanceId();
-	}
-
-	/**
-	 * Starts a new scenario instance for the given scenario id.
-	 *
 	 * @return the id of the new scenario instance.
 	 */
 	public int startNewScenarioInstance() {
@@ -180,34 +162,8 @@ public class ExecutionService /*implements Runnable*/ {
 		instanceHistory.addFirst(scenarioInstanceId);
 	}
 
-	/**
-	 * Gives all scenarios in the database.
-	 *
-	 * @return all list with all ids of all scenarios in the database.
-	 */
-	public LinkedList<Integer> getAllScenarioIDs() {
-		return dbScenario.getScenarioIDs();
-	}
 
-	/**
-	 * Checks if the scenario instance have been open.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @return true if the scenario instance have been open. false if not.
-	 */
-	public boolean scenarioInstanceIsRunning(int scenarioInstanceId) {
-		return scenarioInstanceMap.containsKey(scenarioInstanceId);
-	}
 
-	/**
-	 * Checks if the scenario instance exist in the database.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @return true if the scenario instance exist in the database. false if not.
-	 */
-	public boolean existScenarioInstance(int scenarioInstanceId) {
-		return dbScenarioInstance.existScenario(scenarioInstanceId);
-	}
 
 	/**
 	 * Checks if the scenario instance exist in the database.
@@ -230,25 +186,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return dbScenario.existScenario(scenarioId);
 	}
 
-	/**
-	 * Gives all scenario instance id for a scenario id.
-	 *
-	 * @param scenarioId This is the id of the scenario.
-	 * @return a list of all scenario instance ids for a the given scenario id.
-	 */
-	public LinkedList<Integer> listAllScenarioInstancesForScenario(int scenarioId) {
-		return dbScenarioInstance.getScenarioInstances(scenarioId);
-	}
-
-	/**
-	 * Gives the database id from the scenario for a scenario instance id.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @return the database id for a scenario.
-	 */
-	public int getScenarioIDForScenarioInstance(int scenarioInstanceId) {
-		return dbScenarioInstance.getScenarioID(scenarioInstanceId);
-	}
 
 	/**
 	 * Gives all activity ids for a scenario instance which are enabled.
@@ -272,25 +209,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return ids;
 	}
 
-	/**
-	 * Returns the Labels of enabled activities for a scenario instance id.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @return a Map. Keys are the activity ids. Values are the labels of the activities.
-	 */
-	public Map<Integer, String> getEnabledActivityLabelsForScenarioInstance(
-			int scenarioInstanceId) {
-		Map<Integer, String> labels = new HashMap<>();
-		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getEnabledControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				labels.put(nodeInstance.getControlNodeId(),
-						((ActivityInstance) nodeInstance).getLabel());
-			}
-		}
-		return labels;
-	}
 
 	/**
 	 * Gives all activity ids for a scenario instance which are running.
@@ -309,26 +227,6 @@ public class ExecutionService /*implements Runnable*/ {
 			}
 		}
 		return ids;
-	}
-
-	/**
-	 * Returns the Labels of running activities for a scenario instance id.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @return a Map. Keys are the activity ids. Values are the labels of the activities.
-	 */
-	public Map<Integer, String> getRunningActivityLabelsForScenarioInstance(
-			int scenarioInstanceId) {
-		Map<Integer, String> labels = new HashMap<>();
-		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
-				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				labels.put(nodeInstance.getControlNodeId(),
-						((ActivityInstance) nodeInstance).getLabel());
-			}
-		}
-		return labels;
 	}
 
 	/**
@@ -370,46 +268,6 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	/**
-	 * Terminates the execution of an activity specified by the params.
-	 * The state will only be changed if the activity is enabled.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityInstanceId Specifies the activity instance id.
-	 * @return Indicates the success. True if the activity has been started, else false.
-	 */
-	public boolean terminateActivityInstance(int scenarioInstanceId, int activityInstanceId) {
-		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
-				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeInstanceId()
-					== activityInstanceId) {
-				return nodeInstance.terminate();
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Terminates the execution of an activity specified by the params.
-	 * The state will only be changed if the activity is enabled.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityInstanceId Specifies the activity instance id.
-	 * @return Indicates the success. True if the activity has been started, else false.
-	 */
-	public boolean terminateActivityInstance(int scenarioInstanceId, int activityInstanceId,
-                                             Map<String, String> dataClassNameToState) {
-		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
-				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
-				return ((ActivityInstance) nodeInstance).terminate(dataClassNameToState);
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Returns information about all enabled Activities of a given scenario instance.
 	 *
 	 * @return a Collection of Activity instances, which are enabled and part of the
@@ -425,7 +283,6 @@ public class ExecutionService /*implements Runnable*/ {
 				allEnabledActivities.add((ActivityInstance) nodeInstance);
 			}
 		}
-		Collection<ActivityInstance> activities = new LinkedList<>();
 		List<ActivityInstance> enabledActivities = new LinkedList<>(allEnabledActivities);
 		return enabledActivities;
 	}
@@ -606,38 +463,6 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	/**
-	 * Checks if a scenario instance is terminated.
-	 *
-	 * @param scenarioInstanceId This is the database id from the scenario instance id.
-	 * @return true if the scenario instance ist terminated. false if not.
-	 */
-	public boolean checkTerminationForScenarioInstance(int scenarioInstanceId) {
-		DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-		return dbScenarioInstance.getTerminated(scenarioInstanceId) == 1;
-	}
-
-	/**
-	 * Returns the scenario name for a given scenario id.
-	 *
-	 * @param scenarioId This is the database id from the scenario id.
-	 * @return the scenario name in a String.
-	 */
-	public String getScenarioName(int scenarioId) {
-		return dbScenario.getScenarioName(scenarioId);
-	}
-
-	/**
-	 * Returns the scenario name for a given scenario instance id.
-	 *
-	 * @param scenarioInstanceId This is the database id from the scenario instance id.
-	 * @return the scenario name in a String.
-	 */
-	public String getScenarioNameForScenarioInstance(int scenarioInstanceId) {
-		return dbScenario.getScenarioName(
-				dbScenarioInstance.getScenarioID(scenarioInstanceId));
-	}
-
-	/**
 	 * Gives the scenario instance for a scenario instance id.
 	 * Only for Tests.
 	 *
@@ -647,33 +472,22 @@ public class ExecutionService /*implements Runnable*/ {
 	public ScenarioInstance getScenarioInstance(int scenarioInstanceID) {
 		return scenarioInstanceMap.get(scenarioInstanceID);
 	}
-
-	/**
-	 * Terminates the given scenario instance.
-	 *
-	 * @param scenarioInstanceID The id of the scenario instance.
-	 */
-	public void terminateScenarioInstance(int scenarioInstanceID) {
-		dbScenarioInstance.setTerminated(scenarioInstanceID, true);
-	}
-
 	/**
 	 * Sets the values of the data attributes for an activity instance.
 	 *
 	 * @param scenarioInstanceId The id of the scenario instance.
-	 * @param activityInstanceID  The id of the activity instance.
-	 * @param values              A Map with the data attribute instance id as key
-	 *                            	and the value of the data attribute as value.
+	 * @param activityInstanceId The id of the activity instance.
+	 * @param idToValue          A Map with the data attribute instance id as key
+	 *                           and the value of the data attribute as value.
 	 * @return true if attributes were set (else false).
 	 */
-	public boolean setDataAttributeValues(
-			int scenarioInstanceId, int activityInstanceID,
-			Map<Integer, String> values) {
+	public boolean setDataAttributeValues(int scenarioInstanceId, int activityInstanceId,
+			Map<Integer, String> idToValue) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeInstanceId() == activityInstanceID) {
-				return ((ActivityInstance) nodeInstance).setDataAttributeValues(values);
+			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
+				return ((ActivityInstance) nodeInstance).setDataAttributeValues(idToValue);
 			}
 		}
 		return false;
@@ -722,17 +536,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return dataObjectArray;
 	}
 
-	/**
-	 * This method is used to get the stateName corresponding to a dataObject.
-	 *
-	 * @param dataObject This is an object of the DataObject class.
-	 * @return the name of the state of the dataObject as a String.
-	 */
-	public String getStateNameForDataObjectInstanceInput(
-			DataObject dataObject) {
-		DbState dbState = new DbState();
-		return dbState.getStateName(dataObject.getStateId());
-	}
 
 
 	/**
@@ -762,14 +565,6 @@ public class ExecutionService /*implements Runnable*/ {
 		return dataAttributes;
 	}
 
-	public void setNewVersionAvailable(boolean newVersionAvailable) {
-		this.newVersionAvailable = newVersionAvailable;
-	}
-
-	public boolean isNewVersionAvailable() {
-		return newVersionAvailable;
-	}
-
 	protected static int getInstancesSize() {
 		int size = -1;
 		if (instances != null) {
@@ -792,5 +587,4 @@ public class ExecutionService /*implements Runnable*/ {
 		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 		return dbControlNodeInstance.existControlNodeInstance(activityID);
 	}
-
 }
