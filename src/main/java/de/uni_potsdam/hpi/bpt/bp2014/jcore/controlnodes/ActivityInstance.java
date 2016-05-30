@@ -156,6 +156,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 */
 	public boolean begin() {
         if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
+			((ActivityStateMachine) getStateMachine()).begin();
 			_begin();
 			return true;
 		} else {
