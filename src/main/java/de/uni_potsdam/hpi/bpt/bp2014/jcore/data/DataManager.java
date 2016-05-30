@@ -1,8 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataconditions;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioUtil;
@@ -37,10 +39,10 @@ public class DataManager {
      * @return Returns if the state was successfully changed
      */
     public Boolean changeDataObjectState(int dataObjectId, int stateId, int activityInstanceId) {
-        Optional<DataObject> dataObjectInstance = getDataobjectForId(dataObjectId);
-        if (dataObjectInstance.isPresent()) {
-            dataObjectInstance.get().setState(stateId);
-            int dataobjectId = dataObjectInstance.get().getId();
+        Optional<DataObject> dataObject = getDataobjectForId(dataObjectId);
+        if (dataObject.isPresent()) {
+            dataObject.get().setState(stateId);
+            int dataobjectId = dataObject.get().getId();
             new DbLogEntry().logDataobjectTransition(dataobjectId, stateId,
                 activityInstanceId, this.scenarioInstance.getScenarioInstanceId());
             return true;
@@ -130,8 +132,28 @@ public class DataManager {
         return inputSet.isFulfilled(dataObjects);
     }
 
-    public void initializeDataObject(int dataClassId) {
-        this.dataObjects.add(new DataObject(dataClassId, scenarioInstance));
+    public void initializeDataObject(int dataClassId, int stateId) {
+        this.dataObjects.add(new DataObject(dataClassId, scenarioInstance, stateId));
 
+    }
+
+    /**
+     * Translates the Map of dataclass name and state name
+     * to a map of dataclass id and state id
+     * for easier database access and use
+     * @param dataClassNameToStateName map containing names
+     * @return map containing ids
+     */
+    public Map<Integer, Integer> translate(Map<String, String> dataClassNameToStateName) {
+        DbDataClass dbDataClass = new DbDataClass();
+        DbState dbState = new DbState();
+        Map<Integer, Integer> dataClassIdToStateId = new HashMap<>();
+        for(Map.Entry<String, String> entry : dataClassNameToStateName.entrySet()) {
+            int dataClassId = dbDataClass.getId(entry.getKey(), this.scenarioInstance.getScenarioId());
+            dataClassIdToStateId.put(
+                    dataClassId,
+                    dbState.getStateId(dataClassId, entry.getValue()));
+        }
+        return dataClassIdToStateId;
     }
 }

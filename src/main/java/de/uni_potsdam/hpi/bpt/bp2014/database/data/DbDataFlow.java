@@ -53,10 +53,10 @@ public class DbDataFlow extends DbObject {
 	}
 
 	private List<Integer> getDataClassIds(int input, int controlNodeId) {
-		String sql = "SELECT n.dataclass_id as class_id"
+		String sql = "SELECT n.dataclass_id as class_id "
 				+ "FROM datanode as n, dataflow as f, datasetconsistsofdatanode as s "
 				+ "WHERE f.input = %d "
-				+ "WHERE f.controlnode_id = %d "
+				+ "AND f.controlnode_id = %d "
 				+ "AND f.dataset_id = s.dataset_id "
 				+ "AND n.id = s.datanode_id";
 		return this.executeStatementReturnsListInt(

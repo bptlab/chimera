@@ -36,7 +36,7 @@ public class DbDataConditions {
         }
         return resolveNames(inputIdToStateIds);
     }
-
+    
     /**
      *
      * @return

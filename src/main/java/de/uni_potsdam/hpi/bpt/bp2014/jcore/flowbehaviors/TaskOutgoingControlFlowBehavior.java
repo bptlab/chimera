@@ -8,6 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -41,11 +42,16 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * @param dataClassNameToStateName Map from name of the data class to new state
 	 */
 	public void terminate(Map<String, String> dataClassNameToStateName) {
-        List<DataObject> usedDataObjects = getUsedDataobjects();
-        Map<Integer, Integer> dataClassIdToStateId = translate(
-                usedDataObjects, dataClassNameToStateName);
-
-        createOrUpdateDataObjects(dataClassIdToStateId);
+        DbDataFlow dataFlow = new DbDataFlow();
+        List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
+        List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
+        Set<Integer> toCreate = new HashSet<>(outputClassIds);
+        toCreate.removeAll(inputClassIds);
+        if (dataClassNameToStateName.isEmpty()) {
+            dataClassNameToStateName = loadOnlyOutputSet();
+        }
+        createDataObjects(toCreate, dataClassNameToStateName);
+        updateDataObjects(dataClassNameToStateName);
 
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
@@ -54,28 +60,72 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 		this.runAutomaticTasks();
 	}
 
-    /**
-     * Creates a new dataobject in the database for dataobjects in the output,
-     * that were not given as an input.
-     * Updates the state of input dataobjects to fit to the output state.
-     *
-     * @param classIdToStateId Map from dataclass id to object state id
-     */
-    private void createOrUpdateDataObjects(Map<Integer, Integer> classIdToStateId) {
-        DbDataFlow dataFlow = new DbDataFlow();
-        List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
-
-        // TODO if no map classIdToStateId given use defaults
-        for (Map.Entry<Integer, Integer> entry : classIdToStateId.entrySet()) {
-            if (inputClassIds.contains(entry.getKey())) {
-                this.changeDataObjectState(entry.getKey(), entry.getValue());
-            } else {
-                // TODO what to do with this
-                new DataObject(entry.getKey(), this.getScenarioInstance(), entry.getValue());
-            }
+    private void createDataObjects(Set<Integer> toCreate, Map<String, String> dataClassNameToStateName) {
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
+        Map<Integer, Integer> dataClassIdToStateId =
+                dataManager.translate(dataClassNameToStateName);
+        for (int classId : toCreate) {
+            dataManager.initializeDataObject(
+                    classId,
+                    dataClassIdToStateId.get(classId));
         }
+    }
+
+    private void updateDataObjects(Map<String, String> dataClassNameToStateName){
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
+        List<DataObject> usedDataObjects = getUsedDataobjects();
+        Map<Integer, Integer> dataClassIdToStateId = translate(
+                usedDataObjects, dataClassNameToStateName);
+
+        int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
+        Map<Integer, Integer> dataClassToSelectedObject = getClassToSelectedObjectIdMap();
+
+        for (Map.Entry<Integer, Integer> entry : dataClassIdToStateId.entrySet()) {
+            dataManager.changeDataObjectState(
+                    dataClassToSelectedObject.get(entry.getKey()), entry.getValue(),
+                    controlNodeInstanceId);
+        }
+    }
 
 
+    /**
+     * This method is used to load the default output of an activity.
+     * If there is more than one possible output set an IllegalArgumentException
+     * is thrown.
+     * @return Map from data class id to state id, if the dataobject has only one possible output set
+     */
+    private Map<String, String> loadOnlyOutputSet() {
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
+                this.getControlNodeId());
+        if (outputSets.size() > 1) {
+            throw new IllegalArgumentException("Should only be used when there are no "
+                    + "alternative output sets.");
+        }
+        DbDataConditions dataConditions = new DbDataConditions();
+        Map<String, Set<String>> outputMapWithSet = dataConditions.loadOutputSets(this.getControlNodeId());
+        Map<String, String> outputMapForOnlyOutput = new HashMap<>();
+        for (Map.Entry<String, Set<String>> entry : outputMapWithSet.entrySet()) {
+            assert 1 == entry.getValue().size();
+            outputMapForOnlyOutput.put(entry.getKey(), entry.getValue().iterator().next());
+        }
+        return outputMapForOnlyOutput;
+    }
+
+    /**
+     * Returns a Map from the dataclass to the object that is selected to use
+     * for this specific dataclass
+     */
+    private Map<Integer, Integer> getClassToSelectedObjectIdMap() {
+        int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
+        DbSelectedDataObjects dbSelection = new DbSelectedDataObjects();
+        DbDataObject dbDataObject = new DbDataObject();
+        int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+        List<Integer> dataObjectSelection = dbSelection.getDataObjectSelection(
+                scenarioInstanceId, controlNodeInstanceId);
+        return dataObjectSelection.stream().collect(Collectors.toMap(
+                dbDataObject::getDataClassId, Function.identity()
+        ));
     }
 
     /**
@@ -98,6 +148,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         }
         return dataclassIdToStateId;
     }
+
     /**
      * @return List of the data objects on which the activity works
      */

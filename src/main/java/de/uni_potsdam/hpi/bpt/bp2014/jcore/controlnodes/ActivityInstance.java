@@ -173,9 +173,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
             ((ActivityStateMachine) getStateMachine()).begin();
             ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
                     .lockDataObjectInstances(workingItems);
-            DbSelectedDataObjects dbDataobjectSelection = new DbSelectedDataObjects();
+            DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
             int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
-            dbDataobjectSelection.saveDataObjectSelection(scenarioInstanceId,
+            dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
                     this.getControlNodeInstanceId(), workingItems);
             _begin();
             return true;
@@ -190,6 +190,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         scenarioInstance.updateDataFlow();
         scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
         taskExecutionBehavior.execute();
+		scenarioInstance.getRunningControlNodeInstances().add(this);
         enableAttachedEvents();
         if (isAutomaticTask) {
             this.terminate();

@@ -18,10 +18,18 @@ import java.util.Map;
 public class DbDataClass extends DbObject {
     private static Logger log = Logger.getLogger(DbDataClass.class);
 
-    public String getName(int dataClassId) {
+    public String getName(int id) {
         String sql = "SELECT * FROM dataclass WHERE id = %d;";
-        sql = String.format(sql, dataClassId);
+        sql = String.format(sql, id);
         return this.executeStatementReturnsString(sql, "name");
+    }
+    
+    public int getId(String name, int scenarioId) {
+        String sql = "SELECT dataclass.id as class_id FROM dataclass, datanode WHERE dataclass.name = '%s' "
+                + "AND datanode.scenario_id = %d "
+                + "AND dataclass.id = datanode.dataclass_id;";
+        return this.executeStatementReturnsInt(
+                String.format(sql, name, scenarioId), "class_id");
     }
 
     public List<Integer> getDataAttributes(int classId) {
@@ -32,6 +40,10 @@ public class DbDataClass extends DbObject {
 
     public Map<Integer, List<Integer>> getDataAttributesPerClass() {
         Map<Integer, List<Integer>> classToAttributeIds = new HashMap<>();
+        List<Integer> dataClassIds = new DbObject()
+                .executeStatementReturnsListInt(
+                        "SELECT id FROM dataclass;", "id");
+        dataClassIds.forEach(id -> classToAttributeIds.put(id, new ArrayList<>()));
 
         String sql = "SELECT * FROM dataclass as dc, dataattribute as da" +
                 "WHERE dc.id = da.dataclass_id;";
@@ -39,10 +51,7 @@ public class DbDataClass extends DbObject {
         try (Statement stat = con.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             while (rs.next()) {
-                int classId = rs.getInt("dataclass_id");
-                if (!classToAttributeIds.containsKey(classId)) {
-                    classToAttributeIds.put(classId, new ArrayList<>());
-                }
+                int classId = rs.getInt("da.dataclass_id");
                 int dataattributeId = rs.getInt("da.id");
                 classToAttributeIds.get(classId).add(dataattributeId);
             }

@@ -42,6 +42,7 @@ public class DataObject {
         this.scenarioId = scenarioInstance.getScenarioId();
         this.scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
         this.initializeAttributes();
+		this.stateId = stateId;
 	}
 
     /**

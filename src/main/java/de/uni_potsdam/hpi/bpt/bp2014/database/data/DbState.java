@@ -38,10 +38,10 @@ public class DbState extends DbObject {
         return nameToId;
     }
 
-    public Integer getStateId(int dataclassId, String name) {
-        String sql = "SELECT * FROM state, datanode, dataclass WHERE " +
-                "state.id = datanode.state_id AND datanode.dataclass_id = %d" +
-                "AND state.name = '%s';";
+    public int getStateId(int dataclassId, String name) {
+        String sql = "SELECT * FROM state, datanode WHERE " +
+                "state.id = datanode.state_id AND datanode.dataclass_id = %d " +
+                "AND state.name = '%s'";
         sql = String.format(sql, dataclassId, name);
         return this.executeStatementReturnsInt(sql, "state.id");
     }

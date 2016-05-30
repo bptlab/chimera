@@ -12,6 +12,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +50,16 @@ public class CaseStarter {
         DataManager dataManager = scenarioInstance.getDataManager();
         for (int dataAttributeId : attributeIdToJsonPath.keySet()) {
             int dataClassId = attributeToclass.get(dataAttributeId);
-            dataManager.initializeDataObject(dataClassId);
+            // FIXME what to do with data object state at case start:
+            // state is modeled in the editor and sent to engine as well
+            //dataManager.initializeDataObject(dataClassId);
         }
     }
 
     public void writeDataAttributes(List<DataAttributeInstance> dataAttributes,
                                     String json, int scenarioInstanceId) {
 
-        if ("{}".equals(json) && this.hasMapping()) {
+        if (new JSONObject(json).length() == 0 && this.hasMapping()) {
             throw new IllegalStateException("Could not initialize attributes from empty json");
         }
 
