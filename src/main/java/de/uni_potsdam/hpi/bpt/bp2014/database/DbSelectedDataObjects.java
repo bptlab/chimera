@@ -6,8 +6,8 @@ import java.util.List;
  * This class is used to save and retrieve which dataobjects an activity works with.
  */
 public class DbSelectedDataObjects extends DbObject {
-    public void saveDataObjectSeletion(
-            int scenarioInstanceId,int activityInstanceId, List<Integer> dataobjectIds) {
+    public void saveDataObjectSelection(
+            int scenarioInstanceId, int activityInstanceId, List<Integer> dataobjectIds) {
         String insertTemplate = "INSERT INTO dataobjectselection " +
                 "(scenarioinstance_id, activityinstance_id, dataobject_id) VALUES " +
                 "(%d, %d, %d);";

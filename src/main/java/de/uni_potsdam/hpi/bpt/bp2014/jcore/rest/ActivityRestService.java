@@ -332,8 +332,7 @@ public class ActivityRestService extends AbstractRestService {
             if (controlNodeInstance.getControlNodeInstanceId() == activityID) {
                 activity.setLabel(executionService
                         .getLabelForControlNodeID(
-                                controlNodeInstance.
-                                        getControlNodeId()
+                                controlNodeInstance.getControlNodeId()
                         ));
             }
         }
@@ -458,7 +457,6 @@ public class ActivityRestService extends AbstractRestService {
                     + "terminate activity with id " + activityId + "\"}");
 
         }
-
     }
 
 

@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
+import org.junit.Assert;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Test;
@@ -67,7 +68,6 @@ public class ActivityInstanceTest {
         activity.begin();
         verify(instance);
     }
-
 
     @Test
     public void testBeginWorkingItems() {

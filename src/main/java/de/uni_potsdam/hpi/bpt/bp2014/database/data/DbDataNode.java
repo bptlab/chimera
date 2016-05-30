@@ -38,7 +38,7 @@ public class DbDataNode extends DbObject {
 	 * @param dataSetId This is the database ID of a dataSet.
 	 * @return a list of all database ID's of all states this dataSet can have.
 	 */
-	public LinkedList<Integer> getDataStatesForDataSets(int dataSetId) {
+	public List<Integer> getDataStatesForDataSets(int dataSetId) {
 		String sql =
 				"Select state_id FROM datanode, datasetconsistsofdatanode "
 						+ "WHERE datanode.id = "

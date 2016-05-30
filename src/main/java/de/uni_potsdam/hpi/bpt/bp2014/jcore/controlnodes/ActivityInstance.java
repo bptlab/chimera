@@ -141,9 +141,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		case "Activity":
 			this.setCanTerminate(true);
 		default:
-			this.taskExecutionBehavior =
-					new HumanTaskExecutionBehavior(getControlNodeInstanceId(),
-					scenarioInstance, this);
+			this.taskExecutionBehavior = new HumanTaskExecutionBehavior(
+                    getControlNodeInstanceId(), scenarioInstance, this);
 			this.isAutomaticTask = false;
 		}
 	}
@@ -156,18 +155,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could started. false if the activity couldn't started.
 	 */
 	public boolean begin() {
-        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
         if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
-			((ActivityStateMachine) getStateMachine()).begin();
-			new DbLogEntry().logActivity(
-                    this.getControlNodeInstanceId(), "running", scenarioInstanceId);
-            scenarioInstance.updateDataFlow();
-			scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
-			taskExecutionBehavior.execute();
-            enableAttachedEvents();
-            if (isAutomaticTask) {
-				this.terminate();
-			}
+			_begin();
 			return true;
 		} else {
 			return false;
@@ -180,18 +169,31 @@ public class ActivityInstance extends AbstractControlNodeInstance {
      * @return Whether the activity could have been started.
      */
     public boolean begin(List<Integer> workingItems) {
-        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
-
         if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
             ((ActivityStateMachine) getStateMachine()).begin();
-            new DbLogEntry().logActivity(
-                    this.getControlNodeInstanceId(), "running", scenarioInstanceId);
-
             ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
                     .lockDataObjectInstances(workingItems);
+            DbSelectedDataObjects dbDataobjectSelection = new DbSelectedDataObjects();
+            int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+            dbDataobjectSelection.saveDataObjectSelection(scenarioInstanceId,
+                    this.getControlNodeInstanceId(), workingItems);
+            _begin();
             return true;
         }
         return false;
+    }
+
+    private void _begin() {
+        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
+        new DbLogEntry().logActivity(
+                this.getControlNodeInstanceId(), "running", scenarioInstanceId);
+        scenarioInstance.updateDataFlow();
+        scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
+        taskExecutionBehavior.execute();
+        enableAttachedEvents();
+        if (isAutomaticTask) {
+            this.terminate();
+        }
     }
 
     private void enableAttachedEvents() {
@@ -246,13 +248,13 @@ public class ActivityInstance extends AbstractControlNodeInstance {
     }
 
 	/**
-	 * sets the dataAttributes for an activity.
-	 *
-	 * @param values values that the attributes should be set to.
+	 * Sets values for data attributes.
+     *
+	 * @param values Map from data attribute id to the name of the state it should be set to.
 	 * @return true if the dataAttributes could be set.
 	 */
 	public boolean setDataAttributeValues(Map<Integer, String> values) {
-		if (AbstractStateMachine.STATE.RUNNING == getStateMachine().getState()) {
+		if (AbstractStateMachine.STATE.RUNNING == this.getState()) {
 			return taskExecutionBehavior.setDataAttributeValues(values);
 		}
 		return false;
