@@ -35,7 +35,7 @@ public class ReceiveActivityTest {
         String path = "src/test/resources/Scenarios/ReceiveTaskScenario.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("BeforeReceiveTask", scenarioInstance);
-        ScenarioTestHelper.terminateActivityInstanceByName("BeforeReceiveTask", scenarioInstance);
+        ScenarioTestHelper.terminateActivityByName("BeforeReceiveTask", scenarioInstance);
         DataManager dataManager = scenarioInstance.getDataManager();
         // Since only one data object is present in the scenario
         DataObject dataObject = dataManager.getDataObjects().get(0);

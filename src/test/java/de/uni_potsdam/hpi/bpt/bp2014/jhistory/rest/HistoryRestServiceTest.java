@@ -69,6 +69,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         String path = "src/test/resources/history/simpleScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("Do something", instance);
+        // ScenarioTestHelper.terminateActivityByName("Do something", instance);
 
         int scenarioId = instance.getScenarioId();
         int scenarioInstanceId = instance.getScenarioInstanceId();

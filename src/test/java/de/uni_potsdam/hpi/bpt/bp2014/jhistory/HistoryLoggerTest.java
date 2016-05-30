@@ -52,7 +52,7 @@ public class HistoryLoggerTest {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.terminateActivityByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
         List<LogEntry> activityEntries =
@@ -66,7 +66,7 @@ public class HistoryLoggerTest {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.terminateActivityByName("ChangeData", instance);
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataObjectEntries =

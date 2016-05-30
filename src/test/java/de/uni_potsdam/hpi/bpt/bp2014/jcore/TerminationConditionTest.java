@@ -40,9 +40,9 @@ public class TerminationConditionTest {
             assertEquals(false, scenarioInstance.checkTerminationCondition());
 
             ScenarioTestHelper.beginActivityByName("Review Costumer", scenarioInstance);
-            ScenarioTestHelper.terminateActivityInstanceByName("Review Costumer", scenarioInstance);
+            ScenarioTestHelper.terminateActivityByName("Review Costumer", scenarioInstance);
             ScenarioTestHelper.beginActivityByName("Accept Another", scenarioInstance);
-            ScenarioTestHelper.terminateActivityInstanceByName("Accept Another", scenarioInstance);
+            ScenarioTestHelper.terminateActivityByName("Accept Another", scenarioInstance);
             assertEquals(true, scenarioInstance.checkTerminationCondition());
         } catch (IOException e) {
             Assert.fail();

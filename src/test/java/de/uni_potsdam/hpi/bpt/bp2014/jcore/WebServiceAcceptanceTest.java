@@ -57,7 +57,7 @@ public class WebServiceAcceptanceTest  {
         assertDataAttributeInstancesEmpty(dataAttributes);
         // Terminating the manual task starts the automatic task
         ScenarioTestHelper.beginActivityByName("ManualTask", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
+        ScenarioTestHelper.terminateActivityByName("ManualTask", instance);
         assertDataAttributeInstanceHasValue(dataAttributes);
     }
 
@@ -76,7 +76,7 @@ public class WebServiceAcceptanceTest  {
                 instance.getDataAttributeInstances().values();
         assertDataAttributeInstancesEmpty(dataAttributes);
         ScenarioTestHelper.beginActivityByName("ManualTask", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
+        ScenarioTestHelper.terminateActivityByName("ManualTask", instance);
         assertDataAttributeInstanceHasValue(dataAttributes);
     }
 

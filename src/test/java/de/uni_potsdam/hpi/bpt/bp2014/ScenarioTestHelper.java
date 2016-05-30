@@ -73,11 +73,23 @@ public class ScenarioTestHelper {
     }
 
 
-    public static void terminateActivityInstanceByName(String activityName, ScenarioInstance scenarioInstance) {
-        ActivityInstance instance = findActivityInstanceInNodes(
-                activityName, scenarioInstance.getRunningControlNodeInstances());
-        instance.terminate();
+    public static void beginActivityByName(String name, ScenarioInstance scenarioInstance) {
+        ActivityInstance activity = findActivityInstanceInNodes(
+                name, scenarioInstance.getEnabledControlNodeInstances());
+        activity.begin();
     }
+
+    public static void terminateActivityByName(String activityName, ScenarioInstance scenarioInstance) {
+        ActivityInstance activity = findActivityInstanceInNodes(
+                activityName, scenarioInstance.getRunningControlNodeInstances());
+        activity.terminate();
+    }
+
+    public static void executeActivityByName(String activityName, ScenarioInstance scenarioInstance) {
+        beginActivityByName(activityName, scenarioInstance);
+        terminateActivityByName(activityName, scenarioInstance);
+    }
+
 
     /**
      *
@@ -86,13 +98,6 @@ public class ScenarioTestHelper {
         Optional<AbstractControlNodeInstance> activity = findActivityInstanceInScenario(
                 activityName, scenarioInstance);
         return activity.isPresent();
-    }
-
-
-    public static void beginActivityByName(String name, ScenarioInstance scenarioInstance) {
-        ActivityInstance activity = findActivityInstanceInNodes(
-                name, scenarioInstance.getEnabledControlNodeInstances());
-        activity.begin();
     }
     public static int triggerEventInScenario(
             ScenarioInstance scenarioInstance, WebTarget base) {
