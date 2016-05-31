@@ -116,20 +116,23 @@ public class DbDataObject extends DbObject {
      * @param dataObject data object which should be initialized, but has id already set
      */
     public void loadFromDb(DataObject dataObject) {
-        String sql = "SELECT * FROM dataobject WHERE id = %d;";
+        String sql = "SELECT * FROM dataobject as do, dataclass as dc " +
+                "WHERE do.id = %d AND do.dataclass_id = dc.id;";
         sql = String.format(sql, dataObject.getId());
-        java.sql.Connection con =  Connection.getInstance().connect();
-        try (Statement stat = con.createStatement();
+        try (java.sql.Connection con =  Connection.getInstance().connect();
+             Statement stat = con.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             if (rs.next()) {
-                int dataclassId = rs.getInt("dataclass_id");
+                int dataclassId = rs.getInt("do.dataclass_id");
                 dataObject.setDataClassId(dataclassId);
-                boolean locked = rs.getBoolean("locked");
+                boolean locked = rs.getBoolean("do.locked");
                 if (locked) {
                     dataObject.lock();
                 }
-                int state = rs.getInt("state_id");
+                int state = rs.getInt("do.state_id");
                 dataObject.setState(state);
+                String name = rs.getString("dc.name");
+                dataObject.setName(name);
             } else {
                 log.error("Could not initialize data object from database.");
             }

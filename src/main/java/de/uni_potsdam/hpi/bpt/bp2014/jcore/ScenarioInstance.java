@@ -212,7 +212,8 @@ public class ScenarioInstance {
 				((ActivityInstance) activityInstance).checkDataFlowEnabled();
 			}
 		}
-	}
+        checkTerminationCondition();
+    }
 
 	/**
 	 * Checks if terminated control node triggers an xor gateway.

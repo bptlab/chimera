@@ -17,7 +17,7 @@ public class ScenarioUtil {
         List<AbstractControlNodeInstance> nodes = scenarioInstance.getControlNodeInstances();
         Optional<AbstractControlNodeInstance> activityInstance = nodes.stream()
                 .filter(x -> x instanceof ActivityInstance)
-                .filter(x -> x.getControlNodeInstanceId() == id).findFirst();
+                .filter(x -> x.getControlNodeId() == id).findFirst();
         if (activityInstance.isPresent()) {
             return (ActivityInstance) activityInstance.get();
         }

@@ -133,8 +133,8 @@ public class DataManager {
     }
 
     public void initializeDataObject(int dataClassId, int stateId) {
-        this.dataObjects.add(new DataObject(dataClassId, scenarioInstance, stateId));
-
+        DataObject dataObject = new DataObject(dataClassId, scenarioInstance, stateId);
+        this.dataObjects.add(dataObject);
     }
 
     /**

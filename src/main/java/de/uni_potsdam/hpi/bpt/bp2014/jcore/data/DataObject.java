@@ -17,7 +17,9 @@ public class DataObject {
     private int dataClassId;
 	private int scenarioId;
 	private int scenarioInstanceId;
-	private String name;
+
+
+    private String name;
 
 	private ScenarioInstance scenarioInstance;
 	private final DbDataObject dbDataObject = new DbDataObject();
@@ -33,14 +35,15 @@ public class DataObject {
 	 * @param scenarioInstance This is an instance from the class ScenarioInstance.
 	 */
 	public DataObject(int dataClassId, ScenarioInstance scenarioInstance, int stateId) {
-        this.id = dbDataObject.createDataObject(scenarioId, scenarioInstanceId, stateId, dataClassId);
-        DbDataClass dataClass = new DbDataClass();
-
-        this.name = dataClass.getName(dataClassId);
         this.scenarioInstance = scenarioInstance;
         this.dataClassId = dataClassId;
         this.scenarioId = scenarioInstance.getScenarioId();
         this.scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+
+        this.id = dbDataObject.createDataObject(scenarioId, scenarioInstanceId, stateId, dataClassId);
+        DbDataClass dataClass = new DbDataClass();
+
+        this.name = dataClass.getName(dataClassId);
         this.initializeAttributes();
 		this.stateId = stateId;
 	}
@@ -80,7 +83,6 @@ public class DataObject {
 	public void setState(int stateId) {
 		this.stateId = stateId;
 		dbDataObject.setState(id, stateId);
-		scenarioInstance.checkTerminationCondition();
 	}
 
 	/**
@@ -153,6 +155,11 @@ public class DataObject {
     public void unlock() {
         this.dbDataObject.setLocked(this.id, false);
         this.isLocked = false;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isLocked () {

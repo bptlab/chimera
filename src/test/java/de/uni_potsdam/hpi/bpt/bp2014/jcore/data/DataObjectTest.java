@@ -4,10 +4,12 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +17,11 @@ import static org.junit.Assert.*;
  *
  */
 public class DataObjectTest {
+    @After
+    public void tearDown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
+
     @Test
     public void testNoDataObjectsAtStart() throws IOException {
         ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/DataObjectTestScenario.json");

@@ -23,7 +23,7 @@ public class DbDataClass extends DbObject {
         sql = String.format(sql, id);
         return this.executeStatementReturnsString(sql, "name");
     }
-    
+
     public int getId(String name, int scenarioId) {
         String sql = "SELECT dataclass.id as class_id FROM dataclass, datanode WHERE dataclass.name = '%s' "
                 + "AND datanode.scenario_id = %d "
@@ -45,7 +45,7 @@ public class DbDataClass extends DbObject {
                         "SELECT id FROM dataclass;", "id");
         dataClassIds.forEach(id -> classToAttributeIds.put(id, new ArrayList<>()));
 
-        String sql = "SELECT * FROM dataclass as dc, dataattribute as da" +
+        String sql = "SELECT * FROM dataclass as dc, dataattribute as da " +
                 "WHERE dc.id = da.dataclass_id;";
         java.sql.Connection con = Connection.getInstance().connect();
         try (Statement stat = con.createStatement();

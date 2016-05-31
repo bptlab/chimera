@@ -120,16 +120,21 @@ public class EndToEndTest extends JerseyTest {
                 .request().post(Entity.json("{}"));
         assertEquals(202, terminateFirstActivity.getStatus());
 
+        Response dataInput = base.path("interface/v2/scenario/1/instance/1/activity/2/availableInput")
+                .request().get();
+        System.out.println(dataInput.readEntity(String.class));
+
         Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startSecondActivity.getStatus());
 
-        DataAttributeUpdateJaxBean update = new DataAttributeUpdateJaxBean();
-        update.setId(1);
-        update.setValue("bar");
-        Response setDataAttribute = base.path("interface/v2/scenario/1/instance/1/activity/2").request()
-                .put(Entity.json(update));
-        assertEquals(202, setDataAttribute.getStatus());
+//
+//        DataAttributeUpdateJaxBean update = new DataAttributeUpdateJaxBean();
+//        update.setId(1);
+//        update.setValue("bar");
+//        Response setDataAttribute = base.path("interface/v2/scenario/1/instance/1/activity/2").request()
+//                .put(Entity.json(update));
+//        assertEquals(202, setDataAttribute.getStatus());
 
 
         Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activity/2/terminate")

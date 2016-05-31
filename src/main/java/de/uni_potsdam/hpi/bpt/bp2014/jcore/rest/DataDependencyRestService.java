@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -198,14 +199,29 @@ public class DataDependencyRestService extends AbstractRestService {
                 scenarioInstanceId);
         List<DataObject> possibleInputs = scenarioInstance.getDataManager()
                 .getAvailableInput(activityInstanceId);
+        List<DataObjectJaxBean> outputBeans = possibleInputs.stream()
+                .map(x -> buildDataObjectJaxBean(x, executionService))
+                .collect(Collectors.toList());
+        JSONArray array = new JSONArray(outputBeans);
         return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON)
-                .entity(possibleInputs).build();
+                .entity(array.toString()).build();
     }
 
     private DataObjectJaxBean buildDataObjectJaxBean(
             int setId, DataObject dataObjectInstance, ExecutionService executionService) {
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
         dataObject.setSetId(setId);
+        dataObject.setId(dataObjectInstance.getId());
+        dataObject.setLabel(dataObjectInstance.getName());
+        dataObject.setState(dataObjectInstance.getStateName());
+        dataObject.setAttributeConfiguration(executionService
+                .getDataAttributesForDataObjectInstance(dataObjectInstance));
+        return dataObject;
+    }
+
+    private DataObjectJaxBean buildDataObjectJaxBean(
+            DataObject dataObjectInstance, ExecutionService executionService) {
+        DataObjectJaxBean dataObject = new DataObjectJaxBean();
         dataObject.setId(dataObjectInstance.getId());
         dataObject.setLabel(dataObjectInstance.getName());
         dataObject.setState(dataObjectInstance.getStateName());
