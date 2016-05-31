@@ -1,11 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -14,16 +11,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.assertEquals;
@@ -128,7 +122,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.terminateActivityByName("ChangeData", instance);
 
         String requestPath = String.format(
                 "scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
@@ -145,7 +139,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.terminateActivityByName("ChangeData", instance);
 
         String requestPath = String.format(
                 "scenario/%d/instance/%d/dataobjects", scenarioId, scenarioInstanceId);

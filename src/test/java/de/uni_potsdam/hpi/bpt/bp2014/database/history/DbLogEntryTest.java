@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.history;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 import org.junit.After;
 import org.junit.Test;
@@ -64,11 +65,13 @@ public class DbLogEntryTest {
         DbLogEntry logEntry = new DbLogEntry();
         int dummyActivityId = 1;
         int scenarioInstanceId = 1;
+        int dummyDataClassId = 1;
         logEntry.logActivity(dummyActivityId, "init", scenarioInstanceId);
         logEntry.logActivity(dummyActivityId, "running", scenarioInstanceId);
 
         int dummyDataobjectId = 2;
-        logEntry.logDataobjectCreation(dummyDataobjectId, "received", scenarioInstanceId);
+        int stateId = new Connector().insertStateIntoDatabase("received", dummyDataClassId);
+        logEntry.logDataobjectCreation(dummyDataobjectId, stateId, scenarioInstanceId);
 
         int dummyAttributeId = 3;
         logEntry.logDataattributeCreation(dummyAttributeId, "foo", scenarioInstanceId);
