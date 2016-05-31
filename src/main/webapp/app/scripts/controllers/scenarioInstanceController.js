@@ -239,7 +239,7 @@ angular.module('jfrontend')
                 }
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activity/" + activityId + "?state=begin", dataObject).
+                    "/activity/" + activityId + "/begin", dataObject).
                 success(function () {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
@@ -255,7 +255,7 @@ angular.module('jfrontend')
                 var dataObject = "";
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activity/" + activityId + "?state=terminate", dataObject).
+                    "/activity/" + activityId + "/terminate", dataObject).
                 success(function (data) {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
@@ -270,7 +270,7 @@ angular.module('jfrontend')
                 var dataObject = "";
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activity/" + activityId + "?state=terminate&outputset=" + outputset, dataObject).
+                    "/activity/" + activityId + "/terminate", dataObject).
                 success(function (data) {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
