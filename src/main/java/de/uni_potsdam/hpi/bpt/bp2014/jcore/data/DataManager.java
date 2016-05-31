@@ -1,9 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioUtil;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -43,6 +46,31 @@ public class DataManager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Searches for data objects which fulfill one of the conditions of
+     * the input set.
+     * @param activityInstanceId Id of the activity instance
+     * @return List of data objects
+     */
+    public List<DataObject> getAvailableInput(int activityInstanceId) {
+        DbDataConditions conditions = new DbDataConditions();
+        ScenarioUtil util = new ScenarioUtil();
+        ActivityInstance activityInstance = util.getActivityById(
+                scenarioInstance, activityInstanceId);
+        Map<String, Set<String>> input = conditions.loadInputSets(
+                activityInstance.getControlNodeId());
+        List<DataObject> dataobjectsFulfillingInputCondition = new ArrayList<>();
+        for (DataObject dataObject : this.dataObjects) {
+            if (input.containsKey(dataObject.getName())) {
+                Set<String> possibleStates = input.get(dataObject.getName());
+                if (possibleStates.contains(dataObject.getStateName())) {
+                    dataobjectsFulfillingInputCondition.add(dataObject);
+                }
+            }
+        }
+        return dataobjectsFulfillingInputCondition;
     }
 
     /**

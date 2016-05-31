@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -185,7 +187,20 @@ public class DataDependencyRestService extends AbstractRestService {
         return Response.ok(buildIOJson(outputSets), MediaType.APPLICATION_JSON).build();
     }
 
-
+    @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/availableInput")
+    public Response getAvailableInput(@PathParam("scenarioId") int scenarioId,
+                                      @PathParam("instanceId") int scenarioInstanceId,
+                                      @PathParam("activityId") int activityInstanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+        ScenarioInstance scenarioInstance = executionService.getScenarioInstance(
+                scenarioInstanceId);
+        List<DataObject> possibleInputs = scenarioInstance.getDataManager()
+                .getAvailableInput(activityInstanceId);
+        return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON)
+                .entity(possibleInputs).build();
+    }
 
     private DataObjectJaxBean buildDataObjectJaxBean(
             int setId, DataObject dataObjectInstance, ExecutionService executionService) {

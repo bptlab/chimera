@@ -250,12 +250,13 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	/**
 	 * Sets values for data attributes.
      *
-	 * @param values Map from data attribute id to the name of the state it should be set to.
+	 * @param idToValue Map from data attribute instance id to the name
+     *                  of the state it should be set to.
 	 * @return true if the dataAttributes could be set.
 	 */
-	public boolean setDataAttributeValues(Map<Integer, String> values) {
+	public boolean setDataAttributeValues(Map<Integer, String> idToValue) {
 		if (AbstractStateMachine.STATE.RUNNING == this.getState()) {
-			return taskExecutionBehavior.setDataAttributeValues(values);
+			return taskExecutionBehavior.setDataAttributeValues(idToValue);
 		}
 		return false;
 	}

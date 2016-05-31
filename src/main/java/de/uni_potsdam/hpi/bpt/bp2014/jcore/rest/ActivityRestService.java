@@ -1,8 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
 import org.apache.log4j.Logger;
@@ -347,28 +349,28 @@ public class ActivityRestService extends AbstractRestService {
      * This method updates the data attributes of a specific activity
      * defined via its activityID.
      *
-     * @param scenarioID         The id of a scenario model.
-     * @param scenarioInstanceID the id of an scenario instance.
-     * @param activityID         the control node id of the activity.
+     * @param scenarioId         The id of a scenario model.
+     * @param scenarioInstanceId the id of an scenario instance.
+     * @param activityId         the control node id of the activity.
      * @param input				 data input.
      * @return Status code with regard to its success / failure
      */
     @PUT
     @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
     public Response setDataAttribute(
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID,
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("activityId") int activityId,
             final DataAttributeUpdateJaxBean input) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
 
         Map<Integer, String> values = new HashMap<>();
         if (input != null) {
             values.put(input.getId(), input.getValue());
         }
 
-        if (executionService.setDataAttributeValues(scenarioInstanceID, activityID, values)) {
+        if (executionService.setDataAttributeValues(scenarioInstanceId, activityId, values)) {
             return this.buildAcceptedResponse("{\"message\":\"attribute value was "
                     + "changed successfully.\"}");
         } else {
@@ -395,7 +397,7 @@ public class ActivityRestService extends AbstractRestService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/begin")
-    public Response updateActivityState(
+    public Response beginActivity(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("activityId") int activityId,
@@ -411,6 +413,7 @@ public class ActivityRestService extends AbstractRestService {
                 usedDataObjects.add(dataobjectsJson.getInt(i));
             }
         }
+
         succesful = executionService.beginActivity(
                 scenarioInstanceId, activityId, usedDataObjects);
         if (succesful) {
@@ -457,33 +460,5 @@ public class ActivityRestService extends AbstractRestService {
                     + "terminate activity with id " + activityId + "\"}");
 
         }
-    }
-
-
-        /**
-         * @param instances The Map containing information about the activity instances.
-         *                  We Assume that the key is a the id and the value is a Map
-         *                  from String to Object with the properties of the instance.
-         * @param uriInfo   Specifies the context. For example the uri
-         *                  of the request.
-         * @return			JSON Object containing activities and their references.
-         */
-    private JSONObject buildJSONObjectForReferencedActivities(
-            Collection<ActivityInstance> instances, UriInfo uriInfo) {
-        List<Integer> ids = new ArrayList<>(instances.size());
-        JSONArray activities = new JSONArray();
-        for (ActivityInstance instance : instances) {
-            JSONObject activityJSON = new JSONObject();
-            ids.add(instance.getControlNodeInstanceId());
-            activityJSON.put("id", instance.getControlNodeInstanceId());
-            activityJSON.put("label", instance.getLabel());
-            activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                    + instance.getControlNodeInstanceId());
-            activities.put(activityJSON);
-        }
-        JSONObject result = new JSONObject();
-        result.put("ids", new JSONArray(ids));
-        result.put("activities", activities);
-        return result;
     }
 }

@@ -49,7 +49,7 @@ public class TaskExecutionBehavior {
 	}
 
 	/**
-	 * @param values a Map of Keys and Values.
+	 * @param values Map from attribute instance id to the name of the state to set.
 	 * @return true if all values could be set.
 	 */
 	public boolean setDataAttributeValues(Map<Integer, String> values) {

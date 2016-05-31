@@ -23,6 +23,53 @@ import java.util.Map;
 @Path("interface/v2")
 public class DataObjectRestService {
     /**
+     * Returns a JSON-Object, which contains information about all
+     * data objects of a specified scenario instance.
+     * The data contains the id, label and state.
+     *
+     * @param scenarioID   The ID of the scenario model.
+     * @param instanceID   The ID of the scenario instance.
+     * @param filterString A String which specifies a filter. Only Data
+     *                     Objects with a label containing this string
+     *                     will be returned.
+     * @param uriInfo      A Context object of the server request.
+     * @return A Response with the outcome of the GET-Request. The Response
+     * will be a 200 (OK) if the specified instance was found. Hence
+     * the JSON-Object will be returned.
+     * It will be a 301 (REDIRECT) if the scenarioID is wrong.
+     * And a 404 if the instance id is wrong.
+     */
+    @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
+    @Produces(MediaType.APPLICATION_JSON) public Response getDataObjects(
+            @Context UriInfo uriInfo,
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int instanceID,
+            @QueryParam("filter") String filterString) {
+
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
+        List<Integer> dataObjects =
+                executionService.getAllDataObjectIDs(instanceID);
+        Map<Integer, String> states =
+                executionService.getDataObjectStates(instanceID);
+        Map<Integer, String> labels =
+                executionService.getAllDataObjectNames(instanceID);
+        if (filterString != null && !filterString.isEmpty()) {
+            for (Map.Entry<Integer, String> labelEntry : labels.entrySet()) {
+                if (!labelEntry.getValue().contains(filterString)) {
+                    dataObjects.remove(labelEntry.getKey());
+                    states.remove(labelEntry.getKey());
+                    labels.remove(labelEntry.getKey());
+                }
+            }
+        }
+        JSONObject result = buildListForDataObjects(uriInfo, dataObjects, states, labels);
+        return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+    }
+
+
+    /**
      * This method provides detailed information about an data Object.
      * The information contain the id, parent scenario instance, label
      * and the current state,
@@ -70,52 +117,6 @@ public class DataObjectRestService {
         dataObject.setLabel(labels.get(dataObjectID));
         dataObject.setState(states.get(dataObjectID));
         return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
-    }
-
-    /**
-     * Returns a JSON-Object, which contains information about all
-     * data objects of a specified scenario instance.
-     * The data contains the id, label and state.
-     *
-     * @param scenarioID   The ID of the scenario model.
-     * @param instanceID   The ID of the scenario instance.
-     * @param filterString A String which specifies a filter. Only Data
-     *                     Objects with a label containing this string
-     *                     will be returned.
-     * @param uriInfo      A Context object of the server request.
-     * @return A Response with the outcome of the GET-Request. The Response
-     * will be a 200 (OK) if the specified instance was found. Hence
-     * the JSON-Object will be returned.
-     * It will be a 301 (REDIRECT) if the scenarioID is wrong.
-     * And a 404 if the instance id is wrong.
-     */
-    @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
-    @Produces(MediaType.APPLICATION_JSON) public Response getDataObjects(
-            @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int instanceID,
-            @QueryParam("filter") String filterString) {
-
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, instanceID);
-        List<Integer> dataObjects =
-                executionService.getAllDataObjectIDs(instanceID);
-        Map<Integer, String> states =
-                executionService.getDataObjectStates(instanceID);
-        Map<Integer, String> labels =
-                executionService.getAllDataObjectNames(instanceID);
-        if (filterString != null && !filterString.isEmpty()) {
-            for (Map.Entry<Integer, String> labelEntry : labels.entrySet()) {
-                if (!labelEntry.getValue().contains(filterString)) {
-                    dataObjects.remove(labelEntry.getKey());
-                    states.remove(labelEntry.getKey());
-                    labels.remove(labelEntry.getKey());
-                }
-            }
-        }
-        JSONObject result = buildListForDataObjects(uriInfo, dataObjects, states, labels);
-        return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 

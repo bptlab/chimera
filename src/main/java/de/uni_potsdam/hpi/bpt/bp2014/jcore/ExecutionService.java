@@ -258,10 +258,10 @@ public class ExecutionService /*implements Runnable*/ {
 	public boolean beginActivity(int scenarioInstanceId, int activityId,
 								 List<Integer> usedDataObjects) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
+        for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getEnabledControlNodeInstances()) {
 			if (nodeInstance.getControlNodeId() == activityId) {
-				return ((ActivityInstance) nodeInstance).begin(usedDataObjects);
+                return ((ActivityInstance) nodeInstance).begin(usedDataObjects);
 			}
 		}
 		return false;

@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,10 +11,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DataObjectJaxBean {
+
+    public DataObjectJaxBean() {};
+
+    public DataObjectJaxBean(DataObject dataObject) {
+        this.setId(dataObject.getId());
+        this.setLabel(dataObject.getName());
+        this.setState(dataObject.getStateName());
+    }
+
     /**
      * The label of the data object.
      */
     private String label;
+
     /**
      * The id the dataobject (not the instance) has inside
      * the database.
