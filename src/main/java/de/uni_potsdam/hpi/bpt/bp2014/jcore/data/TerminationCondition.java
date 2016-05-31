@@ -16,7 +16,7 @@ public class TerminationCondition {
 
     public TerminationCondition(ScenarioInstance scenarioInstance) {
         DbTerminationCondition terminationCondition = new DbTerminationCondition();
-        List<String> conditionSetKeys = terminationCondition.getConditionSetKeysForScenario(
+        Set<String> conditionSetKeys = terminationCondition.getConditionSetKeysForScenario(
                 scenarioInstance.getScenarioId());
         Set<String> uniqueConditionSetKeys = new HashSet<>(conditionSetKeys);
         this.terminationParts = uniqueConditionSetKeys.stream().

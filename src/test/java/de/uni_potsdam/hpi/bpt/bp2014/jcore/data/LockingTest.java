@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class LockingTest {
     /**
+     * TODO remodel the scenario since there are no initial dataobjects anymore
      * Test if the locked data object instances are correctly written and loaded
      */
     @Test

@@ -26,6 +26,7 @@ public class ReceiveActivityTest {
     }
 
     /**
+     * TODO remodel scenario
      * The tested scenario is a linear sequence of the activities BeforeReceiveTask, reveiceEvent
      * and AfterReceiveTask. receiveEvent is a message receive task which changes the state of the
      * data object with the name Data from init to changed.

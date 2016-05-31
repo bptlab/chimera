@@ -21,10 +21,11 @@ public class DbTerminationCondition extends DbObject {
 				"dataclass_id", "state_id");
 	}
 
-    public List<String> getConditionSetKeysForScenario(int scenarioId) {
+    public Set<String> getConditionSetKeysForScenario(int scenarioId) {
         String sql = "SELECT * FROM terminationcondition WHERE scenario_id = %d;";
         String retrieveMappingKeys = String.format(sql, scenarioId);
-        return this.executeStatementReturnsListString(retrieveMappingKeys, "conditionset_id");
+        return new HashSet<>(this.executeStatementReturnsListString(
+                retrieveMappingKeys, "conditionset_id"));
     }
 
 	/**
