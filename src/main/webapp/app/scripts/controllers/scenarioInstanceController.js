@@ -231,11 +231,16 @@ angular.module('jfrontend')
 
             // begins an activity
             this.beginActivity = function (activityId) {
-                var dataObject = "";
+                var dataObject = {'dataobjects':[]};
+                for (var dclassid in instanceCtrl.selectedOutputInstanceID) {
+                    if (instanceCtrl.selectedOutputInstanceID.hasOwnProperty(dclassid)) {
+                        dataObject['dataobjects'].push(instanceCtrl.selectedOutputInstanceID[dclassid])
+                    }
+                }
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/activity/" + activityId + "?state=begin", dataObject).
-                success(function (data) {
+                success(function () {
                     instanceCtrl.instanceDetails.activities = {};
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
@@ -387,39 +392,26 @@ angular.module('jfrontend')
                     instanceCtrl.scenario['activity'] = {};
                 }
                 instanceCtrl.scenario['activity'][activityID] = {};
+                instanceCtrl.activityOutputInstances = {};
+                instanceCtrl.selectedOutputInstanceID = {};
                 //retrieve referenced Activities for this activityID
+                // ######################################################################
+                // DO STUFF HERE
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/references").
-                success(function (data) {
-                    instanceCtrl.scenario['activity'][activityID]['references'] = data;
-                    var activityArray = data['ids'];
-                    instanceCtrl.scenario['refLength'] = data['ids'].length;
-                    activityArray.push(activityID);
-                    //check if there are any referenced Activities
-                    if (instanceCtrl.scenario['activity'][activityID]['references']['ids'].length > 0) {
-                        //if so, lets get the output for each of them
-                        angular.forEach(activityArray, function (refActivityID, key) {
-                            //retrieving the output for each retrieved referenced Activity
-                            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + refActivityID + "/output").
-                            success(function (data2) {
-                                instanceCtrl.activityOutput[refActivityID] = {};
-                                instanceCtrl.activityOutput[refActivityID] = data2;
-                                //now, we also want to get the details of the outputset to access the label e.g. for each entry
-                                angular.forEach(instanceCtrl.activityOutput[refActivityID], function (outputset, key2) {
-                                    $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/outputset/" + outputset['id'] + "").
-                                    success(function (data3) {
-                                        instanceCtrl.scenario['outputsets'][outputset['id']] = {};
-                                        instanceCtrl.scenario['outputsets'][outputset['id']] = data3;
-                                    }).
-                                    error(function () {
-                                        console.log('request failed');
-                                    });
-                                });
-                            }).
-                            error(function () {
-                                console.log('request failed');
-                            });
-                        });
-                    }
+                success(function(data){
+                    var sorteddata = {};
+                    data.forEach(function(data){
+                        if (!(data.label in sorteddata)) {
+                            sorteddata[data.label] = {
+                                'label': data.label,
+                                'id': data.id,
+                                'state': data.state,
+                                'instances': []
+                            }
+                        }
+                        sorteddata[data.label]['instances'].push(data)
+                    });
+                    instanceCtrl.activityOutput[activityID] = sorteddata;
                 }).
                 error(function () {
                     console.log('request failed');
@@ -438,5 +430,10 @@ angular.module('jfrontend')
             source.addEventListener('refresh', function(event) {
                 instanceCtrl.refreshPage();
             });
+            
+						this.selectDataObject = function (dclassid, dinstanceid, attrconfiguration) {
+                instanceCtrl.activityOutputInstances[dclassid] = attrconfiguration;
+                instanceCtrl.selectedOutputInstanceID[dclassid] = dinstanceid;
+            }
         }
     ]);
