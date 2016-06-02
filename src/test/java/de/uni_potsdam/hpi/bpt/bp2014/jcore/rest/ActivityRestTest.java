@@ -200,7 +200,7 @@ public class ActivityRestTest extends AbstractTest {
         // TODO Find out what this does
         Response response = base.path("scenario/135/instance/808/activity/4518")
                 .queryParam("state", "begin").request().post(Entity.json("[]"));
-        assertEquals("The Response code of beginActivity was not 202",
+        assertEquals("The Response code of beginActivityInstance was not 202",
                 202, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
@@ -213,7 +213,7 @@ public class ActivityRestTest extends AbstractTest {
         Response updateResponse = base.path("scenario/135/instance/808/activity/4518")
                 .request()
                 .put(Entity.json("{\"id\":1,\"value\":\"Test\"}"));
-        assertEquals("The Response code of beginActivity was not 202",
+        assertEquals("The Response code of beginActivityInstance was not 202",
                 202, updateResponse.getStatus());
 
         // Terminate activity

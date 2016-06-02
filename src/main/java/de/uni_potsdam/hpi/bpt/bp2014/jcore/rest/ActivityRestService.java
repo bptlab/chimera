@@ -1,10 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
 import org.apache.log4j.Logger;
@@ -380,27 +378,24 @@ public class ActivityRestService extends AbstractRestService {
     }
 
     /**
-     * Updates the state of an activity instance.
-     * The state will be changed to the specified one.
-     * The activity Instance is specified by:
+     * Changes the state of an activityInstance from enabled to running.
      *
      * @param scenarioId         The id of a scenario model.
      * @param scenarioInstanceId the id of an scenario instance.
-     * @param activityId         the control node id of the activity.
-     * @param postBody           Json Object containing the target state and the
-     *                           data object id's if needed
-     * @return Returns a Response, the response code implies the
-     * outcome of the PUT-Request.
+     * @param activityInstanceId the id of the activity instance.
+     * @param postBody           Json Object containing the data objects which are used
+     *                           executing this activity
+     * @return
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/begin")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityInstance/{activityInstanceId}/begin")
     public Response beginActivity(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
-            @PathParam("activityId") int activityId,
+            @PathParam("activityInstanceId") int activityInstanceId,
             String postBody) {
         boolean succesful;
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
@@ -414,8 +409,8 @@ public class ActivityRestService extends AbstractRestService {
             }
         }
 
-        succesful = executionService.beginActivity(
-                scenarioInstanceId, activityId, usedDataObjects);
+        succesful = executionService.beginActivityInstance(
+                scenarioInstanceId, activityInstanceId, usedDataObjects);
         if (succesful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
@@ -423,16 +418,30 @@ public class ActivityRestService extends AbstractRestService {
                     .build();
         } else {
                 return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                        + "start activity with id " + activityId + "\"}");
+                        + "start activity with id " + activityInstanceId + "\"}");
         }
     }
 
+    /**
+     * Changes the state of of an activity instance from running to terminated.
+     * @param scenarioId Id of the scenario model.
+     * @param scenarioInstanceId Id of the model instance.
+     * @param activityInstanceId Id of the activity instance to terminate
+     * @param postBody Json Body containing a map from name of data object to state
+     *                 specifying the resulting states of the data objects the activity works on
+     * @return
+     * 202 (ACCEPTED) means that the activity was terminated successfully
+     * 400 (BAD_REQUEST) Termination of the activity failed. Possible reasons are:
+     *  1) The activity was not running
+     *  2) The wanted state does not comply to the OLC
+     *  3) The Body specifies not a resulting state for each data object.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/terminate")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityInstance/{activityInstanceId}/terminate")
     public Response terminateActivity(@PathParam("scenarioId") int scenarioId,
                                   @PathParam("instanceId") int scenarioInstanceId,
-                                  @PathParam("activityId") int activityId,
+                                  @PathParam("activityInstanceId") int activityInstanceId,
                                   String postBody) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
@@ -445,10 +454,10 @@ public class ActivityRestService extends AbstractRestService {
                         (String) dataClassName));
 
             }
-            succesful = executionService.terminateActivity(
-                    scenarioInstanceId, activityId, dataClassNameToState);
+            succesful = executionService.terminateActivityInstance(
+                    scenarioInstanceId, activityInstanceId, dataClassNameToState);
         } else {
-            succesful = executionService.terminateActivity(scenarioInstanceId, activityId);
+            succesful = executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId);
         }
         if (succesful) {
             return Response.status(Response.Status.ACCEPTED)
@@ -457,7 +466,7 @@ public class ActivityRestService extends AbstractRestService {
                     .build();
         } else {
             return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                    + "terminate activity with id " + activityId + "\"}");
+                    + "terminate activity with id " + activityInstanceId + "\"}");
 
         }
     }

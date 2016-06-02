@@ -236,7 +236,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param activityId         This is the id of the activity.
 	 * @return true if the activity could been started. false if not.
 	 */
-	public boolean beginActivity(int scenarioInstanceId, int activityId) {
+	public boolean beginActivityInstance(int scenarioInstanceId, int activityId) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getEnabledControlNodeInstances()) {
@@ -252,15 +252,15 @@ public class ExecutionService /*implements Runnable*/ {
 	 * The state will only be changed if the activity is enabled.
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityId Specifies the activity id.
+	 * @param activityInstanceId Specifies the activity id.
 	 * @return Indicates the success. True if the activity has been started, else false.
 	 */
-	public boolean beginActivity(int scenarioInstanceId, int activityId,
-								 List<Integer> usedDataObjects) {
+	public boolean beginActivityInstance(int scenarioInstanceId, int activityInstanceId,
+                                         List<Integer> usedDataObjects) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
         for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getEnabledControlNodeInstances()) {
-			if (nodeInstance.getControlNodeId() == activityId) {
+			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
                 return ((ActivityInstance) nodeInstance).begin(usedDataObjects);
 			}
 		}
@@ -373,7 +373,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param activityId         This is the id of the activity.
 	 * @return true if the activity could been terminated. false if not.
 	 */
-	public boolean terminateActivity(int scenarioInstanceId, int activityId) {
+	public boolean terminateActivityInstance(int scenarioInstanceId, int activityId) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		//ScenarioInstance scenarioInstance =
 		//	sortedScenarioInstances.get(scenarioInstanceId);
@@ -387,18 +387,18 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	/**
-	 * Terminates an activity which is running.
+	 * Terminates an activity instance.
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityId         This is the id of the activity.
+	 * @param activityInstanceId This is the id of the activity instance.
 	 * @return true if the activity could been terminated. false if not.
 	 */
-	public boolean terminateActivity(
-			int scenarioInstanceId, int activityId, Map<String, String> classToState) {
+	public boolean terminateActivityInstance(
+			int scenarioInstanceId, int activityInstanceId, Map<String, String> classToState) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeId() == activityId) {
+			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
 				return ((ActivityInstance) nodeInstance).terminate(classToState);
 			}
 		}
