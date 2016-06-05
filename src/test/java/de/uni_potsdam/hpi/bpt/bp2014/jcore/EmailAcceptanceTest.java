@@ -38,7 +38,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * Email Test Scenario 142.
      */
-    @Test
+    @Test @Ignore
     public void testScenario142() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = ExecutionService.getInstance(142);
         int scenarioInstance = executionService.startNewScenarioInstance();
@@ -78,7 +78,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      * @throws IOException
      * @throws EmailException
      */
-    @Test
+    @Test @Ignore
     public void testScenario141() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = ExecutionService.getInstance(141);
         int scenarioInstance = executionService.startNewScenarioInstance();
@@ -123,7 +123,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      * @throws IOException
      * @throws EmailException
      */
-    @Test
+    @Test @Ignore
     public void testScenario145() throws MessagingException, IOException, EmailException {
     	int scenarioID = 145;
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
@@ -244,7 +244,7 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
      * @throws IOException
      * @throws EmailException
      */
-    @Test
+    @Test @Ignore
     public void testScenario151() throws MessagingException, IOException, EmailException {
         ExecutionService executionService = ExecutionService.getInstance(151);
         int scenarioInstance = executionService.startNewScenarioInstance();

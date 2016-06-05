@@ -13158,7 +13158,7 @@ ALTER TABLE dataclass
 --
 
 INSERT INTO `dataclass` (`id`, `name`, `is_event`) VALUES
-(1, 'obejct1', 0),
+(1, 'object1', 0),
 (2, 'object2', 0),
 (3, 'A', 0),
 (4, 'A', 0),

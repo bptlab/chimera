@@ -47,11 +47,11 @@ public class DbPathMappingTest {
     private Map<Integer, String> buildExpectedPathMap() {
         DbObject dbConn = new DbObject();
         int attrId1 = dbConn.executeStatementReturnsInt(
-                String.format("SELECT * FROM dataattribute WHERE name = '%s'", "attr1"),
-                "id");
+                String.format("SELECT * FROM dataattribute WHERE name = '%s'", "attr1"), "id");
 
         Map<Integer, String> pathMap = new HashMap<>();
         pathMap.put(attrId1, "$.a[0].b.prop1");
+
         return pathMap;
     }
 

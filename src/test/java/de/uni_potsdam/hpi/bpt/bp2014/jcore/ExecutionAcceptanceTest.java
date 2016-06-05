@@ -20,7 +20,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
      * This test run scenario 2 from the database. It checks AND gateways and consistency.
      */
     //test AND1
-    @Test
+    @Test @Ignore
     public void testScenario2() {
         System.out.println("\n ------------------ test Scenario 2 ------------------\n");
         int activity1 = 103;
@@ -406,7 +406,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * Test scenario 144, xor test
      */
-    @Test
+    @Test @Ignore
     public void testScenario144() {
         ExecutionService executionService = ExecutionService.getInstance(144);
         int scenarioID = 144;
@@ -454,7 +454,7 @@ public class ExecutionAcceptanceTest extends AbstractDatabaseDependentTest {
     /**
      * test scenario 144_2, xor test
      */
-    @Test
+    @Test @Ignore
     public void testScenario144_2() {
         ExecutionService executionService = ExecutionService.getInstance(144);
         int scenarioID = 144;

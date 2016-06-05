@@ -83,22 +83,19 @@ public class EventDispatcherTest extends JerseyTest {
     }
 
     @Test
-    public void testParseQuery() {
+    public void testParseQuery() throws IOException {
+        // TODO maybe remodel necessary
         String path = "src/test/resources/EventScenarios/VariablesInQueries.json";
-        try {
-            ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
-            assertEquals("The query was inadvertently modified",
-                    "SELECT * FROM data.path",
-                    EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM data.path",
-                    scenarioInstance.getScenarioInstanceId(),
-                    scenarioInstance.getScenarioId()));
-            scenarioInstance.getDataAttributeInstances().get(1).setValue("AnEvent");
-            String replacedQuery = EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM #data.path",
-                    scenarioInstance.getScenarioInstanceId(),
-                    scenarioInstance.getScenarioId());
-            assertEquals("SELECT * FROM AnEvent", replacedQuery);
-        } catch (IOException e) {
-            assert (false);
-        }
+        ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
+        assertEquals("The query was inadvertently modified",
+                "SELECT * FROM data.path",
+                EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM data.path",
+                scenarioInstance.getScenarioInstanceId(),
+                scenarioInstance.getScenarioId()));
+        scenarioInstance.getDataAttributeInstances().get(1).setValue("AnEvent");
+        String replacedQuery = EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM #data.path",
+                scenarioInstance.getScenarioInstanceId(),
+                scenarioInstance.getScenarioId());
+        assertEquals("SELECT * FROM AnEvent", replacedQuery);
     }
 }

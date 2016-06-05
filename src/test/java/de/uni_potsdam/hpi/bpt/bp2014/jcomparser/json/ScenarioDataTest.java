@@ -50,7 +50,9 @@ public class ScenarioDataTest {
 
     @Test
     public void testAssociateDataNodesWithDataClasses() {
-
+        ScenarioData scenarioData = new ScenarioData();
+        DomainModel domainModel = EasyMock.createNiceMock(DomainModel.class);
+        scenarioData.associateDataNodesWithDataClasses(createMockFragments(), domainModel);
         Assert.fail();
     }
 
@@ -104,6 +106,7 @@ public class ScenarioDataTest {
 
     @Test
     public void testGenerateFragmentList() {
+
         Assert.fail();
     }
 }
