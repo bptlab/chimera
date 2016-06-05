@@ -18,29 +18,9 @@ public class FragmentTest {
     public void tearDown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
-
     @Test
     public void testSave() {
-        Assert.fail();
-    }
 
-    @Test
-    public void testGetOutputSets() {
-        Assert.fail();
-    }
-
-    @Test
-    public void testGetOutputSetsForNode() {
-        Assert.fail();
-    }
-
-    @Test
-    public void testGetInputSets() {
-        Assert.fail();
-    }
-
-    @Test
-    public void testGetInputSetsForNode() {
         Assert.fail();
     }
 

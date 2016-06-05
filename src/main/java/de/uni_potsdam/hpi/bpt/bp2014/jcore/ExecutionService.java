@@ -370,16 +370,14 @@ public class ExecutionService /*implements Runnable*/ {
 	 * Terminates an activity which is running.
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityId         This is the id of the activity.
+	 * @param activityInstanceId         This is the id of the activity.
 	 * @return true if the activity could been terminated. false if not.
 	 */
-	public boolean terminateActivityInstance(int scenarioInstanceId, int activityId) {
+	public boolean terminateActivityInstance(int scenarioInstanceId, int activityInstanceId) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		//ScenarioInstance scenarioInstance =
-		//	sortedScenarioInstances.get(scenarioInstanceId);
 		for (AbstractControlNodeInstance nodeInstance
 				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeId() == activityId) {
+			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
 				return nodeInstance.terminate();
 			}
 		}

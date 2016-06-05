@@ -384,7 +384,7 @@ public class ActivityRestService extends AbstractRestService {
      * @param scenarioInstanceId the id of an scenario instance.
      * @param activityInstanceId the id of the activity instance.
      * @param postBody           Json Object containing the data objects which are used
-     *                           executing this activity
+     *                           executing this activity TODO add format
      * @return
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
