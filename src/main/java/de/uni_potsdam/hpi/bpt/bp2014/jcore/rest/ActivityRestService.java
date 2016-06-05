@@ -397,21 +397,21 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("activityInstanceId") int activityInstanceId,
             String postBody) {
-        boolean succesful;
+        boolean successful;
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         List<Integer> usedDataObjects = new ArrayList<>();
         JSONObject postJson = new JSONObject(postBody);
         if (postJson.has("dataobjects")) {
-            JSONArray dataobjectsJson = postJson.getJSONArray("dataobjects");
-            for (int i = 0; i < dataobjectsJson.length(); i++) {
-                usedDataObjects.add(dataobjectsJson.getInt(i));
+            JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
+            for (int i = 0; i < dataObjectsJson.length(); i++) {
+                usedDataObjects.add(dataObjectsJson.getInt(i));
             }
         }
 
-        succesful = executionService.beginActivityInstance(
-                scenarioInstanceId, activityInstanceId, usedDataObjects);
-        if (succesful) {
+        successful = executionService.beginActivity(
+                scenarioInstanceId, activityId, usedDataObjects);
+        if (successful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"message\":\"activity begun.\"}")

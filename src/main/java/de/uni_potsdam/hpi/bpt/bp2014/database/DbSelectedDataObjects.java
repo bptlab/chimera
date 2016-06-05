@@ -8,13 +8,13 @@ import java.util.List;
  */
 public class DbSelectedDataObjects extends DbObject {
     public void saveDataObjectSelection(
-            int scenarioInstanceId, int activityInstanceId, List<Integer> dataobjectIds) {
+            int scenarioInstanceId, int activityInstanceId, List<Integer> dataObjectIds) {
         String insertTemplate = "INSERT INTO dataobjectselection " +
                 "(scenarioinstance_id, activityinstance_id, dataobject_id) VALUES " +
                 "(%d, %d, %d);";
-        for (Integer dataobjectId : dataobjectIds) {
+        for (Integer dataObjectId : dataObjectIds) {
             String sql = String.format(
-                    insertTemplate, scenarioInstanceId, activityInstanceId, dataobjectId);
+                    insertTemplate, scenarioInstanceId, activityInstanceId, dataObjectId);
             this.executeInsertStatement(sql);
         }
     }

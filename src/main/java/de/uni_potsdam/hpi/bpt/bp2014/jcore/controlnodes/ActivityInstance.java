@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * Represents the activity instance.
- * It save the state of the activity in the state machine. It has an outgoing behavior
+ * It saves the state of the activity in the state machine. It has an outgoing behavior
  * and an incoming behavior.
  */
 
@@ -39,7 +39,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 *
 	 * @param controlNodeId      This is the database id from the control node.
 	 * @param fragmentInstanceId This is the database id from the fragment instance.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+	 * @param scenarioInstance   This is an instance from the class ScenarioInstance.
 	 */
 	public ActivityInstance(int controlNodeId, int fragmentInstanceId,
 			ScenarioInstance scenarioInstance) {
