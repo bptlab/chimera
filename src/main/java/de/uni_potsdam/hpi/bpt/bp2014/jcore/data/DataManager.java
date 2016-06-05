@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class DataManager {
     private Logger log = Logger.getLogger(DataManager.class);
     private final ScenarioInstance scenarioInstance;
+
     private List<DataObject> dataObjects = new ArrayList<>();
 
     public DataManager(ScenarioInstance instance) {
@@ -155,5 +156,10 @@ public class DataManager {
                     dbState.getStateId(dataClassId, entry.getValue()));
         }
         return dataClassIdToStateId;
+    }
+
+
+    public void setDataObjects(List<DataObject> dataObjects) {
+        this.dataObjects = dataObjects;
     }
 }

@@ -50,6 +50,34 @@ public class DataDependencyRestServiceTest extends AbstractTest {
     }
 
     @Test
+    public void testGetInputForInvalidScenario() {
+        Response response = base.path("scenario/9987/instance/1234/activity/1/input")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
+    public void testNotFoundInputInvalidActivityId() {
+        Response response = base.path("scenario/1/instance/72/activity/9999/input")
+                .request().get();
+        assertEquals("The Response code of getInputDataObjects was not 404",
+                404, response.getStatus());
+        assertEquals("getInputDataObjects does not return a JSON",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                response.readEntity(String.class),
+                jsonEquals("{\"error\":\"There is no such activity instance.\"}")
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
     public void testGetOutputForActivityWithoutOutput() {
         Response response = base.path("scenario/118/instance/704/activity/3749/output")
                 .request().get();
