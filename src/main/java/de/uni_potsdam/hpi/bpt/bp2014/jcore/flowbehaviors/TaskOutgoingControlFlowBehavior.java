@@ -50,8 +50,15 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         if (dataClassNameToStateName.isEmpty()) {
             dataClassNameToStateName = loadOnlyOutputSet();
         }
+
         createDataObjects(toCreate, dataClassNameToStateName);
-        updateDataObjects(dataClassNameToStateName);
+
+        List<DataObject> usedDataObjects = getUsedDataobjects();
+        List<DataObject> toUpdate = usedDataObjects.stream().filter(outputClassIds::contains)
+                .collect(Collectors.toList());
+
+        updateDataObjects(dataClassNameToStateName, toUpdate);
+        usedDataObjects.forEach(DataObject::unlock);
 
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
@@ -66,16 +73,15 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
                 dataManager.translate(dataClassNameToStateName);
         for (int classId : toCreate) {
             dataManager.initializeDataObject(
-                    classId,
-                    dataClassIdToStateId.get(classId));
+                    classId, dataClassIdToStateId.get(classId));
         }
     }
 
-    private void updateDataObjects(Map<String, String> dataClassNameToStateName){
+    private void updateDataObjects(Map<String, String> dataClassNameToStateName,
+                                   List<DataObject> toUpdate){
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        List<DataObject> usedDataObjects = getUsedDataobjects();
         Map<Integer, Integer> dataClassIdToStateId = translate(
-                usedDataObjects, dataClassNameToStateName);
+                toUpdate, dataClassNameToStateName);
 
         int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
         Map<Integer, Integer> dataClassToSelectedObject = getClassToSelectedObjectIdMap();
@@ -156,7 +162,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         DbSelectedDataObjects dbSelectedDataObjects = new DbSelectedDataObjects();
         ScenarioInstance instance = this.getScenarioInstance();
         Set<Integer> workItems =  new HashSet<>(dbSelectedDataObjects.getDataObjectSelection(
-                instance.getScenarioInstanceId(), this.getControlNodeId()));
+                instance.getScenarioInstanceId(), this.activityInstance.getControlNodeInstanceId()));
         List<DataObject> dataObjects = instance.getDataManager().getDataObjects();
         return dataObjects.stream().filter(x -> workItems.contains(x.getId())).collect(
                 Collectors.toList());

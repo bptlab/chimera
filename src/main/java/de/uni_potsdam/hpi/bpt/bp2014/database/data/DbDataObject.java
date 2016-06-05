@@ -98,10 +98,10 @@ public class DbDataObject extends DbObject {
      * @return the name.
      */
     public String getName(int dataObjectId) {
-        String sql = "SELECT name FROM dataobject, dataclass " +
-                "WHERE id = %d AND dataobject.dataclass_id = dataclass.id;";
+        String sql = "SELECT name FROM dataobject as do, dataclass as dc" +
+                "WHERE id = %d AND do.dataclass_id = dc.id;";
         sql = String.format(sql, dataObjectId);
-        return this.executeStatementReturnsString(sql, "name");
+        return this.executeStatementReturnsString(sql, "dc.name");
     }
 
     public boolean isLocked(int dataObjectId) {

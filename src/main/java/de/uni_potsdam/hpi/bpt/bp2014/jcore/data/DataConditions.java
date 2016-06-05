@@ -22,11 +22,12 @@ public class DataConditions {
         for (Map.Entry<Integer, Integer> condition : dataClassToState.entrySet()) {
             int dataClassId = condition.getKey();
             int stateId = condition.getValue();
-            if (possibleStatesForDataClasses.containsKey(dataClassId)) {
-                Set<Integer> possibleStatesOfClass = possibleStatesForDataClasses.get(condition.getKey());
-                if (!(possibleStatesOfClass.contains(stateId))) {
-                    return false;
-                }
+            if (!possibleStatesForDataClasses.containsKey(dataClassId)) {
+                return false;
+            }
+            Set<Integer> possibleStatesOfClass = possibleStatesForDataClasses.get(condition.getKey());
+            if (!(possibleStatesOfClass.contains(stateId))) {
+                return false;
             }
         }
         return true;

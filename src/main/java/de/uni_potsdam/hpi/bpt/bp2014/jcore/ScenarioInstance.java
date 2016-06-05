@@ -206,8 +206,7 @@ public class ScenarioInstance {
 	 * Checks if the control flow enabled control nodes can set to data flow enabled.
 	 */
 	public void updateDataFlow() {
-		for (AbstractControlNodeInstance activityInstance
-				: controlFlowEnabledControlNodeInstances) {
+		for (AbstractControlNodeInstance activityInstance : controlNodeInstances) {
 			if (activityInstance.getClass() == ActivityInstance.class) {
 				((ActivityInstance) activityInstance).checkDataFlowEnabled();
 			}
