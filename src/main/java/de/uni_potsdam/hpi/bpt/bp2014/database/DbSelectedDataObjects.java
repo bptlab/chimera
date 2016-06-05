@@ -3,7 +3,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import java.util.List;
 
 /**
- * This class is used to save and retrieve which dataobjects an activity works with.
+ * This class is used to save and retrieve the data objects selected by the user
+ * to work on in an activity.
  */
 public class DbSelectedDataObjects extends DbObject {
     public void saveDataObjectSelection(

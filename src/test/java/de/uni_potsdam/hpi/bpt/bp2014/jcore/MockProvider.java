@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 import org.easymock.EasyMock;
@@ -63,5 +64,17 @@ public class MockProvider {
             emptyAttributes.add(new ArrayList<>());
         }
         return mockDataClasses(names, emptyAttributes);
+    }
+
+    public static List<DataNode> mockDataNodes(List<String> dataclassNames, List<String> states) {
+        List<DataNode> dataNodes = new ArrayList<>();
+        for (int i = 0; i < states.size(); i++) {
+            DataNode dataNode = EasyMock.createNiceMock(DataNode.class);
+            expect(dataNode.getState()).andReturn(states.get(i));
+            expect(dataNode.getName()).andReturn(dataclassNames.get(i));
+            replay(dataNode);
+            dataNodes.add(dataNode);
+        }
+        return dataNodes;
     }
 }

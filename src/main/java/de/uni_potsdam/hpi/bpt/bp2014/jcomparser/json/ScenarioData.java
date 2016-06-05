@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class ScenarioData {
     private static Logger logger = Logger.getLogger(ScenarioData.class.getName());
-    private final JSONObject scenarioJson;
+    private JSONObject scenarioJson;
 
     private String scenarioName;
     private String scenarioEditorId;
@@ -34,6 +34,11 @@ public class ScenarioData {
     private List<StartQuery> startQueries;
 
     private int scenarioDbId;
+
+    /**
+     * Only for test purposes do not use in production.
+     */
+    public ScenarioData() {}
 
     public ScenarioData(final String element) throws JAXBException {
         try {
@@ -181,5 +186,9 @@ public class ScenarioData {
 
     public List<StartQuery> getStartQueries() {
         return startQueries;
+    }
+
+    public DomainModel getDomainModel() {
+        return domainModel;
     }
 }
