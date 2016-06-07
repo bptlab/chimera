@@ -15,7 +15,8 @@ public class ExampleValueInserter {
     }
 
     public int insertDataAttribute(String name, String type, String defaultVal, int dataclassId) {
-        String insertDataattribute = "INSERT INTO dataattribute (name, type, default, dataclass_id) " +
+        String insertDataattribute = "INSERT INTO dataattribute (dataattribute.name, " +
+                "dataattribute.type, dataattribute.default, dataattribute.dataclass_id) " +
                 "VALUES ('%s', '%s', '%s', %d);";
         insertDataattribute = String.format(
                 insertDataattribute, name, type, defaultVal, dataclassId);
@@ -30,4 +31,10 @@ public class ExampleValueInserter {
         return new DbObject().executeInsertStatement(insertDataattributeInstance);
     }
 
+    public int insertDataClass(String name, boolean isEvent) {
+        String insertDataclass = "INSERT INTO dataclass (name, is_event) VALUES ('%s', %d);";
+        int event = isEvent ? 1 : 0;
+        insertDataclass = String.format(insertDataclass, name, event);
+        return new DbObject().executeInsertStatement(insertDataclass);
+    }
 }

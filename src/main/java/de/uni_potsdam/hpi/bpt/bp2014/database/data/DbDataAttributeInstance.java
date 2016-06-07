@@ -2,6 +2,8 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
+import java.util.List;
+
 /**
  * This class is the representation of a DataAttribute instance in the database.
  * It provides the functionality to check for existing instances as well as creating new ones.
@@ -110,4 +112,11 @@ public class DbDataAttributeInstance extends DbObject {
 				+ dataAttributeInstanceId;
 		return this.executeStatementReturnsInt(sql, "dataattribute_id");
 	}
+
+    public List<Integer> getAttributeIdsForDataObject(int dataobjectId) {
+        String getDataAttributes = "SELECT dataattribute_id FROM dataattributeinstance " +
+                "WHERE dataobject_id = %d;";
+        getDataAttributes = String.format(getDataAttributes, dataobjectId);
+        return new DbObject().executeStatementReturnsListInt(getDataAttributes, "dataattribute_id");
+    }
 }

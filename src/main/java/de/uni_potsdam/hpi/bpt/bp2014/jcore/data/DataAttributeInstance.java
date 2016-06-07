@@ -48,6 +48,24 @@ public class DataAttributeInstance {
 		this.name = dbDataAttributeInstance.getName(dataAttributeId);
 	}
 
+    /**
+     * This constructor loads a data attribute instance from database.
+     *
+     * @param dataAttributeInstanceId Id of the instance to load.
+     */
+    public DataAttributeInstance (int dataAttributeInstanceId, DataObject dataObject) {
+        if (!dbDataAttributeInstance.existDataAttributeInstance(
+                dataAttributeInstanceId, dataObject.getId())) {
+            throw new IllegalArgumentException("Instance Id not present in the database");
+        }
+        this.dataAttributeInstanceId = dataAttributeInstanceId;
+        this.dataAttributeId = dbDataAttributeInstance.getDataAttributeID(dataAttributeInstanceId);
+        this.type = dbDataAttributeInstance.getType(dataAttributeId);
+        this.dataObject = dataObject;
+        this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
+        this.name = dbDataAttributeInstance.getName(dataAttributeId);
+    }
+
 	/**
 	 * @return the type of the Data Attribute Instance
 	 */

@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
@@ -57,6 +58,14 @@ public class DataObject {
         this.id = dataObjectId;
         this.scenarioInstance = scenarioInstance;
         dbDataObject.loadFromDb(this);
+        // Load data attribute instances from database
+        DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
+        List<Integer> datattributeInstances = dbDataAttributeInstance
+                .getAttributeIdsForDataObject(dataObjectId);
+        for (Integer dataAttributeInstanceId : datattributeInstances) {
+            this.dataAttributeInstances.add(new DataAttributeInstance(
+                    dataAttributeInstanceId, this));
+        }
     }
 
 	private void initializeAttributes() {

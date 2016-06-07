@@ -140,5 +140,6 @@ public class DbDataObject extends DbObject {
             log.error("Could not initialize data object from database.", e);
         }
     }
+
 }
 

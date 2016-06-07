@@ -15,9 +15,9 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -61,12 +61,39 @@ public class DataManagerTest {
 
         insertExampleValues(scenarioId, scenarioInstanceId);
         DataManager dataManager = new DataManager(scenarioInstance);
-        assertEquals(3, dataManager.getAllDataAttributeInstances().size());
+        List<DataAttributeInstance> dataAttributeInstances = dataManager
+                .getAllDataAttributeInstances();
+        assertEquals(3, dataAttributeInstances.size());
+        List<Integer> attributeInstanceIds = dataAttributeInstances.stream()
+                .map(DataAttributeInstance::getDataAttributeInstanceId)
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList(1, 2, 3),  attributeInstanceIds);
+
     }
 
     @Test
     public void testChangeDataObjectInstanceState() {
-        Assert.fail();
+        ScenarioInstance scenarioInstance = EasyMock.createNiceMock(ScenarioInstance.class);
+        final int scenarioId = 1;
+        final int scenarioInstanceId = 1;
+        expect(scenarioInstance.getScenarioId()).andReturn(scenarioId);
+        expect(scenarioInstance.getScenarioInstanceId()).andReturn(scenarioInstanceId);
+        replay(scenarioInstance);
+
+        DataManager dataManager = new DataManager(scenarioInstance);
+        int activityInstanceId = 1;
+        int dataobjectId = 1;
+        int desiredState = 2;
+
+        DataObject first = EasyMock.createNiceMock(DataObject.class);
+        expect(first.getId()).andReturn(dataobjectId);
+        first.setState(desiredState);
+        expectLastCall();
+        replay(first);
+        dataManager.setDataObjects(Arrays.asList(first));
+
+        dataManager.changeDataObjectState(dataobjectId, desiredState, activityInstanceId);
+        verify(first);
     }
 
     @Test
@@ -126,8 +153,9 @@ public class DataManagerTest {
 
     private void insertExampleValues(int scenarioId, int scenarioInstanceId) {
         ExampleValueInserter inserter = new ExampleValueInserter();
-        int firstDataclass = 1;
-        int secondDataclass = 2;
+        int firstDataclass = inserter.insertDataClass("Customer", false);
+        int secondDataclass = inserter.insertDataClass("Contract", false);
+
         int firstState = 1;
         int secondState = 2;
         int firstDataObject = inserter.insertDataObject(
@@ -138,6 +166,7 @@ public class DataManagerTest {
         int attribute1 = inserter.insertDataAttribute("name", "String", "", firstDataclass);
         int attribute2 = inserter.insertDataAttribute("age", "Integer", "1", firstDataclass);
         int attribute3 = inserter.insertDataAttribute("lines", "Integer", "0", secondDataclass);
+
 
         inserter.insertDataAttributeInstance("Klaus", attribute1, firstDataObject);
         inserter.insertDataAttributeInstance("3", attribute2, firstDataObject);
