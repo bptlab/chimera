@@ -57,7 +57,8 @@ public class XesExportTest extends JerseyTest {
         ScenarioTestHelper.beginActivityByName("Do something", instance);
         ScenarioTestHelper.terminateActivityByName("Do something", instance);
 
-        Response response = base.path(String.format("export/%d", instance.getScenarioId())).request().get();
+        Response response = base.path(String.format("scenario/%d/export",
+                instance.getScenarioId())).request().get();
         assertEquals(200, response.getStatus());
         Document doc = XmlUtil.retrieveFromString(response.readEntity(String.class));
         Node rootElement = doc.getChildNodes().item(0);

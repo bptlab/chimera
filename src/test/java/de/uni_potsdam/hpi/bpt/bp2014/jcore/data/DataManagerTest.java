@@ -51,6 +51,20 @@ public class DataManagerTest {
     }
 
     @Test
+    public void testLoadDataObjectsWithAttributes() {
+        ScenarioInstance scenarioInstance = EasyMock.createNiceMock(ScenarioInstance.class);
+        final int scenarioId = 1;
+        final int scenarioInstanceId = 1;
+        expect(scenarioInstance.getScenarioId()).andReturn(scenarioId);
+        expect(scenarioInstance.getScenarioInstanceId()).andReturn(scenarioInstanceId);
+        replay(scenarioInstance);
+
+        insertExampleValues(scenarioId, scenarioInstanceId);
+        DataManager dataManager = new DataManager(scenarioInstance);
+        assertEquals(3, dataManager.getAllDataAttributeInstances().size());
+    }
+
+    @Test
     public void testChangeDataObjectInstanceState() {
         Assert.fail();
     }
@@ -116,8 +130,18 @@ public class DataManagerTest {
         int secondDataclass = 2;
         int firstState = 1;
         int secondState = 2;
-        inserter.insertDataObject(scenarioId, scenarioInstanceId, firstState, firstDataclass, false);
-        inserter.insertDataObject(scenarioId, scenarioInstanceId, secondState, secondDataclass, false);
+        int firstDataObject = inserter.insertDataObject(
+                scenarioId, scenarioInstanceId, firstState, firstDataclass, false);
+        int secondDataObject = inserter.insertDataObject(
+                scenarioId, scenarioInstanceId, secondState, secondDataclass, false);
 
+        int attribute1 = inserter.insertDataAttribute("name", "String", "", firstDataclass);
+        int attribute2 = inserter.insertDataAttribute("age", "Integer", "1", firstDataclass);
+        int attribute3 = inserter.insertDataAttribute("lines", "Integer", "0", secondDataclass);
+
+        inserter.insertDataAttributeInstance("Klaus", attribute1, firstDataObject);
+        inserter.insertDataAttributeInstance("3", attribute2, firstDataObject);
+        inserter.insertDataAttributeInstance("1000", attribute3, secondDataObject);
     }
+
 }
