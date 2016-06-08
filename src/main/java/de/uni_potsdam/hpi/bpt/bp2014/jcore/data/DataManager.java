@@ -158,6 +158,34 @@ public class DataManager {
         return dataClassIdToStateId;
     }
 
+    /**
+     * Sets the values of data attributes and logs the attribute change.
+     * Checks whether the values are of valid type for the attribute.
+     *
+     * @param activityInstanceId needed for the log entry
+     * @param idToValue map of attribute instance id to new value
+     * @return true if all attributes could be set correctly, false if
+     * an attribute was of the wrong data type
+     */
+    public boolean setAttributeValues(int activityInstanceId, Map<Integer, String> idToValue) {
+        boolean allValuesValid = true;
+        for (Map.Entry<Integer, String> attributeInstanceIdToValue : idToValue.entrySet()) {
+            Integer dataAttributeInstanceId = attributeInstanceIdToValue.getKey();
+            String value = attributeInstanceIdToValue.getValue();
+            new DbLogEntry().logDataAttributeTransition(dataAttributeInstanceId, value,
+                    activityInstanceId, scenarioInstance.getScenarioInstanceId());
+            DataAttributeInstance dataAttributeInstance = scenarioInstance
+                    .getDataAttributeInstances().get(dataAttributeInstanceId);
+            if (dataAttributeInstance.isValueAllowed(value)) {
+                dataAttributeInstance.setValue(value);
+            } else {
+                log.error("Attribute value could not be set "
+                        + "because it has the wrong data type.");
+                allValuesValid = false;
+            }
+        }
+        return allValuesValid;
+    }
 
     public void setDataObjects(List<DataObject> dataObjects) {
         this.dataObjects = dataObjects;

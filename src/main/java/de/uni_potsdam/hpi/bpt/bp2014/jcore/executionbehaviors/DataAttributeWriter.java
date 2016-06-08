@@ -40,7 +40,7 @@ public class DataAttributeWriter {
             int dataAttributeInstanceId = idToPathEntry.getKey();
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
             String jsonPath = idToPathEntry.getValue();
-            Object value = JsonPath.read(json, jsonPath);
+            String value = JsonPath.read(json, jsonPath);
             if (instance.isValueAllowed(value)) {
                 new DbLogEntry().logDataAttributeTransition(instance.getDataAttributeInstanceId(),
                         value, controlNodeInstanceId, scenarioInstanceId);

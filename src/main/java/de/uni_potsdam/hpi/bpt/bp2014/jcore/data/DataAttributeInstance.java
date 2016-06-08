@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -88,7 +89,7 @@ public class DataAttributeInstance {
 	 *
 	 * @param value to set.
 	 */
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		validateValueType(value);
 		this.value = value;
 		dbDataAttributeInstance.setValue(dataAttributeInstanceId, value);
@@ -99,7 +100,7 @@ public class DataAttributeInstance {
 	 * e.g. if it fits to the data type.
 	 * @param value
      */
-	public boolean isValueAllowed(Object value) {
+	public boolean isValueAllowed(String value) {
 		try {
 			validateValueType(value);
 			return true;
@@ -108,31 +109,42 @@ public class DataAttributeInstance {
 		}
 	}
 
-	private void validateValueType(Object value) {
+	private void validateValueType(String value) {
+		// TODO notify frontend when value is wrong
 		String excp = "Could not set data attribute value "
 				+ "because it did not have the correct data type.";
 		switch(this.getType()) {
 			case "Integer":
-				if (!(value instanceof Integer))
+				try {
+					Integer.valueOf(value);
+				} catch (Exception e) {
 					throw new IllegalArgumentException(excp);
+				}
 				break;
 			case "Double":
-				if (!(value instanceof Double))
+				try {
+					Double.valueOf(value);
+				} catch (Exception e) {
 					throw new IllegalArgumentException(excp);
+				}
 				break;
 			case "Boolean":
-				if (!(value instanceof Boolean))
+				try {
+					Boolean.valueOf(value);
+				} catch (Exception e) {
 					throw new IllegalArgumentException(excp);
+				}
 				break;
 			case "Date":
-				if (!(value instanceof String) && !(value instanceof Date))
+				try {
+					new SimpleDateFormat("dd.MM.yyyy").parse(value);
+				} catch (Exception e) {
 					throw new IllegalArgumentException(excp);
+				}
 				break;
 			case "String":
 			case "Enum":
 			case "Class":
-				if (!(value instanceof String))
-					throw new IllegalArgumentException(excp);
 				break;
 			default:
 				throw new IllegalArgumentException("Attribute data type is not supported.");

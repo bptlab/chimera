@@ -471,7 +471,7 @@ public class ExecutionService /*implements Runnable*/ {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
         DataManager dataManager = scenarioInstance.getDataManager();
         return dataManager.getDataObjects().stream().collect(Collectors.toMap(
-                DataObject::getDataClassId,
+                DataObject::getId,
                 x -> dataClass.getName(x.getDataClassId())
         ));
 	}
@@ -498,13 +498,7 @@ public class ExecutionService /*implements Runnable*/ {
 	public boolean setDataAttributeValues(int scenarioInstanceId, int activityInstanceId,
 			Map<Integer, String> idToValue) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
-				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
-				return ((ActivityInstance) nodeInstance).setDataAttributeValues(idToValue);
-			}
-		}
-		return false;
+		return scenarioInstance.getDataManager().setAttributeValues(activityInstanceId, idToValue);
 	}
 
 	/**

@@ -168,7 +168,7 @@ public class ActivityRestTest extends AbstractTest {
     @Test
     public void testInvalidStateTransition() {
         // An activity which is running cannot be started again
-        Response response = base.path("scenario/1/instance/72/activityInstance/105/begin")
+        Response response = base.path("scenario/1/instance/72/activityinstance/105/begin")
                 .request().post(Entity.json("[]"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());

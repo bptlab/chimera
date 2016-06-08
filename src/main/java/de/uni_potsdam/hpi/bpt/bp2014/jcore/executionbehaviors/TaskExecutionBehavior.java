@@ -48,31 +48,6 @@ public class TaskExecutionBehavior {
 		((ActivityInstance) controlNodeInstance).setCanTerminate(canTerminate);
 	}
 
-	/**
-	 * @param values Map from attribute instance id to the name of the state to set.
-	 * @return true if all values could be set.
-	 */
-	public boolean setDataAttributeValues(Map<Integer, String> values) {
-		boolean allValuesValid = true;
-		for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
-            Integer dataattributeInstanceId = attributeInstanceIdToValue.getKey();
-            String value = attributeInstanceIdToValue.getValue();
-            new DbLogEntry().logDataAttributeTransition(dataattributeInstanceId, value,
-                    activityInstanceId, scenarioInstance.getScenarioInstanceId());
-            DataAttributeInstance dataAttributeInstance = getScenarioInstance()
-                    .getDataAttributeInstances().get(dataattributeInstanceId);
-			if (dataAttributeInstance.isValueAllowed(value)) {
-				dataAttributeInstance.setValue(value);
-			} else {
-				LOGGER.error("Attribute value could not be set "
-						+ "because it has the wrong data type.");
-				allValuesValid = false;
-			}
-        }
-        this.setCanTerminate(true);
-		return allValuesValid;
-    }
-
 	public ScenarioInstance getScenarioInstance() {
 		return scenarioInstance;
 	}

@@ -6,7 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInsta
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.ActivityJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -251,10 +251,11 @@ public class ActivityRestService extends AbstractRestService {
                 ids.put(instance.getControlNodeInstanceId());
                 JSONObject activityJSON = new JSONObject();
                 activityJSON.put("id", instance.getControlNodeInstanceId());
+                activityJSON.put("activityid", instance.getControlNodeId());
                 activityJSON.put("label", instance.getLabel());
                 activityJSON.put("state", entry.getKey());
-                activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                        + instance.getControlNodeInstanceId());
+                activityJSON.put("link", uriInfo.getAbsolutePath()
+                        + String.valueOf(instance.getControlNodeInstanceId()));
                 activities.put(""
                                 + instance.getControlNodeInstanceId(),
                         activityJSON);
@@ -284,10 +285,11 @@ public class ActivityRestService extends AbstractRestService {
             JSONObject activityJSON = new JSONObject();
             ids.add(instance.getControlNodeInstanceId());
             activityJSON.put("id", instance.getControlNodeInstanceId());
+            activityJSON.put("activityid", instance.getControlNodeId());
             activityJSON.put("label", instance.getLabel());
             activityJSON.put("state", state);
-            activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                    + instance.getControlNodeInstanceId());
+            activityJSON.put("link", uriInfo.getAbsolutePath()
+                    + String.valueOf(instance.getControlNodeInstanceId()));
             activities.put(activityJSON);
         }
         JSONObject result = new JSONObject();
@@ -363,16 +365,22 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
             @PathParam("activityInstanceId") int activityInstanceId,
-            final DataAttributeUpdateJaxBean input) {
+            final String input) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
 
-        Map<Integer, String> values = new HashMap<>();
-        if (input != null) {
-            values.put(input.getId(), input.getValue());
+        Map<Integer, String> idToValue = new HashMap<>();
+        JSONObject object = new JSONObject(input);
+
+        for (Object key : object.keySet()) {
+            String keyString = String.valueOf(key);
+            idToValue.put (Integer.valueOf(keyString), object.getString(keyString));
         }
 
-        if (executionService.setDataAttributeValues(scenarioInstanceId, activityInstanceId, values)) {
+        boolean successful = executionService.setDataAttributeValues(
+                scenarioInstanceId, activityInstanceId, idToValue);
+
+        if (input != null && successful) {
             return this.buildAcceptedResponse("{\"message\":\"attribute value was "
                     + "changed successfully.\"}");
         } else {
@@ -410,7 +418,7 @@ public class ActivityRestService extends AbstractRestService {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activityInstance/{activityInstanceId}/begin")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
     public Response beginActivity(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
@@ -457,7 +465,7 @@ public class ActivityRestService extends AbstractRestService {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activityInstance/{activityInstanceId}/terminate")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
     public Response terminateActivity(@PathParam("scenarioId") int scenarioId,
                                   @PathParam("instanceId") int scenarioInstanceId,
                                   @PathParam("activityInstanceId") int activityInstanceId,

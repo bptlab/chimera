@@ -3,6 +3,25 @@
 angular.module('jfrontend')
     .controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
         function ($routeParams, $location, $http, $scope) {
+            $scope.$on('$viewContentLoaded', function() {
+                console.log($routeParams.id);
+                //if we are within the scenario layer
+                if ($routeParams.id != null) {
+                // setting current id of scenario based on the URI
+                controller.currentScenario['id'] = $routeParams.id;
+                // fetching details for this scenario
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + controller.currentScenario['id'] + "/").
+                success(function (data) {
+                    controller.currentScenario['details'] = data;
+                }).
+                error(function () {
+                    console.log('request failed');
+                });
+                // requesting additional informations for this scenario
+                controller.getInstancesOfScenario(controller.currentScenario['id']);
+                controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
+            }
+            });
             // For accessing data from inside the $http context
             var controller = this;
 
@@ -52,23 +71,6 @@ angular.module('jfrontend')
                 });
             };
 
-            //if we are within the scenario layer
-            if ($routeParams.id != null) {
-                // setting current id of scenario based on the URI
-                controller.currentScenario['id'] = $routeParams.id;
-                // fetching details for this scenario
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + controller.currentScenario['id'] + "/").
-                success(function (data) {
-                    controller.currentScenario['details'] = data;
-                }).
-                error(function () {
-                    console.log('request failed');
-                });
-                // requesting additional informations for this scenario
-                controller.getInstancesOfScenario(controller.currentScenario['id']);
-                controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
-            }
-
             // requesting details for a specified scenario
             this.getScenarioDetails = function (id) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
@@ -80,15 +82,9 @@ angular.module('jfrontend')
                 });
             };
 
-            // CURRENTLY NOT SUPPORTED: fetching scenario images for visualisation
-            this.getImageForScenario = function (id) {
-                this.scenarios["" + id]['imageUrl'] =
-                    JEngine_Server_URL + "/" + JComparser_REST_Interface + "/scenarios/" + id + "/image/";
-            };
-
             // navigating to the specified scenario
             this.goToDetailsFrom = function (id) {
-                $location.path('scenario/' + id);
+                $location.path('scenario/' + $routeParams.id + '/instance/' + id);
             };
 
             // helper for accessing scenario details for a scenario

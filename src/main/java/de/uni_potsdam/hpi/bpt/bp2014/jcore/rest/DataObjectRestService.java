@@ -147,8 +147,8 @@ public class DataObjectRestService {
             dataObject.put("id", id);
             dataObject.put("label", labels.get(id));
             dataObject.put("state", states.get(id));
-            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + id);
-            results.put("" + id, dataObject);
+            dataObject.put("link", uriInfo.getAbsolutePath() + String.valueOf(id));
+            results.put(String.valueOf(id), dataObject);
         }
         result.put("results", results);
         return result;

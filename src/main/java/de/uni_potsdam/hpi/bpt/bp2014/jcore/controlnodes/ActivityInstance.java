@@ -200,7 +200,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         scenarioInstance.updateDataFlow();
         scenarioInstance.checkXorGatewaysForTermination(getControlNodeId());
         taskExecutionBehavior.execute();
-		scenarioInstance.getRunningControlNodeInstances().add(this);
         enableAttachedEvents();
         if (isAutomaticTask) {
             this.terminate();
@@ -257,20 +256,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 					boundaryEventId, this.getFragmentInstanceId());
 		}
     }
-
-	/**
-	 * Sets values for data attributes.
-     *
-	 * @param idToValue Map from data attribute instance id to the name
-     *                  of the state it should be set to.
-	 * @return true if the dataAttributes could be set.
-	 */
-	public boolean setDataAttributeValues(Map<Integer, String> idToValue) {
-		if (AbstractStateMachine.STATE.RUNNING == this.getState()) {
-			return taskExecutionBehavior.setDataAttributeValues(idToValue);
-		}
-		return false;
-	}
 
 	/**
 	 * Checks if the Activity is now data enabled.

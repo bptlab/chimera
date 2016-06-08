@@ -130,7 +130,7 @@ public class HistoryLoggerTest {
         assert(idToChangedValue.size() > 0);
         // Begin activity so that it can alter the values of data attributes
         activity.begin();
-        activity.setDataAttributeValues(idToChangedValue);
+        scenarioInstance.getDataManager().setAttributeValues(activity.getControlNodeInstanceId(), idToChangedValue);
 
     }
 }

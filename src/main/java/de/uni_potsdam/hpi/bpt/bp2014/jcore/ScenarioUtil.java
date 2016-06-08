@@ -29,5 +29,4 @@ public class ScenarioUtil {
         }
         throw new IllegalArgumentException("Invalid activity instance activityInstanceId");
     }
-
 }

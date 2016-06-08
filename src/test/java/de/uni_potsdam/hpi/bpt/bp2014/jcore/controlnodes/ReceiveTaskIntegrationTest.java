@@ -53,11 +53,11 @@ public class ReceiveTaskIntegrationTest extends JerseyTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityInstance/2/begin")
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityInstance/2/terminate")
+        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
                 .request().post(Entity.json("{}"));
         assertEquals(202, termianteFirstActivity.getStatus());
 

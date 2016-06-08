@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.integration;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.*;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
 import net.javacrumbs.jsonunit.core.Option;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -55,11 +54,11 @@ public class EndToEndTest extends JerseyTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityInstance/1/begin")
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/1/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityInstance/1/terminate")
+        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/1/terminate")
                 .request().post(Entity.json("{}"));
         assertEquals(202, terminateFirstActivity.getStatus());
 
