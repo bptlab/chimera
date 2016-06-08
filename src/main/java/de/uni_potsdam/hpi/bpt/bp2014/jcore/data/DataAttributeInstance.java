@@ -56,7 +56,7 @@ public class DataAttributeInstance {
      */
     public DataAttributeInstance (int dataAttributeInstanceId, DataObject dataObject) {
         if (!dbDataAttributeInstance.existDataAttributeInstance(
-                dataAttributeInstanceId, dataObject.getId())) {
+                dataAttributeInstanceId)) {
             throw new IllegalArgumentException("Instance Id not present in the database");
         }
         this.dataAttributeInstanceId = dataAttributeInstanceId;
@@ -66,6 +66,27 @@ public class DataAttributeInstance {
         this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
         this.name = dbDataAttributeInstance.getName(dataAttributeId);
     }
+
+	/**
+	 * This is used for changing attribute instance values.
+	 * This constructor loads a data attribute instance from database.
+	 * It does not have a link to the dataobject.
+	 *
+	 * @param dataAttributeInstanceId Id of the instance to load.
+	 */
+	public DataAttributeInstance (int dataAttributeInstanceId) {
+		if (!dbDataAttributeInstance.existDataAttributeInstance(
+				dataAttributeInstanceId)) {
+			throw new IllegalArgumentException("Instance Id not present in the database");
+		}
+		this.dataAttributeInstanceId = dataAttributeInstanceId;
+		this.dataAttributeId = dbDataAttributeInstance.getDataAttributeID(dataAttributeInstanceId);
+		this.type = dbDataAttributeInstance.getType(dataAttributeId);
+		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
+		this.name = dbDataAttributeInstance.getName(dataAttributeId);
+
+		this.dataObject = null;
+	}
 
 	/**
 	 * @return the type of the Data Attribute Instance

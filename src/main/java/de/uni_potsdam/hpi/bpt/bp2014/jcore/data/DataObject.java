@@ -77,10 +77,6 @@ public class DataObject {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
 					dataAttributeId, id, this);
             dataAttributeInstances.add(dataAttributeInstance);
-            // TODO remove this method
-			scenarioInstance.getDataAttributeInstances()
-					.put(dataAttributeInstance.getDataAttributeInstanceId(),
-							dataAttributeInstance);
 		}
 	}
 

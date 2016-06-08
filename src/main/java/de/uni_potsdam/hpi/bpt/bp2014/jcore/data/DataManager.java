@@ -174,8 +174,8 @@ public class DataManager {
             String value = attributeInstanceIdToValue.getValue();
             new DbLogEntry().logDataAttributeTransition(dataAttributeInstanceId, value,
                     activityInstanceId, scenarioInstance.getScenarioInstanceId());
-            DataAttributeInstance dataAttributeInstance = scenarioInstance
-                    .getDataAttributeInstances().get(dataAttributeInstanceId);
+            DataAttributeInstance dataAttributeInstance =
+                    new DataAttributeInstance(dataAttributeInstanceId);
             if (dataAttributeInstance.isValueAllowed(value)) {
                 dataAttributeInstance.setValue(value);
             } else {

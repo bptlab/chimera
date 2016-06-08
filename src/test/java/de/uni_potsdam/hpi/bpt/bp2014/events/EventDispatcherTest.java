@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -92,7 +93,7 @@ public class EventDispatcherTest extends JerseyTest {
                 EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM data.path",
                 scenarioInstance.getScenarioInstanceId(),
                 scenarioInstance.getScenarioId()));
-        scenarioInstance.getDataAttributeInstances().get(1).setValue("AnEvent");
+        new DataAttributeInstance(1).setValue("AnEvent");
         String replacedQuery = EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM #data.path",
                 scenarioInstance.getScenarioInstanceId(),
                 scenarioInstance.getScenarioId());

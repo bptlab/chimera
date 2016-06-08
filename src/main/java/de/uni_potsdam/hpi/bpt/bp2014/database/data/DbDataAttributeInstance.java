@@ -34,13 +34,19 @@ public class DbDataAttributeInstance extends DbObject {
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
 	 * @param dataObjectId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
-	 * @return as a boolean whether the given dataAttribute exists
+	 * @return as a boolean whether the given dataAttributeInstance exists
 	 */
 	public Boolean existDataAttributeInstance(int dataAttributeId, int dataObjectId) {
 		String sql = "SELECT id FROM dataattributeinstance "
 				+ "WHERE dataobject_id = " + dataObjectId + " "
 				+ "AND dataattribute_id = " + dataAttributeId;
 		return this.executeExistStatement(sql);
+	}
+
+	public Boolean existDataAttributeInstance(int dataAttributeInstanceId) {
+		String sql = "SELECT id FROM dataattributeinstance "
+				+ "WHERE id = %d";
+		return this.executeExistStatement(String.format(sql, dataAttributeInstanceId));
 	}
 
 	/**
