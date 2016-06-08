@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ExampleValueInserter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import org.easymock.EasyMock;
@@ -100,6 +101,8 @@ public class DbDataObjectTest {
     @Test
     public void testInitializeFromDb() {
         insertExampleObject();
+        ExampleValueInserter inserter = new ExampleValueInserter();
+        inserter.insertDataClass("1", false);
         DataObject dataObject = createDataObjectMock();
         DbDataObject dataObjectDao = new DbDataObject();
         dataObjectDao.loadFromDb(dataObject);
