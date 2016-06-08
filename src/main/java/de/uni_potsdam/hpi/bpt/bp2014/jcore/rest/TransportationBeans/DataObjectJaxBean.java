@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -11,15 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DataObjectJaxBean {
-
-    public DataObjectJaxBean() {};
-
-    public DataObjectJaxBean(DataObject dataObject) {
-        this.setId(dataObject.getId());
-        this.setLabel(dataObject.getName());
-        this.setState(dataObject.getStateName());
-    }
-
     /**
      * The label of the data object.
      */
@@ -36,13 +28,34 @@ public class DataObjectJaxBean {
      * The label not the id will be saved.
      */
     private String state;
+
     /**
      * An array of all dataAttributes belonging to this dataObject.
      * Each attribute has an id, name, type and value.
      */
     private DataAttributeJaxBean[] attributeConfiguration;
 
+    // TODO is this still needed for something
     private int setId;
+
+    public DataObjectJaxBean() {};
+
+    public DataObjectJaxBean(DataObject dataObject) {
+        this.setId(dataObject.getId());
+        this.setLabel(dataObject.getName());
+        this.setState(dataObject.getStateName());
+    }
+
+    // TODO does this really need the execution service
+    public DataObjectJaxBean (DataObject dataObjectInstance, ExecutionService executionService) {
+        this.setId(dataObjectInstance.getId());
+        this.setLabel(dataObjectInstance.getName());
+        this.setState(dataObjectInstance.getStateName());
+        this.setAttributeConfiguration(executionService
+                .getDataAttributesForDataObjectInstance(dataObjectInstance));
+    }
+
+
 
     public String getLabel() {
         return label;

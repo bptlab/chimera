@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
@@ -14,6 +15,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -98,6 +100,20 @@ public class ExecutionService /*implements Runnable*/ {
 		ExecutionService ex = ExecutionService.getInstance(scenarioId);
 		return ex.startNewScenarioInstance();
 	}
+
+    public List<DataObjectJaxBean> getSelectedWorkingItems(int scenarioInstanceId, int activityInstanceId) {
+        ScenarioInstance scenarioInstance = this.getScenarioInstance(scenarioInstanceId);
+        DbSelectedDataObjects workItems = new DbSelectedDataObjects();
+        List<Integer> dataObjectIds = workItems.getDataObjectSelection(
+                scenarioInstanceId, activityInstanceId);
+        List<DataObjectJaxBean> dataObjectJaxBeen = new ArrayList<>();
+        for (Integer dataObjectId : dataObjectIds) {
+            DataObject dataObject = new DataObject(dataObjectId, scenarioInstance);
+            DataObjectJaxBean dataObjectJaxBean = new DataObjectJaxBean(dataObject, this);
+            dataObjectJaxBeen.add(dataObjectJaxBean);
+        }
+        return dataObjectJaxBeen;
+    }
 
 	/**
 	 * Open a existing scenario instance.

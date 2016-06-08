@@ -1,15 +1,19 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -349,16 +353,16 @@ public class ActivityRestService extends AbstractRestService {
      *
      * @param scenarioId         The id of a scenario model.
      * @param scenarioInstanceId the id of an scenario instance.
-     * @param activityId         the control node id of the activity.
+     * @param activityInstanceId the control node instance id of the activity.
      * @param input				 data input.
      * @return Status code with regard to its success / failure
      */
     @PUT
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
     public Response setDataAttribute(
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
-            @PathParam("activityId") int activityId,
+            @PathParam("activityInstanceId") int activityInstanceId,
             final DataAttributeUpdateJaxBean input) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
@@ -368,13 +372,28 @@ public class ActivityRestService extends AbstractRestService {
             values.put(input.getId(), input.getValue());
         }
 
-        if (executionService.setDataAttributeValues(scenarioInstanceId, activityId, values)) {
+        if (executionService.setDataAttributeValues(scenarioInstanceId, activityInstanceId, values)) {
             return this.buildAcceptedResponse("{\"message\":\"attribute value was "
                     + "changed successfully.\"}");
         } else {
             return this.buildBadRequestResponse("{\"error\":\"error within the "
                     + "update of attributes\"}");
         }
+    }
+
+    @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
+    public Response getWorkingItems(@PathParam("scenarioId") int scenarioId,
+                                    @PathParam("instanceId") int scenarioInstanceId,
+                                    @PathParam("activityInstanceId") int activityInstanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+
+        List<DataObjectJaxBean> selectedDataObjects = executionService.getSelectedWorkingItems(
+                scenarioInstanceId, activityInstanceId);
+        JSONArray selectedDataObjectsJson = new JSONArray(selectedDataObjects);
+        return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON)
+                .entity(selectedDataObjectsJson.toString()).build();
     }
 
     /**
