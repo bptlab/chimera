@@ -7,12 +7,15 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.*;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.TaskOutgoingControlFlowBehavior;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents the activity instance.
@@ -155,13 +158,17 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * @return true if the activity could started. false if the activity couldn't started.
 	 */
 	public boolean begin() {
-        if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
-			((ActivityStateMachine) getStateMachine()).begin();
-			_begin();
-			return true;
-		} else {
-			return false;
-		}
+        DataManager dataManager = scenarioInstance.getDataManager();
+        List<DataObject> dataObjects = dataManager.getAvailableInput(
+                this.getControlNodeInstanceId());
+        Set<Integer> dataclassIds = dataObjects.stream().map(DataObject::getDataClassId)
+                .collect(Collectors.toSet());
+        assert dataObjects.size() == dataclassIds.size(): "Data object selection underspecified";
+
+        // TODO find better error msg
+        List<Integer> dataobjectids = dataObjects.stream().map(DataObject::getId)
+                .collect(Collectors.toList());
+        return this.begin(dataobjectids);
 	}
 
     /**
@@ -170,20 +177,22 @@ public class ActivityInstance extends AbstractControlNodeInstance {
      * @return Whether the activity could have been started.
      */
     public boolean begin(List<Integer> workingItems) {
-        if (((ActivityStateMachine) getStateMachine()).isEnabled()) {
-            ((ActivityStateMachine) getStateMachine()).begin();
-            ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
-                    .lockDataObjectInstances(workingItems);
-            DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
-            int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
-            dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
-                    this.getControlNodeInstanceId(), workingItems);
-            _begin();
-            return true;
+        if (!((ActivityStateMachine) getStateMachine()).isEnabled()) {
+            return false;
         }
-        return false;
+        ((ActivityStateMachine) getStateMachine()).begin();
+        ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
+                .lockDataObjectInstances(workingItems);
+        DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
+        int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+        dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
+                this.getControlNodeInstanceId(), workingItems);
+        _begin();
+        return true;
+
     }
 
+    // TODO rename properly
     private void _begin() {
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
         new DbLogEntry().logActivity(

@@ -13,15 +13,21 @@ import java.util.Optional;
  */
 public class ScenarioUtil {
 
-    public ActivityInstance getActivityById(ScenarioInstance scenarioInstance, Integer id) {
+    /**
+     *
+     * @param scenarioInstance
+     * @param activityInstanceId
+     * @return
+     */
+    public ActivityInstance getActivityById(ScenarioInstance scenarioInstance, Integer activityInstanceId) {
         List<AbstractControlNodeInstance> nodes = scenarioInstance.getControlNodeInstances();
         Optional<AbstractControlNodeInstance> activityInstance = nodes.stream()
                 .filter(x -> x instanceof ActivityInstance)
-                .filter(x -> x.getControlNodeId() == id).findFirst();
+                .filter(x -> x.getControlNodeInstanceId() == activityInstanceId).findFirst();
         if (activityInstance.isPresent()) {
             return (ActivityInstance) activityInstance.get();
         }
-        throw new IllegalArgumentException("Invalid activity instance id");
+        throw new IllegalArgumentException("Invalid activity instance activityInstanceId");
     }
 
 }

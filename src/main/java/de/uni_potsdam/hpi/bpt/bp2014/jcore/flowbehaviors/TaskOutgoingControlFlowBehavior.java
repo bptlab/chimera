@@ -54,8 +54,8 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         createDataObjects(toCreate, dataClassNameToStateName);
 
         List<DataObject> usedDataObjects = getUsedDataobjects();
-        List<DataObject> toUpdate = usedDataObjects.stream().filter(outputClassIds::contains)
-                .collect(Collectors.toList());
+        List<DataObject> toUpdate = usedDataObjects.stream().filter(
+                x ->  outputClassIds.contains(x.getDataClassId())).collect(Collectors.toList());
 
         updateDataObjects(dataClassNameToStateName, toUpdate);
         usedDataObjects.forEach(DataObject::unlock);
@@ -77,19 +77,26 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         }
     }
 
+    // TODO Maybe pass to update instead
     private void updateDataObjects(Map<String, String> dataClassNameToStateName,
                                    List<DataObject> toUpdate){
         DataManager dataManager = this.getScenarioInstance().getDataManager();
         Map<Integer, Integer> dataClassIdToStateId = translate(
-                toUpdate, dataClassNameToStateName);
+                this.getScenarioInstance().getScenarioId(), dataClassNameToStateName);
 
         int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
         Map<Integer, Integer> dataClassToSelectedObject = getClassToSelectedObjectIdMap();
 
-        for (Map.Entry<Integer, Integer> entry : dataClassIdToStateId.entrySet()) {
-            dataManager.changeDataObjectState(
-                    dataClassToSelectedObject.get(entry.getKey()), entry.getValue(),
-                    controlNodeInstanceId);
+        Set<Integer> usedDataclassIds = toUpdate.stream().map(DataObject::getDataClassId)
+                .collect(Collectors.toSet());
+        for (Map.Entry<Integer, Integer> entry : dataClassToSelectedObject.entrySet()) {
+            if (!usedDataclassIds.contains(entry.getKey())) {
+                continue;
+            }
+            int dataclassId = entry.getKey();
+            int dataobjectId = dataClassToSelectedObject.get(dataclassId);
+            int stateId = dataClassIdToStateId.get(dataclassId);
+            dataManager.changeDataObjectState(dataobjectId, stateId, controlNodeInstanceId);
         }
     }
 
@@ -137,20 +144,22 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
     /**
      * Converts map from data class name to state name to it's respective database
      * ids.
-     * @param dataObjects
+     * @param scenarioId This id is needed because the scope of a data class name is only
+     *                   unique in one scenario
      * @param dataClassNameToStateName
      * @return
      */
-    private Map<Integer, Integer> translate(List<DataObject> dataObjects,
+    private Map<Integer, Integer> translate(int scenarioId,
             Map<String, String> dataClassNameToStateName) {
-        DbDataObject dbDataObject = new DbDataObject();
+        DbDataClass dbDataClass = new DbDataClass();
         DbState dbState = new DbState();
         Map<Integer, Integer> dataclassIdToStateId = new HashMap<>();
-        for (DataObject dataObject : dataObjects) {
-            String name = dbDataObject.getName(dataObject.getId());
+        for (Map.Entry<String, String> class_state : dataClassNameToStateName.entrySet()) {
+            String name = class_state.getKey();
+            int dataclassId = dbDataClass.getId(name, scenarioId);
             String stateToSet = dataClassNameToStateName.get(name);
-            Integer stateId = dbState.getStateId(dataObject.getDataClassId(), stateToSet);
-            dataclassIdToStateId.put(dataObject.getDataClassId(), stateId);
+            Integer stateId = dbState.getStateId(dataclassId, stateToSet);
+            dataclassIdToStateId.put(dataclassId, stateId);
         }
         return dataclassIdToStateId;
     }

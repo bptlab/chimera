@@ -486,7 +486,6 @@ public class ActivityRestService extends AbstractRestService {
         } else {
             return this.buildBadRequestResponse("{\"error\":\"impossible to "
                     + "terminate activity with id " + activityInstanceId + "\"}");
-
         }
     }
 }
