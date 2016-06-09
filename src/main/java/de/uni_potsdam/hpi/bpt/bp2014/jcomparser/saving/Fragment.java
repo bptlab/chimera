@@ -120,19 +120,16 @@ public class Fragment {
      */
     public List<InputSet> getInputSets() {
         List<InputSet> sets = new ArrayList<>();
-        Map<String, DataNode> idToDataNode = new HashMap<>();
-        for (DataNode dataNode : this.getDataNodes()) {
-            idToDataNode.put(dataNode.getId(), dataNode);
-        }
-
         for (AbstractDataControlNode node : this.xmlWrapper.getAllDataControlNodes()) {
-            sets.addAll(getInputSetsForNode(node, idToDataNode));
+            sets.addAll(getInputSetsForNode(node));
         }
-
         return sets;
     }
 
-    public List<InputSet> getInputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
+    public List<InputSet> getInputSetsForNode(AbstractDataControlNode node) {
+        Map<String, DataNode> idToDataNode = this.getDataNodes().stream()
+                .collect(Collectors.toMap(x -> x.getId(), x -> x));
+
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         for (DataInputAssociation assoc : node.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
