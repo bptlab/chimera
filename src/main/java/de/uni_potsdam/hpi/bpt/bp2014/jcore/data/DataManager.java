@@ -9,6 +9,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioUtil;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -96,7 +97,7 @@ public class DataManager {
                 .filter(x -> x.getId() == dataObjectId).findFirst();
     }
 
-    public List<DataAttributeInstance> getAllDataAttributeInstances() {
+    public List<DataAttributeInstance> getDataAttributeInstances() {
         return this.getDataObjects().stream().map(DataObject::getDataAttributeInstances)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -135,6 +136,8 @@ public class DataManager {
 
     public void initializeDataObject(int dataClassId, int stateId) {
         DataObject dataObject = new DataObject(dataClassId, scenarioInstance, stateId);
+        new DbLogEntry().logDataobjectCreation(
+                dataObject.getId(), stateId, scenarioInstance.getScenarioInstanceId());
         this.dataObjects.add(dataObject);
     }
 

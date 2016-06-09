@@ -2,14 +2,11 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
 import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbStartQuery;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -34,7 +31,7 @@ public class CaseStarter {
     public void startInstance(String json, ScenarioInstance scenarioInstance) {
         initializeDataObjects(scenarioInstance);
         List<DataAttributeInstance> dataAttributes =  new ArrayList<>(
-                scenarioInstance.getDataManager().getAllDataAttributeInstances());
+                scenarioInstance.getDataManager().getDataAttributeInstances());
         writeDataAttributes(dataAttributes, json, scenarioInstance.getScenarioInstanceId());
     }
 

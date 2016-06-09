@@ -2,12 +2,9 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.ExampleValueInserter;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -62,7 +59,7 @@ public class DataManagerTest {
         insertExampleValues(scenarioId, scenarioInstanceId);
         DataManager dataManager = new DataManager(scenarioInstance);
         List<DataAttributeInstance> dataAttributeInstances = dataManager
-                .getAllDataAttributeInstances();
+                .getDataAttributeInstances();
         assertEquals(3, dataAttributeInstances.size());
         List<Integer> attributeInstanceIds = dataAttributeInstances.stream()
                 .map(DataAttributeInstance::getDataAttributeInstanceId)
@@ -134,7 +131,7 @@ public class DataManagerTest {
         DataManager dataManager = new DataManager(scenarioInstance);
         dataManager.setDataObjects(Arrays.asList(dataObject1, dataObject2));
         assertEquals(Arrays.asList(attr1, attr2, attr3),
-                dataManager.getAllDataAttributeInstances());
+                dataManager.getDataAttributeInstances());
     }
 
     @Test
