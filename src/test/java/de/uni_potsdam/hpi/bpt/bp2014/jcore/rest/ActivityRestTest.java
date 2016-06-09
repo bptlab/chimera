@@ -87,7 +87,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[186,189,6686,6688],\"activities\":[{\"id\":186,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment1\"},{\"id\":189,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment2\"},{\"id\":6686,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment3\"},{\"id\":6688,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment4\"}]}",
+                "{\"ids\":[186,189,6686,6688],\"activities\":[{\"id\":186,\"activityid\":2,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment1\"},{\"id\":189,\"activityid\":4,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/189\",\"state\":\"ready(ControlFlow)\",\"label\":\"Activity1Fragment2\"},{\"id\":6686,\"activityid\":10,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6686\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment3\"},{\"id\":6688,\"activityid\":16,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"state\":\"ready(ControlFlow)\",\"label\":\"ActivityFragment4\"}]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -147,7 +147,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("GetActivitiesOfInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"activities\":{\"6688\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"id\":6688,\"label\":\"ActivityFragment4\",\"state\":\"ready\"},\"186\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,6688]}",
+                "{\"activities\":{\"6688\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/6688\",\"id\":6688,\"label\":\"ActivityFragment4\",\"state\":\"ready\", \"activityid\":16},\"186\":{\"activityid\":2, \"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity/186\",\"id\":186,\"label\":\"Activity1Fragment1\",\"state\":\"ready\"}},\"ids\":[186,6688]}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -169,7 +169,11 @@ public class ActivityRestTest extends AbstractTest {
     public void testInvalidStateTransition() {
         // An activity which is running cannot be started again
         Response response = base.path("scenario/1/instance/72/activityinstance/105/begin")
-                .request().post(Entity.json("[]"));
+                .request().post(Entity.json("{}"));
+        assertEquals(202, response.getStatus());
+
+        response = base.path("scenario/1/instance/72/activityinstance/105/begin")
+                .request().post(Entity.json("{}"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
@@ -184,11 +188,11 @@ public class ActivityRestTest extends AbstractTest {
     @Test
     public void testUpdateActivityWAttributes(){
         // TODO Find out what this does
-        Response response = base.path("scenario/135/instance/808/activity/4518")
-                .queryParam("state", "begin").request().post(Entity.json("[]"));
+        Response response = base.path("scenario/135/instance/808/activityinstance/4518/begin")
+                .request().post(Entity.json("{}"));
         assertEquals("The Response code of beginActivityInstance was not 202",
                 202, response.getStatus());
-        assertEquals("Get TerminationCondition does not return a JSON",
+        assertEquals("BeginActivityInstance does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 "{\"message\":\"activity state changed.\"}",
@@ -196,16 +200,15 @@ public class ActivityRestTest extends AbstractTest {
                         .when(Option.IGNORING_ARRAY_ORDER));
 
         // Update value of activity
-        Response updateResponse = base.path("scenario/135/instance/808/activity/4518")
+        Response updateResponse = base.path("scenario/135/instance/808/activityinstance/4518")
                 .request()
-                .put(Entity.json("{\"id\":1,\"value\":\"Test\"}"));
-        assertEquals("The Response code of beginActivityInstance was not 202",
+                .put(Entity.json("{\"1\":\"Test\"}"));
+        assertEquals("The Response code of setting attribute values was not 202",
                 202, updateResponse.getStatus());
 
         // Terminate activity
-        response = base.path("scenario/135/instance/808/activity/4518")
-                .queryParam("state", "terminate").request()
-                .post(Entity.json("[{\"label\":\"Reiseplan\",\"id\":22,\"state\":\"init\",\"attributeConfiguration\":{\"entry\":[{\"key\":1,\"value\":\"{name=Preis, type=, value=400}\"}]}}]"));
+        response = base.path("scenario/135/instance/808/activityinstance/4518/terminate")
+                .request().post(Entity.json("{\"Reiseplan\":\"init\"}"));
         assertEquals("The Response code of getTerminationCondition was not 202",
                 202, updateResponse.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",

@@ -289,7 +289,7 @@ public class ActivityRestService extends AbstractRestService {
             activityJSON.put("label", instance.getLabel());
             activityJSON.put("state", state);
             activityJSON.put("link", uriInfo.getAbsolutePath()
-                    + String.valueOf(instance.getControlNodeInstanceId()));
+                    + "/" + String.valueOf(instance.getControlNodeInstanceId()));
             activities.put(activityJSON);
         }
         JSONObject result = new JSONObject();

@@ -41,7 +41,7 @@ public final class EventDispatcher {
 
     private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
     private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url")
-            + PropertyLoader.getProperty("unicorn.path.deploy");
+            + PropertyLoader.getProperty("unicorn.deploypath");
     private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url")
             + PropertyLoader.getProperty("chimera.path.deploy");
     private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/eventnode/%s";

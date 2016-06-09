@@ -134,41 +134,32 @@ public class DataAttributeInstance {
 		// TODO notify frontend when value is wrong
 		String excp = "Could not set data attribute value "
 				+ "because it did not have the correct data type.";
-		switch(this.getType()) {
-			case "Integer":
-				try {
+		try {
+			switch(this.getType()) {
+				case "Integer":
 					Integer.valueOf(value);
-				} catch (Exception e) {
-					throw new IllegalArgumentException(excp);
-				}
-				break;
-			case "Double":
-				try {
+					break;
+				case "Double":
 					Double.valueOf(value);
-				} catch (Exception e) {
-					throw new IllegalArgumentException(excp);
-				}
-				break;
-			case "Boolean":
-				try {
-					Boolean.valueOf(value);
-				} catch (Exception e) {
-					throw new IllegalArgumentException(excp);
-				}
-				break;
-			case "Date":
-				try {
+					break;
+				case "Boolean":
+					if (!value.equalsIgnoreCase("true")
+							&& !value.equalsIgnoreCase("false")) {
+						throw new IllegalArgumentException(excp);
+					}
+					break;
+				case "Date":
 					new SimpleDateFormat("dd.MM.yyyy").parse(value);
-				} catch (Exception e) {
-					throw new IllegalArgumentException(excp);
-				}
-				break;
-			case "String":
-			case "Enum":
-			case "Class":
-				break;
-			default:
-				throw new IllegalArgumentException("Attribute data type is not supported.");
+					break;
+				case "String":
+				case "Enum":
+				case "Class":
+					break;
+				default:
+					throw new IllegalArgumentException("Attribute data type is not supported.");
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException(excp);
 		}
 	}
 

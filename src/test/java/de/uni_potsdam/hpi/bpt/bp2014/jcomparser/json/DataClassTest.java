@@ -116,7 +116,7 @@ public class DataClassTest  {
 
         DbDataClass dbDataClass = new DbDataClass();
         List<Integer> dataAttributes = dbDataClass.getDataAttributes(classId);
-        assertEquals(Arrays.asList(1, 2, 3), dataAttributes);
+        assertEquals(Arrays.asList(1, 2, 3, 4), dataAttributes);
 
         DbDataNode dbDataNode = new DbDataNode();
         // Take id from object itself

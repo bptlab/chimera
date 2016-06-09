@@ -56,11 +56,11 @@ public class DataObjectRestService {
         Map<Integer, String> labels =
                 executionService.getAllDataObjectNames(instanceID);
         if (filterString != null && !filterString.isEmpty()) {
-            for (Map.Entry<Integer, String> labelEntry : labels.entrySet()) {
-                if (!labelEntry.getValue().contains(filterString)) {
-                    dataObjects.remove(labelEntry.getKey());
-                    states.remove(labelEntry.getKey());
-                    labels.remove(labelEntry.getKey());
+            for (Integer objectId : dataObjects) {
+                if (!String.valueOf(objectId).contains(filterString)) {
+                    dataObjects.remove(objectId);
+                    states.remove(objectId);
+                    labels.remove(objectId);
                 }
             }
         }
@@ -147,7 +147,7 @@ public class DataObjectRestService {
             dataObject.put("id", id);
             dataObject.put("label", labels.get(id));
             dataObject.put("state", states.get(id));
-            dataObject.put("link", uriInfo.getAbsolutePath() + String.valueOf(id));
+            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + String.valueOf(id));
             results.put(String.valueOf(id), dataObject);
         }
         result.put("results", results);
