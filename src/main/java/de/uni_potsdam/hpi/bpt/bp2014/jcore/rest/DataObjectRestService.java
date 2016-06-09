@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -56,13 +57,14 @@ public class DataObjectRestService {
         Map<Integer, String> labels =
                 executionService.getAllDataObjectNames(instanceID);
         if (filterString != null && !filterString.isEmpty()) {
-            for (Integer objectId : dataObjects) {
-                if (!String.valueOf(objectId).contains(filterString)) {
-                    dataObjects.remove(objectId);
-                    states.remove(objectId);
-                    labels.remove(objectId);
-                }
-            }
+            List<Integer> oldDataObjects = new ArrayList<>(dataObjects);
+            oldDataObjects.stream()
+                    .filter(objectId -> !objectId.toString().contains(filterString))
+                    .forEach(objectId -> {
+                        dataObjects.remove(objectId);
+                        states.remove(objectId);
+                        labels.remove(objectId);
+            });
         }
         JSONObject result = buildListForDataObjects(uriInfo, dataObjects, states, labels);
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();

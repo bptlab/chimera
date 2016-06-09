@@ -3,10 +3,12 @@ package de.uni_potsdam.hpi.bpt.bp2014.integration;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
@@ -38,11 +40,12 @@ public class EndToEndTest extends JerseyTest {
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class, ScenarioInstanceRestService.class,
                 ActivityRestService.class, ScenarioRestService.class, DataObjectRestService.class,
-                DataDependencyRestService.class);
+                DataDependencyRestService.class, AuthorizationRequestFilter.class);
     }
 
     @Test
     public void testScenarioWithIOSetsViaRest() throws IOException {
+        // TODO get dataobject ids via rest
         WebTarget base = target();
         String path = "src/test/resources/Scenarios/IOSetScenario.json";
         String jsonString = FileUtils.readFileToString(new File(path));
@@ -54,33 +57,33 @@ public class EndToEndTest extends JerseyTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/1/begin")
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/1/terminate")
-                .request().post(Entity.json("{}"));
+        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
+                .request().post(Entity.json(buildOutputSetSelection1()));
         assertEquals(202, terminateFirstActivity.getStatus());
 
-        Response inputSets = base.path("interface/v2/scenario/1/instance/1/activity/2/input")
+        Response inputSets = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/input")
                 .request(MediaType.APPLICATION_JSON).get();
         assertEquals(200, inputSets.getStatus());
         assertThat(buildInputSetMap(), jsonEquals(inputSets.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
 
-        Response outputSets = base.path("interface/v2/scenario/1/instance/1/activity/2/output")
+        Response outputSets = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/output")
                 .request(MediaType.APPLICATION_JSON).get();
         assertEquals(200, outputSets.getStatus());
         assertThat(buildOutputSetMap(), jsonEquals(outputSets.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
 
-        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/begin")
-                .request().post(Entity.json("{}"));
+        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/begin")
+                .request().post(Entity.json(buildInputSetSelection()));
         assertEquals(202, startSecondActivity.getStatus());
 
-        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
-                .request().post(Entity.json(buildOutputSetSelection()));
+        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/terminate")
+                .request().post(Entity.json(buildOutputSetSelection2()));
         assertEquals(202, terminateActivityUsingOutputSet.getStatus());
 
-        Response startActivityUsingInputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/3/begin")
+        Response startActivityUsingInputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/6/begin")
                 .request().post(Entity.json(buildInputSetSelection()));
         assertEquals(202, startActivityUsingInputSet.getStatus());
     }
@@ -98,47 +101,58 @@ public class EndToEndTest extends JerseyTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
+
         // Create some costumer objects
         for (int i = 0; i < 4; i++) {
-            // TODO search activity id via REST
+            int customerActivityId = idForEnabledActivityInstance("Create Costumer", base);
             Response beginCreateCostumer = base.path(
-                    "interface/v2/scenario/1/instance/1/activity/6/begin")
+                    "interface/v2/scenario/1/instance/1/activityinstance/" + customerActivityId + "/begin")
                     .request().post(Entity.json("{}"));
             Response createCostumer = base.path(
-                    "interface/v2/scenario/1/instance/1/activity/6/terminate")
-                    .request().post(Entity.json("{}"));
+                    "interface/v2/scenario/1/instance/1/activityinstance/" + customerActivityId + "/terminate")
+                    .request().post(Entity.json(buildOutputSetSelectionCustomer()));
             assertEquals(202, beginCreateCostumer.getStatus());
             assertEquals(202, createCostumer.getStatus());
         }
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/1/begin")
+        // TODO search for activities via REST
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/1/terminate")
+        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
                 .request().post(Entity.json("{}"));
         assertEquals(202, terminateFirstActivity.getStatus());
 
-        Response dataInput = base.path("interface/v2/scenario/1/instance/1/activity/2/availableInput")
+        Response dataInput = base.path("interface/v2/scenario/1/instance/1/activity/3/availableInput")
                 .request().get();
         System.out.println(dataInput.readEntity(String.class));
 
-        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activity/2/begin")
+        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startSecondActivity.getStatus());
 
-//
-//        DataAttributeUpdateJaxBean update = new DataAttributeUpdateJaxBean();
-//        update.setId(1);
-//        update.setValue("bar");
-//        Response setDataAttribute = base.path("interface/v2/scenario/1/instance/1/activity/2").request()
-//                .put(Entity.json(update));
-//        assertEquals(202, setDataAttribute.getStatus());
+        String attributeUpdate = "{\"1\":\"bar\"}";
+        Response setDataAttribute = base.path("interface/v2/scenario/1/instance/1/activityinstance/5").request()
+                .put(Entity.json(attributeUpdate));
+        assertEquals(202, setDataAttribute.getStatus());
 
 
-        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activity/2/terminate")
-                .request().post(Entity.json(buildOutputSetSelection()));
+        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/terminate")
+                .request().post(Entity.json(buildOutputSetSelection2()));
         assertEquals(202, terminateActivityUsingOutputSet.getStatus());
+    }
+
+    private int idForEnabledActivityInstance(String label, WebTarget base) {
+        Response getActivities = base.path("interface/v2/scenario/1/instance/1/activity/?state=ready")
+                .request().get();
+        JSONArray activityInstances = new JSONObject(getActivities.readEntity(String.class)).getJSONArray("activities");
+        for (int i = 0; i < activityInstances.length(); i++) {
+            if (label.equals(activityInstances.getJSONObject(i).getString("label"))) {
+                return activityInstances.getJSONObject(i).getInt("id");
+            }
+        }
+        return -1;
     }
 
 
@@ -150,11 +164,19 @@ public class EndToEndTest extends JerseyTest {
         return "{\"Order\":[\"accepted\", \"rejected\"],\"Customer\":[\"accepted\", \"rejected\"]}";
     }
 
-    private String buildOutputSetSelection() {
+    private String buildOutputSetSelection1() {
+        return "{\"Order\":\"init\",\"Customer\":\"init\"}";
+    }
+
+    private String buildOutputSetSelection2() {
         return "{\"Order\":\"accepted\",\"Customer\":\"accepted\"}";
     }
 
+    private String buildOutputSetSelectionCustomer() {
+        return "{\"Customer\":\"init\"}";
+    }
+
     private String buildInputSetSelection() {
-        return "{\"dataobjects\" : [3, 5]}";
+        return "{\"dataobjects\" : [1, 2]}";
     }
 }
