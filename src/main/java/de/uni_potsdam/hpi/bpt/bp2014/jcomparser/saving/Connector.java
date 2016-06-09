@@ -41,8 +41,7 @@ public class Connector extends DbObject {
 	public int insertXmlIntoDatabase(final int fragmentId, final String xml) {
 		String sql = "Insert into fragmentxml (fragment_id, xml) "
 				+ "VALUES (%d, '%s')";
-		return performSQLInsertStatementWithAutoId(
-				String.format(sql, fragmentId, xml));
+		return executeInsertStatement(String.format(sql, fragmentId, xml));
 	}
 
 	/**

@@ -94,14 +94,15 @@ public class Fragment {
         return sets;
     }
 
-    public List<OutputSet> getOutputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
+    public List<OutputSet> getOutputSetsForNode(
+            AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         if (node.getDataOutputAssociations().isEmpty()) {
             return new ArrayList<>();
         }
         for (DataOutputAssociation assoc : node.getDataOutputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
-            if(!dataNodeToStates.containsKey(dataNode.getName())) {
+            if (!dataNodeToStates.containsKey(dataNode.getName())) {
                 dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
             }
             dataNodeToStates.get(dataNode.getName()).add(dataNode);
@@ -133,7 +134,7 @@ public class Fragment {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         for (DataInputAssociation assoc : node.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
-            if(!dataNodeToStates.containsKey(dataNode.getName())) {
+            if (!dataNodeToStates.containsKey(dataNode.getName())) {
                 dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
             }
             dataNodeToStates.get(dataNode.getName()).add(dataNode);
