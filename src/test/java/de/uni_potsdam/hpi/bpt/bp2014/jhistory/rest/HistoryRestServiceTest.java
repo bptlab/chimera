@@ -121,8 +121,9 @@ public class HistoryRestServiceTest extends JerseyTest {
 
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityByName("ChangeData", instance);
+        ScenarioTestHelper.executeActivityByName("Create Data", instance);
+        ScenarioTestHelper.executeActivityByName("Change Data", instance);
+
 
         String requestPath = String.format(
                 "scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
@@ -138,19 +139,20 @@ public class HistoryRestServiceTest extends JerseyTest {
 
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityByName("ChangeData", instance);
-
+        ScenarioTestHelper.executeActivityByName("Create Data", instance);
+        ScenarioTestHelper.executeActivityByName("Change Data", instance);
         String requestPath = String.format(
                 "scenario/%d/instance/%d/dataobjects", scenarioId, scenarioInstanceId);
         Response response = base.path(requestPath).request().get();
         JSONArray resp = new JSONArray(response.readEntity(String.class));
 
-        // The second entry is the one indicating a change the other ones correspond
-        // To the initialization.
-        JSONObject first = resp.getJSONObject(2);
-        assertEquals("init", first.get("oldValue"));
-        assertEquals("changed", first.get("newValue"));
+        JSONObject initEntry = resp.getJSONObject(0);
+        assertEquals(JSONObject.NULL, initEntry.get("oldValue"));
+        assertEquals("init", initEntry.get("newValue"));
+
+        JSONObject changedEntry = resp.getJSONObject(1);
+        assertEquals("init", changedEntry.get("oldValue"));
+        assertEquals("changed", changedEntry.get("newValue"));
     }
 
     @Test

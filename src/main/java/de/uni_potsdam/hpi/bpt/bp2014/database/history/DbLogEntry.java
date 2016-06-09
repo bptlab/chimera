@@ -186,4 +186,15 @@ public class DbLogEntry extends DbObject {
             e.printStackTrace();
         }
     }
+
+    public List<LogEntry> getCreationLogEntries(int scenarioInstanceId, LogEntry.LogType type) {
+        String sql = "SELECT l1.* FROM logentry l1 " +
+                "INNER JOIN (SELECT logged_id, MIN(timestamp) as timestamp, type FROM logentry " +
+                "GROUP BY logged_id, type) l2 " +
+                "ON l1.logged_id = l2.logged_id WHERE l1.timestamp = l2.timestamp AND " +
+                "l1.type = l2.type AND l1.scenarioinstance_id = %d AND l1.type = '%s';";
+
+        sql = String.format(sql, scenarioInstanceId, type.name());
+        return retrieveLogEntries(sql);
+    }
 }
