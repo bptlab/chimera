@@ -63,8 +63,10 @@ public class StateTransitionLog {
         String sql =
                 "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
                         "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +
-                        " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
-                        " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
+                        " ON a.logged_id = b.logged_id  AND a.type = b.type " +
+                        " AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
+                        " timestamp >= a.timestamp AND a.logged_id = logged_id AND " +
+                        "id <> a.id) " +
                         " WHERE a.scenarioinstance_id = %d;";
         sql = String.format(sql, scenarioInstanceId);
         List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);

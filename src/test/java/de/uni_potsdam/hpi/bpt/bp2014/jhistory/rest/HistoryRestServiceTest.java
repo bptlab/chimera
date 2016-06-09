@@ -129,7 +129,10 @@ public class HistoryRestServiceTest extends JerseyTest {
                 "scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
         Response response = base.path(requestPath).request().get();
         JSONArray resp = new JSONArray(response.readEntity(String.class));
-        assertEquals(7, resp.length());
+        // There should be init running terminate for both activities and init again for the
+        // first one.
+        // One init for data attribute init and init changed for data object
+        assertEquals(10, resp.length());
     }
 
     @Test

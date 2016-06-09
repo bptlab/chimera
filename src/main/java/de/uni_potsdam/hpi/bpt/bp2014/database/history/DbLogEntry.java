@@ -72,7 +72,7 @@ public class DbLogEntry extends DbObject {
     /**
      *
      * @param objectInstanceId
-     * @param state
+     * @param stateId
      * @param scenarioInstanceId
      */
     public void logDataobjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {

@@ -54,12 +54,12 @@ public class ActivityRestTest extends AbstractTest {
 
     @Test
     public void testGetActivity(){
-        Response response = base.path("scenario/135/instance/808/activity/4517").request().get();
+        Response response = base.path("scenario/135/instance/808/activityinstance/4517").request().get();
         assertEquals("The Response code of getActivity was not 200", 200, response.getStatus());
         assertEquals("Get Activity does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":4517,\"label\":\"Reiseplanung beginnen\",\"outputSetLink\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/output\",\"inputSetLink\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activity/4517/input\"}",
+                "{\"id\":4517,\"label\":\"Reiseplanung beginnen\",\"outputSetLink\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activityinstance/4517/output\",\"inputSetLink\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/activityinstance/4517/input\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }

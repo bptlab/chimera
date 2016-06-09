@@ -18,14 +18,10 @@ public class FragmentTest {
     public void tearDown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
-    @Test
-    public void testSave() {
-
-        Assert.fail();
-    }
 
     @Test
     public void testGetAllActivities() {
+
         Assert.fail();
     }
 }

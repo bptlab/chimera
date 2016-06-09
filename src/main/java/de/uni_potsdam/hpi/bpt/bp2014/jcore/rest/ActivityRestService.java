@@ -306,21 +306,21 @@ public class ActivityRestService extends AbstractRestService {
      * @param uriInfo            A UriInfo object, which holds the server context.
      * @param scenarioId         The databaseID of a scenario.
      * @param scenarioInstanceId The databaseID of a scenarioInstance.
-     * @param activityID         The databaseID of an activityInstance.
+     * @param activityInstanceId         The databaseID of an activityInstance.
      * @return a response Object with the status code:
      * 200 if everything was correct and holds the information about the activityInstance.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
     public Response getActivity(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
-            @PathParam("activityId") int activityID) {
+            @PathParam("activityInstanceId") int activityInstanceId) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (!executionService.testActivityInstanceExists(activityID)) {
+        if (!executionService.testActivityInstanceExists(activityInstanceId)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such "
@@ -328,14 +328,14 @@ public class ActivityRestService extends AbstractRestService {
                     .build();
         }
         ActivityJaxBean activity = new ActivityJaxBean();
-        activity.setId(activityID);
+        activity.setId(activityInstanceId);
         ExecutionService.getInstance(scenarioId).openExistingScenarioInstance(
                 scenarioId, scenarioInstanceId);
         List<AbstractControlNodeInstance> controlNodeInstances =
                 executionService.getScenarioInstance(
                         scenarioInstanceId).getControlNodeInstances();
         for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
-            if (controlNodeInstance.getControlNodeInstanceId() == activityID) {
+            if (controlNodeInstance.getControlNodeInstanceId() == activityInstanceId) {
                 activity.setLabel(executionService
                         .getLabelForControlNodeID(
                                 controlNodeInstance.getControlNodeId()
