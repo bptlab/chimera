@@ -85,7 +85,6 @@ public class EventDispatcherTest extends JerseyTest {
 
     @Test
     public void testParseQuery() throws IOException {
-        // TODO maybe remodel necessary
         String path = "src/test/resources/EventScenarios/VariablesInQueries.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
         assertEquals("The query was inadvertently modified",
@@ -93,6 +92,8 @@ public class EventDispatcherTest extends JerseyTest {
                 EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM data.path",
                 scenarioInstance.getScenarioInstanceId(),
                 scenarioInstance.getScenarioId()));
+        ScenarioTestHelper.executeActivityByName("create data", scenarioInstance);
+        ScenarioTestHelper.executeActivityByName("modify data", scenarioInstance);
         new DataAttributeInstance(1).setValue("AnEvent");
         String replacedQuery = EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM #data.path",
                 scenarioInstance.getScenarioInstanceId(),

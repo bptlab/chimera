@@ -95,6 +95,13 @@ public class DbDataAttributeInstance extends DbObject {
 		return this.executeStatementReturnsString(sql, "name");
 	}
 
+	public int getDataObjectId(int dataAttributeInstanceId) {
+		String sql = "SELECT dataobject_id FROM dataattributeinstance "
+				+ "WHERE id = %d";
+		return this.executeStatementReturnsInt(String.format(sql, dataAttributeInstanceId),
+				"dataobject_id");
+	}
+
 	/**
 	 * This method sets the DataAttributeinstance to a desired value
 	 * and saves a log entry into the database.

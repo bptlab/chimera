@@ -1,10 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataconditions;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.*;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioUtil;
@@ -86,6 +82,7 @@ public class DataManager {
         DbDataObject dbDataObject = new DbDataObject();
         List<Integer> dataObjectIds = dbDataObject.getDataObjectIds(
                 scenarioInstance.getScenarioInstanceId());
+        this.dataObjects.clear();
         for (Integer dataObjectId : dataObjectIds) {
             this.dataObjects.add(new DataObject(dataObjectId, scenarioInstance));
         }
@@ -175,12 +172,13 @@ public class DataManager {
         for (Map.Entry<Integer, String> attributeInstanceIdToValue : idToValue.entrySet()) {
             Integer dataAttributeInstanceId = attributeInstanceIdToValue.getKey();
             String value = attributeInstanceIdToValue.getValue();
-            new DbLogEntry().logDataAttributeTransition(dataAttributeInstanceId, value,
-                    activityInstanceId, scenarioInstance.getScenarioInstanceId());
             DataAttributeInstance dataAttributeInstance =
                     new DataAttributeInstance(dataAttributeInstanceId);
             if (dataAttributeInstance.isValueAllowed(value)) {
+                new DbLogEntry().logDataAttributeTransition(dataAttributeInstanceId, value,
+                        activityInstanceId, scenarioInstance.getScenarioInstanceId());
                 dataAttributeInstance.setValue(value);
+                updateDataObjectAttribute(dataAttributeInstance);
             } else {
                 log.error("Attribute value could not be set "
                         + "because it has the wrong data type.");
@@ -188,6 +186,16 @@ public class DataManager {
             }
         }
         return allValuesValid;
+    }
+
+    private void updateDataObjectAttribute(DataAttributeInstance attributeInstance) {
+        DbDataAttributeInstance db = new DbDataAttributeInstance();
+        int attributeInstanceId = attributeInstance.getId();
+        Optional<DataObject> object =
+                getDataobjectForId(db.getDataObjectId(attributeInstanceId));
+        if (object.isPresent()) {
+            object.get().getDataAttributeInstanceMap().put(attributeInstanceId, attributeInstance);
+        }
     }
 
     public void setDataObjects(List<DataObject> dataObjects) {

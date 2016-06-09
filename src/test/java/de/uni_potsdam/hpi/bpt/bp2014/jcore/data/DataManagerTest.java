@@ -62,7 +62,7 @@ public class DataManagerTest {
                 .getDataAttributeInstances();
         assertEquals(3, dataAttributeInstances.size());
         List<Integer> attributeInstanceIds = dataAttributeInstances.stream()
-                .map(DataAttributeInstance::getDataAttributeInstanceId)
+                .map(DataAttributeInstance::getId)
                 .collect(Collectors.toList());
         assertEquals(Arrays.asList(1, 2, 3),  attributeInstanceIds);
 

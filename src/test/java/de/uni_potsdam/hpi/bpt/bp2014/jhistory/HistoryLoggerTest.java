@@ -128,10 +128,8 @@ public class HistoryLoggerTest {
     private void changeDataattributeValues(
             ScenarioInstance scenarioInstance, ActivityInstance activity) {
         Map<Integer, String> idToChangedValue = new HashMap<>();
-        List<DataAttributeInstance> dataAttributeInstances = scenarioInstance.getDataManager()
-                .getDataAttributeInstances();
-        for (DataAttributeInstance attribute : dataAttributeInstances) {
-            idToChangedValue.put(attribute.getDataAttributeInstanceId(), "bar");
+        for (DataAttributeInstance attribute : scenarioInstance.getDataAttributeInstances().values()) {
+            idToChangedValue.put(attribute.getId(), "bar");
         }
         assert(idToChangedValue.size() > 0);
         // Begin activity so that it can alter the values of data attributes

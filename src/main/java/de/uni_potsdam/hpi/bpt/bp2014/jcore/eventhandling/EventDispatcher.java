@@ -206,7 +206,7 @@ public final class EventDispatcher {
         if (queryString.contains("#")) {
             ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
             for (DataAttributeInstance attribute : scenario
-                    .getDataAttributeInstances().values()) {
+                    .getDataManager().getAllDataAttributeInstances()) {
                 String dataattributePath = String.format("#%s.%s",
                         attribute.getDataObject().getName(), attribute.getName());
                 queryString = queryString.replace(dataattributePath,

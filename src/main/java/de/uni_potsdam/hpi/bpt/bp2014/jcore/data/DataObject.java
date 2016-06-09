@@ -7,7 +7,9 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents data object instances.
@@ -25,7 +27,7 @@ public class DataObject {
 	private ScenarioInstance scenarioInstance;
 	private final DbDataObject dbDataObject = new DbDataObject();
 	private int stateId;
-	private List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
+	private Map<Integer, DataAttributeInstance> dataAttributeInstanceMap = new HashMap<>();
     private boolean isLocked = false;
 
     /**
@@ -33,7 +35,7 @@ public class DataObject {
 	 *
 	 * @param dataClassId This is the database id from the data class.
 	 * @param stateId This is the database id from the scenario.
-	 * @param scenarioInstance This is an instance from the class ScenarioInstance.
+	 * @param scenarioInstance This is an instance from the  class ScenarioInstance.
 	 */
 	public DataObject(int dataClassId, ScenarioInstance scenarioInstance, int stateId) {
         this.scenarioInstance = scenarioInstance;
@@ -63,7 +65,7 @@ public class DataObject {
         List<Integer> datattributeInstances = dbDataAttributeInstance
                 .getAttributeIdsForDataObject(dataObjectId);
         for (Integer dataAttributeInstanceId : datattributeInstances) {
-            this.dataAttributeInstances.add(new DataAttributeInstance(
+            this.dataAttributeInstanceMap.put(dataAttributeInstanceId, new DataAttributeInstance(
                     dataAttributeInstanceId, this));
         }
     }
@@ -76,7 +78,8 @@ public class DataObject {
         for (int dataAttributeId : dataAttributeIds) {
 			DataAttributeInstance dataAttributeInstance = new DataAttributeInstance(
 					dataAttributeId, id, this);
-            dataAttributeInstances.add(dataAttributeInstance);
+            dataAttributeInstanceMap.put(dataAttributeInstance.getId(),
+					dataAttributeInstance);
 		}
 	}
 
@@ -149,7 +152,11 @@ public class DataObject {
 	 * to this Data Object Instance.
 	 */
 	public List<DataAttributeInstance> getDataAttributeInstances() {
-		return dataAttributeInstances;
+		return new ArrayList<>(dataAttributeInstanceMap.values());
+	}
+
+	public Map<Integer, DataAttributeInstance> getDataAttributeInstanceMap() {
+		return this.dataAttributeInstanceMap;
 	}
 
     public void lock() {

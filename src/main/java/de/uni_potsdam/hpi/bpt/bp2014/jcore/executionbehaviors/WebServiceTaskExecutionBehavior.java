@@ -119,7 +119,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(
                 node.getControlNodeId(),
                 node.getControlNodeInstanceId(),
-                this.getScenarioInstance().getScenarioInstanceId());
+                this.getScenarioInstance());
         List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
         getPossibleDataObjects().values().stream().filter(x -> !x.isEmpty())
                 .forEach(x -> dataAttributeInstances.addAll(

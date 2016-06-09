@@ -4,13 +4,12 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  *
  */
 public class DataAttributeInstance {
-	private final int dataAttributeInstanceId;
+	private final int id;
 	private final int dataAttributeId;
 
 	private final DataObject dataObject;
@@ -22,30 +21,30 @@ public class DataAttributeInstance {
 	/**
 	 * @param dataAttributeId		The ID of the Data Attribute belonging to this
 	 *                              instance.
-	 * @param dataObjectInstanceId	The ID of the Data Object Instance belonging to
+	 * @param dataObjectId	The ID of the Data Object Instance belonging to
 	 *                              this instance.
 	 * @param dataObject	The Data Object Instance belonging to this instance.
 	 */
-	public DataAttributeInstance(int dataAttributeId, int dataObjectInstanceId,
+	public DataAttributeInstance(int dataAttributeId, int dataObjectId,
 			DataObject dataObject) {
 		this.dataAttributeId = dataAttributeId;
 		this.dataObject = dataObject;
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
 		if (dbDataAttributeInstance.existDataAttributeInstance(
-						dataAttributeId, dataObjectInstanceId)) {
+						dataAttributeId, dataObjectId)) {
 			//creates an existing Attribute Instance using the database information
-			this.dataAttributeInstanceId = dbDataAttributeInstance
+			this.id = dbDataAttributeInstance
 					.getDataAttributeInstanceID(
-							dataAttributeId, dataObjectInstanceId);
+							dataAttributeId, dataObjectId);
         } else {
 			//creates a new Attribute Instance also in database
-			this.dataAttributeInstanceId = dbDataAttributeInstance
+			this.id = dbDataAttributeInstance
 					.createNewDataAttributeInstance(
-							dataAttributeId, dataObjectInstanceId);
-            new DbLogEntry().logDataattributeCreation(dataObjectInstanceId, this.getValue(),
+							dataAttributeId, dataObjectId);
+            new DbLogEntry().logDataattributeCreation(dataObjectId, this.getValue(),
                     dataObject.getScenarioInstanceId());
         }
-		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
+		this.value = dbDataAttributeInstance.getValue(id);
 		this.name = dbDataAttributeInstance.getName(dataAttributeId);
 	}
 
@@ -59,7 +58,7 @@ public class DataAttributeInstance {
                 dataAttributeInstanceId)) {
             throw new IllegalArgumentException("Instance Id not present in the database");
         }
-        this.dataAttributeInstanceId = dataAttributeInstanceId;
+        this.id = dataAttributeInstanceId;
         this.dataAttributeId = dbDataAttributeInstance.getDataAttributeID(dataAttributeInstanceId);
         this.type = dbDataAttributeInstance.getType(dataAttributeId);
         this.dataObject = dataObject;
@@ -79,7 +78,7 @@ public class DataAttributeInstance {
 				dataAttributeInstanceId)) {
 			throw new IllegalArgumentException("Instance Id not present in the database");
 		}
-		this.dataAttributeInstanceId = dataAttributeInstanceId;
+		this.id = dataAttributeInstanceId;
 		this.dataAttributeId = dbDataAttributeInstance.getDataAttributeID(dataAttributeInstanceId);
 		this.type = dbDataAttributeInstance.getType(dataAttributeId);
 		this.value = dbDataAttributeInstance.getValue(dataAttributeInstanceId);
@@ -113,7 +112,7 @@ public class DataAttributeInstance {
 	public void setValue(String value) {
 		validateValueType(value);
 		this.value = value;
-		dbDataAttributeInstance.setValue(dataAttributeInstanceId, value);
+		dbDataAttributeInstance.setValue(id, value);
 	}
 
 	/**
@@ -166,8 +165,8 @@ public class DataAttributeInstance {
 	/**
 	 * @return the ID of the Data Attribute Instance
 	 */
-	public int getDataAttributeInstanceId() {
-		return dataAttributeInstanceId;
+	public int getId() {
+		return id;
 	}
 
 	/**

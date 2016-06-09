@@ -4,7 +4,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
@@ -517,7 +516,7 @@ public class ExecutionService /*implements Runnable*/ {
 			values.put("value", dataAttributeInstance.getValue().toString());
 			values.put("name", dataAttributeInstance.getName());
 			attributeInstances.put(
-					dataAttributeInstance.getDataAttributeInstanceId(), values);
+					dataAttributeInstance.getId(), values);
 		}
 		return attributeInstances;
 	}
@@ -563,7 +562,7 @@ public class ExecutionService /*implements Runnable*/ {
 		for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
 			DataAttributeJaxBean dataAttribute =
 					new DataAttributeJaxBean();
-			dataAttribute.setId(dataAttributeInstance.getDataAttributeInstanceId());
+			dataAttribute.setId(dataAttributeInstance.getId());
 			dataAttribute.setName(dataAttributeInstance.getName());
 			dataAttribute.setType(dataAttributeInstance.getType());
 			dataAttribute.setValue(dataAttributeInstance.getValue().toString());

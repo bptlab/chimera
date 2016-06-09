@@ -45,7 +45,7 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
     public void writeDataObjects(String eventJson) {
         DataAttributeWriter writer = new DataAttributeWriter(
-                this.getControlNodeId(), controlNodeInstanceId, this.getScenarioInstance().getScenarioInstanceId());
+                this.getControlNodeId(), controlNodeInstanceId, this.getScenarioInstance());
         List<DataAttributeInstance> attributeInstances = new ArrayList<>(
                 this.getScenarioInstance().getDataAttributeInstances().values());
         writer.writeDataAttributesFromJson(eventJson, attributeInstances);

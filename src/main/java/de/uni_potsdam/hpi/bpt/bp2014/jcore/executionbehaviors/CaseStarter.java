@@ -62,7 +62,7 @@ public class CaseStarter {
 
         Map<Integer, DataAttributeInstance> idToDataAttributeInstance = dataAttributes
                 .stream().collect(Collectors.toMap(
-                        DataAttributeInstance::getDataAttributeInstanceId, x -> x));
+                        DataAttributeInstance::getId, x -> x));
         for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
             int dataAttributeInstanceId = idToPathEntry.getKey();
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
@@ -72,7 +72,7 @@ public class CaseStarter {
             if (instance.isValueAllowed(value)) {
                 instance.setValue(value);
                 new DbLogEntry().logDataattributeCreation(
-                        instance.getDataAttributeInstanceId(), value, scenarioInstanceId);
+                        instance.getId(), value, scenarioInstanceId);
             } else {
                 LOGGER.error("Attribute value could not be set because it has the wrong data type.");
             }

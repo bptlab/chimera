@@ -1,6 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import org.apache.commons.io.FileUtils;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -27,8 +29,12 @@ public class DataAttributeWriterTest {
         int dummyControlNodeId = 0;
         int dummyControlNodeInstanceId = 0;
         int dummyScenarioInstanceId = 0;
+        ScenarioInstance instance = EasyMock.createNiceMock(ScenarioInstance.class);
+        DataManager mockDM = createMockDM();
+        expect(instance.getDataManager()).andReturn(mockDM).anyTimes();
+        replay(instance);
         DataAttributeWriter writer = new DataAttributeWriter(
-                dummyControlNodeId, dummyControlNodeInstanceId, dummyScenarioInstanceId);
+                dummyControlNodeId, dummyControlNodeInstanceId, instance);
         List<DataAttributeInstance> attributeInstances = createExampleInstances();
         Map<Integer, String> jsonPathMap = createAttributeIdToJsonPathExample();
 
@@ -38,13 +44,22 @@ public class DataAttributeWriterTest {
             String json = FileUtils.readFileToString(file);
             writer.setAttributeIdToJsonPath(jsonPathMap);
             writer.writeDataAttributesFromJson(json, attributeInstances);
+            // verifying that the datamanager was called with the correct
+            // parameters (see createMockDM)
+            EasyMock.verify(mockDM);
 
-            // Since $a[0].b.prop1 should evaluate to foo on the example, a setValue('foo') call
-            // on the Dataattribute with id 67890 is expected.
-            attributeInstances.forEach(EasyMock::verify);
         } catch (IOException e) {
             fail("Could not load test resource:" + e.getMessage());
         }
+    }
+
+    private DataManager createMockDM() {
+        DataManager manager = EasyMock.createNiceMock(DataManager.class);
+        Map<Integer, String> expectedMap = new HashMap<>();
+        expectedMap.put(67890, "foo");
+        expect(manager.setAttributeValues(0, expectedMap)).andReturn(true).anyTimes();
+        replay(manager);
+        return manager;
     }
 
     private Map<Integer,String> createAttributeIdToJsonPathExample() {
@@ -56,12 +71,12 @@ public class DataAttributeWriterTest {
 
     private List<DataAttributeInstance> createExampleInstances() {
         DataAttributeInstance firstDataAttributeInstance = createNiceMock(DataAttributeInstance.class);
-        expect(firstDataAttributeInstance.getDataAttributeInstanceId()).andReturn(12345);
+        expect(firstDataAttributeInstance.getId()).andReturn(12345);
         // expect(firstDataAttributeInstance.getType()).andReturn("String");
         replay(firstDataAttributeInstance);
 
         DataAttributeInstance secondDataAttributeInstance = createNiceMock(DataAttributeInstance.class);
-        expect(secondDataAttributeInstance.getDataAttributeInstanceId()).andReturn(67890);
+        expect(secondDataAttributeInstance.getId()).andReturn(67890);
         expect(secondDataAttributeInstance.isValueAllowed("foo")).andReturn(true);
         secondDataAttributeInstance.setValue("foo");
         EasyMock.expectLastCall().once();
