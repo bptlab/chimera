@@ -39,6 +39,7 @@ public class DataObjectTest {
 
     @Test
     public void testMultiObjectCreation() {
+
         Assert.fail();
     }
 

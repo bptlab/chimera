@@ -70,8 +70,8 @@ public class MockProvider {
         List<DataNode> dataNodes = new ArrayList<>();
         for (int i = 0; i < states.size(); i++) {
             DataNode dataNode = EasyMock.createNiceMock(DataNode.class);
-            expect(dataNode.getState()).andReturn(states.get(i));
-            expect(dataNode.getName()).andReturn(dataclassNames.get(i));
+            expect(dataNode.getState()).andReturn(states.get(i)).anyTimes();
+            expect(dataNode.getName()).andReturn(dataclassNames.get(i)).anyTimes();
             replay(dataNode);
             dataNodes.add(dataNode);
         }

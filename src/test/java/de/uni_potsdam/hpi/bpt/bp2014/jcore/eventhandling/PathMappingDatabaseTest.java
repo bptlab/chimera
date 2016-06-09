@@ -64,29 +64,25 @@ public class PathMappingDatabaseTest extends JerseyTest {
     }
 
     @Test
-    public void testSavingOfEventData() {
-        try {
-            ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
-                    "src/test/resources/EventScenarios/EventDataSavingScenario.json");
+    public void testSavingOfEventData() throws IOException {
+        ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
+                "src/test/resources/EventScenarios/EventDataSavingScenario.json");
 
-            int eventNodeId = ScenarioTestHelper.triggerEventInScenario(
-                    instance, base, "{ \"foo\": \"bar\"}");
-            DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
+        int eventNodeId = ScenarioTestHelper.triggerEventInScenario(
+                instance, base, "{ \"foo\": \"bar\"}");
+        DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
 
-            DbPathMapping dbPathMapping = new DbPathMapping();
-            List<Integer> attributeIds = dbPathMapping
-                    .getAttributeIdsForControlNode(eventNodeId);
-            boolean isValueSaved = false;
-            for (Integer attributeId : attributeIds) {
-                if ("bar".equals(dbDataAttributeInstance.getValue(attributeId))) {
-                    isValueSaved = true;
-                    break;
-                }
+        DbPathMapping dbPathMapping = new DbPathMapping();
+        List<Integer> attributeIds = dbPathMapping
+                .getAttributeIdsForControlNode(eventNodeId);
+        boolean isValueSaved = false;
+        for (Integer attributeId : attributeIds) {
+            if ("bar".equals(dbDataAttributeInstance.getValue(attributeId))) {
+                isValueSaved = true;
+                break;
             }
-            assertTrue(isValueSaved);
-        } catch (IOException e) {
-            fail("Failed to read scenario json: " + e.getMessage());
         }
+        assertTrue(isValueSaved);
     }
 
 

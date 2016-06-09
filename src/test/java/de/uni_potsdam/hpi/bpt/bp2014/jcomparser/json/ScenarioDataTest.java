@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 /**
@@ -36,24 +34,25 @@ public class ScenarioDataTest {
 
     @Test
     public void testSave() throws Exception {
-        try {
-            String path = "src/test/resources/Scenarios/IOSetScenario.json";
-            String jsonString = FileUtils.readFileToString(new File(path));
-            ScenarioData data = new ScenarioData(jsonString);
-            int scenarioId = data.save();
-            Assert.fail();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            Assert.fail();
-        }
+        String path = "src/test/resources/Scenarios/IOSetScenario.json";
+        String jsonString = FileUtils.readFileToString(new File(path));
+        ScenarioData data = new ScenarioData(jsonString);
+        int scenarioId = data.save();
+
     }
 
     @Test
     public void testAssociateDataNodesWithDataClasses() {
         ScenarioData scenarioData = new ScenarioData();
         DomainModel domainModel = EasyMock.createNiceMock(DomainModel.class);
-        scenarioData.associateDataNodesWithDataClasses(createMockFragments(), domainModel);
-        Assert.fail();
+        List<DataClass> dataClasses = mockDataclasses();
+        expect(domainModel.getDataClasses()).andReturn(dataClasses);
+        replay(domainModel);
+        scenarioData.associateDataNodesWithDataClasses(
+                createMockFragments(), domainModel);
+        for (DataClass dataClass : dataClasses) {
+            verify(dataClass);
+        }
     }
 
     @Test
@@ -67,6 +66,7 @@ public class ScenarioDataTest {
     }
 
     private Map<String, DataClass> mockNameToDataClass() {
+        // TODO use method for get dataclasses
         Map<String, DataClass> nameToDataClass = new HashMap<>();
         DataClass customer = EasyMock.createNiceMock(DataClass.class);
         @SuppressWarnings("unchecked")
@@ -89,6 +89,25 @@ public class ScenarioDataTest {
         return nameToDataClass;
     }
 
+    private List<DataClass> mockDataclasses() {
+        List<DataClass> mockedDataclasses = new ArrayList<>();
+        DataClass customer = EasyMock.createNiceMock(DataClass.class);
+        customer.addDataNode(EasyMock.anyObject(DataNode.class));
+        expectLastCall().times(2);
+        expect(customer.getName()).andReturn("Customer");
+        replay(customer);
+        mockedDataclasses.add(customer);
+
+        DataClass contract = EasyMock.createNiceMock(DataClass.class);
+        expect(contract.getName()).andReturn("Contract");
+        contract.addDataNode(EasyMock.anyObject(DataNode.class));
+        expectLastCall().times(1);
+
+        replay(contract);
+        mockedDataclasses.add(contract);
+        return mockedDataclasses;
+    }
+
     private List<Fragment> createMockFragments() {
         List<DataNode> dataNodes = MockProvider.mockDataNodes(
                 Arrays.asList("Customer", "Customer"), Arrays.asList("received", "reviewed"));
@@ -101,12 +120,5 @@ public class ScenarioDataTest {
         replay(fragment);
         replay(fragment2);
         return Arrays.asList(fragment, fragment2);
-    }
-
-
-    @Test
-    public void testGenerateFragmentList() {
-
-        Assert.fail();
     }
 }
