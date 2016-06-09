@@ -42,7 +42,6 @@ public class DataAttributeWriter {
             int dataAttributeInstanceId = idToPathEntry.getKey();
             String jsonPath = idToPathEntry.getValue();
             String value = JsonPath.read(json, jsonPath).toString();
-
             idToValue.put(dataAttributeInstanceId, value);
         }
 
