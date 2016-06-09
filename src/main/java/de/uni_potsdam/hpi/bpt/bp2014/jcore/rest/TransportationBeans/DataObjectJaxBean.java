@@ -35,9 +35,6 @@ public class DataObjectJaxBean {
      */
     private DataAttributeJaxBean[] attributeConfiguration;
 
-    // TODO is this still needed for something
-    private int setId;
-
     public DataObjectJaxBean() {};
 
     public DataObjectJaxBean(DataObject dataObject) {
@@ -88,15 +85,5 @@ public class DataObjectJaxBean {
     public void setAttributeConfiguration(DataAttributeJaxBean[] attributeConfiguration) {
         this.attributeConfiguration = attributeConfiguration;
     }
-
-    public int getSetId() {
-        return setId;
-    }
-
-    public void setSetId(int setId) {
-        this.setId = setId;
-    }
-
-
 }
 

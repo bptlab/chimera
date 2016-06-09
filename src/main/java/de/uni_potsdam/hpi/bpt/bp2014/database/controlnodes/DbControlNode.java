@@ -72,4 +72,12 @@ public class DbControlNode extends DbObject {
 		}
 		return label;
 	}
+
+    public boolean existControlNode(int controlNodeId, int scenarioId) {
+        String existControlNode = "SELECT * FROM controlnode, fragment WHERE " +
+                "controlnode.fragment_id = fragment.id AND " +
+                "controlnode.id = %d AND fragment.scenario_id = %d;";
+        existControlNode = String.format(existControlNode, controlNodeId, scenarioId);
+        return this.executeExistStatement(existControlNode);
+    }
 }

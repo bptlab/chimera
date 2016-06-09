@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
@@ -94,7 +96,7 @@ public class DataDependencyRestService extends AbstractRestService {
         }
         DataObjectJaxBean[] dataObjects = new DataObjectJaxBean[dataObjectInstances.length];
         for (int i = 0; i < dataObjectInstances.length; i++) {
-            dataObjects[i] = buildDataObjectJaxBean(setId, dataObjectInstances[i], executionService);
+            dataObjects[i] = buildDataObjectJaxBean(dataObjectInstances[i], executionService);
         }
         return Response.ok(dataObjects, MediaType.APPLICATION_JSON_TYPE).build();
     }
@@ -124,23 +126,22 @@ public class DataDependencyRestService extends AbstractRestService {
      * instead of the array.
      */
     @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/input")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/input")
     public Response getInputDataObjects(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int instanceId,
-            @PathParam("activityId") int activityInstanceId) {
+            @PathParam("activityInstanceId") int activityInstanceId) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-
-        if (!executionService.testActivityInstanceExists(activityInstanceId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "activity instance.\"}")
-                    .build();
+        int activityId = new DbControlNodeInstance().getControlNodeID(activityInstanceId);
+        Map<String, Set<String>> inputSets = new DbDataConditions().loadInputSets(activityId);
+        if (inputSets.size() == 0) {
+            String errorMsg = "{\"error\":\"There is no input set for activity instance %d\"}";
+            errorMsg = String.format(errorMsg, activityInstanceId);
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity(errorMsg).build();
         }
-        Map<String, Set<String>> inputSets = new DbDataConditions().loadInputSets(activityInstanceId);
         return Response.ok(buildIOJson(inputSets), MediaType.APPLICATION_JSON).build();
     }
 
@@ -171,20 +172,23 @@ public class DataDependencyRestService extends AbstractRestService {
      * instead of the array.
      */
     @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/output")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/output")
     public Response getOutputDataObjects(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioID,
             @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityInstanceId) {
+            @PathParam("activityInstanceId") int activityInstanceId) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.testActivityInstanceExists(activityInstanceId)) {
-            return this.buildNotFoundResponse("{\"error\":\"There is no such "
-                    + "activity instance.\"}");
-        }
+        int activityId = new DbControlNodeInstance().getControlNodeID(activityInstanceId);
         Map<String, Set<String>> outputSets = new DbDataConditions()
-                .loadOutputSets(activityInstanceId);
+                .loadOutputSets(activityId);
+        if (outputSets.size() == 0) {
+            String errorMsg = "{\"error\":\"There is no output set for activity instance %d\"}";
+            errorMsg = String.format(errorMsg, activityInstanceId);
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                    .entity(errorMsg).build();
+        }
         return Response.ok(buildIOJson(outputSets), MediaType.APPLICATION_JSON).build();
     }
 
@@ -205,18 +209,6 @@ public class DataDependencyRestService extends AbstractRestService {
         JSONArray array = new JSONArray(outputBeans);
         return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON)
                 .entity(array.toString()).build();
-    }
-
-    private DataObjectJaxBean buildDataObjectJaxBean(
-            int setId, DataObject dataObjectInstance, ExecutionService executionService) {
-        DataObjectJaxBean dataObject = new DataObjectJaxBean();
-        dataObject.setSetId(setId);
-        dataObject.setId(dataObjectInstance.getId());
-        dataObject.setLabel(dataObjectInstance.getName());
-        dataObject.setState(dataObjectInstance.getStateName());
-        dataObject.setAttributeConfiguration(executionService
-                .getDataAttributesForDataObjectInstance(dataObjectInstance));
-        return dataObject;
     }
 
     private DataObjectJaxBean buildDataObjectJaxBean(

@@ -112,8 +112,6 @@ public class DataObjectRestService {
                     .build();
         }
         DataObjectJaxBean dataObject = new DataObjectJaxBean();
-        dataObject.setSetId(0);
-
         dataObject.setId(dataObjectID);
         dataObject.setLabel(labels.get(dataObjectID));
         dataObject.setState(states.get(dataObjectID));

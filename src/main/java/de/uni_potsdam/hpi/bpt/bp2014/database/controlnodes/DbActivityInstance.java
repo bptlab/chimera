@@ -80,6 +80,16 @@ public class DbActivityInstance extends DbObject {
 		return this.executeStatementReturnsListInt(sql, "controlnode_id");
 	}
 
+    // TODO document
+    public Boolean existsActivityInstance(int controlNodeInstanceId, int scenarioInstanceId) {
+        String existsActivityInstance = "SELECT * FROM controlnodeinstance as cni, " +
+                "fragmentinstance as fi WHERE cni.fragmentinstance_id = fi.id " +
+                "AND fi.scenarioinstance_id = %d AND cni.id = %d;";
+        existsActivityInstance = String.format(existsActivityInstance,
+                scenarioInstanceId, controlNodeInstanceId);
+        return this.executeExistStatement(existsActivityInstance);
+    }
+
 	/**
 	 * This method returns all database ID's for all activities
 	 * who have terminated in the context of a scenario instance.
