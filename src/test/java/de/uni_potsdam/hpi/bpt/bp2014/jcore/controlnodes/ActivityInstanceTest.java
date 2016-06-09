@@ -33,6 +33,7 @@ public class ActivityInstanceTest {
     private DataManager createExampleDM() {
         DataManager instance = EasyMock.createNiceMock(DataManager.class);
         expect(instance.getDataObjects()).andReturn(new ArrayList<>()).anyTimes();
+        expect(instance.getAvailableInput(1)).andReturn(new ArrayList<>()).anyTimes();
         replay(instance);
         return instance;
     }

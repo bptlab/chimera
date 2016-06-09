@@ -254,7 +254,7 @@ public class ActivityRestService extends AbstractRestService {
                 activityJSON.put("activityid", instance.getControlNodeId());
                 activityJSON.put("label", instance.getLabel());
                 activityJSON.put("state", entry.getKey());
-                activityJSON.put("link", uriInfo.getAbsolutePath()
+                activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
                         + String.valueOf(instance.getControlNodeInstanceId()));
                 activities.put(""
                                 + instance.getControlNodeInstanceId(),

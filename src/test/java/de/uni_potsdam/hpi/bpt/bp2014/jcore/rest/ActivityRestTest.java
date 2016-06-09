@@ -168,18 +168,18 @@ public class ActivityRestTest extends AbstractTest {
     @Test
     public void testInvalidStateTransition() {
         // An activity which is running cannot be started again
-        Response response = base.path("scenario/1/instance/72/activityinstance/105/begin")
+        Response response = base.path("scenario/1/instance/72/activityinstance/186/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, response.getStatus());
 
-        response = base.path("scenario/1/instance/72/activityinstance/105/begin")
+        response = base.path("scenario/1/instance/72/activityinstance/186/begin")
                 .request().post(Entity.json("{}"));
         assertEquals("The Response code of getTerminationCondition was not 400",
                 400, response.getStatus());
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"impossible to start activity with id 105\"}",
+                "{\"error\":\"impossible to start activity with id 186\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -195,7 +195,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("BeginActivityInstance does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"activity state changed.\"}",
+                "{\"message\":\"activity begun.\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
 
@@ -214,7 +214,7 @@ public class ActivityRestTest extends AbstractTest {
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"message\":\"activity state changed.\"}",
+                "{\"message\":\"activity terminated.\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
