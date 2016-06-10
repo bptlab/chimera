@@ -46,8 +46,8 @@ public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
         dClass.save(testScenarioId);
         DataAttribute attribute = dClass.getAttributes().get(0);
         DbDataAttributeInstance instance = new DbDataAttributeInstance();
-        String dbType = instance.getType(attribute.getDataAttributeID());
-        String dbName = instance.getName(attribute.getDataAttributeID());
+        String dbType = instance.getType(attribute.getAttributeDatabaseId());
+        String dbName = instance.getName(attribute.getAttributeDatabaseId());
         assertEquals("The attributeName has not been saved correctly", "Beginn", dbName);
         assertEquals("The attributeType has not been saved correctly", "String", dbType);
     }

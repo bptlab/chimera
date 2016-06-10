@@ -24,7 +24,7 @@ public class DataAttribute implements IPersistable {
 	/**
 	 * This is the databaseID of the attribute.
 	 */
-	private int dataAttributeID;
+	private int attributeDatabaseId;
 
 	/**
 	 * Constructor which sets the Name and Type of the DataAttribute.
@@ -49,18 +49,18 @@ public class DataAttribute implements IPersistable {
 
 	@Override public int save() {
 		Connector conn = new Connector();
-		this.dataAttributeID = conn.insertDataAttributeIntoDatabase(
+		this.attributeDatabaseId = conn.insertDataAttributeIntoDatabase(
 				this.dataAttributeName, this.dataClassID,
 						this.dataAttributeType);
-		return dataAttributeID;
+		return attributeDatabaseId;
 	}
 
 	public int getDataClassID() {
 		return dataClassID;
 	}
 
-	public int getDataAttributeID() {
-		return dataAttributeID;
+	public int getAttributeDatabaseId() {
+		return attributeDatabaseId;
 	}
 
 	public String getDataAttributeType() {

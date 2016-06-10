@@ -63,8 +63,6 @@ public class StartQueryIntegrationTest extends JerseyTest {
         DbCaseStart caseStart = new DbCaseStart();
         List<StartQuery> startQueries =  scenarioData.getStartQueries();
         StartQuery startQuery = startQueries.get(0);
-        assertEquals("$.bar.foo", startQuery.getAttributeToJsonPath().get("572f75ee9f9d1ef84a299af3"));
-        assertEquals("$.a.c", startQuery.getAttributeToJsonPath().get("572f75ee9f9d1ef84a299af4"));
         String requestKey = caseStart.getEventKey(startQuery.getId());
         String triggerPath = String.format("casestart/%s", requestKey);
         Response triggerEvent = base.path(triggerPath).request().post(

@@ -46,6 +46,7 @@ public class DataClass {
 
     protected int isEvent = 0;
 
+
     protected Map<String, Integer> stateToDatabaseId = new HashMap<>();
 
     protected List<String> states = new ArrayList<>();

@@ -10,7 +10,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.EventFactory;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.TimerEventInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.CaseStarter;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeEventJob;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.commons.lang3.StringEscapeUtils;

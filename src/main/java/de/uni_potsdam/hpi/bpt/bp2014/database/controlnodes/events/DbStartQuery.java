@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.StartQueryPart;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,25 +21,36 @@ public class DbStartQuery extends DbObject {
         return new ArrayList<>(uniqueQueries);
     }
 
-    public Map<String, Map<Integer, String>> getPathMappings(int scenarioId) {
-        String sql = "SELECT * FROM startquery WHERE scenario_id = %d";
-        sql = String.format(sql, scenarioId);
+    public List<StartQueryPart> loadStartQueryParts(String queryId, Integer scenarioId) {
+        String sql = "SELECT * FROM startquery, startpart WHERE scenario_id = %d AND " +
+                "startquery.id = startpart.query_id AND startpart.query_id = '%s'";
+        sql = String.format(sql, scenarioId, queryId);
+        Map<Integer, StartQueryPart> dataclassIdToStartQuery = new HashMap<>();
         java.sql.Connection connection = Connection.getInstance().connect();
-        Map<String, Map<Integer, String>> queryIdToJsonMapping = new HashMap<>();
         try (Statement stat = connection.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             while (rs.next()) {
-                String queryId = rs.getString("id");
-                if (!queryIdToJsonMapping.containsKey(queryId )) {
-                    queryIdToJsonMapping.put(queryId, new HashMap<>());
+                int dataclassId = rs.getInt("dataclass");
+                int stateId = rs.getInt("state");
+                if (!dataclassIdToStartQuery.containsKey(dataclassId)) {
+                    StartQueryPart startQueryPart = new StartQueryPart(dataclassId, stateId);
+                    dataclassIdToStartQuery.put(dataclassId, startQueryPart);
                 }
                 int dataattributeId = rs.getInt("dataattribute_id");
                 String jsonPath = rs.getString("jsonpath");
-                queryIdToJsonMapping.get(queryId).put(dataattributeId, jsonPath);
+                StartQueryPart part = dataclassIdToStartQuery.get(dataclassId);
+                part.addAttributeMapping(dataattributeId, jsonPath);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return queryIdToJsonMapping;
+        return new ArrayList<>(dataclassIdToStartQuery.values());
+    }
+
+    public List<String> getQueryIds(int scenarioId) {
+        String getQueryIds = "SELECT * FROM startquery, startpart WHERE " +
+                " scenario_id = %d;";
+        getQueryIds = String.format(getQueryIds, scenarioId);
+        return this.executeStatementReturnsListString(getQueryIds, "id");
     }
 }

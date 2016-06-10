@@ -1,4 +1,4 @@
-package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
+package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbStartQuery;
@@ -22,10 +22,11 @@ import java.util.stream.Collectors;
 public class CaseStarter {
 
     static final Logger LOGGER = Logger.getLogger(CaseStarter.class);
-    Map<Integer, String> attributeIdToJsonPath;
+    List<StartQueryPart> startQueryParts;
 
     public CaseStarter(int scenarioId, String queryId) {
-        this.attributeIdToJsonPath = new DbStartQuery().getPathMappings(scenarioId).get(queryId);
+        DbStartQuery dbStartQuery = new DbStartQuery();
+        this.startQueryParts = dbStartQuery.loadStartQueryParts(queryId, scenarioId);
     }
 
     public void startInstance(String json, ScenarioInstance scenarioInstance) {
@@ -41,15 +42,9 @@ public class CaseStarter {
      * one data object.
      */
     public void initializeDataObjects(ScenarioInstance scenarioInstance) {
-        Map<Integer, List<Integer>> classToAttributes =
-                new DbDataClass().getDataAttributesPerClass();
-        Map<Integer, Integer> attributeToclass = CollectionUtil.invertMapping(classToAttributes);
         DataManager dataManager = scenarioInstance.getDataManager();
-        for (int dataAttributeId : attributeIdToJsonPath.keySet()) {
-            int dataClassId = attributeToclass.get(dataAttributeId);
-            // FIXME what to do with data object state at case start:
-            // state is modeled in the editor and sent to engine as well
-            //dataManager.initializeDataObject(dataClassId);
+        for (StartQueryPart part : this.startQueryParts) {
+            dataManager.initializeDataObject(part.getDataClassId(), part.getStartStateId());
         }
     }
 
@@ -61,9 +56,16 @@ public class CaseStarter {
         }
 
         Map<Integer, DataAttributeInstance> idToDataAttributeInstance = dataAttributes
-                .stream().collect(Collectors.toMap(
-                        DataAttributeInstance::getId, x -> x));
-        for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
+                .stream().collect(Collectors.toMap(DataAttributeInstance::getId, x -> x));
+        for (StartQueryPart part : this.startQueryParts) {
+            initializeFromPart(part, scenarioInstanceId, json, idToDataAttributeInstance);
+        }
+    }
+
+    private void initializeFromPart(StartQueryPart part, int scenarioInstanceId, String json,
+                                    Map<Integer, DataAttributeInstance> idToDataAttributeInstance) {
+        for (Map.Entry<Integer, String>
+                idToPathEntry : part.getAttributeIdToJsonPath().entrySet()) {
             int dataAttributeInstanceId = idToPathEntry.getKey();
             DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
             String jsonPath = idToPathEntry.getValue();
@@ -82,7 +84,9 @@ public class CaseStarter {
 
 
     public boolean hasMapping() {
-        return this.attributeIdToJsonPath.size() > 0;
+        return !this.startQueryParts.isEmpty();
     }
+
+
 }
 

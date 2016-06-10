@@ -6,10 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 import org.easymock.EasyMock;
 
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
@@ -28,7 +25,7 @@ public class MockProvider {
             DataAttribute dataAttribute = createNiceMock(DataAttribute.class);
             expect(dataAttribute.getDataAttributeName()).andReturn(names.get(i)).anyTimes();
             expect(dataAttribute.getEditorId()).andReturn(editorIds.get(i)).anyTimes();
-            expect(dataAttribute.getDataAttributeID()).andReturn(databaseIds.get(i)).anyTimes();
+            expect(dataAttribute.getAttributeDatabaseId()).andReturn(databaseIds.get(i)).anyTimes();
             replay(dataAttribute);
             dataAttributes.add(dataAttribute);
         }
@@ -37,20 +34,30 @@ public class MockProvider {
     }
 
     public static List<DataClass> mockDataClasses(
-            List<String> names, List<List<DataAttribute>> dataAttributes) {
+            List<String> names, List<List<DataAttribute>> dataAttributes,
+            List<List<String>> states) {
         assert names.size() == dataAttributes.size() : "names and attributes must have same length";
         List<DataClass> dataClasses = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             DataClass dataClass = createNiceMock(DataClass.class);
             expect(dataClass.getName()).andReturn(names.get(i)).anyTimes();
             expect(dataClass.getAttributes()).andReturn(dataAttributes.get(i)).anyTimes();
-            expect(dataClass.getDatabaseId()).andReturn(i).anyTimes();
+            expect(dataClass.getDatabaseId()).andReturn(i + 1).anyTimes();
+
             for (DataAttribute dataAttribute : dataAttributes.get(i)) {
                 String dataAttributeName = dataAttribute.getDataAttributeName();
                 Optional<DataAttribute> dataAttributeOptional = Optional.of(dataAttribute);
                 expect(dataClass.getDataAttributeByName(dataAttributeName))
                         .andReturn(dataAttributeOptional).anyTimes();
             }
+
+            Map<String, Integer> stateToDatabaseId = new HashMap<>();
+            List<String> statesOfDataclass = states.get(i);
+            for (int j = 0; j < statesOfDataclass.size(); j++) {
+                stateToDatabaseId.put(statesOfDataclass.get(j), j + 1);
+            }
+            expect(dataClass.getStateToDatabaseId()).andReturn(stateToDatabaseId).anyTimes();
+
             replay(dataClass);
             dataClass.setAttributes(dataAttributes.get(i));
             dataClasses.add(dataClass);
@@ -58,12 +65,16 @@ public class MockProvider {
         return dataClasses;
     }
 
+
+
     public static List<DataClass> mockDataClasses(List<String> names) {
         List<List<DataAttribute>> emptyAttributes = new ArrayList<>();
+        List<List<String>> emptyStates = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             emptyAttributes.add(new ArrayList<>());
+            emptyStates.add(new ArrayList<>());
         }
-        return mockDataClasses(names, emptyAttributes);
+        return mockDataClasses(names, emptyAttributes, emptyStates);
     }
 
     public static List<DataNode> mockDataNodes(List<String> dataclassNames, List<String> states) {

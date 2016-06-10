@@ -4,10 +4,12 @@ import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbStartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.StartQueryPart;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,20 +29,19 @@ import static org.junit.Assert.*;
  */
 public class StartQueryTest {
 
-    static JSONArray startQueriesArray;
+    JSONArray startQueriesArray;
 
     @After
     public void tearDown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
 
-    @BeforeClass
-    public static void setUpStartQuery() {
-        startQueriesArray = new JSONArray();
-        JSONObject first = getSinglePathMapping("Data", "Name", "$.a.b");
-        JSONObject second = getSinglePathMapping("Data", "Age", "$.foo.bar");
-        startQueriesArray.put(getSingleStartQuery("SELECT * FROM anEvent", Arrays.asList(first, second)));
-        startQueriesArray.put(getSingleStartQuery("SELECT * FROM anotherEvent", Arrays.asList(first)));
+    @Before
+    public void setup() throws IOException {
+        String path = "src/test/resources/json/exampleStartQuery.json";
+        String startQueryJson = FileUtils.readFileToString(new File(path));
+        JSONObject startQuery = new JSONObject(startQueryJson);
+        startQueriesArray = startQuery.getJSONArray("startconditions");
     }
 
     private static JSONObject getSingleStartQuery(String query, List<JSONObject> pathMappings) {
@@ -62,50 +63,42 @@ public class StartQueryTest {
 
     @Test
     public void testStartQueryCreation() {
-        StartQuery startQuery = createTestStartQuery();
-        assertEquals(2, startQuery.getAttributeToJsonPath().size());
+        StartQuery startQuery = new StartQuery(startQueriesArray.getJSONObject(0));
+        assertEquals(1, startQuery.getQueryParts().size());
         assertEquals("SELECT * FROM anEvent", startQuery.getQuery());
-    }
-
-    private StartQuery createTestStartQuery() {
-        JSONObject first = getSinglePathMapping("Data", "Name", "$.a.b");
-        JSONObject second = getSinglePathMapping("Data", "Age", "$.foo.bar");
-        JSONObject startQueryJson = getSingleStartQuery(
-                "SELECT * FROM anEvent", Arrays.asList(first, second));
-        List<DataClass> dataClasses = getTestDataclasses();
-        return new StartQuery(startQueryJson, dataClasses);
     }
 
     private List<DataClass> getTestDataclasses() {
         List<DataAttribute> dataAttributes = MockProvider.mockDataAttributes(
                 Arrays.asList("Name", "Age"), Arrays.asList("1", "2"), Arrays.asList(1, 2));
+        List<List<String>> states = Arrays.asList(Arrays.asList("init"));
         return MockProvider.mockDataClasses(
-                Arrays.asList("Data"), Arrays.asList(dataAttributes));
+                Arrays.asList("Data"), Arrays.asList(dataAttributes), states);
     }
 
     @Test
     public void testStartQuerySaving() {
-        StartQuery startQuery = createTestStartQuery();
+        StartQuery startQuery = new StartQuery(startQueriesArray.getJSONObject(0));
         int scenarioId = 123451337;
-        startQuery.save(scenarioId);
+        List<DataClass> dataClasses = getTestDataclasses();
+        startQuery.save(scenarioId, dataClasses);
         DbStartQuery dbStartQuery = new DbStartQuery();
         assertEquals(Arrays.asList("SELECT * FROM anEvent"), dbStartQuery.getStartQueries(123451337));
-        Map<String, Map<Integer, String>> pathMappings = dbStartQuery.getPathMappings(123451337);
+        List<String> queryIds = dbStartQuery.getQueryIds(scenarioId);
+        assertEquals(2, queryIds.size());
+        List<StartQueryPart> pathMappings = dbStartQuery.loadStartQueryParts(queryIds.get(0),
+                123451337);
         assertEquals(1, pathMappings.size());
-        String queryId = pathMappings.keySet().iterator().next();
-        Map<Integer, String> pathMapping = pathMappings.get(queryId);
-        assertEquals(2, pathMapping.size());
-        assertEquals("$.a.b", pathMapping.get(1));
-        assertEquals("$.foo.bar", pathMapping.get(2));
+        // HERE assert values of start query parts
     }
 
     @Test
     public void testMultipleStartQueriesSaving() {
         List<DataClass> dataClasses = getTestDataclasses();
-        List<StartQuery> startQueries = StartQuery.parseStartQueries(startQueriesArray, dataClasses);
+        List<StartQuery> startQueries = StartQuery.parseStartQueries(startQueriesArray);
         assertEquals(2, startQueries.size());
         int scenarioId = 12345;
-        startQueries.forEach(x -> x.save(scenarioId));
+        startQueries.forEach(x -> x.save(scenarioId, dataClasses));
 
         DbStartQuery dbStartQuery = new DbStartQuery();
         List<String> expected = Arrays.asList("SELECT * FROM anEvent", "SELECT * FROM anotherEvent");
@@ -113,8 +106,6 @@ public class StartQueryTest {
                 && dbStartQuery.getStartQueries(12345).containsAll(expected));
 
         // TODO also assert values
-        Map<String, Map<Integer, String>> pathMappings = dbStartQuery.getPathMappings(12345);
-        assertEquals(2, pathMappings.size());
     }
 
     @Test

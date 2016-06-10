@@ -335,11 +335,28 @@ public class Connector extends DbObject {
 		this.executeInsertStatement(sql);
 	}
 
-    public void insertStartQueryIntoDatabase(String query, int scenarioId,
-                                             int attributeDbId, String jsonPath, String id) {
-        String sql = "INSERT INTO startquery (query, scenario_id, dataattribute_id, jsonpath, id) " +
-                "VALUES ('%s', %d, %d, '%s', '%s');";
-        sql = String.format(sql, query, scenarioId, attributeDbId, jsonPath, id);
+    // TODO remove into database because where else should it insert it
+    public void insertStartQueryIntoDatabase(String query, int scenarioId, String id) {
+        String sql = "INSERT INTO startquery (query, scenario_id, id) " +
+                "VALUES ('%s', %d, '%s');";
+        sql = String.format(sql, query, scenarioId, id);
         this.executeInsertStatement(sql);
+    }
+
+    /**
+     *
+     * @param queryId
+     * @param dataClassDbId
+     * @param stateDbId
+     * @param attributeDbId
+     * @param jsonPath
+     */
+    public void insertStartPart(String queryId, int dataClassDbId, int stateDbId,
+                                int attributeDbId, String jsonPath) {
+        String insertStartPart = "INSERT INTO startpart (query_id, dataclass," +
+                "state, dataattribute_id, jsonpath) VALUES ('%s', %d, %d, %d, '%s');";
+        insertStartPart = String.format(insertStartPart, queryId, dataClassDbId, stateDbId,
+                attributeDbId, jsonPath);
+        this.executeInsertStatement(insertStartPart);
     }
 }

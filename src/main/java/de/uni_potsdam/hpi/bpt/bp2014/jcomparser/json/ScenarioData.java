@@ -52,8 +52,7 @@ public class ScenarioData {
 
             if (scenarioJson.has("startconditions")) {
                 JSONArray startQueryArray = scenarioJson.getJSONArray("startconditions");
-                this.startQueries = StartQuery.parseStartQueries(
-                        startQueryArray, domainModel.getDataClasses());
+                this.startQueries = StartQuery.parseStartQueries(startQueryArray);
             } else {
                 this.startQueries = new ArrayList<>();
             }
@@ -84,7 +83,7 @@ public class ScenarioData {
         setTerminationCondition(scenarioJson);
         terminationConditions.forEach(TerminationCondition::save);
 
-        this.startQueries.forEach(x -> x.save(scenarioDbId));
+        this.startQueries.forEach(x -> x.save(scenarioDbId, domainModel.getDataClasses()));
         this.startQueries.forEach(x -> x.register(this.scenarioDbId));
 
         return this.scenarioDbId;

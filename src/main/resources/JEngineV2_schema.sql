@@ -546,10 +546,18 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 CREATE TABLE IF NOT EXISTS `startquery` (
   `id`               VARCHAR(512) NOT NULL,
   `query`            VARCHAR(512) NOT NULL,
-  `scenario_id`      INT(11)      NOT NULL,
+  `scenario_id`      INT(11)      NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `startpart` (
+  `query_id`         VARCHAR(512) NOT NULL,
+  `dataclass`        INT(11) NOT NULL,
+  `state`            INT(11) NOT NULL,
   `dataattribute_id` INT(11)      NOT NULL,
   `jsonpath`         VARCHAR(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
