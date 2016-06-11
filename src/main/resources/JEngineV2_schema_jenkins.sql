@@ -235,6 +235,19 @@ CREATE TABLE IF NOT EXISTS `dataobject` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dataobjectselection`
+--
+
+
+CREATE TABLE IF NOT EXISTS `dataobjectselection` (
+  scenarioinstance_id INT(11) NOT NULL,
+  activityinstance_id INT(11) NOT NULL,
+  dataobject_id INT(11) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `dataset`
 --
 
@@ -446,22 +459,6 @@ CREATE TABLE IF NOT EXISTS `logentry` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Table structure for table `logentry`
---
-
-CREATE TABLE IF NOT EXISTS `logentry` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `logged_id` int(11) NOT NULL,
-  `timestamp` TIMESTAMP(6) NOT NULL,
-  `label` VARCHAR(256) NOT NULL,
-  `type` VARCHAR(256) NOT NULL,
-  `new_value` VARCHAR(256),
-  `scenarioinstance_id` int(11) NOT NULL,
-  `cause` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
 -- Table structure for table `pathmapping`
 --
 
@@ -549,10 +546,18 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 CREATE TABLE IF NOT EXISTS `startquery` (
   `id`               VARCHAR(512) NOT NULL,
   `query`            VARCHAR(512) NOT NULL,
-  `scenario_id`      INT(11)      NOT NULL,
+  `scenario_id`      INT(11)      NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `startpart` (
+  `query_id`         VARCHAR(512) NOT NULL,
+  `dataclass`        INT(11) NOT NULL,
+  `state`            INT(11) NOT NULL,
   `dataattribute_id` INT(11)      NOT NULL,
   `jsonpath`         VARCHAR(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
