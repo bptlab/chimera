@@ -2,6 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.SseNotifier;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -159,6 +160,8 @@ public class DataAttributeInstance {
 					throw new IllegalArgumentException("Attribute data type is not supported.");
 			}
 		} catch (IllegalArgumentException | ParseException e) {
+			SseNotifier.notifyWarning("Data attribute " + this.getName() + " could not be set "
+					+ "because the entered value did not match its data type.");
 			throw new IllegalArgumentException(excp);
 		}
 	}
