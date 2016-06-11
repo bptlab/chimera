@@ -219,13 +219,13 @@ public class ScenarioInstance {
 	 * @param controlNodeId id of the terminated control node which could cause a gateway
      *                      to terminate
 	 */
-	@SuppressWarnings("unchecked") public void checkXorGatewaysForTermination(int controlNodeId) {
-		// Cast to List is necessary because of clone returns Object
-        for (GatewayInstance gatewayInstance : executingGateways) {
-			if (gatewayInstance.checkTermination(controlNodeId)) {
-				gatewayInstance.terminate();
-			}
-		}
+	public void checkXorGatewaysForTermination(int controlNodeId) {
+		// clone is needed because otherwise gateway::terminate would remove itself from the list
+		// causing unexpected behavior
+		List<GatewayInstance> gatewayInstances = new ArrayList<>(executingGateways);
+		gatewayInstances.stream()
+				.filter(gatewayInstance -> gatewayInstance.checkTermination(controlNodeId))
+				.forEach(GatewayInstance::terminate);
 	}
 
 	/**

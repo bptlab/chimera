@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -157,7 +158,7 @@ public class DataAttributeInstance {
 				default:
 					throw new IllegalArgumentException("Attribute data type is not supported.");
 			}
-		} catch (Exception e) {
+		} catch (IllegalArgumentException | ParseException e) {
 			throw new IllegalArgumentException(excp);
 		}
 	}
