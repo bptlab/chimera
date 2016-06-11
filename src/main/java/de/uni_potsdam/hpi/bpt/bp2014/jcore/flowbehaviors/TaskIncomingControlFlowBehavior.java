@@ -83,14 +83,8 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	/**
 	 * Sets the data objects which are outputs of the activity to on change.
 	 */
-	public void lockDataObjectInstances(List<Integer> dataObjectIds) {
+	public void lockDataObjects(List<Integer> dataObjectIds) {
 		DataManager dataManager = this.getScenarioInstance().getDataManager();
-        for (int inputSet : inputSets) {
-			List<Integer> dataObjects = dbDataNode
-					.getDataClassIdsForDataSets(inputSet);
-			for (int dataObject : dataObjects) {
-                dataManager.lockDataobject(dataObject);
-			}
-		}
+		dataObjectIds.forEach(dataManager::lockDataobject);
 	}
 }

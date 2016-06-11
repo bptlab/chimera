@@ -436,8 +436,8 @@ public class ActivityRestService extends AbstractRestService {
             }
         }
 
-        successful = executionService.beginActivity(
-                scenarioInstanceId, activityId, usedDataObjects);
+        successful = executionService.beginActivityInstance(
+                scenarioInstanceId, activityInstanceId, usedDataObjects);
         if (successful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)

@@ -5,6 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import org.junit.After;
 import org.junit.Test;
 
@@ -128,13 +129,14 @@ public class HistoryLoggerTest {
     private void changeDataattributeValues(
             ScenarioInstance scenarioInstance, ActivityInstance activity) {
         Map<Integer, String> idToChangedValue = new HashMap<>();
-        for (DataAttributeInstance attribute : scenarioInstance.getDataAttributeInstances().values()) {
+        DataManager manager = scenarioInstance.getDataManager();
+        for (DataAttributeInstance attribute : manager.getDataAttributeInstances()) {
             idToChangedValue.put(attribute.getId(), "bar");
         }
         assert(idToChangedValue.size() > 0);
         // Begin activity so that it can alter the values of data attributes
         activity.begin();
-        scenarioInstance.getDataManager().setAttributeValues(
+        manager.setAttributeValues(
                 activity.getControlNodeInstanceId(), idToChangedValue);
     }
 }

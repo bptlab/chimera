@@ -55,11 +55,11 @@ public class WebServiceAcceptanceTest  {
                 "src/test/resources/Scenarios/JsonPathWebserviceScenarioGet.json");
         DataManager manager = instance.getDataManager();
         Collection<DataAttributeInstance> dataAttributes =
-                manager.getAllDataAttributeInstances();
+                manager.getDataAttributeInstances();
         assertDataAttributeInstancesEmpty(dataAttributes);
         // Terminating the manual task starts the automatic task
         ScenarioTestHelper.executeActivityByName("ManualTask", instance);
-        dataAttributes = manager.getAllDataAttributeInstances();
+        dataAttributes = manager.getDataAttributeInstances();
         assertDataAttributeInstanceHasValue(dataAttributes);
     }
 
@@ -76,10 +76,10 @@ public class WebServiceAcceptanceTest  {
                 "src/test/resources/Scenarios/JsonPathWebserviceScenarioPost.json");
         DataManager manager = instance.getDataManager();
         Collection<DataAttributeInstance> dataAttributes =
-                manager.getAllDataAttributeInstances();
+                manager.getDataAttributeInstances();
         assertDataAttributeInstancesEmpty(dataAttributes);
         ScenarioTestHelper.executeActivityByName("ManualTask", instance);
-        dataAttributes = manager.getAllDataAttributeInstances();
+        dataAttributes = manager.getDataAttributeInstances();
         assertDataAttributeInstanceHasValue(dataAttributes);
     }
 

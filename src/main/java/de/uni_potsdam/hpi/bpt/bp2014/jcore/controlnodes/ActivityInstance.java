@@ -182,7 +182,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         }
         ((ActivityStateMachine) getStateMachine()).begin();
         ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
-                .lockDataObjectInstances(workingItems);
+                .lockDataObjects(workingItems);
         DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
         int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
         dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,

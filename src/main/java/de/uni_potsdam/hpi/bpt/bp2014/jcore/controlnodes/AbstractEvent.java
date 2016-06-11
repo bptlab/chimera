@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.SseNotifier;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
 
 /**
@@ -95,6 +96,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     public boolean terminate(String eventJson) {
         outgoingBehavior.terminate(eventJson);
+        SseNotifier.notifyRefresh();
         return true;
     }
 }

@@ -401,6 +401,7 @@ public class ScenarioInstance {
 	/**
 	 * @return a Map with DataAttributeInstances.
 	 */
+	@Deprecated
 	public Map<Integer, DataAttributeInstance> getDataAttributeInstances() {
 		return dataAttributeInstances;
 	}

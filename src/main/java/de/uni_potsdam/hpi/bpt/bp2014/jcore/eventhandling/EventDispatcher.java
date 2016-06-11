@@ -64,7 +64,6 @@ public final class EventDispatcher {
             event.terminate(eventJson);
         }
         unregisterEvent(event);
-        SseNotifier.notifyRefresh();
         return Response.accepted("Event received.").build();
     }
 
@@ -205,7 +204,7 @@ public final class EventDispatcher {
         if (queryString.contains("#")) {
             ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
             for (DataAttributeInstance attribute : scenario
-                    .getDataManager().getAllDataAttributeInstances()) {
+                    .getDataManager().getDataAttributeInstances()) {
                 String dataattributePath = String.format("#%s.%s",
                         attribute.getDataObject().getName(), attribute.getName());
                 queryString = queryString.replace(dataattributePath,
