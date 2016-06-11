@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.*;

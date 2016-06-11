@@ -2,6 +2,13 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.history;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataObject;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 
 import java.sql.*;
@@ -49,14 +56,14 @@ public class DbLogEntry extends DbObject {
     /**
      * This method saves a log entry with a DataAttributeInstance value change in the database.
      *
-     * @param objectInstanceId the ID of the DataObjectInstance that is changed.
-     * @param stateId           the new state of the DataObjectInstance.
+     * @param objectInstanceId the ID of the DataObject that is changed.
+     * @param stateId           the new state of the DataObject.
      * @param activityInstanceId
      */
     public void logDataobjectTransition(int objectInstanceId, int stateId,
                                        int activityInstanceId, int scenarioInstanceId) {
-        int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
-        String label = new DbDataObject().getName(dataObjectId);
+        int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
+        String label = new DbDataClass().getName(dataObjectId);
         String state = new DbState().getStateName(stateId);
         this.insertLog(scenarioInstanceId, objectInstanceId,
                 state, Optional.of(activityInstanceId), label, LogEntry.LogType.DATA_OBJECT);
@@ -65,12 +72,13 @@ public class DbLogEntry extends DbObject {
     /**
      *
      * @param objectInstanceId
-     * @param state
+     * @param stateId
      * @param scenarioInstanceId
      */
-    public void logDataobjectCreation(int objectInstanceId, String state, int scenarioInstanceId) {
-        int dataObjectId = new DbDataObjectInstance().getDataObjectID(objectInstanceId);
-        String label = new DbDataObject().getName(dataObjectId);
+    public void logDataobjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {
+        int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
+        String label = new DbDataClass().getName(dataObjectId);
+        String state = new DbState().getStateName(stateId);
         this.insertLog(scenarioInstanceId, objectInstanceId,
                 state, Optional.empty(), label, LogEntry.LogType.DATA_OBJECT);
     }
@@ -177,5 +185,16 @@ public class DbLogEntry extends DbObject {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<LogEntry> getCreationLogEntries(int scenarioInstanceId, LogEntry.LogType type) {
+        String sql = "SELECT l1.* FROM logentry l1 " +
+                "INNER JOIN (SELECT logged_id, MIN(timestamp) as timestamp, type FROM logentry " +
+                "GROUP BY logged_id, type) l2 " +
+                "ON l1.logged_id = l2.logged_id WHERE l1.timestamp = l2.timestamp AND " +
+                "l1.type = l2.type AND l1.scenarioinstance_id = %d AND l1.type = '%s';";
+
+        sql = String.format(sql, scenarioInstanceId, type.name());
+        return retrieveLogEntries(sql);
     }
 }

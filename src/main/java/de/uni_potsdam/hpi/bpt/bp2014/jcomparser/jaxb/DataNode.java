@@ -1,7 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
@@ -44,32 +45,32 @@ public class DataNode {
 
     private int databaseId;
 
-    public void save(DataObject dataObject) {
+    public void save(DataClass dataClass, int scenarioId) {
         Connector connector = new Connector();
 
-        int stateDatabaseId = dataObject.getDataClass().getStateToDatabaseId().get(this.state);
+        int stateDatabaseId = dataClass.getStateToDatabaseId().get(this.state);
         int nodeId = connector.insertDataNodeIntoDatabase(
-                dataObject.getScenarioId(), stateDatabaseId,
-                dataObject.getDataClass().getDatabaseId(), dataObject.getDatabaseId(), this.getId());
+                scenarioId, stateDatabaseId, dataClass.getDatabaseId());
         this.setDatabaseId(nodeId);
     }
 
 
-    public void insertPathMappingIntoDatabase(DataObject dataObject) {
-        if (!jsonPath.isEmpty()) {
-            Connector connector = new Connector();
-            String xmlEscapedPathObject = StringEscapeUtils.unescapeHtml4(jsonPath);
-            JSONObject pathObject = new JSONObject(xmlEscapedPathObject);
-            int precedingControlNode = new DbDataFlow().getPrecedingControlNode(this.databaseId);
-            for (Object key : pathObject.keySet()) {
-                Optional<DataAttribute> dataAttribute = dataObject.getDataClass().getDataAttributeByName(key.toString());
-                if (dataAttribute.isPresent()) {
-                    int dataAttributeId = dataAttribute.get().getDataAttributeID();
-                    String jsonPathString = pathObject.getString(key.toString());
-                    String escapedJsonPath = jsonPathString.replace("'", "''");
-                    connector.insertPathMappingIntoDatabase(
-                            precedingControlNode, dataAttributeId, escapedJsonPath);
-                }
+    public void insertPathMappingIntoDatabase(DataClass dataClass) {
+        if (jsonPath.isEmpty()) {
+            return;
+        }
+        Connector connector = new Connector();
+        String xmlEscapedPathObject = StringEscapeUtils.unescapeHtml4(jsonPath);
+        JSONObject pathObject = new JSONObject(xmlEscapedPathObject);
+        int precedingControlNode = new DbDataFlow().getPrecedingControlNode(this.databaseId);
+        for (Object key : pathObject.keySet()) {
+            Optional<DataAttribute> dataAttribute = dataClass.getDataAttributeByName(key.toString());
+            if (dataAttribute.isPresent()) {
+                int dataAttributeId = dataAttribute.get().getAttributeDatabaseId();
+                String jsonPathString = pathObject.getString(key.toString());
+                String escapedJsonPath = jsonPathString.replace("'", "''");
+                connector.insertPathMappingIntoDatabase(
+                        precedingControlNode, dataAttributeId, escapedJsonPath);
             }
         }
     }

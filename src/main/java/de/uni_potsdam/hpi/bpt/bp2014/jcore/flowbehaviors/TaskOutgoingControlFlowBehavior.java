@@ -1,30 +1,22 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataManager;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.*;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Handles the behavior of a terminating activity instance.
  */
 public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBehavior {
 	private final ActivityInstance activityInstance;
-	/**
-	 * Database Connection objects.
-	 */
-	private final DbDataNode dbDataNode = new DbDataNode();
-	private final DbDataFlow dbDataFlow = new DbDataFlow();
-
-	/**
+    /**
 	 * Initializes the TaskOutgoingControlFlowBehavior.
 	 *
 	 * @param activityId         This is the database id from the activity instance.
@@ -41,79 +33,161 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	}
 
 	@Override public void terminate() {
-		this.terminate(-1);
+		this.terminate(new HashMap<>());
 	}
 
 	/**
 	 * Terminates the activity.
 	 *
-	 * @param outputSetId of the set that get executed.
+	 * @param dataClassNameToStateName Map from name of the data class to new state
 	 */
-	public void terminate(int outputSetId) {
-		setDataStates(outputSetId);
+	public void terminate(Map<String, String> dataClassNameToStateName) {
+        DbDataFlow dataFlow = new DbDataFlow();
+        List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
+        List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
+        Set<Integer> toCreate = new HashSet<>(outputClassIds);
+        toCreate.removeAll(inputClassIds);
+        if (dataClassNameToStateName.isEmpty()) {
+            dataClassNameToStateName = loadOnlyOutputSet();
+        }
+
+        createDataObjects(toCreate, dataClassNameToStateName);
+
+        List<DataObject> usedDataObjects = getUsedDataobjects();
+        List<DataObject> toUpdate = usedDataObjects.stream().filter(
+                x ->  outputClassIds.contains(x.getDataClassId())).collect(Collectors.toList());
+
+        updateDataObjects(dataClassNameToStateName, toUpdate);
+        usedDataObjects.forEach(DataObject::unlock);
 
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
         scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
-
 		this.enableFollowing();
 		this.runAutomaticTasks();
 	}
+
+    private void createDataObjects(Set<Integer> toCreate, Map<String, String> dataClassNameToStateName) {
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
+        Map<Integer, Integer> dataClassIdToStateId =
+                dataManager.translate(dataClassNameToStateName);
+        for (int classId : toCreate) {
+            dataManager.initializeDataObject(
+                    classId, dataClassIdToStateId.get(classId));
+        }
+    }
+
+    // TODO Maybe pass to update instead
+    private void updateDataObjects(Map<String, String> dataClassNameToStateName,
+                                   List<DataObject> toUpdate){
+        DataManager dataManager = this.getScenarioInstance().getDataManager();
+        Map<Integer, Integer> dataClassIdToStateId = translate(
+                this.getScenarioInstance().getScenarioId(), dataClassNameToStateName);
+
+        int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
+        Map<Integer, Integer> dataClassToSelectedObject = getClassToSelectedObjectIdMap();
+
+        Set<Integer> usedDataclassIds = toUpdate.stream().map(DataObject::getDataClassId)
+                .collect(Collectors.toSet());
+        for (Map.Entry<Integer, Integer> entry : dataClassToSelectedObject.entrySet()) {
+            if (!usedDataclassIds.contains(entry.getKey())) {
+                continue;
+            }
+            int dataclassId = entry.getKey();
+            int dataobjectId = dataClassToSelectedObject.get(dataclassId);
+            int stateId = dataClassIdToStateId.get(dataclassId);
+            dataManager.changeDataObjectState(dataobjectId, stateId, controlNodeInstanceId);
+        }
+    }
+
+
+    /**
+     * This method is used to load the default output of an activity.
+     * If there is more than one possible output set an IllegalArgumentException
+     * is thrown.
+     * @return Map from data class id to state id, if the dataobject has only one possible output set
+     */
+    private Map<String, String> loadOnlyOutputSet() {
+        DbDataFlow dbDataFlow = new DbDataFlow();
+        List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
+                this.getControlNodeId());
+        if (outputSets.size() > 1) {
+            throw new IllegalArgumentException("Should only be used when there are no "
+                    + "alternative output sets.");
+        }
+        DbDataConditions dataConditions = new DbDataConditions();
+        Map<String, Set<String>> outputMapWithSet = dataConditions.loadOutputSets(this.getControlNodeId());
+        Map<String, String> outputMapForOnlyOutput = new HashMap<>();
+        for (Map.Entry<String, Set<String>> entry : outputMapWithSet.entrySet()) {
+            assert 1 == entry.getValue().size();
+            outputMapForOnlyOutput.put(entry.getKey(), entry.getValue().iterator().next());
+        }
+        return outputMapForOnlyOutput;
+    }
+
+    /**
+     * Returns a Map from the dataclass to the object that is selected to use
+     * for this specific dataclass
+     */
+    private Map<Integer, Integer> getClassToSelectedObjectIdMap() {
+        int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
+        DbSelectedDataObjects dbSelection = new DbSelectedDataObjects();
+        DbDataObject dbDataObject = new DbDataObject();
+        int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+        List<Integer> dataObjectSelection = dbSelection.getDataObjectSelection(
+                scenarioInstanceId, controlNodeInstanceId);
+        return dataObjectSelection.stream().collect(Collectors.toMap(
+                dbDataObject::getDataClassId, Function.identity()
+        ));
+    }
+
+    /**
+     * Converts map from data class name to state name to it's respective database
+     * ids.
+     * @param scenarioId This id is needed because the scope of a data class name is only
+     *                   unique in one scenario
+     * @param dataClassNameToStateName
+     * @return
+     */
+    private Map<Integer, Integer> translate(int scenarioId,
+            Map<String, String> dataClassNameToStateName) {
+        DbDataClass dbDataClass = new DbDataClass();
+        DbState dbState = new DbState();
+        Map<Integer, Integer> dataclassIdToStateId = new HashMap<>();
+        for (Map.Entry<String, String> class_state : dataClassNameToStateName.entrySet()) {
+            String name = class_state.getKey();
+            int dataclassId = dbDataClass.getId(name, scenarioId);
+            String stateToSet = dataClassNameToStateName.get(name);
+            Integer stateId = dbState.getStateId(dataclassId, stateToSet);
+            dataclassIdToStateId.put(dataclassId, stateId);
+        }
+        return dataclassIdToStateId;
+    }
+
+    /**
+     * @return List of the data objects on which the activity works
+     */
+    private List<DataObject> getUsedDataobjects() {
+        DbSelectedDataObjects dbSelectedDataObjects = new DbSelectedDataObjects();
+        ScenarioInstance instance = this.getScenarioInstance();
+        Set<Integer> workItems =  new HashSet<>(dbSelectedDataObjects.getDataObjectSelection(
+                instance.getScenarioInstanceId(), this.activityInstance.getControlNodeInstanceId()));
+        List<DataObject> dataObjects = instance.getDataManager().getDataObjects();
+        return dataObjects.stream().filter(x -> workItems.contains(x.getId())).collect(
+                Collectors.toList());
+    }
 
     /**
      * Since at the moment each output set can only contain the same data objects with different
      * states it is enough to look only at one output set and free all data objects in this.
      */
     public void cancel() {
-        LinkedList<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(
-                this.getControlNodeId());
-        if (inputSets.size() > 0) {
-            int inputSet = inputSets.getFirst();
-            for (DataObject dataObject : dbDataNode.getDataObjectsForDataSets(inputSet)) {
-                this.lockDataObjects(dataObject.getId());
-            }
-        }
+        DbSelectedDataObjects dbSelectedDataObjects = new DbSelectedDataObjects();
+        List<Integer> usedDataObjects = dbSelectedDataObjects.getDataObjectSelection(
+                this.getScenarioInstance().getScenarioInstanceId(), this.getControlNodeId());
+        usedDataObjects.forEach(this::unlockDataObject);
     }
 
-	/**
-     * TODO improve this method
-	 * Sets the states of the data object to the output states of the activity.
-	 * Sets all this data object to not on change.
-	 */
-	private void setDataStates(int outputSetId) {
-		List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(
-				this.getControlNodeId());
-		for (int outputSet : outputSets) {
-			LinkedList<DataObject> dataObjects =
-					dbDataNode.getDataObjectsForDataSets(outputSet);
-			for (DataObject dataObject : dataObjects) {
-				this.lockDataObjects(dataObject.getId());
-			}
-		}
-		if (outputSets.size() != 0) {
-			int outputSet = outputSets.get(0);
-			if (outputSets.size() > 1) {
-				outputSet = outputSetId;
-			}
-			LinkedList<DataObject> dataObjects = dbDataNode.getDataObjectsForDataSets(
-					outputSet);
-			for (DataObject dataObject : dataObjects) {
-				this.changeDataObjectInstanceState(
-						dataObject.getId(), dataObject.getStateID());
-			}
-		}
-
-	}
-
-	/**
-	 * Terminates all referential running activities.
-	 */
-	public void terminateReferences() {
-		for (int activityId : (activityInstance).getReferences()) {
-			this.terminateReferenceControlNodeInstanceForControlNodeInstanceID(
-					activityId);
-		}
-	}
 
 	/**
 	 * Change the state of the given data object.
@@ -122,9 +196,9 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * @param stateId      This is the database id from the state.
 	 * @return true if the data object state could been changed. false if not
 	 */
-	public Boolean changeDataObjectInstanceState(int dataObjectId, int stateId) {
+	public Boolean changeDataObjectState(int dataObjectId, int stateId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        return dataManager.changeDataObjectInstanceState(dataObjectId, stateId,
+        return dataManager.changeDataObjectState(dataObjectId, stateId,
                 activityInstance.getControlNodeInstanceId());
 	}
 
@@ -132,31 +206,11 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	 * Sets the data object to not on change.
 	 * @param dataObjectId This is the database id from the data object.
 	 */
-	public void lockDataObjects(int dataObjectId) {
+	public void unlockDataObject(int dataObjectId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        Optional<DataObjectInstance> dataObjectInstance =
-                dataManager.getDataobjectInstanceForId(dataObjectId);
+        Optional<DataObject> dataObjectInstance =
+                dataManager.getDataobjectForId(dataObjectId);
         assert dataObjectInstance.isPresent(): "invalid data object id";
         dataObjectInstance.get().unlock();
-	}
-
-	/**
-	 * Checks if the referenced controlNode can be terminated.
-	 * The referenced controlNode have to be referential running.
-	 *
-	 * @param controlNodeId This is the database id from the control node.
-	 */
-	public void terminateReferenceControlNodeInstanceForControlNodeInstanceID(
-			int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance : this.getScenarioInstance()
-				.getReferentialRunningControlNodeInstances()) {
-			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
-				if (controlNodeInstance.getClass() == ActivityInstance.class) {
-					((ActivityInstance) controlNodeInstance)
-							.referenceTerminated();
-					return;
-				}
-			}
-		}
 	}
 }

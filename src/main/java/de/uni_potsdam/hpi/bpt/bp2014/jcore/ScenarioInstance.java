@@ -1,15 +1,16 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.TerminationCondition;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,22 +36,22 @@ public class ScenarioInstance {
 	/**
 	 * Lists to save all fragments and all control nodes sorted by state.
 	 */
-	private LinkedList<AbstractControlNodeInstance> controlNodeInstances = new LinkedList<>();
-	private LinkedList<AbstractControlNodeInstance> enabledControlNodeInstances
-			= new LinkedList<>();
-	private LinkedList<AbstractControlNodeInstance> controlFlowEnabledControlNodeInstances
-			= new LinkedList<>();
-	private LinkedList<AbstractControlNodeInstance> dataEnabledControlNodeInstances
-			= new LinkedList<>();
-	private LinkedList<AbstractControlNodeInstance> runningControlNodeInstances
-			= new LinkedList<>();
-	private LinkedList<AbstractControlNodeInstance> terminatedControlNodeInstances
-			= new LinkedList<>();
+	private List<AbstractControlNodeInstance> controlNodeInstances = new ArrayList<>();
+	private List<AbstractControlNodeInstance> enabledControlNodeInstances
+			= new ArrayList<>();
+	private List<AbstractControlNodeInstance> controlFlowEnabledControlNodeInstances
+			= new ArrayList<>();
+	private List<AbstractControlNodeInstance> dataEnabledControlNodeInstances
+			= new ArrayList<>();
+	private List<AbstractControlNodeInstance> runningControlNodeInstances
+			= new ArrayList<>();
+	private List<AbstractControlNodeInstance> terminatedControlNodeInstances
+			= new ArrayList<>();
 
-    private LinkedList<FragmentInstance> fragmentInstances = new LinkedList<>();
-	private LinkedList<AbstractControlNodeInstance> referentialRunningControlNodeInstances
-			= new LinkedList<>();
-	private LinkedList<GatewayInstance> executingGateways = new LinkedList<>();
+    private List<FragmentInstance> fragmentInstances = new ArrayList<>();
+	private List<AbstractControlNodeInstance> referentialRunningControlNodeInstances
+			= new ArrayList<>();
+	private List<GatewayInstance> executingGateways = new ArrayList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
 
@@ -67,7 +68,6 @@ public class ScenarioInstance {
 	 * @param scenarioInstanceId This is the database id from the scenario instance.
 	 */
 	public ScenarioInstance(int scenarioId, int scenarioInstanceId) {
-
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
@@ -91,6 +91,9 @@ public class ScenarioInstance {
         canTerminate = checkTerminationCondition();
 	}
 
+    private void reloadFromDatabase() {
+
+    }
 	/**
 	 * Creates and initializes a new scenario instance.
 	 * Also save this new instance in database.
@@ -179,14 +182,14 @@ public class ScenarioInstance {
 		}
 
 		//removes the old control node instances
-		LinkedList<AbstractControlNodeInstance> updatedList = new LinkedList<>(
+		ArrayList<AbstractControlNodeInstance> updatedList = new ArrayList<>(
 				terminatedControlNodeInstances);
 		for (AbstractControlNodeInstance controlNodeInstance : updatedList) {
 			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstanceId) {
 				terminatedControlNodeInstances.remove(controlNodeInstance);
 			}
 		}
-		updatedList = new LinkedList<>(controlNodeInstances);
+		updatedList = new ArrayList<>(controlNodeInstances);
 		for (AbstractControlNodeInstance controlNodeInstance : updatedList) {
 			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstanceId) {
 				controlNodeInstances.remove(controlNodeInstance);
@@ -203,27 +206,26 @@ public class ScenarioInstance {
 	 * Checks if the control flow enabled control nodes can set to data flow enabled.
 	 */
 	public void updateDataFlow() {
-		for (AbstractControlNodeInstance activityInstance
-				: controlFlowEnabledControlNodeInstances) {
+		for (AbstractControlNodeInstance activityInstance : controlNodeInstances) {
 			if (activityInstance.getClass() == ActivityInstance.class) {
 				((ActivityInstance) activityInstance).checkDataFlowEnabled();
 			}
 		}
-	}
+        checkTerminationCondition();
+    }
 
 	/**
 	 * Checks if terminated control node triggers an xor gateway.
 	 * @param controlNodeId id of the terminated control node which could cause a gateway
      *                      to terminate
 	 */
-	@SuppressWarnings("unchecked") public void checkXorGatewaysForTermination(int controlNodeId) {
-		// Cast to List is necessary because of clone returns Object
-        for (GatewayInstance gatewayInstance : (
-				(LinkedList<GatewayInstance>) executingGateways.clone())) {
-			if (gatewayInstance.checkTermination(controlNodeId)) {
-				gatewayInstance.terminate();
-			}
-		}
+	public void checkXorGatewaysForTermination(int controlNodeId) {
+		// clone is needed because otherwise gateway::terminate would remove itself from the list
+		// causing unexpected behavior
+		List<GatewayInstance> gatewayInstances = new ArrayList<>(executingGateways);
+		gatewayInstances.stream()
+				.filter(gatewayInstance -> gatewayInstance.checkTermination(controlNodeId))
+				.forEach(GatewayInstance::terminate);
 	}
 
 	/**
@@ -265,7 +267,7 @@ public class ScenarioInstance {
 	 */
 	public boolean checkTerminationCondition() {
         this.canTerminate = this.terminationCondition.
-                checkTerminationCondition(this.dataManager.getDataObjectInstances());
+                checkTerminationCondition(this.dataManager.getDataObjects());
         return this.canTerminate;
 	}
 
@@ -289,17 +291,12 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-
-        for (AbstractControlNodeInstance controlNodeInstance : (
-				(LinkedList<AbstractControlNodeInstance>) enabledControlNodeInstances
-				.clone())) {
+        for (AbstractControlNodeInstance controlNodeInstance : enabledControlNodeInstances) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class
-					&& ((ActivityInstance) controlNodeInstance)
-					.isAutomaticExecution()) {
+					&& ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
 				((ActivityInstance) controlNodeInstance).begin();
 			}
 		}
-
         // Don't execute tasks at the moment.
 	}
 
@@ -342,44 +339,44 @@ public class ScenarioInstance {
 	}
 
 	/**
-	 * @return a LinkedList of control node instances.
+	 * @return a ArrayList of control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getControlNodeInstances() {
 		return controlNodeInstances;
 	}
 
 	/**
-	 * @return a LinkedList of enabled control node instances.
+	 * @return a ArrayList of enabled control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getEnabledControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getEnabledControlNodeInstances() {
 		return enabledControlNodeInstances;
 	}
 
 	/**
-	 * @return a LinkedList of flow enabled control node instances.
+	 * @return a ArrayList of flow enabled control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
 		return controlFlowEnabledControlNodeInstances;
 	}
 
 	/**
-	 * @return a LinkedList of data enabled control node instances.
+	 * @return a ArrayList of data enabled control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getDataEnabledControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getDataEnabledControlNodeInstances() {
 		return dataEnabledControlNodeInstances;
 	}
 
 	/**
-	 * @return a LinkedList of running control node instances.
+	 * @return a ArrayList of running control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getRunningControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getRunningControlNodeInstances() {
 		return runningControlNodeInstances;
 	}
 
 	/**
-	 * @return a LinkedList of terminated control node instances.
+	 * @return a ArrayList of terminated control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
 		return terminatedControlNodeInstances;
 	}
 
@@ -388,16 +385,16 @@ public class ScenarioInstance {
 	}
 
 	/**
-	 * @return a LinkedList of referential running control node instances.
+	 * @return a ArrayList of referential running control node instances.
 	 */
-	public LinkedList<AbstractControlNodeInstance> getReferentialRunningControlNodeInstances() {
+	public List<AbstractControlNodeInstance> getReferentialRunningControlNodeInstances() {
 		return referentialRunningControlNodeInstances;
 	}
 
 	/**
-	 * @return a LinkedList of executing gateways.
+	 * @return a ArrayList of executing gateways.
 	 */
-	public LinkedList<GatewayInstance> getExecutingGateways() {
+	public List<GatewayInstance> getExecutingGateways() {
 		return executingGateways;
 	}
 

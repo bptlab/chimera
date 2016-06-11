@@ -8,11 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.Olc;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,20 +74,26 @@ public class FragmentValidator {
                     outgoingDataobjectStates.keySet(), olcs.keySet());
 
             for (String dataobjectName : dataObjectsNames) {
-                List<String> inputStates = incomingDataobjectStates.get(dataobjectName);
-                if (!outgoingDataobjectStates.containsKey(dataobjectName)) {
-                    continue;
-                }
-                List<String> outputStates = outgoingDataobjectStates.get(dataobjectName);
-                Olc olcForDataobject = olcs.get(dataobjectName);
-                for (String state : inputStates) {
-                    if (!olcForDataobject.allowedStateTransitions.containsKey(state)) {
-                        throw new InvalidDataTransitionException("Invalid OLC transition found ");
+                if (incomingDataobjectStates.containsKey(dataobjectName)) {
+                /* This is the case when dataobjects are created (i.e., not in input, but in output)
+                     TODO instead of skipping when dataobjectName is not contained in
+                     incoming dataobjects, check whether output state is valid begin state
+                     for this data object */
+                    List<String> inputStates = incomingDataobjectStates.get(dataobjectName);
+                    if (!outgoingDataobjectStates.containsKey(dataobjectName)) {
+                        continue;
                     }
-                    List<String> allowedTransitionsForState =
-                            olcForDataobject.allowedStateTransitions.get(state);
-                    if (!allowedTransitionsForState.containsAll(outputStates)) {
-                        throw new InvalidDataTransitionException("Invalid OLC transition found ");
+                    Olc olcForDataobject = olcs.get(dataobjectName);
+                    List<String> outputStates = outgoingDataobjectStates.get(dataobjectName);
+                    for (String state : inputStates) {
+                        if (!olcForDataobject.allowedStateTransitions.containsKey(state)) {
+                            throw new InvalidDataTransitionException("Invalid OLC transition found ");
+                        }
+                        List<String> allowedTransitionsForState =
+                                olcForDataobject.allowedStateTransitions.get(state);
+                        if (!allowedTransitionsForState.containsAll(outputStates)) {
+                            throw new InvalidDataTransitionException("Invalid OLC transition found ");
+                        }
                     }
                 }
             }
@@ -156,8 +158,12 @@ public class FragmentValidator {
             Set<String> incomingDataobjects,
             Set<String> outgoingDataObjects,
             Set<String> dataObjectsWithOlc) {
-        return Stream.concat(incomingDataobjects.stream(), outgoingDataObjects.stream())
-                .distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
+        if (!incomingDataobjects.isEmpty()) {
+            return Stream.concat(incomingDataobjects.stream(), outgoingDataObjects.stream())
+                    .distinct().filter(dataObjectsWithOlc::contains).collect(Collectors.toList());
+        }
+        // this is the case with Activities that write data objects
+        return new ArrayList<>();
     }
 
 }

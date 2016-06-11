@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.TimerEventDao;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbTimerEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.TimeCalculator;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
@@ -31,8 +31,8 @@ public class TimerEventInstance extends AbstractEvent {
     }
 
     public Date getTerminationDate() {
-        TimerEventDao timerEventDao = new TimerEventDao();
-        String timerDefinition = timerEventDao.retrieveTimerDefinition(this.getControlNodeId());
+        DbTimerEvent dbTimerEvent = new DbTimerEvent();
+        String timerDefinition = dbTimerEvent.retrieveTimerDefinition(this.getControlNodeId());
         TimeCalculator calculator = new TimeCalculator();
         Date now = new Date();
         return calculator.getDatePlusInterval(now, timerDefinition);

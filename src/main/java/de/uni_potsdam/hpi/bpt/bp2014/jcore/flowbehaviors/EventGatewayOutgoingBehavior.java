@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping;
 
 import java.util.List;
 

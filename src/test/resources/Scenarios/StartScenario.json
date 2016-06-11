@@ -50,32 +50,40 @@
   ],
   "startconditions": [
     {
-      "query": "Select * From anEvent",
-      "mapping": [
+      "query": "SELECT * FROM anEvent",
+      "mappings": [
         {
-          "classname": "Data",
-          "attr": "Name",
-          "path": "$.a.c"
-        },
-        {
-          "classname": "Data",
-          "attr": "Age",
-          "path": "$.bar.foo"
+          "class": "Data",
+          "state": "init",
+          "attributes": [
+            {
+              "name": "Name",
+              "path": "$.a.c"
+            },
+            {
+              "name": "Age",
+              "path": "$.bar.foo"
+            }
+          ]
         }
       ]
     },
     {
-      "query": "Select * From anotherEvent",
-      "mapping": [
+      "query": "SELECT * FROM anotherEvent",
+      "mappings": [
         {
-          "classname": "Data",
-          "attr": "Name",
-          "path": "$.a.b"
-        },
-        {
-          "classname": "Data",
-          "attr": "Age",
-          "path": "$.foo.bar"
+          "class": "Data",
+          "state": "init",
+          "attributes": [
+            {
+              "name": "Name",
+              "path": "$.a.b"
+            },
+            {
+              "name": "Age",
+              "path": "$.foo.bar"
+            }
+          ]
         }
       ]
     }

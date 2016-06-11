@@ -1,16 +1,19 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.ActivityJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeUpdateJaxBean;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectSetsJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -248,10 +251,11 @@ public class ActivityRestService extends AbstractRestService {
                 ids.put(instance.getControlNodeInstanceId());
                 JSONObject activityJSON = new JSONObject();
                 activityJSON.put("id", instance.getControlNodeInstanceId());
+                activityJSON.put("activityid", instance.getControlNodeId());
                 activityJSON.put("label", instance.getLabel());
                 activityJSON.put("state", entry.getKey());
                 activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                        + instance.getControlNodeInstanceId());
+                        + String.valueOf(instance.getControlNodeInstanceId()));
                 activities.put(""
                                 + instance.getControlNodeInstanceId(),
                         activityJSON);
@@ -281,10 +285,11 @@ public class ActivityRestService extends AbstractRestService {
             JSONObject activityJSON = new JSONObject();
             ids.add(instance.getControlNodeInstanceId());
             activityJSON.put("id", instance.getControlNodeInstanceId());
+            activityJSON.put("activityid", instance.getControlNodeId());
             activityJSON.put("label", instance.getLabel());
             activityJSON.put("state", state);
-            activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                    + instance.getControlNodeInstanceId());
+            activityJSON.put("link", uriInfo.getAbsolutePath()
+                    + "/" + String.valueOf(instance.getControlNodeInstanceId()));
             activities.put(activityJSON);
         }
         JSONObject result = new JSONObject();
@@ -301,21 +306,21 @@ public class ActivityRestService extends AbstractRestService {
      * @param uriInfo            A UriInfo object, which holds the server context.
      * @param scenarioId         The databaseID of a scenario.
      * @param scenarioInstanceId The databaseID of a scenarioInstance.
-     * @param activityID         The databaseID of an activityInstance.
+     * @param activityInstanceId         The databaseID of an activityInstance.
      * @return a response Object with the status code:
      * 200 if everything was correct and holds the information about the activityInstance.
      * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstanceID is wrong.
      */
     @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
     public Response getActivity(
             @Context UriInfo uriInfo,
             @PathParam("scenarioId") int scenarioId,
             @PathParam("instanceId") int scenarioInstanceId,
-            @PathParam("activityId") int activityID) {
+            @PathParam("activityInstanceId") int activityInstanceId) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        if (!executionService.testActivityInstanceExists(activityID)) {
+        if (!executionService.testActivityInstanceExists(activityInstanceId)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"error\":\"There is no such "
@@ -323,18 +328,17 @@ public class ActivityRestService extends AbstractRestService {
                     .build();
         }
         ActivityJaxBean activity = new ActivityJaxBean();
-        activity.setId(activityID);
+        activity.setId(activityInstanceId);
         ExecutionService.getInstance(scenarioId).openExistingScenarioInstance(
                 scenarioId, scenarioInstanceId);
         List<AbstractControlNodeInstance> controlNodeInstances =
                 executionService.getScenarioInstance(
                         scenarioInstanceId).getControlNodeInstances();
         for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
-            if (controlNodeInstance.getControlNodeInstanceId() == activityID) {
+            if (controlNodeInstance.getControlNodeInstanceId() == activityInstanceId) {
                 activity.setLabel(executionService
                         .getLabelForControlNodeID(
-                                controlNodeInstance.
-                                        getControlNodeId()
+                                controlNodeInstance.getControlNodeId()
                         ));
             }
         }
@@ -344,59 +348,39 @@ public class ActivityRestService extends AbstractRestService {
 
     }
 
-    /**
-     * This method implements the REST call for retrieving.
-     * reference information for a specific activity
-     *
-     * @param uriInfo            A UriInfo object, which holds the server context.
-     * @param scenarioID         The databaseID of a scenario.
-     * @param scenarioInstanceID The databaseID of a scenarioInstance.
-     * @param activityID         The databaseID of an activityInstance.
-     * @return a json object containing the referenced activities
-     */
-    @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/references")
-    public Response getReferencesForActivity(
-            @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-        Collection<ActivityInstance> referencedActivities = executionService
-                .getReferentialEnabledActivities(scenarioInstanceID, activityID);
-        JSONObject result = buildJSONObjectForReferencedActivities(
-                        referencedActivities, uriInfo);
-        return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-    }
-
 
     /**
      * This method updates the data attributes of a specific activity
      * defined via its activityID.
      *
-     * @param scenarioID         The id of a scenario model.
-     * @param scenarioInstanceID the id of an scenario instance.
-     * @param activityID         the control node id of the activity.
+     * @param scenarioId         The id of a scenario model.
+     * @param scenarioInstanceId the id of an scenario instance.
+     * @param activityInstanceId the control node instance id of the activity.
      * @param input				 data input.
      * @return Status code with regard to its success / failure
      */
     @PUT
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
     public Response setDataAttribute(
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID,
-            final DataAttributeUpdateJaxBean input) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("activityInstanceId") int activityInstanceId,
+            final String input) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
 
-        Map<Integer, String> values = new HashMap<>();
-        if (input != null) {
-            values.put(input.getId(), input.getValue());
+        Map<Integer, String> idToValue = new HashMap<>();
+        JSONObject object = new JSONObject(input);
+
+        for (Object key : object.keySet()) {
+            String keyString = String.valueOf(key);
+            idToValue.put (Integer.valueOf(keyString), object.getString(keyString));
         }
 
-        if (executionService.setDataAttributeValues(scenarioInstanceID, activityID, values)) {
+        boolean successful = executionService.setDataAttributeValues(
+                scenarioInstanceId, activityInstanceId, idToValue);
+
+        if (input != null && successful) {
             return this.buildAcceptedResponse("{\"message\":\"attribute value was "
                     + "changed successfully.\"}");
         } else {
@@ -405,235 +389,111 @@ public class ActivityRestService extends AbstractRestService {
         }
     }
 
+    @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
+    public Response getWorkingItems(@PathParam("scenarioId") int scenarioId,
+                                    @PathParam("instanceId") int scenarioInstanceId,
+                                    @PathParam("activityInstanceId") int activityInstanceId) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+
+        List<DataObjectJaxBean> selectedDataObjects = executionService.getSelectedWorkingItems(
+                scenarioInstanceId, activityInstanceId);
+        JSONArray selectedDataObjectsJson = new JSONArray(selectedDataObjects);
+        return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON)
+                .entity(selectedDataObjectsJson.toString()).build();
+    }
+
     /**
-     * Updates the state of an activity instance.
-     * The state will be changed to the specified one.
-     * The activity Instance is specified by:
+     * Changes the state of an activityInstance from enabled to running.
      *
-     * @param scenarioID         The id of a scenario model.
-     * @param scenarioInstanceID the id of an scenario instance.
-     * @param activityID         the control node id of the activity.
-     * @param state              the new state of the activity.
-     * @param outputset			 the outputset of the activity.
-     * @return Returns a Response, the response code implies the
-     * outcome of the PUT-Request.
+     * @param scenarioId         The id of a scenario model.
+     * @param scenarioInstanceId the id of an scenario instance.
+     * @param activityInstanceId the id of the activity instance.
+     * @param postBody           Json Object containing the data objects which are used
+     *                           executing this activity TODO add format
+     * @return
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
     @POST
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}")
-    public Response updateActivityState(
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID,
-            @QueryParam("state") String state,
-            @DefaultValue("-1") @QueryParam("outputset") int outputset) {
-        boolean result;
-        if (state == null) {
-            return this.buildBadRequestResponse("{\"error\":\"The state is not set\"}");
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
+    public Response beginActivity(
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int scenarioInstanceId,
+            @PathParam("activityInstanceId") int activityInstanceId,
+            String postBody) {
+        boolean successful;
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+        List<Integer> usedDataObjects = new ArrayList<>();
+        JSONObject postJson = new JSONObject(postBody);
+        if (postJson.has("dataobjects")) {
+            JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
+            for (int i = 0; i < dataObjectsJson.length(); i++) {
+                usedDataObjects.add(dataObjectsJson.getInt(i));
+            }
         }
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, scenarioInstanceID);
-        switch (state) {
-            case "begin":
-                result = executionService
-                        .beginActivityInstance(scenarioInstanceID, activityID);
-                break;
-            case "terminate":
-                if (outputset != -1) {
-                    result = executionService.terminateActivityInstance(scenarioInstanceID,
-                            activityID, outputset);
-                } else {
-                    result = executionService.terminateActivityInstance(
-                            scenarioInstanceID, activityID);
-                }
-                break;
-            default:
-                return this.buildBadRequestResponse("{\"error\":\"The state transition "
-                        + state + " is unknown\"}");
-        }
-        if (result) {
+
+        successful = executionService.beginActivity(
+                scenarioInstanceId, activityId, usedDataObjects);
+        if (successful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"activity state changed.\"}")
+                    .entity("{\"message\":\"activity begun.\"}")
                     .build();
         } else {
-            executionService.reloadScenarioInstanceFromDatabase(
-                            scenarioID, scenarioInstanceID);
-            if ("begin".equals(state)) {
                 return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                        + "start activity with id " + activityID + "\"}");
-            } else {
-                return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                    + "terminate activity with id " + activityID + "\"}");
-            }
-
+                        + "start activity with id " + activityInstanceId + "\"}");
         }
     }
 
     /**
-     * This method responds to a GET request by returning an array of inputSets.
-     * Each contains the inputSetDatabaseID, the name of the dataObject and their state
-     * as a Map & a link to get the dataObjectInstances with their dataAttributesInstances.
-     * The result is determined by:
-     *
-     * @param uriInfo            A UriInfo object that holds the server context
-     *                              used for the link.
-     * @param scenarioID         The databaseID of the scenario.
-     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the
-     *                              aforementioned scenario.
-     * @param activityID         The databaseID of the activityInstance belonging to this
-     *                              scenarioInstance.
-     * @return a response consisting of:
-     * array of inputSets containing the inputSetDatabaseID, the name of the dataObject
-     * and their state as a Map & a link to get the dataObjectInstances with their
-     * dataAttributesInstances.
-     * a response status code:
-     * <p/>
-     * A 200 if everything was correct.
-     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance
-     * is non-existing or if the activity has no inputSet & with an error message
-     * instead of the array.
+     * Changes the state of of an activity instance from running to terminated.
+     * @param scenarioId Id of the scenario model.
+     * @param scenarioInstanceId Id of the model instance.
+     * @param activityInstanceId Id of the activity instance to terminate
+     * @param postBody Json Body containing a map from name of data object to state
+     *                 specifying the resulting states of the data objects the activity works on
+     * @return
+     * 202 (ACCEPTED) means that the activity was terminated successfully
+     * 400 (BAD_REQUEST) Termination of the activity failed. Possible reasons are:
+     *  1) The activity was not running
+     *  2) The wanted state does not comply to the OLC
+     *  3) The Body specifies not a resulting state for each data object.
      */
-    @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/input")
-    public Response getInputDataObjects(
-            @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID) {
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
+    public Response terminateActivity(@PathParam("scenarioId") int scenarioId,
+                                  @PathParam("instanceId") int scenarioInstanceId,
+                                  @PathParam("activityInstanceId") int activityInstanceId,
+                                  String postBody) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+        boolean succesful;
+        JSONObject postJson = new JSONObject(postBody);
+        if (postJson.length() != 0) {
+            Map<String, String> dataClassNameToState = new HashMap<>();
+            for (Object dataClassName : postJson.keySet()) {
+                dataClassNameToState.put((String) dataClassName, postJson.getString(
+                        (String) dataClassName));
 
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-
-        if (!executionService.testActivityInstanceExists(activityID)) {
-            return Response.status(Response.Status.NOT_FOUND)
+            }
+            succesful = executionService.terminateActivityInstance(
+                    scenarioInstanceId, activityInstanceId, dataClassNameToState);
+        } else {
+            succesful = executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId);
+        }
+        if (succesful) {
+            return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no such "
-                            + "activity instance.\"}")
+                    .entity("{\"message\":\"activity terminated.\"}")
                     .build();
+        } else {
+            return this.buildBadRequestResponse("{\"error\":\"impossible to "
+                    + "terminate activity with id " + activityInstanceId + "\"}");
         }
-        if (executionService.getInputSetsForActivityInstance(activityID) == null
-                || executionService
-                .getInputSetsForActivityInstance(activityID).size() == 0) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no inputSet for this "
-                            + "activity instance.\"}")
-                    .build();
-        }
-        Map<Integer, Map<String, String>> inputSetMap = executionService
-                .getInputSetsForActivityInstance(activityID);
-        int j = 0;
-        DataObjectSetsJaxBean[] inputSets =
-                new DataObjectSetsJaxBean[inputSetMap.keySet().size()];
-        for (Integer i : inputSetMap.keySet()) {
-            DataObjectSetsJaxBean inputSet = new DataObjectSetsJaxBean();
-            inputSet.setId(i);
-            inputSet.setDataObjects(inputSetMap.get(i));
-            String[] path = uriInfo.getAbsolutePath().toString().split("/");
-            inputSet.setLinkDataObject("");
-            for (int k = 0; k < path.length - 3; k++) {
-                inputSet.setLinkDataObject(
-                        inputSet.getLinkDataObject() + path[k] + "/");
-            }
-            inputSet.setLinkDataObject(
-                    inputSet.getLinkDataObject() + "inputset/" + inputSet.getId()
-            );
-            inputSets[j] = inputSet;
-            j++;
-        }
-        return Response.ok(inputSets, MediaType.APPLICATION_JSON).build();
-    }
-
-    /**
-     * This method responds to a GET request by returning an array of outputSets.
-     * Each contains the outputSetDatabaseID, the name of the dataObject and their
-     * state as a Map & a link to get the dataObjectInstances with their
-     * dataAttributesInstances.
-     * The result is determined by:
-     *
-     * @param uriInfo            A UriInfo object, which holds the server context used
-     *                              for the link.
-     * @param scenarioID         The databaseID of the scenario.
-     * @param scenarioInstanceID The databaseID of the scenarioInstance belonging to the
-     *                              aforementioned scenario.
-     * @param activityID         The databaseID of the activityInstance belonging to this
-     *                              scenarioInstance.
-     * @return a response consisting of:
-     * array of outputSets containing the outputSetDatabaseID, the name of the dataObject
-     * and their state as a Map & a link to get the dataObjectInstances
-     * with their dataAttributesInstances.
-     * a response status code:
-     * <p/>
-     * A 200 if everything was correct.
-     * A 404 Not Found is returned if the scenario/scenarioInstance/activityInstance
-     * is non-existing or if the activity has no outputSet & with an error message
-     * instead of the array.
-     */
-    @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/output")
-    public Response getOutputDataObjects(
-            @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int scenarioInstanceID,
-            @PathParam("activityId") int activityID) {
-
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        if (!executionService.testActivityInstanceExists(activityID)) {
-            return this.buildNotFoundResponse("{\"error\":\"There is no such "
-                    + "activity instance.\"}");
-        }
-        if (executionService.getOutputSetsForActivityInstance(activityID) == null
-                || executionService.getOutputSetsForActivityInstance(activityID).size() == 0) {
-            return this.buildNotFoundResponse("{\"error\":\"There is no outputSet for this "
-                    + "activity instance.\"}");
-        }
-        Map<Integer, Map<String, String>> outputSetMap = executionService
-                .getOutputSetsForActivityInstance(activityID);
-        int j = 0;
-        DataObjectSetsJaxBean[] outputSets = new DataObjectSetsJaxBean[outputSetMap.size()];
-        for (Integer i : outputSetMap.keySet()) {
-            DataObjectSetsJaxBean outputSet = new DataObjectSetsJaxBean();
-            outputSet.setId(i);
-            outputSet.setDataObjects(outputSetMap.get(i));
-            String[] path = uriInfo.getAbsolutePath().toString().split("/");
-            outputSet.setLinkDataObject("");
-            for (int k = 0; k < path.length - 3; k++) {
-                outputSet.setLinkDataObject(
-                        outputSet.getLinkDataObject()+ path[k] + "/");
-            }
-            outputSet.setLinkDataObject(
-                    outputSet.getLinkDataObject() + "outputset/" + outputSet.getId());
-            outputSets[j] = outputSet;
-            j++;
-        }
-        return Response.ok(outputSets, MediaType.APPLICATION_JSON).build();
-    }
-
-    /**
-     * @param instances The Map containing information about the activity instances.
-     *                  We Assume that the key is a the id and the value is a Map
-     *                  from String to Object with the properties of the instance.
-     * @param uriInfo   Specifies the context. For example the uri
-     *                  of the request.
-     * @return			JSON Object containing activities and their references.
-     */
-    private JSONObject buildJSONObjectForReferencedActivities(
-            Collection<ActivityInstance> instances, UriInfo uriInfo) {
-        List<Integer> ids = new ArrayList<>(instances.size());
-        JSONArray activities = new JSONArray();
-        for (ActivityInstance instance : instances) {
-            JSONObject activityJSON = new JSONObject();
-            ids.add(instance.getControlNodeInstanceId());
-            activityJSON.put("id", instance.getControlNodeInstanceId());
-            activityJSON.put("label", instance.getLabel());
-            activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                    + instance.getControlNodeInstanceId());
-            activities.put(activityJSON);
-        }
-        JSONObject result = new JSONObject();
-        result.put("ids", new JSONArray(ids));
-        result.put("activities", activities);
-        return result;
     }
 }

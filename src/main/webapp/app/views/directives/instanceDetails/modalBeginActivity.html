@@ -1,5 +1,5 @@
-<div ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['ready']['activities']"
-     id="{{'modal' + value['id']}}" class="modal fade">
+<div ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['ready']['activities']"
+     id="{{'modal' + activityInstance['id']}}" class="modal fade">
     <!--div class="modal-backdrop fade in"></div-->
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,78 +8,45 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{value['label']}}</h4>
+                <h4 class="modal-title">{{activityInstance['label']}}</h4>
             </div>
             <!-- ./ panel header -->
             <!-- Body of the Modal -->
             <div class="modal-body">
-                <!-- if there are not referenced tasks just let the user begin the activity -->
-                <div ng-hide="instanceCtrl.scenario['refLength']">
-                    <p>Do you want to assign the activity "{{value['label']}}" to your task list?</p>
+                <div ng-repeat="(dclass, dobjects) in instanceCtrl.availableInput[activityInstance['id']]">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">{{dclass}}</h3>
+                        </div>
+                        <div class="panel-body form-group">
+                            <select class="form-control" ng-model="obj" ng-options="dobject as dobject.id for dobject in dobjects"
+                                    ng-change="instanceCtrl.selectDataObject(dclass, obj.id, obj.attributeConfiguration)"
+                            ></select>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="attr in obj.attributeConfiguration">
+                                    <td>{{attr['name']}}</td>
+                                    <td>{{attr['value']}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <!-- /.ng-hide="instanceCtrl.scenario['refLength']" -->
-                <!-- if there are referenced tasks  let the user choose between them for beginning the activity -->
-                <div ng-show="instanceCtrl.scenario['refLength']">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Characteristic</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{value['id']}}</td>
-                            <td>{{value['label']}}</td>
-                            <td>
-                                <!-- display the activity itself -->
-                                <div ng-repeat="(key2, output) in instanceCtrl.activityOutput[value['id']] track by $index">
-                                    <div ng-repeat="(key3, outputset) in instanceCtrl.scenario['outputsets'][output['id']] track by $index">
-                                        "{{outputset['label']}}" in state "{{outputset['state']}}" <br>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);"
-                                        data-dismiss="modal" class="btn btn-primary">Begin
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- display all referenced activity by looking up the referenced array -->
-                        <tr ng-repeat="(key, refActivity) in instanceCtrl.scenario['activity'][value['id']]['references']['activities'] track by $index">
-                            <td>{{refActivity['id']}}</td>
-                            <td>{{refActivity['label']}}</td>
-                            <td>
-                                <!-- retrieving all output for each referenced activity -->
-                                <div ng-repeat="(key4, output2) in instanceCtrl.activityOutput[refActivity['id']] track by $index">
-                                    <!-- retrieving all outputset for each output -->
-                                    <div ng-repeat="(key5, outputset2) in instanceCtrl.scenario['outputsets'][output2['id']] track by $index">
-                                        "{{outputset2['label']}}" in state "{{outputset2['state']}}"<br>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <button type="button" ng-click="instanceCtrl.beginActivity(refActivity['id']);"
-                                        data-dismiss="modal" class="taskassign btn btn-primary">Begin
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.ng-show="instanceCtrl.scenario['refLength']"-->
             </div>
             <!-- /.modal body -->
             <!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <span ng-hide="instanceCtrl.scenario['refLength']">
-                      <button type="button" ng-click="instanceCtrl.beginActivity(value['id']);" data-dismiss="modal"
-                              class="btn btn-primary">Begin
-                      </button>
-                </span>
+                <button type="button" ng-click="instanceCtrl.beginActivity(activityInstance['id']);" data-dismiss="modal"
+                        class="btn btn-primary">Begin
+                </button>
             </div>
             <!-- /.modal footer -->
         </div>

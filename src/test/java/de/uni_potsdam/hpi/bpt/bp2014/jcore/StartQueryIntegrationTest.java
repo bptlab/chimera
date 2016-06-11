@@ -2,9 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.StartQuery;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -13,7 +14,6 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvnet.hk2.internal.Collector;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -63,8 +63,6 @@ public class StartQueryIntegrationTest extends JerseyTest {
         DbCaseStart caseStart = new DbCaseStart();
         List<StartQuery> startQueries =  scenarioData.getStartQueries();
         StartQuery startQuery = startQueries.get(0);
-        assertEquals("$.bar.foo", startQuery.getAttributeToJsonPath().get("572f75ee9f9d1ef84a299af3"));
-        assertEquals("$.a.c", startQuery.getAttributeToJsonPath().get("572f75ee9f9d1ef84a299af4"));
         String requestKey = caseStart.getEventKey(startQuery.getId());
         String triggerPath = String.format("casestart/%s", requestKey);
         Response triggerEvent = base.path(triggerPath).request().post(
@@ -75,8 +73,8 @@ public class StartQueryIntegrationTest extends JerseyTest {
         // TODO inspect data objects via Rest call
         ScenarioInstance scenarioInstance = new ScenarioInstance(1, 1);
         List<DataAttributeInstance> dataAttributeInstances = scenarioInstance.getDataManager()
-                .getDataObjectInstances().stream()
-                .map(DataObjectInstance::getDataAttributeInstances)
+                .getDataObjects().stream()
+                .map(DataObject::getDataAttributeInstances)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         assertEquals(1L, dataAttributeInstances.stream().filter(
                 x -> x.getValue().equals("someValue")).count());

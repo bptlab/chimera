@@ -38,16 +38,35 @@ public class StateTransitionLog {
                 " WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
         sql = String.format(sql, scenarioInstanceId, type.name());
         List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
-        addInitialTransitions(transitionLogs, scenarioInstanceId);
+        addInitialTransitions(transitionLogs, scenarioInstanceId, type);
         return transitionLogs;
+    }
+
+    private static void addInitialTransitions(
+            List<StateTransitionLog> transitions, int scenarioInstanceId, LogEntry.LogType type) {
+        DbLogEntry logEntryDao = new DbLogEntry();
+        List<LogEntry> logEntries = logEntryDao.getCreationLogEntries(scenarioInstanceId, type);
+        for (LogEntry logEntry : logEntries) {
+            StateTransitionLog stateTransition = new StateTransitionLog();
+            stateTransition.setCause(logEntry.getCause());
+            stateTransition.setLoggedId(logEntry.getLoggedId());
+            stateTransition.setLabel(logEntry.getLabel());
+            stateTransition.setNewValue(logEntry.getNewValue());
+            stateTransition.setOldValue(JSONObject.NULL);
+            stateTransition.setTimeStamp(logEntry.getTimeStamp());
+            transitions.add(stateTransition);
+        }
+        transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
     }
 
     public static List<StateTransitionLog> getStateTransitons(int scenarioInstanceId) {
         String sql =
                 "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
                         "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +
-                        " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
-                        " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
+                        " ON a.logged_id = b.logged_id  AND a.type = b.type " +
+                        " AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
+                        " timestamp >= a.timestamp AND a.logged_id = logged_id AND " +
+                        "id <> a.id) " +
                         " WHERE a.scenarioinstance_id = %d;";
         sql = String.format(sql, scenarioInstanceId);
         List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);

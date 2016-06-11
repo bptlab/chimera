@@ -30,7 +30,7 @@ public class DomainModel implements IPersistable {
 	/**
 	 * The databaseID of the corresponding scenario.
 	 */
-	private int scenarioID;
+	private int scenarioId;
 
     /**
 	 * A List of all aggregation between the dataClasses belonging to this domainModel.
@@ -88,16 +88,8 @@ public class DomainModel implements IPersistable {
 	 *
 	 * @param id databaseID of the corresponding scenario.
 	 */
-	public void setScenarioID(final int id) {
-		this.scenarioID = id;
-	}
-
-	/**
-	 * This method generates a List of aggregates from the XML.
-	*/
-	private List<Aggregation> generateAggregations() {
-		// TODO check every attribute if its name equals one of the data classes' name
-		throw new NotImplementedException("Aggregations cannot be parsed.");
+	public void setScenarioId(final int id) {
+		this.scenarioId = id;
 	}
 
 	/**
@@ -140,80 +132,18 @@ public class DomainModel implements IPersistable {
 	@Override public int save() {
 		Connector conn = new Connector();
 		conn.insertDomainModelIntoDatabase(this.domainModelEditorId, this.versionNumber,
-				this.scenarioID);
-		dataClasses.forEach(DataClass::save);
+				this.scenarioId);
+		dataClasses.forEach(x -> x.save(scenarioId));
 		aggregations.forEach(Aggregation::save);
 		return 1;
-	}
-
-	/**
-	 * Migrate all dataAttributeInstances that are instances of all dataAttributes
-	 * belonging to the instances of the old scenario.
-	 *
-	 * @param oldScenarioDbID DatabaseID of the old scenario
-	 *                           whose dataAttributeInstances get migrated.
-	 */
-	public void migrateDataAttributeInstances(int oldScenarioDbID) {
-		Map<Integer, Integer> mappedDataClassIDs = mapDataClassIDs(oldScenarioDbID);
-		Map<Integer, Integer> mappedDataAttributeIDs = new HashMap<>();
-		Connector connector = new Connector();
-		for (Map.Entry<Integer, Integer> dataClassIDs : mappedDataClassIDs.entrySet()) {
-			Map<Integer, String> oldDataAttributes = connector
-					.getDataAttributes(dataClassIDs.getKey());
-			Map<Integer, String> newDataAttributes = connector
-					.getDataAttributes(dataClassIDs.getValue());
-			for (Map.Entry<Integer, String> oldDataAttribute
-					: oldDataAttributes.entrySet()) {
-				for (Map.Entry<Integer, String> newDataAttribute
-						: newDataAttributes.entrySet()) {
-					if (oldDataAttribute.getValue().equals(
-							newDataAttribute.getValue())) {
-						mappedDataAttributeIDs.put(
-								oldDataAttribute.getKey(),
-								newDataAttribute.getKey());
-						newDataAttributes.remove(newDataAttribute.getKey());
-						break;
-					}
-				}
-			}
-		}
-		for (Map.Entry<Integer, Integer> dataAttribute
-				: mappedDataAttributeIDs.entrySet()) {
-			connector.migrateDataAttributeInstance(
-					dataAttribute.getKey(), dataAttribute.getValue());
-		}
-	}
-
-	/**
-	 * Map all dataClassIDs of the old scenario to its counterpart
-	 * in the new scenario (= the scenario this domainModel belongs to);
-	 *
-	 * @param oldScenarioDbID DatabaseID of the old scenario.
-	 */
-	private Map<Integer, Integer> mapDataClassIDs(int oldScenarioDbID) {
-		Connector connector = new Connector();
-		List<Integer> oldDataClassIDs = connector.getDataClassIDs(oldScenarioDbID);
-		List<Integer> newDataClassIDs = connector.getDataClassIDs(scenarioID);
-		Map<Integer, Integer> mappedIDs = new HashMap<>();
-		for (int oldID : oldDataClassIDs) {
-			for (int newID : newDataClassIDs) {
-				String oldName = connector.getDataClassName(oldID);
-				String newName = connector.getDataClassName(newID);
-				if (oldName.equals(newName)) {
-					mappedIDs.put(oldID, newID);
-					break;
-				}
-			}
-		}
-		return mappedIDs;
 	}
 
 	public List<Aggregation> getAggregations() {
 		return aggregations;
 	}
 
-	public int getScenarioID() {
-		return scenarioID;
+	public int getScenarioId() {
+		return scenarioId;
 	}
 
 	public int getVersionNumber() {

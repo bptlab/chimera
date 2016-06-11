@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * Represents an update of a activity
  */
 @XmlRootElement
 public class DataAttributeUpdateJaxBean {

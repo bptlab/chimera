@@ -17,18 +17,8 @@ import org.w3c.dom.NodeList;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,9 +55,10 @@ public class XesExportTest extends JerseyTest {
         String path = "src/test/resources/history/simpleScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.beginActivityByName("Do something", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("Do something", instance);
+        ScenarioTestHelper.terminateActivityByName("Do something", instance);
 
-        Response response = base.path(String.format("export/%d", instance.getScenarioId())).request().get();
+        Response response = base.path(String.format("scenario/%d/export",
+                instance.getScenarioId())).request().get();
         assertEquals(200, response.getStatus());
         Document doc = XmlUtil.retrieveFromString(response.readEntity(String.class));
         Node rootElement = doc.getChildNodes().item(0);

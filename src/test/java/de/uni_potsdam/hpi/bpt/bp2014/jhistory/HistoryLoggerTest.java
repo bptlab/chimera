@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 import org.junit.After;
@@ -34,10 +34,10 @@ public class HistoryLoggerTest {
         assertEquals(1, service.getActivityInstanceEntries(
                 instance.getScenarioInstanceId()).size());
 
-        assertEquals(1, service.getDataObjectEntries(
+        assertEquals(0, service.getDataObjectEntries(
                 instance.getScenarioInstanceId()).size());
 
-        assertEquals(1, service.getDataattributeEntries(
+        assertEquals(0, service.getDataattributeEntries(
                 instance.getScenarioInstanceId()).size());
     }
 
@@ -51,8 +51,7 @@ public class HistoryLoggerTest {
     public void testActivityLog() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.executeActivityByName("Create Data", instance);
 
         HistoryService service = new HistoryService();
         List<LogEntry> activityEntries =
@@ -65,12 +64,13 @@ public class HistoryLoggerTest {
     public void testDataobjectChange() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
-        ScenarioTestHelper.beginActivityByName("ChangeData", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ChangeData", instance);
+        ScenarioTestHelper.executeActivityByName("Create Data", instance);
+        ScenarioTestHelper.executeActivityByName("Change Data", instance);
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataObjectEntries =
                 service.getDataObjectEntries(instance.getScenarioInstanceId());
+        // TODO also assert values if there is no other test
         assertEquals(2, dataObjectEntries.size());
     }
 
@@ -78,14 +78,15 @@ public class HistoryLoggerTest {
     public void testDataattributeChange() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.executeActivityByName("Create Data", instance);
         ActivityInstance activity = ScenarioTestHelper.findActivityInstanceInNodes(
-                "ChangeData", instance.getEnabledControlNodeInstances());
+                "Change Data", instance.getEnabledControlNodeInstances());
 
         changeDataattributeValues(instance, activity);
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries
                 = service.getDataattributeEntries(instance.getScenarioInstanceId());
-        assertEquals(2, dataattributeEntries.size());
+        assertEquals(4, dataattributeEntries.size());
     }
 
     /**
@@ -96,8 +97,9 @@ public class HistoryLoggerTest {
     public void testCorrectLinking() throws IOException {
         String path = "src/test/resources/history/HistoryExample.json";
         ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
+        ScenarioTestHelper.executeActivityByName("Create Data", scenarioInstance);
         ActivityInstance activity = ScenarioTestHelper.findActivityInstanceInNodes(
-                "ChangeData", scenarioInstance.getEnabledControlNodeInstances());
+                "Change Data", scenarioInstance.getEnabledControlNodeInstances());
         changeDataattributeValues(scenarioInstance, activity);
         activity.terminate();
         HistoryService service = new HistoryService();
@@ -111,26 +113,28 @@ public class HistoryLoggerTest {
         List<LogEntry> activityEntries =
                 service.getActivityInstanceEntries(scenarioInstance.getScenarioInstanceId());
 
+        // First three activity entries belong to Create Data
         assertEquals(activity.getControlNodeInstanceId(),
-                activityEntries.get(1).getLoggedId());
+                activityEntries.get(4).getLoggedId());
 
         assertEquals(activity.getControlNodeInstanceId(),
                 dataObjectEntries.get(1).getCause());
 
+        // First two data attribute entries correspond to the creation of data attributes
         assertEquals(activity.getControlNodeInstanceId(),
-                dataattributeEntries.get(1).getCause());
+                dataattributeEntries.get(2).getCause());
     }
 
     private void changeDataattributeValues(
             ScenarioInstance scenarioInstance, ActivityInstance activity) {
         Map<Integer, String> idToChangedValue = new HashMap<>();
         for (DataAttributeInstance attribute : scenarioInstance.getDataAttributeInstances().values()) {
-            idToChangedValue.put(attribute.getDataAttributeInstanceId(), "bar");
+            idToChangedValue.put(attribute.getId(), "bar");
         }
         assert(idToChangedValue.size() > 0);
         // Begin activity so that it can alter the values of data attributes
         activity.begin();
-        activity.setDataAttributeValues(idToChangedValue);
-
+        scenarioInstance.getDataManager().setAttributeValues(
+                activity.getControlNodeInstanceId(), idToChangedValue);
     }
 }

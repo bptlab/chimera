@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 /**
  * This class represents an EventType.
  */
-public class EventType extends DataClass implements IPersistable {
+public class EventType extends DataClass {
     private static Logger logger = Logger.getLogger(EventType.class);
 
     private final static String REGISTRATION_URL =
@@ -48,8 +48,8 @@ public class EventType extends DataClass implements IPersistable {
         String timestampName = "";
 
         for(DataAttribute attr : this.getAttributes()) {
-            if("timestamp".equals(attr.getDataAttributeName())) {
-                timestampName = "timestamp";
+            if("timestamp".equalsIgnoreCase(attr.getDataAttributeName())) {
+                timestampName = attr.getDataAttributeName();
                 break;
             }
         }

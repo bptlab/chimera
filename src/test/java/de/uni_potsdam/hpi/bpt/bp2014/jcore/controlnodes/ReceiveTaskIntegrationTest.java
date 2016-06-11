@@ -27,12 +27,6 @@ import static org.junit.Assert.assertEquals;
 public class ReceiveTaskIntegrationTest extends JerseyTest {
 
     @After
-    public void resetDatabase() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-
-    @After
     public void teardown() throws IOException, SQLException {
         AbstractDatabaseDependentTest.resetDatabase();
     }
@@ -59,12 +53,12 @@ public class ReceiveTaskIntegrationTest extends JerseyTest {
         Response startScenario = base.path("interface/v2/scenario/1/instance").request().post(null);
         assertEquals(201, startScenario.getStatus());
 
-        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2")
-                .queryParam("state", "begin").request().post(Entity.json("[]"));
+        Response startFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/begin")
+                .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activity/2")
-                .queryParam("state", "terminate").request().post(Entity.json("[]"));
+        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
+                .request().post(Entity.json("{}"));
         assertEquals(202, termianteFirstActivity.getStatus());
 
         Response getEventKeys = base.path(

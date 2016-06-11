@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
 import org.apache.log4j.Logger;
@@ -45,7 +45,7 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
     public void writeDataObjects(String eventJson) {
         DataAttributeWriter writer = new DataAttributeWriter(
-                this.getControlNodeId(), controlNodeInstanceId, this.getScenarioInstance().getScenarioInstanceId());
+                this.getControlNodeId(), controlNodeInstanceId, this.getScenarioInstance());
         List<DataAttributeInstance> attributeInstances = new ArrayList<>(
                 this.getScenarioInstance().getDataAttributeInstances().values());
         writer.writeDataAttributesFromJson(eventJson, attributeInstances);

@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

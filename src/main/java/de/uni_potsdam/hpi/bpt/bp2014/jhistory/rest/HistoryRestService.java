@@ -32,9 +32,7 @@ import java.util.Map;
  * This class implements the REST interface of the JEngine history.
  */
 @Path("history/v2/") public class HistoryRestService {
-	private HistoryService historyService = new HistoryService();
-
-    /**
+	/**
 	 * This method gives the log entries for all activities for a specific scenario instance.
 	 *
 	 * @param scenarioID The id of the scenario belonging to the instance.
@@ -145,7 +143,7 @@ import java.util.Map;
     }
 
     @GET
-    @Path("export/{scenarioId}")
+    @Path("scenario/{scenarioId}/export")
     @Produces(MediaType.APPLICATION_XML)
     public Response exportToXml(@PathParam("scenarioId") int scenarioId)
             throws TransformerConfigurationException {

@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbTerminationCondition;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbTerminationCondition;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.InvalidDataTransitionException;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.validation.InvalidDataclassReferenceExeption;

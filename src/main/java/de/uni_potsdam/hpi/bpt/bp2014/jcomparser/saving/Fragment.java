@@ -94,14 +94,15 @@ public class Fragment {
         return sets;
     }
 
-    private List<OutputSet> getOutputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
+    public List<OutputSet> getOutputSetsForNode(
+            AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         if (node.getDataOutputAssociations().isEmpty()) {
             return new ArrayList<>();
         }
         for (DataOutputAssociation assoc : node.getDataOutputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getTargetRef());
-            if(!dataNodeToStates.containsKey(dataNode.getName())) {
+            if (!dataNodeToStates.containsKey(dataNode.getName())) {
                 dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
             }
             dataNodeToStates.get(dataNode.getName()).add(dataNode);
@@ -120,23 +121,20 @@ public class Fragment {
      */
     public List<InputSet> getInputSets() {
         List<InputSet> sets = new ArrayList<>();
-        Map<String, DataNode> idToDataNode = new HashMap<>();
-        for (DataNode dataNode : this.getDataNodes()) {
-            idToDataNode.put(dataNode.getId(), dataNode);
-        }
-
         for (AbstractDataControlNode node : this.xmlWrapper.getAllDataControlNodes()) {
-            sets.addAll(getInputSetsForNode(node, idToDataNode));
+            sets.addAll(getInputSetsForNode(node));
         }
-
         return sets;
     }
 
-    public List<InputSet> getInputSetsForNode(AbstractDataControlNode node, Map<String, DataNode> idToDataNode) {
+    public List<InputSet> getInputSetsForNode(AbstractDataControlNode node) {
+        Map<String, DataNode> idToDataNode = this.getDataNodes().stream()
+                .collect(Collectors.toMap(x -> x.getId(), x -> x));
+
         Map<String, List<DataNode>> dataNodeToStates = new HashMap<>();
         for (DataInputAssociation assoc : node.getDataInputAssociations()) {
             DataNode dataNode =  idToDataNode.get(assoc.getSourceRef());
-            if(!dataNodeToStates.containsKey(dataNode.getName())) {
+            if (!dataNodeToStates.containsKey(dataNode.getName())) {
                 dataNodeToStates.put(dataNode.getName(), new ArrayList<>());
             }
             dataNodeToStates.get(dataNode.getName()).add(dataNode);
@@ -148,18 +146,8 @@ public class Fragment {
             return datanodeCombinations.stream().map(combination ->
                     new InputSet(node, combination)).collect(Collectors.toList());
         } else {
-            return new ArrayList<InputSet>();
+            return new ArrayList<>();
         }
-    }
-
-    private Map<String, Task> createMapFromIdToTask() {
-        List<AbstractDataControlNode> tasks = this.xmlWrapper.getAllActivities();
-        Map<String, Task> idToNode = new HashMap<>();
-        for (AbstractDataControlNode task : tasks) {
-            idToNode.put(task.getId(), (Task) task);
-        }
-
-        return idToNode;
     }
 
     /**

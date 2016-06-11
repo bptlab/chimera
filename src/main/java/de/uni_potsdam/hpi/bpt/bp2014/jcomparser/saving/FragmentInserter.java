@@ -1,13 +1,10 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbDataNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.BoundaryEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.SequenceFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataClass;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DomainModel;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +25,14 @@ public class FragmentInserter {
      * @return return database Id of the inserted fragment
      */
 
-    public int save(Fragment fragment, List<DataObject> dataObjects) {
+    public int save(Fragment fragment, List<DataClass> dataClasses) {
         int fragmentDatabaseId = fragment.save();
         Map<String, Integer> nodeToDatabaseId = saveControlNodes(fragmentDatabaseId, fragment);
         saveControlFlow(fragment, nodeToDatabaseId);
         saveDataFlow(fragment);
         // this has to be saved after saving the data flow
         // because we need the data sets to link data nodes to their preceding control nodes
-        savePathMapping(fragment, dataObjects);
+        savePathMapping(fragment, dataClasses);
         return fragmentDatabaseId;
     }
 
@@ -74,27 +71,22 @@ public class FragmentInserter {
      * Saves the input and output sets to the database.
      */
     private void saveSets(Fragment fragment) {
-        for (InputSet set : fragment.getInputSets()) {
-            set.save();
-        }
-
-        for (OutputSet set : fragment.getOutputSets()) {
-            set.save();
-        }
+        fragment.getInputSets().forEach(InputSet::save);
+        fragment.getOutputSets().forEach(OutputSet::save);
     }
 
-    private void savePathMapping(Fragment fragment, List<DataObject> dataObjects) {
+    private void savePathMapping(Fragment fragment, List<DataClass> dataClasses) {
         for (DataNode dataNode : fragment.getDataNodes()) {
-            int dataObjectId = new DbDataNode()
-                    .getDataObjectIdForDataNode(dataNode.getDatabaseId());
-            Optional<DataObject> dataObject = findDataObjectById(dataObjects, dataObjectId);
+            int dataClassId = new DbDataNode()
+                    .getDataClassIdForDataNode(dataNode.getDatabaseId());
+            Optional<DataClass> dataObject = findDataObjectById(dataClasses, dataClassId);
             if (dataObject.isPresent()) {
                 dataNode.insertPathMappingIntoDatabase(dataObject.get());
             }
         }
     }
 
-    private Optional<DataObject> findDataObjectById(List<DataObject> dataObjects, int dataObjectId) {
+    private Optional<DataClass> findDataObjectById(List<DataClass> dataObjects, int dataObjectId) {
         return dataObjects.stream().filter(x -> x.getDatabaseId() == dataObjectId).findFirst();
     }
 }

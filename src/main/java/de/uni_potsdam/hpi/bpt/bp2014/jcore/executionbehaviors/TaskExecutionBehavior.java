@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Performs the execution for one activity.
  */
 public class TaskExecutionBehavior {
-	final static Logger LOGGER = Logger.getLogger(TaskExecutionBehavior.class);
+	private static final Logger LOGGER = Logger.getLogger(TaskExecutionBehavior.class);
 
 	private final ScenarioInstance scenarioInstance;
 	private final int activityInstanceId;
@@ -38,6 +38,7 @@ public class TaskExecutionBehavior {
 	 * Executes the behavior of the activity.
 	 */
 	public void execute() {
+		//handled by implementers
 	}
 
 	/**
@@ -46,29 +47,6 @@ public class TaskExecutionBehavior {
 	protected void setCanTerminate(boolean canTerminate) {
 		((ActivityInstance) controlNodeInstance).setCanTerminate(canTerminate);
 	}
-
-	/**
-	 * @param values a Map of Keys and Values.
-	 */
-	public boolean setDataAttributeValues(Map<Integer, String> values) {
-		boolean allValuesValid = true;
-		for (Map.Entry<Integer, String> attributeInstanceIdToValue : values.entrySet()) {
-            Integer dataattributeInstanceId = attributeInstanceIdToValue.getKey();
-            String value = attributeInstanceIdToValue.getValue();
-            new DbLogEntry().logDataAttributeTransition(dataattributeInstanceId, value,
-                    activityInstanceId, scenarioInstance.getScenarioInstanceId());
-            DataAttributeInstance dataAttributeInstance = getScenarioInstance()
-                    .getDataAttributeInstances().get(dataattributeInstanceId);
-			if (dataAttributeInstance.isValueAllowed(value)) {
-				dataAttributeInstance.setValue(value);
-			} else {
-				LOGGER.error("Attribute value could not be set because it has the wrong data type.");
-				allValuesValid = false;
-			}
-        }
-        this.setCanTerminate(true);
-		return allValuesValid;
-    }
 
 	public ScenarioInstance getScenarioInstance() {
 		return scenarioInstance;

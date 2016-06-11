@@ -5,6 +5,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
@@ -51,12 +53,13 @@ public class WebServiceAcceptanceTest  {
 
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
                 "src/test/resources/Scenarios/JsonPathWebserviceScenarioGet.json");
+        DataManager manager = instance.getDataManager();
         Collection<DataAttributeInstance> dataAttributes =
-                instance.getDataAttributeInstances().values();
+                manager.getAllDataAttributeInstances();
         assertDataAttributeInstancesEmpty(dataAttributes);
         // Terminating the manual task starts the automatic task
-        ScenarioTestHelper.beginActivityByName("ManualTask", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
+        ScenarioTestHelper.executeActivityByName("ManualTask", instance);
+        dataAttributes = manager.getAllDataAttributeInstances();
         assertDataAttributeInstanceHasValue(dataAttributes);
     }
 
@@ -71,11 +74,12 @@ public class WebServiceAcceptanceTest  {
 
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
                 "src/test/resources/Scenarios/JsonPathWebserviceScenarioPost.json");
+        DataManager manager = instance.getDataManager();
         Collection<DataAttributeInstance> dataAttributes =
-                instance.getDataAttributeInstances().values();
+                manager.getAllDataAttributeInstances();
         assertDataAttributeInstancesEmpty(dataAttributes);
-        ScenarioTestHelper.beginActivityByName("ManualTask", instance);
-        ScenarioTestHelper.terminateActivityInstanceByName("ManualTask", instance);
+        ScenarioTestHelper.executeActivityByName("ManualTask", instance);
+        dataAttributes = manager.getAllDataAttributeInstances();
         assertDataAttributeInstanceHasValue(dataAttributes);
     }
 

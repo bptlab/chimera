@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 /**

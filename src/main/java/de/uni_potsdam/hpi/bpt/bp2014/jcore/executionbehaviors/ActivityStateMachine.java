@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbActivityInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 
@@ -209,7 +209,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to running. (else false).
 	 */
 	public boolean begin() {
-		//String state = this.getState();
 		if (STATE.READY.equals(getState())) {
 			this.setState(STATE.RUNNING);
 			getScenarioInstance().getRunningControlNodeInstances()
@@ -232,7 +231,6 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state was set to terminated. (else false).
 	 */
 	@Override public boolean terminate() {
-		//String state = this.getState();
 		if (STATE.RUNNING.equals(getState())) {
 			this.setState(STATE.TERMINATED);
 			getScenarioInstance().getRunningControlNodeInstances()
@@ -297,8 +295,8 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 * @return true if the state is ready, ready(ControlFlow) or ready(data).
 	 */
 	private boolean isReady(STATE state) {
-		return STATE.READY.equals(state) || STATE.CONTROLFLOW_ENABLED.equals(state) ||
-                STATE.DATAFLOW_ENABLED.equals(state);
+		return STATE.READY.equals(state) || STATE.CONTROLFLOW_ENABLED.equals(state)
+				|| STATE.DATAFLOW_ENABLED.equals(state);
 	}
 
 	/**
@@ -308,6 +306,7 @@ public class ActivityStateMachine extends AbstractStateMachine {
 	 *
 	 * @param state This is the new state.
 	 */
+	@Override
 	public void setState(STATE state) {
 		super.setState(state);
 		dbActivityInstance.setState(getControlNodeInstanceId(), state);

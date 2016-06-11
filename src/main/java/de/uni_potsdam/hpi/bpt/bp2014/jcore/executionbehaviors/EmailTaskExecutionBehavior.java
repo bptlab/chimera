@@ -1,9 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbState;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbState;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import org.apache.commons.mail.Email;
@@ -62,29 +62,29 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
 				.getDataAttributeInstances().values()) {
 			message = message.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance())
+					"#" + (dataAttributeInstance.getDataObject())
 							.getName()
 							+ "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 			subject = subject.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance())
+					"#" + (dataAttributeInstance.getDataObject())
 							.getName()
 							+ "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 			receiverMail = receiverMail.replace(
-					"#" + (dataAttributeInstance.getDataObjectInstance())
+					"#" + (dataAttributeInstance.getDataObject())
 							.getName()
 							+ "."
 							+ dataAttributeInstance.getName(),
 					dataAttributeInstance.getValue().toString());
 		}
 		DbState dbState = new DbState();
-		for (DataObjectInstance dataObjectInstance
-				: getScenarioInstance().getDataManager().getDataObjectInstances()) {
-			message = message.replace("$" + dataObjectInstance.getName(),
-					dbState.getStateName(dataObjectInstance.getStateId()));
+		for (DataObject dataObject
+				: getScenarioInstance().getDataManager().getDataObjects()) {
+			message = message.replace("$" + dataObject.getName(),
+					dbState.getStateName(dataObject.getStateId()));
 		}
 	}
 

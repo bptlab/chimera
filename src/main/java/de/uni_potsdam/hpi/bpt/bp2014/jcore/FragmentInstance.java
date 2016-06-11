@@ -1,9 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNode;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlNodeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbEventMapping;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragmentInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;

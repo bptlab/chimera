@@ -1,11 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.DataAttribute;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataAttributeInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.DataObjectInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import org.junit.After;
 import org.junit.Test;
 
@@ -36,25 +32,26 @@ public class AttributeTypeValidationTest {
     public void testSettingOfCorrectValues() {
         DataAttributeInstance[] instances = mockInstances();
         assertTrue(instances[0].isValueAllowed("aString"));
-        assertTrue(instances[1].isValueAllowed(true));
-        assertTrue(instances[2].isValueAllowed(1337));
-        assertTrue(instances[3].isValueAllowed(3.14D));
+        assertTrue(instances[1].isValueAllowed("true"));
+        assertTrue(instances[2].isValueAllowed("1337"));
+        assertTrue(instances[3].isValueAllowed("3.14D"));
         assertTrue(instances[4].isValueAllowed("anEnum"));
         assertTrue(instances[5].isValueAllowed("aClass"));
-        assertTrue(instances[6].isValueAllowed("a:Da:te:00"));
+        assertTrue(instances[6].isValueAllowed("01.01.2010"));
     }
 
     @Test
     public void testSettingOfWrongValues() {
         DataAttributeInstance[] instances = mockInstances();
-        for(DataAttributeInstance instance : instances) {
-            assertFalse(instance.isValueAllowed(new Object()));
-        }
+        assertFalse(instances[1].isValueAllowed("notABoolean"));
+        assertFalse(instances[2].isValueAllowed("notAnInteger"));
+        assertFalse(instances[3].isValueAllowed("notADouble"));
+        assertFalse(instances[6].isValueAllowed("notADate"));
     }
 
 
     private DataAttributeInstance[] mockInstances() {
-        DataObjectInstance objectInstance = createNiceMock(DataObjectInstance.class);
+        DataObject objectInstance = createNiceMock(DataObject.class);
         expect(objectInstance.getScenarioInstanceId()).andReturn(1).anyTimes();
         replay(objectInstance);
         int dataObjectInstanceId = -1;

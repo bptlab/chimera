@@ -8,7 +8,6 @@ var JCore_REST_Interface = InstanceName + "/api/interface/v2";
 var JConfig_REST_Interface = InstanceName + "/api/config/v2";
 var JHistory_REST_Interface = InstanceName + "/api/history/v2";
 var JAnalytics_REST_Interface = InstanceName + "/api/analytics/v2";
-var JComparser_REST_Interface = InstanceName + "/api/jcomparser";
 var JUserManagement_REST_Interface = "JUserManagement/api/interface/v1";
 
 // SSE Event Receiver for reloading the page when an event occurs

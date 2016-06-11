@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,57 +23,6 @@ import java.util.Map;
  */
 @Path("interface/v2")
 public class DataObjectRestService {
-    /**
-     * This method provides detailed information about an data Object.
-     * The information contain the id, parent scenario instance, label
-     * and the current state,
-     * This information will be provided as a JSON-Object.
-     * A Data object is specified by:
-     *
-     * @param scenarioID   The scenario Model ID.
-     * @param instanceID   The scenario Instance ID.
-     * @param dataObjectID The Data Object ID.
-     * @return Returns a JSON-Object with information about the dataObject,
-     * the response code will be a 200 (OK).
-     * If the data object does not exist a 404 (NOT_FOUND) will not be
-     * returned.
-     * If the instance does exist but some params are wrong a 301
-     * (REDIRECT) will be returned.
-     */
-    @GET
-    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{dataObjectId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDataObject(
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int instanceID,
-            @PathParam("dataObjectId") int dataObjectID) {
-
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, instanceID);
-        List<Integer> dataObjects =
-                executionService.getAllDataObjectIDs(instanceID);
-        Map<Integer, String> states =
-                executionService.getDataObjectStates(instanceID);
-        Map<Integer, String> labels =
-                executionService.getAllDataObjectNames(instanceID);
-        if (!dataObjects.contains(dataObjectID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no dataobject "
-                            + "with the id " + dataObjectID
-                            + " for the scenario instance "
-                            + instanceID
-                            + "\"}")
-                    .build();
-        }
-        DataObjectJaxBean dataObject = new DataObjectJaxBean();
-        dataObject.setSetId(0);
-        dataObject.setId(dataObjectID);
-        dataObject.setLabel(labels.get(dataObjectID));
-        dataObject.setState(states.get(dataObjectID));
-        return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
-    }
-
     /**
      * Returns a JSON-Object, which contains information about all
      * data objects of a specified scenario instance.
@@ -107,17 +57,69 @@ public class DataObjectRestService {
         Map<Integer, String> labels =
                 executionService.getAllDataObjectNames(instanceID);
         if (filterString != null && !filterString.isEmpty()) {
-            for (Map.Entry<Integer, String> labelEntry : labels.entrySet()) {
-                if (!labelEntry.getValue().contains(filterString)) {
-                    dataObjects.remove(labelEntry.getKey());
-                    states.remove(labelEntry.getKey());
-                    labels.remove(labelEntry.getKey());
-                }
-            }
+            List<Integer> oldDataObjects = new ArrayList<>(dataObjects);
+            oldDataObjects.stream()
+                    .filter(objectId -> !objectId.toString().contains(filterString))
+                    .forEach(objectId -> {
+                        dataObjects.remove(objectId);
+                        states.remove(objectId);
+                        labels.remove(objectId);
+            });
         }
         JSONObject result = buildListForDataObjects(uriInfo, dataObjects, states, labels);
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
+
+
+    /**
+     * This method provides detailed information about an data Object.
+     * The information contain the id, parent scenario instance, label
+     * and the current state,
+     * This information will be provided as a JSON-Object.
+     * A Data object is specified by:
+     *
+     * @param scenarioID   The scenario Model ID.
+     * @param instanceID   The scenario Instance ID.
+     * @param dataObjectID The Data Object ID.
+     * @return Returns a JSON-Object with information about the dataObject,
+     * the response code will be a 200 (OK).
+     * If the data object does not exist a 404 (NOT_FOUND) will not be
+     * returned.
+     * If the instance does exist but some params are wrong a 301
+     * (REDIRECT) will be returned.
+     */
+    @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{dataObjectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDataObject(
+            @PathParam("scenarioId") int scenarioID,
+            @PathParam("instanceId") int instanceID,
+            @PathParam("dataObjectId") int dataObjectID) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
+        executionService.openExistingScenarioInstance(scenarioID, instanceID);
+        List<Integer> dataObjects =
+                executionService.getAllDataObjectIDs(instanceID);
+        Map<Integer, String> states =
+                executionService.getDataObjectStates(instanceID);
+        Map<Integer, String> labels =
+                executionService.getAllDataObjectNames(instanceID);
+        if (!dataObjects.contains(dataObjectID)) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity("{\"error\":\"There is no dataobject "
+                            + "with the id " + dataObjectID
+                            + " for the scenario instance "
+                            + instanceID
+                            + "\"}")
+                    .build();
+        }
+        DataObjectJaxBean dataObject = new DataObjectJaxBean();
+        dataObject.setId(dataObjectID);
+        dataObject.setLabel(labels.get(dataObjectID));
+        dataObject.setState(states.get(dataObjectID));
+        return Response.ok(dataObject, MediaType.APPLICATION_JSON).build();
+    }
+
 
     /**
     * Creates an array of DataObjects.
@@ -145,8 +147,8 @@ public class DataObjectRestService {
             dataObject.put("id", id);
             dataObject.put("label", labels.get(id));
             dataObject.put("state", states.get(id));
-            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + id);
-            results.put("" + id, dataObject);
+            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + String.valueOf(id));
+            results.put(String.valueOf(id), dataObject);
         }
         result.put("results", results);
         return result;

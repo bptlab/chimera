@@ -14,68 +14,34 @@ import java.util.stream.Collectors;
 public class StartQuery {
     private String query;
 
-    /**
-     * Map from editor Id of data attribute to path mapping
-     */
-    private Map<String, String> attributeToJsonPath = new HashMap<>();
-
-
     private String id;
-    private List<DataAttribute> dataAttributes;
 
-    public StartQuery(JSONObject startQueryJson, List<DataClass> dataClasses) {
+    List<StartPart> queryParts = new ArrayList<>();
+
+    public StartQuery(JSONObject startQueryJson) {
+        this.id = UUID.randomUUID().toString().replaceAll("\\-", "");
         this.query = startQueryJson.getString("query");
-        JSONArray pathMappings = startQueryJson.getJSONArray("mapping");
+        JSONArray pathMappings = startQueryJson.getJSONArray("mappings");
         for (int i = 0; i < pathMappings.length(); i++) {
             JSONObject singleMapping = pathMappings.getJSONObject(i);
-            String className = singleMapping.getString("classname");
-            String attributeName = singleMapping.getString("attr");
-            String dataattributeId = findDataattributeId(dataClasses, className, attributeName);
-            attributeToJsonPath.put(dataattributeId, singleMapping.getString("path"));
+            queryParts.add(new StartPart(singleMapping, id));
         }
-        dataAttributes = dataClasses.stream().map(DataClass::getAttributes)
-                .flatMap(Collection::stream).collect(Collectors.toList());
-        id = UUID.randomUUID().toString().replaceAll("\\-", "");
     }
 
-    private String findDataattributeId(
-            List<DataClass> dataClasses, String className, String attributeName) {
-        Map<String, DataClass> classNameToDataclass = new HashMap<>();
-        for (DataClass dataClass : dataClasses) {
-            classNameToDataclass.put(dataClass.getName(), dataClass);
-        }
-        DataClass dataClass = classNameToDataclass.get(className);
-        Optional<DataAttribute> dataAttribute = dataClass.getDataAttributeByName(
-                attributeName);
-        if (!dataAttribute.isPresent()) {
-            throw new IllegalArgumentException(
-                    "Invalid data attribute specified: " + attributeName);
-        }
-        return dataAttribute.get().getEditorId();
-    }
-
-    static List<StartQuery> parseStartQueries(
-            JSONArray startQueryArray, List<DataClass> dataClasses) {
+    static List<StartQuery> parseStartQueries(JSONArray startQueryArray) {
         List<StartQuery> startQueries = new ArrayList<>();
         for (int i = 0; i < startQueryArray.length(); i++) {
             JSONObject jsonObject = startQueryArray.getJSONObject(i);
-            startQueries.add(new StartQuery(jsonObject, dataClasses));
+            startQueries.add(new StartQuery(jsonObject));
         }
         return startQueries;
     }
 
-    public void save(int scenarioId) {
-        Map<String, Integer> editorToDbId = new HashMap<>();
-        for (DataAttribute dataAttribute : dataAttributes) {
-            editorToDbId.put(dataAttribute.getEditorId(), dataAttribute.getDataAttributeID());
-        }
-
+    public void save(int scenarioId, List<DataClass> dataClasses) {
         Connector connector = new Connector();
-
-        for (Map.Entry<String, String> entry : this.attributeToJsonPath.entrySet()) {
-            int attributeDbId = editorToDbId.get(entry.getKey());
-            connector.insertStartQueryIntoDatabase(
-                    this.query, scenarioId, attributeDbId, entry.getValue(), id);
+        connector.insertStartQueryIntoDatabase(this.query, scenarioId, id);
+        for (StartPart startPart : this.queryParts) {
+            startPart.save(dataClasses);
         }
     }
 
@@ -92,7 +58,52 @@ public class StartQuery {
         return id;
     }
 
-    public Map<String, String> getAttributeToJsonPath() {
-        return attributeToJsonPath;
+
+    private class StartPart {
+
+        final String dataClass;
+        final String state;
+        final String queryId;
+        Map<String, String> attributeNameToJsonPath = new HashMap<>();
+
+        public StartPart(JSONObject jsonObject, String queryId) {
+            this.queryId = queryId;
+            dataClass = jsonObject.getString("class");
+            state = jsonObject.getString("state");
+            JSONArray attributeMappings = jsonObject.getJSONArray("attributes");
+            for (int i = 0; i < attributeMappings.length(); i++) {
+                JSONObject attrMapping = attributeMappings.getJSONObject(i);
+                String attrName = attrMapping.getString("name");
+                String jsonPath = attrMapping.getString("path");
+                attributeNameToJsonPath.put(attrName, jsonPath);
+            }
+        }
+
+        /**
+         * Saves the start part into the database.
+         * @param dataClasses List of dataclasses which are already saved into database.
+         */
+        public void save(List<DataClass> dataClasses) {
+            Map<String, DataClass> nameToDataClass = dataClasses.stream().collect(
+                    Collectors.toMap(x -> x.getName(), x -> x));
+            DataClass belongingDataClass = nameToDataClass.get(dataClass);
+            int dataClassDbId = belongingDataClass.getDatabaseId();
+            int stateDbId = belongingDataClass.getStateToDatabaseId().get(state);
+
+            Connector connector = new Connector();
+            for (Map.Entry<String, String> entry : this.attributeNameToJsonPath.entrySet()) {
+                Optional<DataAttribute> dataAttribute = belongingDataClass
+                        .getDataAttributeByName(entry.getKey());
+                assert dataAttribute.isPresent(): "Referenced invalid data attribute";
+                int attributeDbId = dataAttribute.get().getAttributeDatabaseId();
+                String jsonPath = entry.getValue();
+                connector.insertStartPart(
+                        queryId, dataClassDbId, stateDbId, attributeDbId, jsonPath);
+            }
+        }
+    }
+
+    public List<StartPart> getQueryParts() {
+        return queryParts;
     }
 }

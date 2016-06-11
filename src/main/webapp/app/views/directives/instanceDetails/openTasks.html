@@ -9,11 +9,11 @@
                 <div ng-if="!todo_terminated">
                     <table class="table table-striped">
                         <tbody>
-                        <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.activities['running']['activities']  track by $index">
-                            <td>{{value['label']}}</td>
+                        <tr ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running']['activities']  track by $index">
+                            <td>{{activityInstance['label']}}</td>
                             <td><a type="button" data-toggle="modal"
-                                   ng-click="instanceCtrl.getOutputAndOutputsets(value['id'])"
-                                   data-target="{{'#modalTerminate' + value['id']}}"><i
+                                   ng-click="instanceCtrl.getActivityOutputStates(activityInstance['activityid']);instanceCtrl.getActivityOutput(activityInstance['id'])"
+                                   data-target="{{'#modalTerminate' + activityInstance['id']}}"><i
                                     class="fa fa-check"></i></a></td>
 
                         </tr>

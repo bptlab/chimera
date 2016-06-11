@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,7 @@ import java.util.*;
 /**
  * This class represents a DataClass.
  */
-public class DataClass implements IPersistable {
+public class DataClass {
     private static Logger logger = Logger.getLogger(DataClass.class);
 
     /**
@@ -45,9 +46,12 @@ public class DataClass implements IPersistable {
 
     protected int isEvent = 0;
 
+
     protected Map<String, Integer> stateToDatabaseId = new HashMap<>();
 
     protected List<String> states = new ArrayList<>();
+
+    protected List<DataNode> dataNodes = new ArrayList<>();
 
     public DataClass(final String element) {
         try {
@@ -69,12 +73,13 @@ public class DataClass implements IPersistable {
     }
 
     /**
-     * This method saves the dataClass to the database.
+     * This method saves the dataClass and all associated classes to the database.
+     * Classes associated with the data class are state and data nodes.
      *
+     * @param scenarioId Database Id of the scenario
      * @return the databaseID of the dataClass.
      */
-    @Override
-    public int save() {
+    public int save(int scenarioId) {
         Connector conn = new Connector();
         this.databaseId = conn.insertDataClassIntoDatabase(this.name, this.isEvent);
         saveDataAttributes();
@@ -84,6 +89,7 @@ public class DataClass implements IPersistable {
             stateToDatabaseId.put(state, stateID);
         }
 
+        saveDataNodes(scenarioId);
         return databaseId;
     }
 
@@ -111,6 +117,14 @@ public class DataClass implements IPersistable {
             dataAttribute.setDataClassID(databaseId);
             dataAttribute.save();
         }
+    }
+
+    private void saveDataNodes(int scenarioId) {
+        dataNodes.forEach(x -> x.save(this, scenarioId));
+    }
+
+    public void addDataNode(DataNode dataNode) {
+        this.dataNodes.add(dataNode);
     }
 
 
