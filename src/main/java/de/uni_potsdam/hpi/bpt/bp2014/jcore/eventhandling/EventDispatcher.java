@@ -245,7 +245,7 @@ public final class EventDispatcher {
                     .post(Entity.json(gson.toJson(queryRequest)));
             if (response.getStatus() != 200) {
                 // throw new RuntimeException("Query could not be registered");
-                logger.debug("Could not register Query");
+                logger.warn("Could not register Query \"" + query + "\"");
                 return "-1";
             } else {
                 // return the UUID of the Notification Rule
@@ -253,7 +253,7 @@ public final class EventDispatcher {
                 return response.readEntity(String.class);
             }
         } catch (ProcessingException e) {
-            logger.debug("Could not register Query");
+            logger.warn("Could not register Query \"" + query+ "\"");
             return "-1";
         }
     }

@@ -24,6 +24,8 @@ public class Olc {
      */
     public Map<String, List<String>> allowedStateTransitions = new HashMap<>();
 
+    private List<String> stateNames = new ArrayList<>();
+
     public Olc(final String element) {
         try {
             JSONObject olcJson = new JSONObject(element);
@@ -46,6 +48,7 @@ public class Olc {
         for (int i = 0; i < states.length(); i++) {
             JSONObject state = states.getJSONObject(i);
             stateToOutgoing.put(state.getString("id"), new ArrayList<>());
+            stateNames.add(state.getString("name"));
         }
     }
 
@@ -78,5 +81,9 @@ public class Olc {
             nameOutgoing.put(stateName, outgoingStateNames);
         }
         return nameOutgoing;
+    }
+
+    public List<String> getStateNames() {
+        return stateNames;
     }
 }

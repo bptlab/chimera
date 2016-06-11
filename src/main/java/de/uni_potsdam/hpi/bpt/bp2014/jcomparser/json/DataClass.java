@@ -65,6 +65,7 @@ public class DataClass {
             generateDataAttributeList(this.jsonRepresentation.getJSONArray("attributes"));
             if (this.jsonRepresentation.has("olc")) {
                 this.olc = new Olc(this.jsonRepresentation.get("olc").toString());
+                this.states = this.olc.getStateNames();
             }
         } catch (JSONException e) {
             logger.trace(e);

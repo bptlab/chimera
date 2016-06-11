@@ -67,7 +67,7 @@ public class EventType extends DataClass {
         try {
             Response response = client.target(getRegistrationUrl()).request()
                     .post(Entity.json(jsonString));
-            if (response.getStatus() != 200) {
+            if (response.getStatus() != 204) {
                 logger.warn("Unexpected response while registering Event Type. Status:"
                         + response.getStatus());
             }
