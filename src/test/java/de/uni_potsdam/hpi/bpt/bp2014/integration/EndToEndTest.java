@@ -128,25 +128,29 @@ public class EndToEndTest extends JerseyTest {
                 .request().get();
         System.out.println(dataInput.readEntity(String.class));
 
-        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/begin")
+        Response startSecondActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/13/begin")
                 .request().post(Entity.json("{}"));
         assertEquals(202, startSecondActivity.getStatus());
 
         String attributeUpdate = "{\"1\":\"bar\"}";
-        Response setDataAttribute = base.path("interface/v2/scenario/1/instance/1/activityinstance/5").request()
+        Response setDataAttribute = base.path("interface/v2/scenario/1/instance/1/activityinstance/13").request()
                 .put(Entity.json(attributeUpdate));
         assertEquals(202, setDataAttribute.getStatus());
 
 
-        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/terminate")
+        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/13/terminate")
                 .request().post(Entity.json(buildOutputSetSelection2()));
         assertEquals(202, terminateActivityUsingOutputSet.getStatus());
     }
 
     private int idForEnabledActivityInstance(String label, WebTarget base) {
-        Response getActivities = base.path("interface/v2/scenario/1/instance/1/activity/?state=ready")
-                .request().get();
-        JSONArray activityInstances = new JSONObject(getActivities.readEntity(String.class)).getJSONArray("activities");
+//        Response getActivities = base.path("interface/v2/scenario/1/instance/1/activity/?state=ready")
+//                .request().get();
+        Response getActivities = base.path("interface/v2/scenario/1/instance/1/activity")
+                .queryParam("state", "ready").request().get();
+
+        String json = getActivities.readEntity(String.class);
+        JSONArray activityInstances = new JSONObject(json).getJSONArray("activities");
         for (int i = 0; i < activityInstances.length(); i++) {
             if (label.equals(activityInstances.getJSONObject(i).getString("label"))) {
                 return activityInstances.getJSONObject(i).getInt("id");
