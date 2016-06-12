@@ -131,7 +131,7 @@ public final class EventDispatcher {
     public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
         final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
         String notificationPath = String.format(
-                SELF_PATH_CASESTART, SELF_DEPLOY_URL, scenarioId, requestId);
+                SELF_PATH_CASESTART, SELF_DEPLOY_URL, requestId);
         String notificationRuleId = sendQueryToEventService(
                 eventQuery, requestId, notificationPath);
         new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
