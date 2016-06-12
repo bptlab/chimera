@@ -288,7 +288,7 @@ angular.module('jfrontend')
                 }).
                 error(function () {
                     instanceCtrl.instanceDetails.canTerminate = false;
-                    console.log('request failed');
+                    console.log('Instance cannot be terminated yet.');
                 });
             };
 

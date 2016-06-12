@@ -34,10 +34,8 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- ./ ng-repeat -->
-                <br><br><br>
                 <!-- if outputsets are present display them with the option for termination -->
-                <div ng-show="instanceCtrl.activityOutputStates[activityInstance['id']].length">
+                <div ng-show="instanceCtrl.activityOutputStates[activityInstance['id']]">
                     <div class="panel">
                         <div class="panel-header">
                             Please select a state for each output.
