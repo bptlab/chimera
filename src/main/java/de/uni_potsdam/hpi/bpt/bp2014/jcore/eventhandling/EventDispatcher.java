@@ -43,8 +43,8 @@ public final class EventDispatcher {
             + PropertyLoader.getProperty("unicorn.path.deploy");
     private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url")
             + PropertyLoader.getProperty("chimera.path.deploy");
-    private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/eventnode/%s";
-    private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/scenario/%d/casestart/%s";
+    private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s";
+    private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/casestart/%s";
 
     private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
