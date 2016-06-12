@@ -1,0 +1,459 @@
+{
+    "__v": 15,
+    "_id": "575be30d0a923fd4325f0f5c",
+    "domainmodel": {
+        "__v": 36,
+        "_id": "575be30d0a923fd4325f0f5d",
+        "dataclasses": [
+            {
+                "_id": "575d4214712f113f0d62a509",
+                "attributes": [
+                    {
+                        "_id": "575d4214712f113f0d62a50a",
+                        "datatype": "String",
+                        "name": "PresentationDate"
+                    }
+                ],
+                "is_event": false,
+                "name": "Presentation",
+                "olc": {
+                    "intermediateThrowEvent": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "dated",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "prepared",
+                            "outgoing": [
+                                "SequenceFlow_1oecrah"
+                            ]
+                        },
+                        {
+                            "id": "State_0ubnbwq",
+                            "incoming": [
+                                "SequenceFlow_1oecrah"
+                            ],
+                            "name": "held"
+                        }
+                    ],
+                    "sequenceFlow": [
+                        {
+                            "id": "SequenceFlow_1d9kpvm",
+                            "sourceRef": "State_11u8x6w",
+                            "targetRef": "State_0x8fy3i"
+                        },
+                        {
+                            "id": "SequenceFlow_1oecrah",
+                            "sourceRef": "State_0x8fy3i",
+                            "targetRef": "State_0ubnbwq"
+                        }
+                    ],
+                    "state": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "dated",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "prepared",
+                            "outgoing": [
+                                "SequenceFlow_1oecrah"
+                            ]
+                        },
+                        {
+                            "id": "State_0ubnbwq",
+                            "incoming": [
+                                "SequenceFlow_1oecrah"
+                            ],
+                            "name": "held"
+                        }
+                    ]
+                }
+            },
+            {
+                "_id": "575d423f712f113f0d62a50b",
+                "attributes": [],
+                "is_event": false,
+                "name": "Code",
+                "olc": {
+                    "intermediateThrowEvent": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "clean"
+                        }
+                    ],
+                    "state": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "clean"
+                        }
+                    ]
+                }
+            },
+            {
+                "_id": "575d424f712f113f0d62a50c",
+                "attributes": [],
+                "is_event": false,
+                "name": "Docu",
+                "olc": {
+                    "intermediateThrowEvent": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "old",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "complete"
+                        }
+                    ],
+                    "sequenceFlow": [
+                        {
+                            "id": "SequenceFlow_1d9kpvm",
+                            "sourceRef": "State_11u8x6w",
+                            "targetRef": "State_0x8fy3i"
+                        }
+                    ],
+                    "state": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "old",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "complete"
+                        }
+                    ]
+                }
+            },
+            {
+                "_id": "575d4266712f113f0d62a50d",
+                "attributes": [],
+                "is_event": false,
+                "name": "Thesis",
+                "olc": {
+                    "intermediateThrowEvent": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "draft",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "draft reviewed",
+                            "outgoing": [
+                                "SequenceFlow_1g690yl"
+                            ]
+                        },
+                        {
+                            "id": "State_0ish4ev",
+                            "incoming": [
+                                "SequenceFlow_1g690yl"
+                            ],
+                            "name": "written"
+                        }
+                    ],
+                    "sequenceFlow": [
+                        {
+                            "id": "SequenceFlow_1d9kpvm",
+                            "sourceRef": "State_11u8x6w",
+                            "targetRef": "State_0x8fy3i"
+                        },
+                        {
+                            "id": "SequenceFlow_1g690yl",
+                            "sourceRef": "State_0x8fy3i",
+                            "targetRef": "State_0ish4ev"
+                        }
+                    ],
+                    "state": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "draft",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "draft reviewed",
+                            "outgoing": [
+                                "SequenceFlow_1g690yl"
+                            ]
+                        },
+                        {
+                            "id": "State_0ish4ev",
+                            "incoming": [
+                                "SequenceFlow_1g690yl"
+                            ],
+                            "name": "written"
+                        }
+                    ]
+                }
+            },
+            {
+                "_id": "575d4290712f113f0d62a50e",
+                "attributes": [{
+                    "_id": "575d4214712f113f0d62a51a",
+                    "datatype": "Integer",
+                    "name": "TicketNumber"
+                }],
+                "is_event": false,
+                "name": "Feature",
+                "olc": {
+                    "intermediateThrowEvent": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "idea",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "planned",
+                            "outgoing": [
+                                "SequenceFlow_0hjkx57"
+                            ]
+                        },
+                        {
+                            "id": "State_1ufkjkz",
+                            "incoming": [
+                                "SequenceFlow_0hjkx57",
+                                "SequenceFlow_1vfoyaj"
+                            ],
+                            "name": "tested",
+                            "outgoing": [
+                                "SequenceFlow_14hb767"
+                            ]
+                        },
+                        {
+                            "id": "State_16v8v3h",
+                            "incoming": [
+                                "SequenceFlow_14hb767"
+                            ],
+                            "name": "implemented",
+                            "outgoing": [
+                                "SequenceFlow_160hu1s",
+                                "SequenceFlow_1t3p018"
+                            ]
+                        },
+                        {
+                            "id": "State_118ahxj",
+                            "incoming": [
+                                "SequenceFlow_160hu1s"
+                            ],
+                            "name": "approved"
+                        },
+                        {
+                            "id": "State_13hocwr",
+                            "incoming": [
+                                "SequenceFlow_1t3p018"
+                            ],
+                            "name": "rejected",
+                            "outgoing": [
+                                "SequenceFlow_1vfoyaj"
+                            ]
+                        }
+                    ],
+                    "sequenceFlow": [
+                        {
+                            "id": "SequenceFlow_1d9kpvm",
+                            "sourceRef": "State_11u8x6w",
+                            "targetRef": "State_0x8fy3i"
+                        },
+                        {
+                            "id": "SequenceFlow_0hjkx57",
+                            "sourceRef": "State_0x8fy3i",
+                            "targetRef": "State_1ufkjkz"
+                        },
+                        {
+                            "id": "SequenceFlow_14hb767",
+                            "sourceRef": "State_1ufkjkz",
+                            "targetRef": "State_16v8v3h"
+                        },
+                        {
+                            "id": "SequenceFlow_160hu1s",
+                            "sourceRef": "State_16v8v3h",
+                            "targetRef": "State_118ahxj"
+                        },
+                        {
+                            "id": "SequenceFlow_1t3p018",
+                            "sourceRef": "State_16v8v3h",
+                            "targetRef": "State_13hocwr"
+                        },
+                        {
+                            "id": "SequenceFlow_1vfoyaj",
+                            "sourceRef": "State_13hocwr",
+                            "targetRef": "State_1ufkjkz"
+                        }
+                    ],
+                    "state": [
+                        {
+                            "id": "State_11u8x6w",
+                            "name": "idea",
+                            "outgoing": [
+                                "SequenceFlow_1d9kpvm"
+                            ]
+                        },
+                        {
+                            "id": "State_0x8fy3i",
+                            "incoming": [
+                                "SequenceFlow_1d9kpvm"
+                            ],
+                            "name": "planned",
+                            "outgoing": [
+                                "SequenceFlow_0hjkx57"
+                            ]
+                        },
+                        {
+                            "id": "State_1ufkjkz",
+                            "incoming": [
+                                "SequenceFlow_0hjkx57",
+                                "SequenceFlow_1vfoyaj"
+                            ],
+                            "name": "tested",
+                            "outgoing": [
+                                "SequenceFlow_14hb767"
+                            ]
+                        },
+                        {
+                            "id": "State_16v8v3h",
+                            "incoming": [
+                                "SequenceFlow_14hb767"
+                            ],
+                            "name": "implemented",
+                            "outgoing": [
+                                "SequenceFlow_160hu1s",
+                                "SequenceFlow_1t3p018"
+                            ]
+                        },
+                        {
+                            "id": "State_118ahxj",
+                            "incoming": [
+                                "SequenceFlow_160hu1s"
+                            ],
+                            "name": "approved"
+                        },
+                        {
+                            "id": "State_13hocwr",
+                            "incoming": [
+                                "SequenceFlow_1t3p018"
+                            ],
+                            "name": "rejected",
+                            "outgoing": [
+                                "SequenceFlow_1vfoyaj"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "name": "Final Presentation",
+        "revision": 123
+    },
+    "fragments": [
+        {
+            "__v": 0,
+            "_id": "575bf61c0a923fd4325f0f63",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:task id=\"Task_0wyhfye\" name=\"Create Feature\">\n      <bpmn:incoming>SequenceFlow_15u5aix</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1fx34xt</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_0486cx2\">\n        <bpmn:sourceRef>DataObjectReference_1q5ybgv</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0zuze81\">\n        <bpmn:targetRef>DataObjectReference_0co3v03</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_1fx34xt</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:boundaryEvent id=\"BoundaryEvent_1yxj07u\" attachedToRef=\"Task_0wyhfye\" griffin:eventquery=\"SELECT * FROM TestFailed\">\n      <bpmn:outgoing>SequenceFlow_0r1ytne</bpmn:outgoing>\n      <bpmn:messageEventDefinition />\n    </bpmn:boundaryEvent>\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_1mniyw7\">\n      <bpmn:incoming>SequenceFlow_06i4f6h</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_1e1j1bl</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_15u5aix</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_15u5aix\" sourceRef=\"ExclusiveGateway_1mniyw7\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:task id=\"Task_0gxmlu8\" name=\"Fix Tests\">\n      <bpmn:incoming>SequenceFlow_0r1ytne</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_06i4f6h</bpmn:outgoing>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0r1ytne\" sourceRef=\"BoundaryEvent_1yxj07u\" targetRef=\"Task_0gxmlu8\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_06i4f6h\" sourceRef=\"Task_0gxmlu8\" targetRef=\"ExclusiveGateway_1mniyw7\" />\n    <bpmn:task id=\"Task_11uynh6\" name=\"Write tests for feature\">\n      <bpmn:incoming>SequenceFlow_0l5yt60</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1e1j1bl</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_1p8b0ry\">\n        <bpmn:sourceRef>DataObjectReference_0z45uq5</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0g9iwhh\">\n        <bpmn:targetRef>DataObjectReference_1q5ybgv</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1e1j1bl\" sourceRef=\"Task_11uynh6\" targetRef=\"ExclusiveGateway_1mniyw7\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_1q5ybgv\" name=\"Feature[tested]\" dataObjectRef=\"DataObject_0q0eobx\" griffin:state=\"tested\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_0q0eobx\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0co3v03\" name=\"Feature[implemented]\" dataObjectRef=\"DataObject_0jbcya1\" griffin:state=\"implemented\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_0jbcya1\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1fx34xt\" sourceRef=\"Task_0wyhfye\" targetRef=\"EndEvent_0cah2hq\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0l5yt60\" sourceRef=\"StartEvent_0ewf6qx\" targetRef=\"Task_11uynh6\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0z45uq5\" name=\"Feature[planned]\" dataObjectRef=\"DataObject_1ru4peo\" griffin:state=\"planned\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_1ru4peo\" />\n    <bpmn:startEvent id=\"StartEvent_0ewf6qx\">\n      <bpmn:outgoing>SequenceFlow_0l5yt60</bpmn:outgoing>\n    </bpmn:startEvent>\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"577\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"784\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"757\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"BoundaryEvent_1yxj07u_di\" bpmnElement=\"BoundaryEvent_1yxj07u\">\n        <dc:Bounds x=\"628.6472819216182\" y=\"213\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"601.6472819216182\" y=\"249\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_1mniyw7_di\" bpmnElement=\"ExclusiveGateway_1mniyw7\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"446.6472819216182\" y=\"166\" width=\"50\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"426.6472819216182\" y=\"216\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_15u5aix_di\" bpmnElement=\"SequenceFlow_15u5aix\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"497\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"577\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"351\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_0gxmlu8_di\" bpmnElement=\"Task_0gxmlu8\">\n        <dc:Bounds x=\"514.6472819216182\" y=\"285.44374209860933\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0r1ytne_di\" bpmnElement=\"SequenceFlow_0r1ytne\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"647\" y=\"249\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"647\" y=\"325\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"615\" y=\"325\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"474\" y=\"316.5\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_06i4f6h_di\" bpmnElement=\"SequenceFlow_06i4f6h\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"515\" y=\"325\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"472\" y=\"325\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"472\" y=\"216\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"452.5\" y=\"357\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_11uynh6_di\" bpmnElement=\"Task_11uynh6\">\n        <dc:Bounds x=\"289.6472819216182\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1e1j1bl_di\" bpmnElement=\"SequenceFlow_1e1j1bl\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"390\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"447\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"373.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1q5ybgv_di\" bpmnElement=\"DataObjectReference_1q5ybgv\">\n        <dc:Bounds x=\"366.96965865992416\" y=\"36.848293299620764\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"339.96965865992416\" y=\"86.84829329962076\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0g9iwhh_di\" bpmnElement=\"DataOutputAssociation_0g9iwhh\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"354\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"376\" y=\"87\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_0486cx2_di\" bpmnElement=\"DataInputAssociation_0486cx2\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"403\" y=\"72\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"577\" y=\"164\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0co3v03_di\" bpmnElement=\"DataObjectReference_0co3v03\">\n        <dc:Bounds x=\"683.9696586599241\" y=\"57\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"689\" y=\"108\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0zuze81_di\" bpmnElement=\"DataOutputAssociation_0zuze81\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"655\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"685\" y=\"107\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1fx34xt_di\" bpmnElement=\"SequenceFlow_1fx34xt\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"677\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"784\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"685.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0l5yt60_di\" bpmnElement=\"SequenceFlow_0l5yt60\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"185\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"290\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"174.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0z45uq5_di\" bpmnElement=\"DataObjectReference_0z45uq5\">\n        <dc:Bounds x=\"251\" y=\"57\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"224\" y=\"107\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_1p8b0ry_di\" bpmnElement=\"DataInputAssociation_1p8b0ry\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"285\" y=\"107\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"314\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"StartEvent_0ewf6qx_di\" bpmnElement=\"StartEvent_0ewf6qx\">\n        <dc:Bounds x=\"149\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"122\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "name": "Implement Feature",
+            "revision": 5
+        },
+        {
+            "__v": 0,
+            "_id": "575bf881ae2aec6703246e8b",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_0vy2x8y</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:task id=\"Task_0wyhfye\" name=\"Review Feature\">\n      <bpmn:incoming>SequenceFlow_0vy2x8y</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1uw5t49</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_02y5494\">\n        <bpmn:sourceRef>DataObjectReference_0hip2tn</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_1whaf3q\">\n        <bpmn:targetRef>DataObjectReference_0itgyyy</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_05bkytx\">\n        <bpmn:targetRef>DataObjectReference_0pftrig</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vy2x8y\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_1uw5t49</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1uw5t49\" sourceRef=\"Task_0wyhfye\" targetRef=\"EndEvent_0cah2hq\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0hip2tn\" name=\"Feature[implemented]\" dataObjectRef=\"DataObject_1ia8uyn\" griffin:state=\"implemented\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_1ia8uyn\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0pftrig\" name=\"Feature[approved]\" dataObjectRef=\"DataObject_0li2ej6\" griffin:state=\"approved\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_0li2ej6\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0itgyyy\" name=\"Feature[rejected]\" dataObjectRef=\"DataObject_1ury2kz\" griffin:state=\"rejected\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_1ury2kz\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"319\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vy2x8y_di\" bpmnElement=\"SequenceFlow_0vy2x8y\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"219\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"319\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"201\" y=\"110\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"535\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"508\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1uw5t49_di\" bpmnElement=\"SequenceFlow_1uw5t49\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"419\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"535\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"431.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0hip2tn_di\" bpmnElement=\"DataObjectReference_0hip2tn\">\n        <dc:Bounds x=\"257\" y=\"45\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"230\" y=\"95\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_02y5494_di\" bpmnElement=\"DataInputAssociation_02y5494\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"293\" y=\"93\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"338\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0pftrig_di\" bpmnElement=\"DataObjectReference_0pftrig\">\n        <dc:Bounds x=\"431\" y=\"45\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"404\" y=\"95\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0itgyyy_di\" bpmnElement=\"DataObjectReference_0itgyyy\">\n        <dc:Bounds x=\"431\" y=\"291\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"404\" y=\"341\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_1whaf3q_di\" bpmnElement=\"DataOutputAssociation_1whaf3q\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"395\" y=\"231\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"433\" y=\"291\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_05bkytx_di\" bpmnElement=\"DataOutputAssociation_05bkytx\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"395\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"432\" y=\"95\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "name": "Customer Review",
+            "revision": 3
+        },
+        {
+            "__v": 0,
+            "_id": "575bf8ecae2aec6703246e8c",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_0vy2x8y</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:task id=\"Task_0wyhfye\" name=\"Adapt tests to new expectations\">\n      <bpmn:incoming>SequenceFlow_0vy2x8y</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1uw5t49</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_0copfna\">\n        <bpmn:sourceRef>DataObjectReference_02d4fn3</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_08jhu1c\">\n        <bpmn:targetRef>DataObjectReference_0nwudk3</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vy2x8y\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_0anhyod</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1uw5t49\" sourceRef=\"Task_0wyhfye\" targetRef=\"Task_0yn1g46\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_02d4fn3\" name=\"Feature[rejected]\" dataObjectRef=\"DataObject_0tbakct\" griffin:state=\"rejected\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_0tbakct\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0nwudk3\" name=\"Feature[tested]\" dataObjectRef=\"DataObject_1uutvc7\" griffin:state=\"tested\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_1uutvc7\" />\n    <bpmn:task id=\"Task_0yn1g46\" name=\"Rework feature\">\n      <bpmn:incoming>SequenceFlow_1uw5t49</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0anhyod</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_0so45ab\">\n        <bpmn:sourceRef>DataObjectReference_0nwudk3</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_05divmo\">\n        <bpmn:targetRef>DataObjectReference_0n289gw</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0anhyod\" sourceRef=\"Task_0yn1g46\" targetRef=\"EndEvent_0cah2hq\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0n289gw\" name=\"Feature[implemented]\" dataObjectRef=\"DataObject_0ioj49r\" griffin:state=\"implemented\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_0ioj49r\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"319\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vy2x8y_di\" bpmnElement=\"SequenceFlow_0vy2x8y\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"219\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"319\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"201\" y=\"110\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"695\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"668\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1uw5t49_di\" bpmnElement=\"SequenceFlow_1uw5t49\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"419\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"529\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"431.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_02d4fn3_di\" bpmnElement=\"DataObjectReference_02d4fn3\">\n        <dc:Bounds x=\"264\" y=\"24\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"237\" y=\"74\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_0copfna_di\" bpmnElement=\"DataInputAssociation_0copfna\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"297\" y=\"74\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"344\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0nwudk3_di\" bpmnElement=\"DataObjectReference_0nwudk3\">\n        <dc:Bounds x=\"436\" y=\"24\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"409\" y=\"74\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_08jhu1c_di\" bpmnElement=\"DataOutputAssociation_08jhu1c\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"393\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"439\" y=\"74\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_0yn1g46_di\" bpmnElement=\"Task_0yn1g46\">\n        <dc:Bounds x=\"529\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0anhyod_di\" bpmnElement=\"SequenceFlow_0anhyod\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"629\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"695\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"617\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_0so45ab_di\" bpmnElement=\"DataInputAssociation_0so45ab\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"472\" y=\"69\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"544\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0n289gw_di\" bpmnElement=\"DataObjectReference_0n289gw\">\n        <dc:Bounds x=\"656\" y=\"24\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"629\" y=\"74\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_05divmo_di\" bpmnElement=\"DataOutputAssociation_05divmo\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"606\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"657\" y=\"74\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "name": "Improve Feature",
+            "revision": 2
+        },
+        {
+            "__v": 0,
+            "_id": "575bfe643827219e032a2c97",
+            "name": "Presentation",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:task id=\"Task_0wyhfye\" name=\"Start hacking intensively\">\n      <bpmn:incoming>SequenceFlow_158a2as</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0ayi8jd</bpmn:outgoing>\n    </bpmn:task>\n    <bpmn:startEvent id=\"StartEvent_0uuc9us\" name=\"Presentation soon\" griffin:eventquery=\"SELECT * FROM PresentationNotification\">\n      <bpmn:outgoing>SequenceFlow_0kgxhs7</bpmn:outgoing>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_1na18j1\">\n        <bpmn:targetRef>DataObjectReference_1bfsoga</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n      <bpmn:messageEventDefinition />\n    </bpmn:startEvent>\n    <bpmn:parallelGateway id=\"ParallelGateway_0c2osx0\">\n      <bpmn:incoming>SequenceFlow_0kgxhs7</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_158a2as</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_1a10iii</bpmn:outgoing>\n    </bpmn:parallelGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0kgxhs7\" sourceRef=\"StartEvent_0uuc9us\" targetRef=\"ParallelGateway_0c2osx0\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_158a2as\" sourceRef=\"ParallelGateway_0c2osx0\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:task id=\"Task_0un6sm0\" name=\"Prepare presentation\">\n      <bpmn:incoming>SequenceFlow_1a10iii</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1pqevzb</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_0aq02bp\">\n        <bpmn:sourceRef>DataObjectReference_1bfsoga</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_1vtdq0q\">\n        <bpmn:targetRef>DataObjectReference_06thljr</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1a10iii\" sourceRef=\"ParallelGateway_0c2osx0\" targetRef=\"Task_0un6sm0\" />\n    <bpmn:task id=\"Task_1pztig7\" name=\"Hold presentation\">\n      <bpmn:incoming>SequenceFlow_1pqevzb</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1km25m8</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_138knec\">\n        <bpmn:sourceRef>DataObjectReference_06thljr</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_15mul2q\">\n        <bpmn:targetRef>DataObjectReference_1smit6m</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1pqevzb\" sourceRef=\"Task_0un6sm0\" targetRef=\"Task_1pztig7\" />\n    <bpmn:parallelGateway id=\"ParallelGateway_0vlznbv\">\n      <bpmn:incoming>SequenceFlow_1km25m8</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_0ayi8jd</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0edd3y0</bpmn:outgoing>\n    </bpmn:parallelGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1km25m8\" sourceRef=\"Task_1pztig7\" targetRef=\"ParallelGateway_0vlznbv\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_0ayi8jd\" sourceRef=\"Task_0wyhfye\" targetRef=\"ParallelGateway_0vlznbv\" />\n    <bpmn:endEvent id=\"EndEvent_0vhuj38\">\n      <bpmn:incoming>SequenceFlow_0edd3y0</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0edd3y0\" sourceRef=\"ParallelGateway_0vlznbv\" targetRef=\"EndEvent_0vhuj38\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_1bfsoga\" name=\"Presentation[dated]\" dataObjectRef=\"DataObject_1oei0sv\" griffin:state=\"dated\" griffin:dataclass=\"Presentation\" griffin:jsonpath=\"{&#34;PresentationDate&#34;:&#34;$.PresentationDate&#34;}\" />\n    <bpmn:dataObject id=\"DataObject_1oei0sv\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_06thljr\" name=\"Presentation[prepared]\" dataObjectRef=\"DataObject_1v9hzoz\" griffin:state=\"prepared\" griffin:dataclass=\"Presentation\" />\n    <bpmn:dataObject id=\"DataObject_1v9hzoz\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_1smit6m\" name=\"Presentation[held]\" dataObjectRef=\"DataObject_14pavf7\" griffin:state=\"held\" griffin:dataclass=\"Presentation\" />\n    <bpmn:dataObject id=\"DataObject_14pavf7\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"381\" y=\"58\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"StartEvent_0uuc9us_di\" bpmnElement=\"StartEvent_0uuc9us\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"ParallelGateway_0c2osx0_di\" bpmnElement=\"ParallelGateway_0c2osx0\">\n        <dc:Bounds x=\"285\" y=\"166\" width=\"50\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"265\" y=\"216\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0kgxhs7_di\" bpmnElement=\"SequenceFlow_0kgxhs7\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"219\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"285\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"207\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_158a2as_di\" bpmnElement=\"SequenceFlow_158a2as\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"310\" y=\"166\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"310\" y=\"98\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"381\" y=\"98\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"265\" y=\"122\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_0un6sm0_di\" bpmnElement=\"Task_0un6sm0\">\n        <dc:Bounds x=\"381\" y=\"252\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1a10iii_di\" bpmnElement=\"SequenceFlow_1a10iii\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"310\" y=\"216\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"310\" y=\"292\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"381\" y=\"292\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"265\" y=\"244\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_1pztig7_di\" bpmnElement=\"Task_1pztig7\">\n        <dc:Bounds x=\"554\" y=\"252\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1pqevzb_di\" bpmnElement=\"SequenceFlow_1pqevzb\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"481\" y=\"292\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"554\" y=\"292\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"472.5\" y=\"282\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ParallelGateway_0vlznbv_di\" bpmnElement=\"ParallelGateway_0vlznbv\">\n        <dc:Bounds x=\"701\" y=\"166\" width=\"50\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"681\" y=\"216\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1km25m8_di\" bpmnElement=\"SequenceFlow_1km25m8\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"654\" y=\"292\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"726\" y=\"292\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"726\" y=\"216\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"645\" y=\"282\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0ayi8jd_di\" bpmnElement=\"SequenceFlow_0ayi8jd\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"481\" y=\"98\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"726\" y=\"98\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"726\" y=\"166\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"558.5\" y=\"88\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0vhuj38_di\" bpmnElement=\"EndEvent_0vhuj38\">\n        <dc:Bounds x=\"798\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"771\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0edd3y0_di\" bpmnElement=\"SequenceFlow_0edd3y0\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"751\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"798\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"729.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0im9qp7_di\" bpmnElement=\"DataOutputAssociation_0im9qp7\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"209\" y=\"207\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"298\" y=\"395\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1bfsoga_di\" bpmnElement=\"DataObjectReference_1bfsoga\">\n        <dc:Bounds x=\"262.96007984031934\" y=\"428.75349301397205\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"235.96007984031934\" y=\"478.75349301397205\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0xclyga_di\" bpmnElement=\"DataOutputAssociation_0xclyga\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"206\" y=\"208\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"273\" y=\"429\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_1na18j1_di\" bpmnElement=\"DataOutputAssociation_1na18j1\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"206\" y=\"208\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"273\" y=\"429\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_0aq02bp_di\" bpmnElement=\"DataInputAssociation_0aq02bp\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"299\" y=\"435\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"394\" y=\"332\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_06thljr_di\" bpmnElement=\"DataObjectReference_06thljr\">\n        <dc:Bounds x=\"472\" y=\"439\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"445\" y=\"489\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_1vtdq0q_di\" bpmnElement=\"DataOutputAssociation_1vtdq0q\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"445\" y=\"332\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"481\" y=\"439\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_138knec_di\" bpmnElement=\"DataInputAssociation_138knec\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"507\" y=\"439\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"577\" y=\"332\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1smit6m_di\" bpmnElement=\"DataObjectReference_1smit6m\">\n        <dc:Bounds x=\"628\" y=\"439\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"601\" y=\"489\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_15mul2q_di\" bpmnElement=\"DataOutputAssociation_15mul2q\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"614\" y=\"332\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"640\" y=\"439\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "revision": 10
+        },
+        {
+            "__v": 0,
+            "_id": "575d2e04712f113f0d62a4eb",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_095twmo</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_1cw0jhm</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:task id=\"Task_0cvbzqz\" name=\"Find title and write draft\">\n      <bpmn:incoming>SequenceFlow_095twmo</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1xv4g9s</bpmn:outgoing>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_188h7zi\">\n        <bpmn:targetRef>DataObjectReference_1jmthh5</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_095twmo\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0cvbzqz\" />\n    <bpmn:eventBasedGateway id=\"EventBasedGateway_1484hqh\">\n      <bpmn:incoming>SequenceFlow_1xv4g9s</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1siu8l9</bpmn:outgoing>\n      <bpmn:outgoing>SequenceFlow_10cjamv</bpmn:outgoing>\n    </bpmn:eventBasedGateway>\n    <bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_1kqn9um\" name=\"Review Meeting \">\n      <bpmn:incoming>SequenceFlow_10cjamv</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_03d1ji1</bpmn:outgoing>\n      <bpmn:timerEventDefinition>\n        <bpmn:timeDuration xsi:type=\"bpmn:tFormalExpression\">PT10S</bpmn:timeDuration>\n      </bpmn:timerEventDefinition>\n    </bpmn:intermediateCatchEvent>\n    <bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_1fomtlz\" name=\"Review Mail\" griffin:eventquery=\"SELECT * FROM SupervisorFeedback\">\n      <bpmn:incoming>SequenceFlow_1siu8l9</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0jjh3u0</bpmn:outgoing>\n      <bpmn:messageEventDefinition />\n    </bpmn:intermediateCatchEvent>\n    <bpmn:dataObjectReference id=\"DataObjectReference_1jmthh5\" name=\"Thesis[draft]\" dataObjectRef=\"DataObject_0mhm1d9\" griffin:state=\"draft\" griffin:dataclass=\"Thesis\" />\n    <bpmn:dataObject id=\"DataObject_0mhm1d9\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1siu8l9\" sourceRef=\"EventBasedGateway_1484hqh\" targetRef=\"IntermediateCatchEvent_1fomtlz\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_10cjamv\" sourceRef=\"EventBasedGateway_1484hqh\" targetRef=\"IntermediateCatchEvent_1kqn9um\" />\n    <bpmn:exclusiveGateway id=\"ExclusiveGateway_0u10kt1\">\n      <bpmn:incoming>SequenceFlow_0jjh3u0</bpmn:incoming>\n      <bpmn:incoming>SequenceFlow_03d1ji1</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1k3nbvl</bpmn:outgoing>\n    </bpmn:exclusiveGateway>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0jjh3u0\" sourceRef=\"IntermediateCatchEvent_1fomtlz\" targetRef=\"ExclusiveGateway_0u10kt1\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_03d1ji1\" sourceRef=\"IntermediateCatchEvent_1kqn9um\" targetRef=\"ExclusiveGateway_0u10kt1\" />\n    <bpmn:task id=\"Task_036dvhn\" name=\"Review draft\">\n      <bpmn:incoming>SequenceFlow_1k3nbvl</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1kvf76w</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_1mn3z5w\">\n        <bpmn:sourceRef>DataObjectReference_1jmthh5</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_00k0oe1\">\n        <bpmn:targetRef>DataObjectReference_1pgzyzy</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1k3nbvl\" sourceRef=\"ExclusiveGateway_0u10kt1\" targetRef=\"Task_036dvhn\" />\n    <bpmn:task id=\"Task_14z8s07\" name=\"Complete Thesis\">\n      <bpmn:incoming>SequenceFlow_1kvf76w</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1cw0jhm</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_05a7rhb\">\n        <bpmn:sourceRef>DataObjectReference_1pgzyzy</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_1mh35hj\">\n        <bpmn:targetRef>DataObjectReference_0ah2wqr</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1kvf76w\" sourceRef=\"Task_036dvhn\" targetRef=\"Task_14z8s07\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1cw0jhm\" sourceRef=\"Task_14z8s07\" targetRef=\"EndEvent_0cah2hq\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_1pgzyzy\" name=\"Thesis[draft reviewed]\" dataObjectRef=\"DataObject_189pmyc\" griffin:state=\"draft reviewed\" griffin:dataclass=\"Thesis\" />\n    <bpmn:dataObject id=\"DataObject_189pmyc\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0ah2wqr\" name=\"Thesis[written]\" dataObjectRef=\"DataObject_0vhlgjp\" griffin:state=\"written\" griffin:dataclass=\"Thesis\" />\n    <bpmn:dataObject id=\"DataObject_0vhlgjp\" />\n    <bpmn:sequenceFlow id=\"SequenceFlow_1xv4g9s\" sourceRef=\"Task_0cvbzqz\" targetRef=\"EventBasedGateway_1484hqh\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"241\" y=\"448\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"214\" y=\"484\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"1052\" y=\"448\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"1025\" y=\"484\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0cvbzqz_di\" bpmnElement=\"Task_0cvbzqz\">\n        <dc:Bounds x=\"331\" y=\"426\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_095twmo_di\" bpmnElement=\"SequenceFlow_095twmo\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"277\" y=\"466\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"331\" y=\"466\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"205\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EventBasedGateway_1484hqh_di\" bpmnElement=\"EventBasedGateway_1484hqh\">\n        <dc:Bounds x=\"480\" y=\"441\" width=\"50\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"460\" y=\"491\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"IntermediateCatchEvent_1kqn9um_di\" bpmnElement=\"IntermediateCatchEvent_1kqn9um\">\n        <dc:Bounds x=\"584\" y=\"525\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"557\" y=\"561\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"IntermediateCatchEvent_1fomtlz_di\" bpmnElement=\"IntermediateCatchEvent_1fomtlz\">\n        <dc:Bounds x=\"584\" y=\"370\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"557\" y=\"406\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1jmthh5_di\" bpmnElement=\"DataObjectReference_1jmthh5\">\n        <dc:Bounds x=\"592\" y=\"274\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"565\" y=\"324\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1siu8l9_di\" bpmnElement=\"SequenceFlow_1siu8l9\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"505\" y=\"441\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"505\" y=\"388\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"584\" y=\"388\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"460\" y=\"404.5\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_10cjamv_di\" bpmnElement=\"SequenceFlow_10cjamv\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"505\" y=\"491\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"505\" y=\"543\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"584\" y=\"543\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"460\" y=\"507\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"ExclusiveGateway_0u10kt1_di\" bpmnElement=\"ExclusiveGateway_0u10kt1\" isMarkerVisible=\"true\">\n        <dc:Bounds x=\"651\" y=\"441\" width=\"50\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"631\" y=\"491\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0jjh3u0_di\" bpmnElement=\"SequenceFlow_0jjh3u0\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"620\" y=\"388\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"676\" y=\"388\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"676\" y=\"441\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"603\" y=\"378\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_03d1ji1_di\" bpmnElement=\"SequenceFlow_03d1ji1\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"620\" y=\"543\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"676\" y=\"543\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"676\" y=\"491\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"603\" y=\"533\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_036dvhn_di\" bpmnElement=\"Task_036dvhn\">\n        <dc:Bounds x=\"744\" y=\"426\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1k3nbvl_di\" bpmnElement=\"SequenceFlow_1k3nbvl\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"701\" y=\"466\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"744\" y=\"466\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"677.5\" y=\"456\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_14z8s07_di\" bpmnElement=\"Task_14z8s07\">\n        <dc:Bounds x=\"901.5504\" y=\"426\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1kvf76w_di\" bpmnElement=\"SequenceFlow_1kvf76w\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"844\" y=\"466\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"902\" y=\"466\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"828\" y=\"456\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1cw0jhm_di\" bpmnElement=\"SequenceFlow_1cw0jhm\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"1002\" y=\"466\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"1052\" y=\"466\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"982\" y=\"456\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_1mn3z5w_di\" bpmnElement=\"DataInputAssociation_1mn3z5w\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"612\" y=\"324\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"791\" y=\"426\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1pgzyzy_di\" bpmnElement=\"DataObjectReference_1pgzyzy\">\n        <dc:Bounds x=\"833.9178515007899\" y=\"290.5221169036335\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"806.9178515007899\" y=\"340.5221169036335\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_00k0oe1_di\" bpmnElement=\"DataOutputAssociation_00k0oe1\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"809\" y=\"426\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"843\" y=\"341\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_05a7rhb_di\" bpmnElement=\"DataInputAssociation_05a7rhb\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"868\" y=\"341\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"925\" y=\"426\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0ah2wqr_di\" bpmnElement=\"DataObjectReference_0ah2wqr\">\n        <dc:Bounds x=\"967.9178515007899\" y=\"291\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"940.9178515007899\" y=\"341\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_1mh35hj_di\" bpmnElement=\"DataOutputAssociation_1mh35hj\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"961\" y=\"426\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"980\" y=\"341\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1xv4g9s_di\" bpmnElement=\"SequenceFlow_1xv4g9s\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"431\" y=\"466\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"480\" y=\"466\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"410.5\" y=\"456\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_188h7zi_di\" bpmnElement=\"DataOutputAssociation_188h7zi\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"427\" y=\"432\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"592\" y=\"312\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "name": "Write Thesis",
+            "revision": 5
+        },
+        {
+            "__v": 0,
+            "_id": "575d3934712f113f0d62a500",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_0vy2x8y</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:task id=\"Task_0wyhfye\" name=\"Find feature idea\">\n      <bpmn:incoming>SequenceFlow_0vy2x8y</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1uw5t49</bpmn:outgoing>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0qjc68w\">\n        <bpmn:targetRef>DataObjectReference_0fdoxrz</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vy2x8y\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_1rftjv8</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1uw5t49\" sourceRef=\"Task_0wyhfye\" targetRef=\"Task_09u1jav\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0fdoxrz\" name=\"Feature[idea]\" dataObjectRef=\"DataObject_10cvwly\" griffin:state=\"idea\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_10cvwly\" />\n    <bpmn:task id=\"Task_09u1jav\" name=\"Plan and document in JIRA\">\n      <bpmn:incoming>SequenceFlow_1uw5t49</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1rftjv8</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_0wiuqzx\">\n        <bpmn:sourceRef>DataObjectReference_0fdoxrz</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_07mz2o2\">\n        <bpmn:targetRef>DataObjectReference_0dj77p3</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1rftjv8\" sourceRef=\"Task_09u1jav\" targetRef=\"EndEvent_0cah2hq\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0dj77p3\" name=\"Feature[planned]\" dataObjectRef=\"DataObject_02rocaa\" griffin:state=\"planned\" griffin:dataclass=\"Feature\" />\n    <bpmn:dataObject id=\"DataObject_02rocaa\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"319\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vy2x8y_di\" bpmnElement=\"SequenceFlow_0vy2x8y\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"219\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"319\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"201\" y=\"110\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"705\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"678\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1uw5t49_di\" bpmnElement=\"SequenceFlow_1uw5t49\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"419\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"522\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"431.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0fdoxrz_di\" bpmnElement=\"DataObjectReference_0fdoxrz\">\n        <dc:Bounds x=\"446\" y=\"55\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"419\" y=\"105\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0qjc68w_di\" bpmnElement=\"DataOutputAssociation_0qjc68w\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"403\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"446\" y=\"101\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_09u1jav_di\" bpmnElement=\"Task_09u1jav\">\n        <dc:Bounds x=\"522\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1rftjv8_di\" bpmnElement=\"SequenceFlow_1rftjv8\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"622\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"705\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"618.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_0wiuqzx_di\" bpmnElement=\"DataInputAssociation_0wiuqzx\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"482\" y=\"98\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"533\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0dj77p3_di\" bpmnElement=\"DataObjectReference_0dj77p3\">\n        <dc:Bounds x=\"593\" y=\"55\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"566\" y=\"105\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_07mz2o2_di\" bpmnElement=\"DataOutputAssociation_07mz2o2\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"586\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"602\" y=\"105\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "name": "Sprint Planning",
+            "revision": 3
+        },
+        {
+            "__v": 0,
+            "_id": "575d3d8c712f113f0d62a501",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:griffin=\"http://wat\" id=\"Definitions_1\" targetNamespace=\"http://bpmn.io/schema/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_0vy2x8y</bpmn:outgoing>\n    </bpmn:startEvent>\n    <bpmn:task id=\"Task_0wyhfye\" name=\"Clean up code\">\n      <bpmn:incoming>SequenceFlow_0vy2x8y</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1uw5t49</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_15163v2\">\n        <bpmn:sourceRef>DataObjectReference_19ho4qn</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0vv4s66\">\n        <bpmn:targetRef>DataObjectReference_0mjyamj</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vy2x8y\" sourceRef=\"StartEvent_1\" targetRef=\"Task_0wyhfye\" />\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_1e1gbhu</bpmn:incoming>\n    </bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1uw5t49\" sourceRef=\"Task_0wyhfye\" targetRef=\"Task_1ezjxlg\" />\n    <bpmn:task id=\"Task_1ezjxlg\" name=\"Write documentation\">\n      <bpmn:incoming>SequenceFlow_1uw5t49</bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1e1gbhu</bpmn:outgoing>\n      <bpmn:dataInputAssociation id=\"DataInputAssociation_1hlqf6m\">\n        <bpmn:sourceRef>DataObjectReference_1gjgozp</bpmn:sourceRef>\n      </bpmn:dataInputAssociation>\n      <bpmn:dataOutputAssociation id=\"DataOutputAssociation_0oao4uo\">\n        <bpmn:targetRef>DataObjectReference_1sle192</bpmn:targetRef>\n      </bpmn:dataOutputAssociation>\n    </bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1e1gbhu\" sourceRef=\"Task_1ezjxlg\" targetRef=\"EndEvent_0cah2hq\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_19ho4qn\" name=\"Presentation[held]\" dataObjectRef=\"DataObject_09updlv\" griffin:state=\"held\" griffin:dataclass=\"Presentation\" />\n    <bpmn:dataObject id=\"DataObject_09updlv\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_0mjyamj\" name=\"Code[clean]\" dataObjectRef=\"DataObject_1bhf3yz\" griffin:state=\"clean\" griffin:dataclass=\"Code\" />\n    <bpmn:dataObject id=\"DataObject_1bhf3yz\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_1sle192\" name=\"Docu[complete]\" dataObjectRef=\"DataObject_1fgjh81\" griffin:state=\"complete\" griffin:dataclass=\"Docu\" />\n    <bpmn:dataObject id=\"DataObject_1fgjh81\" />\n    <bpmn:dataObjectReference id=\"DataObjectReference_1gjgozp\" name=\"Docu[old]\" dataObjectRef=\"DataObject_07ptjwv\" griffin:state=\"old\" griffin:dataclass=\"Docu\" />\n    <bpmn:dataObject id=\"DataObject_07ptjwv\" />\n  </bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"183\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"156\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"319\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vy2x8y_di\" bpmnElement=\"SequenceFlow_0vy2x8y\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"219\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"251\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"319\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"201\" y=\"110\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"628\" y=\"173\" width=\"36\" height=\"36\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"601\" y=\"209\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1uw5t49_di\" bpmnElement=\"SequenceFlow_1uw5t49\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"419\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"476\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"431.5\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"Task_1ezjxlg_di\" bpmnElement=\"Task_1ezjxlg\">\n        <dc:Bounds x=\"476\" y=\"151\" width=\"100\" height=\"80\" />\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1e1gbhu_di\" bpmnElement=\"SequenceFlow_1e1gbhu\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"576\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"582\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"582\" y=\"191\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"627\" y=\"191\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"537\" y=\"181\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_19ho4qn_di\" bpmnElement=\"DataObjectReference_19ho4qn\">\n        <dc:Bounds x=\"270\" y=\"27\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"243\" y=\"77\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_15163v2_di\" bpmnElement=\"DataInputAssociation_15163v2\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"303\" y=\"77\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"346\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_0mjyamj_di\" bpmnElement=\"DataObjectReference_0mjyamj\">\n        <dc:Bounds x=\"425\" y=\"27\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"398\" y=\"77\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0vv4s66_di\" bpmnElement=\"DataOutputAssociation_0vv4s66\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"390\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"430\" y=\"77\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1sle192_di\" bpmnElement=\"DataObjectReference_1sle192\">\n        <dc:Bounds x=\"705\" y=\"27\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"678\" y=\"77\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataOutputAssociation_0oao4uo_di\" bpmnElement=\"DataOutputAssociation_0oao4uo\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"537\" y=\"151\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"705\" y=\"62\" />\n      </bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"DataObjectReference_1gjgozp_di\" bpmnElement=\"DataObjectReference_1gjgozp\">\n        <dc:Bounds x=\"508\" y=\"19\" width=\"36\" height=\"50\" />\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"481\" y=\"69\" width=\"90\" height=\"20\" />\n        </bpmndi:BPMNLabel>\n      </bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"DataInputAssociation_1hlqf6m_di\" bpmnElement=\"DataInputAssociation_1hlqf6m\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"526\" y=\"69\" />\n        <di:waypoint xsi:type=\"dc:Point\" x=\"526\" y=\"151\" />\n      </bpmndi:BPMNEdge>\n    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n",
+            "name": "Clean Up",
+            "revision": 3
+        }
+    ],
+    "name": "Bachelor Project",
+    "revision": 17,
+    "startconditions": [
+        {
+            "_id": "575d3f3b712f113f0d62a503",
+            "mappings": [
+                {
+                    "_id": "575bf3e00a923fd4325f0f62",
+                    "class": "Docu",
+                    "attributes": [],
+                    "state": "old"
+                }
+            ],
+            "query": "SELECT * FROM Semester5Start"
+        }
+    ],
+    "terminationconditions": [
+        "Thesis[written], Code[clean], Docu[complete], Presentation[held]"
+    ]
+}
