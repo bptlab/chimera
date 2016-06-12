@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
@@ -63,7 +64,8 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
         DataAttributeWriter writer = new DataAttributeWriter(
                 this.getControlNodeId(), controlNodeInstanceId, this.getScenarioInstance());
         List<DataAttributeInstance> attributeInstances = new ArrayList<>(
-                this.getScenarioInstance().getDataAttributeInstances().values());
+                this.getScenarioInstance().getDataManager().getDataAttributeInstances());
+
         writer.writeDataAttributesFromJson(eventJson, attributeInstances);
     }
 

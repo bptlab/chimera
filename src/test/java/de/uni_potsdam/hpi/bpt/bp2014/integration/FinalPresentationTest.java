@@ -6,6 +6,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbCaseStart;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.ScenarioData;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json.StartQuery;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -73,10 +75,15 @@ public class FinalPresentationTest extends JerseyTest {
         ex("Find feature idea");
         ex("Plan and document in JIRA");
         ex("Write tests for feature");
+        tr("{\"PresentationDate\":\"13.06.2016\"}");
         ScenarioTestHelper.beginActivityByName("Create Feature", instance);
-        tr();
-        tr();
+        tr("{}");
         instance = new ScenarioInstance(1, 1);
+
+        List<String> attributes = instance.getDataManager().getDataAttributeInstances()
+                .stream().map(x -> x.getValue().toString()).collect(Collectors.toList());
+        assertTrue(attributes.contains("13.06.2016"));
+
         ex("Fix Tests");
         ex("Create Feature");
 
@@ -100,7 +107,7 @@ public class FinalPresentationTest extends JerseyTest {
         ScenarioTestHelper.executeActivityByName(name, instance);
     }
 
-    private void tr() {
-        ScenarioTestHelper.triggerEventInScenario(instance, base);
+    private void tr(String val) {
+        ScenarioTestHelper.triggerEventInScenario(instance, base, val);
     }
 }
