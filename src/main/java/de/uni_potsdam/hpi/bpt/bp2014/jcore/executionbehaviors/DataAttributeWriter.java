@@ -39,7 +39,12 @@ public class DataAttributeWriter {
     public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
         Map<Integer, String> idToValue = new HashMap<>();
         for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
-            int dataAttributeInstanceId = idToPathEntry.getKey();
+            int dataAttributeId = idToPathEntry.getKey();
+            // TODO safety check
+            int dataAttributeInstanceId = dataAttributeInstances.stream()
+                    .filter(x -> x.getDataAttributeId() == dataAttributeId)
+                    .map(x -> x.getId())
+                    .findFirst().get();
             String jsonPath = idToPathEntry.getValue();
             String value = JsonPath.read(json, jsonPath).toString();
             idToValue.put(dataAttributeInstanceId, value);
