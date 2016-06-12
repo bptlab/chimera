@@ -37,13 +37,13 @@
                 <!-- ./ ng-repeat -->
                 <br><br><br>
                 <!-- if outputsets are present display them with the option for termination -->
-                <div ng-show="instanceCtrl.activityOutputStates[activityInstance['activityid']].length">
+                <div ng-show="instanceCtrl.activityOutputStates[activityInstance['id']].length">
                     <div class="panel">
                         <div class="panel-header">
                             Please select a state for each output.
                         </div>
                         <div class="panel-body form-group">
-                            <div ng-repeat="(dclass, possiblestates) in instanceCtrl.activityOutputStates[activityInstance['activityid']] track by $index">
+                            <div ng-repeat="(dclass, possiblestates) in instanceCtrl.activityOutputStates[activityInstance['id']] track by $index">
                                 <label for="{{'select' + dclass}}">{{dclass}}</label>
                                 <select class="form-control" id="{{'select' + dclass}}" ng-model="lestate" ng-options="state for state in possiblestates"
                                         ng-change="instanceCtrl.selectState(dclass, lestate)">
@@ -61,7 +61,7 @@
             <!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <span ng-hide="instanceCtrl.activityOutputStates[activityInstance['activityid']]">
+                <span ng-hide="instanceCtrl.activityOutputStates[activityInstance['id']]">
                     <button type="button" ng-click="instanceCtrl.terminateActivity(activityInstance['id']);" data-dismiss="modal"
                             class="btn btn-danger">Terminate
                     </button>

@@ -12,7 +12,7 @@
                         <tr ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running']['activities']  track by $index">
                             <td>{{activityInstance['label']}}</td>
                             <td><a type="button" data-toggle="modal"
-                                   ng-click="instanceCtrl.getActivityOutputStates(activityInstance['activityid']);instanceCtrl.getActivityOutput(activityInstance['id'])"
+                                   ng-click="instanceCtrl.getActivityOutputStates(activityInstance['id']);instanceCtrl.getActivityOutput(activityInstance['id'])"
                                    data-target="{{'#modalTerminate' + activityInstance['id']}}"><i
                                     class="fa fa-check"></i></a></td>
 

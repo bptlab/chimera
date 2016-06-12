@@ -341,17 +341,18 @@ angular.module('jfrontend')
                 })
             };
 
-            this.getActivityOutputStates = function (activityID) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/" + activityID + "/output").
+            this.getActivityOutputStates = function (activityInstanceId) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activityinstance/" + activityInstanceId + "/output").
                 success(function (data) {
-                    instanceCtrl.activityOutputStates[activityID] = data;
+                    instanceCtrl.activityOutputStates[activityInstanceId] = data;
                 }).
                 error(function () {
                     console.log('Loading activity output states failed.');
                 });
             };
 
-            this.handleReferencedActivities = function (activityID) {
+            // TODO support referenced activities again
+            /* this.handleReferencedActivities = function (activityID) {
                 //if outputsets is already defined, we dont touch them
                 if (!instanceCtrl.scenario['outputsets']) {
                     instanceCtrl.scenario['outputsets'] = {};
@@ -385,7 +386,7 @@ angular.module('jfrontend')
                 error(function () {
                     console.log('request failed');
                 });
-            };
+            }; */
 
             this.refreshPage = function() {
                 instanceCtrl.initializeActivityInstances();
@@ -393,6 +394,7 @@ angular.module('jfrontend')
                 instanceCtrl.initializeActivitylogInstances();
                 instanceCtrl.initializeDataobjectlogInstances();
                 instanceCtrl.initializeDataobjectAttributelogInstances();
+                instanceCtrl.canTerminate();
             };
 
             // Event Listener for receiving events from the backend and refreshing the page
