@@ -66,11 +66,11 @@ public class XesExportTest extends JerseyTest {
         assertEquals(1, traces.getLength());
         Node trace = traces.item(0);
         NodeList logEntries = trace.getChildNodes();
-        // There should be 4 log entries init, running, terminated and init again because the
-        // fragment is restarted.
-        assertEquals(4, logEntries.getLength());
-
+        // There should be 4 history entries: init, running, terminated and init again because the
+        // fragment is restarted. Since we only log completed activities, there should be one entry left.
         System.out.println(XmlUtil.convertToString(doc));
+        assertEquals(1, logEntries.getLength());
+
     }
 
 

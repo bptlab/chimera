@@ -23,7 +23,10 @@ public class Trace {
         List<LogEntry> logEntries = new DbLogEntry().getLogEntriesForScenarioInstance(
                 this.scenarioInstanceId);
         for (LogEntry logEntry: logEntries) {
-            logEntry.appendToTrace(traceXml);
+            //ProM only cares about completed activities
+            if ("terminated".equals(logEntry.getNewValue())) {
+                logEntry.appendToTrace(traceXml);
+            }
         }
         rootElement.appendChild(traceXml);
     }
