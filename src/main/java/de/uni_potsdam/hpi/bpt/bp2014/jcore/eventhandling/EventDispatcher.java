@@ -58,7 +58,7 @@ public final class EventDispatcher {
             @PathParam("requestKey") String requestId,
             String eventJson) {
         AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
-        if (eventJson.isEmpty()) {
+        if (eventJson.isEmpty() || "{}".equals(eventJson)) {
             event.terminate();
         } else {
             event.terminate(eventJson);
@@ -141,7 +141,7 @@ public final class EventDispatcher {
                                           int scenarioInstanceId, int scenarioId) {
         String mappingKey = registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
         Date terminationDate = event.getTerminationDate();
-        assert (terminationDate.after(new Date()));
+        assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM (-243)";
         SchedulerFactory sf = new StdSchedulerFactory();
         try {
             Scheduler sched = sf.getScheduler();

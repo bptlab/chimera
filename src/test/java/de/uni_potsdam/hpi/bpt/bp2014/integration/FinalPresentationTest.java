@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FinalPresentationTest extends JerseyTest {
 
@@ -50,7 +51,7 @@ public class FinalPresentationTest extends JerseyTest {
     }
 
     @Test
-    public void testFullScenario() throws IOException, JAXBException {
+    public void testFullScenario() throws IOException, JAXBException, InterruptedException {
         String path = "src/test/resources/EventScenarios/FinalPresentation.json";
         String json = FileUtils.readFileToString(new File(path));
         ScenarioData scenarioData = new ScenarioData(json);
@@ -72,14 +73,27 @@ public class FinalPresentationTest extends JerseyTest {
         ex("Find feature idea");
         ex("Plan and document in JIRA");
         ex("Write tests for feature");
-        ex("Create Feature");
+        ScenarioTestHelper.beginActivityByName("Create Feature", instance);
         tr();
         tr();
+        instance = new ScenarioInstance(1, 1);
         ex("Fix Tests");
         ex("Create Feature");
 
         ex("Start hacking intensively");
+        ex("Prepare presentation");
+        ex("Hold presentation");
 
+        ex("Clean up code");
+        ex("Write documentation");
+
+        ex("Find title and write draft");
+        Thread.sleep(5000);
+        instance = new ScenarioInstance(1, 1);
+        ex("Review draft");
+        ex("Complete Thesis");
+
+        assertTrue(instance.checkTerminationCondition());
     }
 
     private void ex(String name) {

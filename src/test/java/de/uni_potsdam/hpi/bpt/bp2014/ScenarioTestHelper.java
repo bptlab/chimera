@@ -101,7 +101,7 @@ public class ScenarioTestHelper {
     }
     public static int triggerEventInScenario(
             ScenarioInstance scenarioInstance, WebTarget base) {
-        return triggerEventInScenario(scenarioInstance, base, "");
+        return triggerEventInScenario(scenarioInstance, base, "{}");
     }
 
     public static int triggerEventInScenario(

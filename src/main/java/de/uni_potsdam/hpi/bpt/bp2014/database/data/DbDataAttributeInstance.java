@@ -126,10 +126,10 @@ public class DbDataAttributeInstance extends DbObject {
 		return this.executeStatementReturnsInt(sql, "dataattribute_id");
 	}
 
-    public List<Integer> getAttributeIdsForDataObject(int dataobjectId) {
-        String getDataAttributes = "SELECT dataattribute_id FROM dataattributeinstance " +
+    public List<Integer> getAttributeInstanceIdsForDataObject(int dataobjectId) {
+        String getDataAttributes = "SELECT id FROM dataattributeinstance " +
                 "WHERE dataobject_id = %d;";
         getDataAttributes = String.format(getDataAttributes, dataobjectId);
-        return new DbObject().executeStatementReturnsListInt(getDataAttributes, "dataattribute_id");
+        return new DbObject().executeStatementReturnsListInt(getDataAttributes, "id");
     }
 }

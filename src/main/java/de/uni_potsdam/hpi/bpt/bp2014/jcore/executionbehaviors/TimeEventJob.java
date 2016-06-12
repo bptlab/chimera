@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors;
 
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -17,7 +18,9 @@ public class TimeEventJob implements Job {
         int scenarioId = data.getIntValue("scenarioId");
         int scenarioInstanceId = data.getIntValue("scenarioInstanceId");
         String mappingKey = data.getString("mappingKey");
+        AbstractEvent timerEvent = EventDispatcher.findEvent(mappingKey, scenarioId, scenarioInstanceId);
         EventDispatcher.unregisterEvent(
-                EventDispatcher.findEvent(mappingKey, scenarioId, scenarioInstanceId));
+                timerEvent);
+        timerEvent.terminate();
     }
 }

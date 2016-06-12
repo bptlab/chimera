@@ -63,7 +63,7 @@ public class DataObject {
         // Load data attribute instances from database
         DbDataAttributeInstance dbDataAttributeInstance = new DbDataAttributeInstance();
         List<Integer> datattributeInstances = dbDataAttributeInstance
-                .getAttributeIdsForDataObject(dataObjectId);
+                .getAttributeInstanceIdsForDataObject(dataObjectId);
         for (Integer dataAttributeInstanceId : datattributeInstances) {
             this.dataAttributeInstanceMap.put(dataAttributeInstanceId, new DataAttributeInstance(
                     dataAttributeInstanceId, this));
