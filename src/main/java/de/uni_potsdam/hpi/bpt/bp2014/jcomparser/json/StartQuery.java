@@ -91,14 +91,19 @@ public class StartQuery {
             int stateDbId = belongingDataClass.getStateToDatabaseId().get(state);
 
             Connector connector = new Connector();
-            for (Map.Entry<String, String> entry : this.attributeNameToJsonPath.entrySet()) {
-                Optional<DataAttribute> dataAttribute = belongingDataClass
-                        .getDataAttributeByName(entry.getKey());
-                assert dataAttribute.isPresent(): "Referenced invalid data attribute";
-                int attributeDbId = dataAttribute.get().getAttributeDatabaseId();
-                String jsonPath = entry.getValue();
-                connector.insertStartPart(
-                        queryId, dataClassDbId, stateDbId, attributeDbId, jsonPath);
+            if (this.attributeNameToJsonPath.size() == 0) {
+                // TODO do not insert -1 and null but find a better way for start queries without attributes
+                connector.insertStartPart(queryId, dataClassDbId, stateDbId, -1, "null");
+            } else {
+                for (Map.Entry<String, String> entry : this.attributeNameToJsonPath.entrySet()) {
+                    Optional<DataAttribute> dataAttribute = belongingDataClass
+                            .getDataAttributeByName(entry.getKey());
+                    assert dataAttribute.isPresent() : "Referenced invalid data attribute";
+                    int attributeDbId = dataAttribute.get().getAttributeDatabaseId();
+                    String jsonPath = entry.getValue();
+                    connector.insertStartPart(
+                            queryId, dataClassDbId, stateDbId, attributeDbId, jsonPath);
+                }
             }
         }
     }

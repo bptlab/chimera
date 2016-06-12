@@ -1,5 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
+import org.apache.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,8 @@ import java.util.Map;
  * Represents the start query for one data object.
  */
 public class StartQueryPart {
+    private static final Logger log = Logger.getLogger(StartQueryPart.class);
+
     private int startStateId;
     private int dataClassId;
     private Map<Integer, String> attributeIdToJsonPath;
@@ -36,7 +40,11 @@ public class StartQueryPart {
         return attributeIdToJsonPath;
     }
 
-    public void addAttributeMapping(int attribute, String jsonPath) {
-        this.attributeIdToJsonPath.put(attribute, jsonPath);
+    public void addAttributeMapping(int attributeId, String jsonPath) {
+        if (attributeId < 0) {
+            log.warn("Start query part attribute mapping is empty.");
+        } else {
+            this.attributeIdToJsonPath.put(attributeId, jsonPath);
+        }
     }
 }

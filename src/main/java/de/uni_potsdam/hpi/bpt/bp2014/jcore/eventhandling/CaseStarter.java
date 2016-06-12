@@ -83,8 +83,10 @@ public class CaseStarter {
 
 
 
-    public boolean hasMapping() {
-        return !this.startQueryParts.isEmpty();
+    private boolean hasMapping() {
+        return this.startQueryParts.stream()
+                .filter(x -> x.getAttributeIdToJsonPath().size() > 0)
+                .findAny().isPresent();
     }
 
 
