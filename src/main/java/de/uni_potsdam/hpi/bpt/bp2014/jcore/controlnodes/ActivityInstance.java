@@ -160,7 +160,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public boolean begin() {
         DataManager dataManager = scenarioInstance.getDataManager();
         List<DataObject> dataObjects = dataManager.getAvailableInput(
-                this.getControlNodeInstanceId());
+                this.getControlNodeId());
         Set<Integer> dataclassIds = dataObjects.stream().map(DataObject::getDataClassId)
                 .collect(Collectors.toSet());
         assert dataObjects.size() == dataclassIds.size(): "Data object selection underspecified";

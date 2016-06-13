@@ -313,16 +313,16 @@ angular.module('jfrontend')
                 });
             };
             
-            this.getActivityInput = function(activityInstanceId) {
+            this.getActivityInput = function(activityId) {
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id 
-                         + '/instance/' + $routeParams.instanceId + '/activity/' + activityInstanceId + '/availableInput')
+                         + '/instance/' + $routeParams.instanceId + '/activity/' + activityId + '/availableInput')
                 .success(function (data) {
-                    instanceCtrl.availableInput[activityInstanceId] = {};
+                    instanceCtrl.availableInput[activityId] = {};
                     data.forEach(function(dataobject) {
-                        if (!instanceCtrl.availableInput[activityInstanceId].hasOwnProperty(dataobject['label'])) {
-                            instanceCtrl.availableInput[activityInstanceId][dataobject['label']] = [];
+                        if (!instanceCtrl.availableInput[activityId].hasOwnProperty(dataobject['label'])) {
+                            instanceCtrl.availableInput[activityId][dataobject['label']] = [];
                         }
-                        instanceCtrl.availableInput[activityInstanceId][dataobject['label']].push(dataobject);
+                        instanceCtrl.availableInput[activityId][dataobject['label']].push(dataobject);
                     });
                 })
                 .error(function() {

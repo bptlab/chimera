@@ -196,13 +196,13 @@ public class DataDependencyRestService extends AbstractRestService {
     @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/availableInput")
     public Response getAvailableInput(@PathParam("scenarioId") int scenarioId,
                                       @PathParam("instanceId") int scenarioInstanceId,
-                                      @PathParam("activityId") int activityInstanceId) {
+                                      @PathParam("activityId") int activityId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
         ScenarioInstance scenarioInstance = executionService.getScenarioInstance(
                 scenarioInstanceId);
         List<DataObject> possibleInputs = scenarioInstance.getDataManager()
-                .getAvailableInput(activityInstanceId);
+                .getAvailableInput(activityId);
         List<DataObjectJaxBean> outputBeans = possibleInputs.stream()
                 .map(x -> buildDataObjectJaxBean(x, executionService))
                 .collect(Collectors.toList());
