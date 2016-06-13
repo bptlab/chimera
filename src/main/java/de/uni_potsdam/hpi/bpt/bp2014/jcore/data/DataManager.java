@@ -54,13 +54,10 @@ public class DataManager {
      * @param activityInstanceId Id of the activity instance
      * @return List of data objects
      */
-    public List<DataObject> getAvailableInput(int activityInstanceId) {
+    public List<DataObject> getAvailableInput(int activityId) {
         DbDataConditions conditions = new DbDataConditions();
-        ScenarioUtil util = new ScenarioUtil();
-        ActivityInstance activityInstance = util.getActivityById(
-                scenarioInstance, activityInstanceId);
         Map<String, Set<String>> input = conditions.loadInputSets(
-                activityInstance.getControlNodeId());
+                activityId);
         List<DataObject> dataobjectsFulfillingInputCondition = new ArrayList<>();
         for (DataObject dataObject : this.dataObjects) {
             if (input.containsKey(dataObject.getName())) {
