@@ -22,7 +22,8 @@
                         <td>
                         <button ng-if="instanceCtrl.instanceDetails.canTerminate" ng-click="instanceCtrl.terminateInstance();"
                                 data-dismiss="modal" class="taskcompleted btn btn-danger">
-                            <a ng-href="#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}">Terminate</a>
+                            <a ng-href="#/scenario/{{instanceCtrl.instanceDetails['scenario_id']}}"
+                               style="color:white;">Terminate</a>
                         </button>
                         </td>
                     </tr>
