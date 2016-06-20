@@ -40,13 +40,14 @@ public abstract class AbstractOutgoingBehavior {
 		case "Activity":
 		case "EmailTask":
 		case "WebServiceTask":
+		case "SendTask":
 			controlNodeInstance = new ActivityInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
             new DbLogEntry().logActivity(controlNodeInstance.getControlNodeInstanceId(),
                     "init", this.getScenarioInstance().getScenarioInstanceId());
             break;
 		case "EndEvent":
-			controlNodeInstance = new EventInstance(
+			controlNodeInstance = new EndEvent(
 					fragmentInstanceId, scenarioInstance, "EndEvent");
 			break;
 		case "XOR":
@@ -57,10 +58,13 @@ public abstract class AbstractOutgoingBehavior {
 			controlNodeInstance = new AndGatewayInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
 			break;
-        case "IntermediateEvent":
+        case "IntermediateCatchEvent":
             controlNodeInstance = new IntermediateEvent(
 					controlNodeId, fragmentInstanceId, scenarioInstance);
             break;
+		case "IntermediateThrowEvent":
+			controlNodeInstance = new IntermediateThrowEvent(
+					controlNodeId, fragmentInstanceId, scenarioInstance);
 		case "ReceiveActivity":
 			controlNodeInstance = new ReceiveActivity(
 					controlNodeId, fragmentInstanceId, scenarioInstance);

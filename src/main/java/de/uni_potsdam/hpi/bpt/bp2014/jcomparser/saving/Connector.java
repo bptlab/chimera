@@ -225,6 +225,11 @@ public class Connector extends DbObject {
         this.executeInsertStatement(filledOutQuery);
     }
 
+	public void saveSendEvent(int controlNodeId) {
+		String sql = "INSERT INTO sendevent (controlnode_id) VALUES %d;";
+		this.executeInsertStatement(String.format(sql, controlNodeId));
+	}
+
     /**
      * Boundary events also have an attachedtoref attribute.
      * @param eventtype type of the event.

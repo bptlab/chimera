@@ -33,7 +33,7 @@ public class EventFactory {
         DbControlNode dbControlNode = new DbControlNode();
         String eventType = dbControlNode.getType(controlNodeId);
         switch (eventType) {
-            case "IntermediateEvent": return new IntermediateEvent(
+            case "IntermediateCatchEvent": return new IntermediateEvent(
                     controlNodeId, fragmentInstanceId, this.scenarioInstance);
             case "BoundaryEvent": return new BoundaryEvent(
                     controlNodeId, fragmentInstanceId, this.scenarioInstance);

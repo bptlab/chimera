@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class IntermediateEventTest {
+public class IntermediateCatchEventTest {
     private String testString = "<bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_1le8d7a\" \n" +
             "griffin:eventquery = \"querY\" name=\"Fell asleep while drinking coffee\"> \n" +
             "<bpmn:incoming>SequenceFlow_12g1b5j</bpmn:incoming> \n" +
@@ -24,9 +24,9 @@ public class IntermediateEventTest {
     public void testEventDeserialization() {
         Document doc = XmlTestHelper.getDocumentFromXmlString(testString);
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(IntermediateEvent.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(IntermediateCatchEvent.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            IntermediateEvent event = (IntermediateEvent) jaxbUnmarshaller.unmarshal(doc);
+            IntermediateCatchEvent event = (IntermediateCatchEvent) jaxbUnmarshaller.unmarshal(doc);
             assertEquals("IntermediateCatchEvent_1le8d7a", event.getId());
             assertEquals(1,event.getIncoming().size());
             assertEquals("SequenceFlow_12g1b5j", event.getIncoming().get(0));

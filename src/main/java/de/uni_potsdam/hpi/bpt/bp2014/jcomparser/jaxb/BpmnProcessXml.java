@@ -41,11 +41,17 @@ public class BpmnProcessXml {
     @XmlElement(name = "bpmn:receiveTask")
     private List<ReceiveTask> receiveTasks = new ArrayList<>();
 
+    @XmlElement(name = "bpmn:sendTask")
+    private List<SendTask> sendTasks = new ArrayList<>();
+
     @XmlElement(name = "bpmn:dataObjectReference")
     private List<DataNode> dataNodes = new ArrayList<>();
 
     @XmlElement(name = "bpmn:intermediateCatchEvent")
-    private List<IntermediateEvent> intermediateEvents = new ArrayList<>();
+    private List<IntermediateCatchEvent> intermediateCatchEvents = new ArrayList<>();
+
+    @XmlElement(name = "bpmn:intermediateThrowEvent")
+    private List<IntermediateThrowEvent> intermediateThrowEvents = new ArrayList<>();
 
     @XmlElement(name = "bpmn:eventBasedGateway")
     private List<EventBasedGateway> eventBasedGateways = new ArrayList<>();
@@ -109,12 +115,12 @@ public class BpmnProcessXml {
         this.dataNodes = dataNodes;
     }
 
-    public List<IntermediateEvent> getIntermediateEvents() {
-        return intermediateEvents;
+    public List<IntermediateCatchEvent> getIntermediateCatchEvents() {
+        return intermediateCatchEvents;
     }
 
-    public void setIntermediateEvents(List<IntermediateEvent> intermediateEvents) {
-        this.intermediateEvents = intermediateEvents;
+    public void setIntermediateCatchEvents(List<IntermediateCatchEvent> intermediateCatchEvents) {
+        this.intermediateCatchEvents = intermediateCatchEvents;
     }
 
     public String getId() {

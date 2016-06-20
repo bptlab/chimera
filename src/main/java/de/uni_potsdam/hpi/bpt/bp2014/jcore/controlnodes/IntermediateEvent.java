@@ -17,7 +17,7 @@ public class IntermediateEvent extends AbstractEvent {
 
     @Override
     public String getType() {
-        return "IntermediateEvent";
+        return "IntermediateCatchEvent";
     }
 
 

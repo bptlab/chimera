@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  */
-public class IntermediateEventTest {
+public class IntermediateCatchEventTest {
 	@Test @Ignore
 	public void testScenario() throws JAXBException {
         // TODO implement

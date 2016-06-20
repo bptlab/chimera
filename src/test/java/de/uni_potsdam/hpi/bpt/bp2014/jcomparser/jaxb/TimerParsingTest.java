@@ -41,9 +41,9 @@ public class TimerParsingTest {
     public void testEventDeserialization() {
         Document doc = XmlTestHelper.getDocumentFromXmlString(timerDefinition);
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(IntermediateEvent.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(IntermediateCatchEvent.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            IntermediateEvent event = (IntermediateEvent) jaxbUnmarshaller.unmarshal(doc);
+            IntermediateCatchEvent event = (IntermediateCatchEvent) jaxbUnmarshaller.unmarshal(doc);
             TimerDefinition timer = event.getTimer();
             assertEquals("PT1M30S", timer.getTimerDuration());
         } catch (JAXBException e) {

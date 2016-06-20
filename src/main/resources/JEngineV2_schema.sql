@@ -540,6 +540,16 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sendevent`
+--
+
+CREATE TABLE IF NOT EXISTS `startevent` (
+  `controlnode_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `startquery`
 --
 

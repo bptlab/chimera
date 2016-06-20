@@ -38,6 +38,13 @@ public class DbDataClass extends DbObject {
         return classToAttributeIds.get(classId);
     }
 
+    public boolean isEvent(int classId) {
+        String sql = "SELECT is_event FROM dataclass WHERE id = %d;";
+        return executeStatementReturnsBoolean(
+                String.format(sql, classId),
+                "is_event");
+    }
+
     public Map<Integer, List<Integer>> getDataAttributesPerClass() {
         Map<Integer, List<Integer>> classToAttributeIds = new HashMap<>();
         List<Integer> dataClassIds = new DbObject()

@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.NONE)
 public class EndEvent extends AbstractDataControlNode {
 
+    @XmlElement(name = "bpmn:messageDefinition")
+    private MessageDefinition message;
 
     @Override
     public int save() {
@@ -19,8 +21,9 @@ public class EndEvent extends AbstractDataControlNode {
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "EndEvent", this.getFragmentId(), this.getId());
 
-        connector.insertEventIntoDatabase("EndEvent", "None",
-                this.fragmentId, this.getId(), this.databaseId);
+        if (message != null) {
+            connector.saveSendEvent(databaseId);
+        }
 
         return this.databaseId;
     }

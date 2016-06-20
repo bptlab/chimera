@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement(name = "bpmn:intermediateCatchEvent")
 @XmlAccessorType(XmlAccessType.NONE)
-public class IntermediateEvent extends AbstractDataControlNode {
+public class IntermediateCatchEvent extends AbstractDataControlNode {
     /*"<bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_1le8d7a\"
                 griffin:eventquery="querY" name="Fell asleep while drinking coffee">\n" +
             "      <bpmn:incoming>SequenceFlow_12g1b5j</bpmn:incoming>\n" +
@@ -39,9 +39,9 @@ public class IntermediateEvent extends AbstractDataControlNode {
     private void saveIntermediateWithoutTimer() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNodeIntoDatabase(
-                this.getName(), "IntermediateEvent", this.fragmentId, this.getId());
+                this.getName(), "IntermediateCatchEvent", this.fragmentId, this.getId());
 
-        connector.insertEventIntoDatabase("IntermediateEvent", this.eventQuery,
+        connector.insertEventIntoDatabase("IntermediateCatchEvent", this.eventQuery,
                 this.fragmentId, this.getId(), this.databaseId);
     }
 
