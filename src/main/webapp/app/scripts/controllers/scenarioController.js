@@ -147,5 +147,11 @@ angular.module('jfrontend')
                     });
                 }
             };
+            
+            source.addEventListener('refresh', function(event) {
+                controller.getInstancesOfScenario(controller.currentScenario['id']);
+                controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
+            });
+            
         }]
     );
