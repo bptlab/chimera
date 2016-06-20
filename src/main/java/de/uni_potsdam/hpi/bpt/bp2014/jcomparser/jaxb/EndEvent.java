@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.NONE)
 public class EndEvent extends AbstractDataControlNode {
 
-    @XmlElement(name = "bpmn:messageDefinition")
+    @XmlElement(name = "bpmn:messageEventDefinition")
     private MessageDefinition message;
 
     @Override

@@ -125,6 +125,9 @@ public class ExecutionService /*implements Runnable*/ {
 		if (scenarioInstanceMap.containsKey(scenarioInstanceId)) {
 			log.info("Open existing scenario instance with scenarioId=" + scenarioId
 					+ " and scenarioInstanceId=" + scenarioInstanceId + ".");
+			// refresh data objects
+			ScenarioInstance instance = scenarioInstanceMap.get(scenarioInstanceId);
+			instance.getDataManager().loadFromDatabase();
 		} else if (existScenarioInstance(scenarioId, scenarioInstanceId)) {
 			log.info("Load existing scenario instance with scenarioId=" + scenarioId
 					+ " and scenarioInstanceId="

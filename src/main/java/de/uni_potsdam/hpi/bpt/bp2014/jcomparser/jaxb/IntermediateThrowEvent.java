@@ -16,8 +16,6 @@ public class IntermediateThrowEvent extends AbstractDataControlNode {
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "IntermediateThrowEvent", this.fragmentId, this.getId());
 
-        connector.saveSendEvent(databaseId);
-
         return databaseId;
     }
 }

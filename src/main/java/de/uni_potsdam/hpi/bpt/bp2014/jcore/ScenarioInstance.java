@@ -4,6 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
@@ -291,7 +292,8 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-        for (AbstractControlNodeInstance controlNodeInstance : enabledControlNodeInstances) {
+		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(enabledControlNodeInstances);
+        for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class
 					&& ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
 				((ActivityInstance) controlNodeInstance).begin();

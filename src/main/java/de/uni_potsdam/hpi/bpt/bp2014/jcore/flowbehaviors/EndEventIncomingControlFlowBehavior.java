@@ -8,7 +8,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventSpawner;
  * Represents the incoming behavior of end events.
  */
 public class EndEventIncomingControlFlowBehavior extends AbstractIncomingBehavior {
-	private final String type;
 	private final boolean isSendEvent;
 	private EventSpawner eventSpawner;
 
@@ -18,14 +17,12 @@ public class EndEventIncomingControlFlowBehavior extends AbstractIncomingBehavio
 	 *
 	 * @param controlNodeInstance This is an instance of the class AbstractControlNodeInstance.
 	 * @param scenarioInstance    This is an instance of the class ScenarioInstance.
-	 * @param type                This is the type of the event.
 	 */
 	public EndEventIncomingControlFlowBehavior(AbstractControlNodeInstance controlNodeInstance,
-											   ScenarioInstance scenarioInstance, String type,
+											   ScenarioInstance scenarioInstance,
 											   boolean isSendEvent) {
 		this.setControlNodeInstance(controlNodeInstance);
 		this.setScenarioInstance(scenarioInstance);
-		this.type = type;
 		this.isSendEvent = isSendEvent;
 		if (isSendEvent) {
 			this.eventSpawner = new EventSpawner(scenarioInstance);
@@ -38,16 +35,5 @@ public class EndEventIncomingControlFlowBehavior extends AbstractIncomingBehavio
 		}
 		getScenarioInstance().restartFragment(this.getControlNodeInstance()
 				.getFragmentInstanceId());
-	}
-
-    /*
-	 * Getter
-     */
-
-	/**
-	 * @return the type of behavior.
-	 */
-	public String getType() {
-		return type;
 	}
 }

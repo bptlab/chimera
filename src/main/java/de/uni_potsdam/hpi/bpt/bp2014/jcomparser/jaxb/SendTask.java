@@ -16,8 +16,6 @@ public class SendTask extends AbstractDataControlNode {
         this.databaseId = connector.insertControlNodeIntoDatabase(
                 this.getName(), "SendTask", this.getFragmentId(), this.getId());
 
-        connector.saveSendEvent(databaseId);
-
         return this.databaseId;
     }
 }

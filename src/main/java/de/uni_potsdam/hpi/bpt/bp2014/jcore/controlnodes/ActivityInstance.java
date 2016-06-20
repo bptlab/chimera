@@ -79,6 +79,15 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 							"SendTask",
 							"init");
 			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
+			break;
+		case "IntermediateThrowEvent":
+			dbActivityInstance
+					.createNewActivityInstance(
+							getControlNodeInstanceId(),
+							"IntermediateThrowEvent",
+							"init");
+			dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
+			break;
 		default:
 			dbActivityInstance
 					.createNewActivityInstance(
@@ -148,11 +157,13 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			this.isAutomaticTask = true;
 			break;
 		case "SendTask":
+		case "IntermediateThrowEvent":
 			this.taskExecutionBehavior =
 					new SendTaskExecutionBehavior(
 							getControlNodeInstanceId(),
 							scenarioInstance, this);
 			this.isAutomaticTask = true;
+			break;
 		//Added additional case: activities can be terminated every time
 		case "Activity":
 			this.setCanTerminate(true);

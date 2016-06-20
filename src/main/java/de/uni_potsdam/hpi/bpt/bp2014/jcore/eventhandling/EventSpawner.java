@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 import org.apache.log4j.Logger;
@@ -24,7 +25,8 @@ public class EventSpawner {
 
     private ScenarioInstance instance;
 
-    private static final String EVENT_URL = PropertyLoader.getProperty("unicorn.url");
+    private static final String EVENT_URL = PropertyLoader.getProperty("unicorn.url")
+            + PropertyLoader.getProperty("unicorn.path.deploy");
     private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
 
     private static final Logger log = Logger.getLogger(EventSpawner.class);
@@ -41,7 +43,9 @@ public class EventSpawner {
     }
 
     private DataObject getInputObject(int controlNodeId) {
-        List<DataObject> possibleInputs = instance.getDataManager()
+        DataManager manager = instance.getDataManager();
+        manager.loadFromDatabase();
+        List<DataObject> possibleInputs = manager
                 .getAvailableInput(controlNodeId);
         assert possibleInputs.size() == 1 : "There is only one input object allowed for send events/tasks.";
         DataObject inputObject = possibleInputs.get(0);
@@ -68,7 +72,7 @@ public class EventSpawner {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = db.newDocument();
 
-            Element rootElement = doc.createElement(eventName);
+            Element rootElement = createRootElement(doc, eventName);
             doc.appendChild(rootElement);
             appendAttributes(doc, rootElement, attributes);
 
@@ -88,6 +92,15 @@ public class EventSpawner {
             log.warn("Event was not sent correctly. Response status: " + response.getStatus());
         }
         return response;
+    }
+
+    // <FoilEvent xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FoilEvent.xsd">
+    private Element createRootElement(Document doc, String eventName) {
+        Element ele = doc.createElement(eventName);
+        ele.setAttribute("xmlns", "");
+        ele.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        ele.setAttribute("xsi:noNamespaceSchemaLocation", eventName + ".xsd");
+        return ele;
     }
 
     private void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {

@@ -226,7 +226,7 @@ public class Connector extends DbObject {
     }
 
 	public void saveSendEvent(int controlNodeId) {
-		String sql = "INSERT INTO sendevent (controlnode_id) VALUES %d;";
+		String sql = "INSERT INTO sendevent (controlnode_id) VALUES (%d);";
 		this.executeInsertStatement(String.format(sql, controlNodeId));
 	}
 
