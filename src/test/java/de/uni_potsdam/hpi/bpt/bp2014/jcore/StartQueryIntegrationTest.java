@@ -93,4 +93,31 @@ public class StartQueryIntegrationTest extends JerseyTest {
         json.put("a", a);
         return json;
     }
+
+    @Test
+    public void testStartQueryDemoPaper() throws IOException, JAXBException {
+        String path = "src/test/resources/Scenarios/DemoPaper.json";
+        String json = FileUtils.readFileToString(new File(path));
+        ScenarioData scenarioData = new ScenarioData(json);
+        scenarioData.save();
+
+        DbCaseStart caseStart = new DbCaseStart();
+        List<StartQuery> startQueries =  scenarioData.getStartQueries();
+        StartQuery startQuery = startQueries.get(0);
+        String requestKey = caseStart.getEventKey(startQuery.getId());
+        String triggerPath = String.format("casestart/%s", requestKey);
+        Response triggerEvent = base.path(triggerPath).request().post(
+                Entity.json(getDemoPaperJson().toString()));
+        assertEquals(200, triggerEvent.getStatus());
+
+
+    }
+
+    private JSONObject getDemoPaperJson() {
+        JSONObject json = new JSONObject();
+        json.put("fieldId", 21);
+        json.put("date", "blub");
+        return json;
+    }
+
 }

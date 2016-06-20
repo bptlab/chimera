@@ -56,20 +56,28 @@ public class CaseStarter {
         }
 
         Map<Integer, DataAttributeInstance> idToDataAttributeInstance = dataAttributes
-                .stream().collect(Collectors.toMap(DataAttributeInstance::getId, x -> x));
+                .stream()
+                .collect(Collectors.toMap(DataAttributeInstance::getDataAttributeId, x -> x));
         for (StartQueryPart part : this.startQueryParts) {
             initializeFromPart(part, scenarioInstanceId, json, idToDataAttributeInstance);
         }
     }
 
+    /**
+     *
+     * @param part
+     * @param scenarioInstanceId
+     * @param json
+     * @param idToDataAttributeInstance
+     */
     private void initializeFromPart(StartQueryPart part, int scenarioInstanceId, String json,
                                     Map<Integer, DataAttributeInstance> idToDataAttributeInstance) {
         for (Map.Entry<Integer, String>
                 idToPathEntry : part.getAttributeIdToJsonPath().entrySet()) {
-            int dataAttributeInstanceId = idToPathEntry.getKey();
-            DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeInstanceId);
+            int dataAttributeId = idToPathEntry.getKey();
+            DataAttributeInstance instance = idToDataAttributeInstance.get(dataAttributeId);
             String jsonPath = idToPathEntry.getValue();
-            String value = JsonPath.read(json, jsonPath);
+            String value = JsonPath.read(json, jsonPath).toString();
 
             if (instance.isValueAllowed(value)) {
                 instance.setValue(value);
