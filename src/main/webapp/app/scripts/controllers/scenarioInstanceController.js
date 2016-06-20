@@ -94,7 +94,7 @@ angular.module('jfrontend')
             };
             // activitylogs
             this.initializeActivitylogInstances = function () {
-                instanceCtrl.instanceDetails.dataobjects = {};
+                instanceCtrl.instanceDetails.activitylogs = {};
                 $http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/activities/").
@@ -107,7 +107,7 @@ angular.module('jfrontend')
             };
             // dataobjectlogs
             this.initializeDataobjectlogInstances = function () {
-                instanceCtrl.instanceDetails.dataobjects = {};
+                instanceCtrl.instanceDetails.dataobjectlogs = {};
                 $http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/dataobjects/").
@@ -121,7 +121,7 @@ angular.module('jfrontend')
 
             // dataobjectattributeslogs
             this.initializeDataobjectAttributelogInstances = function () {
-                instanceCtrl.instanceDetails.dataobjects = {};
+                instanceCtrl.instanceDetails.dataobjectAttributelogs = {};
                 $http.get(JEngine_Server_URL + "/" + JHistory_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
                     "/attributes/").

@@ -8,12 +8,14 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Name</th>
                         <th>State</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
+                        <td>{{value['id']}}</td>
                         <td>{{value['label']}}</td>
                         <td>{{value['state']}}</td>
                     </tr>
