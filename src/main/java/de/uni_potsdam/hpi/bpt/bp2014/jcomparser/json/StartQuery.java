@@ -21,7 +21,7 @@ public class StartQuery {
     public StartQuery(JSONObject startQueryJson) {
         this.id = UUID.randomUUID().toString().replaceAll("\\-", "");
         this.query = startQueryJson.getString("query");
-        JSONArray pathMappings = startQueryJson.getJSONArray("mappings");
+        JSONArray pathMappings = startQueryJson.getJSONArray("dataclasses");
         for (int i = 0; i < pathMappings.length(); i++) {
             JSONObject singleMapping = pathMappings.getJSONObject(i);
             queryParts.add(new StartPart(singleMapping, id));
@@ -68,12 +68,12 @@ public class StartQuery {
 
         public StartPart(JSONObject jsonObject, String queryId) {
             this.queryId = queryId;
-            dataClass = jsonObject.getString("class");
+            dataClass = jsonObject.getString("classname");
             state = jsonObject.getString("state");
-            JSONArray attributeMappings = jsonObject.getJSONArray("attributes");
+            JSONArray attributeMappings = jsonObject.getJSONArray("mapping");
             for (int i = 0; i < attributeMappings.length(); i++) {
                 JSONObject attrMapping = attributeMappings.getJSONObject(i);
-                String attrName = attrMapping.getString("name");
+                String attrName = attrMapping.getString("attr");
                 String jsonPath = attrMapping.getString("path");
                 attributeNameToJsonPath.put(attrName, jsonPath);
             }
