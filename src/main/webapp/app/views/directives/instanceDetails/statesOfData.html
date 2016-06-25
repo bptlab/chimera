@@ -14,10 +14,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="(key, value) in instanceCtrl.instanceDetails.dataobjects['results'] track by $index">
-                        <td>{{value['id']}}</td>
-                        <td>{{value['label']}}</td>
-                        <td>{{value['state']}}</td>
+                    <tr ng-repeat="dataobject in instanceCtrl.instanceDetails.dataobjects['results']">
+                        <td>{{dataobject['id']}}</td>
+                        <td>{{dataobject['label']}}</td>
+                        <td>{{dataobject['state']}}</td>
                     </tr>
                     </tbody>
                 </table>

@@ -442,7 +442,7 @@ public class ExecutionService /*implements Runnable*/ {
         DataManager dataManager = scenarioInstance.getDataManager();
 
 		return dataManager.getDataObjects().stream()
-                .map(DataObject::getDataClassId)
+                .map(DataObject::getId)
                 .collect(Collectors.toList());
 	}
 
