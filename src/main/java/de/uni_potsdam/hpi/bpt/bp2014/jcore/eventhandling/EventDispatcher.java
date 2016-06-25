@@ -282,4 +282,16 @@ public final class EventDispatcher {
             logger.debug("Could not unregister Query");
         }
     }
+
+    public static void unregisterStartQuery(int scenarioId) {
+        DbCaseStart caseStart = new DbCaseStart();
+        List<String> requestKeys = caseStart.getRequestKeys(scenarioId);
+        List<String> notificationRuleIds = requestKeys.stream()
+                .map(x -> caseStart.getNotificationRuleId(scenarioId, x))
+                .collect(Collectors.toList());
+
+        notificationRuleIds.forEach(EventDispatcher::unregisterNotificationRule);
+
+        requestKeys.forEach(caseStart::deleteCaseMapping);
+    }
 }

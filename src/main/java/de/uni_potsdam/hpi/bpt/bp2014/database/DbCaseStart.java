@@ -42,7 +42,7 @@ public class DbCaseStart extends DbEventMapping {
         return executeStatementReturnsString(sql, "eventkey");
     }
 
-    public String getNotificationPath(int scenarioId, String requestKey) {
+    public String getNotificationRuleId(int scenarioId, String requestKey) {
         String sql = "SELECT * FROM casestart WHERE eventkey = '%s' AND scenario_id = %d";
         sql = String.format(sql, requestKey, scenarioId);
         return this.executeStatementReturnsString(sql, "notificationrule_id");
