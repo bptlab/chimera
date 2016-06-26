@@ -18,13 +18,8 @@ public class Execution {
 	 */
 	public boolean deleteScenario(int scenarioId) throws Exception {
 		DbConfigurationConnection conn = new DbConfigurationConnection();
-		List<Integer> runningInstances = conn.getRunningScenarioInstances(scenarioId);
-		if (runningInstances.size() > 0) {
-			return false;
-		} else {
-			conn.deleteScenario(scenarioId);
-			EventDispatcher.unregisterStartQuery(scenarioId);
-			return true;
-		}
+		conn.deleteScenario(scenarioId);
+		EventDispatcher.unregisterStartQuery(scenarioId);
+		return true;
 	}
 }
