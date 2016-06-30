@@ -1,23 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import com.google.gson.Gson;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONArray;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.log4j.Logger;
 
 /**
  * This class represents an EventType.
@@ -33,7 +25,12 @@ public class EventType extends DataClass {
     public EventType(final String element) {
         super(element);
         this.isEvent = 1;
+    }
+
+    @Override
+    public int save(int scenarioId) {
         registerEventType();
+        return super.save(scenarioId);
     }
 
     /**
@@ -65,7 +62,7 @@ public class EventType extends DataClass {
         client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
         client.property(ClientProperties.READ_TIMEOUT, 1000);
         try {
-            Response response = client.target(getRegistrationUrl()).request()
+            Response response = client.target(REGISTRATION_URL).request()
                     .post(Entity.json(jsonString));
             if (response.getStatus() != 204) {
                 logger.warn("Unexpected response while registering Event Type. Status:"
@@ -77,6 +74,7 @@ public class EventType extends DataClass {
      }
 
     private String generateXsd() {
+        // TODO rework with Documentbuilder, see send events
         StringBuffer buffer = new StringBuffer();
         buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         buffer.append("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"");

@@ -2,8 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 
-import java.util.List;
-
 /**
  * This class executes configurations.
  */
@@ -19,7 +17,7 @@ public class Execution {
 	public boolean deleteScenario(int scenarioId) throws Exception {
 		DbConfigurationConnection conn = new DbConfigurationConnection();
 		conn.deleteScenario(scenarioId);
-		EventDispatcher.unregisterStartQuery(scenarioId);
+		EventDispatcher.unregisterCaseStartEvent(scenarioId);
 		return true;
 	}
 }

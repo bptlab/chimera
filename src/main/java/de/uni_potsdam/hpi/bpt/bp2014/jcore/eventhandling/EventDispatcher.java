@@ -283,7 +283,7 @@ public final class EventDispatcher {
         }
     }
 
-    public static void unregisterStartQuery(int scenarioId) {
+    public static void unregisterCaseStartEvent(int scenarioId) {
         DbCaseStart caseStart = new DbCaseStart();
         List<String> requestKeys = caseStart.getRequestKeys(scenarioId);
         List<String> notificationRuleIds = requestKeys.stream()
