@@ -46,19 +46,11 @@ import java.util.Map;
 	@DELETE @Path("scenario/{scenarioID}/") public Response deleteScenario(
 			@PathParam("scenarioID") Integer scenarioID) throws Exception {
 
-		boolean result;
 		Execution execution = new Execution();
-		result = execution.deleteScenario(scenarioID);
-
-		if (result) {
-			return Response.status(Response.Status.ACCEPTED).type(
+		execution.deleteScenario(scenarioID);
+		return Response.status(Response.Status.ACCEPTED).type(
 					MediaType.APPLICATION_JSON).entity("{\"message\":\""
-					+ "scenario deletion successfully.\"}").build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST).type(
-					MediaType.APPLICATION_JSON).entity(
-					"{\"error\":\"" + "scenario deletion failed\"}").build();
-		}
+					+ "scenario deletion successful.\"}").build();
 	}
 
 	// ************************** EMAIL SERVICE TASKS **********************************/

@@ -90,7 +90,7 @@ public class DataObjectRestTest extends AbstractTest {
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[1,2],\"results\":{\"1\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/1\",\"id\":1,\"label\":\"object1\",\"state\":\"init\"},\"2\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/2\",\"id\":2,\"label\":\"object2\",\"state\":\"init\"}}}",
+                "{\"ids\":[7,8],\"results\":{\"7\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/7\",\"id\":7,\"label\":\"object1\",\"state\":\"init\"},\"8\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/8\",\"id\":8,\"label\":\"object2\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
@@ -98,13 +98,13 @@ public class DataObjectRestTest extends AbstractTest {
     @Test
     public void testGetDataObjectsWithFilter() {
         Response response = base.path("scenario/1/instance/62/dataobject")
-                .queryParam("filter", "1").request().get();
+                .queryParam("filter", "7").request().get();
         assertEquals("The Response code of getDataObjects was not 200",
                 200, response.getStatus());
         assertEquals("getDataObjects returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"ids\":[1],\"results\":{\"1\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/1\",\"id\":1,\"label\":\"object1\",\"state\":\"init\"}}}",
+                "{\"ids\":[7],\"results\":{\"7\":{\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/62/dataobject/7\",\"id\":7,\"label\":\"object1\",\"state\":\"init\"}}}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
     }
@@ -124,13 +124,13 @@ public class DataObjectRestTest extends AbstractTest {
 
     @Test
     public void testGetDataObject() {
-        Response response = base.path("scenario/1/instance/62/dataobject/1").request().get();
+        Response response = base.path("scenario/1/instance/62/dataobject/7").request().get();
         assertEquals("The Response code of getDataObject was not 200",
                 200, response.getStatus());
         assertEquals("getDataObject return a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"label\":\"object1\",\"setId\":0,\"id\":1,\"state\":\"init\"}",
+                "{\"label\":\"object1\",\"setId\":0,\"id\":7,\"state\":\"init\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER)
                         .when(Option.IGNORING_EXTRA_FIELDS));

@@ -28,7 +28,6 @@ public class DataAttributeWriterTest {
     public void testWebserviceWriting() {
         int dummyControlNodeId = 0;
         int dummyControlNodeInstanceId = 0;
-        int dummyScenarioInstanceId = 0;
         ScenarioInstance instance = EasyMock.createNiceMock(ScenarioInstance.class);
         DataManager mockDM = createMockDM();
         expect(instance.getDataManager()).andReturn(mockDM).anyTimes();
@@ -56,7 +55,7 @@ public class DataAttributeWriterTest {
     private DataManager createMockDM() {
         DataManager manager = EasyMock.createNiceMock(DataManager.class);
         Map<Integer, String> expectedMap = new HashMap<>();
-        expectedMap.put(67890, "foo");
+        expectedMap.put(678, "foo");
         expect(manager.setAttributeValues(0, expectedMap)).andReturn(true).anyTimes();
         replay(manager);
         return manager;
@@ -65,19 +64,21 @@ public class DataAttributeWriterTest {
     private Map<Integer,String> createAttributeIdToJsonPathExample() {
         Map<Integer, String> map = new HashMap<>();
         // retrieve "foo"
-        map.put(67890, "$.a[0].b.prop1");
+        map.put(678, "$.a[0].b.prop1");
         return map;
     }
 
     private List<DataAttributeInstance> createExampleInstances() {
         DataAttributeInstance firstDataAttributeInstance = createNiceMock(DataAttributeInstance.class);
-        expect(firstDataAttributeInstance.getId()).andReturn(12345);
+        expect(firstDataAttributeInstance.getId()).andReturn(123);
         // expect(firstDataAttributeInstance.getType()).andReturn("String");
+        expect(firstDataAttributeInstance.getDataAttributeId()).andReturn(677);
         replay(firstDataAttributeInstance);
 
         DataAttributeInstance secondDataAttributeInstance = createNiceMock(DataAttributeInstance.class);
-        expect(secondDataAttributeInstance.getId()).andReturn(67890);
+        expect(secondDataAttributeInstance.getId()).andReturn(124);
         expect(secondDataAttributeInstance.isValueAllowed("foo")).andReturn(true);
+        expect(secondDataAttributeInstance.getDataAttributeId()).andReturn(678);
         secondDataAttributeInstance.setValue("foo");
         EasyMock.expectLastCall().once();
         replay(secondDataAttributeInstance);

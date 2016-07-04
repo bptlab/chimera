@@ -86,7 +86,7 @@ public class HistoryService {
 	 *                           DataAttributeInstance log entries shall be returned.
 	 * @return a.
 	 */
-	public List<LogEntry> getDataattributeEntries(int scenarioInstanceId) {
+	public List<LogEntry> getDataAttributeEntries(int scenarioInstanceId) {
 		return new DbLogEntry().getLogEntriesForScenarioInstance(
                 scenarioInstanceId, LogEntry.LogType.DATA_ATTRIBUTE);
 	}

@@ -20,7 +20,7 @@ import java.util.List;
 public class ExecutionTest extends AbstractDatabaseDependentTest {
     //private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     @Test
-    public void testDeletion() throws IOException, SQLException, Exception{
+    public void testDeletion() throws IOException, SQLException {
         String insertScenarios = "INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES " +
                 "(4, 'Testszenario', 0, 123, 0, 456, 0), " +
                 "(5, 'Testszenario', 1, 123, 0, 456, 0), " +
@@ -41,7 +41,7 @@ public class ExecutionTest extends AbstractDatabaseDependentTest {
         DbObject dbObject = new DbObject();
         String select = "SELECT deleted FROM scenario WHERE id = 4";
         List<Integer> deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
-        Assert.assertEquals("Scenario deleted even though there are still running instances", 0, deleted.get(0).intValue());
+        Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());
         select = "SELECT deleted FROM scenario WHERE id = 5";
         deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
         Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());

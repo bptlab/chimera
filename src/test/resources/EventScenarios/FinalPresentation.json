@@ -442,11 +442,11 @@
     "startconditions": [
         {
             "_id": "575d3f3b712f113f0d62a503",
-            "mappings": [
+            "dataclasses": [
                 {
                     "_id": "575bf3e00a923fd4325f0f62",
-                    "class": "Docu",
-                    "attributes": [],
+                    "classname": "Docu",
+                    "mapping": [],
                     "state": "old"
                 }
             ],

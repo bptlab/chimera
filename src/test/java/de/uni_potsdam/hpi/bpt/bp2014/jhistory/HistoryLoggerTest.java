@@ -38,7 +38,7 @@ public class HistoryLoggerTest {
         assertEquals(0, service.getDataObjectEntries(
                 instance.getScenarioInstanceId()).size());
 
-        assertEquals(0, service.getDataattributeEntries(
+        assertEquals(0, service.getDataAttributeEntries(
                 instance.getScenarioInstanceId()).size());
     }
 
@@ -86,7 +86,7 @@ public class HistoryLoggerTest {
         changeDataattributeValues(instance, activity);
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries
-                = service.getDataattributeEntries(instance.getScenarioInstanceId());
+                = service.getDataAttributeEntries(instance.getScenarioInstanceId());
         assertEquals(4, dataattributeEntries.size());
     }
 
@@ -109,7 +109,7 @@ public class HistoryLoggerTest {
                 service.getDataObjectEntries(scenarioInstance.getScenarioInstanceId());
 
         List<LogEntry> dataattributeEntries
-                = service.getDataattributeEntries(scenarioInstance.getScenarioInstanceId());
+                = service.getDataAttributeEntries(scenarioInstance.getScenarioInstanceId());
 
         List<LogEntry> activityEntries =
                 service.getActivityInstanceEntries(scenarioInstance.getScenarioInstanceId());

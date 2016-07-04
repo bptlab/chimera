@@ -2,17 +2,17 @@
   "startconditions": [
     {
       "query": "SELECT * FROM anEvent",
-      "mappings": [
+      "dataclasses": [
         {
-          "class": "Data",
+          "classname": "Data",
           "state": "init",
-          "attributes": [
+          "mapping": [
             {
-              "name": "Name",
+              "attr": "Name",
               "path": "$.a.c"
             },
             {
-              "name": "Age",
+              "attr": "Age",
               "path": "$.bar.foo"
             }
           ]
@@ -21,17 +21,17 @@
     },
     {
       "query": "SELECT * FROM anotherEvent",
-      "mappings": [
+      "dataclasses": [
         {
-          "class": "Data",
+          "classname": "Data",
           "state": "init",
-          "attributes": [
+          "mapping": [
             {
-              "name": "Name",
+              "attr": "Name",
               "path": "$.a.b"
             },
             {
-              "name": "Age",
+              "attr": "Age",
               "path": "$.foo.bar"
             }
           ]

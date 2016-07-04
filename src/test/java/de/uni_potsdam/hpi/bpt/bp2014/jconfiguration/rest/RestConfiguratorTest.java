@@ -161,27 +161,23 @@ public class RestConfiguratorTest extends AbstractTest {
 
     /**
      * When one sends a DELETE to {@link RestConfigurator#deleteScenario(Integer)}
-     * the returned Status Code should be either 202 or 400
-     * depending of it was possible to delete te scenario or if
-     * dependencies failed like all instances are not terminated
+     * the returned Status Code should be 202 since the scenario will be deleted in any case.
      */
     @Test
-    public void testDeleteScenarioInvalid() {
+    public void testDeleteScenarioWithRunningInstances() {
         Response response = base.path("scenario/1/").request().delete();
-        assertEquals("The Response code of deleting a scenario was not 404",
-                400, response.getStatus());
+        assertEquals("The Response code of deleting a scenario was not 202",
+                202, response.getStatus());
     }
 
     /**
      * When one sends a DELETE to {@link RestConfigurator#deleteScenario(Integer)}
-     * the returned Status Code should be either 202 or 400
-     * depending of it was possible to delete te scenario or if
-     * dependencies failed like all instances are not terminated
+     * the returned Status Code should be 202 since the scenario will be deleted in any case.
      */
     @Test
-    public void testDeleteScenarioValid() {
+    public void testDeleteScenarioWithoutRunningInstances() {
         Response response = base.path("scenario/152/").request().delete();
-        assertEquals("The Response code of deleting a scenario was not 200",
+        assertEquals("The Response code of deleting a scenario was not 202",
                 202, response.getStatus());
     }
 

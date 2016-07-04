@@ -90,7 +90,7 @@ public class EventLoggingTest extends JerseyTest {
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries =
-                service.getDataattributeEntries(instance.getScenarioInstanceId());
+                service.getDataAttributeEntries(instance.getScenarioInstanceId());
         assertEquals(2, dataattributeEntries.size());
         // The change in data attribute has been caused by the event
         assertEquals(eventControlNodeInstanceId,
@@ -115,7 +115,7 @@ public class EventLoggingTest extends JerseyTest {
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries =
-                service.getDataattributeEntries(instance.getScenarioInstanceId());
+                service.getDataAttributeEntries(instance.getScenarioInstanceId());
         assertEquals(2, dataattributeEntries.size());
     }
 
