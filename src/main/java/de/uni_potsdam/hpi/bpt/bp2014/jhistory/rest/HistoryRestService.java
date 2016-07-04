@@ -3,9 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.HistoryService;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.LogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jhistory.StateTransitionLog;
-import de.uni_potsdam.hpi.bpt.bp2014.util.XmlUtil;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 
 import javax.ws.rs.Path;
@@ -17,16 +15,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class implements the REST interface of the JEngine history.
@@ -54,61 +44,39 @@ import java.util.Map;
                             + "is incorrect\"}")
                     .build();
         }
-        List<StateTransitionLog> logEntries =
-                StateTransitionLog.getStateTransitons(instanceID, LogEntry.LogType.ACTIVITY);
-        JSONArray json = new JSONArray(logEntries);
+        List<StateTransitionLog> activityLog =
+                StateTransitionLog.getStateTransitions(instanceID, LogEntry.LogType.ACTIVITY);
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(json.toString()).build();
+                .entity(new JSONArray(activityLog).toString()).build();
     }
 
     /**
      * This method gives the log entries for all dataObjects for a specific scenario instance.
      *
-     * @param scenarioID The id of the scenario belonging to the instance.
-     * @param scenarioInstanceID The id of the scenario instance.
+     * @param scenarioId The id of the scenario belonging to the instance.
+     * @param scenarioInstanceId The id of the scenario instance.
      * @return a JSON-Object with the log entries.
      */
     @GET
-    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}/dataobjects")
+    @Path("scenario/{scenarioId}/instance/{scenarioInstanceId}/dataobjects")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDataObjectLog(
-            @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
-            @DefaultValue("0") @PathParam("scenarioInstanceID")
-            int scenarioInstanceID) {
-        if (scenarioInstanceID == 0 || scenarioID == 0) {
+            @DefaultValue("0") @PathParam("scenarioId") int scenarioId,
+            @DefaultValue("0") @PathParam("scenarioInstanceId")
+            int scenarioInstanceId) {
+        if (scenarioInstanceId == 0 || scenarioId == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"The instance or scenario ID "
+                    .entity("{\"error\":\"The instance or scenario Id "
                             + "is incorrect\"}")
                     .build();
         }
-        List<StateTransitionLog> dataobjectLog = StateTransitionLog.getStateTransitons(
-                scenarioInstanceID, LogEntry.LogType.DATA_OBJECT);
+        List<StateTransitionLog> dataObjectLog = StateTransitionLog.getStateTransitions(
+                scenarioInstanceId, LogEntry.LogType.DATA_OBJECT);
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(new JSONArray(dataobjectLog).toString()).build();
+                .entity(new JSONArray(dataObjectLog).toString()).build();
     }
 
-
-    /**
-     * This method gives the log entries for all dataObjects for a specific scenario instance.
-     *
-     * @param scenarioID The id of the scenario belonging to the instance.
-     * @param scenarioInstanceID The id of the scenario instance.
-     * @return a JSON-Object with the log entries.
-     */
-    @GET
-    @Path("scenario/{scenarioID}/instance/{scenarioInstanceID}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCompleteLog(
-            @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
-            @DefaultValue("0") @PathParam("scenarioInstanceID")
-            int scenarioInstanceID) {
-
-        List<StateTransitionLog> log = StateTransitionLog.getStateTransitons(
-                scenarioInstanceID);
-        return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(new JSONArray(log).toString()).build();
-    }
 
     /**
      * This method gives the log entries for all DataAttributeInstances
@@ -124,7 +92,7 @@ import java.util.Map;
     public Response getDataAttributeLog(
             @DefaultValue("0") @PathParam("scenarioID") int scenarioID,
             @DefaultValue("0") @PathParam("scenarioInstanceID")
-            int scenarioInstanceID) {
+                    int scenarioInstanceID) {
         if (scenarioInstanceID == 0 || scenarioID == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
@@ -133,13 +101,31 @@ import java.util.Map;
                     .build();
         }
 
-        List<StateTransitionLog> attributeLog = StateTransitionLog.getStateTransitons(
+        List<StateTransitionLog> attributeLog = StateTransitionLog.getStateTransitions(
                 scenarioInstanceID, LogEntry.LogType.DATA_ATTRIBUTE);
-        JSONArray log = new JSONArray(attributeLog);
-
-        String json = log.toString();
         return Response.ok().type(MediaType.APPLICATION_JSON)
-                .entity(log.toString()).build();
+                .entity(new JSONArray(attributeLog).toString()).build();
+    }
+
+    /**
+     * This method gives the log entries for all dataObjects for a specific scenario instance.
+     *
+     * @param scenarioId The id of the scenario belonging to the instance.
+     * @param scenarioInstanceId The id of the scenario instance.
+     * @return a JSON-Object with the log entries.
+     */
+    @GET
+    @Path("scenario/{scenarioId}/instance/{scenarioInstanceId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCompleteLog(
+            @DefaultValue("0") @PathParam("scenarioId") int scenarioId,
+            @DefaultValue("0") @PathParam("scenarioInstanceId")
+            int scenarioInstanceId) {
+
+        List<StateTransitionLog> log = StateTransitionLog.getStateTransitions(
+                scenarioInstanceId);
+        return Response.ok().type(MediaType.APPLICATION_JSON)
+                .entity(new JSONArray(log).toString()).build();
     }
 
     @GET

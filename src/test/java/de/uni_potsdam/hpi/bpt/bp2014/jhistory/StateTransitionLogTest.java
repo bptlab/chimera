@@ -31,7 +31,7 @@ public class StateTransitionLogTest {
         logEntry.logActivity(testActivityInstanceId, "terminated", testScenarioInstanceId);
 
         List<StateTransitionLog> logs =
-                StateTransitionLog.getStateTransitons(testScenarioInstanceId, LogEntry.LogType.ACTIVITY);
+                StateTransitionLog.getStateTransitions(testScenarioInstanceId, LogEntry.LogType.ACTIVITY);
         assertEquals(3, logs.size());
     }
 
@@ -43,7 +43,7 @@ public class StateTransitionLogTest {
         logEntry.logActivity(testActivityInstanceId, "init", testScenarioInstanceId);
         logEntry.logActivity(testActivityInstanceId, "running", testScenarioInstanceId);
         logEntry.logActivity(testActivityInstanceId, "terminated", testScenarioInstanceId);
-        List<StateTransitionLog> stateTransitions = StateTransitionLog.getStateTransitons(
+        List<StateTransitionLog> stateTransitions = StateTransitionLog.getStateTransitions(
                 testScenarioInstanceId);
         StateTransitionLog first = stateTransitions.get(0);
         assertEquals(JSONObject.NULL, first.getOldValue());

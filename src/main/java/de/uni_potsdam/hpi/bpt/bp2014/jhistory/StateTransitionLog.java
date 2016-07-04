@@ -28,14 +28,16 @@ public class StateTransitionLog {
 
     String label;
 
-    public static List<StateTransitionLog> getStateTransitons(
+    public static List<StateTransitionLog> getStateTransitions(
             int scenarioInstanceId, LogEntry.LogType type) {
-        String sql =
-                "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
-                "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +
-                " ON a.logged_id = b.logged_id AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
-                " timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " +
-                " WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
+        String sql = "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, "
+                + "       a.logged_id as logged_id, a.label as label, b.cause as cause "
+                + "FROM logentry a JOIN logentry b "
+                + "ON a.logged_id = b.logged_id "
+                + "AND a.type = b.type "
+                + "AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE "
+                + "    timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) "
+                + "WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
         sql = String.format(sql, scenarioInstanceId, type.name());
         List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
         addInitialTransitions(transitionLogs, scenarioInstanceId, type);
@@ -59,7 +61,7 @@ public class StateTransitionLog {
         transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
     }
 
-    public static List<StateTransitionLog> getStateTransitons(int scenarioInstanceId) {
+    public static List<StateTransitionLog> getStateTransitions(int scenarioInstanceId) {
         String sql =
                 "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
                         "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +

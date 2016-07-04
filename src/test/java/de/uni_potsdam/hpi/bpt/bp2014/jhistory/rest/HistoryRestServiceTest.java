@@ -192,7 +192,7 @@ public class HistoryRestServiceTest extends JerseyTest {
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
                 response.readEntity(String.class),
-                jsonEquals("{\"error\":\"The instance or scenario ID is incorrect\"}")
+                jsonEquals("{\"error\":\"The instance or scenario Id is incorrect\"}")
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
