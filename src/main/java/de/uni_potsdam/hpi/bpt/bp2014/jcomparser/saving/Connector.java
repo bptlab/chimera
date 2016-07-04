@@ -1,16 +1,14 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import org.apache.log4j.Logger;
-
-import java.util.*;
 
 /**
  * The Connector has methods to create entries inside the database.
  * Therefore it uses the database.Connection class.
  */
 public class Connector extends DbObject {
+	// TODO use this!
 	private static Logger log = Logger.getLogger(Connector.class);
 
 	/**

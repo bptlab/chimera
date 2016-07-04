@@ -43,7 +43,7 @@ public class DataAttributeInstance {
 			this.id = dbDataAttributeInstance
 					.createNewDataAttributeInstance(
 							dataAttributeId, dataObjectId);
-            new DbLogEntry().logDataattributeCreation(dataObjectId, this.getValue(),
+            new DbLogEntry().logDataAttributeCreation(dataObjectId, this.getValue(),
                     dataObject.getScenarioInstanceId());
         }
 		this.value = dbDataAttributeInstance.getValue(id);

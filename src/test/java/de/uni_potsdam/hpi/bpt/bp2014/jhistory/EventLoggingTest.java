@@ -89,12 +89,12 @@ public class EventLoggingTest extends JerseyTest {
         ScenarioTestHelper.triggerEventInScenario(instance, base, json);
 
         HistoryService service = new HistoryService();
-        List<LogEntry> dataattributeEntries =
+        List<LogEntry> dataAttributeEntries =
                 service.getDataAttributeEntries(instance.getScenarioInstanceId());
-        assertEquals(2, dataattributeEntries.size());
+        assertEquals(2, dataAttributeEntries.size());
         // The change in data attribute has been caused by the event
         assertEquals(eventControlNodeInstanceId,
-                dataattributeEntries.get(1).getCause());
+                dataAttributeEntries.get(1).getCause());
 
         List<LogEntry> eventEntries=
                 service.getEventEntries(instance.getScenarioInstanceId());
@@ -103,7 +103,7 @@ public class EventLoggingTest extends JerseyTest {
     }
 
     @Test
-    public void testEventDataattributeWritingLog() throws IOException {
+    public void testEventDataAttributeWritingLog() throws IOException {
         String path = "src/test/resources/EventScenarios/EventLoggingScenario.json";
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.executeActivityByName("Before Event", instance);
@@ -140,7 +140,7 @@ public class EventLoggingTest extends JerseyTest {
         assertEquals(eventControlNodeInstanceId, eventEntries.get(0).getLoggedId());
         assertEquals(eventControlNodeInstanceId, eventEntries.get(1).getLoggedId());
 
-        assertEquals("SomeEvent", eventEntries.get(0).getLabel());
-        assertEquals("SomeEvent", eventEntries.get(1).getLabel());
+        assertEquals("event", eventEntries.get(0).getLabel());
+        assertEquals("event", eventEntries.get(1).getLabel());
     }
 }

@@ -209,7 +209,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 	public void unlockDataObject(int dataObjectId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
         Optional<DataObject> dataObjectInstance =
-                dataManager.getDataobjectForId(dataObjectId);
+                dataManager.getDataObjectForId(dataObjectId);
         assert dataObjectInstance.isPresent(): "invalid data object id";
         dataObjectInstance.get().unlock();
 	}

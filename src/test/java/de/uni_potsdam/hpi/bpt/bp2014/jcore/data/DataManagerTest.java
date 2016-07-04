@@ -106,11 +106,11 @@ public class DataManagerTest {
         replay(second);
 
         dataManager.setDataObjects(Arrays.asList(first, second));
-        Optional<DataObject> dataObject = dataManager.getDataobjectForId(2);
+        Optional<DataObject> dataObject = dataManager.getDataObjectForId(2);
         assertTrue(dataObject.isPresent());
         assertEquals(second, dataObject.get());
 
-        Optional<DataObject> nonExistingDataobject = dataManager.getDataobjectForId(3);
+        Optional<DataObject> nonExistingDataobject = dataManager.getDataObjectForId(3);
         assertFalse(nonExistingDataobject.isPresent());
     }
 

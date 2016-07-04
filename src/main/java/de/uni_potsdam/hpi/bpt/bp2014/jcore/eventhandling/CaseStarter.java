@@ -2,12 +2,10 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling;
 
 import com.jayway.jsonpath.JsonPath;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbStartQuery;
-import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataClass;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
-import de.uni_potsdam.hpi.bpt.bp2014.util.CollectionUtil;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -63,13 +61,6 @@ public class CaseStarter {
         }
     }
 
-    /**
-     *
-     * @param part
-     * @param scenarioInstanceId
-     * @param json
-     * @param idToDataAttributeInstance
-     */
     private void initializeFromPart(StartQueryPart part, int scenarioInstanceId, String json,
                                     Map<Integer, DataAttributeInstance> idToDataAttributeInstance) {
         for (Map.Entry<Integer, String>
@@ -81,7 +72,7 @@ public class CaseStarter {
 
             if (instance.isValueAllowed(value)) {
                 instance.setValue(value);
-                new DbLogEntry().logDataattributeCreation(
+                new DbLogEntry().logDataAttributeTransition(
                         instance.getId(), value, scenarioInstanceId);
             } else {
                 LOGGER.error("Attribute value could not be set because it has the wrong data type.");

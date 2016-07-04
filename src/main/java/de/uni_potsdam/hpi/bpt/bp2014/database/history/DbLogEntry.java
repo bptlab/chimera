@@ -47,10 +47,23 @@ public class DbLogEntry extends DbObject {
                                           int causeInstanceId, int scenarioInstanceId) {
 
         DbDataAttributeInstance attributeDao = new DbDataAttributeInstance();
-        int dataattributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
-        String label = attributeDao.getName(dataattributeId);
+        int dataAttributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
+        String label = attributeDao.getName(dataAttributeId);
         this.insertLog(scenarioInstanceId, dataAttributeInstanceId, value.toString(),
                 Optional.of(causeInstanceId), label, LogEntry.LogType.DATA_ATTRIBUTE);
+    }
+
+    /**
+     * Same as above, but this method is used for start query transitions, since
+     * they do not have a causeInstanceId.
+     */
+    public void logDataAttributeTransition(int dataAttributeInstanceId, Object value,
+                                           int scenarioInstanceId) {
+        DbDataAttributeInstance attributeDao = new DbDataAttributeInstance();
+        int dataAttributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
+        String label = attributeDao.getName(dataAttributeId);
+        this.insertLog(scenarioInstanceId, dataAttributeInstanceId, value.toString(),
+                Optional.empty(), label, LogEntry.LogType.DATA_ATTRIBUTE);
     }
 
     /**
@@ -60,8 +73,8 @@ public class DbLogEntry extends DbObject {
      * @param stateId           the new state of the DataObject.
      * @param activityInstanceId
      */
-    public void logDataobjectTransition(int objectInstanceId, int stateId,
-                                       int activityInstanceId, int scenarioInstanceId) {
+    public void logDataObjectTransition(int objectInstanceId, int stateId,
+                                        int activityInstanceId, int scenarioInstanceId) {
         int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
         String label = new DbDataClass().getName(dataObjectId);
         String state = new DbState().getStateName(stateId);
@@ -75,7 +88,7 @@ public class DbLogEntry extends DbObject {
      * @param stateId
      * @param scenarioInstanceId
      */
-    public void logDataobjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {
+    public void logDataObjectCreation(int objectInstanceId, int stateId, int scenarioInstanceId) {
         int dataObjectId = new DbDataObject().getDataClassId(objectInstanceId);
         String label = new DbDataClass().getName(dataObjectId);
         String state = new DbState().getStateName(stateId);
@@ -83,11 +96,11 @@ public class DbLogEntry extends DbObject {
                 state, Optional.empty(), label, LogEntry.LogType.DATA_OBJECT);
     }
 
-    public void logDataattributeCreation(
+    public void logDataAttributeCreation(
             int dataAttributeInstanceId, Object value, int scenarioInstanceId) {
         DbDataAttributeInstance attributeDao = new DbDataAttributeInstance();
-        int dataattributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
-        String label = attributeDao.getName(dataattributeId);
+        int dataAttributeId = attributeDao.getDataAttributeID(dataAttributeInstanceId);
+        String label = attributeDao.getName(dataAttributeId);
         if (null == value) {
             value = "";
         }

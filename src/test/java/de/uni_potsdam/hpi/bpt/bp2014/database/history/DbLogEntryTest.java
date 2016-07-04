@@ -54,7 +54,7 @@ public class DbLogEntryTest {
     @Test
     public void testGetLogEntriesForScenarioInstance() {
         DbLogEntry logEntry = new DbLogEntry();
-        logEntry.logDataobjectTransition(0,0,0,0);
+        logEntry.logDataObjectTransition(0,0,0,0);
         String sql = "SELECT COUNT(*) as count FROM logentry;";
         int logCount = new DbObject().executeStatementReturnsInt(sql, "count");
         assertEquals(1, logCount);
@@ -71,10 +71,10 @@ public class DbLogEntryTest {
 
         int dummyDataobjectId = 2;
         int stateId = new Connector().insertStateIntoDatabase("received", dummyDataClassId);
-        logEntry.logDataobjectCreation(dummyDataobjectId, stateId, scenarioInstanceId);
+        logEntry.logDataObjectCreation(dummyDataobjectId, stateId, scenarioInstanceId);
 
         int dummyAttributeId = 3;
-        logEntry.logDataattributeCreation(dummyAttributeId, "foo", scenarioInstanceId);
+        logEntry.logDataAttributeCreation(dummyAttributeId, "foo", scenarioInstanceId);
         logEntry.logDataAttributeTransition(dummyAttributeId, "bar", 1, scenarioInstanceId);
         logEntry.logDataAttributeTransition(dummyAttributeId, "val", 4, scenarioInstanceId);
 

@@ -92,7 +92,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         int scenarioInstanceId = 1;
         int scenarioId = 1;
         DbLogEntry logEntry = new DbLogEntry();
-        logEntry.logDataattributeCreation(1, "val", scenarioInstanceId);
+        logEntry.logDataAttributeCreation(1, "val", scenarioInstanceId);
         logEntry.logDataAttributeTransition(1, "foo", 1, scenarioInstanceId);
         logEntry.logDataAttributeTransition(1, "bar", 1, scenarioInstanceId);
         String requestPath = String.format(

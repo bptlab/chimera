@@ -1,10 +1,9 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbPathMapping;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataConditions;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.DbDataFlow;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataAttributeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.DataAttributeWriter;
 import org.apache.log4j.Logger;
@@ -28,7 +27,8 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
         this.setScenarioInstance(scenarioInstance);
     }
 
-    @Override public void terminate() {
+    @Override
+    public void terminate() {
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
         scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
@@ -39,9 +39,13 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
     public void terminate(String json) {
         DbDataFlow dataFlow = new DbDataFlow();
+        List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
         List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
+        Set<Integer> toCreate = new HashSet<>(outputClassIds);
+        toCreate.removeAll(inputClassIds);
+
         Map<String, String> dataClassNameToStateName = loadOnlyOutputSet();
-        createDataObjects(new HashSet<>(outputClassIds), dataClassNameToStateName);
+        createDataObjects(toCreate, dataClassNameToStateName);
 
         if (json.isEmpty()) {
             LOGGER.info("No event json present to write data attributes from.");
