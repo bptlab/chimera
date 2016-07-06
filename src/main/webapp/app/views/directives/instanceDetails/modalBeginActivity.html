@@ -19,7 +19,10 @@
                             <h3 class="panel-title">{{dclass}}</h3>
                         </div>
                         <div class="panel-body form-group">
-                            <select class="form-control" ng-model="obj" ng-options="dobject as dobject.id for dobject in dobjects"
+                            <select class="form-control" 
+                                    ng-model="obj"
+                                    ng-init="obj=dobjects[0]; instanceCtrl.selectDataObject(dclass, obj.id, obj.attributeConfiguration)"
+                                    ng-options="dobject as dobject.id for dobject in dobjects"
                                     ng-change="instanceCtrl.selectDataObject(dclass, obj.id, obj.attributeConfiguration)"
                             ></select>
                         </div>
