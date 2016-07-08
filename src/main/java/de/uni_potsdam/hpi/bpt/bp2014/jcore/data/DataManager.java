@@ -3,6 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcore.data;
 import de.uni_potsdam.hpi.bpt.bp2014.database.data.*;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.SseNotifier;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -175,6 +176,8 @@ public class DataManager {
                 updateDataObjectAttribute(dataAttributeInstance);
             } else {
                 log.error("Attribute value could not be set "
+                        + "because it has the wrong data type.");
+                SseNotifier.notifyError("Attribute value could nto be set "
                         + "because it has the wrong data type.");
                 allValuesValid = false;
             }
