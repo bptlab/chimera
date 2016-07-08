@@ -211,13 +211,12 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
         dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
                 this.getControlNodeInstanceId(), workingItems);
-        _begin();
+        beginExecution();
         return true;
 
     }
-
-    // TODO rename properly
-    private void _begin() {
+	
+    private void beginExecution() {
         int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
         new DbLogEntry().logActivity(
                 this.getControlNodeInstanceId(), "running", scenarioInstanceId);
