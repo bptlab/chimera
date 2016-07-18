@@ -147,19 +147,19 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/janalytics/MetaAnalyticsModel.html#getLogEntriesForScenarioInstanceWithinActivity(int)">getLogEntriesForScenarioInstanceWithinActivity</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/janalytics/MetaAnalyticsModel.html#getLogEntriesForScenarioInstanceWithinActivity(int)">getLogEntriesForScenarioInstanceWithinActivity</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the Activity log entries for a ScenarioInstance.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/janalytics/MetaAnalyticsModel.html#getLogEntriesForScenarioInstanceWithinDataAttribute(int)">getLogEntriesForScenarioInstanceWithinDataAttribute</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/janalytics/MetaAnalyticsModel.html#getLogEntriesForScenarioInstanceWithinDataAttribute(int)">getLogEntriesForScenarioInstanceWithinDataAttribute</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the DataAttributeInstance log entries for a ScenarioInstance.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/janalytics/MetaAnalyticsModel.html#getLogEntriesForScenarioInstanceWithinDataObject(int)">getLogEntriesForScenarioInstanceWithinDataObject</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/janalytics/MetaAnalyticsModel.html#getLogEntriesForScenarioInstanceWithinDataObject(int)">getLogEntriesForScenarioInstanceWithinDataObject</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the DataObjectInstances log entries for a ScenarioInstance.</div>
 </td>
 </tr>
@@ -218,9 +218,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLogEntriesForScenarioInstanceWithinActivity</h4>
-<pre>public static&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getLogEntriesForScenarioInstanceWithinActivity(int&nbsp;scenarioInstanceId)</pre>
+<pre>public static&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getLogEntriesForScenarioInstanceWithinActivity(int&nbsp;id)</pre>
 <div class="block">This method returns the Activity log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the activity log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the activity log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>
@@ -230,9 +230,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLogEntriesForScenarioInstanceWithinDataAttribute</h4>
-<pre>public static&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getLogEntriesForScenarioInstanceWithinDataAttribute(int&nbsp;scenarioInstanceId)</pre>
+<pre>public static&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getLogEntriesForScenarioInstanceWithinDataAttribute(int&nbsp;id)</pre>
 <div class="block">This method returns the DataAttributeInstance log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the DataAttributeInstance log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the DataAttributeInstance log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>
@@ -242,9 +242,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLogEntriesForScenarioInstanceWithinDataObject</h4>
-<pre>public static&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getLogEntriesForScenarioInstanceWithinDataObject(int&nbsp;scenarioInstanceId)</pre>
+<pre>public static&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getLogEntriesForScenarioInstanceWithinDataObject(int&nbsp;id)</pre>
 <div class="block">This method returns the DataObjectInstances log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the DataObjectInstance log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the DataObjectInstance log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>

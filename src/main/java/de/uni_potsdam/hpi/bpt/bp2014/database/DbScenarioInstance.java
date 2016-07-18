@@ -14,7 +14,7 @@ public class DbScenarioInstance extends DbObject {
 	private static Logger log = Logger.getLogger(DbScenarioInstance.class);
 	private boolean exist = false;
 	private int scenarioId = -1;
-	private int scenarioInstanceId = -1;
+	private int id = -1;
 
 	/**
 	 * Checks if a scenario instance belongs to the right scenario.
@@ -25,14 +25,14 @@ public class DbScenarioInstance extends DbObject {
 	 */
 	public Boolean existScenario(int scenarioId, int scenarioInstanceId) {
 		if (!exist || this.scenarioId != scenarioId
-				|| this.scenarioInstanceId != scenarioInstanceId) {
+				|| this.id != scenarioInstanceId) {
 			String sql = "SELECT id FROM scenarioinstance "
 					+ "WHERE scenario_id = " + scenarioId + " "
 					+ "AND id = " + scenarioInstanceId;
 			log.info(sql);
 			exist = this.executeExistStatement(sql);
 			this.scenarioId = scenarioId;
-			this.scenarioInstanceId = scenarioInstanceId;
+			this.id = scenarioInstanceId;
 		}
 		return exist;
 	}
@@ -44,12 +44,12 @@ public class DbScenarioInstance extends DbObject {
 	 * @return if the check was positive(true) or not(false).
 	 */
 	public Boolean existScenario(int scenarioInstanceId) {
-		if (!exist || this.scenarioInstanceId != scenarioInstanceId) {
+		if (!exist || this.id != scenarioInstanceId) {
 			String sql = "SELECT id FROM scenarioinstance "
 					+ "WHERE id = " + scenarioInstanceId;
 			log.info(sql);
 			exist = this.executeExistStatement(sql);
-			this.scenarioInstanceId = scenarioInstanceId;
+			this.id = scenarioInstanceId;
 		}
 		return exist;
 	}
@@ -127,12 +127,12 @@ public class DbScenarioInstance extends DbObject {
 	/**
 	 * returns if a scenario instance is terminated or not.
 	 *
-	 * @param scenarioInstanceId This is the database ID of a scenario instance.
+	 * @param id This is the database ID of a scenario instance.
 	 * @return if the scenario instance is terminated(1) or not(0) as an Integer.
 	 */
-	public int getTerminated(int scenarioInstanceId) {
+	public int getTerminated(int id) {
 		String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = "
-				+ scenarioInstanceId;
+				+ id;
 		log.info(sql);
 		return this.executeStatementReturnsInt(sql, "terminated");
 	}

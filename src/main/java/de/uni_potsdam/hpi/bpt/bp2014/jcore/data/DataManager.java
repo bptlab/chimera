@@ -40,7 +40,7 @@ public class DataManager {
             dataObject.get().setState(stateId);
             int dataobjectId = dataObject.get().getId();
             new DbLogEntry().logDataObjectTransition(dataobjectId, stateId,
-                activityInstanceId, this.scenarioInstance.getScenarioInstanceId());
+                activityInstanceId, this.scenarioInstance.getId());
             return true;
         }
         return false;
@@ -76,7 +76,7 @@ public class DataManager {
     public void loadFromDatabase() {
         DbDataObject dbDataObject = new DbDataObject();
         List<Integer> dataObjectIds = dbDataObject.getDataObjectIds(
-                scenarioInstance.getScenarioInstanceId());
+                scenarioInstance.getId());
         this.dataObjects.clear();
         for (Integer dataObjectId : dataObjectIds) {
             this.dataObjects.add(new DataObject(dataObjectId, scenarioInstance));
@@ -129,7 +129,7 @@ public class DataManager {
     public void initializeDataObject(int dataClassId, int stateId) {
         DataObject dataObject = new DataObject(dataClassId, scenarioInstance, stateId);
         new DbLogEntry().logDataObjectCreation(
-                dataObject.getId(), stateId, scenarioInstance.getScenarioInstanceId());
+                dataObject.getId(), stateId, scenarioInstance.getId());
         this.dataObjects.add(dataObject);
     }
 
@@ -171,7 +171,7 @@ public class DataManager {
                     new DataAttributeInstance(dataAttributeInstanceId);
             if (dataAttributeInstance.isValueAllowed(value)) {
                 new DbLogEntry().logDataAttributeTransition(dataAttributeInstanceId, value,
-                        activityInstanceId, scenarioInstance.getScenarioInstanceId());
+                        activityInstanceId, scenarioInstance.getId());
                 dataAttributeInstance.setValue(value);
                 updateDataObjectAttribute(dataAttributeInstance);
             } else {

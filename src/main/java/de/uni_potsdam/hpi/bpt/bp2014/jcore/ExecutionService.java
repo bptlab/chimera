@@ -83,11 +83,11 @@ public class ExecutionService /*implements Runnable*/ {
 		ScenarioInstance scenarioInstance = new ScenarioInstance(this.scenarioId);
 		scenarioInstances.add(scenarioInstance);
 		//scenarioInstanceMap.put(scenarioInstance
-		// 	.getScenarioInstanceId(), scenarioInstance);
+		// 	.getId(), scenarioInstance);
 		addScenarioInstanceToMap(scenarioInstance);
 		sortedScenarioInstances.put(
-				scenarioInstance.getScenarioInstanceId(), scenarioInstance);
-		return scenarioInstance.getScenarioInstanceId();
+				scenarioInstance.getId(), scenarioInstance);
+		return scenarioInstance.getId();
 	}
 
 	/**
@@ -145,13 +145,13 @@ public class ExecutionService /*implements Runnable*/ {
 	}
 
 	private void addScenarioInstanceToMap(ScenarioInstance scenarioInstance) {
-		scenarioInstanceMap.put(scenarioInstance.getScenarioInstanceId(), scenarioInstance);
-		updateHistory(scenarioInstance.getScenarioInstanceId());
+		scenarioInstanceMap.put(scenarioInstance.getId(), scenarioInstance);
+		updateHistory(scenarioInstance.getId());
 		if (scenarioInstanceMap.size() > MAX_MAP_SIZE) {
 			int oldestInstance = instanceHistory.removeLast();
 			scenarioInstanceMap.remove(oldestInstance);
 			log.info("Inserted scenario with ID="
-					+ scenarioInstance.getScenarioInstanceId()
+					+ scenarioInstance.getId()
 					+ " and removed scenario with ID=" + oldestInstance
 					+ ". The History contains "
 					+ instanceHistory.size() + " elements.");

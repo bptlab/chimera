@@ -12,19 +12,19 @@ public class DataAttribute implements IPersistable {
     /**
 	 * This is the databaseID of the dataClass belonging to this attribute.
 	 */
-	private int dataClassID = -1;
+	private int dataClassId = -1;
 	/**
 	 * This is the name of the attribute.
 	 */
-	private String dataAttributeName;
+	private String name;
 	/**
 	 * This is the type of the attribute.
 	 */
-	private String dataAttributeType;
+	private String type;
 	/**
 	 * This is the databaseID of the attribute.
 	 */
-	private int attributeDatabaseId;
+	private int id;
 
 	/**
 	 * Constructor which sets the Name and Type of the DataAttribute.
@@ -33,8 +33,8 @@ public class DataAttribute implements IPersistable {
 	 * @param type This is the dataype of the DataAttribute.
 	 */
 	public DataAttribute(String name, String type, String editorId) {
-		this.dataAttributeName = name;
-		this.dataAttributeType = type;
+		this.name = name;
+		this.type = type;
         this.editorId = editorId;
 	}
 
@@ -43,32 +43,32 @@ public class DataAttribute implements IPersistable {
 	 *
 	 * @param id This is the databaseID of the dataClass
 	 */
-	public void setDataClassID(final int id) {
-		this.dataClassID = id;
+	public void setDataClassId(final int id) {
+		this.dataClassId = id;
 	}
 
 	@Override public int save() {
 		Connector conn = new Connector();
-		this.attributeDatabaseId = conn.insertDataAttributeIntoDatabase(
-				this.dataAttributeName, this.dataClassID,
-						this.dataAttributeType);
-		return attributeDatabaseId;
+		this.id = conn.insertDataAttributeIntoDatabase(
+				this.name, this.dataClassId,
+						this.type);
+		return id;
 	}
 
-	public int getDataClassID() {
-		return dataClassID;
+	public int getDataClassId() {
+		return dataClassId;
 	}
 
-	public int getAttributeDatabaseId() {
-		return attributeDatabaseId;
+	public int getId() {
+		return id;
 	}
 
-	public String getDataAttributeType() {
-		return dataAttributeType;
+	public String getType() {
+		return type;
 	}
 
-	public String getDataAttributeName() {
-		return dataAttributeName;
+	public String getName() {
+		return name;
 	}
 
     public String getEditorId() {

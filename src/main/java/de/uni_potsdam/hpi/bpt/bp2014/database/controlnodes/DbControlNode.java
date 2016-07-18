@@ -13,7 +13,7 @@ public class DbControlNode extends DbObject {
 	private static Logger log = Logger.getLogger(DbControlNode.class);
 	private String type = null;
 	private String label = null;
-	private int controlNodeId = -1;
+	private int id = -1;
 
 	/**
 	 * This method returns the database Id of a startEvent in the context of a fragment.
@@ -46,7 +46,7 @@ public class DbControlNode extends DbObject {
 	 * @return the type of the controlNode as a String.
 	 */
 	public String getType(int controlNodeId) {
-		if (type == null || this.controlNodeId != controlNodeId) {
+		if (type == null || this.id != controlNodeId) {
 			String sql = "SELECT type FROM controlnode WHERE id = " + controlNodeId;
 			log.info(sql);
 			type = this.executeStatementReturnsString(sql, "type");
@@ -64,11 +64,11 @@ public class DbControlNode extends DbObject {
 	 * @return the label of the controlNode as a String.
 	 */
 	public String getLabel(int controlNodeId) {
-		if (label == null || this.controlNodeId != controlNodeId) {
+		if (label == null || this.id != controlNodeId) {
 			String sql = "SELECT label FROM controlnode WHERE id = " + controlNodeId;
 			log.info(sql);
 			label = this.executeStatementReturnsString(sql, "label");
-			this.controlNodeId = controlNodeId;
+			this.id = controlNodeId;
 		}
 		return label;
 	}

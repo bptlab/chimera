@@ -18,7 +18,7 @@ public class DbBoundaryEvent extends DbObject {
                 + eventNodeId + ";";
         Integer activityControlNodeId = this.executeStatementReturnsInt(editorIdQuery, "attachedtoref");
         DbControlNodeInstance controlNodeInstance = new DbControlNodeInstance();
-        return controlNodeInstance.getControlNodeInstanceID(activityControlNodeId,
+        return controlNodeInstance.getControlNodeInstanceId(activityControlNodeId,
                 fragmentInstanceId);
     }
 

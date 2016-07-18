@@ -15,19 +15,6 @@ public class EventFactory {
         this.scenarioInstance = scenarioInstance;
     }
 
-    /**
-     *
-     * @param dbControlNodeInstanceId
-     * @return
-     */
-    public AbstractEvent getEventForInstanceId(int dbControlNodeInstanceId) {
-        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        int controlNodeId = dbControlNodeInstance.getControlNodeID(dbControlNodeInstanceId);
-        int fragmentInstanceId = dbControlNodeInstance.getFragmentInstanceId(
-                dbControlNodeInstanceId);
-        return this.getEventForControlNodeId(controlNodeId, fragmentInstanceId);
-    }
-
     public AbstractEvent getEventForControlNodeId(
             Integer controlNodeId, Integer fragmentInstanceId) {
         DbControlNode dbControlNode = new DbControlNode();

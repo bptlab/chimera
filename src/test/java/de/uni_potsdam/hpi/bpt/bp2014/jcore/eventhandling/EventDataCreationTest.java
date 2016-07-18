@@ -50,7 +50,7 @@ public class EventDataCreationTest extends JerseyTest {
         ScenarioTestHelper.executeActivityByName("Before Event", scenarioInstance);
         ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, getExampleJson());
         scenarioInstance = new ScenarioInstance(scenarioInstance.getScenarioId(),
-                scenarioInstance.getScenarioInstanceId());
+                scenarioInstance.getId());
         List<DataObject> dataObjects = scenarioInstance.getDataManager().getDataObjects();
         assertEquals(1, dataObjects.size());
         assertEquals("1", dataObjects.get(0).getDataAttributeInstances().get(0).getValue());
@@ -58,7 +58,7 @@ public class EventDataCreationTest extends JerseyTest {
         ScenarioTestHelper.executeActivityByName("Before Event", scenarioInstance);
         ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, getExampleJson());
         scenarioInstance = new ScenarioInstance(scenarioInstance.getScenarioId(),
-                scenarioInstance.getScenarioInstanceId());
+                scenarioInstance.getId());
         dataObjects = scenarioInstance.getDataManager().getDataObjects();
         assertEquals(2, dataObjects.size());
     }

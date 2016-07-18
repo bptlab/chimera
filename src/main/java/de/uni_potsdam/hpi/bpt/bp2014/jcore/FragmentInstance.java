@@ -21,19 +21,17 @@ import java.util.List;
  * Represents a fragment instance.
  */
 public class FragmentInstance {
-	private final ScenarioInstance scenarioInstance;
+	private int id; //final
 	private final int fragmentId;
-	private int fragmentInstanceId; //final
+	private final ScenarioInstance scenarioInstance;
 	private int scenarioInstanceId; //final
+
 	/**
 	 * Database Connection objects
 	 */
 	private final DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
 	private final DbControlNode dbControlNode = new DbControlNode();
-	private final DbControlFlow dbControlFlow = new DbControlFlow();
 	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-
-	private Boolean start = false;
 
 	/**
 	 * Creates and initializes a new fragment instance.
@@ -57,8 +55,8 @@ public class FragmentInstance {
         DbEventMapping mapping = new DbEventMapping();
         EventFactory factory = new EventFactory(this.scenarioInstance);
         List<AbstractEvent> events = new ArrayList<>();
-        for (Integer event : mapping.getRegisteredEventsForFragment(this.fragmentInstanceId)) {
-            events.add(factory.getEventForControlNodeId(event, this.fragmentInstanceId));
+        for (Integer event : mapping.getRegisteredEventsForFragment(this.id)) {
+            events.add(factory.getEventForControlNodeId(event, this.id));
         }
 
         return events;
@@ -67,12 +65,12 @@ public class FragmentInstance {
 	public void createDatabaseFragmentInstance () {
 		if (dbFragmentInstance.existFragment(fragmentId, scenarioInstanceId)) {
 			//creates an existing DatabaseFragment Instance using the database information
-			this.fragmentInstanceId = dbFragmentInstance
+			this.id = dbFragmentInstance
 					.getFragmentInstanceID(fragmentId, scenarioInstanceId);
 			this.initializeExistingNodeInstanceForFragment();
 		} else {
 			//creates a new DatabaseFragment Instance also in database
-			this.fragmentInstanceId = dbFragmentInstance
+			this.id = dbFragmentInstance
 					.createNewFragmentInstance(fragmentId, scenarioInstanceId);
 			this.initializeNewNodeInstanceForFragment();
 		}
@@ -84,31 +82,31 @@ public class FragmentInstance {
 	private void initializeExistingNodeInstanceForFragment() {
 		//initializes all Activity Instances in the database
 		LinkedList<Integer> activities = dbControlNodeInstance
-				.getActivitiesForFragmentInstanceID(fragmentInstanceId);
+				.getActivitiesForFragmentInstanceId(id);
 		LinkedList<Integer> activityInstances = dbControlNodeInstance
-				.getActivityInstancesForFragmentInstanceID(fragmentInstanceId);
+				.getActivityInstancesForFragmentInstanceID(id);
 		for (int i = 0; activities.size() > i; i++) {
 			new ActivityInstance(
-					activities.get(i), fragmentInstanceId,
+					activities.get(i), id,
 					scenarioInstance, activityInstances.get(i));
 		}
 		//initializes all Gateway Instances in the database
 		LinkedList<Integer> gateways = dbControlNodeInstance
-				.getGatewaysForFragmentInstanceID(fragmentInstanceId);
+				.getGatewaysForFragmentInstanceID(id);
 		LinkedList<Integer> gatewayInstances = dbControlNodeInstance
-				.getGatewayInstancesForFragmentInstanceID(fragmentInstanceId);
+				.getGatewayInstancesForFragmentInstanceID(id);
 		for (int i = 0; gateways.size() > i; i++) {
 			switch(dbControlNode.getType(gateways.get(i))) {
 				case "AND":
-					new AndGatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
+					new AndGatewayInstance(gateways.get(i), id, scenarioInstance,
 							gatewayInstances.get(i));
 					break;
 				case "XOR":
-					new XorGatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
+					new XorGatewayInstance(gateways.get(i), id, scenarioInstance,
 							gatewayInstances.get(i));
 					break;
 				case "EVENT_BASED":
-					new EventBasedGatewayInstance(gateways.get(i), fragmentInstanceId, scenarioInstance,
+					new EventBasedGatewayInstance(gateways.get(i), id, scenarioInstance,
 							gatewayInstances.get(i));
 					break;
 				default:
@@ -125,7 +123,7 @@ public class FragmentInstance {
 		//gets the Start Event and then the following Control Node to initialize it
 		int startEventDatabaseId = dbControlNode.getStartEventID(fragmentId);
         StartEvent startEvent = new StartEvent(startEventDatabaseId,
-                this.fragmentInstanceId, this.scenarioInstance);
+                this.id, this.scenarioInstance);
         startEvent.enableControlFlow();
 	}
 
@@ -133,7 +131,7 @@ public class FragmentInstance {
 	 * Sets the fragment instances to terminated in the database.
 	 */
 	public void terminate() {
-		dbFragmentInstance.terminateFragmentInstance(fragmentInstanceId);
+		dbFragmentInstance.terminateFragmentInstance(id);
 	}
 
 	// ****************************** Getter **********************************
@@ -155,8 +153,8 @@ public class FragmentInstance {
 	/**
 	 * @return the fragment instance id.
 	 */
-	public int getFragmentInstanceId() {
-		return fragmentInstanceId;
+	public int getId() {
+		return id;
 	}
 
 	/**

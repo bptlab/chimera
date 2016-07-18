@@ -4,7 +4,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events.DbEventMapping
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbFragment;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.AbstractControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
  * The scenario instance provide methods for the administration of the data object instances
  */
 public class ScenarioInstance {
-	private final int scenarioInstanceId;
+	private final int id;
 	private final int scenarioId;
 	private final String name;
 	/**
@@ -66,25 +65,25 @@ public class ScenarioInstance {
 	 * If there is no match in the database it creates a new scenario instance.
 	 *
 	 * @param scenarioId         This is the database id from the scenario.
-	 * @param scenarioInstanceId This is the database id from the scenario instance.
+	 * @param id This is the database id from the scenario instance.
 	 */
-	public ScenarioInstance(int scenarioId, int scenarioInstanceId) {
+	public ScenarioInstance(int scenarioId, int id) {
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
 
-        if (dbScenarioInstance.existScenario(scenarioId, scenarioInstanceId)) {
+        if (dbScenarioInstance.existScenario(scenarioId, id)) {
 			//creates an existing Scenario Instance using the database information
-			this.scenarioInstanceId = scenarioInstanceId;
+			this.id = id;
 		} else {
-			this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
+			this.id = dbScenarioInstance.createNewScenarioInstance(
 					scenarioId);
 		}
         this.startAutomaticControlNodes();
 
 		this.dataManager = new DataManager(this);
 
-		if (dbScenarioInstance.getTerminated(this.scenarioInstanceId) == 0) {
+		if (dbScenarioInstance.getTerminated(this.id) == 0) {
 			this.initializeFragments();
 		}
 
@@ -104,7 +103,7 @@ public class ScenarioInstance {
 	public ScenarioInstance(int scenarioId) {
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
-        this.scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+        this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
 
         // Initialize data manager after setting scenarioId
         this.dataManager = new DataManager(this);
@@ -145,7 +144,7 @@ public class ScenarioInstance {
     public List<String> getRegisteredEventKeys() {
         List<String> eventKeys = new ArrayList<>();
         for (FragmentInstance fragmentInstance : this.fragmentInstances) {
-            Integer fragmentInstanceId = fragmentInstance.getFragmentInstanceId();
+            Integer fragmentInstanceId = fragmentInstance.getId();
             DbEventMapping eventMapping = new DbEventMapping();
             eventKeys.addAll(eventMapping.getRequestKeysForFragment(fragmentInstanceId));
         }
@@ -159,7 +158,7 @@ public class ScenarioInstance {
 	 */
 	private void initializeFragment(int fragmentId) {
 		FragmentInstance fragmentInstance = new FragmentInstance(
-				fragmentId, scenarioInstanceId,	this);
+				fragmentId, id,	this);
 		fragmentInstances.add(fragmentInstance);
 	}
 
@@ -173,7 +172,7 @@ public class ScenarioInstance {
 	public void restartFragment(int fragmentInstanceId) {
 		FragmentInstance fragmentInstance = null;
 		for (FragmentInstance f : fragmentInstances) {
-			if (f.getFragmentInstanceId() == fragmentInstanceId) {
+			if (f.getId() == fragmentInstanceId) {
 				fragmentInstance = f;
 			}
 		}
@@ -278,7 +277,7 @@ public class ScenarioInstance {
 	 * Write the termination in the database and clears all lists.
 	 */
     public void terminate() {
-		dbScenarioInstance.setTerminated(scenarioInstanceId, true);
+		dbScenarioInstance.setTerminated(id, true);
 		controlNodeInstances.clear();
 		enabledControlNodeInstances.clear();
 		controlFlowEnabledControlNodeInstances.clear();
@@ -322,8 +321,8 @@ public class ScenarioInstance {
 	/**
 	 * @return the scenario instance id.
 	 */
-	public int getScenarioInstanceId() {
-		return scenarioInstanceId;
+	public int getId() {
+		return id;
 	}
 
 	/**

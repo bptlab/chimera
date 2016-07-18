@@ -45,8 +45,8 @@ public class EventType extends DataClass {
         String timestampName = "";
 
         for(DataAttribute attr : this.getAttributes()) {
-            if("timestamp".equalsIgnoreCase(attr.getDataAttributeName())) {
-                timestampName = attr.getDataAttributeName();
+            if("timestamp".equalsIgnoreCase(attr.getName())) {
+                timestampName = attr.getName();
                 break;
             }
         }
@@ -90,9 +90,9 @@ public class EventType extends DataClass {
         buffer.append("<xs:sequence>\n");
         for(DataAttribute attr : this.getAttributes()) {
             buffer.append("<xs:element name=\"");
-            buffer.append(attr.getDataAttributeName());
+            buffer.append(attr.getName());
             buffer.append("\" type=\"xs:");
-            buffer.append(attr.getDataAttributeType());
+            buffer.append(attr.getType());
             buffer.append("\"\nminOccurs=\"1\" maxOccurs=\"1\" />\n");
         }
         buffer.append("</xs:sequence>\n");

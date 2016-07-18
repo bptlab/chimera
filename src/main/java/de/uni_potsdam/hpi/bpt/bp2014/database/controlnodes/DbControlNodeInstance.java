@@ -27,12 +27,12 @@ public class DbControlNodeInstance extends DbObject {
 
 	/**
 	 *
-	 * @param controlNodeInstanceId This is the database ID of a controlNodeInstance.
+	 * @param id This is the database ID of a controlNodeInstance.
 	 * @return true if the controlNodeInstance instance exists else false.
 	 */
-	public Boolean existControlNodeInstance(int controlNodeInstanceId) {
+	public Boolean existControlNodeInstance(int id) {
 		String sql = "SELECT id FROM controlnodeinstance "
-				+ "WHERE id = " + controlNodeInstanceId;
+				+ "WHERE id = " + id;
 		return executeExistStatement(sql);
 	}
 
@@ -64,44 +64,19 @@ public class DbControlNodeInstance extends DbObject {
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return -1 if something went wrong else the database ID of a controlNode instance.
 	 */
-	public int getControlNodeInstanceID(int controlNodeId, int fragmentInstanceId) {
+	public int getControlNodeInstanceId(int controlNodeId, int fragmentInstanceId) {
 		String sql = "SELECT id FROM controlnodeinstance "
 				+ "WHERE controlnode_id = " + controlNodeId
 				+ " AND fragmentinstance_id = " + fragmentInstanceId;
 		return this.executeStatementReturnsInt(sql, "id");
 	}
-
-	/**
-	 *
-	 * @param controlNodeId			This is the database ID of a controlNode.
-	 * @param fragmentInstanceId	This is the database ID of a fragment instance.
-	 * @return a list of database ID's of all controlNode instances for this fragment instance.
-	 */
-	public LinkedList<Integer> getControlNodeInstanceIDs(int controlNodeId,
-			int fragmentInstanceId) {
-		String sql = "SELECT id FROM controlnodeinstance "
-				+ "WHERE controlnode_id = " + controlNodeId
-				+ " AND fragmentinstance_id = " + fragmentInstanceId;
-		return this.executeStatementReturnsListInt(sql, "id");
-	}
-
-    /**
-     * @param controlNodeInstanceId id of the control node instance
-     * @return id of the Fragment the control node instance belongs to or -1 if not found
-     */
-    public int getFragmentInstanceId(int controlNodeInstanceId) {
-        String getFragmentInstace = "SELECT * FROM controlnodeinstance = "
-                + controlNodeInstanceId + ";";
-        return this.executeStatementReturnsInt(getFragmentInstace, "fragmentinstance_id");
-    }
-
 	/**
 	 * This method returns all database ID's of all activities belonging to a fragment instance.
 	 *
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return a list of database ID's of all activities of this fragment instance.
 	 */
-	public LinkedList<Integer> getActivitiesForFragmentInstanceID(int fragmentInstanceId) {
+	public LinkedList<Integer> getActivitiesForFragmentInstanceId(int fragmentInstanceId) {
 		String sql =
 				"SELECT controlnode_id FROM controlnodeinstance "
 						+ "WHERE controlnodeinstance.Type = 'Activity' "
@@ -144,12 +119,12 @@ public class DbControlNodeInstance extends DbObject {
 	/**
 	 * This method returns the controlNodeID of a controlNodeInstance.
 	 *
-	 * @param controlNodeInstanceID ID of the controlNodeInstance.
+	 * @param id ID of the controlNodeInstance.
 	 * @return controlNodeID.
 	 */
-	public int getControlNodeID(int controlNodeInstanceID) {
+	public int getControlNodeID(int id) {
 		String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE id = "
-				+ controlNodeInstanceID;
+				+ id;
 		return this.executeStatementReturnsInt(sql, "controlnode_id");
 	}
 

@@ -99,7 +99,7 @@ public class StartQuery {
                     Optional<DataAttribute> dataAttribute = belongingDataClass
                             .getDataAttributeByName(entry.getKey());
                     assert dataAttribute.isPresent() : "Referenced invalid data attribute";
-                    int attributeDbId = dataAttribute.get().getAttributeDatabaseId();
+                    int attributeDbId = dataAttribute.get().getId();
                     String jsonPath = entry.getValue();
                     connector.insertStartPart(
                             queryId, dataClassDbId, stateDbId, attributeDbId, jsonPath);

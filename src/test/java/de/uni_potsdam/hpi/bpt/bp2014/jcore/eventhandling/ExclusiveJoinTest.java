@@ -24,7 +24,7 @@ public class ExclusiveJoinTest {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             Thread.sleep(2000);
             ScenarioInstance reloadedInstance = new ScenarioInstance(scenarioInstance.getScenarioId(),
-                    scenarioInstance.getScenarioInstanceId());
+                    scenarioInstance.getId());
             List<AbstractControlNodeInstance> enabledActivities =
                     reloadedInstance.getEnabledControlNodeInstances();
             assertEquals(1, enabledActivities.size());

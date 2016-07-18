@@ -10,9 +10,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,7 +48,7 @@ public class LockingTest {
                 .collect(Collectors.toList()));
 
         int scenarioId = scenarioInstance.getScenarioId();
-        int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        int scenarioInstanceId = scenarioInstance.getId();
         ScenarioInstance reloaded = new ScenarioInstance(scenarioId, scenarioInstanceId);
 
         Long locked = reloaded.getDataManager().getDataObjects()

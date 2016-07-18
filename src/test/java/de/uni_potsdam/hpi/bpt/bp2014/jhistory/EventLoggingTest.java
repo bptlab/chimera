@@ -50,9 +50,9 @@ public class EventLoggingTest extends JerseyTest {
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
 
         // Before reaching an event no event should be activated
-        assertEquals(0, service.getEventEntries(instance.getScenarioInstanceId()).size());
+        assertEquals(0, service.getEventEntries(instance.getId()).size());
         ScenarioTestHelper.executeActivityByName("Before Event", instance);
-        assertEquals(1, service.getEventEntries(instance.getScenarioInstanceId()).size());
+        assertEquals(1, service.getEventEntries(instance.getId()).size());
     }
 
     @Test
@@ -63,11 +63,11 @@ public class EventLoggingTest extends JerseyTest {
         ScenarioTestHelper.executeActivityByName("Before Event", instance);
         // Only the registration log should be in the database
 
-        assertEquals(1, service.getEventEntries(instance.getScenarioInstanceId()).size());
+        assertEquals(1, service.getEventEntries(instance.getId()).size());
         ScenarioTestHelper.triggerEventInScenario(instance, base);
 
         // After triggering the event there should be another log entry
-        assertEquals(2, service.getEventEntries(instance.getScenarioInstanceId()).size());
+        assertEquals(2, service.getEventEntries(instance.getId()).size());
     }
 
     /**
@@ -90,14 +90,14 @@ public class EventLoggingTest extends JerseyTest {
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataAttributeEntries =
-                service.getDataAttributeEntries(instance.getScenarioInstanceId());
+                service.getDataAttributeEntries(instance.getId());
         assertEquals(2, dataAttributeEntries.size());
         // The change in data attribute has been caused by the event
         assertEquals(eventControlNodeInstanceId,
                 dataAttributeEntries.get(1).getCause());
 
         List<LogEntry> eventEntries=
-                service.getEventEntries(instance.getScenarioInstanceId());
+                service.getEventEntries(instance.getId());
         assertEquals(eventControlNodeInstanceId,
                 eventEntries.get(1).getLoggedId());
     }
@@ -115,7 +115,7 @@ public class EventLoggingTest extends JerseyTest {
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries =
-                service.getDataAttributeEntries(instance.getScenarioInstanceId());
+                service.getDataAttributeEntries(instance.getId());
         assertEquals(2, dataattributeEntries.size());
     }
 
@@ -132,7 +132,7 @@ public class EventLoggingTest extends JerseyTest {
         ScenarioTestHelper.triggerEventInScenario(instance, base, json);
         HistoryService service = new HistoryService();
         List<LogEntry> eventEntries =
-                service.getEventEntries(instance.getScenarioInstanceId());
+                service.getEventEntries(instance.getId());
         assertEquals("received", eventEntries.get(1).getNewValue());
         assertEquals("registered", eventEntries.get(0).getNewValue());
 

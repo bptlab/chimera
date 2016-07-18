@@ -24,7 +24,6 @@ public class ScenarioData {
     private JSONObject scenarioJson;
 
     private String scenarioName;
-    private String scenarioEditorId;
     private int versionNumber;
 
     List<Fragment> fragments;
@@ -33,7 +32,7 @@ public class ScenarioData {
 
     private List<StartQuery> startQueries;
 
-    private int scenarioDbId;
+    private int id;
 
     /**
      * Only for test purposes do not use in production.
@@ -44,7 +43,6 @@ public class ScenarioData {
         try {
             this.scenarioJson = new JSONObject(element);
             this.scenarioName = scenarioJson.getString("name");
-            this.scenarioEditorId = scenarioJson.getString("_id");
             this.versionNumber = scenarioJson.getInt("revision");
 
             JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
@@ -70,23 +68,23 @@ public class ScenarioData {
 
 
     public int save() {
-        this.scenarioDbId = saveScenario();
-        domainModel.setScenarioId(this.scenarioDbId);
+        this.id = saveScenario();
+        domainModel.setScenarioId(this.id);
         domainModel.save();
 
         FragmentInserter inserter = new FragmentInserter();
         for (Fragment fragment : fragments) {
-            fragment.setScenarioId(this.scenarioDbId);
+            fragment.setScenarioId(this.id);
             inserter.save(fragment, this.domainModel.getDataClasses());
         }
 
         setTerminationCondition(scenarioJson);
         terminationConditions.forEach(TerminationCondition::save);
 
-        this.startQueries.forEach(x -> x.save(scenarioDbId, domainModel.getDataClasses()));
-        this.startQueries.forEach(x -> x.register(this.scenarioDbId));
+        this.startQueries.forEach(x -> x.save(id, domainModel.getDataClasses()));
+        this.startQueries.forEach(x -> x.register(this.id));
 
-        return this.scenarioDbId;
+        return this.id;
     }
 
     private Map<String, DataClass> extractNameToDataclass(DomainModel model) {
@@ -125,7 +123,7 @@ public class ScenarioData {
     private int saveScenario() {
         Connector connector = new Connector();
         return connector.insertScenarioIntoDatabase(
-                this.scenarioName, this.scenarioEditorId, this.versionNumber);
+                this.scenarioName, this.versionNumber);
     }
 
     private Map<String, DataClass> getNameToDataclass(DomainModel domainModel) {
@@ -151,8 +149,7 @@ public class ScenarioData {
             try {
                 Fragment fragment = new Fragment(fragmentJson.getString("content"),
                         fragmentJson.getInt("revision"),
-                        fragmentJson.getString("name"),
-                        fragmentJson.getString("_id")
+                        fragmentJson.getString("name")
                 );
                 FragmentValidator.validateFragment(fragment, domainModel);
                 generatedFragments.add(fragment);
@@ -175,11 +172,11 @@ public class ScenarioData {
         JSONArray jsonTerminationConditions = scenarioJson.getJSONArray("terminationconditions");
         Map<String, Integer> stateToDatabaseId = new DbState().getStateToIdMap();
         this.terminationConditions = TerminationCondition.parseTerminationConditions(
-                jsonTerminationConditions, domainModel.getDataClasses(), scenarioDbId, stateToDatabaseId);
+                jsonTerminationConditions, domainModel.getDataClasses(), id, stateToDatabaseId);
     }
 
-    public int getScenarioDbId() {
-        return scenarioDbId;
+    public int getId() {
+        return id;
     }
 
 

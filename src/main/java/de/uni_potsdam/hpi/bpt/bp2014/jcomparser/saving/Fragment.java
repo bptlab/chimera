@@ -36,24 +36,21 @@ public class Fragment {
 
     private int scenarioId;
     private String fragmentName;
-    private String fragmentEditorId;
     private int versionNumber;
     private String xmlString;
     private FragmentXmlWrapper xmlWrapper;
 
-    public Fragment(String xmlString, int versionNumber, String fragmentName,
-                    String fragmentEditorId) throws JAXBException {
+    public Fragment(String xmlString, int versionNumber, String fragmentName) throws JAXBException {
         this.xmlString = xmlString;
         this.xmlWrapper = buildFragment(xmlString);
         this.fragmentName = fragmentName;
         this.versionNumber = versionNumber;
-        this.fragmentEditorId = fragmentEditorId;
     }
 
     public int save() {
         Connector connector = new Connector();
         int fragmentId = connector.insertFragmentIntoDatabase(fragmentName,
-                scenarioId, fragmentEditorId, versionNumber);
+                scenarioId, versionNumber);
         connector.insertXmlIntoDatabase(fragmentId, this.xmlString);
         return fragmentId;
     }
@@ -185,14 +182,6 @@ public class Fragment {
 
     public void setScenarioId(int scenarioId) {
         this.scenarioId = scenarioId;
-    }
-
-    public String getFragmentEditorId() {
-        return fragmentEditorId;
-    }
-
-    public void setFragmentEditorId(String fragmentEditorId) {
-        this.fragmentEditorId = fragmentEditorId;
     }
 
     public String getName() {

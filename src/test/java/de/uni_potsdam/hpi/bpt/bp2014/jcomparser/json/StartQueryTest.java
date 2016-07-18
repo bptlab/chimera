@@ -114,7 +114,7 @@ public class StartQueryTest {
         scenarioData.save();
 
         DbCaseStart caseStart = new DbCaseStart();
-        List<String> requestKeys =  caseStart.getRequestKeys(scenarioData.getScenarioDbId());
+        List<String> requestKeys =  caseStart.getRequestKeys(scenarioData.getId());
         assertEquals(2, requestKeys.size());
     }
 }

@@ -182,7 +182,7 @@ public final class EventDispatcher {
         AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId,
                 fragmentInstanceId);
         new DbLogEntry().logEvent(event.getControlNodeInstanceId(),
-                instance.getScenarioInstanceId(), "received");
+                instance.getId(), "received");
         return event;
     }
 

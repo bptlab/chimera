@@ -17,16 +17,14 @@ public class Connector extends DbObject {
 	 * create a scenario entry.
 	 *
 	 * @param name         The name of the scenario.
-	 * @param modelID      The ID used inside the xml representation.
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertScenarioIntoDatabase(final String name, final String modelID,
+	public int insertScenarioIntoDatabase(final String name,
 			final int modelVersion) {
 		String sql = "INSERT INTO scenario "
-				+ "(scenario.name, modelid, modelversion) "
-				+ "VALUES ('" + name + "', '"
-				+ modelID +	"', " + modelVersion + ")";
+				+ "(name, modelversion) "
+				+ "VALUES ('" + name + "', " + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -48,16 +46,14 @@ public class Connector extends DbObject {
 	 *
 	 * @param fragmentName The name of the fragment.
 	 * @param scenarioID   The database id of the scenario (foreign key).
-	 * @param modelID      The ID used for the fragment inside the xml.
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertFragmentIntoDatabase(final String fragmentName, int scenarioID,
-			final String modelID, final int modelVersion) {
+	public int insertFragmentIntoDatabase(final String fragmentName, int scenarioID, final int modelVersion) {
 		String sql = "INSERT INTO fragment "
-				+ "(fragment.name, scenario_id, modelid, modelversion) "
+				+ "(fragment.name, scenario_id, modelversion) "
 				+ "VALUES ('" + fragmentName + "', " + scenarioID
-				+ ",'" + modelID + "'," + modelVersion + ")";
+				+ "," + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -165,16 +161,14 @@ public class Connector extends DbObject {
 	/**
 	 * Updates the scenario entry with the corresponding domainModel.
 	 *
-	 * @param editorId      is the modelID of the domainModel which should be saved as a String.
 	 * @param versionNumber is the versionNumber of the domainModel as an Integer.
 	 * @param scenarioId    is the databaseID of the corresponding scenario.
 	 */
-	public void insertDomainModelIntoDatabase(final String editorId, final int versionNumber,
+	public void insertDomainModelIntoDatabase(final int versionNumber,
 			final int scenarioId) {
 		DbObject dbObject = new DbObject();
 		String sql = "UPDATE scenario "
-				+ "SET scenario.datamodelid = '" + editorId
-				+ "', scenario.datamodelversion = " + versionNumber
+				+ "SET scenario.datamodelversion = " + versionNumber
 				+ " WHERE id = " + scenarioId + "";
 		dbObject.executeUpdateStatement(sql);
 	}

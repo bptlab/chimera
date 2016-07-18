@@ -31,7 +31,7 @@ public class CaseStarter {
         initializeDataObjects(scenarioInstance);
         List<DataAttributeInstance> dataAttributes =  new ArrayList<>(
                 scenarioInstance.getDataManager().getDataAttributeInstances());
-        writeDataAttributes(dataAttributes, json, scenarioInstance.getScenarioInstanceId());
+        writeDataAttributes(dataAttributes, json, scenarioInstance.getId());
     }
 
     /**
