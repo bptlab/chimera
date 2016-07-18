@@ -85,6 +85,7 @@ public class Connection {
             username = br.readLine();
             password = br.readLine();
             url = br.readLine();
+            fr.close();
         } catch (FileNotFoundException e) {
             try {
                 Context ctx = new InitialContext();

@@ -6,16 +6,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
+import java.util.List;
 
 public class Helper {
 
     /**
-     *
      * @param sql
      * @return
      */
-    public static ArrayList<HashMap<String,Object>> executeStatementReturnsHashMap(String sql) {
+    public static List<Map<String, Object>> executeStatementReturnsMap(String sql) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
         try {
@@ -23,41 +23,40 @@ public class Helper {
             stmt = conn.createStatement();
 
             //query
-            ResultSet Result = null;
-            boolean Returning_Rows = stmt.execute(sql);
-            if (Returning_Rows)
-                Result = stmt.getResultSet();
+            ResultSet result;
+            boolean returningRows = stmt.execute(sql);
+            if (returningRows)
+                result = stmt.getResultSet();
             else
-                return new ArrayList<HashMap<String,Object>>();
+                return new ArrayList<>();
 
             //get metadata
-            ResultSetMetaData Meta = null;
-            Meta = Result.getMetaData();
+            ResultSetMetaData meta = result.getMetaData();
 
             //get column names
-            int Col_Count = Meta.getColumnCount();
-            ArrayList<String> Cols = new ArrayList<String>();
-            for (int Index=1; Index<=Col_Count; Index++)
-                Cols.add(Meta.getColumnName(Index));
+            int columnCount = meta.getColumnCount();
+            ArrayList<String> columns = new ArrayList<String>();
+            for (int i = 1; i <= columnCount; i++)
+                columns.add(meta.getColumnName(i));
 
             //fetch out rows
-            ArrayList<HashMap<String,Object>> Rows =
-                    new ArrayList<HashMap<String,Object>>();
+            List<Map<String, Object>> rows =
+                    new ArrayList<>();
 
-            while (Result.next()) {
-                HashMap<String,Object> Row = new HashMap<String,Object>();
-                for (String Col_Name:Cols) {
-                    Object Val = Result.getObject(Col_Name);
-                    Row.put(Col_Name,Val);
+            while (result.next()) {
+                Map<String, Object> row = new HashMap<String, Object>();
+                for (String columnName : columns) {
+                    Object value = result.getObject(columnName);
+                    row.put(columnName, value);
                 }
-                Rows.add(Row);
+                rows.add(row);
             }
 
             //close statement
             stmt.close();
 
             //pass back rows
-            return Rows;
+            return rows;
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
@@ -78,7 +77,7 @@ public class Helper {
                 se.printStackTrace();
             }
         }
-        return null;
+        return new ArrayList<>();
     }
 
 
@@ -89,11 +88,11 @@ public class Helper {
      * @param columnLabel This is the label of the column which is used as the result.
      * @return List with Integer.
      */
-    public static LinkedList<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
+    public static List<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
-        ResultSet rs = null;
-        LinkedList<Integer> results = new LinkedList<Integer>();
+        ResultSet rs;
+        List<Integer> results = new ArrayList<>();
         if (conn == null) {
             return results;
         }
@@ -140,7 +139,7 @@ public class Helper {
     public static String executeStatementReturnsString(String sql, String columnLabel) {
         java.sql.Connection conn = Connection.getInstance().connect();
         Statement stmt = null;
-        ResultSet rs = null;
+        ResultSet rs;
         String results = "";
         if (conn == null) {
             return results;
@@ -230,7 +229,7 @@ public class Helper {
     /**
      * Executes the given select SQL statement and returns the result as boolean.
      *
-     * @param sql         This is a given select SQL Statement.
+     * @param sql This is a given select SQL Statement.
      * @return boolean.
      */
 

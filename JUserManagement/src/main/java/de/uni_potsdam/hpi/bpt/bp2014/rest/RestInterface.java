@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.rest;
 
+import com.google.gson.Gson;
 import de.uni_potsdam.hpi.bpt.bp2014.core.Controller;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,7 +35,7 @@ public class RestInterface {
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUser(@QueryParam("filter") String filterString) {
-            String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveAllItems("user"));
+            String jsonRepresentation = toJson(Controller.retrieveAllItems("user"));
             return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -51,7 +53,7 @@ public class RestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSpecificUser(@QueryParam("filter") String filterString,
                                     @PathParam("userID") int userID) {
-        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveItem("user", userID));
+        String jsonRepresentation = toJson(Controller.retrieveItem("user", userID));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -66,7 +68,7 @@ public class RestInterface {
     @Path("role")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoles(@QueryParam("filter") String filterString) {
-        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveAllItems("role"));
+        String jsonRepresentation = toJson(Controller.retrieveAllItems("role"));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -83,7 +85,7 @@ public class RestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSpecificRole(@QueryParam("filter") String filterString,
                                     @PathParam("roleID") int roleID) {
-        String jsonRepresentation = JsonUtil.JsonWrapperArrayListHashMap(Controller.RetrieveItem("role", roleID));
+        String jsonRepresentation = toJson(Controller.retrieveItem("role", roleID));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }
 
@@ -103,7 +105,7 @@ public class RestInterface {
     @Path("user/{userID}/")
     public Response deleteUser(@PathParam("userID") Integer userID) throws Exception {
         boolean result;
-        result = Controller.UpdateUser(userID);
+        result = Controller.updateUser(userID);
         if (result) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
@@ -129,7 +131,7 @@ public class RestInterface {
     @Path("role/{roleID}/")
     public Response deleteRole(@PathParam("roleID") Integer roleID) throws Exception {
         boolean result;
-        result = Controller.UpdateRole(roleID);
+        result = Controller.updateRole(roleID);
         if (result) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
@@ -164,7 +166,7 @@ public class RestInterface {
             @Context UriInfo uriInfo,
             NamedJaxBean name) {
 
-            int roleId = Controller.CreateNewRole(name.name, name.description, name.admin_id);
+            int roleId = Controller.createNewRole(name.name, name.description, name.admin_id);
             return Response.status(Response.Status.CREATED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"id\":" + roleId +
@@ -191,7 +193,7 @@ public class RestInterface {
             @PathParam("roleID") int roleID,
             NamedJaxBean name) {
 
-        boolean result = Controller.UpdateRole(roleID, name.name, name.description, name.admin_id);
+        boolean result = Controller.updateRole(roleID, name.name, name.description, name.admin_id);
 
         if(!result) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -224,7 +226,7 @@ public class RestInterface {
             @Context UriInfo uriInfo,
             NamedJaxBean name) {
 
-        int userId = Controller.CreateNewUser(name.name, name.role_id, name.description);
+        int userId = Controller.createNewUser(name.name, name.role_id, name.description);
 
         return Response.status(Response.Status.CREATED)
                 .type(MediaType.APPLICATION_JSON)
@@ -252,7 +254,7 @@ public class RestInterface {
             @PathParam("userID") int userID,
             NamedJaxBean name) {
 
-        boolean result = Controller.UpdateUser(userID, name.name, name.role_id, name.description);
+        boolean result = Controller.updateUser(userID, name.name, name.role_id, name.description);
 
         if(!result) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -272,50 +274,10 @@ public class RestInterface {
     /**********************************************************************************************
      * Helper
      */
-
-    /**
-     * Creates an array of DataObjects.
-     * The data objects will be created out of the information received from the execution Service.
-     * The array elements will be of type {@link RestInterface.DataObjectJaxBean), hence JSON and
-     * XML can be generated automatically.
-     *
-     * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
-     * @param states        The states, mapped from dataobject database id to state (String)
-     * @param labels        The labels, mapped from dataobject database id to label (String)
-     * @return A array with a DataObject for each entry in dataObjectIds
-     */
-    private JSONObject buildListForDataObjects(
-            LinkedList<Integer> dataObjectIds,
-            HashMap<Integer, String> states,
-            HashMap<Integer, String> labels) {
-        JSONObject result = new JSONObject();
-        result.put("ids", dataObjectIds);
-        JSONObject results = new JSONObject();
-        for (Integer id : dataObjectIds) {
-            JSONObject dataObject = new JSONObject();
-            dataObject.put("id", id);
-            dataObject.put("label", labels.get(id));
-            dataObject.put("state", states.get(id));
-            results.put("" + id, dataObject);
-        }
-        result.put("results", results);
-        return result;
-    }
-
-    /**
-     * Creates a JSON object from an HashMap.
-     * The keys will be listed separately.
-     *
-     * @param data        The HashMap which contains the data of the Object
-     * @param keyLabel    The name which will be used
-     * @param resultLabel The label of the results.
-     * @return The newly created JSON Object.
-     */
-    public JSONObject mapToKeysAndResults(Map data, String keyLabel, String resultLabel) {
-        JSONObject result = new JSONObject();
-        result.put(keyLabel, new JSONArray(data.keySet()));
-        result.put(resultLabel, data);
-        return result;
+    public static String toJson(List<Map<String,Object>> content) {
+        Gson gson = new Gson();
+        JSONArray json = new JSONArray(content);
+        return gson.toJson(json);
     }
 
     /**
