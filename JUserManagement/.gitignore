@@ -1,0 +1,7 @@
+.idea
+.idea/*
+*.class
+JEngine.iml
+resources/database_connection
+target/*
+*.iml
