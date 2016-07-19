@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import org.apache.log4j.Logger;
 
@@ -54,7 +54,7 @@ public class DbDataClass extends DbObject {
 
         String sql = "SELECT * FROM dataclass as dc, dataattribute as da " +
                 "WHERE dc.id = da.dataclass_id;";
-        java.sql.Connection con = Connection.getInstance().connect();
+        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
         try (Statement stat = con.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             while (rs.next()) {

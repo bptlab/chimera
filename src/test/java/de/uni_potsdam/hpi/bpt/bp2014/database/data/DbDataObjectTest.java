@@ -1,18 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.database.ExampleValueInserter;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.MockProvider;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import javax.validation.constraints.AssertTrue;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,7 +48,7 @@ public class DbDataObjectTest {
         dataObject.createDataObject(1, 1, 1, 1);
         // Since it is the first data object the id is 1
         String sql = "SELECT * From dataobject WHERE id = 1;";
-        java.sql.Connection con = Connection.getInstance().connect();
+        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
         try (Statement stat = con.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             if (rs.next()) {

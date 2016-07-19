@@ -18,8 +18,8 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	private static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class);
 	private final int controlNodeId;
 	private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
-	private int port;
-	private String serverAddress;
+	private final int port = 587;
+	private final String serverAddress = "exchange.framsteg.org";
 	private String receiverMail;
 	private String sendMail;
 	private String subject;
@@ -42,15 +42,12 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 		this.setValues();
 		this.sendMail();
 		this.setCanTerminate(true);
-		this.setCanTerminate(true);
 	}
 
 	/**
 	 * Sets the attributes for the e mail reading the information from database.
 	 */
 	private void setValues() {
-		port = 587;
-		serverAddress = "exchange.framsteg.org";
 		receiverMail = emailConfiguration.getReceiverEmailAddress(controlNodeId);
 		sendMail = emailConfiguration.getSendEmailAddress(controlNodeId);
 		subject = emailConfiguration.getSubject(controlNodeId);

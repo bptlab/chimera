@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import org.apache.log4j.Logger;
 
@@ -57,7 +57,7 @@ public class DbTerminationCondition extends DbObject {
     @Deprecated
 	public Map<String, List<Map<String, Object>>>
 		executeStatementReturnsMapOfListOfMapsWithKeys(String sql, String... keys) {
-		java.sql.Connection conn = Connection.getInstance().connect();
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
 		ResultSet results = null;
 		Map<String, List<Map<String, Object>>> conditionSets = new HashMap<>();
 		try {
@@ -66,7 +66,7 @@ public class DbTerminationCondition extends DbObject {
 				String conditionSetId = results.getString("set_id");
 				if (!conditionSets.containsKey(conditionSetId)) {
 					conditionSets.put(conditionSetId,
-							new LinkedList<Map<String, Object>>());
+							new ArrayList<>());
 				}
 				Map<String, Object> condition = new HashMap<>();
 				for (String key : keys) {

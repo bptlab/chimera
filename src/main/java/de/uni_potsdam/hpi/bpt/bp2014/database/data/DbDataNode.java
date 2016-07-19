@@ -4,7 +4,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataConditions;
 import org.apache.log4j.Logger;
 
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Map;
 

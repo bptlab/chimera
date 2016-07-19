@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 /**
  * Handles all scenario instances.
  */
-public class ExecutionService /*implements Runnable*/ {
+public class ExecutionService {
 
 	private static Logger log = Logger.getLogger(ExecutionService.class);
 	/**
 	 * Define the maximum allowable Map size.
 	 */
-	public static final int MAX_MAP_SIZE = 100;
+	private static final int MAX_MAP_SIZE = 100;
 	private static Map<Integer, ExecutionService> instances = new HashMap<>();
 	private int scenarioId = -1;
 	private boolean newVersionAvailable = true;
@@ -38,12 +38,10 @@ public class ExecutionService /*implements Runnable*/ {
 	 * This are the Lists for all opened scenario instances.
 	 */
 	private Map<Integer, ScenarioInstance> scenarioInstanceMap = new HashMap<>();
-	private LinkedList<Integer> instanceHistory = new LinkedList<>();
+	private Queue<Integer> instanceHistory = new LinkedList<>();
 
-	private final LinkedList<ScenarioInstance> scenarioInstances = new LinkedList<>();
-	private final Map<Integer, ScenarioInstance> sortedScenarioInstances = new HashMap<>();
 	/**
-	 * Database Connection.
+	 * Database ConnectionWrapper.
 	 */
 	private final DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
 	private final DbScenario dbScenario = new DbScenario();
@@ -60,18 +58,17 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @return the ExecutionService for the specified Instance.
 	 */
 	public static ExecutionService getInstance(int scenarioId) {
-		ExecutionService instance = instances.get(scenarioId);
-		if (instance == null) {
-			instance = new ExecutionService(scenarioId);
-			instances.put(scenarioId, instance);
-			//    		instance.run();
+		ExecutionService service = instances.get(scenarioId);
+		if (service == null) {
+			service = new ExecutionService(scenarioId);
+			instances.put(scenarioId, service);
 		}
 		//if there is a new version available, reload all instances from the database.
-		//if (instance.newVersionAvailable) {
-			instance.scenarioInstanceMap.clear();
-			instance.instanceHistory.clear();
+		//if (service.newVersionAvailable) {
+			service.scenarioInstanceMap.clear();
+			service.instanceHistory.clear();
 		//}
-		return instance;
+		return service;
 	}
 
 	/**
@@ -81,12 +78,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 */
 	public int startNewScenarioInstance() {
 		ScenarioInstance scenarioInstance = new ScenarioInstance(this.scenarioId);
-		scenarioInstances.add(scenarioInstance);
-		//scenarioInstanceMap.put(scenarioInstance
-		// 	.getId(), scenarioInstance);
 		addScenarioInstanceToMap(scenarioInstance);
-		sortedScenarioInstances.put(
-				scenarioInstance.getId(), scenarioInstance);
 		return scenarioInstance.getId();
 	}
 
@@ -134,8 +126,6 @@ public class ExecutionService /*implements Runnable*/ {
 					+ scenarioInstanceId + " from database.");
 			ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId,
 					scenarioInstanceId);
-			scenarioInstances.add(scenarioInstance);
-			sortedScenarioInstances.put(scenarioInstanceId, scenarioInstance);
 			addScenarioInstanceToMap(scenarioInstance);
 		} else {
 			return false;
@@ -148,7 +138,7 @@ public class ExecutionService /*implements Runnable*/ {
 		scenarioInstanceMap.put(scenarioInstance.getId(), scenarioInstance);
 		updateHistory(scenarioInstance.getId());
 		if (scenarioInstanceMap.size() > MAX_MAP_SIZE) {
-			int oldestInstance = instanceHistory.removeLast();
+			int oldestInstance = instanceHistory.poll();
 			scenarioInstanceMap.remove(oldestInstance);
 			log.info("Inserted scenario with ID="
 					+ scenarioInstance.getId()
@@ -171,13 +161,13 @@ public class ExecutionService /*implements Runnable*/ {
 
 	/**
 	 * Updates the scenario-history by removing the scenarioInstanceId first
-	 * and then adding it at the first position of the LinkedList.
+	 * and then adding it to the end of the queue.
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 */
 	private void updateHistory(int scenarioInstanceId) {
-		instanceHistory.remove((Object) scenarioInstanceId);
-		instanceHistory.addFirst(scenarioInstanceId);
+		instanceHistory.remove(scenarioInstanceId);
+		instanceHistory.offer(scenarioInstanceId);
 	}
 
 
@@ -211,19 +201,15 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @return a list of the ids of activities.
 	 */
-	public LinkedList<Integer> getEnabledActivitiesIDsForScenarioInstance(
+	public List<Integer> getEnabledActivityIdsForScenarioInstance(
 			int scenarioInstanceId) {
-		LinkedList<Integer> ids = new LinkedList<>();
+		List<Integer> ids = new ArrayList<>();
 		ScenarioInstance scenarioInstance =
 				scenarioInstanceMap.get(scenarioInstanceId);
-		//ScenarioInstance scenarioInstance =
-		// sortedScenarioInstances.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getEnabledControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				ids.add(nodeInstance.getControlNodeId());
-			}
-		}
+		ids.addAll(scenarioInstance.getEnabledControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(AbstractControlNodeInstance::getControlNodeId)
+				.collect(Collectors.toList()));
 		return ids;
 	}
 
@@ -234,16 +220,14 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @return a list of the ids of activities.
 	 */
-	public LinkedList<Integer> getRunningActivitiesIDsForScenarioInstance(
+	public List<Integer> getRunningActivityIdsForScenarioInstance(
 			int scenarioInstanceId) {
-		LinkedList<Integer> ids = new LinkedList<>();
+		List<Integer> ids = new ArrayList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
-				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				ids.add(nodeInstance.getControlNodeId());
-			}
-		}
+		ids.addAll(scenarioInstance.getRunningControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(AbstractControlNodeInstance::getControlNodeId)
+				.collect(Collectors.toList()));
 		return ids;
 	}
 
@@ -293,15 +277,12 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId The id which specifies the scenario.
 	 */
 	public Collection<ActivityInstance> getEnabledActivities(int scenarioInstanceId) {
-		Collection<ActivityInstance> allEnabledActivities = new LinkedList<>();
+		Collection<ActivityInstance> enabledActivities = new ArrayList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getEnabledControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				allEnabledActivities.add((ActivityInstance) nodeInstance);
-			}
-		}
-		List<ActivityInstance> enabledActivities = new LinkedList<>(allEnabledActivities);
+		enabledActivities.addAll(scenarioInstance.getEnabledControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(nodeInstance -> (ActivityInstance) nodeInstance)
+				.collect(Collectors.toList()));
 		return enabledActivities;
 	}
 
@@ -313,16 +294,14 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId The id which specifies the scenario.
 	 */
 	public Collection<ActivityInstance> getControlFlowEnabledActivities(int scenarioInstanceId) {
-		Collection<ActivityInstance> allCFEnabledActivities = new LinkedList<>();
+		Collection<ActivityInstance> cfEnabledActivities = new ArrayList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getControlFlowEnabledControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				allCFEnabledActivities.add((ActivityInstance) nodeInstance);
-			}
-		}
-
-		return allCFEnabledActivities;
+		cfEnabledActivities.addAll(
+				scenarioInstance.getControlFlowEnabledControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(nodeInstance -> (ActivityInstance) nodeInstance)
+				.collect(Collectors.toList()));
+		return cfEnabledActivities;
 	}
 
 	/**
@@ -333,15 +312,13 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId The id which specifies the scenario.
 	 */
 	public Collection<ActivityInstance> getDataEnabledActivities(int scenarioInstanceId) {
-		Collection<ActivityInstance> allDataEnabledActivities = new LinkedList<>();
+		Collection<ActivityInstance> allDataEnabledActivities = new ArrayList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getDataEnabledControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				allDataEnabledActivities.add((ActivityInstance) nodeInstance);
-			}
-		}
-
+		allDataEnabledActivities.addAll(
+				scenarioInstance.getDataEnabledControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(nodeInstance -> (ActivityInstance) nodeInstance)
+				.collect(Collectors.toList()));
 		return allDataEnabledActivities;
 	}
 
@@ -356,12 +333,11 @@ public class ExecutionService /*implements Runnable*/ {
 	public Collection<ActivityInstance> getTerminatedActivities(int scenarioInstanceId) {
 		Collection<ActivityInstance> terminatedActivities = new LinkedList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance
-				.getTerminatedControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				terminatedActivities.add((ActivityInstance) nodeInstance);
-			}
-		}
+		terminatedActivities.addAll(
+				scenarioInstance.getTerminatedControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(nodeInstance -> (ActivityInstance) nodeInstance)
+				.collect(Collectors.toList()));
 		return terminatedActivities;
 	}
 
@@ -373,19 +349,17 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId The id which specifies the scenario
 	 */
 	public Collection<ActivityInstance> getRunningActivities(int scenarioInstanceId) {
-		Collection<ActivityInstance> runningActivities = new LinkedList<>();
+		Collection<ActivityInstance> runningActivities = new ArrayList<>();
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance
-				: scenarioInstance.getRunningControlNodeInstances()) {
-			if (nodeInstance instanceof ActivityInstance) {
-				runningActivities.add((ActivityInstance) nodeInstance);
-			}
-		}
+		runningActivities.addAll(scenarioInstance.getRunningControlNodeInstances().stream()
+				.filter(nodeInstance -> nodeInstance instanceof ActivityInstance)
+				.map(nodeInstance -> (ActivityInstance) nodeInstance)
+				.collect(Collectors.toList()));
 		return runningActivities;
 	}
 
 	/**
-	 * Terminates an activity which is running.
+	 * Terminates a running activity.
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @param activityInstanceId         This is the id of the activity.
@@ -427,7 +401,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param controlNodeId This is the database id from the control node.
 	 * @return the label of the control node.
 	 */
-	public String getLabelForControlNodeID(int controlNodeId) {
+	public String getLabelForControlNodeId(int controlNodeId) {
 		return dbControlNode.getLabel(controlNodeId);
 	}
 
@@ -437,7 +411,7 @@ public class ExecutionService /*implements Runnable*/ {
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @return a list of the ids of data objects.
 	 */
-	public List<Integer> getAllDataObjectIDs(int scenarioInstanceId) {
+	public List<Integer> getAllDataObjectIds(int scenarioInstanceId) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
         DataManager dataManager = scenarioInstance.getDataManager();
 
@@ -482,11 +456,11 @@ public class ExecutionService /*implements Runnable*/ {
 	 * Gives the scenario instance for a scenario instance id.
 	 * Only for Tests.
 	 *
-	 * @param scenarioInstanceID This is the id of the scenario instance.
+	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @return a instance of the class ScenarioInstance.
 	 */
-	public ScenarioInstance getScenarioInstance(int scenarioInstanceID) {
-		return scenarioInstanceMap.get(scenarioInstanceID);
+	public ScenarioInstance getScenarioInstance(int scenarioInstanceId) {
+		return scenarioInstanceMap.get(scenarioInstanceId);
 	}
 	/**
 	 * Sets the values of the data attributes for an activity instance.
@@ -529,21 +503,19 @@ public class ExecutionService /*implements Runnable*/ {
 	 * This method gets all dataObjectInstances for a specific set of a scenarioInstance.
 	 *
 	 * @param setId              This is the databaseID of a DataConditions (either Input or Output).
-	 * @param scenarioInstanceID This is the databaseID of a scenarioInstance.
+	 * @param scenarioInstanceId This is the databaseID of a scenarioInstance.
 	 * @return an array of dataObjectInstances of dataObjects belonging to the dataSet.
 	 */
 	public DataObject[] getDataObjectInstancesForDataSetId(int setId,
-                                                           int scenarioInstanceID) {
+                                                           int scenarioInstanceId) {
 		DbDataNode dbDataNode = new DbDataNode();
 		List<Integer> dataObjectsInSet = dbDataNode.getDataClassIdsForDataSets(setId);
-        DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceID).getDataManager();
+        DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceId).getDataManager();
 
         List<DataObject> dataObjects = dataManager.getDataObjects()
                 .stream().filter(x -> dataObjectsInSet.contains(x.getDataClassId()))
                 .collect(Collectors.toList());
-        DataObject[] dataObjectArray =
-                dataObjects.toArray(new DataObject[dataObjects.size()]);
-		return dataObjectArray;
+        return dataObjects.toArray(new DataObject[dataObjects.size()]);
 	}
 
 
@@ -575,7 +547,7 @@ public class ExecutionService /*implements Runnable*/ {
 		return dataAttributes;
 	}
 
-	protected static int getInstancesSize() {
+	static int getInstancesSize() {
 		int size = -1;
 		if (instances != null) {
 			size = instances.size();
@@ -583,18 +555,18 @@ public class ExecutionService /*implements Runnable*/ {
 		return size;
 	}
 
-	protected static void dropCachedInstances() {
+	static void dropCachedInstances() {
 		instances.clear();
 	}
 
 	/**
 	 * Test for the existence of an activity instance in a given scenarioInstance.
 	 *
-	 * @param activityID The databaseID of the activityInstance which is to be checked.
+	 * @param activityInstanceId The databaseID of the activityInstance which is to be checked.
 	 * @return a boolean. True == activity is existing/ False == activity does not exist.
 	 */
-	public boolean testActivityInstanceExists(int activityID) {
+	public boolean testActivityInstanceExists(int activityInstanceId) {
 		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-		return dbControlNodeInstance.existControlNodeInstance(activityID);
+		return dbControlNodeInstance.existControlNodeInstance(activityInstanceId);
 	}
 }

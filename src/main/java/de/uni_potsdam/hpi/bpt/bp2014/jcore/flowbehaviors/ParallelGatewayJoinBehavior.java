@@ -5,14 +5,15 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
-import java.util.LinkedList;
+
+import java.util.List;
 
 /**
  * This class implements join behavior for parallel gateways.
  */
 public class ParallelGatewayJoinBehavior extends AbstractIncomingBehavior {
 	/**
-	 * Database Connection objects
+	 * Database ConnectionWrapper objects
 	 */
 	private final DbControlFlow dbControlFlow = new DbControlFlow();
 	private final DbControlNode dbControlNode = new DbControlNode();
@@ -41,7 +42,7 @@ public class ParallelGatewayJoinBehavior extends AbstractIncomingBehavior {
 	 * @return true if this gateway can get enabled. false if not.
 	 */
 	private Boolean checkEnabled() {
-		LinkedList<Integer> predecessors = dbControlFlow
+		List<Integer> predecessors = dbControlFlow
 				.getPredecessorControlNodes(this.getControlNodeInstance()
 						.getControlNodeId());
 		//if a start Event ist before this Gateway it is enabled

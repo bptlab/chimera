@@ -29,7 +29,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 			WebServiceTaskExecutionBehavior.class);
 
 	/**
-	 * DB Connection class.
+	 * DB ConnectionWrapper class.
 	 */
 	private DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 

@@ -12,10 +12,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class deals with the split behavior of exclusive gateways.
@@ -25,7 +22,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	/**
 	 * List of IDs of following control nodes.
 	 */
-	private LinkedList<LinkedList<Integer>> followingControlNodes = new LinkedList<>();
+	private List<List<Integer>> followingControlNodes = new ArrayList<>();
 
 	private DbState dbState = new DbState();
 	private String type = null;
@@ -50,10 +47,10 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * Creates for every control node a bucket.
 	 */
 	private void initializeFollowingControlNodeIds() {
-		LinkedList<Integer> ids = this.getDbControlFlow()
+		List<Integer> ids = this.getDbControlFlow()
 				.getFollowingControlNodes(getControlNodeId());
 		for (int i = 0; i < ids.size(); i++) {
-			followingControlNodes.add(new LinkedList<Integer>());
+			followingControlNodes.add(new ArrayList<>());
 			this.addFollowingControlNode(i, ids.get(i));
 		}
 	}
@@ -66,7 +63,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * @param id        The id of the control node getting added.
 	 */
 	private void addFollowingControlNode(int bucketId, int id) {
-		LinkedList<Integer> ids = followingControlNodes.get(bucketId);
+		List<Integer> ids = followingControlNodes.get(bucketId);
 		ids.add(id);
 		followingControlNodes.set(bucketId, ids);
 		if (type == null || this.getControlNodeId() != id) {
@@ -148,9 +145,9 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			return false;
 		}
 		for (int i = 0; i < followingControlNodes.size(); i++) {
-			if (followingControlNodes.get(i).contains(new Integer(controlNodeId))) {
+			if (followingControlNodes.get(i).contains(controlNodeId)) {
 				followingControlNodes.remove(i);
-				for (LinkedList<Integer> followingControlNodeIds
+				for (List<Integer> followingControlNodeIds
 						: followingControlNodes) {
 					for (int id : followingControlNodeIds) {
 						AbstractControlNodeInstance controlNodeInstance

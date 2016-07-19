@@ -187,7 +187,6 @@ public class ActivityRestTest extends AbstractTest {
 
     @Test
     public void testUpdateActivityWAttributes(){
-        // TODO Find out what this does
         Response response = base.path("scenario/135/instance/808/activityinstance/4518/begin")
                 .request().post(Entity.json("{}"));
         assertEquals("The Response code of beginActivityInstance was not 202",

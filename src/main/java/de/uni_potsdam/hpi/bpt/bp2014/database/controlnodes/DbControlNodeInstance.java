@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is the representation of a controlNode instance in the database.
@@ -76,7 +76,7 @@ public class DbControlNodeInstance extends DbObject {
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return a list of database ID's of all activities of this fragment instance.
 	 */
-	public LinkedList<Integer> getActivitiesForFragmentInstanceId(int fragmentInstanceId) {
+	public List<Integer> getActivitiesForFragmentInstanceId(int fragmentInstanceId) {
 		String sql =
 				"SELECT controlnode_id FROM controlnodeinstance "
 						+ "WHERE controlnodeinstance.Type = 'Activity' "
@@ -89,7 +89,7 @@ public class DbControlNodeInstance extends DbObject {
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return a list of database ID's of all activity instances of this fragment instance.
 	 */
-	public LinkedList<Integer> getActivityInstancesForFragmentInstanceID(
+	public List<Integer> getActivityInstancesForFragmentInstanceID(
 			int fragmentInstanceId) {
 		String sql =
 				"SELECT id FROM controlnodeinstance "
@@ -105,7 +105,7 @@ public class DbControlNodeInstance extends DbObject {
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return a list of database ID's of gateways belonging to this fragment instance.
 	 */
-	public LinkedList<Integer> getGatewaysForFragmentInstanceID(int fragmentInstanceId) {
+	public List<Integer> getGatewaysForFragmentInstanceID(int fragmentInstanceId) {
 		String sql =
 				"SELECT controlnode_id FROM controlnodeinstance "
 						+ "WHERE (controlnodeinstance.Type = 'AND' "
@@ -133,7 +133,7 @@ public class DbControlNodeInstance extends DbObject {
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return a list of database ID's of gateway instances belonging to this fragment instance.
 	 */
-	public LinkedList<Integer> getGatewayInstancesForFragmentInstanceID(
+	public List<Integer> getGatewayInstancesForFragmentInstanceID(
 			int fragmentInstanceId) {
 		String sql =
 				"SELECT id FROM controlnodeinstance "

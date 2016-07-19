@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 /**
  * The Connector has methods to create entries inside the database.
- * Therefore it uses the database.Connection class.
+ * Therefore it uses the database.ConnectionWrapper class.
  */
 public class Connector extends DbObject {
 	// TODO use this!
@@ -65,16 +65,16 @@ public class Connector extends DbObject {
 	 * @param label      The label of the node.
 	 * @param type       The type of the node (StartEvent/EndEvent/Task).
 	 * @param fragmentID The database ID of the DatabaseFragment.
-	 * @param modelID    The modelID of the controlNode from the XML.
+	 * @param modelId    The modelID of the controlNode from the XML.
 	 * @return The newly created database entry.
 	 */
 	public int insertControlNodeIntoDatabase(final String label, final String type,
-			final int fragmentID, final String modelID) {
+			final int fragmentID, final String modelId) {
 
 		String sql = "INSERT INTO controlnode "
 				+ "(label, controlnode.type, fragment_id, modelid) "
 				+ "VALUES ('" + label + "', '" + type
-				+ "', " + fragmentID + ", '" + modelID + "')";
+				+ "', " + fragmentID + ", '" + modelId + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 

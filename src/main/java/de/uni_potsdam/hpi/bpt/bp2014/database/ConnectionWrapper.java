@@ -7,14 +7,10 @@ import org.apache.log4j.Logger;
 //import com.ibatis.common.jdbc.ScriptRunner;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,8 +21,8 @@ import java.sql.Statement;
  * initializes the JDBC Driver and checks whether the schema version used in the database is smaller
  * then the version used by the engine. In that case the database is updated.
  */
-public final class Connection {
-  private static Connection instance = null;
+public final class ConnectionWrapper {
+  private static ConnectionWrapper instance = null;
   private String username;
   private String password;
   private String url;
@@ -34,7 +30,7 @@ public final class Connection {
   private static final String SCHEMA_DEFINITION_PATH = PropertyLoader.getProperty("database.schema.file");
   private static final int PATH_LENGTH = SCHEMA_DEFINITION_PATH.split("/").length;
   private static final String SCHEMA_DEFINITION_FILE = SCHEMA_DEFINITION_PATH.split("/")[PATH_LENGTH - 1];
-  private static Logger log = Logger.getLogger(Connection.class);
+  private static Logger log = Logger.getLogger(ConnectionWrapper.class);
 
   /**
    * Stores the current schema version used in the Chimera engine. Is set to '-1', if reading the
@@ -43,21 +39,15 @@ public final class Connection {
   private int schemaVersion = getSchemaVersion();
 
   /**
-   * Empty constructor. Use {@link getInstance()} to get the singleton instance.
-   */
-  private Connection() {
-  }
-
-  /**
    * This method builds a connection for the database with the credentials taken from the
    * config.properties file. It compares the schema version to the version used in the database and
    * "updates" the database by dropping the schema and executing a SQL script to recreate it.
    *
-   * @return the instance of a new Connection.
+   * @return the instance of a new ConnectionWrapper.
    */
-  public static synchronized Connection getInstance() {
+  public static synchronized ConnectionWrapper getInstance() {
     if (instance == null) {
-      instance = new Connection();
+      instance = new ConnectionWrapper();
       instance.initializeDatabaseConfiguration();
       if (instance.schemaVersionOutdated()) {
         instance.updateSchema();
@@ -80,7 +70,7 @@ public final class Connection {
       conn = DriverManager.getConnection(url, username, password);
     } catch (ClassNotFoundException | SQLException e) {
       // Handle errors for Class.forName
-      log.error("MySQL Connection Error:", e);
+      log.error("MySQL ConnectionWrapper Error:", e);
     }
     return conn;
   }

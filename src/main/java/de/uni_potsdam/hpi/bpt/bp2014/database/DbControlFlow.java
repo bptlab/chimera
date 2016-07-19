@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +28,7 @@ public class DbControlFlow extends DbObject {
 	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return a list of database ID's of controlNodes which succeed the given controlNode.
 	 */
-	public LinkedList<Integer> getFollowingControlNodes(int controlNodeId) {
+	public List<Integer> getFollowingControlNodes(int controlNodeId) {
 		String sql =
 				"SELECT controlnode_id2 FROM controlflow "
 						+ "WHERE controlnode_id1 = " + controlNodeId;
@@ -41,7 +41,7 @@ public class DbControlFlow extends DbObject {
 	 * @param controlNodeId This is the database ID of a controlNode.
 	 * @return a list of database ID's of controlNodes which precede the given controlNode.
 	 */
-	public LinkedList<Integer> getPredecessorControlNodes(int controlNodeId) {
+	public List<Integer> getPredecessorControlNodes(int controlNodeId) {
 		String sql =
 				"SELECT controlnode_id1 FROM controlflow "
 						+ "WHERE controlnode_id2 = " + controlNodeId;

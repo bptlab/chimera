@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	/**
-	 * Database Connection objects
+	 * Database ConnectionWrapper objects
 	 */
 	private final DbDataFlow dbDataFlow = new DbDataFlow();
 	private final DbDataNode dbDataNode = new DbDataNode();

@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -137,7 +137,7 @@ public class MetaAnalyticsModel {
 						+ "WHERE scenarioinstance.terminated = 1 "
 						+ "AND scenarioinstance.scenario_id = "
 						+ scenarioId;
-		java.sql.Connection conn = Connection.getInstance().connect();
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
 		ResultSet results = null;
 		List<ExampleAlgorithm.DbScenarioInstanceIDsAndTimestamps>
 				scenarioInstances = new ArrayList<>();
@@ -178,7 +178,7 @@ public class MetaAnalyticsModel {
 	 */
 	public static Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(
 			String sql, String... keys) {
-		java.sql.Connection conn = Connection.getInstance().connect();
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
 		ResultSet results = null;
 		Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
 		try {
@@ -215,7 +215,7 @@ public class MetaAnalyticsModel {
 	 */
 	public static ArrayList<Map<String, Object>> executeStatementReturnsHashMap(String sql) {
 		java.sql.Connection conn =
-				de.uni_potsdam.hpi.bpt.bp2014.database.Connection.getInstance()
+				ConnectionWrapper.getInstance()
 				.connect();
 		Statement stmt = null;
 		try {

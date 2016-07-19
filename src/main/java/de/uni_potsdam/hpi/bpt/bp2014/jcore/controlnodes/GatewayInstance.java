@@ -11,7 +11,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewaySplitBe
  */
 public class GatewayInstance extends AbstractControlNodeInstance {
 	/**
-	 * Database Connection objects.
+	 * Database ConnectionWrapper objects.
 	 */
 	protected final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 	protected final DbControlNode dbControlNode = new DbControlNode();

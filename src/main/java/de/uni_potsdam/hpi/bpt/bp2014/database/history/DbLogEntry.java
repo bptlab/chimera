@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.history;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.*;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbActivityInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNode;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance;
@@ -158,7 +158,7 @@ public class DbLogEntry extends DbObject {
 
     private List<LogEntry> retrieveLogEntries(String sql) {
         List<LogEntry> entries = new ArrayList<>();
-        try (java.sql.Connection conn = Connection.getInstance().connect();
+        try (java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
              Statement statement = conn.createStatement();
              ResultSet rs = statement.executeQuery(sql)) {
             while (rs.next()) {
@@ -181,7 +181,7 @@ public class DbLogEntry extends DbObject {
 
     private void insertLog(int scenarioInstanceId, int loggedId, String newValue,
                            Optional<Integer> cause, String label, LogEntry.LogType type) {
-        java.sql.Connection con = Connection.getInstance().connect();
+        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
         try (PreparedStatement stat = con.prepareStatement(insertQuery)) {
             stat.setInt(1, scenarioInstanceId);
             stat.setInt(2, loggedId);

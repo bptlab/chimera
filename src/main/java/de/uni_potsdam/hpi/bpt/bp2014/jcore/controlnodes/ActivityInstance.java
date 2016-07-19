@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ActivityInstance extends AbstractControlNodeInstance {
 	private final String label;
 	/**
-	 * Database Connection objects.
+	 * Database ConnectionWrapper objects.
 	 */
 	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 	private final DbActivityInstance dbActivityInstance = new DbActivityInstance();

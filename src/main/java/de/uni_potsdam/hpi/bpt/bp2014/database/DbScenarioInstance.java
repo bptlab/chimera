@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import org.apache.log4j.Logger;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -102,7 +102,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @param scenarioId This is the database ID of a scenario.
 	 * @return a list of database ID's of all scenario instances belonging to this scenario.
 	 */
-	public LinkedList<Integer> getScenarioInstances(int scenarioId) {
+	public List<Integer> getScenarioInstances(int scenarioId) {
 		String sql =
 				"SELECT * FROM scenarioinstance "
 						+ "WHERE scenarioinstance.terminated = 0 "
@@ -117,7 +117,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @param scenarioInstanceId This is the database ID of a scenario instance.
 	 * @return the database ID of the corresponding scenario.
 	 */
-	public int getScenarioID(int scenarioInstanceId) {
+	public int getScenarioId(int scenarioInstanceId) {
 		String sql = "SELECT scenario_id FROM scenarioinstance "
 				+ "WHERE id = " + scenarioInstanceId;
 		log.info(sql);
