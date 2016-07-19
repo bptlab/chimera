@@ -22,7 +22,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
+ * This class implements the REST interface for data based elements.
+ * It allows to generate and retrieve information about inputs/outputs.
+ * Note that direct interaction with data objects is handled by {@link DataObjectRestService}
  */
 @Path("interface/v2")
 public class DataDependencyRestService extends AbstractRestService {
@@ -191,6 +193,14 @@ public class DataDependencyRestService extends AbstractRestService {
         return Response.ok(buildIOJson(outputSets), MediaType.APPLICATION_JSON).build();
     }
 
+    /**
+     *
+     * @param scenarioId         The databaseID of the scenario.
+     * @param scenarioInstanceId The databaseID of the scenarioInstance belonging
+     *                           to the aforementioned scenario.
+     * @param activityId         The databaseID of the activity in this scenarioInstance.
+     * @return an array with the available inputs
+     */
     @GET
     @Path("scenario/{scenarioId}/instance/{instanceId}/activity/{activityId}/availableInput")
     public Response getAvailableInput(@PathParam("scenarioId") int scenarioId,
