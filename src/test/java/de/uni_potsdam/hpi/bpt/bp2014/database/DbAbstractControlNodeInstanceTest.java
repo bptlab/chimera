@@ -29,7 +29,7 @@ public class DbAbstractControlNodeInstanceTest extends AbstractDatabaseDependent
     @Test
     public void testGetControlNodeInstanceID() {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        assertEquals(178, dbControlNodeInstance.getControlNodeInstanceID(4, 168));
+        assertEquals(178, dbControlNodeInstance.getControlNodeInstanceId(4, 168));
     }
 
     /**
@@ -38,7 +38,7 @@ public class DbAbstractControlNodeInstanceTest extends AbstractDatabaseDependent
     @Test
     public void testGetActivitiesForFragmentInstanceID() {
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        assertEquals(2, (int)dbControlNodeInstance.getActivitiesForFragmentInstanceID(83).get(0));
-        assertEquals(5, (int)dbControlNodeInstance.getActivitiesForFragmentInstanceID(83).get(1));
+        assertEquals(2, (int)dbControlNodeInstance.getActivitiesForFragmentInstanceId(83).get(0));
+        assertEquals(5, (int)dbControlNodeInstance.getActivitiesForFragmentInstanceId(83).get(1));
     }
 }

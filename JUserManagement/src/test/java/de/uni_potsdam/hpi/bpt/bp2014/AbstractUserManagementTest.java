@@ -1,7 +1,8 @@
 package de.uni_potsdam.hpi.bpt.bp2014;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
 
@@ -29,7 +30,7 @@ public abstract class AbstractUserManagementTest extends JerseyTest {
     @Before
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
         runner.runScript(new FileReader(JUSERMANAGEMENT_SQL_FILE));
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
@@ -38,7 +39,7 @@ public abstract class AbstractUserManagementTest extends JerseyTest {
      * Drops and recreates the database.
      */
     protected static void clearDatabase() {
-        java.sql.Connection conn = Connection.getInstance().connect();
+        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
         Statement stmt = null;
         if (conn == null) {
             return;

@@ -1,8 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
-//import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractUserManagementTest;
+
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;
@@ -22,7 +21,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * This class is the test for {@link RestConfigurator}.
- * It extends the {@link AbstractUserManagementTest} class,
  * hence the database configuration will be restored afterwards.
  */
 public class RestConfiguratorTest extends AbstractTest {

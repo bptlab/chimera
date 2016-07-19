@@ -1,7 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014;
 
 //import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
 
 import org.junit.AfterClass;
@@ -30,7 +30,7 @@ public class AbstractDatabaseDependentTest {
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
         runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
@@ -43,7 +43,7 @@ public class AbstractDatabaseDependentTest {
     @Before
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
         runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
@@ -53,7 +53,7 @@ public class AbstractDatabaseDependentTest {
      */
     protected static void clearDatabase() {
       // connect() uses the url of the normal db, not the test db
-        java.sql.Connection conn = Connection.getInstance().connect();
+        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
         Statement stmt = null;
         if (conn == null) {
             return;

@@ -107,7 +107,7 @@ public class ScenarioTestHelper {
     public static int triggerEventInScenario(
             ScenarioInstance scenarioInstance, WebTarget base, String body) {
         int scenarioId = scenarioInstance.getScenarioId();
-        int scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        int scenarioInstanceId = scenarioInstance.getId();
         List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
         String registeredEvent = registeredEventKeys.get(0);
         String route = String.format("scenario/%d/instance/%d/events/%s", scenarioId,

@@ -67,7 +67,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         // ScenarioTestHelper.terminateActivityByName("Do something", instance);
 
         int scenarioId = instance.getScenarioId();
-        int scenarioInstanceId = instance.getScenarioInstanceId();
+        int scenarioInstanceId = instance.getId();
         String requestPath = String.format(
                 "scenario/%d/instance/%d/activities", scenarioId, scenarioInstanceId);
         Response response = base.path(requestPath).request().get();

@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.StartQueryPart;
 
@@ -26,7 +26,7 @@ public class DbStartQuery extends DbObject {
                 "startquery.id = startpart.query_id AND startpart.query_id = '%s'";
         sql = String.format(sql, scenarioId, queryId);
         Map<Integer, StartQueryPart> dataclassIdToStartQuery = new HashMap<>();
-        java.sql.Connection connection = Connection.getInstance().connect();
+        java.sql.Connection connection = ConnectionWrapper.getInstance().connect();
         try (Statement stat = connection.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             while (rs.next()) {

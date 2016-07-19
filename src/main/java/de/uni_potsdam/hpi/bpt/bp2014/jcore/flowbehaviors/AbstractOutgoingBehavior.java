@@ -45,7 +45,7 @@ public abstract class AbstractOutgoingBehavior {
 			controlNodeInstance = new ActivityInstance(
                     controlNodeId, fragmentInstanceId, scenarioInstance);
             new DbLogEntry().logActivity(controlNodeInstance.getControlNodeInstanceId(),
-                    "init", this.getScenarioInstance().getScenarioInstanceId());
+                    "init", this.getScenarioInstance().getId());
             break;
 		case "EndEvent":
 			controlNodeInstance = new EndEvent(

@@ -10,7 +10,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.GatewayInstance;
  */
 public class GatewayStateMachine extends AbstractStateMachine {
 	/**
-	 * Database Connection objects
+	 * Database ConnectionWrapper objects
 	 */
 	private final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 

@@ -41,7 +41,7 @@ public class DataObject {
         this.scenarioInstance = scenarioInstance;
         this.dataClassId = dataClassId;
         this.scenarioId = scenarioInstance.getScenarioId();
-        this.scenarioInstanceId = scenarioInstance.getScenarioInstanceId();
+        this.scenarioInstanceId = scenarioInstance.getId();
 
         this.id = dbDataObject.createDataObject(scenarioId, scenarioInstanceId, stateId, dataClassId);
         DbDataClass dataClass = new DbDataClass();

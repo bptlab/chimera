@@ -45,10 +45,10 @@ public class DataAttributeTest {
     public void testDataAttributeSetMethod() {
         DataClass dClass = new DataClass(dataClass);
         for (DataAttribute attr : dClass.getAttributes()) {
-            attr.setDataClassID(42);
+            attr.setDataClassId(42);
         }
         for (int i = 0; i < dClass.getAttributes().size(); i++) {
-            Assert.assertEquals("DataClassID has not been set correctly", 42, dClass.getAttributes().get(i).getDataClassID());
+            Assert.assertEquals("DataClassID has not been set correctly", 42, dClass.getAttributes().get(i).getDataClassId());
         }
     }
 
@@ -56,17 +56,17 @@ public class DataAttributeTest {
     public void testDataAttribute() {
         DataAttribute dataAttribute = new DataAttribute("state", "String", "123EditorId");
         Assert.assertEquals("AttributeName has not been set correctly", "state", dataAttribute
-                .getDataAttributeName());
-        Assert.assertEquals("AttributeType has not been set correctly", "String", dataAttribute.getDataAttributeType());
+                .getName());
+        Assert.assertEquals("AttributeType has not been set correctly", "String", dataAttribute.getType());
     }
 
     @Test
     public void testTypedDataAttribute() {
         DataAttribute dataAttribute = new DataAttribute("state", "String", "123EditorId");
         Assert.assertEquals("AttributeName has not been set correctly", "state", dataAttribute
-                .getDataAttributeName());
+                .getName());
         Assert.assertEquals("AttributeType has not been set correctly", "String", dataAttribute
-                .getDataAttributeType());
+                .getType());
     }
 
     @Test
@@ -74,8 +74,8 @@ public class DataAttributeTest {
         DataClass dClass = new DataClass(dataClass);
         DataAttribute dAttribute = dClass.getAttributes().get(0);
         Assert.assertEquals("AttributeName has not been set correctly", "Beginn", dAttribute
-                .getDataAttributeName());
+                .getName());
         Assert.assertEquals("AttributeType has not been set correctly", "String", dAttribute
-                .getDataAttributeType());
+                .getType());
     }
 }

@@ -1,5 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jconfiguration.rest;
 
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbWebServiceTask;
@@ -17,10 +18,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -30,7 +28,7 @@ import java.util.Map;
  * and to control the instances.
  * Methods which are necessary for the controlling can be found
  * inside the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService}.
- * This class will use {@link de.uni_potsdam.hpi.bpt.bp2014.database.Connection}
+ * This class will use {@link ConnectionWrapper}
  * to access the database directly.
  */
 @Path("config/v2") public class RestConfigurator {
@@ -102,7 +100,7 @@ import java.util.Map;
 			return Response.status(Response.Status.NOT_FOUND).type(
 					MediaType.APPLICATION_JSON).entity("{}").build();
 		}
-		String jsonRepresentation = JsonUtil.jsonWrapperLinkedList(
+		String jsonRepresentation = JsonUtil.jsonWrapperList(
 				mail.getAllEmailTasksForScenario(scenarioID));
 		return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 	}
@@ -157,9 +155,9 @@ import java.util.Map;
 					+ "scenario ID is not existing\"}").build();
 		}
 		DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-		LinkedList<Integer> webServiceTaskIDs =
+		List<Integer> webServiceTaskIds =
 				dbWebServiceTask.getWebServiceTasks(scenarioID);
-		String jsonRepresentation = JsonUtil.jsonWrapperLinkedList(webServiceTaskIDs);
+		String jsonRepresentation = JsonUtil.jsonWrapperList(webServiceTaskIds);
 		return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
 	}
 

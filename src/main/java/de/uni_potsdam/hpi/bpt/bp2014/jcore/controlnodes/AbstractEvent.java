@@ -33,7 +33,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
                     controlNodeId, this.getType(), fragmentInstanceId);
             this.setControlNodeInstanceId(controlNodeInstanceId);
         } else {
-            this.setControlNodeInstanceId(databaseNodeInstance.getControlNodeInstanceID(
+            this.setControlNodeInstanceId(databaseNodeInstance.getControlNodeInstanceId(
                     controlNodeId, fragmentInstanceId));
         }
         outgoingBehavior = this.createOutgoingBehavior();
@@ -75,7 +75,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     protected void registerEvent() {
         EventDispatcher.registerEvent(this, this.getFragmentInstanceId(),
-                this.getScenarioInstance().getScenarioInstanceId(),
+                this.getScenarioInstance().getId(),
                 this.getScenarioInstance().getScenarioId());
     }
 

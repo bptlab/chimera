@@ -26,19 +26,18 @@ public class InputOutputSetTest {
     public void setup() throws IOException, JAXBException {
         final int versionNumber = 0;
         final String fragmentName = "aDummyName";
-        final String fragmentId = "aDummyId";
 
         String path1 = "src/test/resources/fragments/InputOutputFragment.xml";
         File file1 = new File(path1);
         String xml1 = FileUtils.readFileToString(file1);
-        fragmentWithIOSets = new Fragment(xml1, versionNumber, fragmentName, fragmentId);
+        fragmentWithIOSets = new Fragment(xml1, versionNumber, fragmentName);
         activities = fragmentWithIOSets.getAllActivities();
         assert(activities.size() == 3);
 
         String path2 = "src/test/resources/fragments/fragmentWithoutInputOutput.xml";
         File file2 = new File(path2);
         String xml2 = FileUtils.readFileToString(file2);
-        fragmentWithoutIOSets = new Fragment(xml2, versionNumber, fragmentName, fragmentId);
+        fragmentWithoutIOSets = new Fragment(xml2, versionNumber, fragmentName);
     }
 
     @Test

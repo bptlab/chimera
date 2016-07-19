@@ -2,7 +2,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.jcomparser.json;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.jaxb.DataNode;
 import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.Connector;
-import de.uni_potsdam.hpi.bpt.bp2014.jcomparser.saving.IPersistable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -17,10 +16,6 @@ import java.util.*;
 public class DataClass {
     private static Logger logger = Logger.getLogger(DataClass.class);
 
-    /**
-     * This is the modelID of the dataClass.
-     */
-    protected String modelId;
     /**
      * This is the databaseID of the dataClass.
      */
@@ -61,7 +56,6 @@ public class DataClass {
                 String errorMsg = "%s is not a valid data class name";
                 throw new IllegalArgumentException(String.format(errorMsg, name));
             }
-            this.modelId = this.jsonRepresentation.getString("_id");
             generateDataAttributeList(this.jsonRepresentation.getJSONArray("attributes"));
             if (this.jsonRepresentation.has("olc")) {
                 this.olc = new Olc(this.jsonRepresentation.get("olc").toString());
@@ -115,7 +109,7 @@ public class DataClass {
 
     private void saveDataAttributes() {
         for (DataAttribute dataAttribute : this.getAttributes()) {
-            dataAttribute.setDataClassID(databaseId);
+            dataAttribute.setDataClassId(databaseId);
             dataAttribute.save();
         }
     }
@@ -131,7 +125,7 @@ public class DataClass {
 
     public Optional<DataAttribute> getDataAttributeByName(String attributeName) {
         for (DataAttribute attribute : this.getAttributes()) {
-            if (attribute.getDataAttributeName().equals(attributeName)) {
+            if (attribute.getName().equals(attributeName)) {
                 return Optional.of(attribute);
             }
         }
@@ -152,10 +146,6 @@ public class DataClass {
 
     public JSONObject getJsonRepresentation() {
         return jsonRepresentation;
-    }
-
-    public String getModelId() {
-        return modelId;
     }
 
     public Map<String, Integer> getStateToDatabaseId() {

@@ -5,7 +5,6 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.DbSelectedDataObjects;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataManager;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
-import org.junit.Assert;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class ActivityInstanceTest {
         expectLastCall();
         instance.checkXorGatewaysForTermination(controlNodeId);
         expectLastCall();
-        expect(instance.getScenarioInstanceId()).andReturn(scenarioInstanceId);
+        expect(instance.getId()).andReturn(scenarioInstanceId);
         expect(instance.getControlNodeInstances()).andReturn(new ArrayList<>()).anyTimes();
         expect(instance.getControlFlowEnabledControlNodeInstances()).andReturn(
                 new ArrayList<>()).anyTimes();

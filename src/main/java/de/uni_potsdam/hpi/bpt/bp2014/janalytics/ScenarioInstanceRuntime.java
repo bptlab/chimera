@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -73,7 +73,7 @@ public class ScenarioInstanceRuntime implements AnalyticsService {
 						+ "WHERE h.scenarioinstance_id = "
 						+ scenarioInstanceId
 						+ " AND h.scenarioinstance_id = s.id";
-		java.sql.Connection conn = Connection.getInstance().connect();
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
 		ResultSet results = null;
 		try {
 			results = conn.prepareStatement(sql).executeQuery();

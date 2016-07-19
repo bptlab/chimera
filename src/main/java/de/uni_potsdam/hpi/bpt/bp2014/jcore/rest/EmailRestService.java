@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbEmailConfiguration;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.EmailConfigJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.util.JsonUtil;
 
@@ -33,7 +32,7 @@ public class EmailRestService {
             @QueryParam("filter") String filterString) {
         DbEmailConfiguration mail = new DbEmailConfiguration();
         String jsonRepresentation = JsonUtil
-                .jsonWrapperLinkedList(
+                .jsonWrapperList(
                         mail.getAllEmailTasksForScenario(scenarioId));
         return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
     }

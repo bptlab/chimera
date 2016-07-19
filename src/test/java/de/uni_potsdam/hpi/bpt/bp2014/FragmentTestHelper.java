@@ -34,8 +34,7 @@ public class FragmentTestHelper {
             String xml = FileUtils.readFileToString(file);
             int versionNumber = 0;
             String fragmentName = "aDummyName";
-            String fragmentId = "aDummyId";
-            return new Fragment(xml, versionNumber, fragmentName, fragmentId);
+            return new Fragment(xml, versionNumber, fragmentName);
 
         } catch (IOException | JAXBException e) {
             e.printStackTrace();

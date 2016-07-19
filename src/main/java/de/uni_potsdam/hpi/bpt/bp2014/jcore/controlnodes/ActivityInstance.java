@@ -78,7 +78,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		this.label = dbControlNode.getLabel(controlNodeId);
 		scenarioInstance.getControlNodeInstances().add(this);
 		if (instanceId == -1) {
-			setControlNodeInstanceId(dbControlNodeInstance.getControlNodeInstanceID(
+			setControlNodeInstanceId(dbControlNodeInstance.getControlNodeInstanceId(
                     controlNodeId, fragmentInstanceId));
 		} else {
 			this.setControlNodeInstanceId(instanceId);
@@ -216,7 +216,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         ((TaskIncomingControlFlowBehavior) getIncomingBehavior())
                 .lockDataObjects(workingItems);
         DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
-        int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+        int scenarioInstanceId = this.getScenarioInstance().getId();
         dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
                 this.getControlNodeInstanceId(), workingItems);
 
@@ -225,8 +225,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
     }
 
     private void beginExecution() {
-        int scenarioInstanceId = this.scenarioInstance.getScenarioInstanceId();
-
+        int scenarioInstanceId = this.scenarioInstance.getId();
         new DbLogEntry().logActivity(
                 this.getControlNodeInstanceId(), "running", scenarioInstanceId);
         scenarioInstance.updateDataFlow();
@@ -262,7 +261,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
      */
 	public boolean terminate(Map<String, String> dataClassNameToStateName) {
 		if (canTerminate) {
-            int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+            int scenarioInstanceId = this.getScenarioInstance().getId();
             new DbLogEntry().logActivity(
                     this.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
             boolean workingFine = getStateMachine().terminate();

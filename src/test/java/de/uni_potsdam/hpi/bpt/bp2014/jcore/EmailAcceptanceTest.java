@@ -51,16 +51,16 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Test", inbox.get(0).getSubject());
         assertEquals("Test Message", inbox.get(0).getContent());
 
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
 
         //do activity 1
         System.out.println("do activity " + activity1);
         executionService.beginActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
         inbox = Mailbox.get(receiver);
@@ -92,16 +92,16 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         assertEquals("Test Message", inbox.get(0).getContent());
         assertEquals("Test", inbox.get(1).getSubject());
         assertEquals("Test Message", inbox.get(1).getContent());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
 
         //do activity 1
         System.out.println("do activity " + activity1);
         executionService.beginActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
         inbox = Mailbox.get(receiver);
@@ -136,16 +136,16 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         int activity6 = 397;
         System.out.println("Start Scenario 145");
 
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity1, activity2, activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1, activity2, activity3, activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
 
         //do activity 2
         System.out.println("do activity " + activity2);
         executionService.beginActivityInstance(scenarioInstance, activity2);
-        assertArrayEquals(new Integer[]{activity1, activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{activity1, activity3, activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity2);
-        assertArrayEquals(new Integer[]{activity1, activity3, activity4, activity5, activity6}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1, activity3, activity4, activity5, activity6}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
 //        executionService = null;
 //        executionService = ExecutionService.getInstance(scenarioID);
@@ -154,18 +154,18 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         //do activity 1
         System.out.println("do activity " + activity1);
         executionService.beginActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity5, activity6, activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{activity5, activity6, activity3, activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity5, activity6, activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity5, activity6, activity3, activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         //do activity6
         System.out.println("do activity " + activity6);
         executionService.beginActivityInstance(scenarioInstance, activity6);
-        //assertArrayEquals(new Integer[]{activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        //assertArrayEquals(new Integer[]{activity3, activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         //executionService.terminateActivityInstance(scenarioInstance, activity6);
-        assertArrayEquals(new Integer[]{activity3, activity4, activity2}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity3, activity4, activity2}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
         List<Message> inbox = Mailbox.get(receiver);
@@ -194,16 +194,16 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
 
         System.out.println("Start Scenario 145");
 
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
 
         //do activity 1
         System.out.println("do activity " + activity1);
         executionService.beginActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity2, activity3, activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity2, activity3, activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
 //        executionService = null;
 //        executionService = ExecutionService.getInstance(scenarioID);
@@ -212,10 +212,10 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         //do activity 3
         System.out.println("do activity " + activity3);
         executionService.beginActivityInstance(scenarioInstance, activity3);
-        assertArrayEquals(new Integer[]{activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity3);
-        assertArrayEquals(new Integer[]{activity4}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity4}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
         List<Message> inbox = Mailbox.get(receiver);
@@ -226,10 +226,10 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         //do activity 4
         System.out.println("do activity " + activity4);
         executionService.beginActivityInstance(scenarioInstance, activity4);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity4);
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         // executionService = null;
         // executionService = ExecutionService.getInstance(scenarioID);
@@ -252,16 +252,16 @@ public class EmailAcceptanceTest extends AbstractDatabaseDependentTest {
         System.out.println("Start Scenario 151");
 
 
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
 
         //do activity 1
         System.out.println("do activity " + activity1);
         executionService.beginActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
+        assertArrayEquals(new Integer[]{}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
         executionService.terminateActivityInstance(scenarioInstance, activity1);
-        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toArray());
-        System.out.println("enabled Activities: " + executionService.getEnabledActivitiesIDsForScenarioInstance(scenarioInstance).toString());
+        assertArrayEquals(new Integer[]{activity1}, executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toArray());
+        System.out.println("enabled Activities: " + executionService.getEnabledActivityIdsForScenarioInstance(scenarioInstance).toString());
 
         //check for new Email
         List<Message> inbox = Mailbox.get(receiver);

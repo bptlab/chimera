@@ -142,14 +142,14 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbFragmentInstance.html#createNewFragmentInstance(int,%20int)">createNewFragmentInstance</a></strong>(int&nbsp;fragmentId,
-                         int&nbsp;scenarioInstanceId)</code>
+                         int&nbsp;id)</code>
 <div class="block">This method creates and saves a new fragment instance to the database.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbFragmentInstance.html#existFragment(int,%20int)">existFragment</a></strong>(int&nbsp;fragmentId,
-             int&nbsp;scenarioInstanceId)</code>
+             int&nbsp;id)</code>
 <div class="block">This method checks if a fragment is present in the database.</div>
 </td>
 </tr>
@@ -162,7 +162,7 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbFragmentInstance.html#getFragmentInstanceID(int,%20int)">getFragmentInstanceID</a></strong>(int&nbsp;fragmentId,
-                     int&nbsp;scenarioInstanceId)</code>
+                     int&nbsp;id)</code>
 <div class="block">This method gives you the fragment instance ID of a fragment from a specific scenario instance.</div>
 </td>
 </tr>
@@ -225,9 +225,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <li class="blockList">
 <h4>existFragment</h4>
 <pre>public&nbsp;java.lang.Boolean&nbsp;existFragment(int&nbsp;fragmentId,
-                              int&nbsp;scenarioInstanceId)</pre>
+                              int&nbsp;id)</pre>
 <div class="block">This method checks if a fragment is present in the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fragmentId</code> - This is the database ID of a fragment.</dd><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fragmentId</code> - This is the database ID of a fragment.</dd><dd><code>id</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if the fragment exists else false.</dd></dl>
 </li>
 </ul>
@@ -238,9 +238,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <li class="blockList">
 <h4>createNewFragmentInstance</h4>
 <pre>public&nbsp;int&nbsp;createNewFragmentInstance(int&nbsp;fragmentId,
-                            int&nbsp;scenarioInstanceId)</pre>
+                            int&nbsp;id)</pre>
 <div class="block">This method creates and saves a new fragment instance to the database.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fragmentId</code> - This is the database ID of a fragment.</dd><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fragmentId</code> - This is the database ID of a fragment.</dd><dd><code>id</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>-1 if something went wrong else the database ID of the newly created fragment instance.</dd></dl>
 </li>
 </ul>
@@ -251,9 +251,9 @@ extends <a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/database/DbObje
 <li class="blockList">
 <h4>getFragmentInstanceID</h4>
 <pre>public&nbsp;int&nbsp;getFragmentInstanceID(int&nbsp;fragmentId,
-                        int&nbsp;scenarioInstanceId)</pre>
+                        int&nbsp;id)</pre>
 <div class="block">This method gives you the fragment instance ID of a fragment from a specific scenario instance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fragmentId</code> - This is the database ID of a fragment.</dd><dd><code>scenarioInstanceId</code> - This is the database ID of a scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>fragmentId</code> - This is the database ID of a fragment.</dd><dd><code>id</code> - This is the database ID of a scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>the database ID of the fragment instance if existing else -1.</dd></dl>
 </li>
 </ul>

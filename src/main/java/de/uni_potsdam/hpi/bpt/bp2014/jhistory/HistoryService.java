@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class HistoryService {
 	/**
-	 * Database Connection objects
+	 * Database ConnectionWrapper objects
 	 */
 
 	/**

@@ -23,9 +23,9 @@ public class MockProvider {
         List<DataAttribute> dataAttributes = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             DataAttribute dataAttribute = createNiceMock(DataAttribute.class);
-            expect(dataAttribute.getDataAttributeName()).andReturn(names.get(i)).anyTimes();
+            expect(dataAttribute.getName()).andReturn(names.get(i)).anyTimes();
             expect(dataAttribute.getEditorId()).andReturn(editorIds.get(i)).anyTimes();
-            expect(dataAttribute.getAttributeDatabaseId()).andReturn(databaseIds.get(i)).anyTimes();
+            expect(dataAttribute.getId()).andReturn(databaseIds.get(i)).anyTimes();
             replay(dataAttribute);
             dataAttributes.add(dataAttribute);
         }
@@ -45,7 +45,7 @@ public class MockProvider {
             expect(dataClass.getDatabaseId()).andReturn(i + 1).anyTimes();
 
             for (DataAttribute dataAttribute : dataAttributes.get(i)) {
-                String dataAttributeName = dataAttribute.getDataAttributeName();
+                String dataAttributeName = dataAttribute.getName();
                 Optional<DataAttribute> dataAttributeOptional = Optional.of(dataAttribute);
                 expect(dataClass.getDataAttributeByName(dataAttributeName))
                         .andReturn(dataAttributeOptional).anyTimes();

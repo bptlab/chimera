@@ -3,7 +3,6 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.events;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbControlFlow;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**

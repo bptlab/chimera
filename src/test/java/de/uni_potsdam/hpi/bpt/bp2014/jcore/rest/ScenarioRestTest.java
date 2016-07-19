@@ -138,7 +138,7 @@ public class ScenarioRestTest extends AbstractTest {
         assertNotEquals("Get scenarios did not respond with a valid JSON Array",
                 null, new JSONObject(responseEntity));
         assertThat("The content of the valid request is not as expected",
-                "{\"modelid\":\"0\",\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
+                "{\"instances\":\"http://localhost:9998/interface/v2/scenario/1/instance\",\"name\":\"HELLOWORLD\",\"id\":1,\"modelversion\":0}",
                 jsonEquals(responseEntity).when(Option.IGNORING_ARRAY_ORDER));
     }
 }

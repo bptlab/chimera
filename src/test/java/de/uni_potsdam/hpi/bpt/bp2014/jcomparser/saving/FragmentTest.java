@@ -29,7 +29,7 @@ public class FragmentTest {
     public void testGetAllActivities() throws JAXBException, IOException {
         File file = new File("src/test/resources/fragments/FragmentTest.xml");
         String fragmentXml = FileUtils.readFileToString(file);
-        Fragment fragment = new Fragment(fragmentXml, 1, "aTestFragment", "anEditorid");
+        Fragment fragment = new Fragment(fragmentXml, 1, "aTestFragment");
         List<AbstractDataControlNode> activities = fragment.getAllActivities();
         assertEquals(2, activities.size());
         List<String> activityNames = activities.stream()

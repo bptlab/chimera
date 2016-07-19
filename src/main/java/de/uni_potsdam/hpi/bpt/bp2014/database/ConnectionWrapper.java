@@ -16,13 +16,13 @@ import java.sql.Statement;
  * initializes the JDBC Driver and checks whether the schema version used in the database is smaller
  * then the version used by the engine. In that case the database is updated.
  */
-public final class Connection {
+public final class ConnectionWrapper {
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static final String SCHEMA_DEFINITION_PATH = PropertyLoader.getProperty("database.schema.file");
     private static final int PATH_LENGTH = SCHEMA_DEFINITION_PATH.split("/").length;
     private static final String SCHEMA_DEFINITION_FILE = SCHEMA_DEFINITION_PATH.split("/")[PATH_LENGTH - 1];
-    private static Connection instance = null;
-    private static Logger log = Logger.getLogger(Connection.class);
+    private static ConnectionWrapper instance = null;
+    private static Logger log = Logger.getLogger(ConnectionWrapper.class);
     private String username;
     private String password;
     private String url;
@@ -33,21 +33,15 @@ public final class Connection {
     private int schemaVersion = getSchemaVersion();
 
     /**
-     * Hide default constructor. Create instance via {@link #getInstance()}
-     */
-    private Connection() {
-    }
-
-    /**
      * Builds a connection for the database with the credentials taken from the
      * config.properties file. It compares the schema version to the version used in the database and
      * "updates" the database by dropping the schema and executing a SQL script to recreate it.
      *
-     * @return the instance of a new Connection.
+     * @return the instance of a new ConnectionWrapper.
      */
-    public static synchronized Connection getInstance() {
+    public static synchronized ConnectionWrapper getInstance() {
         if (instance == null) {
-            instance = new Connection();
+            instance = new ConnectionWrapper();
             instance.initializeDatabaseConfiguration();
             if (instance.schemaVersionOutdated()) {
                 instance.updateSchema();
@@ -105,9 +99,9 @@ public final class Connection {
             String line = (new BufferedReader(new InputStreamReader(is))).readLine();
             return Integer.parseInt(line);
         } catch (IOException e) {
-            log.error(  "Could no read schema version used by this build of the engine " +
-                        "(should be stored in a file called 'schemaversion')." +
-                        "%n Will NOT update schema.",
+            log.error("Could no read schema version used by this build of the engine " +
+                            "(should be stored in a file called 'schemaversion')." +
+                            "%n Will NOT update schema.",
                     e);
             return -1;
         }

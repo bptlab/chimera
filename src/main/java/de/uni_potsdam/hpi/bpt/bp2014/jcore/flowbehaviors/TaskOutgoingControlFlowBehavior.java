@@ -133,7 +133,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         int controlNodeInstanceId = activityInstance.getControlNodeInstanceId();
         DbSelectedDataObjects dbSelection = new DbSelectedDataObjects();
         DbDataObject dbDataObject = new DbDataObject();
-        int scenarioInstanceId = this.getScenarioInstance().getScenarioInstanceId();
+        int scenarioInstanceId = this.getScenarioInstance().getId();
         List<Integer> dataObjectSelection = dbSelection.getDataObjectSelection(
                 scenarioInstanceId, controlNodeInstanceId);
         return dataObjectSelection.stream().collect(Collectors.toMap(
@@ -171,7 +171,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         DbSelectedDataObjects dbSelectedDataObjects = new DbSelectedDataObjects();
         ScenarioInstance instance = this.getScenarioInstance();
         Set<Integer> workItems =  new HashSet<>(dbSelectedDataObjects.getDataObjectSelection(
-                instance.getScenarioInstanceId(), this.activityInstance.getControlNodeInstanceId()));
+                instance.getId(), this.activityInstance.getControlNodeInstanceId()));
         List<DataObject> dataObjects = instance.getDataManager().getDataObjects();
         return dataObjects.stream().filter(x -> workItems.contains(x.getId())).collect(
                 Collectors.toList());
@@ -185,7 +185,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
     public void cancel() {
         DbSelectedDataObjects dbSelectedDataObjects = new DbSelectedDataObjects();
         List<Integer> usedDataObjects = dbSelectedDataObjects.getDataObjectSelection(
-                this.getScenarioInstance().getScenarioInstanceId(), this.getControlNodeId());
+                this.getScenarioInstance().getId(), this.getControlNodeId());
         usedDataObjects.forEach(this::unlockDataObject);
     }
 

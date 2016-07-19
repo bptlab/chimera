@@ -20,10 +20,6 @@ public class DomainModel implements IPersistable {
 	private static Logger log = Logger.getLogger(DomainModel.class);
 
 	/**
-	 * The modelID found in the JSON.
-	 */
-	private String domainModelEditorId;
-	/**
 	 * The version number of the domainModel
 	 */
 	private int versionNumber;
@@ -61,27 +57,15 @@ public class DomainModel implements IPersistable {
 	}
 
     /**
-     * Creates a mapping from the Id of the dataclass to the dataclass object itself.
-     * @return map from Id to dataclass
-     */
-    public Map<String, DataClass> getMapFromIdToDataclass() {
-        Map<String, DataClass> idToDataclass = new HashMap<>();
-        for (DataClass dataClass : dataClasses) {
-            idToDataclass.put(dataClass.getModelId(), dataClass);
-        }
-        return idToDataclass;
-    }
-
-    /**
      * Creates a mapping from the name of the dataclass to the dataclass object itself.
      * @return map from name to dataclass
      */
-    public Map<String, DataClass> getMapFromNameToDataclass() {
-        Map<String, DataClass> nameToDataclass = new HashMap<>();
+    public Map<String, DataClass> getMapFromNameToDataClass() {
+        Map<String, DataClass> nameToDataClass = new HashMap<>();
         for (DataClass dataClass : dataClasses) {
-            nameToDataclass.put(dataClass.getName(), dataClass);
+            nameToDataClass.put(dataClass.getName(), dataClass);
         }
-        return nameToDataclass;
+        return nameToDataClass;
     }
 	/**
 	 * This sets the scenario ID needed for the update.
@@ -131,7 +115,7 @@ public class DomainModel implements IPersistable {
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
-		conn.insertDomainModelIntoDatabase(this.domainModelEditorId, this.versionNumber,
+		conn.insertDomainModelIntoDatabase(this.versionNumber,
 				this.scenarioId);
 		dataClasses.forEach(x -> x.save(scenarioId));
 		aggregations.forEach(Aggregation::save);
@@ -150,9 +134,6 @@ public class DomainModel implements IPersistable {
 		return versionNumber;
 	}
 
-	public String getDomainModelEditorId() {
-		return domainModelEditorId;
-	}
 
 	public List<DataClass> getDataClasses() {
 		return dataClasses;

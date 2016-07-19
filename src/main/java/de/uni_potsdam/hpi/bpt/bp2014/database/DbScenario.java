@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 
 import org.apache.log4j.Logger;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,7 +19,7 @@ public class DbScenario extends DbObject {
 	 *
 	 * @return a list of database ID's of all scenarios.
 	 */
-	public LinkedList<Integer> getScenarioIDs() {
+	public List<Integer> getScenarioIDs() {
 		String sql = "SELECT id FROM scenario WHERE deleted = 0";
 		log.info(sql);
 		return this.executeStatementReturnsListInt(sql, "id");
@@ -87,10 +87,9 @@ public class DbScenario extends DbObject {
 	 */
 	public Map<String, Object> getScenarioDetails(int id) {
 		String sql =
-				"SELECT id, name, modelid, modelversion FROM scenario "
+				"SELECT id, name, modelversion FROM scenario "
 						+ "WHERE deleted = 0 AND id = "	+ id;
 		log.info(sql);
-		return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion",
-				"modelid");
+		return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion");
 	}
 }

@@ -3,7 +3,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,27 +59,6 @@ public class DbActivityInstance extends DbObject {
 		return this.executeInsertStatement(sql);
 	}
 
-	/**
-	 * This method returns all database ID's for all activities
-	 * who have terminated in the context of a fragment instance.
-	 *
-	 * @param fragmentInstanceId This is the database ID of a fragment instance.
-	 * @return a list of activity ID's which belong to the fragment instance and are terminated.
-	 */
-	public LinkedList<Integer> getTerminatedActivitiesForFragmentInstance(
-			int fragmentInstanceId) {
-		String sql =
-				"SELECT controlnode_id "
-						+ "FROM activityinstance, controlnodeinstance "
-						+ "WHERE "
-						+ "activityinstance.id = controlnodeinstance.id "
-						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND activity_state = 'terminated' "
-						+ "AND fragmentinstance_id = "
-						+ fragmentInstanceId;
-		return this.executeStatementReturnsListInt(sql, "controlnode_id");
-	}
-
     // TODO document
     public Boolean existsActivityInstance(int controlNodeInstanceId, int scenarioInstanceId) {
         String existsActivityInstance = "SELECT * FROM controlnodeinstance as cni, " +
@@ -97,7 +76,7 @@ public class DbActivityInstance extends DbObject {
 	 * @param scenarioInstanceId This is the database ID of a scenario instance.
 	 * @return a list of activity ID's which belong to the scenario instance and are terminated.
 	 */
-	public LinkedList<Integer> getTerminatedActivitiesForScenarioInstance(
+	public List<Integer> getTerminatedActivitiesForScenarioInstance(
 			int scenarioInstanceId) {
 		String sql =
 				"SELECT controlnode_id "

@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database.data;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.DbObject;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.data.DataObject;
@@ -119,9 +119,9 @@ public class DbDataObject extends DbObject {
         String sql = "SELECT * FROM dataobject as do, dataclass as dc " +
                 "WHERE do.id = %d AND do.dataclass_id = dc.id;";
         sql = String.format(sql, dataObject.getId());
-        try (java.sql.Connection con =  Connection.getInstance().connect();
-             Statement stat = con.createStatement();
-             ResultSet rs = stat.executeQuery(sql)) {
+        try (java.sql.Connection con =  ConnectionWrapper.getInstance().connect();
+			 Statement stat = con.createStatement();
+			 ResultSet rs = stat.executeQuery(sql)) {
             if (rs.next()) {
                 int dataclassId = rs.getInt("do.dataclass_id");
                 dataObject.setDataClassId(dataclassId);

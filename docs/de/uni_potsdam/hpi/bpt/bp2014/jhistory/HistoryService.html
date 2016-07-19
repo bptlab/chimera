@@ -134,37 +134,37 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getActivityInstanceLogEntriesForScenarioInstance(int)">getActivityInstanceLogEntriesForScenarioInstance</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getActivityInstanceLogEntriesForScenarioInstance(int)">getActivityInstanceLogEntriesForScenarioInstance</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the Activity log entries for a ScenarioInstance.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getDataAttributeInstanceLogEntriesForScenarioInstance(int)">getDataAttributeInstanceLogEntriesForScenarioInstance</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getDataAttributeInstanceLogEntriesForScenarioInstance(int)">getDataAttributeInstanceLogEntriesForScenarioInstance</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the DataAttributeInstance log entries for a ScenarioInstance.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getDataObjectLogEntriesForScenarioInstance(int)">getDataObjectLogEntriesForScenarioInstance</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getDataObjectLogEntriesForScenarioInstance(int)">getDataObjectLogEntriesForScenarioInstance</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the DataObjectInstances log entries for a ScenarioInstance.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getSelectedActivityInstanceLogEntriesForScenarioInstance(int)">getSelectedActivityInstanceLogEntriesForScenarioInstance</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getSelectedActivityInstanceLogEntriesForScenarioInstance(int)">getSelectedActivityInstanceLogEntriesForScenarioInstance</a></strong>(int&nbsp;id)</code>
 <div class="block">This method returns the terminated Activity log entries for a ScenarioInstance.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>java.util.LinkedList&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getTerminatedActivitiesForScenarioInstance(int)">getTerminatedActivitiesForScenarioInstance</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getTerminatedActivitiesForScenarioInstance(int)">getTerminatedActivitiesForScenarioInstance</a></strong>(int&nbsp;id)</code>
 <div class="block">Gives all ids of terminated activities for a scenario instance id.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.util.HashMap&lt;java.lang.Integer,java.lang.String&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getTerminatedActivityLabelsForScenarioInstance(int)">getTerminatedActivityLabelsForScenarioInstance</a></strong>(int&nbsp;scenarioInstanceId)</code>
+<td class="colLast"><code><strong><a href="../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jhistory/HistoryService.html#getTerminatedActivityLabelsForScenarioInstance(int)">getTerminatedActivityLabelsForScenarioInstance</a></strong>(int&nbsp;id)</code>
 <div class="block">Returns the Labels of terminated activities for a scenario instance id.</div>
 </td>
 </tr>
@@ -213,9 +213,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTerminatedActivitiesForScenarioInstance</h4>
-<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getTerminatedActivitiesForScenarioInstance(int&nbsp;scenarioInstanceId)</pre>
+<pre>public&nbsp;java.util.LinkedList&lt;java.lang.Integer&gt;&nbsp;getTerminatedActivitiesForScenarioInstance(int&nbsp;id)</pre>
 <div class="block">Gives all ids of terminated activities for a scenario instance id.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - This is the id of the scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - This is the id of the scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a list of int ids of the activities.</dd></dl>
 </li>
 </ul>
@@ -225,9 +225,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTerminatedActivityLabelsForScenarioInstance</h4>
-<pre>public&nbsp;java.util.HashMap&lt;java.lang.Integer,java.lang.String&gt;&nbsp;getTerminatedActivityLabelsForScenarioInstance(int&nbsp;scenarioInstanceId)</pre>
+<pre>public&nbsp;java.util.HashMap&lt;java.lang.Integer,java.lang.String&gt;&nbsp;getTerminatedActivityLabelsForScenarioInstance(int&nbsp;id)</pre>
 <div class="block">Returns the Labels of terminated activities for a scenario instance id.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - This is the id of the scenario instance.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - This is the id of the scenario instance.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map. Keys are the activity ids. Values are the labels of the activities.</dd></dl>
 </li>
 </ul>
@@ -237,9 +237,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getDataObjectLogEntriesForScenarioInstance</h4>
-<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getDataObjectLogEntriesForScenarioInstance(int&nbsp;scenarioInstanceId)</pre>
+<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getDataObjectLogEntriesForScenarioInstance(int&nbsp;id)</pre>
 <div class="block">This method returns the DataObjectInstances log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the DataObjectInstance log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the DataObjectInstance log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>
@@ -249,9 +249,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getActivityInstanceLogEntriesForScenarioInstance</h4>
-<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getActivityInstanceLogEntriesForScenarioInstance(int&nbsp;scenarioInstanceId)</pre>
+<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getActivityInstanceLogEntriesForScenarioInstance(int&nbsp;id)</pre>
 <div class="block">This method returns the Activity log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the activity log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the activity log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>
@@ -261,9 +261,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getSelectedActivityInstanceLogEntriesForScenarioInstance</h4>
-<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getSelectedActivityInstanceLogEntriesForScenarioInstance(int&nbsp;scenarioInstanceId)</pre>
+<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getSelectedActivityInstanceLogEntriesForScenarioInstance(int&nbsp;id)</pre>
 <div class="block">This method returns the terminated Activity log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the activity log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the activity log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>
@@ -273,9 +273,9 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getDataAttributeInstanceLogEntriesForScenarioInstance</h4>
-<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getDataAttributeInstanceLogEntriesForScenarioInstance(int&nbsp;scenarioInstanceId)</pre>
+<pre>public&nbsp;java.util.Map&lt;java.lang.Integer,java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;getDataAttributeInstanceLogEntriesForScenarioInstance(int&nbsp;id)</pre>
 <div class="block">This method returns the DataAttributeInstance log entries for a ScenarioInstance.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>scenarioInstanceId</code> - ID of the ScenarioInstance for which the DataAttributeInstance log entries shall be returned.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - ID of the ScenarioInstance for which the DataAttributeInstance log entries shall be returned.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>a Map with a Map of the log entries' attribute names as keys and their respective values.</dd></dl>
 </li>
 </ul>

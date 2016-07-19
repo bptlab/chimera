@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.janalytics;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -77,20 +77,20 @@ public class ExampleAlgorithm implements AnalyticsService {
 	 */
 	public static class DbScenarioInstanceIDsAndTimestamps {
 
-		private int scenarioInstanceID;
+		private int scenarioInstanceId;
 		private Date startDate;
 		private Date endDate;
 
 		/**
 		 *
-		 * @param scenarioInstanceID This is the database ID of a scenario instance.
+		 * @param scenarioInstanceId This is the database ID of a scenario instance.
 		 */
-		public DbScenarioInstanceIDsAndTimestamps(int scenarioInstanceID) {
-			this.scenarioInstanceID = scenarioInstanceID;
+		public DbScenarioInstanceIDsAndTimestamps(int scenarioInstanceId) {
+			this.scenarioInstanceId = scenarioInstanceId;
 		}
 
-		public void setScenarioInstanceID(int scenarioinstanceID) {
-			this.scenarioInstanceID = scenarioinstanceID;
+		public void setScenarioInstanceId(int scenarioinstanceID) {
+			this.scenarioInstanceId = scenarioinstanceID;
 		}
 
 		/**
@@ -118,10 +118,10 @@ public class ExampleAlgorithm implements AnalyticsService {
 							+ "FROM `historydataobjectinstance` as h, "
 							+ "scenarioinstance as s "
 							+ "WHERE h.scenarioinstance_id = "
-							+ scenarioInstanceID + " "
+							+ scenarioInstanceId + " "
 							+ "AND h.scenarioinstance_id = s.id "
 							+ "AND s.terminated = 1";
-			java.sql.Connection conn = Connection.getInstance().connect();
+			java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
 			ResultSet results = null;
 			try {
 				results = conn.prepareStatement(sql).executeQuery();

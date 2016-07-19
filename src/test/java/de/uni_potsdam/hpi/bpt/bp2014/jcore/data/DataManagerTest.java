@@ -38,7 +38,7 @@ public class DataManagerTest {
         insertExampleValues(scenarioId, scenarioInstanceId);
 
         expect(scenarioInstance.getScenarioId()).andReturn(scenarioId);
-        expect(scenarioInstance.getScenarioInstanceId()).andReturn(scenarioInstanceId);
+        expect(scenarioInstance.getId()).andReturn(scenarioInstanceId);
         replay(scenarioInstance);
 
         DataManager dataManager = new DataManager(scenarioInstance);
@@ -53,7 +53,7 @@ public class DataManagerTest {
         final int scenarioId = 1;
         final int scenarioInstanceId = 1;
         expect(scenarioInstance.getScenarioId()).andReturn(scenarioId);
-        expect(scenarioInstance.getScenarioInstanceId()).andReturn(scenarioInstanceId);
+        expect(scenarioInstance.getId()).andReturn(scenarioInstanceId);
         replay(scenarioInstance);
 
         insertExampleValues(scenarioId, scenarioInstanceId);
@@ -74,7 +74,7 @@ public class DataManagerTest {
         final int scenarioId = 1;
         final int scenarioInstanceId = 1;
         expect(scenarioInstance.getScenarioId()).andReturn(scenarioId);
-        expect(scenarioInstance.getScenarioInstanceId()).andReturn(scenarioInstanceId);
+        expect(scenarioInstance.getId()).andReturn(scenarioInstanceId);
         replay(scenarioInstance);
 
         DataManager dataManager = new DataManager(scenarioInstance);
@@ -138,7 +138,7 @@ public class DataManagerTest {
     public void testLockDataobject() {
         ScenarioInstance scenarioInstance = EasyMock.createNiceMock(ScenarioInstance.class);
         expect(scenarioInstance.getScenarioId()).andReturn(1);
-        expect(scenarioInstance.getScenarioInstanceId()).andReturn(1);
+        expect(scenarioInstance.getId()).andReturn(1);
         replay(scenarioInstance);
         insertExampleValues(1, 1);
         DataManager dataManager = new DataManager(scenarioInstance);

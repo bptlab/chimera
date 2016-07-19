@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.database;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class is the representation of a E-mail configuration in the database.
@@ -76,9 +76,9 @@ public class DbEmailConfiguration extends DbObject {
 	/**
 	 *
 	 * @param scenarioId This is the database ID of a scenario.
-	 * @return a LinkedList with email addresses
+	 * @return a List with email addresses
 	 */
-	public LinkedList<Integer> getAllEmailTasksForScenario(int scenarioId) {
+	public List<Integer> getAllEmailTasksForScenario(int scenarioId) {
 		String sql =
 				"SELECT id FROM `controlnode` WHERE type = 'EmailTask' "
 						+ "AND fragment_id IN (Select id FROM fragment "

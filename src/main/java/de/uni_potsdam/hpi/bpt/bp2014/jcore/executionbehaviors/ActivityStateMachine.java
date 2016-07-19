@@ -9,7 +9,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInsta
  */
 public class ActivityStateMachine extends AbstractStateMachine {
 	/**
-	 * Database Connection objects.
+	 * Database ConnectionWrapper objects.
 	 */
 	private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
 

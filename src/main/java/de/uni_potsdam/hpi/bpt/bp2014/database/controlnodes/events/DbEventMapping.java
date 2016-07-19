@@ -75,7 +75,7 @@ public class DbEventMapping extends DbObject {
         }
         final String mappingId = UUID.randomUUID().toString().replaceAll("\\-", "");
         int fragementInstanceId = events.get(0).getFragmentInstanceId();
-        int scenarioInstanceId = events.get(0).getScenarioInstance().getScenarioInstanceId();
+        int scenarioInstanceId = events.get(0).getScenarioInstance().getId();
         String insertMapping = "INSERT INTO ExclusiveEvents (MappingKey, FragmentInstanceId,"
                 + " ScenarioInstanceId, EventControlNodeId) Values ('%s', %d, %d, %d);";
         for (AbstractEvent event : events) {
@@ -97,7 +97,7 @@ public class DbEventMapping extends DbObject {
 
     private String getMappingKeyForEvent(AbstractEvent event) {
         int fragmentInstanceId = event.getFragmentInstanceId();
-        int scenarioInstanceId = event.getScenarioInstance().getScenarioInstanceId();
+        int scenarioInstanceId = event.getScenarioInstance().getId();
         int eventControlNodeId = event.getControlNodeId();
         String retrieveMappingKey = "SELECT * FROM ExclusiveEvents "
                 + "WHERE FragmentInstanceId = '%s'"

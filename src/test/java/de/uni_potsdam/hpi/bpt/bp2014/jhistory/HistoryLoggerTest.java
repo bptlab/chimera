@@ -33,13 +33,13 @@ public class HistoryLoggerTest {
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         // After instantiating a scenario the creation of an activity instance should be logged
         assertEquals(1, service.getActivityInstanceEntries(
-                instance.getScenarioInstanceId()).size());
+                instance.getId()).size());
 
         assertEquals(0, service.getDataObjectEntries(
-                instance.getScenarioInstanceId()).size());
+                instance.getId()).size());
 
         assertEquals(0, service.getDataAttributeEntries(
-                instance.getScenarioInstanceId()).size());
+                instance.getId()).size());
     }
 
     /**
@@ -56,7 +56,7 @@ public class HistoryLoggerTest {
 
         HistoryService service = new HistoryService();
         List<LogEntry> activityEntries =
-                service.getActivityInstanceEntries(instance.getScenarioInstanceId());
+                service.getActivityInstanceEntries(instance.getId());
         assertEquals(4, activityEntries.size());
     }
 
@@ -70,7 +70,7 @@ public class HistoryLoggerTest {
 
         HistoryService service = new HistoryService();
         List<LogEntry> dataObjectEntries =
-                service.getDataObjectEntries(instance.getScenarioInstanceId());
+                service.getDataObjectEntries(instance.getId());
         // TODO also assert values if there is no other test
         assertEquals(2, dataObjectEntries.size());
     }
@@ -86,7 +86,7 @@ public class HistoryLoggerTest {
         changeDataattributeValues(instance, activity);
         HistoryService service = new HistoryService();
         List<LogEntry> dataattributeEntries
-                = service.getDataAttributeEntries(instance.getScenarioInstanceId());
+                = service.getDataAttributeEntries(instance.getId());
         assertEquals(4, dataattributeEntries.size());
     }
 
@@ -106,13 +106,13 @@ public class HistoryLoggerTest {
         HistoryService service = new HistoryService();
 
         List<LogEntry> dataObjectEntries =
-                service.getDataObjectEntries(scenarioInstance.getScenarioInstanceId());
+                service.getDataObjectEntries(scenarioInstance.getId());
 
         List<LogEntry> dataattributeEntries
-                = service.getDataAttributeEntries(scenarioInstance.getScenarioInstanceId());
+                = service.getDataAttributeEntries(scenarioInstance.getId());
 
         List<LogEntry> activityEntries =
-                service.getActivityInstanceEntries(scenarioInstance.getScenarioInstanceId());
+                service.getActivityInstanceEntries(scenarioInstance.getId());
 
         // First three activity entries belong to Create Data
         assertEquals(activity.getControlNodeInstanceId(),

@@ -4,7 +4,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractControlNodeInsta
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.executionbehaviors.AbstractStateMachine;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.ActivityInstance;
 
-import java.util.LinkedList;
+
+import java.util.List;
 
 /**
  * This class represents parallel outgoing behavior.
@@ -14,7 +15,7 @@ public abstract class AbstractParallelOutgoingBehavior extends AbstractOutgoingB
 	 * Set all following control nodes to control flow enabled and initializes them.
 	 */
 	public void enableFollowing() {
-		LinkedList<Integer> followingControlNodeIds = this.getDbControlFlow()
+		List<Integer> followingControlNodeIds = this.getDbControlFlow()
 				.getFollowingControlNodes(this.getControlNodeId());
 		for (int followingControlNodeId : followingControlNodeIds) {
 			AbstractControlNodeInstance followingControlNodeInstance =

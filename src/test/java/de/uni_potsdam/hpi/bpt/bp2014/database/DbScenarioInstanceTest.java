@@ -4,7 +4,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.database;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
 import org.junit.Test;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -39,7 +39,7 @@ public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     @Test
     public void testGetScenarioInstances(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        LinkedList<Integer> instances = dbScenarioInstance.getScenarioInstances(100);
+        List<Integer> instances = dbScenarioInstance.getScenarioInstances(100);
         assertEquals(85, (int)instances.get(0));
         assertEquals(86, (int)instances.get(1));
     }

@@ -66,7 +66,7 @@ public class DataNode {
         for (Object key : pathObject.keySet()) {
             Optional<DataAttribute> dataAttribute = dataClass.getDataAttributeByName(key.toString());
             if (dataAttribute.isPresent()) {
-                int dataAttributeId = dataAttribute.get().getAttributeDatabaseId();
+                int dataAttributeId = dataAttribute.get().getId();
                 String jsonPathString = pathObject.getString(key.toString());
                 String escapedJsonPath = jsonPathString.replace("'", "''");
                 connector.insertPathMappingIntoDatabase(

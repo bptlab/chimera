@@ -1,6 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import org.json.JSONObject;
 
@@ -101,7 +101,7 @@ public class StateTransitionLog {
     }
 
     private static List<StateTransitionLog> parseStateTransitions(String sql) {
-        java.sql.Connection con = Connection.getInstance().connect();
+        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
         List<StateTransitionLog> transitionLogs = new ArrayList<>();
         try (Statement statement = con.createStatement();
              ResultSet rs = statement.executeQuery(sql)) {

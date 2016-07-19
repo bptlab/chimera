@@ -1,19 +1,12 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenario;
-import de.uni_potsdam.hpi.bpt.bp2014.database.DbScenarioInstance;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.*;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.settings.PropertyLoader;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.*;
-import java.util.Map;
 
 /**
  * This class implements the REST interface of the JEngine core.
@@ -23,7 +16,7 @@ import java.util.Map;
  * and to control the instances.
  * Methods which are necessary for the controlling can be found
  * inside the {@link de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService}.
- * This class will use {@link de.uni_potsdam.hpi.bpt.bp2014.database.Connection}
+ * This class will use {@link ConnectionWrapper}
  * to access the database directly.
  */
 @Path("interface/v2") public class RestInterface {

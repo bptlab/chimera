@@ -1,7 +1,6 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jcore.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ExecutionService;
-import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataAttributeJaxBean;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.json.JSONObject;
 
@@ -10,11 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +46,7 @@ public class DataObjectRestService {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         List<Integer> dataObjects =
-                executionService.getAllDataObjectIDs(instanceID);
+                executionService.getAllDataObjectIds(instanceID);
         Map<Integer, String> states =
                 executionService.getDataObjectStates(instanceID);
         Map<Integer, String> labels =
@@ -98,7 +93,7 @@ public class DataObjectRestService {
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
         executionService.openExistingScenarioInstance(scenarioID, instanceID);
         List<Integer> dataObjects =
-                executionService.getAllDataObjectIDs(instanceID);
+                executionService.getAllDataObjectIds(instanceID);
         Map<Integer, String> states =
                 executionService.getDataObjectStates(instanceID);
         Map<Integer, String> labels =

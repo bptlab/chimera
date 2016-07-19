@@ -30,7 +30,7 @@ public class TimerEventInstance extends AbstractEvent {
     @Override
     public void registerEvent() {
         EventDispatcher.registerTimerEvent(this, this.getFragmentInstanceId(),
-                this.getScenarioInstance().getScenarioInstanceId(),
+                this.getScenarioInstance().getId(),
                 this.getScenarioInstance().getScenarioId());
     }
 

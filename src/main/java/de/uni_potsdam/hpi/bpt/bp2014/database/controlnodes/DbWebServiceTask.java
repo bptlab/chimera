@@ -88,14 +88,14 @@ public class DbWebServiceTask extends DbObject {
 	/**
 	 * Get all WebServiceTasks for one scenario.
 	 *
-	 * @param scenarioID The databaseID of the scenario.
+	 * @param scenarioId The databaseID of the scenario.
 	 * @return controlNodeIDs of WebServiceTasks that belong to the scenario.
 	 */
-	public LinkedList<Integer> getWebServiceTasks(int scenarioID) {
+	public List<Integer> getWebServiceTasks(int scenarioId) {
 		String sql = "SELECT controlnode.id "
 				+ "FROM fragment, controlnode "
 				+ "WHERE fragment.id = controlnode.fragment_id "
-				+ "AND fragment.scenario_id = " + scenarioID + " "
+				+ "AND fragment.scenario_id = " + scenarioId + " "
 				+ "AND controlnode.type = 'WebServiceTask'";
 		return executeStatementReturnsListInt(sql, "controlnode.id");
 	}

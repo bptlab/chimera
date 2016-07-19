@@ -56,7 +56,7 @@ public class EventDispatcherTest extends JerseyTest {
             assertEquals(activatedBeforeEvent.size(), 0);
             ScenarioTestHelper.triggerEventInScenario(scenarioInstance, base, "");
             ScenarioInstance scenarioInstance2 = new ScenarioInstance(
-                    scenarioInstance.getScenarioId(), scenarioInstance.getScenarioInstanceId());
+                    scenarioInstance.getScenarioId(), scenarioInstance.getId());
             List<AbstractControlNodeInstance> activatedAfterEvent =
                     scenarioInstance2.getEnabledControlNodeInstances();
             assertFalse(activatedAfterEvent.isEmpty());
@@ -90,13 +90,13 @@ public class EventDispatcherTest extends JerseyTest {
         assertEquals("The query was inadvertently modified",
                 "SELECT * FROM data.path",
                 EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM data.path",
-                scenarioInstance.getScenarioInstanceId(),
+                scenarioInstance.getId(),
                 scenarioInstance.getScenarioId()));
         ScenarioTestHelper.executeActivityByName("create data", scenarioInstance);
         ScenarioTestHelper.executeActivityByName("modify data", scenarioInstance);
         new DataAttributeInstance(1).setValue("AnEvent");
         String replacedQuery = EventDispatcher.insertAttributesIntoQueryString("SELECT * FROM #data.path",
-                scenarioInstance.getScenarioInstanceId(),
+                scenarioInstance.getId(),
                 scenarioInstance.getScenarioId());
         assertEquals("SELECT * FROM AnEvent", replacedQuery);
     }

@@ -2,7 +2,7 @@ package de.uni_potsdam.hpi.bpt.bp2014.rest;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractUserManagementTest;
-import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.database.ConnectionWrapper;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -42,7 +42,7 @@ public class RestInterfaceTest extends AbstractUserManagementTest {
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
-        ScriptRunner runner = new ScriptRunner(Connection.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
         runner.runScript(new FileReader(JUSERMANAGEMENT_SQL_FILE));
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
 
