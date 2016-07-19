@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Representation for event based gateways.
  */
 public class EventBasedGatewayInstance extends GatewayInstance {
 
-    public EventBasedGatewayInstance(int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance) {
+    public EventBasedGatewayInstance(int controlNodeId, int fragmentInstanceId,
+                                     ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.EVENT_BASED;
         this.setControlNodeInstanceId(dbControlNodeInstance
@@ -31,13 +32,21 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         this.type = GatewayType.EVENT_BASED;
     }
 
-
-
+    /**
+     * Since event based gateways can not have data preconditions and the users should not
+     * start them themselves, their enabling results in the immediate termination
+     */
     @Override
     public void enableControlFlow() {
         this.terminate();
     }
 
+    /**
+     * Terminating an EventBasedGatewayInstance will register all following event control nodes
+     * and save that they are alternative.
+     *
+     * @return true
+     */
     @Override
     public boolean terminate() {
         DbControlFlow controlFlow = new DbControlFlow();
@@ -48,7 +57,6 @@ public class EventBasedGatewayInstance extends GatewayInstance {
                 x -> factory.getEventForControlNodeId(x, this.getFragmentInstanceId()))
                 .collect(Collectors.toList());
         EventDispatcher.registerExclusiveEvents(followingEvents);
-        followingEvents.forEach(AbstractEvent::enableControlFlow);
         return true;
     }
 }

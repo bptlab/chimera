@@ -70,6 +70,9 @@ public class DbEventMapping extends DbObject {
 
 
     public void saveAlternativeEvents(List<AbstractEvent> events) {
+        if (events.size() == 0) {
+            return;
+        }
         final String mappingId = UUID.randomUUID().toString().replaceAll("\\-", "");
         int fragementInstanceId = events.get(0).getFragmentInstanceId();
         int scenarioInstanceId = events.get(0).getScenarioInstance().getScenarioInstanceId();

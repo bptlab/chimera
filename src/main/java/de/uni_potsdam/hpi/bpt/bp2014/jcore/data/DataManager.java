@@ -49,13 +49,12 @@ public class DataManager {
     /**
      * Searches for data objects which fulfill one of the conditions of
      * the input set.
-     * @param activityInstanceId Id of the activity instance
+     * @param activityId Id of the activity
      * @return List of data objects
      */
     public List<DataObject> getAvailableInput(int activityId) {
         DbDataConditions conditions = new DbDataConditions();
-        Map<String, Set<String>> input = conditions.loadInputSets(
-                activityId);
+        Map<String, Set<String>> input = conditions.loadInputSets(activityId);
         List<DataObject> dataobjectsFulfillingInputCondition = new ArrayList<>();
         for (DataObject dataObject : this.dataObjects) {
             if (input.containsKey(dataObject.getName())) {

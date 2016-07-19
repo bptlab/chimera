@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Receive activities are used to represent events that also change the states of data
+ * objects.
  */
 public class ReceiveActivity extends AbstractEvent {
 
@@ -25,17 +26,17 @@ public class ReceiveActivity extends AbstractEvent {
         return "ReceiveActivity";
     }
 
-
-    @Override
-    public boolean skip() {
-        return false;
-    }
-
-    @Override
-    public boolean terminate() {
-        return this.terminate("");
-    }
-
+    /**
+     * Terminates a ReceiveActivity.
+     * When terminating a , the terminating behavior of the
+     * {@link AbstractEvent} is executed setting the data attribute values from the
+     * json.
+     *
+     * Additional to this, the
+     *
+     * @param eventJson the json string containing the values.
+     * @return true
+     */
     @Override
     public boolean terminate(String eventJson) {
         super.terminate(eventJson);
@@ -44,9 +45,9 @@ public class ReceiveActivity extends AbstractEvent {
         assert outputSets.size() == 1 : "Receive tasks should have exactly one output set.";
         int outputSetId = outputSets.get(0);
         Map<Integer, Integer> idToState = new DbDataNode().getDataClassIdToState(outputSetId);
+        // TODO use data object id instead of data class id also test this
         for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
-            this.changeDataObjectInstanceState(
-                    entry.getKey(), entry.getValue());
+            this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
         }
         return true;
     }
@@ -59,7 +60,6 @@ public class ReceiveActivity extends AbstractEvent {
      */
     private void changeDataObjectInstanceState(int dataObjectId, int stateId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        // TODO change this to new structure
         dataManager.changeDataObjectState(dataObjectId, stateId,
                 this.getControlNodeInstanceId());
     }

@@ -68,8 +68,7 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 		case "WebServiceTask":
 		case "SendTask":
 			if (!gatewayInstance.isAutomaticExecution()) {
-				((ActivityInstance) controlNodeInstance)
-						.setAutomaticExecution(false);
+				((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
 			}
 			break;
 		case "AND":

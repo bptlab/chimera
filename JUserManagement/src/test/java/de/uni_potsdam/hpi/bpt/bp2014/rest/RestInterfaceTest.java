@@ -1,16 +1,15 @@
 package de.uni_potsdam.hpi.bpt.bp2014.rest;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import de.uni_potsdam.hpi.bpt.bp2014.AbstractTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractUserManagementTest;
 import de.uni_potsdam.hpi.bpt.bp2014.database.Connection;
+import de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterface;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -23,7 +22,7 @@ import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
 
 /**
- * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
+ * This Class extends the {@link AbstractUserManagementTest}
  * to test the RestInterface of the JEngine core.
  * In order to do so it uses the functionality of the
  * {@link org.glassfish.jersey.test.JerseyTest}
@@ -32,11 +31,11 @@ import static org.junit.Assert.*;
  * database will be set up before and after the execution.
  * Define the database Properties inside the database_connection file.
  */
-public class RestInterfaceTest extends AbstractTest {
+public class RestInterfaceTest extends AbstractUserManagementTest {
 
     /**
      * The base url of the rest interface.
-     * Allows us to send requests to the {@link de.uni_potsdam.hpi.bpt.bp2014.rest.RestInterface}.
+     * Allows us to send requests to the .
      */
     private WebTarget base;
 
@@ -51,7 +50,7 @@ public class RestInterfaceTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(de.uni_potsdam.hpi.bpt.bp2014.rest.RestInterface.class);
+        return new ResourceConfig(RestInterface.class);
     }
 
     @Before

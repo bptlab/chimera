@@ -8,6 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewaySplitBe
 
 /**
  * Represents a gateway instance.
+ * TODO review this class
  */
 public class GatewayInstance extends AbstractControlNodeInstance {
 	/**
@@ -17,7 +18,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	protected final DbControlNode dbControlNode = new DbControlNode();
 	protected final DbGatewayInstance dbGatewayInstance = new DbGatewayInstance();
 	protected GatewayType type;
-	protected ScenarioInstance scenarioInstance;
 	protected boolean automaticExecution;
 
 	/**
@@ -35,7 +35,8 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 				.getControlFlowEnabledControlNodeInstances()) {
 			if (this.getFragmentInstanceId() == getControlNodeInstanceId()
 					&& this.getControlNodeId() == controlNodeId) {
-				//if it exist, only checks the control flow
+				// TODO fragmentInstanceId == controlNodeInstanceId ?
+                // if it exist, only checks the control flow
 				controlNodeInstance.enableControlFlow();
 				return;
 			}
@@ -44,7 +45,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
-		//scenarioInstance.getControlNodeInstances().add(this);
 	}
 
 	/**
@@ -89,12 +89,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 
 	public GatewayType getType() {
 		return this.type;
-	}
-	/**
-	 * @return ScenarioInstance.
-	 */
-	public ScenarioInstance getScenarioInstance() {
-		return scenarioInstance;
 	}
 
 	/**

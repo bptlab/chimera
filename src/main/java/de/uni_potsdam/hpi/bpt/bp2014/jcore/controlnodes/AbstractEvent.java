@@ -14,9 +14,12 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     private int controlNodeId;
     private String queryString;
     private EventOutgoingBehavior outgoingBehavior;
+
     /**
-     *
-     * @param controlNodeId id of the abstract control node which represents the event.
+     * Builds a new instance of an AbstractEvent.
+     * @param controlNodeId the id of the event control node.
+     * @param fragmentInstanceId the ud of the instance the event belongs to.
+     * @param scenarioInstance the scenarioInstance object.
      */
     public AbstractEvent(
             int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance) {
@@ -80,10 +83,6 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         return queryString;
     }
 
-    public ScenarioInstance getScenarioInstance() {
-        return scenarioInstance;
-    }
-
     @Override
     public boolean skip() {
         return false;
@@ -94,6 +93,13 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         return terminate("");
     }
 
+    /**
+     * Terminate the event and set the data attributes accordingly. Send refresh to the
+     * Chimera frontend.
+     *
+     * @param eventJson the json string containing the values.
+     * @return Returns true
+     */
     public boolean terminate(String eventJson) {
         outgoingBehavior.terminate(eventJson);
         SseNotifier.notifyRefresh();

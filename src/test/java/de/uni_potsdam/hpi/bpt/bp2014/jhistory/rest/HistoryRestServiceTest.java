@@ -1,6 +1,7 @@
 package de.uni_potsdam.hpi.bpt.bp2014.jhistory.rest;
 
 import de.uni_potsdam.hpi.bpt.bp2014.AbstractDatabaseDependentTest;
+import de.uni_potsdam.hpi.bpt.bp2014.AbstractUserManagementTest;
 import de.uni_potsdam.hpi.bpt.bp2014.ScenarioTestHelper;
 import de.uni_potsdam.hpi.bpt.bp2014.database.history.DbLogEntry;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 
 /**
- * This Class extends the {@link de.uni_potsdam.hpi.bpt.bp2014.AbstractTest}
+ * This Class extends the {@link AbstractUserManagementTest}
  * to test the HistoryRestService of the JEngine core.
  * In order to do so it uses the functionality of the
  * {@link org.glassfish.jersey.test.JerseyTest}

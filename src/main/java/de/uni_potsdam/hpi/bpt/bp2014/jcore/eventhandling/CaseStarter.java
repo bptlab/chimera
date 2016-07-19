@@ -15,12 +15,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Responsible for
  */
 public class CaseStarter {
-
     static final Logger LOGGER = Logger.getLogger(CaseStarter.class);
-    List<StartQueryPart> startQueryParts;
+    private List<StartQueryPart> startQueryParts;
 
     public CaseStarter(int scenarioId, String queryId) {
         DbStartQuery dbStartQuery = new DbStartQuery();

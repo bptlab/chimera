@@ -295,7 +295,7 @@ public class ScenarioInstance {
 		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(enabledControlNodeInstances);
         for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class
-					&& ((ActivityInstance) controlNodeInstance).isAutomaticExecution()) {
+					&& ((ActivityInstance) controlNodeInstance).isAutomaticTask()) {
 				((ActivityInstance) controlNodeInstance).begin();
 			}
 		}

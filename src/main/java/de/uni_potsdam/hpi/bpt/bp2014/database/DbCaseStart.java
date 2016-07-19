@@ -10,6 +10,16 @@ import java.util.List;
  *
  */
 public class DbCaseStart extends DbEventMapping {
+    private final String caseStartForEventKey = "SELECT * FROM casestart WHERE eventkey = '%s'";
+
+    /**
+     * Inserts a new case start query into the database.
+     *
+     * @param requestId if to find the id for the event.
+     * @param scenarioId the id of the scenario, which the case start refers to.
+     * @param notificationRuleId the id of the callback registered in Unicorn.
+     * @param queryId the id of the case start query.
+     */
     public void insertCaseStartMapping(
             String requestId, int scenarioId, String notificationRuleId, String queryId) {
         String sql = "INSERT INTO casestart (eventkey, notificationrule_id, scenario_id, query_id)" +
@@ -18,21 +28,22 @@ public class DbCaseStart extends DbEventMapping {
         this.executeInsertStatement(sql);
     }
 
+    /**
+     * Deletes a case mapping for a request key.
+     * @param requestKey the key under which the case mapping is saved.
+     */
     public void deleteCaseMapping(String requestKey) {
-        String sql = "SELECT * FROM casestart WHERE eventkey = '%s'";
-        sql = String.format(sql, requestKey);
+        String sql = String.format(caseStartForEventKey, requestKey);
         this.executeUpdateStatement(sql);
     }
 
     public int getScenarioId(String requestKey) {
-        String sql = "SELECT * FROM casestart WHERE eventkey = '%s'";
-        sql = String.format(sql, requestKey);
+        String sql = String.format(caseStartForEventKey, requestKey);
         return this.executeStatementReturnsInt(sql, "scenario_id");
     }
 
     public String getQueryId(String requestKey) {
-        String sql = "SELECT * FROM casestart WHERE eventkey = '%s'";
-        sql = String.format(sql, requestKey);
+        String sql = String.format(caseStartForEventKey, requestKey);
         return this.executeStatementReturnsString(sql, "query_id");
     }
 

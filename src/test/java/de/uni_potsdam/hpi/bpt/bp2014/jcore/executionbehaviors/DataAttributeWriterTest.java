@@ -43,8 +43,6 @@ public class DataAttributeWriterTest {
             String json = FileUtils.readFileToString(file);
             writer.setAttributeIdToJsonPath(jsonPathMap);
             writer.writeDataAttributesFromJson(json, attributeInstances);
-            // verifying that the datamanager was called with the correct
-            // parameters (see createMockDM)
             EasyMock.verify(mockDM);
 
         } catch (IOException e) {

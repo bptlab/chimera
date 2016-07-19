@@ -6,7 +6,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractIncomingBehavio
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.AbstractOutgoingBehavior;
 
 /**
- * Represents the abstract control node.
+ * Represents the abstract control node. Each control node has a state, an incoming and outgoing
+ * behavior.
  */
 public abstract class AbstractControlNodeInstance {
 
@@ -93,5 +94,4 @@ public abstract class AbstractControlNodeInstance {
 	public void setScenarioInstance(ScenarioInstance scenarioInstance) {
 		this.scenarioInstance = scenarioInstance;
 	}
-
 }

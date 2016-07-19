@@ -13,7 +13,7 @@ import java.sql.Statement;
 /**
  * An Abstract class for Rest Tests
  */
-public abstract class AbstractTest extends JerseyTest {
+public abstract class AbstractUserManagementTest extends JerseyTest {
 
     protected static final String JUSERMANAGEMENT_SQL_FILE =
             "src/main/resources/JUserManagement_schema.sql";

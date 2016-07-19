@@ -178,6 +178,7 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
     }
 
     /**
+     * Unlocks all data objects bound to the activity instance.
      * Since at the moment each output set can only contain the same data objects with different
      * states it is enough to look only at one output set and free all data objects in this.
      */

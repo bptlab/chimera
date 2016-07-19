@@ -5,7 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.database.controlnodes.DbControlNodeInstance
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.ScenarioInstance;
 
 /**
- * This class hides the logic of dispatching the type of event, by returning the appropriate
+ * This class encapsulates the logic of dispatching the type of event, by returning the appropriate
  * subclass.
  */
 public class EventFactory {
@@ -16,18 +16,12 @@ public class EventFactory {
     }
 
     /**
-     *
-     * @param dbControlNodeInstanceId
-     * @return
+     * Creates a new event for the given control node id.
+     * @param controlNodeId the id for the control node, which should be instantiated.
+     * @param fragmentInstanceId the id of the fragment the control node instance id should be
+     *                           stored in.
+     * @return The event instance for the given control node id.
      */
-    public AbstractEvent getEventForInstanceId(int dbControlNodeInstanceId) {
-        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        int controlNodeId = dbControlNodeInstance.getControlNodeID(dbControlNodeInstanceId);
-        int fragmentInstanceId = dbControlNodeInstance.getFragmentInstanceId(
-                dbControlNodeInstanceId);
-        return this.getEventForControlNodeId(controlNodeId, fragmentInstanceId);
-    }
-
     public AbstractEvent getEventForControlNodeId(
             Integer controlNodeId, Integer fragmentInstanceId) {
         DbControlNode dbControlNode = new DbControlNode();

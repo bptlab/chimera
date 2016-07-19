@@ -216,9 +216,17 @@ public final class EventDispatcher {
         return queryString;
     }
 
+    /**
+     * Saves that events are alternative to each other, so that they can be skipped when
+     * one of the is triggered.
+     * The events have to be registered
+     * @param events the events that are alternative to each other (e.g. behind a event
+     *               based gateway)
+     */
     public static void registerExclusiveEvents(List<AbstractEvent> events) {
         DbEventMapping mapping = new DbEventMapping();
         mapping.saveAlternativeEvents(events);
+        events.forEach(AbstractEvent::enableControlFlow);
     }
 
     private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId,

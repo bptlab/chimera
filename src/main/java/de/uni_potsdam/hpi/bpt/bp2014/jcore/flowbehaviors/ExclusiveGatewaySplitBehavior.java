@@ -120,7 +120,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		case "Activity":
 		case "EmailTask":
 		case "WebServiceTask":
-			((ActivityInstance) controlNodeInstance).setAutomaticExecution(false);
+			((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
 			break;
 		case "XOR":
 		case "EVENT_BASED":

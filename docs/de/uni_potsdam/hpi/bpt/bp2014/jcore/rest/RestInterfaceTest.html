@@ -89,7 +89,7 @@
 <li>org.glassfish.jersey.test.JerseyTest</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest.html" title="class in de.uni_potsdam.hpi.bpt.bp2014">de.uni_potsdam.hpi.bpt.bp2014.AbstractTest</a></li>
+<li><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest.html" title="class in de.uni_potsdam.hpi.bpt.bp2014">de.uni_potsdam.hpi.bpt.bp2014.AbstractUserManagementTest</a></li>
 <li>
 <ul class="inheritance">
 <li>de.uni_potsdam.hpi.bpt.bp2014.jcore.rest.RestInterfaceTest</li>
@@ -204,7 +204,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetActivitiesInvalidInstance()">testGetActivitiesInvalidInstance</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an wrong scenario instance ID
  then a 404 with error message (inside JSON) should be returned.</div>
 </td>
@@ -219,7 +219,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetActivitiesWithFilter()">testGetActivitiesWithFilter</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with a filter String
  then only activities with a label like the filter String will be returned.</div>
 </td>
@@ -227,7 +227,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetActivitiesWithInvalidState()">testGetActivitiesWithInvalidState</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters, an invalid state but no filter
  the request should return a 404 with error message</div>
 </td>
@@ -243,7 +243,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetActivitiesWithState()">testGetActivitiesWithState</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters a state but no filter
  then the request should return all activities with this state.</div>
 </td>
@@ -251,7 +251,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetActivitiesWithStateAndFilter()">testGetActivitiesWithStateAndFilter</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters a state and a filter
  then the request should return all activities with the state who fulfill the filter condition.</div>
 </td>
@@ -259,7 +259,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetActivitiesWithStateTerminated()">testGetActivitiesWithStateTerminated</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters a state but no filter
  then the request should return all activities with this state.</div>
 </td>
@@ -308,7 +308,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetDataObjectsInvalid()">testGetDataObjectsInvalid</a></strong>()</code>
-<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with an invalid instance
  an 404 with error message will be returned</div>
 </td>
@@ -316,7 +316,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetDataObjectsRedirects()">testGetDataObjectsRedirects</a></strong>()</code>
-<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with a correct instance id and a wrong scenario ID
  you will be redirected automatically.</div>
 </td>
@@ -324,7 +324,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetDataObjectsWithFilter()">testGetDataObjectsWithFilter</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with an valid instance and scenario and an filter String
  you will get a list of all DataObjects with labels like the filter String for this scenario.</div>
 </td>
@@ -332,7 +332,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetDataObjectsWOFilter()">testGetDataObjectsWOFilter</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with an valid instance and scenario and no filter String
  you will get a list of all DataObjects for this scenario.</div>
 </td>
@@ -435,7 +435,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetScenarioContent()">testGetScenarioContent</a></strong>()</code>
-<div class="block">When you sent a GET to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a> 
+<div class="block">When you sent a GET to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a>
  the returned JSON will contain the latest version of all Scenarios.</div>
 </td>
 </tr>
@@ -475,7 +475,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetScenarioInstancesReturnsOkAndJSON()">testGetScenarioInstancesReturnsOkAndJSON</a></strong>()</code>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarioInstances(javax.ws.rs.core.UriInfo,%20int,%20java.lang.String)"><code>RestInterface.getScenarioInstances(UriInfo, int, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarioInstances(javax.ws.rs.core.UriInfo,%20int,%20java.lang.String)"><code>RestInterface.getScenarioInstances(UriInfo, int, String)</code></a>
  with valid params and no filter
  then you get 200 a JSON Object.</div>
 </td>
@@ -521,7 +521,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testGetScenarioProducesValidJsonArray()">testGetScenarioProducesValidJsonArray</a></strong>()</code>
-<div class="block">When you sent a get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a> 
+<div class="block">When you sent a get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a>
  the entity of the response will be a valid JSON array.</div>
 </td>
 </tr>
@@ -602,7 +602,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterfaceTest.html#testStartInvalidInstanceWOName()">testStartInvalidInstanceWOName</a></strong>()</code>
-<div class="block">When you send a Post to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#startNewInstance(javax.ws.rs.core.UriInfo,%20int)"><code>RestInterface.startNewInstance(UriInfo, int)</code></a> 
+<div class="block">When you send a Post to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#startNewInstance(javax.ws.rs.core.UriInfo,%20int)"><code>RestInterface.startNewInstance(UriInfo, int)</code></a>
  then the Response will be a 201 and a json object wit the new id will be returned.</div>
 </td>
 </tr>
@@ -761,7 +761,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetScenarioProducesValidJsonArray</h4>
 <pre>public&nbsp;void&nbsp;testGetScenarioProducesValidJsonArray()</pre>
-<div class="block">When you sent a get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a> 
+<div class="block">When you sent a get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a>
  the entity of the response will be a valid JSON array.</div>
 </li>
 </ul>
@@ -772,7 +772,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetScenarioContent</h4>
 <pre>public&nbsp;void&nbsp;testGetScenarioContent()</pre>
-<div class="block">When you sent a GET to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a> 
+<div class="block">When you sent a GET to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarios(javax.ws.rs.core.UriInfo,%20java.lang.String)"><code>RestInterface.getScenarios(UriInfo, String)</code></a>
  the returned JSON will contain the latest version of all Scenarios.</div>
 </li>
 </ul>
@@ -818,7 +818,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetScenarioInstancesReturnsOkAndJSON</h4>
 <pre>public&nbsp;void&nbsp;testGetScenarioInstancesReturnsOkAndJSON()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarioInstances(javax.ws.rs.core.UriInfo,%20int,%20java.lang.String)"><code>RestInterface.getScenarioInstances(UriInfo, int, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getScenarioInstances(javax.ws.rs.core.UriInfo,%20int,%20java.lang.String)"><code>RestInterface.getScenarioInstances(UriInfo, int, String)</code></a>
  with valid params and no filter
  then you get 200 a JSON Object.</div>
 </li>
@@ -903,7 +903,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testStartInvalidInstanceWOName</h4>
 <pre>public&nbsp;void&nbsp;testStartInvalidInstanceWOName()</pre>
-<div class="block">When you send a Post to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#startNewInstance(javax.ws.rs.core.UriInfo,%20int)"><code>RestInterface.startNewInstance(UriInfo, int)</code></a> 
+<div class="block">When you send a Post to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#startNewInstance(javax.ws.rs.core.UriInfo,%20int)"><code>RestInterface.startNewInstance(UriInfo, int)</code></a>
  then the Response will be a 201 and a json object wit the new id will be returned.</div>
 </li>
 </ul>
@@ -983,7 +983,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetActivitiesInvalidInstance</h4>
 <pre>public&nbsp;void&nbsp;testGetActivitiesInvalidInstance()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an wrong scenario instance ID
  then a 404 with error message (inside JSON) should be returned.</div>
 </li>
@@ -995,7 +995,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetActivitiesWithState</h4>
 <pre>public&nbsp;void&nbsp;testGetActivitiesWithState()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters a state but no filter
  then the request should return all activities with this state.</div>
 </li>
@@ -1007,7 +1007,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetActivitiesWithInvalidState</h4>
 <pre>public&nbsp;void&nbsp;testGetActivitiesWithInvalidState()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters, an invalid state but no filter
  the request should return a 404 with error message</div>
 </li>
@@ -1019,7 +1019,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetActivitiesWithStateTerminated</h4>
 <pre>public&nbsp;void&nbsp;testGetActivitiesWithStateTerminated()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters a state but no filter
  then the request should return all activities with this state.</div>
 </li>
@@ -1031,7 +1031,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetActivitiesWithStateAndFilter</h4>
 <pre>public&nbsp;void&nbsp;testGetActivitiesWithStateAndFilter()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with an correct parameters a state and a filter
  then the request should return all activities with the state who fulfill the filter condition.</div>
 </li>
@@ -1067,7 +1067,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetActivitiesWithFilter</h4>
 <pre>public&nbsp;void&nbsp;testGetActivitiesWithFilter()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getActivitiesOfInstance(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String,%20java.lang.String)"><code>RestInterface.getActivitiesOfInstance(UriInfo, int, int, String, String)</code></a>
  with a filter String
  then only activities with a label like the filter String will be returned.</div>
 </li>
@@ -1079,7 +1079,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetDataObjectsRedirects</h4>
 <pre>public&nbsp;void&nbsp;testGetDataObjectsRedirects()</pre>
-<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with a correct instance id and a wrong scenario ID
  you will be redirected automatically.</div>
 </li>
@@ -1091,7 +1091,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetDataObjectsInvalid</h4>
 <pre>public&nbsp;void&nbsp;testGetDataObjectsInvalid()</pre>
-<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">WHen you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with an invalid instance
  an 404 with error message will be returned</div>
 </li>
@@ -1103,7 +1103,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetDataObjectsWOFilter</h4>
 <pre>public&nbsp;void&nbsp;testGetDataObjectsWOFilter()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with an valid instance and scenario and no filter String
  you will get a list of all DataObjects for this scenario.</div>
 </li>
@@ -1115,7 +1115,7 @@ extends <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/AbstractTest
 <li class="blockList">
 <h4>testGetDataObjectsWithFilter</h4>
 <pre>public&nbsp;void&nbsp;testGetDataObjectsWithFilter()</pre>
-<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a> 
+<div class="block">When you send a Get to <a href="../../../../../../../de/uni_potsdam/hpi/bpt/bp2014/jcore/rest/RestInterface.html#getDataObjects(javax.ws.rs.core.UriInfo,%20int,%20int,%20java.lang.String)"><code>RestInterface.getDataObjects(UriInfo, int, int, String)</code></a>
  with an valid instance and scenario and an filter String
  you will get a list of all DataObjects with labels like the filter String for this scenario.</div>
 </li>

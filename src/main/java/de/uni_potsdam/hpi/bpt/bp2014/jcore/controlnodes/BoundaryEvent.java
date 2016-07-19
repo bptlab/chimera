@@ -11,6 +11,8 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
 public class BoundaryEvent extends AbstractEvent {
 
     /**
+     * Create new BoundaryEvent instance
+     *
      * @param controlNodeId id of the abstract control node which represents the event.
      * @param fragmentInstanceId databaseId of the Fragment where start event belongs to.
      * @param scenarioInstance ScenarioInstance object which holds control nodes.
@@ -28,6 +30,8 @@ public class BoundaryEvent extends AbstractEvent {
 
     @Override
     public boolean skip() {
+        // Boundary Events can not be skipped.
+        // TODO check if applies
         return false;
     }
 
@@ -36,5 +40,4 @@ public class BoundaryEvent extends AbstractEvent {
         return new BoundaryEventOutgoingBehavior(this.getControlNodeId(),
                 scenarioInstance, getFragmentInstanceId(), getControlNodeInstanceId());
     }
-
 }

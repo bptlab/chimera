@@ -8,7 +8,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.eventhandling.EventDispatcher;
 import java.util.Date;
 
 /**
- *
+ * Represent timer events. Currently only time spans are supported (e.g. one day).
  */
 public class TimerEventInstance extends AbstractEvent {
 
@@ -23,6 +23,10 @@ public class TimerEventInstance extends AbstractEvent {
         return "TimerEvent";
     }
 
+    /**
+     * Since timer events are not registered at a Event platform, but are handled internally,
+     * calls specific method for timer events.
+     */
     @Override
     public void registerEvent() {
         EventDispatcher.registerTimerEvent(this, this.getFragmentInstanceId(),
@@ -30,6 +34,12 @@ public class TimerEventInstance extends AbstractEvent {
                 this.getScenarioInstance().getScenarioId());
     }
 
+    /**
+     * Calculate the termination of the timer from the current time and the
+     * specified time span.
+     *
+     * @return the Date when the timer should be triggered.
+     */
     public Date getTerminationDate() {
         DbTimerEvent dbTimerEvent = new DbTimerEvent();
         String timerDefinition = dbTimerEvent.retrieveTimerDefinition(this.getControlNodeId());

@@ -5,7 +5,7 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.controlnodes.AbstractEvent;
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.EventOutgoingBehavior;
 
 /**
- *
+ * Representation for start events.
  */
 public class StartEvent extends AbstractEvent {
 
@@ -17,16 +17,10 @@ public class StartEvent extends AbstractEvent {
     public StartEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
-        this.setFragmentInstanceId(fragmentInstanceId);
     }
 
     @Override
     public String getType() {
         return "StartEvent";
-    }
-
-    @Override
-    public boolean skip() {
-        return false;
     }
 }

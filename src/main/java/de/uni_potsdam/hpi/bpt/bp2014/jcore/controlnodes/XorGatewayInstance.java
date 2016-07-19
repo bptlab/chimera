@@ -6,7 +6,10 @@ import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewayJoinBeh
 import de.uni_potsdam.hpi.bpt.bp2014.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 
 /**
- *
+ * Represents exclusive gateways.
+ * In contrast to the BPMN specification, exclusive gateways are handled like event
+ * based gateways. All following control nodes are enabled, and skipped when one of them
+ * begins.
  */
 public class XorGatewayInstance extends GatewayInstance {
 
