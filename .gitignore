@@ -4,7 +4,7 @@
 .project
 .settings
 *.class
-JEngine.iml
+*.iml
 resources/database_connection
 target/*
 *~

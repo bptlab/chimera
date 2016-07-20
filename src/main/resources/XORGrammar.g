@@ -7,11 +7,11 @@ options
 }
 
 @lexer::header {
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.hpi.bpt.chimera.jcore;
 }
 
 @parser::header {
-package de.uni_potsdam.hpi.bpt.bp2014.jcore;
+package de.hpi.bpt.chimera.jcore;
 }
 
 fragment STRING: '#'?('A'..'Z' | 'a'..'z' | '0'..'9')+;
