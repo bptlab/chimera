@@ -4,12 +4,17 @@ import de.hpi.bpt.chimera.database.DbEmailConfiguration;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.EmailConfigJaxBean;
 import de.hpi.bpt.chimera.util.JsonUtil;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * This class implements the REST interface for email tasks.
+ * It allows to retrieve information about email tasks.
  */
 @Path("interface/v2")
 public class EmailRestService {
@@ -20,8 +25,8 @@ public class EmailRestService {
      * A Json Object will be returned with an array of ids and a Map
      * from ids to labels.
      *
-     * @param scenarioId   The ID of the scenario, its mail tasks will be DataDependencyWebServiceTestreturned.
-     * @param filterString A Filter String, only mail tasks with a label containing
+     * @param scenarioId   The ID of the scenario
+     * @param filterString A filter String. only mail tasks with a label containing
      *                     this filter String will be returned.
      * @return The JSON Object with ids and labels.
      */
