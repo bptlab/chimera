@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: '0.1'
+  version: '1.2'
   title: Chimera API
 host: localhost:8080
 basePath: /api/interface/v2
@@ -412,7 +412,7 @@ paths:
           description: Bad Request.
           schema:
             $ref: '#/definitions/Error'
-  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input:
+  /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceID}/input:
     get:
       description: This method responds to a GET request by returning an array of inputSets.
       operationId: getInputDataObjects_
@@ -435,7 +435,7 @@ paths:
         description: >-
           The databaseID of the scenarioInstance belonging to the
                                         aforementioned scenario.
-      - name: activityID
+      - name: activityInstanceID
         in: path
         required: true
         x-is-map: false
@@ -446,11 +446,58 @@ paths:
                                         scenarioInstance.
       responses:
         '200':
-          description: success
-  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output:
+          description: An array with information about the inputs of the activity
+          schema:
+            $ref: '#/definitions/IOList'
+        '404':
+          description: The scenario/scenarioInstance/activityInstance was not found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/activityInstace/{activityInstanceID}/output:
     get:
       description: This method responds to a GET request by returning an array of outputSets.
       operationId: getOutputDataObjects_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          The databaseID of the scenarioInstance belonging to the
+                                        aforementioned scenario.
+      - name: activityInstanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          The databaseID of the activityInstance belonging to this
+                                        scenarioInstance.
+      responses:
+        '200':
+          description: An array with information about the outputs of the activity
+          schema:
+            $ref: '#/definitions/IOList'
+        '404':
+          description: The scenario/scenarioInstance/activityInstance was not found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/availableInput:
+    get:
+      description: This method provides a list of available inputs.
+      operationId: getAvailableInput_
       produces:
       - application/json
       parameters:
@@ -477,11 +524,13 @@ paths:
         type: integer
         format: int64
         description: >-
-          The databaseID of the activityInstance belonging to this
+          The databaseID of the activity in this
                                         scenarioInstance.
       responses:
-        '200':
-          description: success
+        '202':
+          description: An array with the available inputs
+          schema:
+            $ref: '#/definitions/DataSetList'
   /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references:
     get:
       description: This method implements the REST call for retrieving.
@@ -642,13 +691,17 @@ paths:
                                         scenarioInstance.
       responses:
         '200':
-          description: success
+          description: List of dataObjectInstances for the inputSet
+          schema:
+            $ref: '#/definitions/DataSetList'
+        '404':
+          description: the scenario/scenarioInstance/inputSet can't be found
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}:
     get:
       description: >-
-        This method responds to a GET request
-         by returning an array of dataObjectsInstances with their dataAttributeInstances
-         belonging to an outputSet.
+        This method responds to a GET request by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.
       operationId: getOutputDataObjectsAndAttributes_
       produces:
       - application/json
@@ -680,11 +733,11 @@ paths:
                                         scenarioInstance.
       responses:
         '200':
-          description: success
+          description: List of dataObjectInstances for the outputSet
           schema:
-            $ref: '#/definitions/OutputsetList'
+            $ref: '#/definitions/DataSetList'
         '404':
-          description: Not found.
+          description: the scenario/scenarioInstance/outputSet can't be found
           schema:
             $ref: '#/definitions/Error'
   /scenario/{scenarioId}/terminationcondition:
@@ -942,7 +995,7 @@ definitions:
   DataObjectEntry:
     type: object
     properties:
-      id:
+      (id):
         type: array
         description: 'the name of this attribute is the actual ID of the data object (note that swagger cant do this).'
         items:
@@ -963,6 +1016,30 @@ definitions:
       link:
         type: string
         description: 'The URI of the data object'
+  IOList:
+    type: array
+    description: 'Information about all IOObjects.'
+    items:
+      $ref: '#/definitions/IOEntry'   
+  IOEntry:
+    type: object
+    properties:
+      (id):
+        type: array
+        description: 'the name of this attribute is the actual ID of the IO object (swagger cant do this).'
+        items:
+          $ref: '#/definitions/IOObject'
+  IOObject:
+    type: object
+    properties:
+      (id):
+        type: string
+        description: 'Name of the dataclass.'
+      states:
+        type: array
+        items:
+          type: string
+        description: 'Possible States'
           
   TerminationCondition:
     type: object
@@ -1117,7 +1194,7 @@ definitions:
         items:
           $ref: '#/definitions/DomainModel'
 
-  OutputsetList:
+  DataSetList:
     type: array
     description: 'All data objects found.'
     items:
