@@ -795,22 +795,6 @@
                         "schema": {
                             "$ref": "#/definitions/DataObjectList"
                         }
-                    },
-                    "303": {
-                        "description": "The instance was found for a different scenario id.",
-                        "schema": {
-                            "description": "Correct URI",
-                            "format": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "There is no scenario / instance / data object for the given ids.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Wrong scenario id - couldn't create correct URI for redirection"
                     }
                 }
             }
@@ -858,21 +842,11 @@
                             "$ref": "#/definitions/DataObjectJaxBean"
                         }
                     },
-                    "303": {
-                        "description": "The instance was found for a different scenario id.",
-                        "schema": {
-                            "description": "Correct URI",
-                            "format": "string"
-                        }
-                    },
                     "404": {
                         "description": "There is no scenario / instance / data object for the given ids.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
-                    },
-                    "500": {
-                        "description": "Wrong scenario id - couldn't create correct URI for redirection"
                     }
                 }
             }
@@ -1634,11 +1608,6 @@
                 "state": {
                     "type": "string",
                     "description": "The state of the data object."
-                },
-                "setId": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The setId of the dataobject."
                 }
             }
         },

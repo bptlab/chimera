@@ -599,17 +599,6 @@ paths:
           description: List of all data objects.
           schema:
             $ref: '#/definitions/DataObjectList'
-        '303':
-          description: The instance was found for a different scenario id.
-          schema:
-            description: Correct URI
-            format: string
-        '404':
-          description: There is no scenario / instance / data object for the given ids.
-          schema:
-            $ref: '#/definitions/Error'
-        '500':
-          description: Wrong scenario id - couldn't create correct URI for redirection
   /scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataObjectID}:
     get:
       description: This method provides detailed information about an data Object.
@@ -643,17 +632,10 @@ paths:
           description: Detailed information about the data object.
           schema:
             $ref: '#/definitions/DataObjectJaxBean'
-        '303':
-          description: The instance was found for a different scenario id.
-          schema:
-            description: Correct URI
-            format: string
         '404':
           description: There is no scenario / instance / data object for the given ids.
           schema:
             $ref: '#/definitions/Error'
-        '500':
-          description: Wrong scenario id - couldn't create correct URI for redirection
   /scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}:
     get:
       description: >-
@@ -1218,10 +1200,6 @@ definitions:
       state:
         type: string
         description: 'The state of the data object.'
-      setId:
-        type: number
-        format: integer
-        description: 'The setId of the dataobject.'
   Error:
     type: object
     properties:

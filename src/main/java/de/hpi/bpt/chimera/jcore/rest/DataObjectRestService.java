@@ -4,7 +4,11 @@ import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,7 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * This class implements the REST interface for data objects.
+ * It allows to retrieve information about individual data objects.
+ * Note that interaction with input/output sets is handled by {@link DataDependencyRestService}
  */
 @Path("interface/v2")
 public class DataObjectRestService {
@@ -142,7 +148,7 @@ public class DataObjectRestService {
             dataObject.put("id", id);
             dataObject.put("label", labels.get(id));
             dataObject.put("state", states.get(id));
-            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + String.valueOf(id));
+            dataObject.put("link", uriInfo.getAbsolutePath() + "/" + id);
             results.put(String.valueOf(id), dataObject);
         }
         result.put("results", results);
