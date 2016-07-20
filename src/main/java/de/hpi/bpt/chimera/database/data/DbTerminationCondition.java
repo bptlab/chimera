@@ -4,15 +4,16 @@ import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.database.DbObject;
 import org.apache.log4j.Logger;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 /**
  * This class creates and executes sql statements to get the terminationCondition for a scenario.
  */
 public class DbTerminationCondition extends DbObject {
-	private static Logger log = Logger.getLogger(DbTerminationCondition.class);
 
 	public Map<Integer, Integer> getDataClassToState(String conditionSetId) {
 		String sql = "SELECT dataclass_id, state_id FROM terminationcondition WHERE conditionset_id = '%s'";
@@ -29,7 +30,7 @@ public class DbTerminationCondition extends DbObject {
     }
 
 	/**
-	 * Returns a list of Hashmap with all the information
+	 * Returns a list of hash map with all the information
 	 * of a Termination Condition of one specific Scenario.
 	 * The Scenario is specified by the given id.
 	 *
@@ -49,7 +50,6 @@ public class DbTerminationCondition extends DbObject {
 	}
 
 	/**
-	 *
 	 * @param sql	This is the sql Statement which shall be executed.
 	 * @param keys	These strings specify what to return
 	 * @return a Map with a List of Maps with Keys
@@ -57,11 +57,11 @@ public class DbTerminationCondition extends DbObject {
     @Deprecated
 	public Map<String, List<Map<String, Object>>>
 		executeStatementReturnsMapOfListOfMapsWithKeys(String sql, String... keys) {
-		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-		ResultSet results = null;
+
 		Map<String, List<Map<String, Object>>> conditionSets = new HashMap<>();
-		try {
-			results = conn.prepareStatement(sql).executeQuery();
+		try (Connection conn = ConnectionWrapper.getInstance().connect();
+			 Statement stmt = conn.createStatement()){
+			ResultSet results = stmt.executeQuery(sql);
 			while (results.next()) {
 				String conditionSetId = results.getString("set_id");
 				if (!conditionSets.containsKey(conditionSetId)) {
@@ -74,21 +74,9 @@ public class DbTerminationCondition extends DbObject {
 				}
 				conditionSets.get(conditionSetId).add(condition);
 			}
+			results.close();
 		} catch (SQLException e) {
 			log.error("SQL Error!: ", e);
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				log.error("SQL Error!: ", e);
-			}
-			try {
-				if (results != null) {
-					results.close();
-				}
-			} catch (SQLException e) {
-				log.error("SQL Error!: ", e);
-			}
 		}
 		return conditionSets;
 	}

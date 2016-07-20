@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
 
-import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import org.json.JSONArray;
 
@@ -32,18 +31,8 @@ public class TerminationCondition {
      * @param stateId        This is the ID of the state of the DataNode.
      * @param dataObjectId   This is the database ID of a DataObject.
      */
-    public void addCondition(int dataObjectId, int stateId) {
+    private void addCondition(int dataObjectId, int stateId) {
         this.dataObjectIdToStateId.put(dataObjectId, stateId);
-    }
-
-    /**
-     * Find the id of a DataNode State by the name.
-     * @param stateName name of the state
-     * @return id of the state
-     */
-    private static int findStateIdByName(String stateName) {
-        DbState dbState = new DbState();
-        return dbState.getStateId(stateName);
     }
 
     /**
@@ -52,7 +41,7 @@ public class TerminationCondition {
      * @param dataClasses
      * @return List of parsed termination conditions.
      */
-    public static List<TerminationCondition> parseTerminationConditions(
+    static List<TerminationCondition> parseTerminationConditions(
             JSONArray jsonTerminationConditions, List<DataClass> dataClasses, int scenarioId,
             Map<String, Integer> stateToDatabaseId) {
         List<TerminationCondition> conditions = new ArrayList<>();

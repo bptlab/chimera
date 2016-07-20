@@ -1,16 +1,18 @@
 package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 /**
- *
+ * Database access object used by the {@link EventDispatcher}
+ * for retrieving case start condition data.
  */
 public class DbCaseStart extends DbEventMapping {
-    private final String caseStartForEventKey = "SELECT * FROM casestart WHERE eventkey = '%s'";
+    private static final String SELECT_BY_EVENT_KEY = "SELECT * FROM casestart WHERE eventkey = '%s'";
 
     /**
      * Inserts a new case start query into the database.
@@ -33,32 +35,52 @@ public class DbCaseStart extends DbEventMapping {
      * @param requestKey the key under which the case mapping is saved.
      */
     public void deleteCaseMapping(String requestKey) {
-        String sql = String.format(caseStartForEventKey, requestKey);
+        String sql = String.format(SELECT_BY_EVENT_KEY, requestKey);
         this.executeUpdateStatement(sql);
     }
 
+    /**
+     * Retrieves the scenario Id for a request key.
+     * @param requestKey the key under which the case mapping is saved.
+     */
     public int getScenarioId(String requestKey) {
-        String sql = String.format(caseStartForEventKey, requestKey);
+        String sql = String.format(SELECT_BY_EVENT_KEY, requestKey);
         return this.executeStatementReturnsInt(sql, "scenario_id");
     }
 
+    /**
+     * Retrieves the query Id for a request key.
+     * @param requestKey the key under which the case mapping is saved.
+     */
     public String getQueryId(String requestKey) {
-        String sql = String.format(caseStartForEventKey, requestKey);
+        String sql = String.format(SELECT_BY_EVENT_KEY, requestKey);
         return this.executeStatementReturnsString(sql, "query_id");
     }
 
+    /**
+     * Retrieves the event key for a query Id.
+     * @param queryId the query id saved in the mapping.
+     */
     public String getEventKey(String queryId) {
         String sql = "SELECT * FROM casestart WHERE query_id = '%s'";
         sql = String.format(sql, queryId);
         return executeStatementReturnsString(sql, "eventkey");
     }
 
+    /**
+     * Retrieves the notification rule id for a request key.
+     * A scenario needs to be specified since the same notification rule
+     * can be referenced in different scenarios.
+     */
     public String getNotificationRuleId(int scenarioId, String requestKey) {
         String sql = "SELECT * FROM casestart WHERE eventkey = '%s' AND scenario_id = %d";
         sql = String.format(sql, requestKey, scenarioId);
         return this.executeStatementReturnsString(sql, "notificationrule_id");
     }
 
+    /**
+     * Collect all event keys saved for a specific scenario.
+     */
     public List<String> getRequestKeys(int scenarioId) {
         String sql = "SELECT * FROM casestart WHERE scenario_id = %d";
         sql = String.format(sql, scenarioId);

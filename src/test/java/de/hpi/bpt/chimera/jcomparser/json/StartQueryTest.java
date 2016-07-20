@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.jcomparser.json;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.DbCaseStart;
+import de.hpi.bpt.chimera.database.DbObject;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbStartQuery;
 import de.hpi.bpt.chimera.jcore.eventhandling.StartQueryPart;
 import de.hpi.bpt.chimera.jcore.MockProvider;
@@ -82,12 +83,18 @@ public class StartQueryTest {
         startQuery.save(scenarioId, dataClasses);
         DbStartQuery dbStartQuery = new DbStartQuery();
         assertEquals(Arrays.asList("SELECT * FROM anEvent"), dbStartQuery.getStartQueries(123451337));
-        List<String> queryIds = dbStartQuery.getQueryIds(scenarioId);
+        List<String> queryIds = getQueryIds(scenarioId);
         assertEquals(2, queryIds.size());
         List<StartQueryPart> pathMappings = dbStartQuery.loadStartQueryParts(queryIds.get(0),
                 123451337);
         assertEquals(1, pathMappings.size());
         // HERE assert values of start query parts
+    }
+
+    private List<String> getQueryIds(int scenarioId) {
+        String getQueryIds = "SELECT * FROM startquery WHERE scenario_id = %d;";
+        getQueryIds = String.format(getQueryIds, scenarioId);
+        return new DbObject().executeStatementReturnsListString(getQueryIds, "id");
     }
 
     @Test

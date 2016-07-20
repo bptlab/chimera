@@ -46,6 +46,11 @@ public class DbDataObject extends DbObject {
 		return this.executeInsertStatement(sql);
 	}
 
+	/**
+	 * Retrieve all Ids of data objects in a given scenario instance.
+	 * @param scenarioInstanceId Id of the scenario instance.
+	 * @return All Ids of data objects active in the instance.
+     */
     public List<Integer> getDataObjectIds(int scenarioInstanceId) {
         String sql = "SELECT id FROM dataobject WHERE scenarioinstance_id = %d;";
         sql = String.format(sql, scenarioInstanceId);
@@ -104,7 +109,7 @@ public class DbDataObject extends DbObject {
         return this.executeStatementReturnsString(sql, "dc.name");
     }
 
-    public boolean isLocked(int dataObjectId) {
+	boolean isLocked(int dataObjectId) {
         String sql = "SELECT locked FROM dataobject "
                 + "WHERE id = " + dataObjectId;
         return this.executeStatementReturnsBoolean(sql, "locked");

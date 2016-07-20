@@ -13,17 +13,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Database Access Object for Data Classes.
+ * Used by the all classes working with data objects.
  */
 public class DbDataClass extends DbObject {
-    private static Logger log = Logger.getLogger(DbDataClass.class);
 
+    /**
+     * Retrieve the name of a data class specified via Id.
+     * @param id The data class Id.
+     * @return The name of the data class.
+     */
     public String getName(int id) {
         String sql = "SELECT * FROM dataclass WHERE id = %d;";
         sql = String.format(sql, id);
         return this.executeStatementReturnsString(sql, "name");
     }
 
+    /**
+     * Retrieve the id of a data class, specified by the name in a given scenario.
+     * @param name Name of the data class to be retrieved.
+     * @param scenarioId Id of the scenario containing the data class.
+     * @return Id of the data class.
+     */
     public int getId(String name, int scenarioId) {
         String sql = "SELECT dataclass.id as class_id FROM dataclass, datanode WHERE dataclass.name = '%s' "
                 + "AND datanode.scenario_id = %d "
@@ -32,12 +43,23 @@ public class DbDataClass extends DbObject {
                 String.format(sql, name, scenarioId), "class_id");
     }
 
+    /**
+     * Retrieve all data attribute ids of a data class.
+     * @param classId Id of the data class.
+     * @return All data attribute ids for specified attributes in the data class.
+     */
     public List<Integer> getDataAttributes(int classId) {
         Map<Integer, List<Integer>> classToAttributeIds = getDataAttributesPerClass();
         assert classToAttributeIds.containsKey(classId) : "Invalid dataclass requested";
         return classToAttributeIds.get(classId);
     }
 
+    /**
+     * Event types inherit from data classes. This method checks, whether a
+     * data class (specified by id) is an event type.
+     * @param classId Id of the data class.
+     * @return True, if the class is an event type. False otherwise.
+     */
     public boolean isEvent(int classId) {
         String sql = "SELECT is_event FROM dataclass WHERE id = %d;";
         return executeStatementReturnsBoolean(
@@ -45,7 +67,7 @@ public class DbDataClass extends DbObject {
                 "is_event");
     }
 
-    public Map<Integer, List<Integer>> getDataAttributesPerClass() {
+    private Map<Integer, List<Integer>> getDataAttributesPerClass() {
         Map<Integer, List<Integer>> classToAttributeIds = new HashMap<>();
         List<Integer> dataClassIds = new DbObject()
                 .executeStatementReturnsListInt(

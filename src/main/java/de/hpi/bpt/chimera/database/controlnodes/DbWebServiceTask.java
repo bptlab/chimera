@@ -1,15 +1,17 @@
 package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.WebServiceTaskExecutionBehavior;
 import org.apache.log4j.Logger;
 
 import java.util.*;
 
 /**
- * This class implements the WebServiceTask.
+ * Database Access Object for WebServiceTasks.
+ * Used in the {@link WebServiceTaskExecutionBehavior} to retrieve
+ * execution data.
  */
 public class DbWebServiceTask extends DbObject {
-    private static Logger log = Logger.getLogger(DbWebServiceTask.class);
 
     /**
 	 * Returns the Link for the webservice task.
@@ -148,7 +150,6 @@ public class DbWebServiceTask extends DbObject {
 	 * @return A map of all dataattributeIDs and its names
 	 */
 	public Map<Integer, String> getOutputAttributesForWebservice(int webserviceNodeId) {
-		// TODO
 		String sql = "SELECT dataattribute.id as did, dataattribute.name as dname"
 				+ " FROM pathmapping, dataattribute "
 				+ "WHERE pathmapping.controlnode_id = %d "

@@ -42,10 +42,35 @@ public class DbDataFlow extends DbObject {
 		return this.executeStatementReturnsListInt(sql, "dataset_id");
 	}
 
+	/**
+	 * Retrieve the id of the control node that writes data into a given data node.
+	 * @param dataNodeId Id of the data node.
+	 * @return The Id of the writing control node.
+     */
+	public int getPrecedingControlNode(int dataNodeId) {
+		String sql = "SELECT d.controlnode_id as cn_id " +
+				"FROM datanode as n, datasetconsistsofdatanode as s, dataflow as d " +
+				"WHERE n.id = s.datanode_id AND d.dataset_id = s.dataset_id "
+				+ "AND d.input = 0 AND n.id = %d;";
+		return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "cn_id");
+	}
+
+	/**
+	 * Retrieve the Ids of the data classes of incoming data objects for a given
+	 * control node.
+	 * @param controlNodeId Id of the control node.
+	 * @return All Ids of data classes of preceding data nodes.
+     */
 	public List<Integer> getPrecedingDataClassIds(int controlNodeId) {
 		return getDataClassIds(1, controlNodeId);
 	}
 
+	/**
+	 * Retrieve the Ids of the data classes of outgoing data objects for a given
+	 * control node.
+	 * @param controlNodeId Id of the control node.
+	 * @return All Ids of data classes of following data nodes.
+	 */
 	public List<Integer> getFollowingDataClassIds(int controlNodeId) {
 		return getDataClassIds(0, controlNodeId);
 	}
@@ -60,12 +85,4 @@ public class DbDataFlow extends DbObject {
 		return this.executeStatementReturnsListInt(
 				String.format(sql, input, controlNodeId), "class_id");
 	}
-
-    public int getPrecedingControlNode(int datanodeId) {
-        String sql = "SELECT d.controlnode_id as cn_id " +
-                "FROM datanode as n, datasetconsistsofdatanode as s, dataflow as d " +
-                "WHERE n.id = s.datanode_id AND d.dataset_id = s.dataset_id "
-				+ "AND d.input = 0 AND n.id = %d;";
-        return this.executeStatementReturnsInt(String.format(sql, datanodeId), "cn_id");
-    }
 }

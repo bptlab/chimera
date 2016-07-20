@@ -2,19 +2,20 @@ package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jhistory.HistoryService;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * Represents the activity instance of the database.
- * Methods are mostly used by the HistoryService.
+ * Methods are mostly used by the {@link HistoryService}.
  * Hence, you can get all terminated activities or start new ones.
  */
 
 public class DbActivityInstance extends DbObject {
 	/**
-	 * This method returns the actual state of an activity.
+	 * This method returns the current state of an activity.
 	 *
 	 * @param id This is the database ID of an activity instance.
 	 * @return the state of the activity as a String.
@@ -59,7 +60,13 @@ public class DbActivityInstance extends DbObject {
 		return this.executeInsertStatement(sql);
 	}
 
-    // TODO document
+	/**
+	 * This method checks whether an activity instance exists for the given control
+	 * node instance in the given scenario instance.
+	 * @param controlNodeInstanceId Id of a control node instance.
+	 * @param scenarioInstanceId Id of a scenario instance.
+	 * @return True, if an activity instance exists for the specified Ids. False else.
+     */
     public Boolean existsActivityInstance(int controlNodeInstanceId, int scenarioInstanceId) {
         String existsActivityInstance = "SELECT * FROM controlnodeinstance as cni, " +
                 "fragmentinstance as fi WHERE cni.fragmentinstance_id = fi.id " +
@@ -93,7 +100,7 @@ public class DbActivityInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Retrieve whether an activity instance is automatic.
 	 * @param id This is the database ID of an activity instance.
 	 * @return a boolean with the Automatic Execution state
 	 */
@@ -103,7 +110,7 @@ public class DbActivityInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Set the execution mode for an activity instance.
 	 * @param id This is the database ID of an activity instance.
 	 * @param automaticExecution This is a boolean Automatic Execution state.
 	 */
@@ -121,110 +128,7 @@ public class DbActivityInstance extends DbObject {
 	}
 
 	/**
-	 *
-	 * @param instanceId This is the database ID of an activity instance.
-	 * @return a Map of all activity instances
-	 */
-	public Map<Integer, Map<String, Object>> getMapForAllActivityInstances(int instanceId) {
-		String sql =
-				"SELECT activityinstance.id AS id, activityinstance.type AS type, "
-						+ "activity_state, controlnode.label AS label "
-						+ "FROM activityinstance, "
-						+ "controlnodeinstance, controlnode "
-						+ "WHERE "
-						+ "activityinstance.id = controlnodeinstance.id "
-						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND controlnodeinstance.controlnode_id = "
-						+ 		"controlnode.id "
-						+ "AND fragmentinstance_id "
-						+ "IN (Select id FROM fragmentinstance "
-						+ "WHERE scenarioinstance_id =" + instanceId + ")";
-		return this.executeStatementReturnsMapWithMapWithKeys(
-				sql, "id", "type", "activity_state", "label");
-	}
-
-	/**
-	 *
-	 * @param instanceID This is the database ID of an activity instance.
-	 * @param filterString This is a filter string for labels.
-	 * @param state This is a filter for activity states.
-	 * @return a Map of all matching activity instances
-	 */
-	public Map<Integer, Map<String, Object>> getMapForActivityInstancesWithFilterAndState(
-			int instanceID, String filterString, String state) {
-		String sql =
-				"SELECT activityinstance.id AS id, activityinstance.type AS type, "
-						+ "activity_state, controlnode.label AS label "
-						+ "FROM activityinstance, "
-						+ "controlnodeinstance, controlnode "
-						+ "WHERE "
-						+ "activityinstance.id = controlnodeinstance.id "
-						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND controlnodeinstance.controlnode_id = "
-						+ "controlnode.id AND controlnode.label "
-						+ "LIKE '%" + filterString + "%' "
-						+ "AND activity_state = '" + state + "'"
-						+ "AND fragmentinstance_id IN (Select id "
-						+ "FROM fragmentinstance "
-						+ "WHERE scenarioinstance_id =" + instanceID + ")";
-		return this.executeStatementReturnsMapWithMapWithKeys(
-				sql, "id", "type", "activity_state", "label");
-	}
-
-	/**
-	 *
-	 * @param instanceID This is the database ID of an activity instance.
-	 * @param state This is a filter for activity states.
-	 * @return a Map of all matching activity instances
-	 */
-	public Map<Integer, Map<String, Object>> getMapForActivityInstancesWithState(
-			int instanceID,	String state) {
-		String sql =
-				"SELECT activityinstance.id AS id, activityinstance.type AS type, "
-						+ "activity_state, controlnode.label AS label "
-						+ "FROM activityinstance, "
-						+ "controlnodeinstance, controlnode "
-						+ "WHERE "
-						+ "activityinstance.id = controlnodeinstance.id "
-						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND controlnodeinstance.controlnode_id = "
-						+ "controlnode.id "
-						+ "AND activity_state = '" + state + "'"
-						+ "AND fragmentinstance_id IN (Select id "
-						+ "FROM fragmentinstance "
-						+ "WHERE scenarioinstance_id =" + instanceID + ")";
-		return this.executeStatementReturnsMapWithMapWithKeys(
-				sql, "id", "type", "activity_state", "label");
-	}
-
-	/**
-	 *
-	 * @param instanceID This is the database ID of an activity instance.
-	 * @param filterString This is a filter string for labels.
-	 * @return a Map of all matching activity instances
-	 */
-	public Map<Integer, Map<String, Object>> getMapForActivityInstancesWithFilter(
-			int instanceID,	String filterString) {
-		String sql =
-				"SELECT activityinstance.id AS id, activityinstance.type AS type, "
-						+ "activity_state, controlnode.label AS label "
-						+ "FROM activityinstance, "
-						+ "controlnodeinstance, controlnode "
-						+ "WHERE "
-						+ "activityinstance.id = controlnodeinstance.id "
-						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND controlnodeinstance.controlnode_id = "
-						+ "controlnode.id AND controlnode.label "
-						+ "LIKE '%" + filterString + "%'" + " "
-						+ "AND fragmentinstance_id IN (Select id "
-						+ "FROM fragmentinstance "
-						+ "WHERE scenarioinstance_id =" + instanceID + ")";
-		return this.executeStatementReturnsMapWithMapWithKeys(
-				sql, "id", "type", "activity_state", "label");
-	}
-
-	/**
-	 *
+	 * Retrieves whether an activity instance can be terminated.
 	 * @param id This is the database ID of an activity instance.
 	 * @return a boolean indicating whether the instance can terminate
 	 */
@@ -234,7 +138,7 @@ public class DbActivityInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Sets the termination permission for an activity instance.
 	 * @param id This is the database ID of an activity instance.
 	 * @param canTerminate This is a boolean indicating whether the instance can terminate
 	 */
@@ -252,6 +156,11 @@ public class DbActivityInstance extends DbObject {
 		this.executeUpdateStatement(sql);
 	}
 
+	/**
+	 * Retrieves the activity name for a given activity instance.
+	 * @param activityInstanceId The Id of the activity instance.
+	 * @return The name of the activity.
+     */
     public String getLabel(int activityInstanceId) {
         String sql = "SELECT cn.label as label FROM controlnodeinstance as cni," +
                 "controlnode as cn WHERE cni.controlnode_id = cn.id AND cni.id = %d; ";

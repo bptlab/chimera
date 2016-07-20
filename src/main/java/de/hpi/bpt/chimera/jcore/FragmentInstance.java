@@ -84,7 +84,7 @@ public class FragmentInstance {
         List<Integer> gateways = dbControlNodeInstance
                 .getGatewaysForFragmentInstanceID(id);
         List<Integer> gatewayInstances = dbControlNodeInstance
-                .getGatewayInstancesForFragmentInstanceID(id);
+                .getGatewayInstancesForFragmentInstanceId(id);
         for (int i = 0; gateways.size() > i; i++) {
             switch (dbControlNode.getType(gateways.get(i))) {
                 case "AND":

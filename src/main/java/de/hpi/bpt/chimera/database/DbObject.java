@@ -9,11 +9,12 @@ import java.sql.Connection;
 import java.util.*;
 
 /**
- * This class is the representation of a database object.
+ * A generic Database Access Object utility, providing different
+ * kinds of database requests/statements.
  */
 public class DbObject {
 
-    private static Logger log = Logger.getLogger(DbObject.class);
+    protected static Logger log = Logger.getLogger(DbObject.class);
     private static final String SQL_ERROR = "SQL Error: ";
 
 

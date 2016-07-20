@@ -10,24 +10,16 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- *
- */
 public class DbDataNodeTest extends AbstractDatabaseDependentTest {
-    /**
-     *
-     */
+
     @Test
     public void testGetDataObjectIdsForDataSets(){
         DbDataNode dbDataNode = new DbDataNode();
-        List<Integer> dataclassIds = dbDataNode.getDataClassIdsForDataSets(11);
-        assertEquals(2, dataclassIds.size());
-        assertEquals(Arrays.asList(1, 2), dataclassIds);
+        List<Integer> dataClassIds = dbDataNode.getDataClassIdsForDataSets(11);
+        assertEquals(2, dataClassIds.size());
+        assertEquals(Arrays.asList(1, 2), dataClassIds);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetDataStatesForDataSets(){
         DbDataNode dbDataNode = new DbDataNode();

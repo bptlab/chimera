@@ -18,6 +18,9 @@ public class DbFragment extends DbObject {
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
 
+	/**
+	 * Retrieves the BPMN XML strings for each fragment of a given scenario.
+     */
 	public List<String> getXmlStringsForScenario(int scenarioId) {
 		String sql = "SELECT xml FROM fragment, fragmentxml "
 				+ "WHERE fragment.scenario_id = %d "

@@ -30,7 +30,8 @@ public class DbDataAttributeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Checks the database for the existence of an attribute instance for a given
+	 * data attribute and data object.
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
 	 * @param dataObjectId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
@@ -43,6 +44,11 @@ public class DbDataAttributeInstance extends DbObject {
 		return this.executeExistStatement(sql);
 	}
 
+	/**
+	 * Checks the database for the existence of an attribute instance for a given id.
+	 * @param id Id of the data attribute instance.
+     * @return as a boolean whether the given data attribute instance exists.
+     */
 	public Boolean existDataAttributeInstance(int id) {
 		String sql = "SELECT id FROM dataattributeinstance "
 				+ "WHERE id = %d";
@@ -50,7 +56,8 @@ public class DbDataAttributeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Retrieves the id of a data attribute instance specified by a
+	 * data attribute and a data object.
 	 * @param dataAttributeId		This is the database ID of the DataAttribute.
 	 * @param dataObjectId	This is the database ID of the DataObject
 	 *                              the AttributeInstance belongs to.
@@ -64,7 +71,7 @@ public class DbDataAttributeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Retrieve the data type of a data attribute.
 	 * @param dataAttributeId	This is the database ID of the DataAttribute.
 	 * @return the type of the DataAttribute as a String.
 	 */
@@ -74,7 +81,7 @@ public class DbDataAttributeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Retrieve the current data value of a data attribute instance.
 	 * @param id This is the database ID of the DataAttribute instance.
 	 * @return the Value of the DataAttribute instance.
 	 */
@@ -86,7 +93,7 @@ public class DbDataAttributeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Retrieve the name of a data attribute.
 	 * @param dataAttributeId	This is the database ID of the DataAttribute.
 	 * @return the name of the DataAttribute as a String.
 	 */
@@ -95,6 +102,11 @@ public class DbDataAttributeInstance extends DbObject {
 		return this.executeStatementReturnsString(sql, "name");
 	}
 
+	/**
+	 * Retrieve the id of the data object holding this data attribute instance.
+	 * @param id A data attribute instance id.
+	 * @return The Id of the belonging data object.
+     */
 	public int getDataObjectId(int id) {
 		String sql = "SELECT dataobject_id FROM dataattributeinstance "
 				+ "WHERE id = %d";
@@ -126,6 +138,11 @@ public class DbDataAttributeInstance extends DbObject {
 		return this.executeStatementReturnsInt(sql, "dataattribute_id");
 	}
 
+	/**
+	 * Retrieves all data attribute instance ids that are held by a specific data object.
+	 * @param dataObjectId The Id of the data object.
+	 * @return All Ids of data attribute instances held by the object.
+     */
     public List<Integer> getAttributeInstanceIdsForDataObject(int dataObjectId) {
         String getDataAttributes = "SELECT id FROM dataattributeinstance " +
                 "WHERE dataobject_id = %d;";

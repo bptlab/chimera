@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.database.data;
 
 import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcore.data.DataConditions;
 import org.apache.log4j.Logger;
 
 
@@ -48,17 +47,24 @@ public class DbDataNode extends DbObject {
 		return this.executeStatementReturnsListInt(sql, "state_id");
 	}
 
-    public DataConditions getInputSetFor(int inputSetId) {
-        throw new RuntimeException("To be implemented");
-    }
-
+	/**
+	 * Retrieve the Id of a data class of a data node.
+	 * @param dataNodeId Id of the data node.
+	 * @return Id of its data class.
+     */
     public int getDataClassIdForDataNode(int dataNodeId) {
         String sql = "SELECT dataclass_id FROM datanode " +
                 "WHERE datanode.id = %d";
         return this.executeStatementReturnsInt(String.format(sql, dataNodeId), "dataclass_id");
     }
 
-	public Map<Integer, Integer> getDataClassIdToState(int dataSetId) {
+	/**
+	 * Retrieve a Map, linking each data class id in a data set to its
+	 * respective data state id.
+	 * @param dataSetId Id of the data set whose data classes should be retrieved.
+	 * @return A Map linking data class Ids to the Ids of their state in the given set.
+     */
+	public Map<Integer, Integer> getDataSetClassToStateMap(int dataSetId) {
 		String sql = "SELECT dataclass_id, state_id "
 						+ "FROM datanode, datasetconsistsofdatanode "
 						+ "WHERE datanode.id = "

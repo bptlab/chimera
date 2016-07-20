@@ -26,7 +26,7 @@ public class DbControlNodeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * This method checks if a controlNode instance exists in the database for a given id.
 	 * @param id This is the database ID of a controlNodeInstance.
 	 * @return true if the controlNodeInstance instance exists else false.
 	 */
@@ -129,11 +129,11 @@ public class DbControlNodeInstance extends DbObject {
 	}
 
 	/**
-	 *
+	 * Retrieve the node ids of all gateways in a given fragment instance.
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 * @return a list of database ID's of gateway instances belonging to this fragment instance.
 	 */
-	public List<Integer> getGatewayInstancesForFragmentInstanceID(
+	public List<Integer> getGatewayInstancesForFragmentInstanceId(
 			int fragmentInstanceId) {
 		String sql =
 				"SELECT id FROM controlnodeinstance "

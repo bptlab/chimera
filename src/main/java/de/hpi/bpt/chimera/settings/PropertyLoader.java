@@ -15,11 +15,11 @@ public final class PropertyLoader {
 	/**
 	 * Name of properties file.
 	 */
-	public static final String PROPERTIES_FILE = "config.properties";
+	private static final String PROPERTIES_FILE = "config.properties";
 	/**
 	 * Folder for properties file.
 	 */
-	public static final String PROPERTIES_FOLDER = "resources";
+	private static final String PROPERTIES_FOLDER = "resources";
 	private static Properties props = new Properties();
 
 	//TODO should an exception be thrown if the property file could not be read?

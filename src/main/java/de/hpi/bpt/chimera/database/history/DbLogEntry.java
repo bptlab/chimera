@@ -144,6 +144,7 @@ public class DbLogEntry extends DbObject {
     /**
      * This method receives for each logged object the first entry in which this
      * object appeared.
+     * @param scenarioInstanceId
      * @return List of log entries, where each logged id only occurs one with the min timestamp.
      */
     public List<LogEntry> getCreationLogEntries(int scenarioInstanceId) {
@@ -153,6 +154,24 @@ public class DbLogEntry extends DbObject {
         "AND l1.scenarioinstance_id = %d;";
 
         sql = String.format(sql, scenarioInstanceId);
+        return retrieveLogEntries(sql);
+    }
+
+    /**
+     * Retrieve all log entries that log the creation of an object,
+     * calculated by the use of the timestamp.
+     * @param scenarioInstanceId Id of the scenario istance.
+     * @param type The type of the object.
+     * @return All creation log entries.
+     */
+    public List<LogEntry> getCreationLogEntries(int scenarioInstanceId, LogEntry.LogType type) {
+        String sql = "SELECT l1.* FROM logentry l1 " +
+                "INNER JOIN (SELECT logged_id, MIN(timestamp) as timestamp, type FROM logentry " +
+                "GROUP BY logged_id, type) l2 " +
+                "ON l1.logged_id = l2.logged_id WHERE l1.timestamp = l2.timestamp AND " +
+                "l1.type = l2.type AND l1.scenarioinstance_id = %d AND l1.type = '%s';";
+
+        sql = String.format(sql, scenarioInstanceId, type.name());
         return retrieveLogEntries(sql);
     }
 
@@ -198,16 +217,5 @@ public class DbLogEntry extends DbObject {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public List<LogEntry> getCreationLogEntries(int scenarioInstanceId, LogEntry.LogType type) {
-        String sql = "SELECT l1.* FROM logentry l1 " +
-                "INNER JOIN (SELECT logged_id, MIN(timestamp) as timestamp, type FROM logentry " +
-                "GROUP BY logged_id, type) l2 " +
-                "ON l1.logged_id = l2.logged_id WHERE l1.timestamp = l2.timestamp AND " +
-                "l1.type = l2.type AND l1.scenarioinstance_id = %d AND l1.type = '%s';";
-
-        sql = String.format(sql, scenarioInstanceId, type.name());
-        return retrieveLogEntries(sql);
     }
 }

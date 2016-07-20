@@ -10,10 +10,6 @@ import org.apache.log4j.Logger;
  * Moreover it is possible to check if two controlNodes have the same output.
  */
 public class DbControlNode extends DbObject {
-	private static Logger log = Logger.getLogger(DbControlNode.class);
-	private String type = null;
-	private String label = null;
-	private int id = -1;
 
 	/**
 	 * This method returns the database Id of a startEvent in the context of a fragment.
@@ -25,7 +21,6 @@ public class DbControlNode extends DbObject {
 		String sql = "SELECT id FROM controlnode "
 				+ "WHERE type = 'StartEvent' "
 				+ "AND fragment_id = " + fragmentId;
-		log.info(sql);
 		return this.executeStatementReturnsInt(sql, "id");
 	}
 
@@ -46,15 +41,8 @@ public class DbControlNode extends DbObject {
 	 * @return the type of the controlNode as a String.
 	 */
 	public String getType(int controlNodeId) {
-		if (type == null || this.id != controlNodeId) {
-			String sql = "SELECT type FROM controlnode WHERE id = " + controlNodeId;
-			log.info(sql);
-			type = this.executeStatementReturnsString(sql, "type");
-		} else {
-			log.info("Used cached type instead of querying "
-					+ "the database for contolNodeId=" + controlNodeId);
-		}
-		return type;
+		String sql = "SELECT type FROM controlnode WHERE id = " + controlNodeId;
+		return this.executeStatementReturnsString(sql, "type");
 	}
 
 	/**
@@ -64,15 +52,16 @@ public class DbControlNode extends DbObject {
 	 * @return the label of the controlNode as a String.
 	 */
 	public String getLabel(int controlNodeId) {
-		if (label == null || this.id != controlNodeId) {
-			String sql = "SELECT label FROM controlnode WHERE id = " + controlNodeId;
-			log.info(sql);
-			label = this.executeStatementReturnsString(sql, "label");
-			this.id = controlNodeId;
-		}
-		return label;
+		String sql = "SELECT label FROM controlnode WHERE id = " + controlNodeId;
+		return this.executeStatementReturnsString(sql, "label");
 	}
 
+	/**
+	 * Retrieves whether a control node exists for a given id in a given scenario.
+	 * @param controlNodeId Id of the control node.
+	 * @param scenarioId Id of the scenario.
+     * @return True, if a control node with that Id exists.
+     */
     public boolean existControlNode(int controlNodeId, int scenarioId) {
         String existControlNode = "SELECT * FROM controlnode, fragment WHERE " +
                 "controlnode.fragment_id = fragment.id AND " +

@@ -44,7 +44,7 @@ public class ReceiveActivity extends AbstractEvent {
                 this.getControlNodeId());
         assert outputSets.size() == 1 : "Receive tasks should have exactly one output set.";
         int outputSetId = outputSets.get(0);
-        Map<Integer, Integer> idToState = new DbDataNode().getDataClassIdToState(outputSetId);
+        Map<Integer, Integer> idToState = new DbDataNode().getDataSetClassToStateMap(outputSetId);
         // TODO use data object id instead of data class id also test this
         for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
             this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
