@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * This class implements the REST interface for data objects.
- * It allows to retrieve information about individual data objects.
+ * It allows to retrieve information about data objects.
  * Note that interaction with input/output sets is handled by {@link DataDependencyRestService}
  */
 @Path("interface/v2")
@@ -38,8 +38,6 @@ public class DataObjectRestService {
      * @return A Response with the outcome of the GET-Request. The Response
      * will be a 200 (OK) if the specified instance was found. Hence
      * the JSON-Object will be returned.
-     * It will be a 301 (REDIRECT) if the scenarioID is wrong.
-     * And a 404 if the instance id is wrong.
      */
     @GET
     @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
@@ -86,8 +84,6 @@ public class DataObjectRestService {
      * the response code will be a 200 (OK).
      * If the data object does not exist a 404 (NOT_FOUND) will not be
      * returned.
-     * If the instance does exist but some params are wrong a 301
-     * (REDIRECT) will be returned.
      */
     @GET
     @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{dataObjectId}")

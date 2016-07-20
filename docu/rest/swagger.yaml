@@ -83,7 +83,7 @@ paths:
         x-is-map: false
         type: integer
         format: int64
-        description: The ID of the scenario, its mail tasks will be returned.
+        description: The ID of the scenario
       - name: filter
         in: query
         required: true
@@ -97,8 +97,8 @@ paths:
           description: List of emailtasks for the scenarios.
           schema:
             $ref: '#/definitions/EmailtaskList'
-        '404':
-          description: there is no scenario with the given id.
+#        '404':
+#         description: there is no scenario with the given id.
   /scenario/{scenarioID}/emailtask/{emailTaskID}:
     get:
       description: This method provides information about an email Task.

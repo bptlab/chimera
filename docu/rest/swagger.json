@@ -112,7 +112,7 @@
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "The ID of the scenario, its mail tasks will be returned."
+                        "description": "The ID of the scenario"
                     },
                     {
                         "name": "filter",
@@ -129,9 +129,6 @@
                         "schema": {
                             "$ref": "#/definitions/EmailtaskList"
                         }
-                    },
-                    "404": {
-                        "description": "there is no scenario with the given id."
                     }
                 }
             }
