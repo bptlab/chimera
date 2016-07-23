@@ -15,7 +15,8 @@ public class SendTaskExecutionBehavior extends TaskExecutionBehavior {
      * @param scenarioInstance    This is an instance from the class ScenarioInstance.
      * @param controlNodeInstance This is an AbstractControlNodeInstance.
      */
-    public SendTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance, AbstractControlNodeInstance controlNodeInstance) {
+    public SendTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance,
+                                     AbstractControlNodeInstance controlNodeInstance) {
         super(activityInstanceId, scenarioInstance, controlNodeInstance);
         eventSpawner = new EventSpawner(scenarioInstance);
     }

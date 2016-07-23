@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 /**
  * This class is the representation of a gateway instance in the database.
@@ -25,11 +25,11 @@ public class DbGatewayInstance extends DbObject {
 	 * @param gatewayInstanceId This is the database ID of a gateway instance.
 	 * @return the state of the gateway instance as a String.
 	 */
-	public AbstractStateMachine.STATE getState(int gatewayInstanceId) {
+	public State getState(int gatewayInstanceId) {
 		String sql = "SELECT gateway_state FROM gatewayinstance "
 				+ "WHERE id = " + gatewayInstanceId;
 		String state = this.executeStatementReturnsString(sql, "gateway_state");
-	    return AbstractStateMachine.STATE.valueOf(state.toUpperCase());
+	    return State.valueOf(state.toUpperCase());
     }
 
 	/**

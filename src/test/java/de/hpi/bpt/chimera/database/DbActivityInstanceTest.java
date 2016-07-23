@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.controlnodes.DbActivityInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,7 @@ public class DbActivityInstanceTest extends AbstractDatabaseDependentTest {
     @Test
     public void testGetState(){
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
-        assertEquals(AbstractStateMachine.STATE.READY, dbActivityInstance.getState(77)) ;
+        assertEquals(State.READY, dbActivityInstance.getState(77)) ;
     }
 
     /**
@@ -26,8 +26,8 @@ public class DbActivityInstanceTest extends AbstractDatabaseDependentTest {
     @Test
     public void testSetState() {
         DbActivityInstance dbActivityInstance = new DbActivityInstance();
-        dbActivityInstance.setState(91, AbstractStateMachine.STATE.TERMINATED);
-        assertEquals(AbstractStateMachine.STATE.TERMINATED, dbActivityInstance.getState(91));
+        dbActivityInstance.setState(91, State.TERMINATED);
+        assertEquals(State.TERMINATED, dbActivityInstance.getState(91));
     }
 
     /**

@@ -444,17 +444,12 @@ public class ActivityRestService extends AbstractRestService {
             }
         }
 
-        successful = executionService.beginActivityInstance(
+        executionService.beginActivityInstance(
                 scenarioInstanceId, activityInstanceId, usedDataObjects);
-        if (successful) {
-            return Response.status(Response.Status.ACCEPTED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"activity begun.\"}")
-                    .build();
-        } else {
-                return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                        + "start activity with id " + activityInstanceId + "\"}");
-        }
+        return Response.status(Response.Status.ACCEPTED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"message\":\"activity begun.\"}")
+                .build();
     }
 
     /**
@@ -489,20 +484,16 @@ public class ActivityRestService extends AbstractRestService {
                         (String) dataClassName));
 
             }
-            successful = executionService.terminateActivityInstance(
+
+            executionService.terminateActivityInstance(
                     scenarioInstanceId, activityInstanceId, dataClassNameToState);
         } else {
-            successful = executionService.terminateActivityInstance(
+            executionService.terminateActivityInstance(
                     scenarioInstanceId, activityInstanceId);
         }
-        if (successful) {
-            return Response.status(Response.Status.ACCEPTED)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"message\":\"activity terminated.\"}")
-                    .build();
-        } else {
-            return this.buildBadRequestResponse("{\"error\":\"impossible to "
-                    + "terminate activity with id " + activityInstanceId + "\"}");
-        }
+        return Response.status(Response.Status.ACCEPTED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity("{\"message\":\"activity terminated.\"}")
+                .build();
     }
 }

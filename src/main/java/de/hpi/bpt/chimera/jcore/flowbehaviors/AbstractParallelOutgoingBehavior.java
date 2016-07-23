@@ -1,8 +1,8 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 
 import java.util.List;
@@ -39,8 +39,7 @@ public abstract class AbstractParallelOutgoingBehavior extends AbstractOutgoingB
 			if (controlNodeId == controlNodeInstance.getControlNodeId()
 					&& !controlNodeInstance.getClass()
 					.equals(ActivityInstance.class)
-					&& !controlNodeInstance
-					.getStateMachine().getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
+					&& !controlNodeInstance.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}

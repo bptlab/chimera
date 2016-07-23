@@ -25,4 +25,9 @@ public class EventGatewayOutgoingBehavior extends AbstractOutgoingBehavior {
             eventMapping.removeEventMapping(this.fragmentInstanceId, eventControlNode);
         }
     }
+
+    @Override
+    public void skip() {
+
+    }
 }

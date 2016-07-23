@@ -41,7 +41,8 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 				return;
 			}
 		}
-		this.automaticExecution = true;
+        this.setState(dbGatewayInstance.getState(this.getControlNodeInstanceId()));
+        this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
@@ -75,15 +76,27 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 				.checkTermination(controlNodeId);
 	}
 
-	@Override public boolean terminate() {
-		getStateMachine().terminate();
+	@Override public void terminate() {
+        setState(State.TERMINATED);
+        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
+        getScenarioInstance().getExecutingGateways().remove(this);
 		getOutgoingBehavior().terminate();
-		return true;
 	}
 
-	@Override public boolean skip() {
-		return getStateMachine().skip();
+	@Override
+    public void skip() {
+        setState(State.SKIPPED);
+        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
+        getScenarioInstance().getExecutingGateways().remove(this);
 	}
+
+    @Override
+    public void begin() {
+        setState(State.EXECUTING);
+        dbGatewayInstance.setState(
+                this.getControlNodeInstanceId(), getState().toString());
+        getScenarioInstance().getExecutingGateways().add(this);
+    }
 
 	// ******************************* Getter & Setter ***************************//
 

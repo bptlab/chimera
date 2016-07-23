@@ -6,7 +6,7 @@ package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.controlnodes.DbGatewayInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -20,6 +20,6 @@ public class DbGatewayInstanceTest extends AbstractDatabaseDependentTest {
     @Test
     public void testGetState(){
         DbGatewayInstance gatewayInstance = new DbGatewayInstance();
-        assertEquals(AbstractStateMachine.STATE.INIT, gatewayInstance.getState(100));
+        assertEquals(State.INIT, gatewayInstance.getState(100));
     }
 }

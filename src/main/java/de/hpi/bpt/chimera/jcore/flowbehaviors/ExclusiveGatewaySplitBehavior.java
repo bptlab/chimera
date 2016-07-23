@@ -6,9 +6,9 @@ import de.hpi.bpt.chimera.jcore.XORGrammarCompiler;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
@@ -85,7 +85,12 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		// Automatic tasks are not started, because the user can still for another task
 	}
 
-	/**
+    @Override
+    public void skip() {
+
+    }
+
+    /**
 	 * Executes the XOR gateway and enable the following control nodes.
 	 */
 	public void execute() {
@@ -99,7 +104,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			if (controlNodeId == controlNodeInstance.getControlNodeId()
 					&& !controlNodeInstance.getClass().equals(
 					ActivityInstance.class) && !controlNodeInstance
-					.getStateMachine().getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
+					.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}

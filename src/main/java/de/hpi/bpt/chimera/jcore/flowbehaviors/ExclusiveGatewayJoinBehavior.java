@@ -30,19 +30,20 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 		if (conditions.size() > 0 && !conditions.iterator().next().equals("")) {
 			condition = false;
 		}
-		if (condition) {
-			GatewayStateMachine stateMachine =
-                    (GatewayStateMachine) this.getControlNodeInstance().getStateMachine();
-            if (null != stateMachine) {
-                stateMachine.execute();
-            }
-
-			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
-					.getOutgoingBehavior()).execute();
-		} else {
-			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
-					.getOutgoingBehavior()).evaluateConditions();
-			getControlNodeInstance().terminate();
-		}
+//		if (condition) {
+//
+//            //GatewayStateMachine stateMachine =
+//                    (GatewayStateMachine) this.getControlNodeInstance().getStateMachine();
+//            if (null != stateMachine) {
+//                stateMachine.execute();
+//            }
+//
+//			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
+//					.getOutgoingBehavior()).execute();
+//		} else {
+//			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
+//					.getOutgoingBehavior()).evaluateConditions();
+//			getControlNodeInstance().terminate();
+//		}
 	}
 }

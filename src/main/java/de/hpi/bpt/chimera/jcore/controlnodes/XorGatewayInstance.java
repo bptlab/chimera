@@ -21,8 +21,6 @@ public class XorGatewayInstance extends GatewayInstance {
                         controlNodeId, "XOR", fragmentInstanceId));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "XOR", "init");
-        this.setStateMachine(new GatewayStateMachine(this.getControlNodeId(),
-                this.scenarioInstance, this));
         this.initGatewayInstance();
     }
 

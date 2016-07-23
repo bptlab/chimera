@@ -24,8 +24,6 @@ public class AndGatewayInstance extends GatewayInstance {
                 .createNewControlNodeInstance(controlNodeId, "AND", fragmentInstanceId));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "AND", "init");
-        this.setStateMachine(new GatewayStateMachine(this.getControlNodeId(),
-                this.scenarioInstance, this));
         this.initGatewayInstance();
     }
 
@@ -51,5 +49,7 @@ public class AndGatewayInstance extends GatewayInstance {
                 getFragmentInstanceId(), this));
         this.setIncomingBehavior(new ParallelGatewayJoinBehavior(
                 this, scenarioInstance));
+        scenarioInstance.getExecutingGateways().add(this);
+        scenarioInstance.getControlNodeInstances().add(this);
     }
 }

@@ -2,11 +2,11 @@ package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
 import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.ActivityStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.database.data.DbDataNode;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 
 import java.util.List;
 
@@ -20,40 +20,60 @@ public class TaskIncomingControlFlowBehavior extends AbstractIncomingBehavior {
 	private final DbDataFlow dbDataFlow = new DbDataFlow();
 	private final DbDataNode dbDataNode = new DbDataNode();
 
+    private ActivityInstance activityInstance;
 	/**
 	 * Initializes the TaskIncomingControlFlowBehavior.
 	 *
-	 * @param controlNodeInstance This is an AbstractControlNodeInstance.
+	 * @param instance the activity instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
-	 * @param stateMachine        This is an instance from the class AbstractStateMachine.
 	 */
-	public TaskIncomingControlFlowBehavior(AbstractControlNodeInstance controlNodeInstance,
-										   ScenarioInstance scenarioInstance, AbstractStateMachine stateMachine) {
-		this.setControlNodeInstance(controlNodeInstance);
+	public TaskIncomingControlFlowBehavior(ActivityInstance instance,
+										   ScenarioInstance scenarioInstance) {
+        this.setControlNodeInstance(instance);
 		this.setScenarioInstance(scenarioInstance);
-		this.setStateMachine(stateMachine);
-		if (checkInputObjects()) {
-			((ActivityStateMachine) stateMachine).enableData();
-		}
+        if (checkInputObjects()) {
+            enableData();
+        }
 	}
 
 	@Override public void enableControlFlow() {
-		((ActivityStateMachine) this.getStateMachine()).enableControlFlow();
-		if (checkInputObjects()) {
-			((ActivityStateMachine) this.getStateMachine()).enableData();
-		}
+        State currentState = this.getControlNodeInstance().getState();
+        if (State.INIT.equals(currentState)) {
+            this.getControlNodeInstance().setState(State.CONTROLFLOW_ENABLED);
+        }
+        if (State.DATAFLOW_ENABLED.equals(currentState) || checkInputObjects()) {
+            this.getControlNodeInstance().setState(State.READY);
+        }
 	}
+
+    private void enableData() {
+        AbstractControlNodeInstance instance = this.getControlNodeInstance();
+        if (instance.getState().equals(State.INIT)) {
+            instance.setState(State.DATAFLOW_ENABLED);
+        } else if (instance.getState().equals(State.CONTROLFLOW_ENABLED)) {
+            instance.setState(State.READY);
+        }
+    }
+
+    private void disableData() {
+        AbstractControlNodeInstance instance = this.getControlNodeInstance();
+        if (State.DATAFLOW_ENABLED.equals(instance.getState())) {
+            instance.setState(State.INIT);
+        } else if (State.READY.equals(instance.getState())) {
+                instance.setState(State.CONTROLFLOW_ENABLED);
+        }
+    }
 
 	/**
 	 * Checks if the activity can get data flow enabled.
 	 * Sets the activity to data flow enabled if the activity is data flow enabled.
 	 */
-	public void checkDataFlowEnabledAndEnableDataFlow() {
+	public void updateDataFlow() {
 		if (checkInputObjects()) {
-			((ActivityStateMachine) this.getStateMachine()).enableData();
+			enableData();
 		} else {
-			((ActivityStateMachine) this.getStateMachine()).disableData();
-		}
+            disableData();
+    	}
 	}
 
 	/**

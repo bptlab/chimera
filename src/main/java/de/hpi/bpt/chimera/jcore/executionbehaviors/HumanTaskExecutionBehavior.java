@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * TODO is this needed
  */
 public class HumanTaskExecutionBehavior extends TaskExecutionBehavior {
-
 	/**
 	 *
 	 * @param activityInstanceId This is an activty instance id.

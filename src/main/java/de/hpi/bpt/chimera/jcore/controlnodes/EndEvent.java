@@ -28,14 +28,6 @@ public class EndEvent extends AbstractControlNodeInstance {
                 this, scenarioInstance, this.isSendEvent));
     }
 
-	@Override public boolean skip() {
-		return false;
-	}
-
-	@Override public boolean terminate() {
-		return false;
-	}
-
 	private boolean isSendEvent() {
 		String isSendEventQuery = "SELECT * FROM sendevent WHERE controlnode_id = %d;";
 

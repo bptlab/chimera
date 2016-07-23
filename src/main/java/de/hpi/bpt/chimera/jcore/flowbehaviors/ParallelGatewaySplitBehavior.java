@@ -3,7 +3,7 @@ import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 /**
  *
@@ -36,7 +36,12 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 		this.runAutomaticTasks();
 	}
 
-	@Override protected AbstractControlNodeInstance createFollowingNodeInstance(
+    @Override
+    public void skip() {
+
+    }
+
+    @Override protected AbstractControlNodeInstance createFollowingNodeInstance(
 			int controlNodeId) {
 		for (AbstractControlNodeInstance controlNodeInstance
 				: this.getScenarioInstance().getControlNodeInstances()) {
@@ -44,8 +49,7 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 					== controlNodeInstance.getControlNodeId()
 					&& !controlNodeInstance.getClass().equals(
 						ActivityInstance.class)
-					&& !controlNodeInstance.getStateMachine()
-					.getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
+					&& !controlNodeInstance.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}

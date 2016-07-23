@@ -41,10 +41,9 @@ public class EventBasedGatewayInstance extends GatewayInstance {
      * Terminating an EventBasedGatewayInstance will register all following event control nodes
      * and save that they are alternative.
      *
-     * @return true
      */
     @Override
-    public boolean terminate() {
+    public void terminate() {
         DbControlFlow controlFlow = new DbControlFlow();
         List<Integer> followingControlNodes =
                 controlFlow.getFollowingControlNodes(this.getControlNodeId());
@@ -53,6 +52,5 @@ public class EventBasedGatewayInstance extends GatewayInstance {
                 x -> factory.getEventForControlNodeId(x, this.getFragmentInstanceId()))
                 .collect(Collectors.toList());
         EventDispatcher.registerExclusiveEvents(followingEvents);
-        return true;
     }
 }

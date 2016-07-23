@@ -1,11 +1,11 @@
 package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 import de.hpi.bpt.chimera.jhistory.HistoryService;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
+
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents the activity instance of the database.
@@ -20,10 +20,10 @@ public class DbActivityInstance extends DbObject {
 	 * @param id This is the database ID of an activity instance.
 	 * @return the state of the activity as a String.
 	 */
-	public AbstractStateMachine.STATE getState(int id) {
+	public State getState(int id) {
 		String sql = "SELECT activity_state FROM activityinstance WHERE id = " + id;
 		String activityState = this.executeStatementReturnsString(sql, "activity_state");
-	    return AbstractStateMachine.STATE.valueOf(activityState.toUpperCase());
+	    return State.valueOf(activityState.toUpperCase());
     }
 
 	/**
@@ -32,7 +32,7 @@ public class DbActivityInstance extends DbObject {
 	 * @param id    This is the database ID of an activity instance in the database.
 	 * @param state This is the state in which an activity should be after executing setState.
 	 */
-	public void setState(int id, AbstractStateMachine.STATE state) {
+	public void setState(int id, State state) {
         String sql = "UPDATE activityinstance "
 				+ "SET activity_state = '" + state.name() + "' "
 				+ "WHERE id = " + id;

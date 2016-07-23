@@ -27,7 +27,6 @@ public class TimerEventInstance extends AbstractEvent {
      * Since timer events are not registered at a Event platform, but are handled internally,
      * calls specific method for timer events.
      */
-    @Override
     public void registerEvent() {
         EventDispatcher.registerTimerEvent(this, this.getFragmentInstanceId(),
                 this.getScenarioInstance().getId(),

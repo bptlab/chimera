@@ -22,6 +22,8 @@ public abstract class AbstractOutgoingBehavior {
 	public abstract void terminate();
 
 
+    public abstract void skip();
+
 	/**
 	 * Runs other methods after terminate a control node instance.
 	 */

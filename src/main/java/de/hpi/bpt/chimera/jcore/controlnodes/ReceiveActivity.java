@@ -35,10 +35,9 @@ public class ReceiveActivity extends AbstractEvent {
      * Additional to this, the
      *
      * @param eventJson the json string containing the values.
-     * @return true
      */
     @Override
-    public boolean terminate(String eventJson) {
+    public void terminate(String eventJson) {
         super.terminate(eventJson);
         List<Integer> outputSets = new DbDataFlow().getOutputSetsForControlNode(
                 this.getControlNodeId());
@@ -49,7 +48,6 @@ public class ReceiveActivity extends AbstractEvent {
         for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
             this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
         }
-        return true;
     }
 
     /**

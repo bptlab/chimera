@@ -2,12 +2,9 @@ package de.hpi.bpt.chimera.jcore;
 
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
 import de.hpi.bpt.chimera.database.DbFragment;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
-import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.TerminationCondition;
@@ -37,16 +34,6 @@ public class ScenarioInstance {
 	 * Lists to save all fragments and all control nodes sorted by state.
 	 */
 	private List<AbstractControlNodeInstance> controlNodeInstances = new ArrayList<>();
-	private List<AbstractControlNodeInstance> enabledControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> controlFlowEnabledControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> dataEnabledControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> runningControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> terminatedControlNodeInstances
-			= new ArrayList<>();
 
     private List<FragmentInstance> fragmentInstances = new ArrayList<>();
 	private List<AbstractControlNodeInstance> referentialRunningControlNodeInstances
@@ -182,11 +169,11 @@ public class ScenarioInstance {
 		}
 
 		//removes the old control node instances
-		ArrayList<AbstractControlNodeInstance> updatedList = new ArrayList<>(
-				terminatedControlNodeInstances);
+		List<AbstractControlNodeInstance> updatedList = new ArrayList<>(
+				this.getTerminatedControlNodeInstances());
 		for (AbstractControlNodeInstance controlNodeInstance : updatedList) {
 			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstanceId) {
-				terminatedControlNodeInstances.remove(controlNodeInstance);
+				this.controlNodeInstances.remove(controlNodeInstance);
 			}
 		}
 		updatedList = new ArrayList<>(controlNodeInstances);
@@ -235,8 +222,8 @@ public class ScenarioInstance {
 	 * @return true if the terminated control node instances contains the control node.
 	 */
 	public boolean terminatedControlNodeInstancesContainControlNodeID(int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance
-				: terminatedControlNodeInstances) {
+		for (AbstractControlNodeInstance controlNodeInstance :
+                this.getTerminatedControlNodeInstances()) {
 			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
 				return true;
 			}
@@ -279,11 +266,6 @@ public class ScenarioInstance {
     public void terminate() {
 		dbScenarioInstance.setTerminated(id, true);
 		controlNodeInstances.clear();
-		enabledControlNodeInstances.clear();
-		controlFlowEnabledControlNodeInstances.clear();
-		dataEnabledControlNodeInstances.clear();
-		runningControlNodeInstances.clear();
-		terminatedControlNodeInstances.clear();
 	}
 
 	/**
@@ -291,7 +273,8 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(enabledControlNodeInstances);
+		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(
+                this.getEnabledControlNodeInstances());
         for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class
 					&& ((ActivityInstance) controlNodeInstance).isAutomaticTask()) {
@@ -350,36 +333,41 @@ public class ScenarioInstance {
 	 * @return a ArrayList of enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getEnabledControlNodeInstances() {
-		return enabledControlNodeInstances;
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.READY))
+                .collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of flow enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
-		return controlFlowEnabledControlNodeInstances;
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.CONTROLFLOW_ENABLED)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of data enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getDataEnabledControlNodeInstances() {
-		return dataEnabledControlNodeInstances;
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.DATAFLOW_ENABLED)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of running control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getRunningControlNodeInstances() {
-		return runningControlNodeInstances;
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.RUNNING)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of terminated control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
-		return terminatedControlNodeInstances;
-	}
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.TERMINATED)).collect(Collectors.toList());
+    }
 
 	public List<FragmentInstance> getFragmentInstances() {
 		return fragmentInstances;

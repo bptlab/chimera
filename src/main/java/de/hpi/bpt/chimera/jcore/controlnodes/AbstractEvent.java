@@ -5,6 +5,8 @@ import de.hpi.bpt.chimera.database.controlnodes.events.DbEvent;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.EventExecutionBehavior;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.EventIncomingBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.EventOutgoingBehavior;
 
 /**
@@ -26,6 +28,8 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         this.controlNodeId = controlNodeId;
         this.scenarioInstance = scenarioInstance;
         this.setFragmentInstanceId(fragmentInstanceId);
+        this.setExecutionBehavior(new EventExecutionBehavior(this));
+        this.setIncomingBehavior(new EventIncomingBehavior(this));
 
         DbControlNodeInstance databaseNodeInstance = new DbControlNodeInstance();
         if (!databaseNodeInstance.existControlNodeInstance(controlNodeId, fragmentInstanceId)) {
@@ -46,37 +50,10 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     public abstract String getType();
 
-    @Override
-    public void enableControlFlow() {
-        DbEvent eventDao = new DbEvent();
-
-        this.queryString = eventDao.getQueryForControlNode(this.controlNodeId);
-        if (queryString.trim().isEmpty()) {
-            this.terminate();
-        } else {
-            this.registerEvent();
-        }
-    }
-
-    @Override
-    public int getControlNodeId() {
-        return controlNodeId;
-    }
-
-    @Override
-    public void setControlNodeId(int controlNodeId) {
-        this.controlNodeId = controlNodeId;
-    }
 
     @Override
     public EventOutgoingBehavior getOutgoingBehavior() {
         return this.outgoingBehavior;
-    }
-
-    protected void registerEvent() {
-        EventDispatcher.registerEvent(this, this.getFragmentInstanceId(),
-                this.getScenarioInstance().getId(),
-                this.getScenarioInstance().getScenarioId());
     }
 
     public String getQueryString() {
@@ -84,13 +61,8 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     }
 
     @Override
-    public boolean skip() {
-        return false;
-    }
-
-    @Override
-    public boolean terminate() {
-        return terminate("");
+    public void terminate() {
+        terminate("");
     }
 
     /**
@@ -98,11 +70,8 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
      * Chimera frontend.
      *
      * @param eventJson the json string containing the values.
-     * @return Returns true
      */
-    public boolean terminate(String eventJson) {
+    public void terminate(String eventJson) {
         outgoingBehavior.terminate(eventJson);
-        SseNotifier.notifyRefresh();
-        return true;
     }
 }
