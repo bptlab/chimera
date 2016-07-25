@@ -176,7 +176,7 @@ paths:
         x-is-map: false
         description: The name, which will be used for the new instance.
         schema:
-          $ref: '#/definitions/RestInterface-NamedJaxBean'
+          $ref: '#/definitions/UserRestService-NamedJaxBean'
       responses:
         '200':
           description: success
@@ -352,7 +352,7 @@ paths:
         x-is-map: false
         description: data input.
         schema:
-          $ref: '#/definitions/RestInterface-DataAttributeUpdateJaxBean'
+          $ref: '#/definitions/UserRestService-DataAttributeUpdateJaxBean'
       responses:
         '202':
           description: Input was accepted.
@@ -761,7 +761,7 @@ paths:
             $ref: '#/definitions/VersionObject'
 definitions:
   RestInterface-NamedJaxBean:
-    title: RestInterface-NamedJaxBean
+    title: UserRestService-NamedJaxBean
     type: object
     properties:
       name:
@@ -770,7 +770,7 @@ definitions:
     required:
     - name
   RestInterface-DataAttributeUpdateJaxBean:
-    title: RestInterface-DataAttributeUpdateJaxBean
+    title: UserRestService-DataAttributeUpdateJaxBean
     type: object
     properties:
       id:

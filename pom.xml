@@ -137,7 +137,7 @@
 
 		<!-- The value of the schema.version property has to be increased when
 			the schema changes! -->
-		<schema.version>23</schema.version>
+		<schema.version>24</schema.version>
 		<db.schema>JEngineV2</db.schema>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
@@ -340,11 +340,11 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.2</version>
 		</dependency>
-                <dependency>
-                    <groupId>com.jayway.restassured</groupId>
-                    <artifactId>json-path</artifactId>
-                    <version>2.4.0</version>
-                </dependency>
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.4.0</version>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
