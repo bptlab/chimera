@@ -8,7 +8,14 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * This class implements the REST interface for scenario instances.
+ * It allows to interact with information about scenario instances.
+ * Note that interaction with input/output sets is handled by {@link DataDependencyRestService}
  */
 @Path("interface/v2")
 public class ScenarioInstanceRestService {
@@ -123,7 +132,14 @@ public class ScenarioInstanceRestService {
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
 
-
+    /**
+     * This method provides a list of registered events for the instance.
+     * @param uriInfo    Contains the context information, is used to build
+     *                   links to other resources.
+     * @param scenarioId The ID of the scenario.
+     * @param instanceId The ID of the instance.
+     * @return A list of events for the specified scenario instance.
+     */
     @GET
     @Path("scenario/{scenarioId}/instance/{instanceId}/events")
     @Produces(MediaType.APPLICATION_JSON) public Response getEvents(
@@ -164,7 +180,7 @@ public class ScenarioInstanceRestService {
     }
 
     /**
-     * This post is used to terminate a scenario instance.
+     * This method is used to terminate a scenario instance.
      * @param scenarioId The Id of the scenario
      * @param instanceId The Id of the instance
      * @return A Response: 200 if termination conditions are fulfilled and it
@@ -219,7 +235,7 @@ public class ScenarioInstanceRestService {
                 instance.getScenarioInstancesLike(scenarioId, filterString);
         JSONObject links = new JSONObject();
         for (int id : data.keySet()) {
-            links.put("" + id, uri.getAbsolutePath() + "/" + id);
+            links.put(String.valueOf(id), uri.getAbsolutePath() + "/" + id);
         }
         result.put("ids", new JSONArray(data.keySet()));
         result.put("labels", new JSONObject(data));

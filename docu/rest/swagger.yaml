@@ -143,7 +143,7 @@ paths:
         description: The id of the scenario which instances should be returned.
       - name: filter
         in: query
-        required: true
+        required: false
         x-is-map: false
         type: string
         description: >-
@@ -156,9 +156,11 @@ paths:
           schema:
             $ref: '#/definitions/ScenarioInstanceList'
         '404':
-          description: There is no scenario with the given id.
+          description: The scenario wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
     put:
-      description: Creates a new instance of a specified scenario.
+      description: Creates a new instance of a specified scenario. The name of the instance can be specified in the request.
       operationId: Update_startNewNamedInstance_
       produces:
       - application/json
@@ -176,12 +178,18 @@ paths:
         x-is-map: false
         description: The name, which will be used for the new instance.
         schema:
-          $ref: '#/definitions/UserRestService-NamedJaxBean'
+          $ref: '#/definitions/NamedJaxBean'
       responses:
-        '200':
-          description: success
+        '201':
+          description: successfully created the instance.
+          schema:
+            $ref: '#/definitions/ScenarioRef'
+        '404':
+          description: The scenario wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
     post:
-      description: Creates a new instance of a specified scenario.
+      description: Creates a new instance of a specified scenario. The instance will have the same name as the scenario.
       operationId: Create_startNewInstance_
       produces:
       - application/json
@@ -196,8 +204,12 @@ paths:
       responses:
         '201':
           description: successfully created the instance.
-        '400':
-          description: Bad Request.
+          schema:
+            $ref: '#/definitions/ScenarioRef'
+        '404':
+          description: The scenario wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/instance/{instanceID}:
     get:
       description: This method provides detailed information about a scenario instance.
@@ -222,6 +234,12 @@ paths:
       responses:
         '200':
           description: Detailed information about the instance.
+          schema:
+            $ref: '#/definitions/ScenarioInstance'
+        '404':
+          description: The scenario or instance wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
     put:
       description: This post can be used to terminate an existing scenario instance.
       operationId: Update_terminateScenarioInstance_
@@ -245,6 +263,106 @@ paths:
       responses:
         '200':
           description: success
+  /scenario/{scenarioID}/instance/{instanceID}/events:
+    get:
+      description: This method provides a list of registered events for the instance.
+      operationId: getEvents_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the instance.
+      responses:
+        '200':
+          description: List of events for the scenario instance.
+          schema:
+            $ref: '#/definitions/EventList'
+        '404':
+          description: The scenario or instance wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/canTerminate:
+    get:
+      description: This determines whether a given scenario instance can terminate.
+      operationId: checkTermination_
+      produces:
+      - text/plain
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the instance.
+      responses:
+        '200':
+          description: Instance can be deleted
+          schema:
+            type: string
+        '400':
+          description: Termination condition is not fulfilled
+          schema:
+            type: string
+        '404':
+          description: The scenario or instance wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/terminate:
+    post:
+      description: This method is used to terminate a scenario instance.
+      operationId: Create_terminateScenarioInstance_
+      produces:
+      - text/plain
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The ID of the instance.
+      responses:
+        '200':
+          description: Instance has been terminated
+          schema:
+            type: string
+        '400':
+          description: Termination condition is not fulfilled
+          schema:
+            type: string
+        '404':
+          description: The scenario or instance wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/instance/{instanceID}/activity:
     get:
       description: >-
@@ -352,7 +470,7 @@ paths:
         x-is-map: false
         description: data input.
         schema:
-          $ref: '#/definitions/UserRestService-DataAttributeUpdateJaxBean'
+          $ref: '#/definitions/DataAttributeUpdateJaxBean'
       responses:
         '202':
           description: Input was accepted.
@@ -760,8 +878,8 @@ paths:
           schema:
             $ref: '#/definitions/VersionObject'
 definitions:
-  RestInterface-NamedJaxBean:
-    title: UserRestService-NamedJaxBean
+  NamedJaxBean:
+    title: NamedJaxBean
     type: object
     properties:
       name:
@@ -769,8 +887,8 @@ definitions:
         type: string
     required:
     - name
-  RestInterface-DataAttributeUpdateJaxBean:
-    title: UserRestService-DataAttributeUpdateJaxBean
+  DataAttributeUpdateJaxBean:
+    title: DataAttributeUpdateJaxBean
     type: object
     properties:
       id:
@@ -841,6 +959,25 @@ definitions:
       instances:
         type: string
         description: 'URI to retrieve instances of the scenario.'
+  ScenarioInstance:
+    type: object
+    properties:
+      activities:
+        type: string
+        description: 'URI to retrieve activities in the scenarioInstance.'
+      name:
+        type: string
+        description: 'The name of the scenarioInstance.'
+      id:
+        type: number
+        format: integer
+        description: 'The ID of the scenarioInstance.'
+      terminated:
+        type: boolean
+      scenario_id:
+        type: number
+        format: integer
+        description: 'The modelId of the scenario.'
   EmailtaskList:
     type: object
     properties:
@@ -872,36 +1009,22 @@ definitions:
           type: number
           format: integer
       labels:
-        type: array
-        description: 'Labels of all known scenario instances.'
-        items:
-          $ref: '#/definitions/InstanceLabel'         
+        $ref: '#/definitions/InstanceLabel'         
       links:
-        type: array
-        description: 'References to all known scenario instances.'
-        items:
-          $ref: '#/definitions/InstanceRef'
+        $ref: '#/definitions/InstanceRef'
   InstanceLabel:
     type: object
     properties:
-      id:
-        type: number
-        format: integer
-        description: 'ID of the instance.'
-      label:
+      (id):
         type: string
-        description: 'Label of the instance.'
+        description: 'Instance id with the respective label.'
   InstanceRef:
     type: object
     properties:
-      id:
-        type: number
-        format: integer
-        description: 'ID of the scenario instance.'
-      link:
+      (id):
         type: string
-        description: 'URI of the scenario instance.'
-  TerinationCondition:
+        description: 'Instance id with the respective URL.'
+  TerminationCondition:
     type: object
     properties:
       conditions:
@@ -1022,16 +1145,12 @@ definitions:
         items:
           type: string
         description: 'Possible States'
+  EventList:
+    type: array
+    description: 'List of events.'
+    items:
+      type: string  
           
-  TerminationCondition:
-    type: object
-    properties:
-      dataobjectname:
-        type: string
-        description: |
-          For each DataObject involved in this TerminationCondition, add a
-          Key/Value-Pair where the Key is the name of the DataObject and the
-          Value is the name of the state. 
   Fragment:
     type: object
     properties:
@@ -1125,56 +1244,6 @@ definitions:
         type: number
         format: long
         description: 'The id of the aggregation relationship target node.'
-  ValidationReport:
-    type: object
-    properties:
-      scenario:
-        $ref: '#/definitions/ScenarioList'
-      correct:
-        type: boolean
-        description: 'True if no errors were found. Otherwise false.'
-      errors:
-        type: array
-        description: 'All errors found.'
-        items:
-          $ref: '#/definitions/ValidationError'
-  ValidationError:
-    type: object
-    properties:
-      message:
-        type: string
-        description: 'The message for this error. This should be displayed to the user.'
-      type:
-        type: string
-        description: 'The type of the error.'
-      level:
-        type: number
-        format: integer
-        description: 'The level of the error (1 Error, 2 Warning, 3 Notice).'
-  FragmentList:
-    type: object
-    properties:
-      content_length:
-        type: number
-        format: integer
-        description: 'The number of fragments found.'
-      scenarios:
-        type: array
-        description: 'All fragments found.'
-        items:
-          $ref: '#/definitions/Fragment'
-  DomainModelList:
-    type: object
-    properties:
-      content_length:
-        type: number
-        format: integer
-        description: 'The number of domain models found.'
-      scenarios:
-        type: array
-        description: 'All models found.'
-        items:
-          $ref: '#/definitions/DomainModel'
 
   DataSetList:
     type: array
