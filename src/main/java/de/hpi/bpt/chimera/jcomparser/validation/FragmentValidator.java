@@ -104,7 +104,7 @@ public class FragmentValidator {
         Set<String>  dataclassNames = domainModel.getMapFromNameToDataClass().keySet();
         for (DataNode node : fragment.getDataNodes()) {
             if (!dataclassNames.contains(node.getName())) {
-                throw new InvalidDataclassReferenceExeption(String.format(
+                throw new InvalidDataclassReferenceException(String.format(
                         "Data node %s references an invalid data class", node.getName()));
             }
         }

@@ -13,14 +13,14 @@ produces:
 paths:
   /scenario:
     get:
-      description: This method allows to give an overview of all current scenarios.
+      description: This method gives an overview of all current scenarios.
       operationId: getScenarios_
       produces:
       - application/json
       parameters:
       - name: filter
         in: query
-        required: true
+        required: false
         x-is-map: false
         type: string
         description: >-
@@ -45,8 +45,16 @@ paths:
         schema:
           $ref: '#/definitions/Scenario'
       responses:
-        'default':
-          description: (empty response)
+        '201':
+          description: Successfully created scenario.
+        '400':
+          description: Invalid fragment XML.
+          schema:
+            $ref: '#/definitions/ErrorArray'
+        '422':
+          description: Failed to process the scenario.
+          schema:
+            $ref: '#/definitions/ErrorArray'
   /scenario/{scenarioID}:
     get:
       description: This method provides information about one scenario.
@@ -67,7 +75,9 @@ paths:
           schema:
             $ref: '#/definitions/ScenarioDetails'
         '404':
-          description: There is no scenario with the given id.
+          description: The scenario wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/emailtask:
     get:
       description: >-
@@ -86,7 +96,7 @@ paths:
         description: The ID of the scenario
       - name: filter
         in: query
-        required: true
+        required: false
         x-is-map: false
         type: string
         description: >-
@@ -388,7 +398,7 @@ paths:
         description: The id of the instance.
       - name: filter
         in: query
-        required: true
+        required: false
         x-is-map: false
         type: string
         description: >-
@@ -397,7 +407,7 @@ paths:
                                shown.
       - name: state
         in: query
-        required: true
+        required: false
         x-is-map: false
         type: string
         description: The state of the instance.
@@ -705,7 +715,7 @@ paths:
         description: The ID of the scenario instance.
       - name: filter
         in: query
-        required: true
+        required: false
         x-is-map: false
         type: string
         description: >-
@@ -862,7 +872,34 @@ paths:
           schema:
             $ref: '#/definitions/TerminationCondition'
         '404':
-          description: There is no scenario with the given id.
+          description: the scenario can't be found
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioId}/xml:
+    get:
+      description: This method provides information about the termination condition.
+      operationId: getFragmentXmlStrings_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: >-
+          This id specifies the scenario. The id is the
+                             primary key inside the database.
+      responses:
+        '200':
+          description: The scenario's fragments as XML.
+          schema:
+            $ref: '#/definitions/FragmentsXML'
+        '404':
+          description: the scenario can't be found
+          schema:
+            $ref: '#/definitions/Error'
   /version:
     get:
       description: >-
@@ -885,8 +922,6 @@ definitions:
       name:
         description: The name which should be assigned to the entity.
         type: string
-    required:
-    - name
   DataAttributeUpdateJaxBean:
     title: DataAttributeUpdateJaxBean
     type: object
@@ -896,9 +931,6 @@ definitions:
         format: int64
       value:
         type: string
-    required:
-    - id
-    - value
   ScenarioList:
     type: object
     properties:
@@ -1028,22 +1060,23 @@ definitions:
     type: object
     properties:
       conditions:
-        type: array
-        description: 'The termination conditions for the scenario.'
-        items:
-          $ref: '#/definitions/TerminationConditionList'
+        $ref: '#/definitions/TerminationConditionList'
       setIDs:
         type: array
         description: 'IDs of the termination conditions.'
         items:
-          type: number
-          format: integer
+          type: string
   TerminationConditionList:
     type: object
     properties:
-      state:
-        type: string
+      (id):
+        type: array
         description: 'State required for termination.'
+        items:
+          $ref: '#/definitions/TerminationConditionEntry'
+  TerminationConditionEntry:
+    type: object
+    properties:
       data_object:
         type: string
         description: 'Name of the associated data object.'
@@ -1051,6 +1084,17 @@ definitions:
         type: number
         format: integer
         description: 'ID of the termination condition set.'
+      state:
+        type: string
+  FragmentsXML:
+    type: object
+    properties:
+      xml:
+        type: array
+        description: 'List of all fragments as XML'
+        items:
+          type: string
+    
   Scenario:
     type: object
     properties:
@@ -1150,101 +1194,6 @@ definitions:
     description: 'List of events.'
     items:
       type: string  
-          
-  Fragment:
-    type: object
-    properties:
-      name:
-        type: string
-        description: 'The fragments name.'
-      _id:
-        type: number
-        format: integer
-        description: 'The fragments unique identifier.'
-      content:
-        type: string
-        format: integer
-        description: 'The BPMN-XML used to describe the content.'
-      revision:
-        type: number
-        format: integer
-        description: 'The fragments revision. Gets increased everytime the fragment is updated.'
-  FragmentStructureObject:
-    type: object
-  DomainModel:
-    type: object
-    required:
-      - name
-      - dataclasses
-    properties:
-      name:
-        type: string
-        description: 'The name of the domain model.'
-      _id:
-        type: number
-        format: long
-        description: 'The unique identifier of the domain model.'
-      revision:
-        type: number
-        format: integer
-        description: 'The domain models revision. Gets increased everytime the domain model is updated.'
-      dataclasses:
-        type: array
-        description: 'The data classes belonging to the domain model.'
-        items:
-          $ref: '#/definitions/DataClass'
-      aggregations:
-        type: array
-        description: 'The aggregation relationships between the data classes of this domain model.'
-        items:
-          $ref: '#/definitions/Aggregation'
-  DataClass:
-    type: object
-    properties:
-      name:
-        type: string
-        description: 'The name of the data class.'
-      _id:
-        type: number
-        format: long
-        description: 'The unique identifier the data class.'
-      is_event:
-        type: boolean
-        description: 'Describes whether the data class represents event data.'
-      attributes:
-        type: array
-        description: 'The attributes of the data class.'
-        items:
-          $ref: '#/definitions/DataClassAttribute'
-  DataClassAttribute:
-    type: object
-    properties:
-      name:
-        type: string
-        description: 'The name of the attribute.'
-      datatype:
-        type: string
-        description: 'The datatype of the attribute.'
-  Aggregation:
-    type: object
-    properties:
-      sourceMultiplicity:
-        type: string
-        format: x..y
-        description: 'The source multiplicity of the aggregation relationship.'
-      targetMultiplicity:
-        type: string
-        format: x..y
-        description: 'The target multiplicity of the aggregation relationship.'
-      sourceNode:
-        type: number
-        format: long
-        description: 'The id of the aggregation relationship source node.'
-      targetNode:
-        type: number
-        format: long
-        description: 'The id of the aggregation relationship target node.'
-
   DataSetList:
     type: array
     description: 'All data objects found.'
@@ -1274,7 +1223,21 @@ definitions:
     properties:
       error:
         type: string
-        description: Description of the error.          
+        description: 'Description of the error.'
+  ErrorArray:
+    type: array
+    description: 'List of errors'
+    items:
+      $ref: '#/definitions/ErrorObject'
+  ErrorObject:
+    type: object
+    properties:
+      text:
+        type: string
+        description: 'Description of the error.'
+      type:
+        type: string
+        description: 'Level of the error'
   VersionObject:
     type: object
     properties:

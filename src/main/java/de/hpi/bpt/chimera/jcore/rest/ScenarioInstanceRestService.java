@@ -25,8 +25,6 @@ import java.util.Map;
 
 /**
  * This class implements the REST interface for scenario instances.
- * It allows to interact with information about scenario instances.
- * Note that interaction with input/output sets is handled by {@link DataDependencyRestService}
  */
 @Path("interface/v2")
 public class ScenarioInstanceRestService {

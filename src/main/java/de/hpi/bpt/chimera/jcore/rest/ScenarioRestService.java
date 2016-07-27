@@ -5,11 +5,18 @@ import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.data.DbTerminationCondition;
 import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
 import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataTransitionException;
-import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataclassReferenceExeption;
+import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataclassReferenceException;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,10 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * This class implements the REST interface for scenarios.
  */
 @Path("interface/v2")
 public class ScenarioRestService {
+    private static Logger log = Logger.getLogger(RestInterface.class);
     /**
      * This method provides information about the termination condition.
      * Of the specified Scenario.
@@ -43,14 +51,6 @@ public class ScenarioRestService {
     @Path("scenario/{scenarioId}/terminationcondition")
     @Produces(MediaType.APPLICATION_JSON) public Response getTerminationCondition(
             @PathParam("scenarioId") int scenarioID) {
-        DbScenario dbScenario = new DbScenario();
-        if (!dbScenario.existScenario(scenarioID)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{\"error\":\"There is no scenario with the id "
-                            + scenarioID + "\"}")
-                    .build();
-        }
         DbTerminationCondition terminationCondition = new DbTerminationCondition();
         Map<String, List<Map<String, Object>>> conditionSets = terminationCondition
                 .getDetailedConditionsForScenario(scenarioID);
@@ -61,7 +61,11 @@ public class ScenarioRestService {
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
 
-
+    /**
+     * This method enables the creation of new scenarios.
+     * @param scenario A Scenario JSON
+     * @return Information about the new scenario.
+     */
     @POST
     @Path("scenario")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -70,25 +74,18 @@ public class ScenarioRestService {
             ScenarioData newScenario = new ScenarioData(scenario);
             newScenario.save();
             return Response.status(201).build();
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException | InvalidDataTransitionException
+                | InvalidDataclassReferenceException e) {
+            log.error("Error: ", e);
             return Response.status(422)
                     .type(MediaType.APPLICATION_JSON)
                     .entity(buildException(e.getMessage()))
                     .build();
         } catch (JAXBException e) {
+            log.error("Error: ", e);
             return Response.status(400)
                     .type(MediaType.APPLICATION_JSON)
                     .entity(buildException("Invalid xml " + e.getMessage()))
-                    .build();
-        } catch (InvalidDataTransitionException e) {
-            return Response.status(422)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity(buildException(e.getMessage()))
-                    .build();
-        } catch (InvalidDataclassReferenceExeption e) {
-            return Response.status(422)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity(buildException(e.getMessage()))
                     .build();
         }
     }
@@ -123,13 +120,6 @@ public class ScenarioRestService {
             @Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
         DbScenario dbScenario = new DbScenario();
         Map<String, Object> data = dbScenario.getScenarioDetails(scenarioId);
-
-        if (data.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity("{}")
-                    .build();
-        }
         data.put("instances", uri.getAbsolutePath() + "/instance");
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONObject(data).toString()).build();
@@ -137,7 +127,7 @@ public class ScenarioRestService {
 
     /**
      * Get the fragment bpmn-xml representations for all fragments of a scenario.
-     * @param scenarioId
+     * @param scenarioId The id of the scenario.
      * @return a JsonObject containing a JSONArray with all fragment xml strings.
      */
     @GET
@@ -185,7 +175,7 @@ public class ScenarioRestService {
         JSONObject jsonResult = mapToKeysAndResults(scenarios, "ids", "labels");
         JSONObject refs = new JSONObject();
         for (int id : scenarios.keySet()) {
-            refs.put("" + id, uriInfo.getAbsolutePath() + "/" + id);
+            refs.put(String.valueOf(id), uriInfo.getAbsolutePath() + "/" + id);
         }
         jsonResult.put("links", refs);
         return Response.ok()
