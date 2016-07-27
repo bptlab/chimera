@@ -35,11 +35,11 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 //            //GatewayStateMachine stateMachine =
 //                    (GatewayStateMachine) this.getControlNodeInstance().getStateMachine();
 //            if (null != stateMachine) {
-//                stateMachine.execute();
+//                stateMachine.begin();
 //            }
 //
 //			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
-//					.getOutgoingBehavior()).execute();
+//					.getOutgoingBehavior()).begin();
 //		} else {
 //			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
 //					.getOutgoingBehavior()).evaluateConditions();

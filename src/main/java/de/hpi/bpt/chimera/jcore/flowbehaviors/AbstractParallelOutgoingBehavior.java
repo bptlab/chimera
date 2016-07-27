@@ -1,7 +1,9 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
+import de.hpi.bpt.chimera.jcomparser.saving.AbstractControlNode;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.ControlNodeFactory;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 
@@ -43,7 +45,10 @@ public abstract class AbstractParallelOutgoingBehavior extends AbstractOutgoingB
 				return controlNodeInstance;
 			}
 		}
-		String type = this.getDbControlNode().getType(controlNodeId);
-		return createControlNode(type, controlNodeId);
+		ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
+        AbstractControlNodeInstance controlNode = controlNodeFactory.createControlNodeInstance(
+                controlNodeId, getFragmentInstanceId(), getScenarioInstance());
+		getScenarioInstance().getControlNodeInstances().add(controlNode);
+        return controlNode;
 	}
 }

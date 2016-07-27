@@ -3,7 +3,9 @@ package de.hpi.bpt.chimera.jcore.executionbehaviors;
 import de.hpi.bpt.chimera.database.controlnodes.DbWebServiceTask;
 import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import org.apache.log4j.Logger;
@@ -24,7 +26,7 @@ import java.util.Random;
 /**
  * This is the execution behavior for webservice tasks.
  */
-public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
+public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 	private static Logger log = Logger.getLogger(
 			WebServiceTaskExecutionBehavior.class);
 
@@ -33,36 +35,27 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 	 */
 	private DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
 
-	/**
-	 * Initializes the webservice task.
-	 *
-	 * @param activityInstanceId The id of the webservice task.
-	 * @param scenarioInstance    The instance of the ScenarioInstance.
-	 * @param controlNodeInstance The AbstractControlNodeInstance (ActivityInstance).
-	 */
-	public WebServiceTaskExecutionBehavior(
-            int activityInstanceId, ScenarioInstance scenarioInstance,
-            AbstractControlNodeInstance controlNodeInstance) {
-		super(activityInstanceId, scenarioInstance, controlNodeInstance);
+	public WebServiceTaskExecutionBehavior(ActivityInstance activityInstance) {
+		super(activityInstance);
 	}
 
 	@Override
-    public void execute() {
+    public void begin() {
         WebTarget target = buildTarget();
 		Response response = executeWebserviceRequest(target);
         if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
             writeDataObjects(response);
         } else {
-            log.warn("Web service task did not execute properly");
+            log.warn("Web service task did not begin properly");
         }
-        this.setCanTerminate(true);
 	}
 
     private WebTarget buildTarget() {
         String link = dbWebServiceTask
-                .getUrl(getControlNodeInstance().getControlNodeId());
+                .getUrl(activityInstance.getControlNodeId());
+        DataManager dataManager = getScenarioInstance().getDataManager();
         String replacedLink = insertDataObjectValues(link,
-                new ArrayList<>(this.getScenarioInstance().getDataAttributeInstances().values()));
+                new ArrayList<>(dataManager.getDataAttributeInstances()));
 
         Client client = ClientBuilder.newClient();
         // Split url into link part and query param part
@@ -103,9 +96,9 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>(getScenarioInstance()
                 .getDataAttributeInstances().values());
 
-        String method = dbWebServiceTask.getMethod(getControlNodeInstance().getControlNodeId());
+        String method = dbWebServiceTask.getMethod(activityInstance.getControlNodeId());
         if ("POST".equals(method) || "PUT".equals(method)) {
-            String post = dbWebServiceTask.getPOSTBody(getControlNodeInstance().getControlNodeId());
+            String post = dbWebServiceTask.getPOSTBody(activityInstance.getControlNodeId());
             String bodyWithAttributeValues = insertDataObjectValues(post, dataAttributeInstances);
             return invocationBuilder.post(Entity.json(bodyWithAttributeValues));
         } else {
@@ -115,11 +108,10 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
 
     private void writeDataObjects(Response response) {
         String json = response.readEntity(String.class);
-        AbstractControlNodeInstance node = this.getControlNodeInstance();
         DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(
-                node.getControlNodeId(),
-                node.getControlNodeInstanceId(),
-                this.getScenarioInstance());
+                activityInstance.getControlNodeId(),
+                activityInstance.getControlNodeInstanceId(),
+                activityInstance.getScenarioInstance());
         List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
         getPossibleDataObjects().values().stream().filter(x -> !x.isEmpty())
                 .forEach(x -> dataAttributeInstances.addAll(
@@ -131,7 +123,7 @@ public class WebServiceTaskExecutionBehavior extends TaskExecutionBehavior {
         Map<Integer, List<DataObject>> possibleDataObjects = new HashMap<>();
         DbDataFlow dbDataFlow = new DbDataFlow();
         List<Integer> followingDataClasses = dbDataFlow.getFollowingDataClassIds(
-                this.getControlNodeInstance().getControlNodeId());
+                activityInstance.getControlNodeId());
         for (Integer dataClass : followingDataClasses) {
             possibleDataObjects.put(dataClass, new ArrayList<>());
         }

@@ -13,7 +13,6 @@ import de.hpi.bpt.chimera.jcore.flowbehaviors.EventOutgoingBehavior;
  *
  */
 public abstract class AbstractEvent extends AbstractControlNodeInstance {
-    private int controlNodeId;
     private String queryString;
     private EventOutgoingBehavior outgoingBehavior;
 
@@ -23,19 +22,20 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
      * @param fragmentInstanceId the ud of the instance the event belongs to.
      * @param scenarioInstance the scenarioInstance object.
      */
-    public AbstractEvent(
-            int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance) {
-        this.controlNodeId = controlNodeId;
+    public AbstractEvent(int controlNodeId, int fragmentInstanceId,
+                         ScenarioInstance scenarioInstance) {
+        this.setControlNodeId(controlNodeId);
         this.scenarioInstance = scenarioInstance;
         this.setFragmentInstanceId(fragmentInstanceId);
         this.setExecutionBehavior(new EventExecutionBehavior(this));
         this.setIncomingBehavior(new EventIncomingBehavior(this));
-
+        this.queryString = new DbEvent().getQueryForControlNode(this.getControlNodeId());
         DbControlNodeInstance databaseNodeInstance = new DbControlNodeInstance();
         if (!databaseNodeInstance.existControlNodeInstance(controlNodeId, fragmentInstanceId)) {
             int controlNodeInstanceId = databaseNodeInstance.createNewControlNodeInstance(
                     controlNodeId, this.getType(), fragmentInstanceId);
             this.setControlNodeInstanceId(controlNodeInstanceId);
+            this.setState(State.INIT);
         } else {
             this.setControlNodeInstanceId(databaseNodeInstance.getControlNodeInstanceId(
                     controlNodeId, fragmentInstanceId));
@@ -43,8 +43,20 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         outgoingBehavior = this.createOutgoingBehavior();
     }
 
+    public AbstractEvent(int controlNodeId, int fragmentInstanceId,
+                         ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
+        this.setControlNodeId(controlNodeId);
+        this.scenarioInstance = scenarioInstance;
+        this.setFragmentInstanceId(fragmentInstanceId);
+        this.setExecutionBehavior(new EventExecutionBehavior(this));
+        this.setIncomingBehavior(new EventIncomingBehavior(this));
+        this.queryString = new DbEvent().getQueryForControlNode(this.getControlNodeId());
+        this.setControlNodeInstanceId(controlNodeInstanceId);
+        outgoingBehavior = this.createOutgoingBehavior();
+    }
+
     protected EventOutgoingBehavior createOutgoingBehavior() {
-        return new EventOutgoingBehavior(controlNodeId,
+        return new EventOutgoingBehavior(this.getControlNodeId(),
                 scenarioInstance, getFragmentInstanceId(), getControlNodeInstanceId());
     }
 
@@ -61,6 +73,12 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
     }
 
     @Override
+    public void enableControlFlow() {
+        getIncomingBehavior().enableControlFlow();
+        this.setState(State.REGISTERED);
+    }
+
+    @Override
     public void terminate() {
         terminate("");
     }
@@ -73,5 +91,10 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
      */
     public void terminate(String eventJson) {
         outgoingBehavior.terminate(eventJson);
+        this.setState(State.TERMINATED);
+    }
+
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
     }
 }

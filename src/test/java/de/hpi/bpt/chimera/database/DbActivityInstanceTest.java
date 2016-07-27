@@ -11,25 +11,7 @@ import static org.junit.Assert.assertEquals;
  *
  */
 public class DbActivityInstanceTest extends AbstractDatabaseDependentTest {
-    /**
-     *
-     */
-    @Test
-    public void testGetState(){
-        DbActivityInstance dbActivityInstance = new DbActivityInstance();
-        assertEquals(State.READY, dbActivityInstance.getState(77)) ;
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testSetState() {
-        DbActivityInstance dbActivityInstance = new DbActivityInstance();
-        dbActivityInstance.setState(91, State.TERMINATED);
-        assertEquals(State.TERMINATED, dbActivityInstance.getState(91));
-    }
-
+    
     /**
      *
      */

@@ -1,5 +1,7 @@
 package de.hpi.bpt.chimera.settings;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,45 +12,30 @@ import java.util.Properties;
  */
 public final class PropertyLoader {
 
-	private PropertyLoader() { }
 
-	/**
-	 * Name of properties file.
-	 */
-	private static final String PROPERTIES_FILE = "config.properties";
-	/**
-	 * Folder for properties file.
-	 */
-	private static final String PROPERTIES_FOLDER = "resources";
-	private static Properties props = new Properties();
+    private static final Logger log = Logger.getLogger(PropertyLoader.class);
 
-	//TODO should an exception be thrown if the property file could not be read?
-	static {
-		String path = PROPERTIES_FOLDER + File.separator + PROPERTIES_FILE;
+    public static final String PROPERTIES_FILE = "config.properties";
+    public static final String PROPERTIES_FOLDER = "resources";
 
-		InputStream is = null;
-		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			is = classLoader.getResourceAsStream(PROPERTIES_FILE);
+    private static Properties props = new Properties();
+
+    private PropertyLoader() {};
+    static {
+        String path = PROPERTIES_FOLDER + File.separator + PROPERTIES_FILE;
+        // TODO do this with path
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		try (InputStream is = classLoader.getResourceAsStream(PROPERTIES_FILE)){
 			props.load(is);
 		} catch (IOException e) {
-			System.err.println("Could not read configuration file " + path);
-			e.printStackTrace();
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+            log.error("Property file not found! - " + e.getMessage(), e);
 		}
 	}
 
 	/**
-	 *
-	 * @param key Key for the Property to be returned
-	 * @return the property
+	 * Read a property.
+	 * @param key Key for the property to be returned
+	 * @return The property
 	 */
 	public static String getProperty(String key) {
 		if (!props.containsKey(key)) {
@@ -60,8 +47,8 @@ public final class PropertyLoader {
 
 	/**
 	 * Changing Properties for tests, e.g. the unicorn server url.
-	 * @param key
-	 * @param value
+	 * @param key Key for the property to be changed
+	 * @param value New value it is changed to
      */
 	public static void setProperty(String key, String value) {
 		if (!props.containsKey(key)) {

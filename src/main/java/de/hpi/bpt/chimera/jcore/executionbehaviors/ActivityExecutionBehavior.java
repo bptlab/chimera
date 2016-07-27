@@ -20,10 +20,13 @@ import java.util.stream.Collectors;
  */
 public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
     private static Logger log = Logger.getLogger(ActivityExecutionBehavior.class);
-    ActivityInstance activityInstance;
 
+    private final ScenarioInstance scenarioInstance;
+
+    ActivityInstance activityInstance;
     public ActivityExecutionBehavior(ActivityInstance instance) {
         this.activityInstance = instance;
+        this.scenarioInstance = activityInstance.getScenarioInstance();
     }
 
     /**
@@ -101,5 +104,9 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
                     activityInstance.getScenarioInstance());
             event.enableControlFlow();
         }
+    }
+
+    public ScenarioInstance getScenarioInstance() {
+        return scenarioInstance;
     }
 }

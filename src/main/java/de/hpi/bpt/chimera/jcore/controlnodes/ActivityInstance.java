@@ -32,8 +32,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	private final DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
 	private final DbActivityInstance dbActivityInstance = new DbActivityInstance();
 	private final DbControlNode dbControlNode = new DbControlNode();
-
-	private TaskExecutionBehavior taskExecutionBehavior;
     private ActivityExecutionBehavior executionBehavior;
 
     private boolean isAutomaticTask;
@@ -53,7 +51,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		this.label = dbControlNode.getLabel(controlNodeId);
-		scenarioInstance.getControlNodeInstances().add(this);
         this.setState(State.INIT);
 		this.createDatabaseRepresentation();
 		this.initActivityInstance();
@@ -80,6 +77,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		} else {
 			this.setControlNodeInstanceId(instanceId);
 		}
+        ;
+        this.setState(new DbControlNodeInstance().getState(getControlNodeInstanceId()));
 		this.initActivityInstance();
 	}
 
@@ -133,36 +132,43 @@ public class ActivityInstance extends AbstractControlNodeInstance {
                 this, scenarioInstance));
         this.setOutgoingBehavior(new TaskOutgoingBehavior(getControlNodeId(),
                 scenarioInstance, getFragmentInstanceId(), this));
-        switch (dbControlNode.getType(getControlNodeId())) {
+        String type = dbControlNode.getType(getControlNodeId());
+        switch (type) {
             case "EmailTask":
-                this.taskExecutionBehavior =
-                        new EmailTaskExecutionBehavior(getControlNodeInstanceId(),
-                                scenarioInstance, this);
+                this.setExecutionBehavior(new EmailTaskExecutionBehavior(this));
                 this.isAutomaticTask = true;
                 break;
             case "WebServiceTask":
-                this.taskExecutionBehavior = new WebServiceTaskExecutionBehavior(
-                        getControlNodeInstanceId(), scenarioInstance, this);
+                this.setExecutionBehavior(new WebServiceTaskExecutionBehavior(this));
                 this.isAutomaticTask = true;
                 break;
             //Added additional case: activities can be terminated every time
             case "SendTask":
             case "IntermediateThrowEvent":
-                this.taskExecutionBehavior = new SendTaskExecutionBehavior(
-                        getControlNodeInstanceId(), scenarioInstance, this);
+                this.setExecutionBehavior(new SendTaskExecutionBehavior(this));
                 this.isAutomaticTask = true;
                 break;
             case "Activity":
-                this.setCanTerminate(true);
-                this.taskExecutionBehavior = new HumanTaskExecutionBehavior(
-                        getControlNodeInstanceId(), scenarioInstance, this);
+                this.setExecutionBehavior(new ActivityExecutionBehavior(this));
                 this.isAutomaticTask = false;
                 break;
             default:
-                this.taskExecutionBehavior = new HumanTaskExecutionBehavior(
-                        getControlNodeInstanceId(), scenarioInstance, this);
+                this.setExecutionBehavior(new ActivityExecutionBehavior(this));
                 this.isAutomaticTask = false;
+                log.warn(String.format("Initializing unsupported activity type: %s", type));
         }
+    }
+
+
+    public void begin(List<Integer> usedDataObjects) {
+        ((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(usedDataObjects);
+        this.setState(State.RUNNING);
+    }
+
+    @Override
+    public void begin() {
+        super.begin();
+        this.setState(State.RUNNING);
     }
 
     public void terminate(Map<String, String> dataClassNameToStateName) {
@@ -198,11 +204,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 
 	// ************************************** Getter & Setter *************************//
 
-	public TaskExecutionBehavior getTaskExecutionBehavior() {
-		return taskExecutionBehavior;
-	}
-
-
 	public String getLabel() {
 		return label;
 	}
@@ -226,7 +227,4 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         return (TaskOutgoingBehavior) super.getOutgoingBehavior();
     }
 
-    public void begin(List<Integer> usedDataObjects) {
-        ((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(usedDataObjects);
-    }
 }

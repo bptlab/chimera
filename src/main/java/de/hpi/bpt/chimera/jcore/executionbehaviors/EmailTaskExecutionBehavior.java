@@ -3,7 +3,9 @@ package de.hpi.bpt.chimera.jcore.executionbehaviors;
 import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.database.DbEmailConfiguration;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import org.apache.commons.mail.Email;
@@ -14,7 +16,7 @@ import org.apache.log4j.Logger;
 /**
  * Class defining the execution behavior of an Email Task.
  */
-public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
+public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	private static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class);
 	private final int controlNodeId;
 	private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
@@ -25,23 +27,14 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	private String subject;
 	private String message;
 
-	/**
-	 * Initializes and creates an EmailTaskExecutionBehavior.
-	 *
-	 * @param activityInstanceId This is an id for an activity instance.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
-	 * @param controlNodeInstance This is an AbstractControlNodeInstance.
-	 */
-	public EmailTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance,
-			AbstractControlNodeInstance controlNodeInstance) {
-		super(activityInstanceId, scenarioInstance, controlNodeInstance);
-		controlNodeId = controlNodeInstance.getControlNodeId();
+	public EmailTaskExecutionBehavior(ActivityInstance activityInstance) {
+		super(activityInstance);
+		controlNodeId = activityInstance.getControlNodeId();
 	}
 
-	@Override public void execute() {
+	@Override public void begin() {
 		this.setValues();
 		this.sendMail();
-		this.setCanTerminate(true);
 	}
 
 	/**
@@ -56,8 +49,9 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 	}
 
 	private void setDataAttributes() {
-		for (DataAttributeInstance dataAttributeInstance : getScenarioInstance()
-				.getDataAttributeInstances().values()) {
+        DataManager dataManager = getScenarioInstance().getDataManager();
+		for (DataAttributeInstance dataAttributeInstance :
+                dataManager.getDataAttributeInstances()) {
 			message = message.replace(
 					"#" + (dataAttributeInstance.getDataObject())
 							.getName()
@@ -78,8 +72,7 @@ public class EmailTaskExecutionBehavior extends TaskExecutionBehavior {
 					dataAttributeInstance.getValue().toString());
 		}
 		DbState dbState = new DbState();
-		for (DataObject dataObject
-				: getScenarioInstance().getDataManager().getDataObjects()) {
+		for (DataObject dataObject : dataManager.getDataObjects()) {
 			message = message.replace("$" + dataObject.getName(),
 					dbState.getStateName(dataObject.getStateId()));
 		}

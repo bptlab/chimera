@@ -15,31 +15,6 @@ import java.util.List;
 
 public class DbActivityInstance extends DbObject {
 	/**
-	 * This method returns the current state of an activity.
-	 *
-	 * @param id This is the database ID of an activity instance.
-	 * @return the state of the activity as a String.
-	 */
-	public State getState(int id) {
-		String sql = "SELECT activity_state FROM activityinstance WHERE id = " + id;
-		String activityState = this.executeStatementReturnsString(sql, "activity_state");
-	    return State.valueOf(activityState.toUpperCase());
-    }
-
-	/**
-	 * This method sets the activity to a state and saves a log entry into the database.
-	 *
-	 * @param id    This is the database ID of an activity instance in the database.
-	 * @param state This is the state in which an activity should be after executing setState.
-	 */
-	public void setState(int id, State state) {
-        String sql = "UPDATE activityinstance "
-				+ "SET activity_state = '" + state.name() + "' "
-				+ "WHERE id = " + id;
-		this.executeUpdateStatement(sql);
-	}
-
-	/**
 	 * This method creates and saves a new activity instance to the database
 	 * into the context of a controlNode instance and saves a log entry into the database.
 	 *

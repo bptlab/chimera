@@ -41,11 +41,11 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 				return;
 			}
 		}
-        this.setState(dbGatewayInstance.getState(this.getControlNodeInstanceId()));
         this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
+        this.setState(State.INIT);
 	}
 
 	/**
@@ -62,8 +62,10 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 		this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
+        this.setControlNodeInstanceId(instanceId);
 		this.setFragmentInstanceId(fragmentInstanceId);
-	}
+        this.setState(dbGatewayInstance.getState(instanceId));
+    }
 
 	/**
 	 * Checks if the gateway can terminate.

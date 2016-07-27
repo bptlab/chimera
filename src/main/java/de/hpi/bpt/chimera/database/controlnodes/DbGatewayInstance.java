@@ -29,7 +29,7 @@ public class DbGatewayInstance extends DbObject {
 		String sql = "SELECT gateway_state FROM gatewayinstance "
 				+ "WHERE id = " + gatewayInstanceId;
 		String state = this.executeStatementReturnsString(sql, "gateway_state");
-	    return State.valueOf(state.toUpperCase());
+ 	    return State.valueOf(state.toUpperCase());
     }
 
 	/**

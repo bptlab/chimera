@@ -4,9 +4,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Contains helper methods for operating on collections.
  */
 public class CollectionUtil {
+
+    private CollectionUtil() {}
+
+    /**
+     * Compute the cartesian product of multiple lists.
+     * E.g., the input ((A, B), (C), (D))
+     * would produce the result ((A, C, D), (B, C, D)).
+     * @return The n-ary cartesian product
+     */
     public static <T> List<List<T>> computeCartesianProduct(List<List<T>> lists) {
         List<List<T>> currentCombinations = Arrays.asList(Arrays.asList());
         for (List<T> list : lists) {
@@ -15,7 +24,7 @@ public class CollectionUtil {
         return currentCombinations;
     }
 
-    public static <T> List<List<T>> appendElements(List<List<T>> combinations, List<T> extraElements) {
+    private static <T> List<List<T>> appendElements(List<List<T>> combinations, List<T> extraElements) {
         return combinations.stream().flatMap(oldCombination
                 -> extraElements.stream().map(extra -> {
             List<T> combinationWithExtra = new ArrayList<>(oldCombination);

@@ -26,6 +26,7 @@ public class EndEvent extends AbstractControlNodeInstance {
         this.isSendEvent = isSendEvent();
         this.setIncomingBehavior(new EndEventIncomingBehavior(
                 this, scenarioInstance, this.isSendEvent));
+        this.setState(State.INIT);
     }
 
 	private boolean isSendEvent() {

@@ -23,7 +23,7 @@ import java.util.*;
 
 /**
  * This class implements the REST interface of the JEngine core.
- * The core module provides methods to execute PCM instances
+ * The core module provides methods to begin PCM instances
  * and to access the date inside the engine.
  * This REST interface provides methods to access this information
  * and to control the instances.
@@ -135,81 +135,6 @@ import java.util.*;
 		return Response.ok(mailConfig, MediaType.APPLICATION_JSON).build();
 	}
 
-	// ************************** WEB SERVICE TASKS **********************************/
-
-	/**
-	 * Get a list of all webservices for a specific scenario.
-	 *
-	 * @param scenarioID   The ID of the scenario model.
-	 * @param filterString A Filter String, only web service tasks with a label containing
-	 *                     this filter String will be returned.
-	 * @return a JSON object with the webservice.
-	 */
-	@GET @Path("scenario/{scenarioID}/webservice")
-		@Produces(MediaType.APPLICATION_JSON) public Response getAllWebserviceTasks(
-			@PathParam("scenarioID") int scenarioID,
-			@QueryParam("filter") String filterString) {
-		DbScenario scenario = new DbScenario();
-		if (!scenario.existScenario(scenarioID)) {
-			return Response.status(Response.Status.NOT_FOUND).type(
-					MediaType.APPLICATION_JSON).entity("{\"error\":\""
-					+ "scenario ID is not existing\"}").build();
-		}
-		DbWebServiceTask dbWebServiceTask = new DbWebServiceTask();
-		List<Integer> webServiceTaskIds =
-				dbWebServiceTask.getWebServiceTasks(scenarioID);
-		String jsonRepresentation = JsonUtil.jsonWrapperList(webServiceTaskIds);
-		return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Get all details for a specific webservice ID.
-	 *
-	 * @param scenarioID   The ID of the scenario model.
-	 * @param webserviceID The ID of the webservice tasks
-	 * @return a JSON object with details.
-	 */
-	@GET @Path("scenario/{scenarioID}/webservice/{webserviceID}")
-		@Produces(MediaType.APPLICATION_JSON) public Response getDetailsForWebServiceTask(
-			@PathParam("scenarioID") int scenarioID,
-			@PathParam("webserviceID") int webserviceID) {
-		DbWebServiceTask webService = new DbWebServiceTask();
-
-		Map<Integer, String> attributes =
-				webService.getOutputAttributesForWebservice(webserviceID);
-
-		Map<String, Object> response = new HashMap<>();
-		response.put("method", webService.getMethod(webserviceID));
-		response.put("link", webService.getUrl(webserviceID));
-		response.put("body", webService.getPOSTBody(webserviceID));
-		response.put("allAttributes", attributes);
-
-		String jsonResponse = JsonUtil.jsonWrapperHashMapOnly(response);
-		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Update details for a specific webserviceID.
-	 *
-	 * @param webserviceID The ID of the webservice tasks
-	 * @param input        The new webservice task configuration
-	 * @return whether the command completed successfully as a status code.
-	 */
-	@PUT @Path("webservice/{webserviceID}")
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON) public Response updateWebservice(
-			@PathParam("webserviceID") int webserviceID,
-			final String input) {
-		//input: {method, link, attributeID, value:[{order,key}], body}
-		//TODO new input Format? New Table layout
-		if (false /*TODO*/) {
-			return Response.status(Response.Status.ACCEPTED).build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST).type(
-					MediaType.APPLICATION_JSON).entity("{}").build();
-		}
-	}
-
 	// ************************** HELPER **********************************/
 
 	/**
@@ -222,22 +147,10 @@ import java.util.*;
 	 */
 	@XmlRootElement public static class EmailConfigJaxBean {
 
-		/**
-		 * The receiver of the email.
-		 * coded as an valid email address (as String)
-		 */
 		private String receiver;
 
-		/**
-		 * The subject of the email.
-		 * Could be any String but null.
-		 */
 		private String subject;
 
-		/**
-		 * The content of the email.
-		 * Could be any String but null.
-		 */
 		private String message;
 
 		public String getReceiver() {
@@ -269,19 +182,11 @@ import java.util.*;
 	 *
 	 */
 	@XmlRootElement public static class WebserviceConfigJaxBean {
-		/**
-		 *
-		 */
+
 		private String link;
 
-		/**
-		 *
-		 */
 		private String method;
 
-		/**
-		 *
-		 */
 		private ArrayList<HashMap<String, Object>> attributes;
 
 		public String getLink() {

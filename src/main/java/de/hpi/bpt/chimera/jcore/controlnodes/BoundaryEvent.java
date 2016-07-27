@@ -19,8 +19,12 @@ public class BoundaryEvent extends AbstractEvent {
     public BoundaryEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
-        this.setFragmentInstanceId(fragmentInstanceId);
     }
+
+public BoundaryEvent(int controlNodeId, int fragmentInstanceId,
+                     ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
+    super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
+}
 
     @Override
     public String getType() {

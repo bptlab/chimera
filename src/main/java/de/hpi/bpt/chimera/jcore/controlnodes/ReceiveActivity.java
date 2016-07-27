@@ -21,6 +21,12 @@ public class ReceiveActivity extends AbstractEvent {
         scenarioInstance.getControlNodeInstances().add(this);
     }
 
+public ReceiveActivity(int controlNodeId, int fragmentInstanceId,
+                       ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
+    super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
+    scenarioInstance.getControlNodeInstances().add(this);
+}
+
     @Override
     public String getType() {
         return "ReceiveActivity";

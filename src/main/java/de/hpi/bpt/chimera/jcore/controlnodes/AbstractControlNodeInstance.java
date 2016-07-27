@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractIncomingBehavior;
@@ -44,7 +45,7 @@ public abstract class AbstractControlNodeInstance {
     }
 
     public void begin() {
-        this.executionBehavior.begin();
+        this.getExecutionBehavior().begin();
     }
 
 	// ********************* Getter/Setter *********************//
@@ -103,9 +104,10 @@ public abstract class AbstractControlNodeInstance {
     }
 
     public void setState(State state) {
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        dbControlNodeInstance.setState(state, this.controlNodeInstanceId);
         this.state = state;
     }
-
 
     public AbstractExecutionBehavior getExecutionBehavior() {
         return executionBehavior;

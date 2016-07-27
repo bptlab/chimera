@@ -31,62 +31,6 @@ public abstract class AbstractOutgoingBehavior {
 		scenarioInstance.startAutomaticControlNodes();
 	}
 
-	/**
-	 * @param type a type for the control node.
-	 * @param controlNodeId the id of the control node to create.
-	 * @return a control node instance of the specified type.
-	 */
-	protected AbstractControlNodeInstance createControlNode(String type, int controlNodeId) {
-		AbstractControlNodeInstance controlNodeInstance = null;
-		switch (type) {
-		case "Activity":
-		case "EmailTask":
-		case "WebServiceTask":
-		case "SendTask":
-		case "IntermediateThrowEvent":
-			controlNodeInstance = new ActivityInstance(
-                    controlNodeId, fragmentInstanceId, scenarioInstance);
-            new DbLogEntry().logActivity(controlNodeInstance.getControlNodeInstanceId(),
-                    "init", this.getScenarioInstance().getId());
-            break;
-		case "EndEvent":
-			controlNodeInstance = new EndEvent(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-			break;
-		case "XOR":
-			controlNodeInstance = new XorGatewayInstance(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-			break;
-		case "AND":
-			controlNodeInstance = new AndGatewayInstance(
-                    controlNodeId, fragmentInstanceId, scenarioInstance);
-			break;
-        case "IntermediateCatchEvent":
-            controlNodeInstance = new IntermediateEvent(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-            break;
-		case "ReceiveActivity":
-			controlNodeInstance = new ReceiveActivity(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-			break;
-        case "TimerEvent":
-            controlNodeInstance = new TimerEventInstance(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-            break;
-        case "BoundaryEvent":
-            controlNodeInstance = new BoundaryEvent(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-            break;
-        case "EventBasedGateway":
-            controlNodeInstance = new EventBasedGatewayInstance(
-					controlNodeId, fragmentInstanceId, scenarioInstance);
-            break;
-        default:
-			break;
-		}
-		return controlNodeInstance;
-	}
-
 	public DbControlFlow getDbControlFlow() {
 		return dbControlFlow;
 	}

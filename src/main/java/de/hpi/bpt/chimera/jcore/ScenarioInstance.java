@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.jcore;
 
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
 import de.hpi.bpt.chimera.database.DbFragment;
@@ -36,8 +37,6 @@ public class ScenarioInstance {
 	private List<AbstractControlNodeInstance> controlNodeInstances = new ArrayList<>();
 
     private List<FragmentInstance> fragmentInstances = new ArrayList<>();
-	private List<AbstractControlNodeInstance> referentialRunningControlNodeInstances
-			= new ArrayList<>();
 	private List<GatewayInstance> executingGateways = new ArrayList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
@@ -46,6 +45,24 @@ public class ScenarioInstance {
 
     private boolean canTerminate;
     private TerminationCondition terminationCondition;
+    /**
+     * Creates and initializes a new scenario instance.
+     * Also save this new instance in database.
+     *
+     * @param scenarioId This is the database id from the scenario.
+     */
+    public ScenarioInstance(int scenarioId) {
+        this.name = dbScenario.getScenarioName(scenarioId);
+        this.scenarioId = scenarioId;
+        this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+
+        // Initialize data manager after setting scenarioId
+        this.dataManager = new DataManager(this);
+        this.terminationCondition = new TerminationCondition(this);
+        this.initializeFragments();
+        this.startAutomaticControlNodes();
+    }
+
 	/**
 	 * Creates and initializes a new scenario instance from database.
 	 * Reads the information for an existing scenario instance from the database.
@@ -58,46 +75,24 @@ public class ScenarioInstance {
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
-
-        if (dbScenarioInstance.existScenario(scenarioId, id)) {
-			//creates an existing Scenario Instance using the database information
-			this.id = id;
-		} else {
-			this.id = dbScenarioInstance.createNewScenarioInstance(
-					scenarioId);
-		}
-        this.startAutomaticControlNodes();
-
-		this.dataManager = new DataManager(this);
+        this.id = id;
+        this.dataManager = new DataManager(this);
+        this.reloadFromDatabase();
 
 		if (dbScenarioInstance.getTerminated(this.id) == 0) {
 			this.initializeFragments();
 		}
 
-		this.startAutomaticControlNodes();
+        this.startAutomaticControlNodes();
         canTerminate = checkTerminationCondition();
-	}
+    }
 
     private void reloadFromDatabase() {
-
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        List<Integer> controlNodeInstanceIds = dbControlNodeInstance.getControlNodeInstances(
+                this.id);
+        controlNodeInstanceIds.forEach(x -> ControlNodeFactory.loadControlNodeInstance(x, this));
     }
-	/**
-	 * Creates and initializes a new scenario instance.
-	 * Also save this new instance in database.
-	 *
-	 * @param scenarioId This is the database id from the scenario.
-	 */
-	public ScenarioInstance(int scenarioId) {
-        this.name = dbScenario.getScenarioName(scenarioId);
-		this.scenarioId = scenarioId;
-        this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
-
-        // Initialize data manager after setting scenarioId
-        this.dataManager = new DataManager(this);
-        this.terminationCondition = new TerminationCondition(this);
-        this.initializeFragments();
-		this.startAutomaticControlNodes();
-	}
 
 	/**
 	 * Creates and initializes all fragments for the scenario.
@@ -281,7 +276,7 @@ public class ScenarioInstance {
 				((ActivityInstance) controlNodeInstance).begin();
 			}
 		}
-        // Don't execute tasks at the moment.
+        // Don't begin tasks at the moment.
 	}
 
 	/**
@@ -371,13 +366,6 @@ public class ScenarioInstance {
 
 	public List<FragmentInstance> getFragmentInstances() {
 		return fragmentInstances;
-	}
-
-	/**
-	 * @return a ArrayList of referential running control node instances.
-	 */
-	public List<AbstractControlNodeInstance> getReferentialRunningControlNodeInstances() {
-		return referentialRunningControlNodeInstances;
 	}
 
 	/**

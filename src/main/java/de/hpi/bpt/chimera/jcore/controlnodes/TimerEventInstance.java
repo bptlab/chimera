@@ -15,8 +15,13 @@ public class TimerEventInstance extends AbstractEvent {
     public TimerEventInstance(int controlNodeId, int fragmentInstanceId,
                               ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
-        this.setFragmentInstanceId(fragmentInstanceId);
     }
+
+public TimerEventInstance(int controlNodeId, int fragmentInstanceId,
+                          ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
+    super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
+
+}
 
     @Override
     public String getType() {

@@ -65,6 +65,7 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
+        activity.enableControlFlow();
         activity.begin();
         verify(instance);
     }
@@ -77,6 +78,7 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
+        activity.enableControlFlow();
         activity.begin(Arrays.asList(1, 2, 3));
         DbSelectedDataObjects dataSelection = new DbSelectedDataObjects();
         List<Integer> dataObjects = dataSelection.getDataObjectSelection(

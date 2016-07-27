@@ -87,7 +87,6 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
 		this.enableFollowing();
 		this.runAutomaticTasks();
 	}

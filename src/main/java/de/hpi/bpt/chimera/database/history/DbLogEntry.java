@@ -110,7 +110,7 @@ public class DbLogEntry extends DbObject {
 
 
     public void logEvent(int eventInstanceId, int scenarioInstanceId, String status) {
-        int controlNodeId = new DbControlNodeInstance().getControlNodeID(eventInstanceId);
+        int controlNodeId = new DbControlNodeInstance().getControlNodeId(eventInstanceId);
         String label = new DbControlNode().getLabel(controlNodeId);
         this.insertLog(scenarioInstanceId, eventInstanceId, status, Optional.empty(),
                 label, LogEntry.LogType.EVENT);

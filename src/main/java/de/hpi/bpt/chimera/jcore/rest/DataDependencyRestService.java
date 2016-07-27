@@ -135,7 +135,7 @@ public class DataDependencyRestService extends AbstractRestService {
             @PathParam("activityInstanceId") int activityInstanceId) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        int activityId = new DbControlNodeInstance().getControlNodeID(activityInstanceId);
+        int activityId = new DbControlNodeInstance().getControlNodeId(activityInstanceId);
         Map<String, Set<String>> inputSets = new DbDataConditions().loadInputSets(activityId);
         if (inputSets.size() == 0) {
             String errorMsg = "{\"error\":\"There is no input set for activity instance %d\"}";
@@ -181,7 +181,7 @@ public class DataDependencyRestService extends AbstractRestService {
             @PathParam("activityInstanceId") int activityInstanceId) {
 
         ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        int activityId = new DbControlNodeInstance().getControlNodeID(activityInstanceId);
+        int activityId = new DbControlNodeInstance().getControlNodeId(activityInstanceId);
         Map<String, Set<String>> outputSets = new DbDataConditions()
                 .loadOutputSets(activityId);
         if (outputSets.size() == 0) {

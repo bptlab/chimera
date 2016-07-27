@@ -3,10 +3,7 @@ package de.hpi.bpt.chimera.jcore.flowbehaviors;
 import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.XORGrammarCompiler;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 import org.antlr.runtime.tree.CommonTree;
@@ -111,10 +108,12 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		if (type == null || this.getControlNodeId() != controlNodeId) {
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
-		AbstractControlNodeInstance controlNodeInstance = createControlNode(
-				type, controlNodeId);
+        ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
+        AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(
+                controlNodeId, getFragmentInstanceId(), getScenarioInstance());
 		setAutomaticExecutionToFalse(type, controlNodeInstance);
-		return controlNodeInstance;
+        getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
+        return controlNodeInstance;
 	}
 
 	private void setAutomaticExecutionToFalse(String type,
