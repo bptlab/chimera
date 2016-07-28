@@ -1,24 +1,37 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- *
+ * This class implements the REST interface for activities.
  */
 @Path("interface/v2")
 public class ActivityRestService extends AbstractRestService {
@@ -61,20 +74,18 @@ public class ActivityRestService extends AbstractRestService {
             @PathParam("instanceId") int instanceID,
             @QueryParam("filter") String filterString,
             @QueryParam("state") String state) {
-        if ((filterString == null || filterString.isEmpty()) && (state == null || state
-                .isEmpty())) {
-            return getAllActivitiesOfInstance(scenarioID, instanceID, uriInfo);
-        } else if (filterString == null || filterString.isEmpty())
-            return getAllActivitiesOfInstanceWithState(
-                    scenarioID, instanceID, state, uriInfo);
-        else if (state == null || state.isEmpty()) {
-            return getAllActivitiesOfInstanceWithFilter(
-                    scenarioID, instanceID, filterString,
-                    uriInfo);
-        } else {
-            return getAllActivitiesWithFilterAndState(
-                    scenarioID, instanceID, filterString, state, uriInfo);
+        if (StringUtils.isEmpty(filterString)) {
+            if (StringUtils.isEmpty(state)) {
+                return getAllActivitiesOfInstance(scenarioID, instanceID, uriInfo);
+            }
+            return getAllActivitiesOfInstanceWithState(scenarioID, instanceID, state, uriInfo);
         }
+        if (StringUtils.isEmpty(state)) {
+            return getAllActivitiesOfInstanceWithFilter(
+                    scenarioID, instanceID, filterString, uriInfo);
+        }
+        return getAllActivitiesWithFilterAndState(
+                scenarioID, instanceID, filterString, state, uriInfo);
     }
 
     /**
@@ -87,9 +98,10 @@ public class ActivityRestService extends AbstractRestService {
      * @param state        the state of the activity
      * @return The Response object as described above.
      */
-    private Response getAllActivitiesWithFilterAndState(int scenarioID, int instanceID,
-                                                        String filterString, String state, UriInfo uriInfo) {
-        Collection<ActivityInstance> instances = getActivitiesOfState(state, scenarioID, instanceID);
+    private Response getAllActivitiesWithFilterAndState(
+            int scenarioID, int instanceID, String filterString, String state, UriInfo uriInfo) {
+        Collection<ActivityInstance> instances = getActivitiesOfState(
+                state, scenarioID, instanceID);
         if (!isLegalState(state)) {
             this.buildNotFoundResponse("{\"error\":\"The state is not allowed "
                     + state + "\"}");
@@ -111,18 +123,16 @@ public class ActivityRestService extends AbstractRestService {
             String state, int scenarioId, int scenarioInstanceId) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-        if (READY.equals(state)) {
-            return executionService.getEnabledActivities(scenarioInstanceId);
-        } else if(TERMINATED.equals(state)) {
-            return executionService.getTerminatedActivities(scenarioInstanceId);
-        } else if (RUNNING.equals(state)) {
-            return executionService.getRunningActivities(scenarioInstanceId);
-        } else if (READY_DATA.equals(state)) {
-            return executionService.getDataEnabledActivities(scenarioInstanceId);
-        } else if (READY_CF.equals(state)) {
-            return executionService.getControlFlowEnabledActivities(scenarioInstanceId);
+        switch (state) {
+            case READY: return executionService.getEnabledActivities(scenarioInstanceId);
+            case TERMINATED: return executionService.getTerminatedActivities(scenarioInstanceId);
+            case RUNNING: return executionService.getRunningActivities(scenarioInstanceId);
+            case READY_DATA: return executionService.getDataEnabledActivities(scenarioInstanceId);
+            case READY_CF: return executionService.getControlFlowEnabledActivities(
+                    scenarioInstanceId);
+            default: throw new IllegalArgumentException(
+                    "State has to be one of ready, terminated or running");
         }
-        throw new IllegalArgumentException("State has to be one of ready, terminated or running");
     }
 
 
@@ -146,20 +156,19 @@ public class ActivityRestService extends AbstractRestService {
         stateToActivities.put(RUNNING, executionService.getRunningActivities(instanceId));
         stateToActivities.put(TERMINATED, executionService.getTerminatedActivities(instanceId));
         stateToActivities.put(READY_DATA, executionService.getDataEnabledActivities(instanceId));
-        stateToActivities.put(READY_CF, executionService.getControlFlowEnabledActivities(instanceId));
+        stateToActivities.put(READY_CF,
+                executionService.getControlFlowEnabledActivities(instanceId));
 
         JSONArray ids = new JSONArray();
         JSONObject activities = new JSONObject();
         for (Map.Entry<String, Collection<ActivityInstance>> entry : stateToActivities.entrySet()) {
-            String state = entry.getKey();
-            for (ActivityInstance instance : entry.getValue()) {
-                if (instance.getLabel().contains(filterString)) {
-                    ids.put(instance.getControlNodeInstanceId());
-                    JSONObject activityJson = buildActivityJson(state, instance, uriInfo);
-                    activities.put(String.valueOf(
-                            instance.getControlNodeInstanceId()), activityJson);
-                }
-            }
+            entry.getValue().stream()
+                    .filter(instance -> instance.getLabel().contains(filterString))
+                    .forEach(instance -> {
+                ids.put(instance.getControlNodeInstanceId());
+                JSONObject activityJson = buildActivityJson(entry.getKey(), instance, uriInfo);
+                activities.put(String.valueOf(instance.getControlNodeInstanceId()), activityJson);
+            });
         }
         JSONObject result = new JSONObject();
         result.put("ids", ids);
@@ -251,9 +260,8 @@ public class ActivityRestService extends AbstractRestService {
                 activityJSON.put("label", instance.getLabel());
                 activityJSON.put("state", entry.getKey());
                 activityJSON.put("link", uriInfo.getAbsolutePath() + "/"
-                        + String.valueOf(instance.getControlNodeInstanceId()));
-                activities.put(""
-                                + instance.getControlNodeInstanceId(),
+                        + instance.getControlNodeInstanceId());
+                activities.put(String.valueOf(instance.getControlNodeInstanceId()),
                         activityJSON);
             }
         }
@@ -285,7 +293,7 @@ public class ActivityRestService extends AbstractRestService {
             activityJSON.put("label", instance.getLabel());
             activityJSON.put("state", state);
             activityJSON.put("link", uriInfo.getAbsolutePath()
-                    + "/" + String.valueOf(instance.getControlNodeInstanceId()));
+                    + "/" + instance.getControlNodeInstanceId());
             activities.put(activityJSON);
         }
         JSONObject result = new JSONObject();
@@ -330,14 +338,10 @@ public class ActivityRestService extends AbstractRestService {
         List<AbstractControlNodeInstance> controlNodeInstances =
                 executionService.getScenarioInstance(
                         scenarioInstanceId).getControlNodeInstances();
-        for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
-            if (controlNodeInstance.getControlNodeInstanceId() == activityInstanceId) {
-                activity.setLabel(executionService
-                        .getLabelForControlNodeId(
-                                controlNodeInstance.getControlNodeId()
-                        ));
-            }
-        }
+        controlNodeInstances.stream().filter(controlNodeInstance
+                -> controlNodeInstance.getControlNodeInstanceId() == activityInstanceId)
+                .forEach(controlNodeInstance -> activity.setLabel(executionService
+                .getLabelForControlNodeId(controlNodeInstance.getControlNodeId())));
         activity.setInputSetLink(uriInfo.getAbsolutePath() + "/input");
         activity.setOutputSetLink(uriInfo.getAbsolutePath() + "/output");
         return Response.ok(activity, MediaType.APPLICATION_JSON).build();
@@ -385,8 +389,16 @@ public class ActivityRestService extends AbstractRestService {
         }
     }
 
+    /**
+     *
+     * @param scenarioId The id of the scenario.
+     * @param scenarioInstanceId The id of the scenario instance.
+     * @param activityInstanceId The id of the activity instance.
+     * @return A list with working items for the activity instance.
+     */
     @GET
     @Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
+    //TODO for some reason this appears to be the only endpoint with capital letters
     public Response getWorkingItems(@PathParam("scenarioId") int scenarioId,
                                     @PathParam("instanceId") int scenarioInstanceId,
                                     @PathParam("activityInstanceId") int activityInstanceId) {
@@ -407,8 +419,8 @@ public class ActivityRestService extends AbstractRestService {
      * @param scenarioInstanceId the id of an scenario instance.
      * @param activityInstanceId the id of the activity instance.
      * @param postBody           Json Object containing the data objects which are used
-     *                           executing this activity TODO add format
-     * @return
+     *                           executing this activity
+     * @return a message regarding the success of the operation
      * A 202 (ACCEPTED) means that the POST was successful.
      * A 400 (BAD_REQUEST) if the transition was not allowed.
      */
@@ -468,7 +480,7 @@ public class ActivityRestService extends AbstractRestService {
                                   String postBody) {
         ExecutionService executionService = ExecutionService.getInstance(scenarioId);
         executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-        boolean succesful;
+        boolean successful;
         JSONObject postJson = new JSONObject(postBody);
         if (postJson.length() != 0) {
             Map<String, String> dataClassNameToState = new HashMap<>();
@@ -477,12 +489,13 @@ public class ActivityRestService extends AbstractRestService {
                         (String) dataClassName));
 
             }
-            succesful = executionService.terminateActivityInstance(
+            successful = executionService.terminateActivityInstance(
                     scenarioInstanceId, activityInstanceId, dataClassNameToState);
         } else {
-            succesful = executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId);
+            successful = executionService.terminateActivityInstance(
+                    scenarioInstanceId, activityInstanceId);
         }
-        if (succesful) {
+        if (successful) {
             return Response.status(Response.Status.ACCEPTED)
                     .type(MediaType.APPLICATION_JSON)
                     .entity("{\"message\":\"activity terminated.\"}")

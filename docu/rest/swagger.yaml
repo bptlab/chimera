@@ -107,8 +107,10 @@ paths:
           description: List of emailtasks for the scenarios.
           schema:
             $ref: '#/definitions/EmailtaskList'
-#        '404':
-#         description: there is no scenario with the given id.
+        '404':
+          description: The scenario wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/emailtask/{emailTaskID}:
     get:
       description: This method provides information about an email Task.
@@ -137,6 +139,8 @@ paths:
             $ref: '#/definitions/EmailConfigJaxBean'
         '404':
           description: There is no emailtask in the scenario with the given ids.
+          schema:
+            type: object
   /scenario/{scenarioID}/instance:
     get:
       description: This method provides information about all instances of one scenario.
@@ -250,29 +254,6 @@ paths:
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
-    put:
-      description: This post can be used to terminate an existing scenario instance.
-      operationId: Update_terminateScenarioInstance_
-      produces:
-      - application/json
-      parameters:
-      - name: scenarioID
-        in: path
-        required: true
-        x-is-map: false
-        type: integer
-        format: int64
-        description: The Id of the scenario.
-      - name: instanceID
-        in: path
-        required: true
-        x-is-map: false
-        type: integer
-        format: int64
-        description: The Id of the instance to be terminated.
-      responses:
-        '200':
-          description: success
   /scenario/{scenarioID}/instance/{instanceID}/events:
     get:
       description: This method provides a list of registered events for the instance.
@@ -413,8 +394,14 @@ paths:
         description: The state of the instance.
       responses:
         '200':
-          description: success
-  /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}:
+          description: A list with all activity instances for the scenario instance.
+          schema:
+            $ref: '#/definitions/Activities'
+        '404':
+          description: The scenario or instance wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityID}:
     get:
       description: This method is used to get all the information for an activity.
       operationId: getActivity_
@@ -444,7 +431,13 @@ paths:
         description: The databaseID of an activityInstance.
       responses:
         '200':
-          description: success
+          description: Information about the activity instance.
+          schema:
+            $ref: '#/definitions/Activity'
+        '404':
+          description: The scenario / instance / activity wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
     put:
       description: >-
         This method updates the data attributes of a specific activity
@@ -480,19 +473,24 @@ paths:
         x-is-map: false
         description: data input.
         schema:
-          $ref: '#/definitions/DataAttributeUpdateJaxBean'
+          $ref: '#/definitions/Input'
       responses:
         '202':
-          description: Input was accepted.
+          description: Successfully updated attribute.
           schema:
             $ref: '#/definitions/Message'
         '400':
-          description: Bad Request.
+          description: Couldn't update the attributes.
           schema:
             $ref: '#/definitions/Error'
+        '404':
+          description: The scenario / instance / activity wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/begin:
     post:
       description: Updates the state of an activity instance.
-      operationId: updateActivityState_
+      operationId: Create_beginActivity_
       produces:
       - application/json
       parameters:
@@ -509,35 +507,80 @@ paths:
         x-is-map: false
         type: integer
         format: int64
-        description: the id of an scenario instance.
-      - name: activityID
+        description: The id of an scenario instance.
+      - name: activityInstanceId
         in: path
         required: true
         x-is-map: false
         type: integer
         format: int64
-        description: the control node id of the activity.
-      - name: state
-        in: query
+        description: The id of the activity instance.
+      - name: postBody
+        in: body
         required: true
         x-is-map: false
-        type: string
-        description: the new state of the activity.
-      - name: outputset
-        in: query
-        required: true
-        x-is-map: false
-        default: -1
-        type: integer
-        format: int64
-        description: the outputset of the activity.
+        description: Information about the dataobjects for the activity.
+        schema:
+          $ref: '#/definitions/postBody'
       responses:
         '202':
-          description: Input was accepted.
+          description: Successfully started the activity.
           schema:
             $ref: '#/definitions/Message'
         '400':
-          description: Bad Request.
+          description: Couldn't start the activity.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: The scenario / instance / activity wasn't found.
+          schema:
+            $ref: '#/definitions/Error'
+  /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/terminate:
+    post:
+      description: Updates the state of an activity instance.
+      operationId: Create_terminateActivity_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of a scenario model.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of an scenario instance.
+      - name: activityInstanceId
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The id of the activity instance.
+      - name: postBody
+        in: body
+        required: true
+        x-is-map: false
+        description: Information about the dataobjects for the activity.
+        schema:
+          $ref: '#/definitions/postBody'
+      responses:
+        '202':
+          description: Successfully terminated the activity.
+          schema:
+            $ref: '#/definitions/Message'
+        '400':
+          description: Couldn't terminate the activity.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: The scenario / instance / activity wasn't found.
           schema:
             $ref: '#/definitions/Error'
   /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceID}/input:
@@ -690,6 +733,43 @@ paths:
       responses:
         '200':
           description: success
+  /scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityInstanceId}/workingItems:
+    get:
+      description: This method provides a list of working items for an activity instance.
+      operationId: getWorkingItems_
+      produces:
+      - application/json
+      parameters:
+      - name: scenarioID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of a scenario.
+      - name: instanceID
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of a scenarioInstance.
+      - name: activityInstanceId
+        in: path
+        required: true
+        x-is-map: false
+        type: integer
+        format: int64
+        description: The databaseID of an activityInstance.
+      responses:
+        '202':
+          description: A list of working items
+          schema:
+            $ref: '#/definitions/WorkingItems'
+        '404':
+          description: The scenario/scenarioInstance/activityInstance was not found.
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/instance/{instanceID}/dataobject:
     get:
       description: >-
@@ -727,6 +807,10 @@ paths:
           description: List of all data objects.
           schema:
             $ref: '#/definitions/DataObjectList'
+        '404':
+          description: There is no scenario / instance for the given ids.
+          schema:
+            $ref: '#/definitions/Error'
   /scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataObjectID}:
     get:
       description: This method provides detailed information about an data Object.
@@ -922,15 +1006,13 @@ definitions:
       name:
         description: The name which should be assigned to the entity.
         type: string
-  DataAttributeUpdateJaxBean:
-    title: DataAttributeUpdateJaxBean
+  Input:
     type: object
+    description: 'New values for the DataAttributes'
     properties:
-      id:
-        type: integer
-        format: int64
-      value:
+      (DataAttribute):
         type: string
+        description: 'new value for the specific DataAttribute'
   ScenarioList:
     type: object
     properties:
@@ -1094,7 +1176,6 @@ definitions:
         description: 'List of all fragments as XML'
         items:
           type: string
-    
   Scenario:
     type: object
     properties:
@@ -1218,6 +1299,91 @@ definitions:
       state:
         type: string
         description: 'The state of the data object.'
+  Activities:
+    type: object
+    properties:
+      activities:
+        $ref: '#/definitions/ActivityList'    
+      ids:
+        type: array
+        items:
+          type: integer
+        description: 'List of all activity ids'
+  ActivityList:
+    type: object
+    description: 'Details for all activites'
+    properties:
+      (id):
+        type: object
+        properties:
+          activityid:
+            type: number
+            format: integer
+          link:
+            type: string
+          id:
+            type: number
+            format: integer
+          label:
+            type: string
+          state:
+            type: string
+  Activity:
+    type: object
+    description: 'Details for an activity'
+    properties:
+      id:
+        type: number
+        format: integer
+      inputSetLink:
+        type: string
+      outputSetLink:
+        type: string
+      label:
+        type: string
+        description: Name of the activity (if existant)
+  WorkingItems:
+    type: array
+    description: 'List of working items'
+    items:
+      $ref: '#/definitions/WorkingItem'
+  WorkingItem:
+    type: object
+    description: 'Details for a working item'
+    properties:
+      label:
+        type: string
+      id:
+        type: number
+        format: integer
+      state:
+        type: string
+      attributeConfiguration:
+        type: array
+        items:
+          $ref: '#/definitions/AttributeConfiguration'
+  AttributeConfiguration:
+    type: object
+    properties:
+      name:
+        type: string
+      id:
+        type: number
+        format: integer
+      type:
+        type: string
+      value:
+        type: string
+  postBody:
+    type: object
+    description: 'Information about data objects.'
+    properties:
+      dataobjects:
+        type: array
+        description: ids of the data objects
+        items:
+          type: number
+          format: integer
   Error:
     type: object
     properties:
