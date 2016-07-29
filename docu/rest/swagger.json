@@ -962,49 +962,6 @@
                 }
             }
         },
-        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references": {
-            "get": {
-                "description": "This method implements the REST call for retrieving.",
-                "operationId": "getReferencesForActivity_",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "scenarioID",
-                        "in": "path",
-                        "required": true,
-                        "x-is-map": false,
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "The databaseID of a scenario."
-                    },
-                    {
-                        "name": "instanceID",
-                        "in": "path",
-                        "required": true,
-                        "x-is-map": false,
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "The databaseID of a scenarioInstance."
-                    },
-                    {
-                        "name": "activityID",
-                        "in": "path",
-                        "required": true,
-                        "x-is-map": false,
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "The databaseID of an activityInstance."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
         "/scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityInstanceId}/workingItems": {
             "get": {
                 "description": "This method provides a list of working items for an activity instance.",

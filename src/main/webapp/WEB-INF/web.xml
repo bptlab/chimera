@@ -22,7 +22,6 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
-                io.swagger.jaxrs.listing,
                 de.hpi.bpt.chimera
             </param-value>
         </init-param>
@@ -48,25 +47,6 @@
         <url-pattern>/done</url-pattern>
     </servlet-mapping>
     -->
-
-    <servlet>
-        <servlet-name>Jersey2Config</servlet-name>
-        <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
-        <init-param>
-            <param-name>api.version</param-name>
-            <param-value>1.0.0</param-value>
-        </init-param>
-        <init-param>
-            <param-name>swagger.api.basepath</param-name>
-            <param-value>http://localhost:8080/api</param-value>
-        </init-param>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-    <!-- SERVLET: REST -->
-    <servlet-mapping>
-        <servlet-name>Jersey2Config</servlet-name>
-        <url-pattern>/docu/*</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>SseServlet</servlet-name>
