@@ -32,6 +32,8 @@ paths:
           description: List of all scenarios.
           schema:
             $ref: '#/definitions/ScenarioList'
+      tags:
+        - scenario
     post:
       description: This method allows to upload a new scenario.
       operationId: postInstance_
@@ -55,6 +57,8 @@ paths:
           description: Failed to process the scenario.
           schema:
             $ref: '#/definitions/ErrorArray'
+      tags:
+        - scenario
   /scenario/{scenarioID}:
     get:
       description: This method provides information about one scenario.
@@ -78,6 +82,8 @@ paths:
           description: The scenario wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario
   /scenario/{scenarioID}/emailtask:
     get:
       description: >-
@@ -111,6 +117,9 @@ paths:
           description: The scenario wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario
+        - email
   /scenario/{scenarioID}/emailtask/{emailTaskID}:
     get:
       description: This method provides information about an email Task.
@@ -141,6 +150,9 @@ paths:
           description: There is no emailtask in the scenario with the given ids.
           schema:
             type: object
+      tags:
+        - scenario
+        - email
   /scenario/{scenarioID}/instance:
     get:
       description: This method provides information about all instances of one scenario.
@@ -173,6 +185,9 @@ paths:
           description: The scenario wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario
+        - scenario instance
     put:
       description: Creates a new instance of a specified scenario. The name of the instance can be specified in the request.
       operationId: Update_startNewNamedInstance_
@@ -202,6 +217,8 @@ paths:
           description: The scenario wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
     post:
       description: Creates a new instance of a specified scenario. The instance will have the same name as the scenario.
       operationId: Create_startNewInstance_
@@ -224,6 +241,8 @@ paths:
           description: The scenario wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
   /scenario/{scenarioID}/instance/{instanceID}:
     get:
       description: This method provides detailed information about a scenario instance.
@@ -254,6 +273,8 @@ paths:
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
   /scenario/{scenarioID}/instance/{instanceID}/events:
     get:
       description: This method provides a list of registered events for the instance.
@@ -284,6 +305,8 @@ paths:
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
   /scenario/{scenarioID}/instance/{instanceID}/canTerminate:
     get:
       description: This determines whether a given scenario instance can terminate.
@@ -319,6 +342,8 @@ paths:
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
   /scenario/{scenarioID}/instance/{instanceID}/terminate:
     post:
       description: This method is used to terminate a scenario instance.
@@ -354,6 +379,8 @@ paths:
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
   /scenario/{scenarioID}/instance/{instanceID}/activity:
     get:
       description: >-
@@ -401,6 +428,9 @@ paths:
           description: The scenario or instance wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
+        - activity
   /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityID}:
     get:
       description: This method is used to get all the information for an activity.
@@ -438,6 +468,8 @@ paths:
           description: The scenario / instance / activity wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
     put:
       description: >-
         This method updates the data attributes of a specific activity
@@ -487,6 +519,8 @@ paths:
           description: The scenario / instance / activity wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
   /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/begin:
     post:
       description: Updates the state of an activity instance.
@@ -535,6 +569,8 @@ paths:
           description: The scenario / instance / activity wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
   /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/terminate:
     post:
       description: Updates the state of an activity instance.
@@ -583,6 +619,8 @@ paths:
           description: The scenario / instance / activity wasn't found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
   /scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceID}/input:
     get:
       description: This method responds to a GET request by returning an array of inputSets.
@@ -624,6 +662,9 @@ paths:
           description: The scenario/scenarioInstance/activityInstance was not found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/activityInstace/{activityInstanceID}/output:
     get:
       description: This method responds to a GET request by returning an array of outputSets.
@@ -665,6 +706,9 @@ paths:
           description: The scenario/scenarioInstance/activityInstance was not found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/availableInput:
     get:
       description: This method provides a list of available inputs.
@@ -702,6 +746,9 @@ paths:
           description: An array with the available inputs
           schema:
             $ref: '#/definitions/DataSetList'
+      tags:
+        - activity
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityInstanceId}/workingItems:
     get:
       description: This method provides a list of working items for an activity instance.
@@ -739,6 +786,9 @@ paths:
           description: The scenario/scenarioInstance/activityInstance was not found.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - activity
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/dataobject:
     get:
       description: >-
@@ -780,6 +830,9 @@ paths:
           description: There is no scenario / instance for the given ids.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario instance
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/dataobject/{dataObjectID}:
     get:
       description: This method provides detailed information about an data Object.
@@ -817,6 +870,8 @@ paths:
           description: There is no scenario / instance / data object for the given ids.
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/inputset/{inputsetID}:
     get:
       description: >-
@@ -861,6 +916,8 @@ paths:
           description: the scenario/scenarioInstance/inputSet can't be found
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - data
   /scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}:
     get:
       description: >-
@@ -903,6 +960,8 @@ paths:
           description: the scenario/scenarioInstance/outputSet can't be found
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - data
   /scenario/{scenarioId}/terminationcondition:
     get:
       description: This method provides information about the termination condition.
@@ -928,6 +987,8 @@ paths:
           description: the scenario can't be found
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario
   /scenario/{scenarioId}/xml:
     get:
       description: This method provides information about the termination condition.
@@ -953,6 +1014,8 @@ paths:
           description: the scenario can't be found
           schema:
             $ref: '#/definitions/Error'
+      tags:
+        - scenario
   /version:
     get:
       description: >-
@@ -967,6 +1030,9 @@ paths:
           description: A JSON object with the Chimera version
           schema:
             $ref: '#/definitions/VersionObject'
+          examples:
+            application/json:
+              "version": "1.0-SNAPSHOT"
 definitions:
   NamedJaxBean:
     title: NamedJaxBean
