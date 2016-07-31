@@ -26,8 +26,9 @@
                 <br>
                 <div ng-switch on="logSelection">
                     <!-- depending of the option of the dropdown: here display activity log -->
+                    <!-- reverse(), so that newest changes are shown on top -->
                     <div ng-switch-default>
-                        <div ng-repeat="entry in instanceCtrl.instanceDetails.activitylogs track by $index">
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.activitylogs.reverse() track by $index">
                             <h4 class="text-success">{{entry['label']}}</h4>
                             <span ng-show="entry['oldValue'].length">{{entry['oldValue']}}</span>
                             <span ng-hide="entry['oldValue'].length"><i>no state</i></span>
@@ -41,7 +42,7 @@
                     <!-- ./switch case -->
                     <!-- depending of the option of the dropdown: here display dataobject log -->
                     <div ng-switch-when="dataobject">
-                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectlogs.reverse() track by $index">
                             <h4 class="text-success">{{entry['label']}}</h4>
                             <span ng-show="entry['oldValue'].length">{{entry['oldValue']}}</span>
                             <span ng-hide="entry['oldValue'].length"><i>no state</i></span>
@@ -55,7 +56,7 @@
                     <!-- ./switch case -->
                     <!-- depending of the option of the dropdown: here display attribute log -->
                     <div ng-switch-when="attributes">
-                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectAttributelogs.reverse() track by $index">
                             <h4 class="text-success">{{entry['label']}}</h4>
                             <span ng-show="entry['oldValue'].length">{{entry['oldValue']}}</span>
                             <span ng-hide="entry['oldValue'].length"><i>empty</i></span>
