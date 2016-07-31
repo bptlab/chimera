@@ -30,17 +30,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	 */
 	public GatewayInstance(int controlNodeId, int fragmentInstanceId,
 			ScenarioInstance scenarioInstance) {
-		//looks if the Gateway Instance has already been initialized
-		for (AbstractControlNodeInstance controlNodeInstance : scenarioInstance
-				.getControlFlowEnabledControlNodeInstances()) {
-			if (this.getFragmentInstanceId() == getControlNodeInstanceId()
-					&& this.getControlNodeId() == controlNodeId) {
-				// TODO fragmentInstanceId == controlNodeInstanceId ?
-                // if it exist, only checks the control flow
-				controlNodeInstance.enableControlFlow();
-				return;
-			}
-		}
         this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);

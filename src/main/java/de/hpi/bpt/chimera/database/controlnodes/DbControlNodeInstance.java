@@ -47,13 +47,11 @@ public class DbControlNodeInstance extends DbObject {
 	 * @return the database ID of the newly created controlNode instance (Error -1).
 	 */
 	public int createNewControlNodeInstance(int controlNodeId, String controlNodeType,
-			int fragmentInstanceId) {
-		String sql =
-				"INSERT INTO controlnodeinstance ("
-						+ "Type, controlnode_id, fragmentinstance_id) "
-						+ "VALUES ('" + controlNodeType + "', "
-						+ controlNodeId + ", "
-						+ fragmentInstanceId	+ ")";
+			int fragmentInstanceId, State state) {
+        String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, " +
+                "fragmentinstance_id, state) VALUES ('%s', %d, %d, '%s')";
+        sql = String.format(sql, controlNodeType, controlNodeId,
+                fragmentInstanceId, state.name());
 		return executeInsertStatement(sql);
 	}
 

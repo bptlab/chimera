@@ -62,10 +62,8 @@ public class EventLoggingTest extends JerseyTest {
         ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(path);
         ScenarioTestHelper.executeActivityByName("Before Event", instance);
         // Only the registration log should be in the database
-
         assertEquals(1, service.getEventEntries(instance.getId()).size());
         ScenarioTestHelper.triggerEventInScenario(instance, base);
-
         // After triggering the event there should be another log entry
         assertEquals(2, service.getEventEntries(instance.getId()).size());
     }

@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +10,7 @@ import static org.junit.Assert.*;
  *
  */
 public class DbFragmentTest extends AbstractDatabaseDependentTest {
-    @Test
+    @Ignore @Test
     public void testGetFragmentsForScenario(){
         DbFragment dbFragment = new DbFragment();
         assertEquals(1, (int)dbFragment.getFragmentsForScenario(1).get(0));

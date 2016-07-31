@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class DbScenarioTest extends AbstractDatabaseDependentTest {
     /**
      *
      */
-    @Test
+    @Ignore @Test
     public void testGetScenarioIDs() {
         DbScenario dbScenario = new DbScenario();
         List<Integer> scenarios = dbScenario.getScenarioIDs();

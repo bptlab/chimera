@@ -91,31 +91,31 @@ public class ActivityInstance extends AbstractControlNodeInstance {
         int controlNodeId = this.getControlNodeId();
         this.setControlNodeInstanceId(dbControlNodeInstance
                 .createNewControlNodeInstance(controlNodeId,
-                        "Activity", this.getFragmentInstanceId()));
+                        "Activity", this.getFragmentInstanceId(), State.INIT));
         switch (dbControlNode.getType(controlNodeId)) {
             case "EmailTask":
                 dbActivityInstance.createNewActivityInstance(
-                        getControlNodeInstanceId(), "EmailTask", "init");
+                        getControlNodeInstanceId(), "EmailTask");
                 dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
                 break;
             case "WebServiceTask":
                 dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(),
-                        "WebServiceTask", "init");
+                        "WebServiceTask");
                 dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
                 break;
             case "SendTask":
                 dbActivityInstance.createNewActivityInstance(
-                        getControlNodeInstanceId(), "SendTask", "init");
+                        getControlNodeInstanceId(), "SendTask");
                 dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
                 break;
             case "IntermediateThrowEvent":
                 dbActivityInstance.createNewActivityInstance(
-                        getControlNodeInstanceId(), "IntermediateThrowEvent", "init");
+                        getControlNodeInstanceId(), "IntermediateThrowEvent");
                 dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
                 break;
             default:
                 dbActivityInstance.createNewActivityInstance(
-                        getControlNodeInstanceId(), "HumanTask", "init");
+                        getControlNodeInstanceId(), "HumanTask");
         }
     }
 

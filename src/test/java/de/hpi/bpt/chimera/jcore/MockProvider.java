@@ -16,6 +16,7 @@ import static org.easymock.EasyMock.replay;
  *
  */
 public class MockProvider {
+    private MockProvider() {};
     public static List<DataAttribute> mockDataAttributes(
             List<String> names, List<String> editorIds, List<Integer> databaseIds) {
         assert names.size() == editorIds.size() : "names and ids must have the same length";

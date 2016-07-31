@@ -1,5 +1,7 @@
 package de.hpi.bpt.chimera.database;
 
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+
 /**
  *
  */
@@ -36,5 +38,10 @@ public class ExampleValueInserter {
         int event = isEvent ? 1 : 0;
         insertDataclass = String.format(insertDataclass, name, event);
         return new DbObject().executeInsertStatement(insertDataclass);
+    }
+
+    public void insertControlNode(String name, String type, int fragmentId, String modelId ) {
+        Connector connector = new Connector();
+        connector.insertControlNodeIntoDatabase(name, type, fragmentId, modelId);
     }
 }

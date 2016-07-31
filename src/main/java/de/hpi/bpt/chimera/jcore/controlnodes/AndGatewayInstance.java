@@ -21,7 +21,8 @@ public class AndGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.AND;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(controlNodeId, "AND", fragmentInstanceId));
+                .createNewControlNodeInstance(controlNodeId, "AND",
+                        fragmentInstanceId, State.INIT));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "AND", "init");
         this.initGatewayInstance();

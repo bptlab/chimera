@@ -9,7 +9,7 @@ import de.hpi.bpt.chimera.jcore.ScenarioInstance;
  *
  */
 public class ControlNodeFactory {
-    public static void loadControlNodeInstance(
+    public static AbstractControlNodeInstance loadControlNodeInstance(
             int controlNodeInstanceId, ScenarioInstance scenarioInstance) {
         AbstractControlNodeInstance controlNodeInstance = null;
         DbControlNodeInstance controlNodeDao = new DbControlNodeInstance();
@@ -56,6 +56,8 @@ public class ControlNodeFactory {
             default:
                 break;
         }
+
+        return controlNodeInstance;
     }
 
     /**
@@ -110,7 +112,8 @@ public class ControlNodeFactory {
                         controlNodeId, fragmentInstanceId, scenarioInstance);
                 break;
             default:
-                break;
+                String errorMsg = "Invalid control node type %s";
+                throw new IllegalArgumentException(String.format(errorMsg, type));
         }
         return controlNodeInstance;
     }

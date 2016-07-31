@@ -20,18 +20,12 @@ public class DbActivityInstance extends DbObject {
 	 *
 	 * @param controlNodeInstanceId This is the ID of a controlNode instance in the database.
 	 * @param activityType           This is the type of an activity.
-	 * @param activityState          This is the state of an activity.
 	 * @return the database ID of the newly created activity instance as an integer (Error: -1).
 	 */
-	public int createNewActivityInstance(int controlNodeInstanceId, String activityType,
-			String activityState) {
-		String sql =
-				"INSERT INTO activityinstance ("
-						+ "id, type, role_id, "
-						+ "activity_state, workitem_state) "
-						+ "VALUES ("	+ controlNodeInstanceId + ", '"
-						+ activityType + "', 1,'"
-						+ activityState	+ "', 'init')";
+	public int createNewActivityInstance(int controlNodeInstanceId, String activityType) {
+		String sql = "Insert INTO activityinstance (id, type, role_id, workitem_state) " +
+                "VALUES (%d, '%s', 1, 'init')";
+        sql = String.format(sql, controlNodeInstanceId, activityType);
 		return this.executeInsertStatement(sql);
 	}
 

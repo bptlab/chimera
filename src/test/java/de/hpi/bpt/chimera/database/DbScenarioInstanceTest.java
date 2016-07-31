@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.database;
 
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     /**
      *
      */
-    @Test
+    @Ignore @Test
     public void testExistScenario(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertTrue(dbScenarioInstance.existScenario(50));
@@ -27,7 +28,7 @@ public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     /**
      *
      */
-    @Test
+    @Ignore @Test
     public void testGetScenarioInstanceID(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         assertEquals(86, dbScenarioInstance.getScenarioInstanceID(100));
@@ -36,7 +37,7 @@ public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     /**
      *
      */
-    @Test
+    @Ignore @Test
     public void testGetScenarioInstances(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         List<Integer> instances = dbScenarioInstance.getScenarioInstances(100);
@@ -47,13 +48,10 @@ public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
     /**
      *
      */
-    @Test
+    @Ignore @Test
     public void testCreateNewScenarioInstance(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         dbScenarioInstance.createNewScenarioInstance(101);
         assertNotNull(dbScenarioInstance.getScenarioInstanceID(101));
     }
-
-
-
 }

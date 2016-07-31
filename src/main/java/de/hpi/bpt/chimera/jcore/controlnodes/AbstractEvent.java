@@ -33,7 +33,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         DbControlNodeInstance databaseNodeInstance = new DbControlNodeInstance();
         if (!databaseNodeInstance.existControlNodeInstance(controlNodeId, fragmentInstanceId)) {
             int controlNodeInstanceId = databaseNodeInstance.createNewControlNodeInstance(
-                    controlNodeId, this.getType(), fragmentInstanceId);
+                    controlNodeId, this.getType(), fragmentInstanceId, State.INIT);
             this.setControlNodeInstanceId(controlNodeInstanceId);
             this.setState(State.INIT);
         } else {
@@ -52,6 +52,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         this.setIncomingBehavior(new EventIncomingBehavior(this));
         this.queryString = new DbEvent().getQueryForControlNode(this.getControlNodeId());
         this.setControlNodeInstanceId(controlNodeInstanceId);
+        this.setState(new DbControlNodeInstance().getState(controlNodeInstanceId));
         outgoingBehavior = this.createOutgoingBehavior();
     }
 

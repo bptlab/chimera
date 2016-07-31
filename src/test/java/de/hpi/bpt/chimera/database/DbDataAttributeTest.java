@@ -7,6 +7,7 @@ import de.hpi.bpt.chimera.jcomparser.json.DataClass;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -39,7 +40,7 @@ public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
                 ).toString();
     }
 
-    @Test
+    @Ignore @Test
     public void testAttributeSaving() {
         int testScenarioId = 1;
         DataClass dClass = new DataClass(dataclassString);

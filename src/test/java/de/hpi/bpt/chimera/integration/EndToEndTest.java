@@ -79,7 +79,8 @@ public class EndToEndTest extends JerseyTest {
                 .request().post(Entity.json(buildInputSetSelection()));
         assertEquals(202, startSecondActivity.getStatus());
 
-        Response terminateActivityUsingOutputSet = base.path("interface/v2/scenario/1/instance/1/activityinstance/5/terminate")
+        Response terminateActivityUsingOutputSet = base.path(
+                "interface/v2/scenario/1/instance/1/activityinstance/5/terminate")
                 .request().post(Entity.json(buildOutputSetSelection2()));
         assertEquals(202, terminateActivityUsingOutputSet.getStatus());
 

@@ -17,7 +17,8 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.EVENT_BASED;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(controlNodeId, "EventBasedGateway", fragmentInstanceId));
+                .createNewControlNodeInstance(controlNodeId,
+                        "EventBasedGateway", fragmentInstanceId, State.INIT));
         this.dbGatewayInstance.createNewGatewayInstance(
                 getControlNodeInstanceId(), "EventBasedGateway", "init");
     }

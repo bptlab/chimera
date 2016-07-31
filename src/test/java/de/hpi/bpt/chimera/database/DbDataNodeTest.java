@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.database;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.data.DbDataNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
