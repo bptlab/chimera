@@ -27,7 +27,7 @@ public class TimerExecutionTest {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);
             List<String> registeredEventKeys = scenarioInstance.getRegisteredEventKeys();
             assertEquals(1, registeredEventKeys.size());
-            Thread.sleep(4000);
+            Thread.sleep(6000);
             assertEquals(0, scenarioInstance.getRegisteredEventKeys().size());
             // TODO assert also that timer event is terminated not only unregistered
         } catch (IOException e) {

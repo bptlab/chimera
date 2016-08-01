@@ -185,36 +185,6 @@ public class RestConfiguratorTest extends AbstractTest {
                 jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    @Test @Ignore
-    public void testGetSpecificWebserviceTask() {
-        Response response = base.path("scenario/145/webservice/390").request().get();
-        assertThat("Get webservice Task details returns something wrong",
-                "{\"body\":\"{\\\"value\\\":\\\"post\\\"}\", \"link\":\"http://localhost:9998/interface/v2/scenario/155/\",\"method\":\"GET\",\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"ids\",\"dataattribute_id\":12},{\"order\":1,\"controlnode_id\":390,\"key\":\"activities\",\"dataattribute_id\":13},{\"order\":2,\"controlnode_id\":390,\"key\":\"0\",\"dataattribute_id\":13}],\"allAttributes\":{}}",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test @Ignore
-    public void testUpdateWebserviceLink() {
-        Response response = base.path("webservice/390").request().put(Entity.json("{\"method\":\"GET\",\"link\":\"scenario/142/emailtask/353\"}"));
-        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetasklink) was not 202",
-                202, response.getStatus());
-    }
-
-    @Test @Ignore
-    public void testUpdateWebserviceAttribute() {
-        System.out.print("");
-        Response response = base.path("webservice/390").request().put(Entity.json("{\"attributes\":[{\"order\":1,\"controlnode_id\":390,\"key\":\"id2\",\"dataattribute_id\":16},{\"order\":2,\"controlnode_id\":390,\"key\":\"id3\",\"dataattribute_id\":16},{\"order\":1,\"controlnode_id\":390,\"key\":\"id22\",\"dataattribute_id\":17}]}"));
-        assertEquals("The Response code of updating the attributes of a webServiceTask was not 202",
-                202, response.getStatus());
-    }
-
-
-    @Test @Ignore()
-    public void testUpdateWebservicePost() {
-        Response response = base.path("webservice/390").request().put(Entity.json("{\"body\":\"GET\"}"));
-        assertEquals("The Response code of updating the WebserviceConfiguration (table webservicetaskpost) was not 202",
-                202, response.getStatus());
-    }
     @Test
     public void testUpdateWebservicePostBadRequest() {
         Response response = base.path("webservice/390").request().put(Entity.json("{\"method2222\":\"GET\"}"));

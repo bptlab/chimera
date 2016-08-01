@@ -59,8 +59,13 @@ public class StartQuery {
     }
 
 
+    /**
+     * Represents a single data object that get's created when the start query triggers.
+     * Consists of the data class of the data object, the state it should be created in
+     * and for each attribute an optional json path, how to initialise the data attribute
+     * from the json of the start query event.
+     */
     private class StartPart {
-
         final String dataClass;
         final String state;
         final String queryId;

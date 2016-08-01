@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
@@ -34,7 +35,9 @@ public class ScenarioRestTest extends AbstractTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(ScenarioRestService.class);
+        ResourceConfig config = new ResourceConfig(ScenarioRestService.class);
+        config.register(AuthorizationRequestFilter.class);
+        return config;
     }
 
     @Before
@@ -95,7 +98,7 @@ public class ScenarioRestTest extends AbstractTest {
         assertEquals("Get scenario returns a not empty JSON, but the id was invalid",
                 404, response.getStatus());
         assertEquals("The content of the invalid request is not an empty JSONObject",
-                "{}",
+                "{\"error\":\"There is no scenario with id 99999\"}",
                 response.readEntity(String.class));
     }
 
@@ -121,7 +124,7 @@ public class ScenarioRestTest extends AbstractTest {
         assertEquals("Get TerminationCondition does not return a JSON",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"error\":\"There is no scenario with the id 102\"}",
+                "{\"error\":\"There is no scenario with id 102\"}",
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }

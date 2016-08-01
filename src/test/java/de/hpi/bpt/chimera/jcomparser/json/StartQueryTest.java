@@ -84,10 +84,11 @@ public class StartQueryTest {
         DbStartQuery dbStartQuery = new DbStartQuery();
         assertEquals(Arrays.asList("SELECT * FROM anEvent"), dbStartQuery.getStartQueries(123451337));
         List<String> queryIds = getQueryIds(scenarioId);
-        assertEquals(2, queryIds.size());
-        List<StartQueryPart> pathMappings = dbStartQuery.loadStartQueryParts(queryIds.get(0),
+        assertEquals(1, queryIds.size());
+        List<StartQueryPart> startQueryParts = dbStartQuery.loadStartQueryParts(queryIds.get(0),
                 123451337);
-        assertEquals(1, pathMappings.size());
+        assertEquals(1, startQueryParts.size());
+        assertEquals(2, startQueryParts.get(0).getAttributeIdToJsonPath().size());
         // HERE assert values of start query parts
     }
 
