@@ -30,7 +30,7 @@ public class BoundaryEvent extends AbstractDataControlNode {
     public void saveConnectionToActivity(Map<String, Integer> savedControlNodes) {
         Connector connector = new Connector();
         int activityDatabaseId = savedControlNodes.get(this.getAttachedToRef());
-        connector.insertBoundaryEventIntoDatabase("BoundaryEvent", this.getEventQuery(),
+        connector.insertBoundaryEvent("BoundaryEvent", this.getEventQuery(),
                 this.getFragmentId(), this.getId(), this.getDatabaseId(), activityDatabaseId);
     }
 
@@ -45,7 +45,7 @@ public class BoundaryEvent extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "BoundaryEvent", this.getFragmentId(), this.getId());
         return this.getDatabaseId();
     }

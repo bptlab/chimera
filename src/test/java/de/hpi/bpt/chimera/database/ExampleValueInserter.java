@@ -42,6 +42,6 @@ public class ExampleValueInserter {
 
     public void insertControlNode(String name, String type, int fragmentId, String modelId ) {
         Connector connector = new Connector();
-        connector.insertControlNodeIntoDatabase(name, type, fragmentId, modelId);
+        connector.insertControlNode(name, type, fragmentId, modelId);
     }
 }

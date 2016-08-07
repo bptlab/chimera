@@ -36,10 +36,10 @@ public class DbFragmentTest {
     }
 
     private static void insertTestData() {
-        fragment1 = connector.insertFragmentIntoDatabase("fragment1", 1, 1);
-        fragment2 = connector.insertFragmentIntoDatabase("fragment2", 1, 1);
-        connector.insertXmlIntoDatabase(fragment1, "<xml 1>");
-        connector.insertXmlIntoDatabase(fragment2, "<xml 2>");
+        fragment1 = connector.insertFragment("fragment1", 1, 1);
+        fragment2 = connector.insertFragment("fragment2", 1, 1);
+        connector.insertFragmentXml(fragment1, "<xml 1>");
+        connector.insertFragmentXml(fragment2, "<xml 2>");
     }
 
     @Test

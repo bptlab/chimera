@@ -31,7 +31,7 @@ public class ParallelGateway extends AbstractControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "AND", this.getFragmentId(), this.getId());
         return this.databaseId;
     }

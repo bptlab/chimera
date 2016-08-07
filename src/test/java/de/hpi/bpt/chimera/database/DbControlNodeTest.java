@@ -37,9 +37,9 @@ public class DbControlNodeTest {
     }
 
     private static void insertTestData() {
-        node1 = connector.insertControlNodeIntoDatabase("node1", START_EVENT, 1, "");
-        node2 = connector.insertControlNodeIntoDatabase("node2", ACTIVITY, 1, "");
-        connector.insertFragmentIntoDatabase("fragment", 1, 1);
+        node1 = connector.insertControlNode("node1", START_EVENT, 1, "");
+        node2 = connector.insertControlNode("node2", ACTIVITY, 1, "");
+        connector.insertFragment("fragment", 1, 1);
     }
 
     @Test

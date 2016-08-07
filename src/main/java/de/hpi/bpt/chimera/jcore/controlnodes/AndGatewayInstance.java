@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.GatewayStateMachine;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ParallelGatewayJoinBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ParallelGatewaySplitBehavior;
 
@@ -23,7 +23,7 @@ public class AndGatewayInstance extends GatewayInstance {
         this.setControlNodeInstanceId(dbControlNodeInstance
                 .createNewControlNodeInstance(controlNodeId, "AND",
                         fragmentInstanceId, State.INIT));
-        this.dbGatewayInstance.createNewGatewayInstance(
+        new Connector().insertGatewayInstance(
                 getControlNodeInstanceId(), "AND", "init");
         this.initGatewayInstance();
     }

@@ -62,7 +62,7 @@ public class SequenceFlow extends Edge {
         int targetDatabaseId = nodeToDatabaseId.get(targetRef);
         int sourceDatabaseId = nodeToDatabaseId.get(sourceRef);
         Connector connector = new Connector();
-        connector.insertControlFlowIntoDatabase(sourceDatabaseId, targetDatabaseId, "");
+        connector.insertControlFlow(sourceDatabaseId, targetDatabaseId, "");
         return 0;
     }
 

@@ -122,7 +122,7 @@ public class ScenarioData {
 
     private int saveScenario() {
         Connector connector = new Connector();
-        return connector.insertScenarioIntoDatabase(
+        return connector.insertScenario(
                 this.scenarioName, this.versionNumber);
     }
 

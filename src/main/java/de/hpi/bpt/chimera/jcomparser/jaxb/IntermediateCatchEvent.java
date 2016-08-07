@@ -37,18 +37,18 @@ public class IntermediateCatchEvent extends AbstractDataControlNode {
 
     private void saveIntermediateWithoutTimer() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "IntermediateCatchEvent", this.fragmentId, this.getId());
 
-        connector.insertEventIntoDatabase("IntermediateCatchEvent", this.eventQuery,
+        connector.insertEvent("IntermediateCatchEvent", this.eventQuery,
                 this.fragmentId, this.getId(), this.databaseId);
     }
 
     private void saveTimerIntermediate() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "TimerEvent", this.fragmentId, this.getId());
-        connector.insertEventIntoDatabase("TimerEvent", this.eventQuery,
+        connector.insertEvent("TimerEvent", this.eventQuery,
                 this.fragmentId, this.getId(), this.databaseId);
         connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
     }

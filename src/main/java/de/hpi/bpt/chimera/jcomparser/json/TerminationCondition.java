@@ -111,7 +111,7 @@ public class TerminationCondition {
         String conditionSetId = UUID.randomUUID().toString();
         Connector conn = new Connector();
         for (Map.Entry<Integer, Integer> condition: this.dataObjectIdToStateId.entrySet()) {
-            conn.insertTerminationConditionIntoDatabase(condition.getKey(), condition.getValue(),
+            conn.insertTerminationCondition(condition.getKey(), condition.getValue(),
                     scenarioId, conditionSetId);
         }
     }

@@ -39,7 +39,7 @@ public class StartQuery {
 
     public void save(int scenarioId, List<DataClass> dataClasses) {
         Connector connector = new Connector();
-        connector.insertStartQueryIntoDatabase(this.query, scenarioId, id);
+        connector.insertStartQuery(this.query, scenarioId, id);
         for (StartPart startPart : this.queryParts) {
             startPart.save(dataClasses);
         }

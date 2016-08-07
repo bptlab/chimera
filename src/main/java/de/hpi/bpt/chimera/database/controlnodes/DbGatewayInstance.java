@@ -11,42 +11,26 @@ public class DbGatewayInstance extends DbObject {
 	/**
 	 * This method gives you the type of a gateway[and/xor].
 	 *
-	 * @param gatewayInstanceId This is the database ID of a gateway instance.
+	 * @param id This is the database ID of a gateway instance.
 	 * @return the type of the gateway instance as a String.
 	 */
-	public String getType(int gatewayInstanceId) {
-		String sql = "SELECT type FROM gatewayinstance WHERE id = " + gatewayInstanceId;
+	public String getType(int id) {
+		String sql = "SELECT type FROM gatewayinstance WHERE id = " + id;
 		return this.executeStatementReturnsString(sql, "type");
 	}
 
 	/**
 	 * This method gives you the state of the gateway.
 	 *
-	 * @param gatewayInstanceId This is the database ID of a gateway instance.
+	 * @param id This is the database ID of a gateway instance.
 	 * @return the state of the gateway instance as a String.
 	 */
-	public State getState(int gatewayInstanceId) {
+	public State getState(int id) {
 		String sql = "SELECT gateway_state FROM gatewayinstance "
-				+ "WHERE id = " + gatewayInstanceId;
+				+ "WHERE id = " + id;
 		String state = this.executeStatementReturnsString(sql, "gateway_state");
  	    return State.valueOf(state.toUpperCase());
     }
-
-	/**
-	 * This method creates and saves a new gateway instance to the database.
-	 *
-	 * @param controlNodeInstanceId This is the database ID of a controlNode instance.
-	 * @param type                   This is the desirable type of the gateway instance.
-	 * @param state                  This is the desirable state of the gateway instance.
-	 */
-	public void createNewGatewayInstance(int controlNodeInstanceId, String type, String state) {
-		String sql =
-				"INSERT INTO gatewayinstance ("
-						+ "id, gatewayinstance.type, gateway_state) "
-						+ "VALUES (" + controlNodeInstanceId + ", '"
-						+ type + "', '" + state + "')";
-		this.executeUpdateStatement(sql);
-	}
 
 	/**
 	 * This method sets the state of a gateway to a desirable one.

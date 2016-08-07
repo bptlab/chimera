@@ -25,7 +25,7 @@ public abstract class AbstractSet implements IPersistable {
 
 	@Override public int save() {
 		Connector connector = new Connector();
-		databaseId = connector.insertDataSetIntoDatabase(this.getClass().getName()
+		databaseId = connector.insertDataSet(this.getClass().getName()
 				.equals("de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.InputSet"));
 		return databaseId;
 	}

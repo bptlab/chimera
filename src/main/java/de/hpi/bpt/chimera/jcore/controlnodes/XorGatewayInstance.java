@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.GatewayStateMachine;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ExclusiveGatewayJoinBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 
@@ -19,7 +19,7 @@ public class XorGatewayInstance extends GatewayInstance {
         this.setControlNodeInstanceId(dbControlNodeInstance
                 .createNewControlNodeInstance(
                         controlNodeId, "XOR", fragmentInstanceId, State.INIT));
-        this.dbGatewayInstance.createNewGatewayInstance(
+        new Connector().insertGatewayInstance(
                 getControlNodeInstanceId(), "XOR", "init");
         this.initGatewayInstance();
     }

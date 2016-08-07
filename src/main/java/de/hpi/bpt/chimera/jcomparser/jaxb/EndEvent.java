@@ -17,11 +17,11 @@ public class EndEvent extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "EndEvent", this.getFragmentId(), this.getId());
 
         if (message != null) {
-            connector.saveSendEvent(databaseId);
+            connector.insertSendEvent(databaseId);
         }
 
         return this.databaseId;

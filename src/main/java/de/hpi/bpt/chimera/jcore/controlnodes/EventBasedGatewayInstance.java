@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbControlFlow;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
@@ -19,7 +20,7 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         this.setControlNodeInstanceId(dbControlNodeInstance
                 .createNewControlNodeInstance(controlNodeId,
                         "EventBasedGateway", fragmentInstanceId, State.INIT));
-        this.dbGatewayInstance.createNewGatewayInstance(
+        new Connector().insertGatewayInstance(
                 getControlNodeInstanceId(), "EventBasedGateway", "init");
     }
 

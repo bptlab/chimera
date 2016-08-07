@@ -76,11 +76,11 @@ public class DataClass {
      */
     public int save(int scenarioId) {
         Connector conn = new Connector();
-        this.databaseId = conn.insertDataClassIntoDatabase(this.name, this.isEvent);
+        this.databaseId = conn.insertDataClass(this.name, this.isEvent);
         saveDataAttributes();
         Connector connector = new Connector();
         for (String state : this.states) {
-            int stateID = connector.insertStateIntoDatabase(state, this.databaseId);
+            int stateID = connector.insertState(state, this.databaseId);
             stateToDatabaseId.put(state, stateID);
         }
 

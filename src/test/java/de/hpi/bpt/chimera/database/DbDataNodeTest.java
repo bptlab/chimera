@@ -41,10 +41,10 @@ public class DbDataNodeTest extends AbstractDatabaseDependentTest {
     }
 
     private static void insertTestData() {
-        node1 = connector.insertDataNodeIntoDatabase(1, 1, 1);
-        node2 = connector.insertDataNodeIntoDatabase(1, 2, 2);
-        connector.insertDataSetConsistOfDataNodeIntoDatabase(1, node1);
-        connector.insertDataSetConsistOfDataNodeIntoDatabase(1, node2);
+        node1 = connector.insertDataNode(1, 1, 1);
+        node2 = connector.insertDataNode(1, 2, 2);
+        connector.insertDataSetConsistOfDataNode(1, node1);
+        connector.insertDataSetConsistOfDataNode(1, node2);
     }
 
     @Test

@@ -24,10 +24,10 @@ public class ReceiveTask extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "ReceiveActivity", this.getFragmentId(), this.getId());
 
-        connector.insertEventIntoDatabase("ReceiveActivity", this.eventQuery,
+        connector.insertEvent("ReceiveActivity", this.eventQuery,
                 this.fragmentId, this.getId(), this.databaseId);
 
         return this.databaseId;
