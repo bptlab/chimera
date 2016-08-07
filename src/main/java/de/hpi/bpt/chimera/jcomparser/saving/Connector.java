@@ -45,14 +45,14 @@ public class Connector extends DbObject {
 	 * The parameters contain all necessary information.
 	 *
 	 * @param fragmentName The name of the fragment.
-	 * @param scenarioID   The database id of the scenario (foreign key).
+	 * @param scenarioId   The database id of the scenario (foreign key).
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertFragmentIntoDatabase(final String fragmentName, int scenarioID, final int modelVersion) {
+	public int insertFragmentIntoDatabase(final String fragmentName, int scenarioId, final int modelVersion) {
 		String sql = "INSERT INTO fragment "
 				+ "(fragment.name, scenario_id, modelversion) "
-				+ "VALUES ('" + fragmentName + "', " + scenarioID
+				+ "VALUES ('" + fragmentName + "', " + scenarioId
 				+ "," + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
@@ -64,17 +64,17 @@ public class Connector extends DbObject {
 	 *
 	 * @param label      The label of the node.
 	 * @param type       The type of the node (StartEvent/EndEvent/Task).
-	 * @param fragmentID The database ID of the DatabaseFragment.
+	 * @param fragmentId The database ID of the DatabaseFragment.
 	 * @param modelId    The modelID of the controlNode from the XML.
 	 * @return The newly created database entry.
 	 */
 	public int insertControlNodeIntoDatabase(final String label, final String type,
-			final int fragmentID, final String modelId) {
+			final int fragmentId, final String modelId) {
 
 		String sql = "INSERT INTO controlnode "
 				+ "(label, controlnode.type, fragment_id, modelid) "
 				+ "VALUES ('" + label + "', '" + type
-				+ "', " + fragmentID + ", '" + modelId + "')";
+				+ "', " + fragmentId + ", '" + modelId + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
