@@ -10,13 +10,11 @@ public class IntermediateEvent extends AbstractEvent {
     public IntermediateEvent(int controlNodeId, int fragmentInstanceId,
                              ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
-        scenarioInstance.getControlNodeInstances().add(this);
     }
 
     public IntermediateEvent(int controlNodeId, int fragmentInstanceId,
                              ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
-        scenarioInstance.getControlNodeInstances().add(this);
     }
 
     @Override

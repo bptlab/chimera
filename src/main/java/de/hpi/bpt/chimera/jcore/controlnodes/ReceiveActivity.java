@@ -4,9 +4,12 @@ import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.database.data.DbDataNode;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
+import de.hpi.bpt.chimera.jcore.data.DataObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Receive activities are used to represent events that also change the states of data
@@ -18,13 +21,11 @@ public class ReceiveActivity extends AbstractEvent {
                            ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.setFragmentInstanceId(fragmentInstanceId);
-        scenarioInstance.getControlNodeInstances().add(this);
     }
 
 public ReceiveActivity(int controlNodeId, int fragmentInstanceId,
                        ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
     super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
-    scenarioInstance.getControlNodeInstances().add(this);
 }
 
     @Override
@@ -50,21 +51,15 @@ public ReceiveActivity(int controlNodeId, int fragmentInstanceId,
         assert outputSets.size() == 1 : "Receive tasks should have exactly one output set.";
         int outputSetId = outputSets.get(0);
         Map<Integer, Integer> idToState = new DbDataNode().getDataSetClassToStateMap(outputSetId);
-        // TODO use data object id instead of data class id also test this
-        for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
-            this.changeDataObjectInstanceState(entry.getKey(), entry.getValue());
-        }
-    }
 
-    /**
-     * Change the state of the given data object to the new state.
-     *
-     * @param dataObjectId This is the database id from the data object
-     * @param stateId      The state the data object should be set to
-     */
-    private void changeDataObjectInstanceState(int dataObjectId, int stateId) {
         DataManager dataManager = this.getScenarioInstance().getDataManager();
-        dataManager.changeDataObjectState(dataObjectId, stateId,
-                this.getControlNodeInstanceId());
+        List<DataObject> availableInput = dataManager.getAvailableInput(this.getControlNodeId());
+        Map<Integer, DataObject> inputMap = availableInput.stream().collect(Collectors.toMap(x -> x.getDataClassId(), Function.identity()));
+
+        for (Map.Entry<Integer, Integer> entry : idToState.entrySet()) {
+            DataObject inputObject = inputMap.get(entry.getKey());
+            dataManager.changeDataObjectState(inputObject.getId(), entry.getValue(),
+                    this.getControlNodeInstanceId());
+        }
     }
 }

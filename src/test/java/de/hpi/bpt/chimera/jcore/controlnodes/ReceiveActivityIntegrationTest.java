@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class ReceiveTaskIntegrationTest extends JerseyTest {
+public class ReceiveActivityIntegrationTest extends JerseyTest {
 
     @After
     public void teardown() throws IOException, SQLException {
@@ -46,7 +46,7 @@ public class ReceiveTaskIntegrationTest extends JerseyTest {
     @Test
     public void testReceiveActivityViaRest() throws IOException {
         WebTarget base = target();
-        String path = "src/test/resources/Scenarios/ReceiveTaskScenario.json";
+        String path = "src/test/resources/EventScenarios/ReceiveTaskScenario.json";
         String jsonString = FileUtils.readFileToString(new File(path));
         Response createScenario =
                 base.path("interface/v2/scenario").request().post(Entity.json(jsonString));
@@ -60,9 +60,9 @@ public class ReceiveTaskIntegrationTest extends JerseyTest {
                 .request().post(Entity.json("{}"));
         assertEquals(202, startFirstActivity.getStatus());
 
-        Response termianteFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
+        Response terminateFirstActivity = base.path("interface/v2/scenario/1/instance/1/activityinstance/2/terminate")
                 .request().post(Entity.json("{}"));
-        assertEquals(202, termianteFirstActivity.getStatus());
+        assertEquals(202, terminateFirstActivity.getStatus());
 
         Response getEventKeys = base.path(
                 "eventdispatcher/scenario/1/instance/1/events").request().get();
@@ -86,6 +86,6 @@ public class ReceiveTaskIntegrationTest extends JerseyTest {
                 "interface/v2/scenario/1/instance/1/dataobject/1").request().get();
         assertEquals(200, checkAfterTriggerDataObject .getStatus());
         dataObject = new JSONObject(checkAfterTriggerDataObject .readEntity(String.class));
-        assertEquals("changed", dataObject.getString("state"));
+        assertEquals("received", dataObject.getString("state"));
     }
 }

@@ -47,7 +47,7 @@ public class DataDependencyRestServiceTest extends AbstractTest {
     }
 
     @Test
-    public void testGetInputDataObjects(){
+    public void testGetInputDataObjectsAndAttributes(){
         Response response = base.path("scenario/135/instance/808/activityinstance/4518/input").request().get();
         assertEquals("The response code of getInputDataObjects was not 200", 200, response.getStatus());
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,

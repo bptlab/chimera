@@ -61,7 +61,7 @@ public final class EventDispatcher {
             String eventJson) {
         AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
         if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-            event.terminate();
+            event.terminate("");
         } else {
             event.terminate(eventJson);
         }

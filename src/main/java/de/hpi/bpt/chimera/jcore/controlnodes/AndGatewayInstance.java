@@ -50,6 +50,7 @@ public class AndGatewayInstance extends GatewayInstance {
                 getFragmentInstanceId(), this));
         this.setIncomingBehavior(new ParallelGatewayJoinBehavior(
                 this, scenarioInstance));
-        scenarioInstance.getControlNodeInstances().add(this);
+        //TODO this should not be needed since it should be done in previous outgoiong behaviour
+        //scenarioInstance.getControlNodeInstances().add(this);
     }
 }

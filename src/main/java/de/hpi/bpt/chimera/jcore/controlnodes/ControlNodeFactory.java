@@ -33,6 +33,10 @@ public class ControlNodeFactory {
                 controlNodeInstance = new AndGatewayInstance(
                         controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
                 break;
+            case "StartEvent":
+                controlNodeInstance = new StartEvent(
+                        controlNodeId, fragmentInstanceId, scenarioInstance);
+                break;
             case "IntermediateCatchEvent":
                 controlNodeInstance = new IntermediateEvent(
                         controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);

@@ -76,6 +76,7 @@ public class ScenarioInstance {
 		this.terminationCondition = new TerminationCondition(this);
         this.id = id;
         this.dataManager = new DataManager(this);
+        this.reloadControlNodesFromDatabase();
 
         // This also reloads the control node instances from the database
 		if (dbScenarioInstance.getTerminated(this.id) == 0) {
@@ -86,6 +87,17 @@ public class ScenarioInstance {
         canTerminate = checkTerminationCondition();
     }
 
+    private void reloadControlNodesFromDatabase() {
+    	this.controlNodeInstances.clear();
+
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        List<Integer> controlNodeInstanceIds = dbControlNodeInstance.getControlNodeInstances(
+                this.id);
+		for (int instanceId : controlNodeInstanceIds) {
+			AbstractControlNodeInstance instance = ControlNodeFactory.loadControlNodeInstance(instanceId, this);
+			this.controlNodeInstances.add(instance);
+		}
+    }
 
 	/**
 	 * Creates and initializes all fragments for the scenario.

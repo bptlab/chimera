@@ -16,7 +16,7 @@ public abstract class AbstractControlNodeInstance {
 	private AbstractIncomingBehavior incomingBehavior;
     private AbstractExecutionBehavior executionBehavior;
 
-    private State state;
+    protected State state;
 
     private int fragmentInstanceId;
 	private int controlNodeInstanceId;

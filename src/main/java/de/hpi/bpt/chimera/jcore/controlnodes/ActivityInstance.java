@@ -70,7 +70,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		this.label = dbControlNode.getLabel(controlNodeId);
-		scenarioInstance.getControlNodeInstances().add(this);
 		if (instanceId == -1) {
 			setControlNodeInstanceId(dbControlNodeInstance.getControlNodeInstanceId(
                     controlNodeId, fragmentInstanceId));

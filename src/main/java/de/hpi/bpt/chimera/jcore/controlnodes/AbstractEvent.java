@@ -7,6 +7,8 @@ import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.EventExecutionBehavior;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractOutgoingBehavior;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractParallelOutgoingBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.EventIncomingBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.EventOutgoingBehavior;
 
@@ -40,7 +42,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         } else {
             this.setControlNodeInstanceId(databaseNodeInstance.getControlNodeInstanceId(
                     controlNodeId, fragmentInstanceId));
-            this.setState(new DbControlNodeInstance().getState(getControlNodeInstanceId()));
+            this.setState(databaseNodeInstance.getState(this.getControlNodeInstanceId()));
         }
         outgoingBehavior = this.createOutgoingBehavior();
     }

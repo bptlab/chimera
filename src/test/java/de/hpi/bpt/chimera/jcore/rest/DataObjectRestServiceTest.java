@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 /**
  *
  */
-public class DataObjectRestTest extends AbstractTest {
+public class DataObjectRestServiceTest extends AbstractTest {
 
     /**
      * Sets up the seed file for the test database.
