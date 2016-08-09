@@ -57,12 +57,12 @@ public class DbScenarioInstance extends DbObject {
 	/**
 	 * Creates a new scenario instance from a scenario.
 	 *
-	 * @param id This is the database Id of a scenario.
+	 * @param scenarioId This is the database Id of a scenario.
 	 * @return the database ID of the newly created scenario instance (Error: -1).
 	 */
-	public int createNewScenarioInstance(int id) {
-		String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + id
-				+ ", (SELECT name FROM scenario WHERE id = " + id + "))";
+	public int createNewScenarioInstance(int scenarioId) {
+		String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + scenarioId
+				+ ", (SELECT name FROM scenario WHERE id = " + scenarioId + "))";
 		log.info(sql);
 		return this.executeInsertStatement(sql);
 	}

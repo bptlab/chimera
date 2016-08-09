@@ -47,13 +47,6 @@ public class DbDataNodeTest extends AbstractDatabaseDependentTest {
         connector.insertDataSetConsistOfDataNode(1, node2);
     }
 
-    @Test
-    public void testGetDataClassIdsForDataSets(){
-        List<Integer> dataClassIds = dbDataNode.getDataClassIdsForDataSets(1);
-        assertEquals(2, dataClassIds.size());
-        assertEquals(Arrays.asList(1, 2), dataClassIds);
-    }
-
 
     @Test
     public void testGetDataStatesForDataSets(){

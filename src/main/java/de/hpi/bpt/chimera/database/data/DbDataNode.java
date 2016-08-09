@@ -16,22 +16,6 @@ public class DbDataNode extends DbObject {
 	private static Logger log = Logger.getLogger(DbDataNode.class);
 
 	/**
-	 * This method returns all database ID's of all dataObjects belonging to a dataSet.
-	 *
-	 * @param dataSetId This is the database ID of a dataSet.
-	 * @return a list of database ID's of all dataObjects belonging to this dataSet.
-	 */
-	public List<Integer> getDataClassIdsForDataSets(int dataSetId) {
-		String sql =
-				"Select dataclass_id FROM datanode, datasetconsistsofdatanode "
-						+ "WHERE datanode.id = "
-						+ "datasetconsistsofdatanode.datanode_id "
-						+ "AND dataset_id = " + dataSetId
-						+ " ORDER BY dataclass_id";
-		return this.executeStatementReturnsListInt(sql, "dataclass_id");
-	}
-
-	/**
 	 * This method returns all database ID's for all states a dataSet can have.
 	 *
 	 * @param dataSetId This is the database ID of a dataSet.

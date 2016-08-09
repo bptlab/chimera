@@ -494,28 +494,6 @@ public class ExecutionService {
 		return attributeInstances;
 	}
 
-
-	/**
-	 * This method gets all dataObjectInstances for a specific set of a scenarioInstance.
-	 *
-	 * @param setId              This is the databaseID of a DataConditions (either Input or Output).
-	 * @param scenarioInstanceId This is the databaseID of a scenarioInstance.
-	 * @return an array of dataObjectInstances of dataObjects belonging to the dataSet.
-	 */
-	public DataObject[] getDataObjectInstancesForDataSetId(int setId,
-                                                           int scenarioInstanceId) {
-		DbDataNode dbDataNode = new DbDataNode();
-		List<Integer> dataObjectsInSet = dbDataNode.getDataClassIdsForDataSets(setId);
-        DataManager dataManager = scenarioInstanceMap.get(scenarioInstanceId).getDataManager();
-
-        List<DataObject> dataObjects = dataManager.getDataObjects()
-                .stream().filter(x -> dataObjectsInSet.contains(x.getDataClassId()))
-                .collect(Collectors.toList());
-        return dataObjects.toArray(new DataObject[dataObjects.size()]);
-	}
-
-
-
 	/**
 	 * This method generates an array of all dataAttributes for a given dataObject.
 	 *

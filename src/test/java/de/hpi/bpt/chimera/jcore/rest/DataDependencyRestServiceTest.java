@@ -2,10 +2,21 @@ package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.database.DbFragmentInstance;
+import de.hpi.bpt.chimera.database.DbScenarioInstance;
+import de.hpi.bpt.chimera.database.ExampleValueInserter;
+import de.hpi.bpt.chimera.database.controlnodes.DbActivityInstance;
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
+import de.hpi.bpt.chimera.database.data.DbDataObject;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,19 +25,18 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static org.junit.Assert.*;
 
 /**
  *
  */
-public class DataDependencyRestServiceTest extends AbstractTest {
+public class DataDependencyRestServiceTest extends JerseyTest {
 
     private WebTarget base;
-
-    static {
-        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
-    }
 
     @Override
     protected Application configure() {
@@ -36,203 +46,57 @@ public class DataDependencyRestServiceTest extends AbstractTest {
     }
 
     @Before
-    public void setUpBase() {
+    public void setUpBaseAndInitialize() throws Exception {
         base = target("interface/v2");
     }
 
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
+    static {
+        try {
+            AbstractDatabaseDependentTest.resetDatabase();
+            ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/DataRestServiceTest.json");
+            new DbDataObject().createDataObject(1, 1, 1, 1);
+            new DbDataObject().createDataObject(1, 1, 2, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterClass
+    public static void clearDataDependecies() throws Exception {
         AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test
-    public void testGetInputDataObjectsAndAttributes(){
-        Response response = base.path("scenario/135/instance/808/activityinstance/4518/input").request().get();
+    public void testGetInputDataObjects(){
+        Response response = base.path("scenario/1/instance/1/activityinstance/2/input").request().get();
         assertEquals("The response code of getInputDataObjects was not 200", 200, response.getStatus());
         assertEquals("GetInputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "{\"Reiseplan\":[\"init\"]}",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_VALUES));
-    }
-
-    @Test
-    public void testGetInputForInvalidScenario() {
-        Response response = base.path("scenario/9987/instance/1234/activityinstance/1/input")
-                .request().get();
-        assertEquals("The Response code of getInputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getInputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testNotFoundInputInvalidActivityId() {
-        Response response = base.path("scenario/1/instance/72/activityinstance/9999/input")
-                .request().get();
-        assertEquals("The Response code of getInputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getInputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no activity instance with id 9999\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testGetOutputForActivityWithoutOutput() {
-        Response response = base.path("scenario/118/instance/704/activityinstance/3749/output")
-                .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getOutputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        String responseJson = response.readEntity(String.class);
-        assertThat("The returned JSON does not contain the expected content",
-                responseJson, jsonEquals(
-                        "{\"error\":\"There is no output set for activity instance 3749\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                "{\"Customer\":[\"init\"]}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
     @Test
     public void testGetOutputDataObjects(){
-        Response response = base.path("scenario/135/instance/808/activityinstance/4518/output").request().get();
+        Response response = base.path("scenario/1/instance/1/activityinstance/2/output").request().get();
         assertEquals("The response code of getOutputDataObjects was not 200", 200, response.getStatus());
         assertEquals("GetOutputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
                 response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                "[{\"id\":140,\"linkDataObject\":\"http://localhost:9998/interface/v2/scenario/135/instance/808/outputset/140\"}]",
-                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER).when(Option.COMPARING_ONLY_STRUCTURE));
+                "{\"Customer\":[\"done\"]}",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
     @Test
-    public void testNotFoundInvalidActivityId() {
-        Response response = base.path("scenario/1/instance/72/activityinstance/9999/output")
-                .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getOutputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+    public void testGetAvailableInput() {
+        Response response = base.path("scenario/1/instance/1/activity/1/availableInput").request().get();
+        assertEquals("The response code of getOutputDataObjects was not 202", 202, response.getStatus());
+        assertEquals("GetOutputDataObjects does not return a JSON", MediaType.APPLICATION_JSON,
+                response.getMediaType().toString());
         assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no activity instance with id 9999\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
+                "[{\"label\":\"Customer\", \"id\":1, \"state\":\"init\", \"attributeConfiguration\":[]}]",
+                jsonEquals(response.readEntity(String.class)).when(Option.IGNORING_ARRAY_ORDER));
     }
 
-    @Test
-    public void testNotFoundForInvalidScenarioId() {
-        Response response = base.path("scenario/0/instance/0/activityinstance/1/output")
-                .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getOutputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no scenario with id 0\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testGetInputForActivityWithoutInput() {
-        Response response = base.path("scenario/135/instance/808/activityinstance/4517/input")
-                .request().get();
-        assertEquals("The Response code of getInputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getInputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no input set for activity instance 4517\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testGetInputSetDataAttributes() {
-        Response response = base.path("scenario/135/instance/808/inputset/139")
-                .request().get();
-        assertEquals("The Response code of getInputDataAttributes was not 200",
-                200, response.getStatus());
-        assertEquals("getAttributes does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"String\",\"value\":\"250\"}]}]")
-                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
-    }
-    @Test
-    public void testGetOutputSetDataAttributes() {
-        Response response = base.path("scenario/135/instance/808/outputset/140")
-                .request().get();
-        assertEquals("The Response code of getOutputDataAttributes was not 200",
-                200, response.getStatus());
-        assertEquals("getOutputDataAttributes does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        String responseJson = response.readEntity(String.class);
-        assertThat("The returned JSON does not contain the expected content",
-                responseJson,
-                jsonEquals("[{\"label\":\"Reiseplan\",\"id\":675,\"state\":\"init\",\"attributeConfiguration\":[{\"id\":1,\"name\":\"Preis\",\"type\":\"String\",\"value\":\"250\"}]}]")
-                        .when(Option.IGNORING_ARRAY_ORDER).when(Option.IGNORING_EXTRA_FIELDS));
-    }
-    @Test
-    public void testNotFoundWithInvalidScenarioId() {
-        Response response = base.path("scenario/9987/instance/1234/outputset/140")
-                .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getOutputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testNotFoundInvalidOutputSetId() {
-        Response response = base.path("scenario/135/instance/808/outputset/1400")
-                .request().get();
-        assertEquals("The Response code of getOutputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getOutputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such outputSet instance.\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testNotFoundInvalidScenarioId() {
-        Response response = base.path("scenario/9987/instance/1234/inputset/140")
-                .request().get();
-        assertEquals("The Response code of getInputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getInputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no scenario with id 9987\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
-
-    @Test
-    public void testNotFoundInvalidInputSetId() {
-        Response response = base.path("scenario/135/instance/808/inputset/1400")
-                .request().get();
-        assertEquals("The Response code of getInputDataObjects was not 404",
-                404, response.getStatus());
-        assertEquals("getInputDataObjects does not return a JSON",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                response.readEntity(String.class),
-                jsonEquals("{\"error\":\"There is no such inputSet instance.\"}")
-                        .when(Option.IGNORING_ARRAY_ORDER));
-    }
 }
