@@ -42,8 +42,8 @@ import java.util.*;
 	 * @return The status code if the operation was successful or not
 	 * @throws Exception in case something goes wrong.
 	 */
-	@DELETE @Path("scenario/{scenarioID}/") public Response deleteScenario(
-			@PathParam("scenarioID") Integer scenarioID) throws Exception {
+	@DELETE @Path("scenario/{scenarioId}/") public Response deleteScenario(
+			@PathParam("scenarioId") Integer scenarioID) throws Exception {
 
 		Execution execution = new Execution();
 		execution.deleteScenario(scenarioID);
@@ -87,20 +87,12 @@ import java.util.*;
 	 * from ids to labels.
 	 *
 	 * @param scenarioID   The ID of the scenario, its mail tasks will be returned.
-	 * @param filterString A Filter String, only mail tasks with a label containing
-	 *                     this filter String will be returned.
 	 * @return The JSON Object with ids and labels.
 	 */
-	@GET @Path("scenario/{scenarioID}/emailtask")
+	@GET @Path("scenario/{scenarioId}/emailtask")
 		@Produces(MediaType.APPLICATION_JSON) public Response getAllEmailTasks(
-			@PathParam("scenarioID") int scenarioID,
-			@QueryParam("filter") String filterString) {
-		DbScenario scenario = new DbScenario();
+			@PathParam("scenarioId") int scenarioID) {
 		DbEmailConfiguration mail = new DbEmailConfiguration();
-		if (!scenario.existScenario(scenarioID)) {
-			return Response.status(Response.Status.NOT_FOUND).type(
-					MediaType.APPLICATION_JSON).entity("{}").build();
-		}
 		String jsonRepresentation = JsonUtil.jsonWrapperList(
 				mail.getAllEmailTasksForScenario(scenarioID));
 		return Response.ok(jsonRepresentation, MediaType.APPLICATION_JSON).build();
@@ -118,9 +110,9 @@ import java.util.*;
 	 * @return Returns a 404 if the mail Task or scenario does not exist
 	 * and a 200 (OK) with a JSON-Object if the emailTask was found.
 	 */
-	@GET @Path("scenario/{scenarioID}/emailtask/{emailTaskID}")
+	@GET @Path("scenario/{scenarioId}/emailtask/{emailTaskID}")
 		@Produces(MediaType.APPLICATION_JSON) public Response getEmailTaskConfiguration(
-			@PathParam("scenarioID") int scenarioID,
+			@PathParam("scenarioId") int scenarioID,
 			@PathParam("emailTaskID") int mailTaskID) {
 		DbScenario scenario = new DbScenario();
 		DbEmailConfiguration mail = new DbEmailConfiguration();
