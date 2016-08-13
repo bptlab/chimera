@@ -23,7 +23,8 @@ public class DbActivityInstance extends DbObject {
 	 * @return the database ID of the newly created activity instance as an integer (Error: -1).
 	 */
 	public int createNewActivityInstance(int controlNodeInstanceId, String activityType) {
-		String sql = "Insert INTO activityinstance (id, type, role_id, workitem_state) " +
+		// TODO remove unnessecary values in activity instance table
+        String sql = "Insert INTO activityinstance (id, type, role_id, workitem_state) " +
                 "VALUES (%d, '%s', 1, 'init')";
         sql = String.format(sql, controlNodeInstanceId, activityType);
 		return this.executeInsertStatement(sql);
@@ -60,7 +61,7 @@ public class DbActivityInstance extends DbObject {
 						+ "WHERE "
 						+ "activityinstance.id = controlnodeinstance.id "
 						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND activity_state = 'terminated' "
+						+ "AND controlnodeinstance.state = 'terminated' "
 						+ "AND fragmentinstance_id "
 						+ "IN (SELECT id FROM fragmentinstance "
 						+ "WHERE scenarioinstance_id ="

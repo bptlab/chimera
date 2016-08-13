@@ -2,9 +2,14 @@ package de.hpi.bpt.chimera.database;
 
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import org.junit.Ignore;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -12,43 +17,50 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
-    /**
-     *
-     */
-    @Ignore @Test
-    public void testExistScenario(){
+public class DbScenarioInstanceTest {
+
+    private int SCENARIO_ID;
+    private int SCENARIO_INSTANCE_ID;
+
+    @Before
+    public void setup() {
+        Connector connector = new Connector();
+        SCENARIO_ID = connector.insertScenarioIntoDatabase("TestScenario", 1);
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        assertTrue(dbScenarioInstance.existScenario(50));
-        assertFalse(dbScenarioInstance.existScenario(999999));
-        assertTrue(dbScenarioInstance.existScenario(1, 50));
-        assertFalse(dbScenarioInstance.existScenario(1, 999));
+        SCENARIO_INSTANCE_ID = dbScenarioInstance.
+                createNewScenarioInstance(SCENARIO_ID);
     }
 
-    /**
-     *
-     */
-    @Ignore @Test
+    @After
+    public void tearDown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
+
+    @Test
+    public void testInstanceBelongsToScenario(){
+        DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
+        assertTrue(dbScenarioInstance.existsScenarioInstance(SCENARIO_ID));
+        assertFalse(dbScenarioInstance.existsScenarioInstance(9999));
+    }
+
+    @Test
     public void testGetScenarioInstanceID(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        assertEquals(86, dbScenarioInstance.getScenarioInstanceID(100));
+        assertEquals(SCENARIO_INSTANCE_ID,
+                dbScenarioInstance.getScenarioInstanceID(SCENARIO_ID));
     }
 
-    /**
-     *
-     */
-    @Ignore @Test
+    @Test
     public void testGetScenarioInstances(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
-        List<Integer> instances = dbScenarioInstance.getScenarioInstances(100);
-        assertEquals(85, (int)instances.get(0));
-        assertEquals(86, (int)instances.get(1));
+        int newScenarioInstance = dbScenarioInstance.
+                createNewScenarioInstance(SCENARIO_ID);
+        List<Integer> instances = dbScenarioInstance.getScenarioInstances(
+                SCENARIO_ID);
+        assertEquals(instances, Arrays.asList(SCENARIO_INSTANCE_ID, newScenarioInstance));
     }
 
-    /**
-     *
-     */
-    @Ignore @Test
+    @Test
     public void testCreateNewScenarioInstance(){
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         dbScenarioInstance.createNewScenarioInstance(101);

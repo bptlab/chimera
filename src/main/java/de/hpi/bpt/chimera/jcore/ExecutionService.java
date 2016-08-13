@@ -181,7 +181,7 @@ public class ExecutionService {
 	 * @return true if the scenario instance exist in the database. false if not.
 	 */
 	public boolean existScenarioInstance(int scenarioId, int scenarioInstanceId) {
-		return dbScenarioInstance.existScenario(scenarioId, scenarioInstanceId);
+		return dbScenarioInstance.doesScenarioInstanceBelongToScenario(scenarioId, scenarioInstanceId);
 	}
 
 	/**

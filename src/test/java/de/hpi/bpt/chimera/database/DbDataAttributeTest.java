@@ -12,10 +12,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- *
- */
-public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
+public class DbDataAttributeTest {
     private String dataclassString;
 
     @Before
@@ -40,7 +37,7 @@ public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
                 ).toString();
     }
 
-    @Ignore @Test
+    @Test
     public void testAttributeSaving() {
         int testScenarioId = 1;
         DataClass dClass = new DataClass(dataclassString);

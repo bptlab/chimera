@@ -23,7 +23,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @param scenarioInstanceId This is the database ID of a scenario instance.
 	 * @return if the check was positive(true) or not(false).
 	 */
-	public Boolean existScenario(int scenarioId, int scenarioInstanceId) {
+	public Boolean doesScenarioInstanceBelongToScenario(int scenarioId, int scenarioInstanceId) {
 		if (!exist || this.scenarioId != scenarioId
 				|| this.id != scenarioInstanceId) {
 			String sql = "SELECT id FROM scenarioinstance "
@@ -43,7 +43,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @param scenarioInstanceId This is the database ID of a scenario instance.
 	 * @return if the check was positive(true) or not(false).
 	 */
-	public Boolean existScenario(int scenarioInstanceId) {
+	public Boolean existsScenarioInstance(int scenarioInstanceId) {
 		if (!exist || this.id != scenarioInstanceId) {
 			String sql = "SELECT id FROM scenarioinstance "
 					+ "WHERE id = " + scenarioInstanceId;
