@@ -45,7 +45,6 @@ public class EndToEndTest extends JerseyTest {
 
     @Test
     public void testScenarioWithIOSetsViaRest() throws IOException {
-        // TODO get dataobject ids via rest
         WebTarget base = target();
         String path = "src/test/resources/Scenarios/IOSetScenario.json";
         String jsonString = FileUtils.readFileToString(new File(path));

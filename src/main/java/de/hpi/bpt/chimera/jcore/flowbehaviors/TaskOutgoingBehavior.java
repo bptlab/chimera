@@ -59,7 +59,6 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
      *
      * @param dataClassNameToStateName the specification for each data object to
      *                                 which state it should be set.
-     * @return true if the activity could set to terminated. false if the activity couldn't set.
      */
     public void terminate(Map<String, String> dataClassNameToStateName) {
         int scenarioInstanceId = this.getScenarioInstance().getId();
