@@ -79,6 +79,8 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
         dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
                 activityInstance.getControlNodeInstanceId(), workingItems);
         beginExecution();
+        scenarioInstance.skipAlternativeControlNodes(
+                activityInstance.getControlNodeInstanceId());
     }
 
     private void beginExecution() {
@@ -87,7 +89,8 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
         new DbLogEntry().logActivity(activityInstance.getControlNodeInstanceId(),
                 "running", scenarioInstanceId);
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(activityInstance.getControlNodeId());
+        scenarioInstance.skipAlternativeControlNodes(activityInstance
+                .getControlNodeInstanceId());
         registerAttachedEvents();
         if (activityInstance.isAutomaticTask()) {
             activityInstance.terminate();

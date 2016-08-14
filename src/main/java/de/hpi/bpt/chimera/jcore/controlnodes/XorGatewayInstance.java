@@ -31,11 +31,34 @@ public class XorGatewayInstance extends GatewayInstance {
         this.initGatewayInstance();
     }
 
+    @Override
+    /**
+     * Do not set state to terminated yet, since there is still influence on the
+     * execution until one of the following control nodes is activated.
+     */
+    public void terminate() {
+        getOutgoingBehavior().terminate();
+    }
+
     private void initGatewayInstance() {
         this.setOutgoingBehavior(new ExclusiveGatewaySplitBehavior(
                 getControlNodeId(), scenarioInstance,
                 getFragmentInstanceId()));
         this.setIncomingBehavior(new ExclusiveGatewayJoinBehavior(
                 this, scenarioInstance));
+    }
+
+    public boolean containsControlNodeInFollowing(int controlNodeId) {
+        ExclusiveGatewaySplitBehavior outgoing = (ExclusiveGatewaySplitBehavior)
+                this.getOutgoingBehavior();
+        return outgoing.containsControlNodeInFollowing(controlNodeId);
+    }
+
+    public void skipAlternativeBranches(int controlNodeId) {
+        ExclusiveGatewaySplitBehavior outgoing = (ExclusiveGatewaySplitBehavior)
+                this.getOutgoingBehavior();
+        outgoing.skipAlternativeBranches(controlNodeId);
+        this.setState(State.TERMINATED);
+        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
     }
 }

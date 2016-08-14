@@ -41,8 +41,6 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = EasyMock.createNiceMock(ScenarioInstance.class);
         instance.updateDataFlow();
         expectLastCall();
-        instance.checkXorGatewaysForTermination(controlNodeId);
-        expectLastCall();
         expect(instance.getId()).andReturn(scenarioInstanceId);
         expect(instance.getControlNodeInstances()).andReturn(new ArrayList<>()).anyTimes();
         expect(instance.getControlFlowEnabledControlNodeInstances()).andReturn(

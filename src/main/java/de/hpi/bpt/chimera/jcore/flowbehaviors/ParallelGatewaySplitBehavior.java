@@ -27,7 +27,8 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 	@Override public void terminate() {
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+        scenarioInstance.skipAlternativeControlNodes(this.gatewayInstance
+                .getControlNodeInstanceId());
 
         this.enableFollowing();
 		this.runAutomaticTasks();

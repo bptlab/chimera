@@ -37,7 +37,6 @@ public class ScenarioInstance {
 	private List<AbstractControlNodeInstance> controlNodeInstances = new ArrayList<>();
 
     private List<FragmentInstance> fragmentInstances = new ArrayList<>();
-	private List<GatewayInstance> executingGateways = new ArrayList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
 
@@ -104,7 +103,6 @@ public class ScenarioInstance {
 		}
 	}
 
-    // TODO Test this method
     public List<AbstractEvent> getEventsForScenarioInstance() {
         return this.fragmentInstances.stream().map(FragmentInstance::getRegisteredEvents).
                 flatMap(Collection::stream).collect(Collectors.toList());
@@ -196,19 +194,21 @@ public class ScenarioInstance {
         checkTerminationCondition();
     }
 
-	/**
-	 * Checks if terminated control node triggers an xor gateway.
-	 * @param controlNodeId id of the terminated control node which could cause a gateway
-     *                      to terminate
-	 */
-	public void checkXorGatewaysForTermination(int controlNodeId) {
-		// clone is needed because otherwise gateway::terminate would remove itself from the list
-		// causing unexpected behavior
-		List<GatewayInstance> gatewayInstances = new ArrayList<>(executingGateways);
-		gatewayInstances.stream()
-				.filter(gatewayInstance -> gatewayInstance.checkTermination(controlNodeId))
-				.forEach(GatewayInstance::terminate);
-	}
+    /**
+     * Checks whether the
+     * @param controlNodeInstanceId The id of the control node instance, which was transferred
+     *                              to the state ready.
+     */
+    public void skipAlternativeControlNodes(int controlNodeInstanceId) {
+        List<XorGatewayInstance> gateways = this.getExecutingGateways();
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        int controlNodeId = dbControlNodeInstance.getControlNodeId(controlNodeInstanceId);
+        for (XorGatewayInstance gateway : gateways) {
+            if (gateway.containsControlNodeInFollowing(controlNodeId)) {
+                gateway.skipAlternativeBranches(controlNodeId);
+            }
+        }
+    }
 
 	/**
 	 * Checks if the list terminatedControlNodeInstances contains the control node.
@@ -233,7 +233,7 @@ public class ScenarioInstance {
 	 * @return true if the executingGateways contains the control node. false if not.
 	 */
 	public boolean executingGatewaysContainControlNodeID(int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance : executingGateways) {
+		for (AbstractControlNodeInstance controlNodeInstance : getExecutingGateways()) {
 			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
 				return true;
 			}
@@ -371,8 +371,11 @@ public class ScenarioInstance {
 	/**
 	 * @return a ArrayList of executing gateways.
 	 */
-	public List<GatewayInstance> getExecutingGateways() {
-		return executingGateways;
+	public List<XorGatewayInstance> getExecutingGateways() {
+        return this.controlNodeInstances.stream()
+                .filter(x -> x.getClass() == XorGatewayInstance.class)
+                .map(x -> (XorGatewayInstance) x)
+                .collect(Collectors.toList());
 	}
 
 	/**

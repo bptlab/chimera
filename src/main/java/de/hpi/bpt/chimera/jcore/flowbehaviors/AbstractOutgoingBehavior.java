@@ -62,4 +62,5 @@ public abstract class AbstractOutgoingBehavior {
 	public void setFragmentInstanceId(int fragmentInstanceId) {
 		this.fragmentInstanceId = fragmentInstanceId;
 	}
+
 }

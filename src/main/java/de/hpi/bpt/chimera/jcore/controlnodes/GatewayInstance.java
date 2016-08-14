@@ -70,7 +70,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	@Override public void terminate() {
         setState(State.TERMINATED);
         dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
-        getScenarioInstance().getExecutingGateways().remove(this);
 		getOutgoingBehavior().terminate();
 	}
 
@@ -86,8 +85,8 @@ public class GatewayInstance extends AbstractControlNodeInstance {
         setState(State.EXECUTING);
         dbGatewayInstance.setState(
                 this.getControlNodeInstanceId(), getState().toString());
-        getScenarioInstance().getExecutingGateways().add(this);
     }
+
 
 	// ******************************* Getter & Setter ***************************//
 
