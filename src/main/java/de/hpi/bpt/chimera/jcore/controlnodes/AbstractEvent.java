@@ -2,6 +2,7 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
 
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEvent;
+import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
@@ -39,6 +40,7 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
         } else {
             this.setControlNodeInstanceId(databaseNodeInstance.getControlNodeInstanceId(
                     controlNodeId, fragmentInstanceId));
+            this.setState(new DbControlNodeInstance().getState(getControlNodeInstanceId()));
         }
         outgoingBehavior = this.createOutgoingBehavior();
     }
