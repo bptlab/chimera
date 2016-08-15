@@ -26,23 +26,10 @@ public class ExclusiveGatewayJoinBehavior extends AbstractIncomingBehavior {
 	@Override public void enableControlFlow() {
 		Collection conditions = this.getDbControlFlow().getConditions(
 				getControlNodeInstance().getControlNodeId()).values();
-		boolean condition = true;
-		if (conditions.size() > 0 && !conditions.iterator().next().equals("")) {
-			condition = false;
+		if (!conditions.isEmpty() && !"".equals(conditions.iterator().next())) {
+            ((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
+                    .getOutgoingBehavior()).evaluateConditions();
 		}
-		if (condition) {
-			GatewayStateMachine stateMachine =
-                    (GatewayStateMachine) this.getControlNodeInstance().getStateMachine();
-            if (null != stateMachine) {
-                stateMachine.execute();
-            }
-
-			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
-					.getOutgoingBehavior()).execute();
-		} else {
-			((ExclusiveGatewaySplitBehavior) getControlNodeInstance()
-					.getOutgoingBehavior()).evaluateConditions();
-			getControlNodeInstance().terminate();
-		}
+        getControlNodeInstance().terminate();
 	}
 }

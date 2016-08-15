@@ -1,9 +1,6 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.*;
 
 /**
  *
@@ -30,13 +27,19 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 	@Override public void terminate() {
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+        scenarioInstance.skipAlternativeControlNodes(this.gatewayInstance
+                .getControlNodeInstanceId());
 
         this.enableFollowing();
 		this.runAutomaticTasks();
 	}
 
-	@Override protected AbstractControlNodeInstance createFollowingNodeInstance(
+    @Override
+    public void skip() {
+
+    }
+
+    @Override protected AbstractControlNodeInstance createFollowingNodeInstance(
 			int controlNodeId) {
 		for (AbstractControlNodeInstance controlNodeInstance
 				: this.getScenarioInstance().getControlNodeInstances()) {
@@ -44,16 +47,17 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 					== controlNodeInstance.getControlNodeId()
 					&& !controlNodeInstance.getClass().equals(
 						ActivityInstance.class)
-					&& !controlNodeInstance.getStateMachine()
-					.getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
+					&& !controlNodeInstance.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}
 		String type = this.getDbControlNode().getType(controlNodeId);
-		AbstractControlNodeInstance controlNodeInstance
-				= createControlNode(type, controlNodeId);
-		this.setAutomaticExecutionToFalse(type, controlNodeInstance);
-		return controlNodeInstance;
+        ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
+        AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(
+                controlNodeId, getFragmentInstanceId(), getScenarioInstance());
+        this.setAutomaticExecutionToFalse(type, controlNodeInstance);
+        getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
+        return controlNodeInstance;
 	}
 
 	/**

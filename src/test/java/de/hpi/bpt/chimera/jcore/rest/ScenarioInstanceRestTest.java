@@ -1,10 +1,17 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.database.DbScenarioInstance;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.NamedJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
 import net.javacrumbs.jsonunit.core.Option;
+import net.minidev.json.JSONObject;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,12 +29,12 @@ import static org.junit.Assert.assertThat;
  * Test methods in the {@link ScenarioInstanceRestService} for status codes, return types
  * and correct answers. Affects database while doing this.
  */
-public class ScenarioInstanceRestTest extends AbstractTest {
-    static {
-        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
-    }
+public class ScenarioInstanceRestTest extends JerseyTest {
 
     private WebTarget base;
+    private int scenarioId;
+    private int scenarioInstanceId;
+    String scenarioName = "testScenario";
 
     @Override
     protected Application configure() {
@@ -37,30 +44,52 @@ public class ScenarioInstanceRestTest extends AbstractTest {
     }
 
     @Before
-    public void setUpBase() {
+    public void setup() {
+        Connector connector = new Connector();
+        scenarioId = connector.insertScenario(scenarioName, 1);
+        DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
+        scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
+                scenarioId, scenarioName);
         base = target("interface/v2");
     }
 
+    @After
+    public void tearDown() throws Exception {
+        super.tearDown();
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
 
     @Test
     public void testGetScenarioInstance() {
-        Response response = base.path("scenario/1/instance/72").request().get();
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"name\":\"HELLOWORLD\",\"id\":72,\"terminated\":false,\"scenario_id\":1,\"activities\":\"http://localhost:9998/interface/v2/scenario/1/instance/72/activity\"}",
+        String path = String.format("scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
+        Response response = base.path(path).request().get();
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("name", scenarioName);
+        expectedResponse.put("id", scenarioInstanceId);
+        expectedResponse.put("terminated", false);
+        expectedResponse.put("scenario_id", 1);
+        String linkToActivities = String.format(
+                "http://localhost:9998/interface/v2/scenario/%d/instance/%d/activity",
+                scenarioId,
+                scenarioInstanceId);
+        expectedResponse.put("activities", linkToActivities);
+        assertThat(expectedResponse.toJSONString(),
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     @Test
     public void testGetScenarioInstancesReturnJson() {
-        Response response = base.path("scenario/1/instance").request().get();
+        String path = String.format("scenario/%d/instance", scenarioId);
+        Response response = base.path(path).request().get();
         assertEquals("Get instances returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
     }
 
     @Test
     public void testGetScenarioInstanceReturnCode() {
-        Response response = base.path("scenario/1/instance/72").request().get();
+        String path = String.format("scenario/%d/instance/%d", scenarioId, scenarioInstanceId);
+        Response response = base.path(path).request().get();
         assertEquals("The Response code of getScenarioInstance was not 200",
                 200, response.getStatus());
     }
@@ -85,7 +114,7 @@ public class ScenarioInstanceRestTest extends AbstractTest {
 
 
     @Test
-    public void testGetScenarioInstancesWithFilter() {
+    public void testGetScenarioInstancesWithInvalidFilter() {
         Response response = base.path("scenario/1/instance")
                 .queryParam("filter", "noInstanceLikeThis").request().get();
         assertThat("The returned JSON does not contain the expected content",
@@ -109,7 +138,10 @@ public class ScenarioInstanceRestTest extends AbstractTest {
 
     @Test
     public void testTerminateInvalidInstanceId() {
-        Response response = base.path("scenario/1/instance/9999/terminate").request().post(Entity.json(null));
+        int nonExistingInstanceId = 9999;
+        String path = String.format(
+                "scenario/%d/instance/%d/terminate", scenarioId, nonExistingInstanceId);
+        Response response = base.path(path).request().post(Entity.json(null));
         assertEquals("The Response code of terminating an instances was not 400",
                 400, response.getStatus());
         assertEquals("The Media type of terminating an instance was not TEXT",
@@ -137,10 +169,17 @@ public class ScenarioInstanceRestTest extends AbstractTest {
         Response response = base.path("scenario/1/instance").request().post(null);
         assertEquals("The Response code of start new instances was not 201",
                 201, response.getStatus());
-        assertEquals("Start new isntance returns a Response with the wrong media Type",
-                MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":966,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/966\"}",
+        assertEquals(MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        JSONObject expectedResponse = new JSONObject();
+        // Use the fact that ids are auto increment
+        int newScenarioInstanceId = scenarioInstanceId + 1;
+        expectedResponse.put("id", newScenarioInstanceId);
+        String pathToNewlyCreatedResouce = String.format(
+                "http://localhost:9998/interface/v2/scenario/%d/instance/%d",
+                scenarioId,
+                newScenarioInstanceId);
+        expectedResponse.put("link", pathToNewlyCreatedResouce);
+        assertThat(expectedResponse.toJSONString(),
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -156,8 +195,16 @@ public class ScenarioInstanceRestTest extends AbstractTest {
                 201, response.getStatus());
         assertEquals("Start new instance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
-        assertThat("The returned JSON does not contain the expected content",
-                "{\"id\":966,\"link\":\"http://localhost:9998/interface/v2/scenario/1/instance/966\"}",
+        JSONObject expectedResponse = new JSONObject();
+        // Use the fact that ids are auto increment
+        int newScenarioInstanceId = scenarioInstanceId + 1;
+        expectedResponse.put("id", newScenarioInstanceId);
+        String pathToNewlyCreatedResouce = String.format(
+                "http://localhost:9998/interface/v2/scenario/%d/instance/%d",
+                scenarioId,
+                newScenarioInstanceId);
+        expectedResponse.put("link", pathToNewlyCreatedResouce);
+        assertThat(expectedResponse.toJSONString(),
                 jsonEquals(response.readEntity(String.class))
                         .when(Option.IGNORING_ARRAY_ORDER));
     }
@@ -172,19 +219,6 @@ public class ScenarioInstanceRestTest extends AbstractTest {
                 404, response.getStatus());
         assertEquals("getScenarioInstance returns a Response with the wrong media Type",
                 MediaType.APPLICATION_JSON, response.getMediaType().toString());
-    }
-
-    @Test
-    public void testTerminateScenarioInstance() {
-        Response response = base.path("scenario/1/instance/72/terminate")
-                .request().post(Entity.json(null));
-        assertEquals("The Response code of terminateScenarioInstance was not 200",
-                200, response.getStatus());
-        assertEquals("terminateScenarioInstance does not return a TEXT",
-                MediaType.TEXT_PLAIN, response.getMediaType().toString());
-        assertEquals("The returned TEXT does not contain the expected content",
-                "Instance has been terminated",
-                response.readEntity(String.class));
     }
 
     @Test

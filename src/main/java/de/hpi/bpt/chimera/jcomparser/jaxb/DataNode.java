@@ -49,7 +49,7 @@ public class DataNode {
         Connector connector = new Connector();
 
         int stateDatabaseId = dataClass.getStateToDatabaseId().get(this.state);
-        int nodeId = connector.insertDataNodeIntoDatabase(
+        int nodeId = connector.insertDataNode(
                 scenarioId, stateDatabaseId, dataClass.getDatabaseId());
         this.setDatabaseId(nodeId);
     }
@@ -69,7 +69,7 @@ public class DataNode {
                 int dataAttributeId = dataAttribute.get().getId();
                 String jsonPathString = pathObject.getString(key.toString());
                 String escapedJsonPath = jsonPathString.replace("'", "''");
-                connector.insertPathMappingIntoDatabase(
+                connector.insertPathMapping(
                         precedingControlNode, dataAttributeId, escapedJsonPath);
             }
         }

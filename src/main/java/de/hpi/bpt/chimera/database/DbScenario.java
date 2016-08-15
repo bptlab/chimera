@@ -12,14 +12,12 @@ import java.util.Map;
 public class DbScenario extends DbObject {
 	private static Logger log = Logger.getLogger(DbScenario.class);
 
-	private String name = null;
-
 	/**
-	 * Returns you all the database ID's of all scenarios stored in the database.
+	 * Retrieve a list of ids of all non-deleted scenarios.
 	 *
 	 * @return a list of database ID's of all scenarios.
 	 */
-	public List<Integer> getScenarioIDs() {
+	public List<Integer> getScenarioIds() {
 		String sql = "SELECT id FROM scenario WHERE deleted = 0";
 		log.info(sql);
 		return this.executeStatementReturnsListInt(sql, "id");
@@ -32,7 +30,7 @@ public class DbScenario extends DbObject {
 	 * @return a boolean which indicates if the scenario is present(true) or not(false).
 	 */
 	public Boolean existScenario(int scenarioId) {
-		String sql = "SELECT id FROM scenario WHERE id = " + scenarioId;
+		String sql = "SELECT id FROM scenario WHERE deleted = 0 AND id = " + scenarioId;
 		log.info(sql);
 		return this.executeExistStatement(sql);
 	}
@@ -44,12 +42,9 @@ public class DbScenario extends DbObject {
 	 * @return the name of the scenario as a String.
 	 */
 	public String getScenarioName(int id) {
-		if (name == null) {
-			String sql = "SELECT name FROM scenario WHERE id = " + id;
-			log.info(sql);
-			name = this.executeStatementReturnsString(sql, "name");
-		}
-		return name;
+		String sql = "SELECT name FROM scenario WHERE id = " + id;
+		log.info(sql);
+		return this.executeStatementReturnsString(sql, "name");
 	}
 
 	/**

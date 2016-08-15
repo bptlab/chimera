@@ -21,6 +21,7 @@ import static org.junit.Assert.assertThat;
 /**
  *
  */
+@Ignore
 public class ActivityRestTest extends AbstractTest {
 
     static {

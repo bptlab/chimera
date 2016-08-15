@@ -11,7 +11,7 @@ import javax.ws.rs.core.*;
 
 /**
  * This class implements the REST interface of the JEngine core.
- * The core module provides methods to execute PCM instances
+ * The core module provides methods to begin PCM instances
  * and to access the date inside the engine.
  * This REST interface provides methods to access this information
  * and to control the instances.

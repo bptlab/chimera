@@ -20,8 +20,8 @@ public class Connector extends DbObject {
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertScenarioIntoDatabase(final String name,
-			final int modelVersion) {
+	public int insertScenario(final String name,
+							  final int modelVersion) {
 		String sql = "INSERT INTO scenario "
 				+ "(name, modelversion) "
 				+ "VALUES ('" + name + "', " + modelVersion + ")";
@@ -34,7 +34,7 @@ public class Connector extends DbObject {
 	 * @param xml The xml-String of a fragment.
 	 * @return the database Auto-Increment-ID of the xml.
      */
-	public int insertXmlIntoDatabase(final int fragmentId, final String xml) {
+	public int insertFragmentXml(final int fragmentId, final String xml) {
 		String sql = "Insert into fragmentxml (fragment_id, xml) "
 				+ "VALUES (%d, '%s')";
 		return executeInsertStatement(String.format(sql, fragmentId, xml));
@@ -45,14 +45,14 @@ public class Connector extends DbObject {
 	 * The parameters contain all necessary information.
 	 *
 	 * @param fragmentName The name of the fragment.
-	 * @param scenarioID   The database id of the scenario (foreign key).
+	 * @param scenarioId   The database id of the scenario (foreign key).
 	 * @param modelVersion The version number of the model.
 	 * @return returns the database id on success or -1 if insertion failed.
 	 */
-	public int insertFragmentIntoDatabase(final String fragmentName, int scenarioID, final int modelVersion) {
+	public int insertFragment(final String fragmentName, int scenarioId, final int modelVersion) {
 		String sql = "INSERT INTO fragment "
 				+ "(fragment.name, scenario_id, modelversion) "
-				+ "VALUES ('" + fragmentName + "', " + scenarioID
+				+ "VALUES ('" + fragmentName + "', " + scenarioId
 				+ "," + modelVersion + ")";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
@@ -64,17 +64,16 @@ public class Connector extends DbObject {
 	 *
 	 * @param label      The label of the node.
 	 * @param type       The type of the node (StartEvent/EndEvent/Task).
-	 * @param fragmentID The database ID of the DatabaseFragment.
+	 * @param fragmentId The database ID of the DatabaseFragment.
 	 * @param modelId    The modelID of the controlNode from the XML.
 	 * @return The newly created database entry.
 	 */
-	public int insertControlNodeIntoDatabase(final String label, final String type,
-			final int fragmentID, final String modelId) {
-
+	public int insertControlNode(final String label, final String type,
+								 final int fragmentId, final String modelId) {
 		String sql = "INSERT INTO controlnode "
 				+ "(label, controlnode.type, fragment_id, modelid) "
 				+ "VALUES ('" + label + "', '" + type
-				+ "', " + fragmentID + ", '" + modelId + "')";
+				+ "', " + fragmentId + ", '" + modelId + "')";
 		return performSQLInsertStatementWithAutoId(sql);
 	}
 
@@ -86,7 +85,7 @@ public class Connector extends DbObject {
 	 * @param scenarioId   The Id of the scenario which has the term. condition.
      * @param conditionSetId Id which groups multiple parts of one termination condition together.
 	 */
-	public void insertTerminationConditionIntoDatabase(
+	public void insertTerminationCondition(
             final int dataClassId, final int stateId, final int scenarioId,
             final String conditionSetId) {
 		String sql = "INSERT INTO terminationcondition "
@@ -105,9 +104,8 @@ public class Connector extends DbObject {
 	 * @param targetID  the database id of the target node
 	 * @param condition the condition which is label of the flow.
 	 */
-	public void insertControlFlowIntoDatabase(final int sourceID, final int targetID,
-			final String condition) {
-
+	public void insertControlFlow(final int sourceID, final int targetID,
+								  final String condition) {
 		String sql = "INSERT INTO controlflow "
 				+ "VALUES (" + sourceID + ", "
 				+ targetID + ", '" + condition + "')";
@@ -122,7 +120,7 @@ public class Connector extends DbObject {
 	 * @param dataClassId The id of the class which can have the state.
 	 * @return the database id of the newly created entry.
 	 */
-	public int insertStateIntoDatabase(final String name, final int dataClassId) {
+	public int insertState(final String name, final int dataClassId) {
 		String sql = "INSERT INTO state (state.name, olc_id) "
 				+ "VALUES ('" + name + "', " + dataClassId + ")";
 		return performSQLInsertStatementWithAutoId(sql);
@@ -134,7 +132,7 @@ public class Connector extends DbObject {
 	 * @param name the name of the Class.
 	 * @return the id of the newly created entry.
 	 */
-	public int insertDataClassIntoDatabase(final String name, final int isEvent) {
+	public int insertDataClass(final String name, final int isEvent) {
 		String sql = "INSERT INTO dataclass (name, is_event) "
 				+ "VALUES ('%s', %d)";
 		return performSQLInsertStatementWithAutoId(
@@ -149,8 +147,8 @@ public class Connector extends DbObject {
 	 * @param type        is the type of the dataAttribute.
 	 * @return the auto-incremented databaseID of the newly added dataAttribute.
 	 */
-	public int insertDataAttributeIntoDatabase(final String name, final int dataClassID,
-			final String type) {
+	public int insertDataAttribute(final String name, final int dataClassID,
+								   final String type) {
 		String sql = "INSERT INTO dataattribute (dataattribute.name, "
 				+ "dataclass_id, dataattribute.type, dataattribute.default) "
 				+ "VALUES ('" + name + "', "
@@ -164,8 +162,8 @@ public class Connector extends DbObject {
 	 * @param versionNumber is the versionNumber of the domainModel as an Integer.
 	 * @param scenarioId    is the databaseID of the corresponding scenario.
 	 */
-	public void insertDomainModelIntoDatabase(final int versionNumber,
-			final int scenarioId) {
+	public void insertDomainModel(final int versionNumber,
+								  final int scenarioId) {
 		DbObject dbObject = new DbObject();
 		String sql = "UPDATE scenario "
 				+ "SET scenario.datamodelversion = " + versionNumber
@@ -180,8 +178,8 @@ public class Connector extends DbObject {
 	 * @param targetID     is the ID of a dataClass which is the target of the aggregation.
 	 * @param multiplicity is the multiplicity of the aggregation as an Integer.
 	 */
-	public void insertAggregationIntoDatabase(final int sourceID, final int targetID,
-			final int multiplicity) {
+	public void insertAggregation(final int sourceID, final int targetID,
+								  final int multiplicity) {
 		String sql = "INSERT INTO aggregation (dataclass_id1, "
 				+ "dataclass_id2, aggregation.multiplicity) "
 				+ "VALUES (" + sourceID + ", "
@@ -199,8 +197,8 @@ public class Connector extends DbObject {
      * @param controlNodeDatabaseId the database ID of the controlnode belonging to this event.
      *
      */
-    public int insertEventIntoDatabase(String eventtype, String eventquery,
-                                       int fragmentId, String modelId, int controlNodeDatabaseId) {
+    public int insertEvent(String eventtype, String eventquery,
+						   int fragmentId, String modelId, int controlNodeDatabaseId) {
         String sql = "INSERT INTO event "
                 + "(event_type, query, fragment_id, model_id, controlnode_id) "
                 + "VALUES ('" + eventtype + "', '" + eventquery + "', "
@@ -217,7 +215,7 @@ public class Connector extends DbObject {
         this.executeInsertStatement(filledOutQuery);
     }
 
-	public void saveSendEvent(int controlNodeId) {
+	public void insertSendEvent(int controlNodeId) {
 		String sql = "INSERT INTO sendevent (controlnode_id) VALUES (%d);";
 		this.executeInsertStatement(String.format(sql, controlNodeId));
 	}
@@ -231,9 +229,9 @@ public class Connector extends DbObject {
      * @param controlNodeDatabaseId the database ID of the controlnode belonging to this event.
      * @param activityDbId the ID of the Activity that the event is attached to.
      */
-    public void insertBoundaryEventIntoDatabase(String eventtype, String eventquery,
-                int fragmentId, String modelId, int controlNodeDatabaseId, int activityDbId) {
-        insertEventIntoDatabase(eventtype, eventquery, fragmentId, modelId, controlNodeDatabaseId);
+    public void insertBoundaryEvent(String eventtype, String eventquery,
+									int fragmentId, String modelId, int controlNodeDatabaseId, int activityDbId) {
+        insertEvent(eventtype, eventquery, fragmentId, modelId, controlNodeDatabaseId);
         String sql = "INSERT INTO boundaryeventref (controlnode_id, attachedtoref)"
                 + "VALUES (" + controlNodeDatabaseId + ", " + activityDbId + ")";
         this.executeInsertStatement(sql);
@@ -248,8 +246,8 @@ public class Connector extends DbObject {
 	 * @param dataClassId  The data class which describes the data object.
 	 * @return the autoincrement id of the newly created entry.
 	 */
-	public int insertDataNodeIntoDatabase(final int scenarioId, final int stateId,
-			final int dataClassId) {
+	public int insertDataNode(final int scenarioId, final int stateId,
+							  final int dataClassId) {
 		String sql = "INSERT INTO datanode (scenario_id, state_id, dataclass_id)"
 				+ " VALUES (%d, %d, %d);";
         sql = String.format(sql, scenarioId, stateId, dataClassId);
@@ -264,7 +262,7 @@ public class Connector extends DbObject {
 	 * @param isInput true if input else false.
 	 * @return The id of the newly created dataset entry.
 	 */
-	public int insertDataSetIntoDatabase(final boolean isInput) {
+	public int insertDataSet(final boolean isInput) {
 		int inputAsInt;
 		if (isInput) {
 			inputAsInt = 1;
@@ -282,8 +280,8 @@ public class Connector extends DbObject {
 	 * @param dataSetId  the database id of the dataset.
 	 * @param dataNodeId the database id of the datanode.
 	 */
-	public void insertDataSetConsistOfDataNodeIntoDatabase(final int dataSetId,
-			final int dataNodeId) {
+	public void insertDataSetConsistOfDataNode(final int dataSetId,
+											   final int dataNodeId) {
 		String sql = "INSERT INTO datasetconsistsofdatanode "
 				+ "(dataset_id, datanode_id) "
 				+ "VALUES (" + dataSetId + ", " + dataNodeId + ")";
@@ -298,8 +296,8 @@ public class Connector extends DbObject {
 	 * @param dataSetID     the id of the dataSet (source or target).
 	 * @param isInput       describes the direction, weather it is an input or output.
 	 */
-	public void insertDataFlowIntoDatabase(final int controlNodeID, final int dataSetID,
-			final boolean isInput) {
+	public void insertDataFlow(final int controlNodeID, final int dataSetID,
+							   final boolean isInput) {
 		int inputAsInt;
 		if (isInput) {
 			inputAsInt = 1;
@@ -317,14 +315,14 @@ public class Connector extends DbObject {
         this.executeInsertStatement(sql);
 	}
 
-	public void insertPathMappingIntoDatabase(int controlNodeId, int dataAttributeId, String jsonPathString) {
+	public void insertPathMapping(int controlNodeId, int dataAttributeId, String jsonPathString) {
 		String sql = "INSERT INTO pathmapping (controlnode_id,"
 				+ "dataattribute_id, jsonpath) VALUES ("
 				+ controlNodeId + ", " + dataAttributeId + ", '" + jsonPathString + "')";
 		this.executeInsertStatement(sql);
 	}
 
-	public void insertWebServiceTaskIntoDatabase(int controlNodeId, String url, String method, String body) {
+	public void insertWebServiceTask(int controlNodeId, String url, String method, String body) {
 		String sql = String.format(
 				"INSERT INTO webservicetask (controlnode_id, url, method, body) "
 						+ "VALUES (%d, '%s', '%s', '%s')",
@@ -332,22 +330,13 @@ public class Connector extends DbObject {
 		this.executeInsertStatement(sql);
 	}
 
-    // TODO remove into database because where else should it insert it
-    public void insertStartQueryIntoDatabase(String query, int scenarioId, String id) {
+    public void insertStartQuery(String query, int scenarioId, String id) {
         String sql = "INSERT INTO startquery (query, scenario_id, id) " +
                 "VALUES ('%s', %d, '%s');";
         sql = String.format(sql, query, scenarioId, id);
         this.executeInsertStatement(sql);
     }
 
-    /**
-     *
-     * @param queryId
-     * @param dataClassDbId
-     * @param stateDbId
-     * @param attributeDbId
-     * @param jsonPath
-     */
     public void insertStartPart(String queryId, int dataClassDbId, int stateDbId,
                                 int attributeDbId, String jsonPath) {
         String insertStartPart = "INSERT INTO startpart (query_id, dataclass," +
@@ -356,4 +345,21 @@ public class Connector extends DbObject {
                 attributeDbId, jsonPath);
         this.executeInsertStatement(insertStartPart);
     }
+
+
+	/**
+	 * This method creates and saves a new gateway instance to the database.
+	 *
+	 * @param controlNodeInstanceId This is the database ID of a controlNode instance.
+	 * @param type                   This is the desirable type of the gateway instance.
+	 * @param state                  This is the desirable state of the gateway instance.
+	 */
+	public void insertGatewayInstance(int controlNodeInstanceId, String type, String state) {
+		String sql =
+				"INSERT INTO gatewayinstance ("
+						+ "id, gatewayinstance.type, gateway_state) "
+						+ "VALUES (" + controlNodeInstanceId + ", '"
+						+ type + "', '" + state + "')";
+		this.executeUpdateStatement(sql);
+	}
 }

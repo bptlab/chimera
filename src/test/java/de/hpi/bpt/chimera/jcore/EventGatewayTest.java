@@ -39,7 +39,8 @@ public class EventGatewayTest extends JerseyTest {
     }
 
     @Test
-    public void testBoundaryDisablementWhenTerminatingActivity() {
+    public void testEventsAreSkipped() {
+        // TODO remodel scenario to have an activity after xor join
         String path = "src/test/resources/Scenarios/EventGatewayScenario.json";
         try {
             ScenarioInstance scenarioInstance = ScenarioTestHelper.createScenarioInstance(path);

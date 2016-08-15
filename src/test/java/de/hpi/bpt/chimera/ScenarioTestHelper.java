@@ -99,6 +99,7 @@ public class ScenarioTestHelper {
                 activityName, scenarioInstance);
         return activity.isPresent();
     }
+
     public static int triggerEventInScenario(
             ScenarioInstance scenarioInstance, WebTarget base) {
         return triggerEventInScenario(scenarioInstance, base, "{}");

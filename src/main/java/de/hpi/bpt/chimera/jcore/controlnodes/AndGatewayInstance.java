@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.GatewayStateMachine;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ParallelGatewayJoinBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ParallelGatewaySplitBehavior;
 
@@ -21,11 +21,10 @@ public class AndGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.AND;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(controlNodeId, "AND", fragmentInstanceId));
-        this.dbGatewayInstance.createNewGatewayInstance(
+                .createNewControlNodeInstance(controlNodeId, "AND",
+                        fragmentInstanceId, State.INIT));
+        new Connector().insertGatewayInstance(
                 getControlNodeInstanceId(), "AND", "init");
-        this.setStateMachine(new GatewayStateMachine(this.getControlNodeId(),
-                this.scenarioInstance, this));
         this.initGatewayInstance();
     }
 
@@ -51,5 +50,7 @@ public class AndGatewayInstance extends GatewayInstance {
                 getFragmentInstanceId(), this));
         this.setIncomingBehavior(new ParallelGatewayJoinBehavior(
                 this, scenarioInstance));
+        //TODO this should not be needed since it should be done in previous outgoiong behaviour
+        //scenarioInstance.getControlNodeInstances().add(this);
     }
 }

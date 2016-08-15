@@ -110,7 +110,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
         int scenarioId = Integer.parseInt(map.getFirst("scenarioId"));
         int instanceId = Integer.parseInt(map.getFirst("instanceId"));
-        return new DbScenarioInstance().existScenario(scenarioId, instanceId);
+        return new DbScenarioInstance().doesScenarioInstanceBelongToScenario(scenarioId, instanceId);
     }
 
     private void abortInvalidInstance(String method) {

@@ -19,24 +19,24 @@ public class BoundaryEvent extends AbstractEvent {
     public BoundaryEvent(int controlNodeId, int fragmentInstanceId,
                       ScenarioInstance scenarioInstance) {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
-        this.setFragmentInstanceId(fragmentInstanceId);
     }
+
+public BoundaryEvent(int controlNodeId, int fragmentInstanceId,
+                     ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
+    super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
+}
 
     @Override
     public String getType() {
         return "BoundaryEvent";
     }
 
-    @Override
-    public boolean skip() {
-        // Boundary Events can not be skipped.
-        // TODO check if applies
-        return false;
-    }
 
     @Override
     protected EventOutgoingBehavior createOutgoingBehavior() {
         return new BoundaryEventOutgoingBehavior(this.getControlNodeId(),
                 scenarioInstance, getFragmentInstanceId(), getControlNodeInstanceId());
     }
+
+
 }

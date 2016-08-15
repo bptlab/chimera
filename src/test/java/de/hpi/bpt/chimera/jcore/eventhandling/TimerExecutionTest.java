@@ -1,11 +1,13 @@
 package de.hpi.bpt.chimera.jcore.eventhandling;
 
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
 import org.junit.After;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.TestCase.fail;
@@ -16,8 +18,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class TimerExecutionTest {
     @After
-    public void teardown() {
-
+    public void teardown() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test

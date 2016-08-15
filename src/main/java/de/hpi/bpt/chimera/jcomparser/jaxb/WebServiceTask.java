@@ -29,9 +29,9 @@ public class WebServiceTask extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "WebServiceTask", this.getFragmentId(), this.getId());
-        connector.insertWebServiceTaskIntoDatabase(this.databaseId,
+        connector.insertWebServiceTask(this.databaseId,
                 StringEscapeUtils.unescapeHtml4(this.webServiceUrl),
                 this.webServiceMethod,
                 this.webServiceBody);

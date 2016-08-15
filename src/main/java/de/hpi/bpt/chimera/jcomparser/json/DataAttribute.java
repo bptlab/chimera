@@ -49,7 +49,7 @@ public class DataAttribute implements IPersistable {
 
 	@Override public int save() {
 		Connector conn = new Connector();
-		this.id = conn.insertDataAttributeIntoDatabase(
+		this.id = conn.insertDataAttribute(
 				this.name, this.dataClassId,
 						this.type);
 		return id;

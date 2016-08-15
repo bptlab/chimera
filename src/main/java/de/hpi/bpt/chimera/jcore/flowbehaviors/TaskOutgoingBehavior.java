@@ -1,11 +1,15 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
+import de.hpi.bpt.chimera.database.controlnodes.DbBoundaryEvent;
 import de.hpi.bpt.chimera.database.data.*;
+import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.database.DbSelectedDataObjects;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 import java.util.*;
 import java.util.function.Function;
@@ -14,34 +18,54 @@ import java.util.stream.Collectors;
 /**
  * Handles the behavior of a terminating activity instance.
  */
-public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBehavior {
+public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 	private final ActivityInstance activityInstance;
     /**
-	 * Initializes the TaskOutgoingControlFlowBehavior.
+	 * Initializes the TaskOutgoingBehavior.
 	 *
 	 * @param activityId         This is the database id from the activity instance.
 	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
 	 * @param fragmentInstanceId This is the database id from the fragment instance.
 	 * @param activityInstance 	This is an AbstractControlNodeInstance.
 	 */
-	public TaskOutgoingControlFlowBehavior(int activityId, ScenarioInstance scenarioInstance,
-			int fragmentInstanceId, ActivityInstance activityInstance) {
+	public TaskOutgoingBehavior(int activityId, ScenarioInstance scenarioInstance,
+                                int fragmentInstanceId, ActivityInstance activityInstance) {
 		this.setControlNodeId(activityId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
 		this.activityInstance = activityInstance;
 	}
 
-	@Override public void terminate() {
-		this.terminate(new HashMap<>());
-	}
 
-	/**
-	 * Terminates the activity.
-	 *
-	 * @param dataClassNameToStateName Map from name of the data class to new state
-	 */
-	public void terminate(Map<String, String> dataClassNameToStateName) {
+    /**
+     * Terminates a running ActivityInstance without specifying the states, to which
+     * the data objects used by the ActivityInstance are set to.
+     *
+     * TODO check whether this works when there is more than one possible output
+     */
+    @Override public void terminate() {
+        this.terminate(new HashMap<>());
+    }
+
+    @Override
+    public void skip() {
+
+    }
+
+    /**
+     * Terminates a running ActivityInstance.
+     * Enables the following control nodes and sets the data outputs, according to the
+     * passed specification.
+     *
+     * @param dataClassNameToStateName the specification for each data object to
+     *                                 which state it should be set.
+     */
+    public void terminate(Map<String, String> dataClassNameToStateName) {
+        int scenarioInstanceId = this.getScenarioInstance().getId();
+        new DbLogEntry().logActivity(
+                this.activityInstance.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
+        activityInstance.setState(State.TERMINATED);
+        cancelAttachedEvents();
         DbDataFlow dataFlow = new DbDataFlow();
         List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
         List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
@@ -62,7 +86,6 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
 
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
 		this.enableFollowing();
 		this.runAutomaticTasks();
 	}
@@ -214,4 +237,13 @@ public class TaskOutgoingControlFlowBehavior extends AbstractParallelOutgoingBeh
         assert dataObjectInstance.isPresent(): "invalid data object id";
         dataObjectInstance.get().unlock();
 	}
+
+    private void cancelAttachedEvents() {
+        DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
+        int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
+        // if activity has attached event
+        if (boundaryEventId > 0) {
+            EventDispatcher.unregisterEvent(boundaryEventId, this.getFragmentInstanceId());
+        }
+    }
 }

@@ -115,14 +115,16 @@ public class ScenarioData {
             List<DataNode> dataNodes = fragment.getDataNodes();
             for (DataNode node : dataNodes) {
                 DataClass correspondingDataClass = nameToDataclass.get(node.getName());
-                correspondingDataClass.getStates().add(node.getState());
+                if (!correspondingDataClass.getStates().contains(node.getState())) {
+                    correspondingDataClass.getStates().add(node.getState());
+                }
             }
         }
     }
 
     private int saveScenario() {
         Connector connector = new Connector();
-        return connector.insertScenarioIntoDatabase(
+        return connector.insertScenario(
                 this.scenarioName, this.versionNumber);
     }
 

@@ -28,7 +28,7 @@ public class ExclusiveGateway extends AbstractControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "XOR", this.getFragmentId(), this.getId());
         return this.databaseId;
     }

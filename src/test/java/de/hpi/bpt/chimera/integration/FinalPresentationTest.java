@@ -94,7 +94,7 @@ public class FinalPresentationTest extends JerseyTest {
         ex("Write documentation");
 
         ex("Find title and write draft");
-        Thread.sleep(5000);
+        Thread.sleep(7000); // Wait for timer event to trigger
         instance = new ScenarioInstance(1, 1);
         ex("Review draft");
         ex("Complete Thesis");

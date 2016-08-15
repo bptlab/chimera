@@ -4,7 +4,6 @@ import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.DbSelectedDataObjects;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -42,8 +41,6 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = EasyMock.createNiceMock(ScenarioInstance.class);
         instance.updateDataFlow();
         expectLastCall();
-        instance.checkXorGatewaysForTermination(controlNodeId);
-        expectLastCall();
         expect(instance.getId()).andReturn(scenarioInstanceId);
         expect(instance.getControlNodeInstances()).andReturn(new ArrayList<>()).anyTimes();
         expect(instance.getControlFlowEnabledControlNodeInstances()).andReturn(
@@ -66,6 +63,7 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
+        activity.enableControlFlow();
         activity.begin();
         verify(instance);
     }
@@ -78,6 +76,7 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
+        activity.enableControlFlow();
         activity.begin(Arrays.asList(1, 2, 3));
         DbSelectedDataObjects dataSelection = new DbSelectedDataObjects();
         List<Integer> dataObjects = dataSelection.getDataObjectSelection(
@@ -95,9 +94,9 @@ public class ActivityInstanceTest {
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
         activity.setCanTerminate(true);
-        activity.getStateMachine().setState(AbstractStateMachine.STATE.RUNNING);
+        activity.setState(State.RUNNING);
         activity.terminate();
-        Assert.assertEquals("Couldn't correctly terminate activity", AbstractStateMachine.STATE.TERMINATED, activity.getState());
+        Assert.assertEquals("Couldn't correctly terminate activity", State.TERMINATED, activity.getState());
     }
 
     @Test
@@ -109,9 +108,10 @@ public class ActivityInstanceTest {
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
         activity.setCanTerminate(true);
-        activity.getStateMachine().setState(AbstractStateMachine.STATE.RUNNING);
+        activity.setState(State.RUNNING);
         activity.terminate(new HashMap<>());
-        Assert.assertEquals("Couldn't correctly terminate activity", AbstractStateMachine.STATE.TERMINATED, activity.getState());
+        Assert.assertEquals("Couldn't correctly terminate activity", State.TERMINATED,
+                activity.getState());
     }
 
     @Test
@@ -133,8 +133,8 @@ public class ActivityInstanceTest {
         ScenarioInstance instance = createExample(controlNodeId, scenarioInstanceId);
         ActivityInstance activity = new ActivityInstance(
                 controlNodeId, fragmentInstanceId, instance);
-        activity.getStateMachine().setState(AbstractStateMachine.STATE.RUNNING);
+        activity.setState(State.RUNNING);
         activity.cancel();
-        Assert.assertEquals(AbstractStateMachine.STATE.CANCEL, activity.getState());
+        Assert.assertEquals(State.CANCEL, activity.getState());
     }
 }

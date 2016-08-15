@@ -49,9 +49,9 @@ public class Fragment {
 
     public int save() {
         Connector connector = new Connector();
-        int fragmentId = connector.insertFragmentIntoDatabase(fragmentName,
+        int fragmentId = connector.insertFragment(fragmentName,
                 scenarioId, versionNumber);
-        connector.insertXmlIntoDatabase(fragmentId, this.xmlString);
+        connector.insertFragmentXml(fragmentId, this.xmlString);
         return fragmentId;
     }
 

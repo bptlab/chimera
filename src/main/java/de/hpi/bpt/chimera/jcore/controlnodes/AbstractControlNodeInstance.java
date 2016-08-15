@@ -1,7 +1,8 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractIncomingBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractOutgoingBehavior;
 
@@ -10,12 +11,14 @@ import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractOutgoingBehavior;
  * behavior.
  */
 public abstract class AbstractControlNodeInstance {
-
 	protected ScenarioInstance scenarioInstance;
 	private AbstractOutgoingBehavior outgoingBehavior;
 	private AbstractIncomingBehavior incomingBehavior;
-	private AbstractStateMachine stateMachine;
-	private int fragmentInstanceId;
+    private AbstractExecutionBehavior executionBehavior;
+
+    protected State state;
+
+    private int fragmentInstanceId;
 	private int controlNodeInstanceId;
 	private int controlNodeId;
 
@@ -23,19 +26,27 @@ public abstract class AbstractControlNodeInstance {
 		incomingBehavior.enableControlFlow();
     }
 
+
 	/**
 	 * Skips the control node.
 	 *
-	 * @return true if the skip success. false if not.
 	 */
-	public abstract boolean skip();
+	public void skip() {
+        this.getOutgoingBehavior().skip();
+    };
 
 	/**
 	 * Terminates the control node.
 	 *
 	 * @return true if the skip success. false if not.
 	 */
-	public abstract boolean terminate();
+	public void terminate() {
+        this.outgoingBehavior.terminate();
+    }
+
+    public void begin() {
+        this.getExecutionBehavior().begin();
+    }
 
 	// ********************* Getter/Setter *********************//
 
@@ -55,13 +66,6 @@ public abstract class AbstractControlNodeInstance {
 		this.incomingBehavior = incomingBehavior;
 	}
 
-	public AbstractStateMachine getStateMachine() {
-		return stateMachine;
-	}
-
-	public void setStateMachine(AbstractStateMachine stateMachine) {
-		this.stateMachine = stateMachine;
-	}
 
 	public int getFragmentInstanceId() {
 		return fragmentInstanceId;
@@ -94,4 +98,22 @@ public abstract class AbstractControlNodeInstance {
 	public void setScenarioInstance(ScenarioInstance scenarioInstance) {
 		this.scenarioInstance = scenarioInstance;
 	}
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        dbControlNodeInstance.setState(state, this.controlNodeInstanceId);
+        this.state = state;
+    }
+
+    public AbstractExecutionBehavior getExecutionBehavior() {
+        return executionBehavior;
+    }
+
+    public void setExecutionBehavior(AbstractExecutionBehavior executionBehavior) {
+        this.executionBehavior = executionBehavior;
+    }
 }

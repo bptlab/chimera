@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import org.junit.Test;
 
-public class ExecutionServiceTest extends AbstractDatabaseDependentTest {
+public class ExecutionServiceTest {
 
 	@Test
 	public void testOneExecutionServicePerScenarioID() {

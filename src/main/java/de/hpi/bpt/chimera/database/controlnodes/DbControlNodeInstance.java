@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 import java.util.List;
 
@@ -46,15 +47,28 @@ public class DbControlNodeInstance extends DbObject {
 	 * @return the database ID of the newly created controlNode instance (Error -1).
 	 */
 	public int createNewControlNodeInstance(int controlNodeId, String controlNodeType,
-			int fragmentInstanceId) {
-		String sql =
-				"INSERT INTO controlnodeinstance ("
-						+ "Type, controlnode_id, fragmentinstance_id) "
-						+ "VALUES ('" + controlNodeType + "', "
-						+ controlNodeId + ", "
-						+ fragmentInstanceId	+ ")";
+			int fragmentInstanceId, State state) {
+        String sql = "INSERT INTO controlnodeinstance (Type, controlnode_id, " +
+                "fragmentinstance_id, state) VALUES ('%s', %d, %d, '%s')";
+        sql = String.format(sql, controlNodeType, controlNodeId,
+                fragmentInstanceId, state.name());
 		return executeInsertStatement(sql);
 	}
+
+    public List<Integer> getControlNodeInstances(int scenarioInstanceId) {
+        String sql = "SELECT * FROM controlnodeinstance as cni, fragmentinstance as f WHERE " +
+                "cni.fragmentinstance_id = f.id AND " +
+                "f.scenarioinstance_id = %d;";
+        sql = String.format(sql, scenarioInstanceId);
+        return executeStatementReturnsListInt(sql, "cni.id");
+    }
+
+    public int getFragmentInstanceId(int controlNodeInstanceId) {
+        String sql = "SELECT * FROM controlnodeinstance as cni WHERE " +
+                "cni.id = %d;";
+        sql = String.format(sql, controlNodeInstanceId);
+        return executeStatementReturnsInt(sql, "cni.fragmentinstance_id");
+    }
 
 	/**
 	 * This method returns the database ID of a controlNode instance
@@ -122,7 +136,7 @@ public class DbControlNodeInstance extends DbObject {
 	 * @param id ID of the controlNodeInstance.
 	 * @return controlNodeID.
 	 */
-	public int getControlNodeID(int id) {
+	public int getControlNodeId(int id) {
 		String sql = "SELECT controlnode_id FROM controlnodeinstance WHERE id = "
 				+ id;
 		return this.executeStatementReturnsInt(sql, "controlnode_id");
@@ -143,4 +157,16 @@ public class DbControlNodeInstance extends DbObject {
 						+ "AND fragmentinstance_id = " + fragmentInstanceId;
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
+
+    public void setState(State state, int controlNodeInstanceId) {
+        String sql = "UPDATE controlnodeinstance SET state='%s' WHERE id = %d";
+        sql = String.format(sql, state.name(), controlNodeInstanceId);
+        this.executeUpdateStatement(sql);
+    }
+
+    public State getState(int controlNodeInstanceId) {
+        String sql = "SELECT * FROM controlnodeinstance WHERE controlnodeinstance.id = %d";
+        sql = String.format(sql, controlNodeInstanceId);
+        return State.valueOf(executeStatementReturnsString(sql, "state"));
+    }
 }

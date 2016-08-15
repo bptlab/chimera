@@ -13,7 +13,7 @@ public class IntermediateThrowEvent extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "IntermediateThrowEvent", this.fragmentId, this.getId());
 
         return databaseId;

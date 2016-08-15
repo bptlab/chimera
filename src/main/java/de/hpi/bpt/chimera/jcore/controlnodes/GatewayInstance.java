@@ -30,21 +30,11 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	 */
 	public GatewayInstance(int controlNodeId, int fragmentInstanceId,
 			ScenarioInstance scenarioInstance) {
-		//looks if the Gateway Instance has already been initialized
-		for (AbstractControlNodeInstance controlNodeInstance : scenarioInstance
-				.getControlFlowEnabledControlNodeInstances()) {
-			if (this.getFragmentInstanceId() == getControlNodeInstanceId()
-					&& this.getControlNodeId() == controlNodeId) {
-				// TODO fragmentInstanceId == controlNodeInstanceId ?
-                // if it exist, only checks the control flow
-				controlNodeInstance.enableControlFlow();
-				return;
-			}
-		}
-		this.automaticExecution = true;
+        this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
+        this.setState(State.INIT);
 	}
 
 	/**
@@ -61,8 +51,10 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 		this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
+        this.setControlNodeInstanceId(instanceId);
 		this.setFragmentInstanceId(fragmentInstanceId);
-	}
+        this.setState(dbGatewayInstance.getState(instanceId));
+    }
 
 	/**
 	 * Checks if the gateway can terminate.
@@ -75,15 +67,26 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 				.checkTermination(controlNodeId);
 	}
 
-	@Override public boolean terminate() {
-		getStateMachine().terminate();
+	@Override public void terminate() {
+        setState(State.TERMINATED);
+        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
 		getOutgoingBehavior().terminate();
-		return true;
 	}
 
-	@Override public boolean skip() {
-		return getStateMachine().skip();
+	@Override
+    public void skip() {
+        setState(State.SKIPPED);
+        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
+        getScenarioInstance().getExecutingGateways().remove(this);
 	}
+
+    @Override
+    public void begin() {
+        setState(State.EXECUTING);
+        dbGatewayInstance.setState(
+                this.getControlNodeInstanceId(), getState().toString());
+    }
+
 
 	// ******************************* Getter & Setter ***************************//
 

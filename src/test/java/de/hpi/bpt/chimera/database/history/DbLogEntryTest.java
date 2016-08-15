@@ -70,7 +70,7 @@ public class DbLogEntryTest {
         logEntry.logActivity(dummyActivityId, "running", scenarioInstanceId);
 
         int dummyDataobjectId = 2;
-        int stateId = new Connector().insertStateIntoDatabase("received", dummyDataClassId);
+        int stateId = new Connector().insertState("received", dummyDataClassId);
         logEntry.logDataObjectCreation(dummyDataobjectId, stateId, scenarioInstanceId);
 
         int dummyAttributeId = 3;

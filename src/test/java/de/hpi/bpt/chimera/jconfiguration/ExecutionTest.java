@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class ExecutionTest extends AbstractDatabaseDependentTest {
+public class ExecutionTest {
     //private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     @Test
     public void testDeletion() throws IOException, SQLException {

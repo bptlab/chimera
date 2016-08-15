@@ -114,7 +114,7 @@ public class DomainModel implements IPersistable {
 	 */
 	@Override public int save() {
 		Connector conn = new Connector();
-		conn.insertDomainModelIntoDatabase(this.versionNumber,
+		conn.insertDomainModel(this.versionNumber,
 				this.scenarioId);
 		dataClasses.forEach(x -> x.save(scenarioId));
 		aggregations.forEach(Aggregation::save);

@@ -3,27 +3,42 @@ package de.hpi.bpt.chimera.jcore.flowbehaviors;
 import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.XORGrammarCompiler;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * This class deals with the split behavior of exclusive gateways.
+ * This class deals with the termination of exclusive gateways.
+ *
+ * <p> Exclusive gateways can not be terminated like other control nodes, since
+ * the control nodes after the gateway are exclusive to each other. So the gateway
+ * has still influence on the execution, although it already activated the following control nodes.
+ *
+ * <p> Nested gateways are supported by allowing multiple control nodes in each branch, that
+ * follows the exclusive gateway.
+ *
+ * <p> To ensure proper skipping of alternative branches each
+ * {@link de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractExecutionBehavior},
+ * has to call {@link ScenarioInstance#skipAlternativeControlNodes(int)}, when the
+ * state of associated control node instances changes to running.
+ *
+ * <p> When the exclusive gateway outgoing branches, are annotated with conditions
+ * the control flow can be evaluated automatically {@link XORGrammarCompiler}. However
+ * the modelling of this is not supported at the moment, so this feature would have to be
+ * tested again.
  */
 public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehavior {
 	private static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class);
-	/**
+    /**
 	 * List of IDs of following control nodes.
 	 */
-	private List<List<Integer>> followingControlNodes = new ArrayList<>();
+	private List<List<Integer>> branches = new ArrayList<>();
 
 	private DbState dbState = new DbState();
 	private String type = null;
@@ -40,52 +55,52 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
-		initializeFollowingControlNodeIds();
+		initializeBranches();
 	}
 
 	/**
 	 * Adds the ids of the following control nodes to the list.
 	 * Creates for every control node a bucket.
 	 */
-	private void initializeFollowingControlNodeIds() {
+	private void initializeBranches() {
 		List<Integer> ids = this.getDbControlFlow()
 				.getFollowingControlNodes(getControlNodeId());
-		for (int i = 0; i < ids.size(); i++) {
-			followingControlNodes.add(new ArrayList<>());
-			this.addFollowingControlNode(i, ids.get(i));
+		for (int id : ids) {
+			branches.add(expandBranch(id));
 		}
 	}
 
 	/**
-	 * Adds the control node id to the bucket.
-	 * Looks for XOR and AND to add the following control nodes.
+	 * Expands branch to cover all control nodes skipping intermediate
+     * gateways.
 	 *
-	 * @param bucketId The bucket id.
 	 * @param id        The id of the control node getting added.
 	 */
-	private void addFollowingControlNode(int bucketId, int id) {
-		List<Integer> ids = followingControlNodes.get(bucketId);
+	private List<Integer> expandBranch(int id) {
+		List<Integer> ids = new ArrayList<>();
 		ids.add(id);
-		followingControlNodes.set(bucketId, ids);
-		if (type == null || this.getControlNodeId() != id) {
-			type = this.getDbControlNode().getType(id);
-		}
+        String type = this.getDbControlNode().getType(id);
+
 		if ("XOR".equals(type) || "AND".equals(type) || "EVENT_BASED".equals(type)) {
-			for (int controlNodeId : this.getDbControlFlow()
-					.getFollowingControlNodes(id)) {
-				this.addFollowingControlNode(bucketId, controlNodeId);
+			for (int controlNodeId : this.getDbControlFlow().getFollowingControlNodes(id)) {
+				ids.addAll(expandBranch(controlNodeId));
 			}
 		}
+        return ids;
 	}
 
 	@Override public void terminate() {
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
-		// Automatic tasks are not started, because the user can still for another task
+        enableFollowing();
 	}
 
-	/**
+    @Override
+    public void skip() {
+
+    }
+
+    /**
 	 * Executes the XOR gateway and enable the following control nodes.
 	 */
 	public void execute() {
@@ -99,17 +114,19 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			if (controlNodeId == controlNodeInstance.getControlNodeId()
 					&& !controlNodeInstance.getClass().equals(
 					ActivityInstance.class) && !controlNodeInstance
-					.getStateMachine().getState().equals(AbstractStateMachine.STATE.TERMINATED)) {
+					.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}
 		if (type == null || this.getControlNodeId() != controlNodeId) {
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
-		AbstractControlNodeInstance controlNodeInstance = createControlNode(
-				type, controlNodeId);
+        ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
+        AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(
+                controlNodeId, getFragmentInstanceId(), getScenarioInstance());
 		setAutomaticExecutionToFalse(type, controlNodeInstance);
-		return controlNodeInstance;
+        getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
+        return controlNodeInstance;
 	}
 
 	private void setAutomaticExecutionToFalse(String type,
@@ -129,6 +146,22 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		}
 	}
 
+    public void skipAlternativeBranches(int controlNodeId) {
+        for (List<Integer> branch : branches) {
+            if (!branch.contains(controlNodeId)) {
+                skipBranch(branch);
+            }
+        }
+    }
+
+    private void skipBranch(List<Integer> branch) {
+        for (int toSkip : branch) {
+            AbstractControlNodeInstance controlNodeInstance = this.getScenarioInstance()
+                    .getControlNodeInstanceForControlNodeId(toSkip);
+            controlNodeInstance.skip();
+        }
+    }
+
 	/**
 	 * Checks if the gateway can terminate
 	 * (because the given control node has changed his state).
@@ -145,11 +178,11 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		if (("AND".equals(type)) || ("XOR".equals(type))) {
 			return false;
 		}
-		for (int i = 0; i < followingControlNodes.size(); i++) {
-			if (followingControlNodes.get(i).contains(controlNodeId)) {
-				followingControlNodes.remove(i);
+		for (int i = 0; i < branches.size(); i++) {
+			if (branches.get(i).contains(controlNodeId)) {
+				branches.remove(i);
 				for (List<Integer> followingControlNodeIds
-						: followingControlNodes) {
+						: branches) {
 					for (int id : followingControlNodeIds) {
 						AbstractControlNodeInstance controlNodeInstance
 								= this.getScenarioInstance()
@@ -285,4 +318,10 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		}
 		return false;
 	}
+
+    public boolean containsControlNodeInFollowing(int controlNodeId) {
+        List<Integer> allFollowing = branches.stream().flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        return allFollowing.contains(controlNodeId);
+    }
 }

@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbControlFlow;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
@@ -17,8 +18,9 @@ public class EventBasedGatewayInstance extends GatewayInstance {
         super(controlNodeId, fragmentInstanceId, scenarioInstance);
         this.type = GatewayType.EVENT_BASED;
         this.setControlNodeInstanceId(dbControlNodeInstance
-                .createNewControlNodeInstance(controlNodeId, "EventBasedGateway", fragmentInstanceId));
-        this.dbGatewayInstance.createNewGatewayInstance(
+                .createNewControlNodeInstance(controlNodeId,
+                        "EventBasedGateway", fragmentInstanceId, State.INIT));
+        new Connector().insertGatewayInstance(
                 getControlNodeInstanceId(), "EventBasedGateway", "init");
     }
 
@@ -41,10 +43,9 @@ public class EventBasedGatewayInstance extends GatewayInstance {
      * Terminating an EventBasedGatewayInstance will register all following event control nodes
      * and save that they are alternative.
      *
-     * @return true
      */
     @Override
-    public boolean terminate() {
+    public void terminate() {
         DbControlFlow controlFlow = new DbControlFlow();
         List<Integer> followingControlNodes =
                 controlFlow.getFollowingControlNodes(this.getControlNodeId());
@@ -53,6 +54,5 @@ public class EventBasedGatewayInstance extends GatewayInstance {
                 x -> factory.getEventForControlNodeId(x, this.getFragmentInstanceId()))
                 .collect(Collectors.toList());
         EventDispatcher.registerExclusiveEvents(followingEvents);
-        return true;
     }
 }

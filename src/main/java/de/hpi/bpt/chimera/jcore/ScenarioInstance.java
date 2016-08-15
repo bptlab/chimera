@@ -2,12 +2,10 @@ package de.hpi.bpt.chimera.jcore;
 
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
 import de.hpi.bpt.chimera.database.DbFragment;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
-import de.hpi.bpt.chimera.jcore.controlnodes.GatewayInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.TerminationCondition;
@@ -37,21 +35,8 @@ public class ScenarioInstance {
 	 * Lists to save all fragments and all control nodes sorted by state.
 	 */
 	private List<AbstractControlNodeInstance> controlNodeInstances = new ArrayList<>();
-	private List<AbstractControlNodeInstance> enabledControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> controlFlowEnabledControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> dataEnabledControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> runningControlNodeInstances
-			= new ArrayList<>();
-	private List<AbstractControlNodeInstance> terminatedControlNodeInstances
-			= new ArrayList<>();
 
     private List<FragmentInstance> fragmentInstances = new ArrayList<>();
-	private List<AbstractControlNodeInstance> referentialRunningControlNodeInstances
-			= new ArrayList<>();
-	private List<GatewayInstance> executingGateways = new ArrayList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
 
@@ -59,6 +44,24 @@ public class ScenarioInstance {
 
     private boolean canTerminate;
     private TerminationCondition terminationCondition;
+    /**
+     * Creates and initializes a new scenario instance.
+     * Also save this new instance in database.
+     *
+     * @param scenarioId This is the database id from the scenario.
+     */
+    public ScenarioInstance(int scenarioId) {
+        this.name = dbScenario.getScenarioName(scenarioId);
+        this.scenarioId = scenarioId;
+        this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+
+        // Initialize data manager after setting scenarioId
+        this.dataManager = new DataManager(this);
+        this.terminationCondition = new TerminationCondition(this);
+        this.initializeFragments();
+        this.startAutomaticControlNodes();
+    }
+
 	/**
 	 * Creates and initializes a new scenario instance from database.
 	 * Reads the information for an existing scenario instance from the database.
@@ -71,46 +74,30 @@ public class ScenarioInstance {
         this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
+        this.id = id;
+        this.dataManager = new DataManager(this);
+        this.reloadControlNodesFromDatabase();
 
-        if (dbScenarioInstance.existScenario(scenarioId, id)) {
-			//creates an existing Scenario Instance using the database information
-			this.id = id;
-		} else {
-			this.id = dbScenarioInstance.createNewScenarioInstance(
-					scenarioId);
-		}
-        this.startAutomaticControlNodes();
-
-		this.dataManager = new DataManager(this);
-
+        // This also reloads the control node instances from the database
 		if (dbScenarioInstance.getTerminated(this.id) == 0) {
 			this.initializeFragments();
 		}
 
-		this.startAutomaticControlNodes();
+        this.startAutomaticControlNodes();
         canTerminate = checkTerminationCondition();
-	}
-
-    private void reloadFromDatabase() {
-
     }
-	/**
-	 * Creates and initializes a new scenario instance.
-	 * Also save this new instance in database.
-	 *
-	 * @param scenarioId This is the database id from the scenario.
-	 */
-	public ScenarioInstance(int scenarioId) {
-        this.name = dbScenario.getScenarioName(scenarioId);
-		this.scenarioId = scenarioId;
-        this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
 
-        // Initialize data manager after setting scenarioId
-        this.dataManager = new DataManager(this);
-        this.terminationCondition = new TerminationCondition(this);
-        this.initializeFragments();
-		this.startAutomaticControlNodes();
-	}
+    private void reloadControlNodesFromDatabase() {
+    	this.controlNodeInstances.clear();
+
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        List<Integer> controlNodeInstanceIds = dbControlNodeInstance.getControlNodeInstances(
+                this.id);
+		for (int instanceId : controlNodeInstanceIds) {
+			AbstractControlNodeInstance instance = ControlNodeFactory.loadControlNodeInstance(instanceId, this);
+			this.controlNodeInstances.add(instance);
+		}
+    }
 
 	/**
 	 * Creates and initializes all fragments for the scenario.
@@ -122,7 +109,6 @@ public class ScenarioInstance {
 		}
 	}
 
-    // TODO Test this method
     public List<AbstractEvent> getEventsForScenarioInstance() {
         return this.fragmentInstances.stream().map(FragmentInstance::getRegisteredEvents).
                 flatMap(Collection::stream).collect(Collectors.toList());
@@ -182,11 +168,11 @@ public class ScenarioInstance {
 		}
 
 		//removes the old control node instances
-		ArrayList<AbstractControlNodeInstance> updatedList = new ArrayList<>(
-				terminatedControlNodeInstances);
+		List<AbstractControlNodeInstance> updatedList = new ArrayList<>(
+				this.getTerminatedControlNodeInstances());
 		for (AbstractControlNodeInstance controlNodeInstance : updatedList) {
 			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstanceId) {
-				terminatedControlNodeInstances.remove(controlNodeInstance);
+				this.controlNodeInstances.remove(controlNodeInstance);
 			}
 		}
 		updatedList = new ArrayList<>(controlNodeInstances);
@@ -214,19 +200,21 @@ public class ScenarioInstance {
         checkTerminationCondition();
     }
 
-	/**
-	 * Checks if terminated control node triggers an xor gateway.
-	 * @param controlNodeId id of the terminated control node which could cause a gateway
-     *                      to terminate
-	 */
-	public void checkXorGatewaysForTermination(int controlNodeId) {
-		// clone is needed because otherwise gateway::terminate would remove itself from the list
-		// causing unexpected behavior
-		List<GatewayInstance> gatewayInstances = new ArrayList<>(executingGateways);
-		gatewayInstances.stream()
-				.filter(gatewayInstance -> gatewayInstance.checkTermination(controlNodeId))
-				.forEach(GatewayInstance::terminate);
-	}
+    /**
+     * Checks whether the
+     * @param controlNodeInstanceId The id of the control node instance, which was transferred
+     *                              to the state ready.
+     */
+    public void skipAlternativeControlNodes(int controlNodeInstanceId) {
+        List<XorGatewayInstance> gateways = this.getExecutingGateways();
+        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+        int controlNodeId = dbControlNodeInstance.getControlNodeId(controlNodeInstanceId);
+        for (XorGatewayInstance gateway : gateways) {
+            if (gateway.containsControlNodeInFollowing(controlNodeId)) {
+                gateway.skipAlternativeBranches(controlNodeId);
+            }
+        }
+    }
 
 	/**
 	 * Checks if the list terminatedControlNodeInstances contains the control node.
@@ -235,8 +223,8 @@ public class ScenarioInstance {
 	 * @return true if the terminated control node instances contains the control node.
 	 */
 	public boolean terminatedControlNodeInstancesContainControlNodeID(int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance
-				: terminatedControlNodeInstances) {
+		for (AbstractControlNodeInstance controlNodeInstance :
+                this.getTerminatedControlNodeInstances()) {
 			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
 				return true;
 			}
@@ -251,7 +239,7 @@ public class ScenarioInstance {
 	 * @return true if the executingGateways contains the control node. false if not.
 	 */
 	public boolean executingGatewaysContainControlNodeID(int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance : executingGateways) {
+		for (AbstractControlNodeInstance controlNodeInstance : getExecutingGateways()) {
 			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
 				return true;
 			}
@@ -279,11 +267,6 @@ public class ScenarioInstance {
     public void terminate() {
 		dbScenarioInstance.setTerminated(id, true);
 		controlNodeInstances.clear();
-		enabledControlNodeInstances.clear();
-		controlFlowEnabledControlNodeInstances.clear();
-		dataEnabledControlNodeInstances.clear();
-		runningControlNodeInstances.clear();
-		terminatedControlNodeInstances.clear();
 	}
 
 	/**
@@ -291,14 +274,15 @@ public class ScenarioInstance {
 	 * For example it starts the email tasks.
 	 */
 	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(enabledControlNodeInstances);
+		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(
+                this.getEnabledControlNodeInstances());
         for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
 			if (controlNodeInstance.getClass() == ActivityInstance.class
 					&& ((ActivityInstance) controlNodeInstance).isAutomaticTask()) {
 				((ActivityInstance) controlNodeInstance).begin();
 			}
 		}
-        // Don't execute tasks at the moment.
+        // Don't begin tasks at the moment.
 	}
 
 	/**
@@ -350,53 +334,54 @@ public class ScenarioInstance {
 	 * @return a ArrayList of enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getEnabledControlNodeInstances() {
-		return enabledControlNodeInstances;
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.READY))
+                .collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of flow enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
-		return controlFlowEnabledControlNodeInstances;
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.CONTROLFLOW_ENABLED)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of data enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getDataEnabledControlNodeInstances() {
-		return dataEnabledControlNodeInstances;
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.DATAFLOW_ENABLED)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of running control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getRunningControlNodeInstances() {
-		return runningControlNodeInstances;
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.RUNNING)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of terminated control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
-		return terminatedControlNodeInstances;
-	}
+        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+                State.TERMINATED)).collect(Collectors.toList());
+    }
 
 	public List<FragmentInstance> getFragmentInstances() {
 		return fragmentInstances;
 	}
 
 	/**
-	 * @return a ArrayList of referential running control node instances.
-	 */
-	public List<AbstractControlNodeInstance> getReferentialRunningControlNodeInstances() {
-		return referentialRunningControlNodeInstances;
-	}
-
-	/**
 	 * @return a ArrayList of executing gateways.
 	 */
-	public List<GatewayInstance> getExecutingGateways() {
-		return executingGateways;
+	public List<XorGatewayInstance> getExecutingGateways() {
+        return this.controlNodeInstances.stream()
+                .filter(x -> x.getClass() == XorGatewayInstance.class)
+                .map(x -> (XorGatewayInstance) x)
+                .collect(Collectors.toList());
 	}
 
 	/**

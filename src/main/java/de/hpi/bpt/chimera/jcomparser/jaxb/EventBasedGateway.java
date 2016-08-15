@@ -20,7 +20,7 @@ public class EventBasedGateway extends AbstractControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 "", "EventBasedGateway", this.getFragmentId(), this.getId());
         return this.databaseId;
     }

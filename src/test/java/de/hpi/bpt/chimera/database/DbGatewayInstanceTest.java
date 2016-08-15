@@ -1,25 +1,60 @@
 package de.hpi.bpt.chimera.database;
 
-/**
- *
- */
 
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.controlnodes.DbGatewayInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+import de.hpi.bpt.chimera.jcore.controlnodes.GatewayType;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.sql.SQLException;
 
-public class DbGatewayInstanceTest extends AbstractDatabaseDependentTest {
-    @Test
-    public void testGetType(){
-        DbGatewayInstance gatewayInstance = new DbGatewayInstance();
-        assertEquals("AND", gatewayInstance.getType(100));
+import static org.junit.Assert.assertEquals;
+
+public class DbGatewayInstanceTest {
+
+    private static DbGatewayInstance dbGatewayInstance;
+    private static Connector connector;
+
+    @BeforeClass
+    public static void clearAndInitialize() throws IOException, SQLException {
+        dbGatewayInstance = new DbGatewayInstance();
+        connector = new Connector();
+        clearGatewayInstances();
+        insertTestData();
     }
+
+    @AfterClass
+    public static void clearGatewayInstances() throws IOException, SQLException {
+        AbstractDatabaseDependentTest.resetDatabase();
+    }
+
+    private static void insertTestData() {
+        connector.insertGatewayInstance(1, GatewayType.AND.name(), State.INIT.name());
+        connector.insertGatewayInstance(2, GatewayType.XOR.name(), State.INIT.name());
+
+    }
+
+    @Test
+    public void testGetType() {
+        assertEquals("AND", dbGatewayInstance.getType(1));
+        assertEquals("XOR", dbGatewayInstance.getType(2));
+    }
+
     @Test
     public void testGetState(){
-        DbGatewayInstance gatewayInstance = new DbGatewayInstance();
-        assertEquals(AbstractStateMachine.STATE.INIT, gatewayInstance.getState(100));
+        assertEquals(State.INIT, dbGatewayInstance.getState(1));
+        assertEquals(State.INIT, dbGatewayInstance.getState(2));
+    }
+
+    @Test
+    public void testSetState() {
+        dbGatewayInstance.setState(1, State.EXECUTING.name());
+        assertEquals(State.EXECUTING, dbGatewayInstance.getState(1));
+        assertEquals(State.INIT, dbGatewayInstance.getState(2));
     }
 }

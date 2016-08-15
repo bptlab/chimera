@@ -6,7 +6,7 @@ import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
 import de.hpi.bpt.chimera.jcore.controlnodes.BoundaryEvent;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import org.junit.After;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class BoundaryEventTest {
             registeredEvents = scenarioInstance.getEventsForScenarioInstance();
             BoundaryEvent boundaryEvent = (BoundaryEvent) registeredEvents.get(0);
             boundaryEvent.terminate();
-            assertEquals(AbstractStateMachine.STATE.CANCEL, activity.getStateMachine().getState());
+            assertEquals(State.CANCEL, activity.getState());
             assertEquals(scenarioInstance.getEnabledControlNodeInstances().size(), 1);
 
         } catch (IOException e) {

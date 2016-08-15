@@ -9,7 +9,7 @@ package de.hpi.bpt.chimera.util;/*
  */
 /*
  * Modified by Pantelis Sopasakis <chvng@mail.ntua.gr> to take care of DELIMITER statements. This way you
- * can execute scripts that contain some TRIGGER creation code. New version using REGEXPs! Latest
+ * can begin scripts that contain some TRIGGER creation code. New version using REGEXPs! Latest
  * modification: Cater for a NullPointerException while parsing. Date: Feb 16, 2011, 11:48 EET
  */
 /*
@@ -40,8 +40,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 /**
- * Tool to run database scripts. This version of the script can be found at 
- * https://gist.github.com/gists/831762/  
+ * Tool to run database scripts. This version of the script can be found at
+ * https://gist.github.com/gists/831762/
  */
 public class ScriptRunner {
 

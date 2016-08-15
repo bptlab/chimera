@@ -17,10 +17,10 @@ public class StartEvent extends AbstractDataControlNode {
     @Override
     public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertControlNodeIntoDatabase(
+        this.databaseId = connector.insertControlNode(
                 this.getName(), "StartEvent", this.getFragmentId(), this.getId());
 
-        connector.insertEventIntoDatabase("StartEvent", this.eventQuery,
+        connector.insertEvent("StartEvent", this.eventQuery,
             this.fragmentId, this.getId(), this.databaseId);
 
         return this.databaseId;

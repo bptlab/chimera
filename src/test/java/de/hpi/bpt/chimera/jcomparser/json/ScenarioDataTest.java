@@ -70,6 +70,8 @@ public class ScenarioDataTest {
         List<String> customerStates = EasyMock.createNiceMock(ArrayList.class);
         expect(customerStates.add("received")).andReturn(true);
         expect(customerStates.add("reviewed")).andReturn(true);
+        expect(customerStates.contains("received")).andReturn(true);
+        expect(customerStates.contains("reviewed")).andReturn(true);
         replay(customerStates);
         expect(customer.getStates()).andReturn(customerStates).anyTimes();
         replay(customer);
@@ -79,6 +81,7 @@ public class ScenarioDataTest {
         @SuppressWarnings("unchecked")
         List<String> contractStates = EasyMock.createNiceMock(ArrayList.class);
         expect(contractStates.add("initial")).andReturn(true);
+        expect(contractStates.contains("initial")).andReturn(true);
         replay(contractStates);
         expect(contract.getStates()).andReturn(contractStates);
         replay(contract);

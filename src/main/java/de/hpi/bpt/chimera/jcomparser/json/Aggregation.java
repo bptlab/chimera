@@ -59,7 +59,7 @@ public class Aggregation implements IPersistable {
 
 	@Override public int save() {
 		Connector conn = new Connector();
-		conn.insertAggregationIntoDatabase(this.source.getDatabaseId(),
+		conn.insertAggregation(this.source.getDatabaseId(),
 				this.target.getDatabaseId(), this.sourceMultiplicity);
 		return 1;
 	}

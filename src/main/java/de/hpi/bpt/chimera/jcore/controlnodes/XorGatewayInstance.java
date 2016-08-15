@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.GatewayStateMachine;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ExclusiveGatewayJoinBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 
@@ -18,11 +18,9 @@ public class XorGatewayInstance extends GatewayInstance {
         this.type = GatewayType.XOR;
         this.setControlNodeInstanceId(dbControlNodeInstance
                 .createNewControlNodeInstance(
-                        controlNodeId, "XOR", fragmentInstanceId));
-        this.dbGatewayInstance.createNewGatewayInstance(
+                        controlNodeId, "XOR", fragmentInstanceId, State.INIT));
+        new Connector().insertGatewayInstance(
                 getControlNodeInstanceId(), "XOR", "init");
-        this.setStateMachine(new GatewayStateMachine(this.getControlNodeId(),
-                this.scenarioInstance, this));
         this.initGatewayInstance();
     }
 
@@ -33,11 +31,34 @@ public class XorGatewayInstance extends GatewayInstance {
         this.initGatewayInstance();
     }
 
+    @Override
+    /**
+     * Do not set state to terminated yet, since there is still influence on the
+     * execution until one of the following control nodes is activated.
+     */
+    public void terminate() {
+        getOutgoingBehavior().terminate();
+    }
+
     private void initGatewayInstance() {
         this.setOutgoingBehavior(new ExclusiveGatewaySplitBehavior(
                 getControlNodeId(), scenarioInstance,
                 getFragmentInstanceId()));
         this.setIncomingBehavior(new ExclusiveGatewayJoinBehavior(
                 this, scenarioInstance));
+    }
+
+    public boolean containsControlNodeInFollowing(int controlNodeId) {
+        ExclusiveGatewaySplitBehavior outgoing = (ExclusiveGatewaySplitBehavior)
+                this.getOutgoingBehavior();
+        return outgoing.containsControlNodeInFollowing(controlNodeId);
+    }
+
+    public void skipAlternativeBranches(int controlNodeId) {
+        ExclusiveGatewaySplitBehavior outgoing = (ExclusiveGatewaySplitBehavior)
+                this.getOutgoingBehavior();
+        outgoing.skipAlternativeBranches(controlNodeId);
+        this.setState(State.TERMINATED);
+        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
     }
 }

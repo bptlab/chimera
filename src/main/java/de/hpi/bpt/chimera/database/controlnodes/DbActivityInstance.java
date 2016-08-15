@@ -1,11 +1,11 @@
 package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractStateMachine;
 import de.hpi.bpt.chimera.jhistory.HistoryService;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
+
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents the activity instance of the database.
@@ -15,48 +15,18 @@ import java.util.Map;
 
 public class DbActivityInstance extends DbObject {
 	/**
-	 * This method returns the current state of an activity.
-	 *
-	 * @param id This is the database ID of an activity instance.
-	 * @return the state of the activity as a String.
-	 */
-	public AbstractStateMachine.STATE getState(int id) {
-		String sql = "SELECT activity_state FROM activityinstance WHERE id = " + id;
-		String activityState = this.executeStatementReturnsString(sql, "activity_state");
-	    return AbstractStateMachine.STATE.valueOf(activityState.toUpperCase());
-    }
-
-	/**
-	 * This method sets the activity to a state and saves a log entry into the database.
-	 *
-	 * @param id    This is the database ID of an activity instance in the database.
-	 * @param state This is the state in which an activity should be after executing setState.
-	 */
-	public void setState(int id, AbstractStateMachine.STATE state) {
-        String sql = "UPDATE activityinstance "
-				+ "SET activity_state = '" + state.name() + "' "
-				+ "WHERE id = " + id;
-		this.executeUpdateStatement(sql);
-	}
-
-	/**
 	 * This method creates and saves a new activity instance to the database
 	 * into the context of a controlNode instance and saves a log entry into the database.
 	 *
 	 * @param controlNodeInstanceId This is the ID of a controlNode instance in the database.
 	 * @param activityType           This is the type of an activity.
-	 * @param activityState          This is the state of an activity.
 	 * @return the database ID of the newly created activity instance as an integer (Error: -1).
 	 */
-	public int createNewActivityInstance(int controlNodeInstanceId, String activityType,
-			String activityState) {
-		String sql =
-				"INSERT INTO activityinstance ("
-						+ "id, type, role_id, "
-						+ "activity_state, workitem_state) "
-						+ "VALUES ("	+ controlNodeInstanceId + ", '"
-						+ activityType + "', 1,'"
-						+ activityState	+ "', 'init')";
+	public int createNewActivityInstance(int controlNodeInstanceId, String activityType) {
+		// TODO remove unnessecary values in activity instance table
+        String sql = "Insert INTO activityinstance (id, type, role_id, workitem_state) " +
+                "VALUES (%d, '%s', 1, 'init')";
+        sql = String.format(sql, controlNodeInstanceId, activityType);
 		return this.executeInsertStatement(sql);
 	}
 
@@ -91,7 +61,7 @@ public class DbActivityInstance extends DbObject {
 						+ "WHERE "
 						+ "activityinstance.id = controlnodeinstance.id "
 						+ "AND controlnodeinstance.Type = 'Activity' "
-						+ "AND activity_state = 'terminated' "
+						+ "AND controlnodeinstance.state = 'terminated' "
 						+ "AND fragmentinstance_id "
 						+ "IN (SELECT id FROM fragmentinstance "
 						+ "WHERE scenarioinstance_id ="

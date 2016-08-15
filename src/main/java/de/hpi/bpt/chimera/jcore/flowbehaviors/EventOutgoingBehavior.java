@@ -5,6 +5,7 @@ import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
+import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.DataAttributeWriter;
 import org.apache.log4j.Logger;
 
@@ -31,10 +32,16 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
     public void terminate() {
         ScenarioInstance scenarioInstance = this.getScenarioInstance();
         scenarioInstance.updateDataFlow();
-        scenarioInstance.checkXorGatewaysForTermination(this.getControlNodeId());
+        scenarioInstance.skipAlternativeControlNodes(this.controlNodeInstanceId);
 
         this.enableFollowing();
         this.runAutomaticTasks();
+        SseNotifier.notifyRefresh();
+    }
+
+    @Override
+    public void skip() {
+
     }
 
     public void terminate(String json) {

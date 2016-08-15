@@ -7,14 +7,12 @@ import de.hpi.bpt.chimera.jcomparser.json.DataClass;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- *
- */
-public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
+public class DbDataAttributeTest {
     private String dataclassString;
 
     @Before

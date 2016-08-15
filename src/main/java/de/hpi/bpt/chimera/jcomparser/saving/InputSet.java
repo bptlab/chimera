@@ -16,12 +16,12 @@ public class InputSet extends AbstractSet implements IPersistable {
 
     @Override public int save() {
         Connector connector = new Connector();
-        this.databaseId = connector.insertDataSetIntoDatabase(true);
+        this.databaseId = connector.insertDataSet(true);
 
         for (DataNode dataNode : this.dataNodes) {
-            connector.insertDataSetConsistOfDataNodeIntoDatabase(this.databaseId,
+            connector.insertDataSetConsistOfDataNode(this.databaseId,
                     dataNode.getDatabaseId());
-            connector.insertDataFlowIntoDatabase(controlNode.getDatabaseId(), this.databaseId,
+            connector.insertDataFlow(controlNode.getDatabaseId(), this.databaseId,
                     true);
         }
 

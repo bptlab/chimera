@@ -1,28 +1,21 @@
 package de.hpi.bpt.chimera.jcore.executionbehaviors;
 
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventSpawner;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 
-public class SendTaskExecutionBehavior extends TaskExecutionBehavior {
+public class SendTaskExecutionBehavior extends ActivityExecutionBehavior {
 
     private EventSpawner eventSpawner;
 
-    /**
-     * Initializes.
-     *
-     * @param activityInstanceId  Id from the activity instance in the database.
-     * @param scenarioInstance    This is an instance from the class ScenarioInstance.
-     * @param controlNodeInstance This is an AbstractControlNodeInstance.
-     */
-    public SendTaskExecutionBehavior(int activityInstanceId, ScenarioInstance scenarioInstance, AbstractControlNodeInstance controlNodeInstance) {
-        super(activityInstanceId, scenarioInstance, controlNodeInstance);
-        eventSpawner = new EventSpawner(scenarioInstance);
+    public SendTaskExecutionBehavior(ActivityInstance activityInstance) {
+        super(activityInstance);
+        eventSpawner = new EventSpawner(getScenarioInstance());
     }
 
     @Override
-    public void execute() {
-        eventSpawner.spawnEvent(getControlNodeInstance().getControlNodeId());
-        this.setCanTerminate(true);
+    public void begin() {
+        eventSpawner.spawnEvent(activityInstance.getControlNodeId());
     }
 }
