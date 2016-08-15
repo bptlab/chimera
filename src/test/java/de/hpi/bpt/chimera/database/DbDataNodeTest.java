@@ -10,15 +10,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 import static org.junit.Assert.*;
 
-public class DbDataNodeTest extends AbstractDatabaseDependentTest {
+public class DbDataNodeTest {
 
 
     private static DbDataNode dbDataNode;
