@@ -79,8 +79,8 @@ public abstract class AbstractEvent extends AbstractControlNodeInstance {
 
     @Override
     public void enableControlFlow() {
-        getIncomingBehavior().enableControlFlow();
         this.setState(State.REGISTERED);
+        getIncomingBehavior().enableControlFlow();
     }
 
     @Override

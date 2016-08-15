@@ -20,7 +20,6 @@ public class TimerEventInstance extends AbstractEvent {
 public TimerEventInstance(int controlNodeId, int fragmentInstanceId,
                           ScenarioInstance scenarioInstance, int controlNodeInstanceId) {
     super(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
-
 }
 
     @Override
@@ -28,6 +27,13 @@ public TimerEventInstance(int controlNodeId, int fragmentInstanceId,
         return "TimerEvent";
     }
 
+    @Override
+    public void enableControlFlow() {
+        if (this.getState().equals(State.INIT)) {
+            this.setState(State.REGISTERED);
+            this.registerEvent();
+        }
+    }
     /**
      * Since timer events are not registered at a Event platform, but are handled internally,
      * calls specific method for timer events.

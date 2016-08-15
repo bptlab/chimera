@@ -34,8 +34,7 @@ public class DataObjectRestService {
      * @param filterString A String which specifies a filter. Only Data
      *                     Objects with a label containing this string
      *                     will be returned.
-     * @param uriInfo      A Context object of the server request.
-     * @return A Response with the outcome of the GET-Request. The Response
+13     * @return A Response with the outcome of the GET-Request. The Response
      * will be a 200 (OK) if the specified instance was found. Hence
      * the JSON-Object will be returned.
      */
