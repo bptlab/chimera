@@ -27,7 +27,7 @@ public class DbDataFlowTest {
     @Test
     public void testGetInputSetsForControlNode(){
         Connector connector = new Connector();
-        connector.insertDataFlowIntoDatabase(CONTROLNODE_ID, INPUTSET_ID, true);
+        connector.insertDataFlow(CONTROLNODE_ID, INPUTSET_ID, true);
         DbDataFlow dbDataFlow = new DbDataFlow();
         List<Integer> inputSets = dbDataFlow.getInputSetsForControlNode(CONTROLNODE_ID);
         assertEquals(1, inputSets.size());
@@ -36,7 +36,7 @@ public class DbDataFlowTest {
 
     @Test
     public void testGetOutputSetsForControlNode(){Connector connector = new Connector();
-        connector.insertDataFlowIntoDatabase(CONTROLNODE_ID, OUTPUTSET_ID, false);
+        connector.insertDataFlow(CONTROLNODE_ID, OUTPUTSET_ID, false);
         DbDataFlow dbDataFlow = new DbDataFlow();
         List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(CONTROLNODE_ID);
         assertEquals(1, outputSets.size());

@@ -39,9 +39,9 @@ public class EmailtaskConfigurationTest extends JerseyTest {
     @Before
     public void setup() {
         Connector connector = new Connector();
-        SCENARIO_ID = connector.insertScenarioIntoDatabase("name", 1);
-        int fragmentId = connector.insertFragmentIntoDatabase("TestFragment", SCENARIO_ID, 1);
-        EMAILTASK_ID = connector.insertControlNodeIntoDatabase(
+        SCENARIO_ID = connector.insertScenario("name", 1);
+        int fragmentId = connector.insertFragment("TestFragment", SCENARIO_ID, 1);
+        EMAILTASK_ID = connector.insertControlNode(
                 "mailTask", "EmailTask", fragmentId, "modelId");
         DbEmailConfiguration dbEmailConfiguration = new DbEmailConfiguration();
         String insertMailConfiguration = "INSERT INTO emailconfiguration " +
@@ -77,7 +77,7 @@ public class EmailtaskConfigurationTest extends JerseyTest {
     @Test
     public void testGetAllMailTasksIfAbsent() {
         Connector connector = new Connector();
-        int emptyScenarioId = connector.insertScenarioIntoDatabase("name", 1);
+        int emptyScenarioId = connector.insertScenario("name", 1);
         String path = String.format("scenario/%d/emailtask", emptyScenarioId);
         Response response = base.path(path).request().get();
         assertThat("Get all mail Tasks returns not an empty JSON Object when the scenario has no mail tasks",

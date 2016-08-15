@@ -46,7 +46,7 @@ public class ScenarioInstanceRestTest extends JerseyTest {
     @Before
     public void setup() {
         Connector connector = new Connector();
-        scenarioId = connector.insertScenarioIntoDatabase(scenarioName, 1);
+        scenarioId = connector.insertScenario(scenarioName, 1);
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
                 scenarioId, scenarioName);

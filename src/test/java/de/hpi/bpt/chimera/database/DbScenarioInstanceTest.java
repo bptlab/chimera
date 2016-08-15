@@ -25,7 +25,7 @@ public class DbScenarioInstanceTest {
     @Before
     public void setup() {
         Connector connector = new Connector();
-        SCENARIO_ID = connector.insertScenarioIntoDatabase("TestScenario", 1);
+        SCENARIO_ID = connector.insertScenario("TestScenario", 1);
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         SCENARIO_INSTANCE_ID = dbScenarioInstance.
                 createNewScenarioInstance(SCENARIO_ID);

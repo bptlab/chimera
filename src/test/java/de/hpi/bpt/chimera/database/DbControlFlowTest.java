@@ -28,8 +28,8 @@ public class DbControlFlowTest {
     @Test
     public void testGetFollowingControlNodes(){
         Connector connector = new Connector();
-        connector.insertControlFlowIntoDatabase(STARTEVENT_ID, FIRST_FOLLOWING, "empty");
-        connector.insertControlFlowIntoDatabase(STARTEVENT_ID, SECOND_FOLLOWING, "empty");
+        connector.insertControlFlow(STARTEVENT_ID, FIRST_FOLLOWING, "empty");
+        connector.insertControlFlow(STARTEVENT_ID, SECOND_FOLLOWING, "empty");
         DbControlFlow dbControlFlow = new DbControlFlow();
         List<Integer> nodesAfterStartEvent = dbControlFlow.getFollowingControlNodes(STARTEVENT_ID);
         assertEquals(nodesAfterStartEvent, Arrays.asList(FIRST_FOLLOWING, SECOND_FOLLOWING));
@@ -38,8 +38,8 @@ public class DbControlFlowTest {
     @Test
     public void testGetPrecedingControlNodes(){
         Connector connector = new Connector();
-        connector.insertControlFlowIntoDatabase(STARTEVENT_ID, FIRST_FOLLOWING, "empty");
-        connector.insertControlFlowIntoDatabase(STARTEVENT_ID, SECOND_FOLLOWING, "empty");
+        connector.insertControlFlow(STARTEVENT_ID, FIRST_FOLLOWING, "empty");
+        connector.insertControlFlow(STARTEVENT_ID, SECOND_FOLLOWING, "empty");
         DbControlFlow dbControlFlow = new DbControlFlow();
         List<Integer> nodesAfterStartEvent = dbControlFlow.getPredecessorControlNodes(
                 FIRST_FOLLOWING);
