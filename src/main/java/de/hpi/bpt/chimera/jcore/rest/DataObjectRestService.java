@@ -23,36 +23,37 @@ import java.util.Map;
  * Note that interaction with input/output sets is handled by {@link DataDependencyRestService}
  */
 @Path("interface/v2")
-public class DataObjectRestService {
+public class DataObjectRestService extends AbstractRestService {
     /**
      * Returns a JSON-Object, which contains information about all
      * data objects of a specified scenario instance.
      * The data contains the id, label and state.
      *
-     * @param scenarioID   The ID of the scenario model.
-     * @param instanceID   The ID of the scenario instance.
+     * @param scenarioId   The ID of the scenario model.
+     * @param instanceId   The ID of the scenario instance.
      * @param filterString A String which specifies a filter. Only Data
      *                     Objects with a label containing this string
      *                     will be returned.
-13     * @return A Response with the outcome of the GET-Request. The Response
+     * @return A Response with the outcome of the GET-Request. The Response
      * will be a 200 (OK) if the specified instance was found. Hence
      * the JSON-Object will be returned.
      */
     @GET
     @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
-    @Produces(MediaType.APPLICATION_JSON) public Response getDataObjects(
-            @PathParam("scenarioId") int scenarioID,
-            @PathParam("instanceId") int instanceID,
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDataObjects(
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int instanceId,
             @QueryParam("filter") String filterString) {
 
-        ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-        executionService.openExistingScenarioInstance(scenarioID, instanceID);
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, instanceId);
         List<Integer> dataObjects =
-                executionService.getAllDataObjectIds(instanceID);
+                executionService.getAllDataObjectIds(instanceId);
         Map<Integer, String> states =
-                executionService.getDataObjectStates(instanceID);
+                executionService.getDataObjectStates(instanceId);
         Map<Integer, String> labels =
-                executionService.getAllDataObjectNames(instanceID);
+                executionService.getAllDataObjectNames(instanceId);
         if (filterString != null && !filterString.isEmpty()) {
             List<Integer> oldDataObjects = new ArrayList<>(dataObjects);
             oldDataObjects.stream()
@@ -67,19 +68,42 @@ public class DataObjectRestService {
         return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
     }
 
-    /**
-    * Creates an array of DataObjects.
-    * The data objects will be created out of the information
-    * received from the execution Service.
-    * The array elements will be of type {@link DataObjectJaxBean ), hence JSON and
-    * XML can be generated automatically.
-    *
-    * @param uriInfo       A Context object of the server request
-    * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
-            * @param states        The states, mapped from dataobject database id to state (String)
-            * @param labels        The labels, mapped from dataobject database id to label (String)
-            * @return A array with a DataObject for each entry in dataObjectIds
-    */
+    @GET
+    @Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{objectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDataObject(
+            @PathParam("scenarioId") int scenarioId,
+            @PathParam("instanceId") int instanceId,
+            @PathParam("objectId") int objectId) {
+
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        executionService.openExistingScenarioInstance(scenarioId, instanceId);
+        String state = executionService.getDataObjectStates(instanceId).getOrDefault(objectId, "");
+        String label = executionService.getAllDataObjectNames(instanceId).getOrDefault(objectId, "");
+
+        if (state.isEmpty() || label.isEmpty()) {
+            return this.buildBadRequestResponse("{\"error\":\"No label or state found for given data object id.\"}");
+        }
+        else {
+            JSONObject result = buildJsonForDataObject(objectId, state, label);
+            return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+        }
+
+    }
+
+        /**
+        * Creates an array of DataObjects.
+        * The data objects will be created out of the information
+        * received from the execution Service.
+        * The array elements will be of type {@link DataObjectJaxBean ), hence JSON and
+        * XML can be generated automatically.
+        *
+        * @param uriInfo       A Context object of the server request
+        * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
+                * @param states        The states, mapped from dataobject database id to state (String)
+                * @param labels        The labels, mapped from dataobject database id to label (String)
+                * @return A array with a DataObject for each entry in dataObjectIds
+        */
     private JSONObject buildListForDataObjects(
             List<Integer> dataObjectIds,
             Map<Integer, String> states,
@@ -95,6 +119,17 @@ public class DataObjectRestService {
             results.put(String.valueOf(id), dataObject);
         }
         result.put("results", results);
+        return result;
+    }
+
+    private JSONObject buildJsonForDataObject(
+            int dataObjectId,
+            String state,
+            String label) {
+        JSONObject result = new JSONObject();
+        result.put("id", dataObjectId);
+        result.put("label", label);
+        result.put("state", state);
         return result;
     }
 }

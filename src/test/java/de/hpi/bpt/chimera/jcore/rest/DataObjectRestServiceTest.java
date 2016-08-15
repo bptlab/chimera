@@ -67,7 +67,7 @@ public class DataObjectRestServiceTest extends JerseyTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"ids\":[1,2],\"results\":{\"1\":{\"id\":1,\"label\":\"Customer\",\"state\":\"init\"},\"2\":{\"id\":2,\"label\":\"Customer\",\"state\":\"done\"}}}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));//.when(Option.IGNORING_EXTRA_FIELDS));
+                        .when(Option.IGNORING_ARRAY_ORDER));
     }
 
     @Test
@@ -81,7 +81,34 @@ public class DataObjectRestServiceTest extends JerseyTest {
         assertThat("The returned JSON does not contain the expected content",
                 "{\"ids\":[2],\"results\":{\"2\":{\"id\":2,\"label\":\"Customer\",\"state\":\"done\"}}}",
                 jsonEquals(response.readEntity(String.class))
-                        .when(Option.IGNORING_ARRAY_ORDER));//.when(Option.IGNORING_EXTRA_FIELDS));
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
+    public void testGetDataObject() {
+        Response response = base.path("scenario/1/instance/1/dataobject/2")
+                .request().get();
+        assertEquals("The Response code of getDataObjects was not 200",
+                200, response.getStatus());
+        assertEquals("getDataObjects returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"id\":2,\"label\":\"Customer\",\"state\":\"done\"}",
+                jsonEquals(response.readEntity(String.class))
+                        .when(Option.IGNORING_ARRAY_ORDER));
+    }
+
+    @Test
+    public void testGetDataObjectWithoutState() {
+        int objId = new DbDataObject().createDataObject(1, 1, 3, 1);
+        Response response = base.path("scenario/1/instance/1/dataobject/" + objId).request().get();
+        assertEquals("The Response code of getDataObjects was not 200",
+                400, response.getStatus());
+        assertEquals("getDataObjects returns a Response with the wrong media Type",
+                MediaType.APPLICATION_JSON, response.getMediaType().toString());
+        assertThat("The returned JSON does not contain the expected content",
+                "{\"error\":\"No label or state found for given data object id.\"}",
+                jsonEquals(response.readEntity(String.class)));
     }
 
 }

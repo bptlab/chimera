@@ -115,7 +115,9 @@ public class ScenarioData {
             List<DataNode> dataNodes = fragment.getDataNodes();
             for (DataNode node : dataNodes) {
                 DataClass correspondingDataClass = nameToDataclass.get(node.getName());
-                correspondingDataClass.getStates().add(node.getState());
+                if (!correspondingDataClass.getStates().contains(node.getState())) {
+                    correspondingDataClass.getStates().add(node.getState());
+                }
             }
         }
     }
