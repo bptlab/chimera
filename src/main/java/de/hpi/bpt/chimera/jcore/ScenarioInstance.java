@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.jcore;
 
+import de.hpi.bpt.chimera.database.DbFragmentInstance;
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
@@ -63,6 +64,25 @@ public class ScenarioInstance {
     }
 
 	/**
+	 * Creates and initializes a new named scenario instance.
+	 * Also save this new instance in database.
+	 *
+	 * @param scenarioId This is the database id from the scenario.
+	 * @param name This is the given name for the scenario instance.
+	 */
+	public ScenarioInstance(int scenarioId, String name) {
+		this.name = name;
+		this.scenarioId = scenarioId;
+		this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId, name);
+
+		// Initialize data manager after setting scenarioId
+		this.dataManager = new DataManager(this);
+		this.terminationCondition = new TerminationCondition(this);
+		this.initializeFragments();
+		this.startAutomaticControlNodes();
+	}
+
+	/**
 	 * Creates and initializes a new scenario instance from database.
 	 * Reads the information for an existing scenario instance from the database.
 	 * If there is no match in the database it creates a new scenario instance.
@@ -80,14 +100,14 @@ public class ScenarioInstance {
 
         // This also reloads the control node instances from the database
 		if (dbScenarioInstance.getTerminated(this.id) == 0) {
-			this.initializeFragments();
+			this.reloadFragments();
 		}
 
         this.startAutomaticControlNodes();
         canTerminate = checkTerminationCondition();
     }
 
-    private void reloadControlNodesFromDatabase() {
+	private void reloadControlNodesFromDatabase() {
     	this.controlNodeInstances.clear();
 
         DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
@@ -105,7 +125,21 @@ public class ScenarioInstance {
 	private void initializeFragments() {
 		List<Integer> fragmentIds = dbFragment.getFragmentsForScenario(scenarioId);
 		for (int fragmentId : fragmentIds) {
-			this.initializeFragment(fragmentId);
+			FragmentInstance fragmentInstance = new FragmentInstance(
+					fragmentId, id,	this);
+			fragmentInstances.add(fragmentInstance);
+		}
+	}
+
+	private void reloadFragments() {
+		List<Integer> fragmentIds = dbFragment.getFragmentsForScenario(scenarioId);
+		DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
+		for (int fragmentId : fragmentIds) {
+			int fragmentInstanceId = dbFragmentInstance
+                    .getFragmentInstanceID(fragmentId, this.id);
+			FragmentInstance fragmentInstance = new FragmentInstance(
+					fragmentId, id,	this, fragmentInstanceId);
+			fragmentInstances.add(fragmentInstance);
 		}
 	}
 
@@ -136,17 +170,6 @@ public class ScenarioInstance {
         }
         return eventKeys;
     }
-
-    /**
-	 * Creates and initializes the fragment with the specific fragment id.
-	 *
-	 * @param fragmentId This is the database id from the fragment.
-	 */
-	private void initializeFragment(int fragmentId) {
-		FragmentInstance fragmentInstance = new FragmentInstance(
-				fragmentId, id,	this);
-		fragmentInstances.add(fragmentInstance);
-	}
 
 	/**
 	 * Restarts the fragment specified by the fragment id.
@@ -182,7 +205,10 @@ public class ScenarioInstance {
 			}
 		}
 		if (fragmentInstance != null) {
-			initializeFragment(fragmentInstance.getFragmentId());
+			int fragmentId = fragmentInstance.getFragmentId();
+			fragmentInstance = new FragmentInstance(
+					fragmentId, id, this);
+			fragmentInstances.add(fragmentInstance);
 		}
 		this.startAutomaticControlNodes();
 	}
@@ -369,6 +395,14 @@ public class ScenarioInstance {
         return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
                 State.TERMINATED)).collect(Collectors.toList());
     }
+
+	/**
+	 * @return a ArrayList of skipped control node instances.
+	 */
+	public List<AbstractControlNodeInstance> getSkippedControlNodeInstances() {
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
+				State.SKIPPED)).collect(Collectors.toList());
+	}
 
 	public List<FragmentInstance> getFragmentInstances() {
 		return fragmentInstances;

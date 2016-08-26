@@ -28,8 +28,6 @@ public class FragmentInstance {
 
     /**
      * Creates and initializes a new fragment instance.
-     * Reads the information for an existing fragment instance from the database
-     * or creates a new one if none exist in the database.
      *
      * @param fragmentId         This is the database id from the fragment.
      * @param scenarioInstanceId This is the database id from the scenario instance.
@@ -43,6 +41,24 @@ public class FragmentInstance {
         this.createDatabaseFragmentInstance();
     }
 
+    /**
+     * Recreates an existing fragment instance.
+     * Reloads Activities and Gateways in the process.
+     *
+     * @param fragmentId            This is the database id of the fragment.
+     * @param scenarioInstanceId    This is the database id of the scenario instance.
+     * @param scenarioInstance      This is the corresponding scenario instance.
+     * @param fragmentInstanceId    This is the id of the already existing fragment instance.
+     */
+    public FragmentInstance(int fragmentId, int scenarioInstanceId,
+                            ScenarioInstance scenarioInstance, int fragmentInstanceId) {
+        this.id = fragmentInstanceId;
+        this.scenarioInstance = scenarioInstance;
+        this.fragmentId = fragmentId;
+        this.scenarioInstanceId = scenarioInstanceId;
+        this.initializeExistingNodeInstanceForFragment();
+    }
+
 
     List<AbstractEvent> getRegisteredEvents() {
         DbEventMapping mapping = new DbEventMapping();
@@ -53,17 +69,10 @@ public class FragmentInstance {
     }
 
     private void createDatabaseFragmentInstance() {
-        if (dbFragmentInstance.existFragment(fragmentId, scenarioInstanceId)) {
-            //creates an existing DatabaseFragment Instance using the database information
-            this.id = dbFragmentInstance
-                    .getFragmentInstanceID(fragmentId, scenarioInstanceId);
-            this.initializeExistingNodeInstanceForFragment();
-        } else {
-            //creates a new DatabaseFragment Instance also in database
-            this.id = dbFragmentInstance
-                    .createNewFragmentInstance(fragmentId, scenarioInstanceId);
-            this.initializeNewNodeInstanceForFragment();
-        }
+        //creates a new DatabaseFragment Instance also in database
+        this.id = dbFragmentInstance
+                .createNewFragmentInstance(fragmentId, scenarioInstanceId);
+        this.initializeNewNodeInstanceForFragment();
     }
 
     /**

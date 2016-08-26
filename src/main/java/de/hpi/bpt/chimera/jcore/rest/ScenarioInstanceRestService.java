@@ -8,14 +8,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,14 +43,7 @@ public class ScenarioInstanceRestService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON) public Response startNewInstance(
             @Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
-        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-        int instanceId = executionService.startNewScenarioInstance();
-        return Response.status(Response.Status.CREATED)
-                .type(MediaType.APPLICATION_JSON)
-                .entity("{\"id\":" + instanceId
-                        + ",\"link\":\"" + uri.getAbsolutePath()
-                        + "/" + instanceId + "\"}")
-                .build();
+        return initializeNewInstance(uri, scenarioId, "");
     }
 
     /**
@@ -70,7 +56,7 @@ public class ScenarioInstanceRestService {
      * The response will imply if the post was successful.
      *
      * @param uriInfo    The context of the server, used to receive the url.
-     * @param scenarioID the id of the scenario.
+     * @param scenarioId the id of the scenario.
      * @param name       The name, which will be used for the new instance.
      * @return The Response of the PUT. The Response code will be
      * either a 201 (CREATED) if the post was successful or 400 (BAD_REQUEST)
@@ -83,13 +69,24 @@ public class ScenarioInstanceRestService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON) public Response startNewNamedInstance(
             @Context UriInfo uriInfo,
-            @PathParam("scenarioId") int scenarioID,
+            @PathParam("scenarioId") int scenarioId,
             NamedJaxBean name) {
         if (name == null) {
-            return startNewInstance(uriInfo, scenarioID);
+            return initializeNewInstance(uriInfo, scenarioId, "");
+        } else {
+            return initializeNewInstance(uriInfo, scenarioId, name.getName());
         }
-        DbScenarioInstance instance = new DbScenarioInstance();
-        int instanceId = instance.createNewScenarioInstance(scenarioID, name.getName());
+
+    }
+
+    private Response initializeNewInstance(UriInfo uriInfo, int scenarioId, String name) {
+        ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+        int instanceId;
+        if (name.isEmpty()) {
+            instanceId = executionService.startNewScenarioInstance();
+        } else {
+            instanceId = executionService.startNewScenarioInstance(name);
+        }
         return Response.status(Response.Status.CREATED)
                 .type(MediaType.APPLICATION_JSON)
                 .entity("{\"id\":" + instanceId

@@ -83,6 +83,18 @@ public class ExecutionService {
 	}
 
 	/**
+	 * Starts a new named scenario instance for the given scenario id.
+	 *
+	 * @param name the given name for the scenario instance
+	 * @return the id of the new scenario instance.
+	 */
+	public int startNewScenarioInstance(String name) {
+		ScenarioInstance scenarioInstance = new ScenarioInstance(this.scenarioId, name);
+		addScenarioInstanceToMap(scenarioInstance);
+		return scenarioInstance.getId();
+	}
+
+	/**
 	 *
 	 * @param scenarioId a scenario ID to instantiate.
 	 * @return the ID of the new scenario instance.
