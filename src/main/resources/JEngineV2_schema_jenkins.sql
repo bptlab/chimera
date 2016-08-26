@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `automaticexecution` tinyint(1) NOT NULL DEFAULT '0',
   `canTerminate` tinyint(1) NOT NULL DEFAULT '0',
   `role_id` int(11) NOT NULL,
-  `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -142,6 +141,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
 CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Type` varchar(512) NOT NULL,
+  `state` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
