@@ -56,17 +56,6 @@ public class GatewayInstance extends AbstractControlNodeInstance {
         this.setState(dbGatewayInstance.getState(instanceId));
     }
 
-	/**
-	 * Checks if the gateway can terminate.
-	 *
-	 * @param controlNodeId A control node id.
-	 * @return true if the gateway can terminate
-	 */
-	public boolean checkTermination(int controlNodeId) {
-		return ((ExclusiveGatewaySplitBehavior) getOutgoingBehavior())
-				.checkTermination(controlNodeId);
-	}
-
 	@Override public void terminate() {
         setState(State.TERMINATED);
         dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());

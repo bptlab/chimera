@@ -28,13 +28,13 @@
                     <!-- depending of the option of the dropdown: here display activity log -->
                     <!-- reverse(), so that newest changes are shown on top -->
                     <div ng-switch-default>
-                        <div ng-repeat="entry in instanceCtrl.instanceDetails.activitylogs.reverse() track by $index">
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.activitylogs track by $index">
                             <h4 class="text-success">{{entry['label']}}</h4>
-                            <span ng-show="entry['oldValue'].length">{{entry['oldValue']}}</span>
-                            <span ng-hide="entry['oldValue'].length"><i>no state</i></span>
+                            <span ng-if="entry['oldValue']">{{entry['oldValue']}}</span>
+                            <span ng-if="!entry['oldValue']"><i>no state</i></span>
                             <i class="fa fa-long-arrow-right"></i>
-                            <span ng-show="entry['newValue'].length">{{entry['newValue']}}</span>
-                            <span ng-hide="entry['newValue'].length"><i>no state</i></span>
+                            <span ng-if="entry['newValue']">{{entry['newValue']}}</span>
+                            <span ng-if="!entry['newValue']"><i>no state</i></span>
                             <div class="pull-right">{{entry['timeStamp']}} <i
                                     class="fa fa-check-square-o text-success"></i></div>
                         </div>
@@ -42,13 +42,13 @@
                     <!-- ./switch case -->
                     <!-- depending of the option of the dropdown: here display dataobject log -->
                     <div ng-switch-when="dataobject">
-                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectlogs.reverse() track by $index">
-                            <h4 class="text-success">{{entry['label']}}</h4>
-                            <span ng-show="entry['oldValue'].length">{{entry['oldValue']}}</span>
-                            <span ng-hide="entry['oldValue'].length"><i>no state</i></span>
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
+                            <h4 class="text-success">{{entry['label']}} ({{entry['loggedId']}})</h4>
+                            <span ng-if="entry['oldValue']">{{entry['oldValue']}}</span>
+                            <span ng-if="!entry['oldValue']"><i>no state</i></span>
                             <i class="fa fa-long-arrow-right"></i>
-                            <span ng-show="entry['newValue'].length">{{entry['newValue']}}</span>
-                            <span ng-hide="entry['newValue'].length"><i>no state</i></span>
+                            <span ng-if="entry['newValue']">{{entry['newValue']}}</span>
+                            <span ng-if="!entry['newValue']"><i>no state</i></span>
                             <div class="pull-right">{{entry['timeStamp']}} <i
                                     class="fa fa-check-square-o text-success"></i></div>
                         </div>
@@ -56,13 +56,13 @@
                     <!-- ./switch case -->
                     <!-- depending of the option of the dropdown: here display attribute log -->
                     <div ng-switch-when="attributes">
-                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectAttributelogs.reverse() track by $index">
+                        <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectAttributelogs track by $index">
                             <h4 class="text-success">{{entry['label']}}</h4>
-                            <span ng-show="entry['oldValue'].length">{{entry['oldValue']}}</span>
-                            <span ng-hide="entry['oldValue'].length"><i>empty</i></span>
+                            <span ng-if="entry['oldValue']">{{entry['oldValue']}}</span>
+                            <span ng-if="!entry['oldValue']"><i>empty</i></span>
                             <i class="fa fa-long-arrow-right"></i>
-                            <span ng-show="entry['newValue'].length">{{entry['newValue']}}</span>
-                            <span ng-hide="entry['newValue'].length"><i>empty</i></span>
+                            <span ng-if="entry['newValue']">{{entry['newValue']}}</span>
+                            <span ng-if="!entry['newValue']"><i>empty</i></span>
                             <div class="pull-right">{{entry['timeStamp']}} <i
                                         class="fa fa-check-square-o text-success"></i></div>
                         </div>

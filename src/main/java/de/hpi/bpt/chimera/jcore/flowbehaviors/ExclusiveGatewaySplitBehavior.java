@@ -163,40 +163,6 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
     }
 
 	/**
-	 * Checks if the gateway can terminate
-	 * (because the given control node has changed his state).
-	 *
-	 * @param controlNodeId The id of the control node.
-	 * @return True if the gateway can terminate. false if not.
-	 */
-	public boolean checkTermination(int controlNodeId) {
-		if (type == null || this.getControlNodeId() != controlNodeId) {
-			type = this.getDbControlNode().getType(controlNodeId);
-		}
-        // TODO check if this is still legit.
-        // Xor Gateways can only be skipped by activities or events
-		if (("AND".equals(type)) || ("XOR".equals(type))) {
-			return false;
-		}
-		for (int i = 0; i < branches.size(); i++) {
-			if (branches.get(i).contains(controlNodeId)) {
-				branches.remove(i);
-				for (List<Integer> followingControlNodeIds
-						: branches) {
-					for (int id : followingControlNodeIds) {
-						AbstractControlNodeInstance controlNodeInstance
-								= this.getScenarioInstance()
-						.getControlNodeInstanceForControlNodeId(id);
-						controlNodeInstance.skip();
-					}
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Evaluates Conditions for the control flow of an XOR gateway.
 	 */
 	public void evaluateConditions() {

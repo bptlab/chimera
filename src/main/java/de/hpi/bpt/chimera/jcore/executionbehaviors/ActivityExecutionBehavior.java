@@ -79,8 +79,6 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
         dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId,
                 activityInstance.getControlNodeInstanceId(), workingItems);
         beginExecution();
-        scenarioInstance.skipAlternativeControlNodes(
-                activityInstance.getControlNodeInstanceId());
     }
 
     private void beginExecution() {

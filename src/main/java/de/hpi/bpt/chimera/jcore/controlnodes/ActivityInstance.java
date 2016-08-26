@@ -198,6 +198,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
     }
 
 	@Override public void skip() {
+	    super.skip();
 		this.setState(State.SKIPPED);
 	}
 

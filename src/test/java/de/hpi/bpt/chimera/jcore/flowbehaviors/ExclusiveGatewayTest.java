@@ -36,6 +36,8 @@ public class ExclusiveGatewayTest {
         ScenarioTestHelper.beginActivityByName("A", instance);
         enabledControlNodes = instance.getEnabledControlNodeInstances();
         assertEquals(0, enabledControlNodes.size());
+        List <AbstractControlNodeInstance> skippedControlNodes = instance.getSkippedControlNodeInstances();
+        assertEquals(2, skippedControlNodes.size());
     }
 
 }

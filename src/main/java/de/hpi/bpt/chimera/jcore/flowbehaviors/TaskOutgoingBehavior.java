@@ -49,7 +49,9 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
     @Override
     public void skip() {
-
+        new DbLogEntry().logActivity(
+                this.activityInstance.getControlNodeInstanceId(), "skipped",
+                this.getScenarioInstance().getId());
     }
 
     /**

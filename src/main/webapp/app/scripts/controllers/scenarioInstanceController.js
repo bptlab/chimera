@@ -67,7 +67,6 @@ angular.module('jfrontend')
             this.initializeActivityInstances = function () {
                 instanceCtrl.instanceDetails.activityInstances = {};
                 ["ready", "terminated", "running"].forEach(function (state) {
-                    var state2 = state;
                     $http.get(
                         JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" +
                         $routeParams.id + "/instance/" + $routeParams.instanceId + "/activity/?state=" + state).

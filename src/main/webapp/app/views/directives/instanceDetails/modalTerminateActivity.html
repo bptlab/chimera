@@ -26,8 +26,8 @@
                         <tbody>
                             <tr ng-repeat="attr in dataobject.attributeConfiguration">
                                 <td>{{attr['name']}}</td>
-                                <td><input type="text" 
-                                           ng-name="attrvalue" 
+                                <td><input type="text"
+                                           ng-name="attrvalue"
                                            ng-model-options='{ debounce: 1000 }'
                                            ng-model="attr['value']"
                                            ng-change="instanceCtrl.setAttribute(attr['id'], attr['value'], activityInstance['id'])">
@@ -37,38 +37,29 @@
                     </table>
                 </div>
                 <!-- if outputsets are present display them with the option for termination -->
-                <div ng-show="instanceCtrl.activityOutputStates[activityInstance['id']]">
+                <div ng-if="instanceCtrl.activityOutputStates[activityInstance['id']]">
                     <div class="panel">
                         <div class="panel-header">
                             Please select a state for each output.
                         </div>
-                        <div class="panel-body form-group">
-                            <div ng-repeat="(dclass, possiblestates) in instanceCtrl.activityOutputStates[activityInstance['id']] track by $index">
+                        <div class="panel-body form-group"
+                             ng-repeat="(dclass, possiblestates) in instanceCtrl.activityOutputStates[activityInstance['id']] track by $index">
                                 <label for="{{'select' + dclass}}">{{dclass}}</label>
-                                <select class="form-control" id="{{'select' + dclass}}" 
-                                        ng-model="lestate" 
+                                <select class="form-control" id="{{'select' + dclass}}"
+                                        ng-model="lestate"
                                         ng-init="lestate=possiblestates[0]; instanceCtrl.selectState(dclass, lestate)"
                                         ng-options="state for state in possiblestates"
                                         ng-change="instanceCtrl.selectState(dclass, lestate)">
                                 </select>
                             </div>
-                        </div>
-                        <div class="panel-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"
-                                    ng-click="instanceCtrl.terminateActivity(activityInstance['id'])">
-                            Terminate</button>
-                        </div>
                     </div>
                 </div>
             </div> <!-- /.modal body -->
             <!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <span ng-hide="instanceCtrl.activityOutputStates[activityInstance['id']]">
-                    <button type="button" ng-click="instanceCtrl.terminateActivity(activityInstance['id']);" data-dismiss="modal"
-                            class="btn btn-danger">Terminate
-                    </button>
-                </span>
+                <button type="button" ng-click="instanceCtrl.terminateActivity(activityInstance['id']);" data-dismiss="modal"
+                        class="btn btn-danger">Terminate</button>
             </div>
             <!-- /.modal footer -->
         </div>

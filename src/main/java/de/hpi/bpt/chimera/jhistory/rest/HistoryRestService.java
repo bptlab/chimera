@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ import java.util.List;
         }
         List<StateTransitionLog> activityLog =
                 StateTransitionLog.getStateTransitions(instanceID, LogEntry.LogType.ACTIVITY);
+        activityLog.sort((log1, log2) -> log2.getTimeStamp().compareTo(log1.getTimeStamp()));
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONArray(activityLog).toString()).build();
     }
@@ -73,6 +75,7 @@ import java.util.List;
         }
         List<StateTransitionLog> dataObjectLog = StateTransitionLog.getStateTransitions(
                 scenarioInstanceId, LogEntry.LogType.DATA_OBJECT);
+        dataObjectLog.sort((log1, log2) -> log2.getTimeStamp().compareTo(log1.getTimeStamp()));
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONArray(dataObjectLog).toString()).build();
     }
@@ -103,6 +106,7 @@ import java.util.List;
 
         List<StateTransitionLog> attributeLog = StateTransitionLog.getStateTransitions(
                 scenarioInstanceID, LogEntry.LogType.DATA_ATTRIBUTE);
+        attributeLog.sort((log1, log2) -> log2.getTimeStamp().compareTo(log1.getTimeStamp()));
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONArray(attributeLog).toString()).build();
     }
@@ -124,6 +128,7 @@ import java.util.List;
 
         List<StateTransitionLog> log = StateTransitionLog.getStateTransitions(
                 scenarioInstanceId);
+        log.sort((log1, log2) -> log2.getTimeStamp().compareTo(log1.getTimeStamp()));
         return Response.ok().type(MediaType.APPLICATION_JSON)
                 .entity(new JSONArray(log).toString()).build();
     }

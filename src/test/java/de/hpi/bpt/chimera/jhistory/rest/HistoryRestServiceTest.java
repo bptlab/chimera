@@ -81,9 +81,9 @@ public class HistoryRestServiceTest extends JerseyTest {
                 "    \"label\": \"Do something\"," +
                 "    \"loggedId\": 2" +
                 "  }";
-        // Ignore vlaues in assertion because of timestamp
+        // Ignore values in assertion because of timestamp
         assertThat("Get activities did not contain the expected information",
-                json.getJSONObject(1).toString(), jsonEquals(expected)
+                json.getJSONObject(0).toString(), jsonEquals(expected)
                         .when(Option.IGNORING_VALUES));
     }
 
@@ -101,7 +101,8 @@ public class HistoryRestServiceTest extends JerseyTest {
         JSONArray resp = new JSONArray(response.readEntity(String.class));
 
         assertEquals(3, resp.length());
-        JSONObject creation = resp.getJSONObject(0);
+        // log entries are in descending order
+        JSONObject creation = resp.getJSONObject(2);
         assertEquals(JSONObject.NULL, creation.get("oldValue"));
         assertEquals("val", creation.get("newValue"));
 
@@ -109,7 +110,7 @@ public class HistoryRestServiceTest extends JerseyTest {
         assertEquals(first.get("oldValue"), "val");
         assertEquals(first.get("newValue"), "foo");
 
-        JSONObject second = resp.getJSONObject(2);
+        JSONObject second = resp.getJSONObject(0);
         assertEquals(second.get("oldValue"), "foo");
         assertEquals(second.get("newValue"), "bar");
     }
@@ -149,11 +150,11 @@ public class HistoryRestServiceTest extends JerseyTest {
         Response response = base.path(requestPath).request().get();
         JSONArray resp = new JSONArray(response.readEntity(String.class));
 
-        JSONObject initEntry = resp.getJSONObject(0);
+        JSONObject initEntry = resp.getJSONObject(1);
         assertEquals(JSONObject.NULL, initEntry.get("oldValue"));
         assertEquals("init", initEntry.get("newValue"));
 
-        JSONObject changedEntry = resp.getJSONObject(1);
+        JSONObject changedEntry = resp.getJSONObject(0);
         assertEquals("init", changedEntry.get("oldValue"));
         assertEquals("changed", changedEntry.get("newValue"));
     }

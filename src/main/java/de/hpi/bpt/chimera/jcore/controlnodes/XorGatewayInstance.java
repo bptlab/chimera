@@ -31,11 +31,12 @@ public class XorGatewayInstance extends GatewayInstance {
         this.initGatewayInstance();
     }
 
-    @Override
+
     /**
      * Do not set state to terminated yet, since there is still influence on the
      * execution until one of the following control nodes is activated.
      */
+    @Override
     public void terminate() {
         getOutgoingBehavior().terminate();
     }
