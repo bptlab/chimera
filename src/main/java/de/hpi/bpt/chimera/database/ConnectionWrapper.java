@@ -30,7 +30,7 @@ public final class ConnectionWrapper {
      * Stores the current schema version used in the Chimera engine. Is set to '-1', if reading the
      * version file fails.
      */
-    private int schemaVersion = getSchemaVersion();
+    private final int schemaVersion = getSchemaVersion();
 
     /**
      * Builds a connection for the database with the credentials taken from the
@@ -138,6 +138,7 @@ public final class ConnectionWrapper {
     /**
      * Updates the schema. It drops the existing schema, then creates a new schema with the
      * same name and reads the table structure from the sql script.
+     * TODO: Fix possible SQL injection
      */
     private void updateSchema() {
         log.info("Trying to update the schema");
@@ -151,6 +152,8 @@ public final class ConnectionWrapper {
             }
             String schemaName = PropertyLoader.getProperty("mysql.schema");
             stmt.execute("DROP SCHEMA " + schemaName);
+            stmt.execute("CREATE SCHEMA " + schemaName);
+            stmt.execute("USE  " + schemaName);
             // now run the script to create the schema definition
             ScriptRunner runner = new ScriptRunner(conn, false, false);
             runner.runScript(new InputStreamReader(is, "UTF-8"));

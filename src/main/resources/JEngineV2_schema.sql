@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 -- Database: `JEngineV2`
 --
 
-CREATE DATABASE IF NOT EXISTS ${db.schema};
-USE ${db.schema};
+-- CREATE DATABASE IF NOT EXISTS ${db.schema};
+-- USE ${db.schema};
 
 
 CREATE TABLE IF NOT EXISTS `version` (
