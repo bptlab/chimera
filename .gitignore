@@ -9,4 +9,5 @@ resources/database_connection
 target/*
 *~
 /target/
-src/main/resources/config.properties
+src/main/resources/
+config.properties
