@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.database.DbControlFlow;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 
 /**

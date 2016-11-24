@@ -12,12 +12,10 @@ angular.module('jfrontend')
             this.detailsForID = [];
 
             //requesting initially all available scenarios
-            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
-            success(function (data) {
+            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").success(function (data) {
                 controller.scenarioIDs = data['labels'];
 
-            }).
-            error(function () {
+            }).error(function () {
                 console.log('request failed');
             });
 
@@ -25,11 +23,9 @@ angular.module('jfrontend')
             this.submitMyForm = function () {
                 //using the data set in the form as request content
                 var data = $scope.form;
-                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data).
-                success(function (data) {
+                $http.put(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/emailtask/" + controller.workingID + "/?", data).success(function (data) {
                     controller.loadData();
-                }).
-                error(function () {
+                }).error(function () {
                     console.log('request failed');
                 });
 
@@ -45,23 +41,20 @@ angular.module('jfrontend')
 
             // Got all emailtasks with the given Id
             this.getAllMailtaskForScenarioID = function (id) {
-                $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").
-                success(function (data) {
+                $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").success(function (data) {
                     controller.emailtaskIDs = data['ids'];
                     //if the emailtaskIDs array is not empty, prefetch the first item details
                     if (controller.emailtaskIDs.length > 0) {
                         controller.getDetails(controller.emailtaskIDs[0], id);
                     }
-                }).
-                error(function () {
+                }).error(function () {
                     console.log('request failed');
                 });
             };
             // Got to the instance with the given Id
             this.getDetailsForMailtaskID = function (id) {
                 $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
-                    "/scenario/1/emailtask/" + id + "/?").
-                success(function (data) {
+                    "/scenario/1/emailtask/" + id + "/?").success(function (data) {
                     // we are storing the data duplicated for faster access, once in the detailsForID array
                     controller.detailsForID = data;
                     // again in the form so the user can edit them directly

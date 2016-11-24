@@ -1,12 +1,12 @@
 package de.hpi.bpt.chimera.jcore;
 
+import de.hpi.bpt.chimera.database.DbFragment;
 import de.hpi.bpt.chimera.database.DbFragmentInstance;
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbEventMapping;
-import de.hpi.bpt.chimera.database.DbFragment;
+import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.TerminationCondition;
@@ -37,38 +37,39 @@ public class ScenarioInstance {
 	 */
 	private List<AbstractControlNodeInstance> controlNodeInstances = new ArrayList<>();
 
-    private List<FragmentInstance> fragmentInstances = new ArrayList<>();
+	private List<FragmentInstance> fragmentInstances = new ArrayList<>();
 	private Map<Integer, DataAttributeInstance> dataAttributeInstances = new HashMap<>();
 
 
-    private DataManager dataManager;
+	private DataManager dataManager;
 
-    private boolean canTerminate;
-    private TerminationCondition terminationCondition;
-    /**
-     * Creates and initializes a new scenario instance.
-     * Also save this new instance in database.
-     *
-     * @param scenarioId This is the database id from the scenario.
-     */
-    public ScenarioInstance(int scenarioId) {
-        this.name = dbScenario.getScenarioName(scenarioId);
-        this.scenarioId = scenarioId;
-        this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+	private boolean canTerminate;
+	private TerminationCondition terminationCondition;
 
-        // Initialize data manager after setting scenarioId
-        this.dataManager = new DataManager(this);
-        this.terminationCondition = new TerminationCondition(this);
-        this.initializeFragments();
-        this.startAutomaticControlNodes();
-    }
+	/**
+	 * Creates and initializes a new scenario instance.
+	 * Also save this new instance in database.
+	 *
+	 * @param scenarioId This is the database id from the scenario.
+	 */
+	public ScenarioInstance(int scenarioId) {
+		this.name = dbScenario.getScenarioName(scenarioId);
+		this.scenarioId = scenarioId;
+		this.id = dbScenarioInstance.createNewScenarioInstance(scenarioId);
+
+		// Initialize data manager after setting scenarioId
+		this.dataManager = new DataManager(this);
+		this.terminationCondition = new TerminationCondition(this);
+		this.initializeFragments();
+		this.startAutomaticControlNodes();
+	}
 
 	/**
 	 * Creates and initializes a new named scenario instance.
 	 * Also save this new instance in database.
 	 *
 	 * @param scenarioId This is the database id from the scenario.
-	 * @param name This is the given name for the scenario instance.
+	 * @param name       This is the given name for the scenario instance.
 	 */
 	public ScenarioInstance(int scenarioId, String name) {
 		this.name = name;
@@ -87,37 +88,36 @@ public class ScenarioInstance {
 	 * Reads the information for an existing scenario instance from the database.
 	 * If there is no match in the database it creates a new scenario instance.
 	 *
-	 * @param scenarioId         This is the database id from the scenario.
-	 * @param id This is the database id from the scenario instance.
+	 * @param scenarioId This is the database id from the scenario.
+	 * @param id         This is the database id from the scenario instance.
 	 */
 	public ScenarioInstance(int scenarioId, int id) {
-        this.name = dbScenario.getScenarioName(scenarioId);
+		this.name = dbScenario.getScenarioName(scenarioId);
 		this.scenarioId = scenarioId;
 		this.terminationCondition = new TerminationCondition(this);
-        this.id = id;
-        this.dataManager = new DataManager(this);
-        this.reloadControlNodesFromDatabase();
+		this.id = id;
+		this.dataManager = new DataManager(this);
+		this.reloadControlNodesFromDatabase();
 
-        // This also reloads the control node instances from the database
+		// This also reloads the control node instances from the database
 		if (dbScenarioInstance.getTerminated(this.id) == 0) {
 			this.reloadFragments();
 		}
 
-        this.startAutomaticControlNodes();
-        canTerminate = checkTerminationCondition();
-    }
+		this.startAutomaticControlNodes();
+		canTerminate = checkTerminationCondition();
+	}
 
 	private void reloadControlNodesFromDatabase() {
-    	this.controlNodeInstances.clear();
+		this.controlNodeInstances.clear();
 
-        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        List<Integer> controlNodeInstanceIds = dbControlNodeInstance.getControlNodeInstances(
-                this.id);
+		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+		List<Integer> controlNodeInstanceIds = dbControlNodeInstance.getControlNodeInstances(this.id);
 		for (int instanceId : controlNodeInstanceIds) {
 			AbstractControlNodeInstance instance = ControlNodeFactory.loadControlNodeInstance(instanceId, this);
 			this.controlNodeInstances.add(instance);
 		}
-    }
+	}
 
 	/**
 	 * Creates and initializes all fragments for the scenario.
@@ -125,8 +125,7 @@ public class ScenarioInstance {
 	private void initializeFragments() {
 		List<Integer> fragmentIds = dbFragment.getFragmentsForScenario(scenarioId);
 		for (int fragmentId : fragmentIds) {
-			FragmentInstance fragmentInstance = new FragmentInstance(
-					fragmentId, id,	this);
+			FragmentInstance fragmentInstance = new FragmentInstance(fragmentId, id, this);
 			fragmentInstances.add(fragmentInstance);
 		}
 	}
@@ -135,41 +134,38 @@ public class ScenarioInstance {
 		List<Integer> fragmentIds = dbFragment.getFragmentsForScenario(scenarioId);
 		DbFragmentInstance dbFragmentInstance = new DbFragmentInstance();
 		for (int fragmentId : fragmentIds) {
-			int fragmentInstanceId = dbFragmentInstance
-                    .getFragmentInstanceID(fragmentId, this.id);
-			FragmentInstance fragmentInstance = new FragmentInstance(
-					fragmentId, id,	this, fragmentInstanceId);
+			int fragmentInstanceId = dbFragmentInstance.getFragmentInstanceID(fragmentId, this.id);
+			FragmentInstance fragmentInstance = new FragmentInstance(fragmentId, id, this, fragmentInstanceId);
 			fragmentInstances.add(fragmentInstance);
 		}
 	}
 
-    public List<AbstractEvent> getEventsForScenarioInstance() {
-        return this.fragmentInstances.stream().map(FragmentInstance::getRegisteredEvents).
-                flatMap(Collection::stream).collect(Collectors.toList());
-    }
+	public List<AbstractEvent> getEventsForScenarioInstance() {
+		return this.fragmentInstances.stream().map(FragmentInstance::getRegisteredEvents).
+				flatMap(Collection::stream).collect(Collectors.toList());
+	}
 
-    public AbstractControlNodeInstance getControlNodeInstanceWithId(int controlNodeInstanceId) {
-        for (AbstractControlNodeInstance controlNodeInstance : this.getControlNodeInstances()) {
-            if (controlNodeInstance.getControlNodeInstanceId() == controlNodeInstanceId) {
-                return controlNodeInstance;
-            }
-        }
-        return null;
-    }
+	public AbstractControlNodeInstance getControlNodeInstanceWithId(int controlNodeInstanceId) {
+		for (AbstractControlNodeInstance controlNodeInstance : this.getControlNodeInstances()) {
+			if (controlNodeInstance.getControlNodeInstanceId() == controlNodeInstanceId) {
+				return controlNodeInstance;
+			}
+		}
+		return null;
+	}
 
-    /**
-     *
-     * @return returns a List of all registered keys to events.
-     */
-    public List<String> getRegisteredEventKeys() {
-        List<String> eventKeys = new ArrayList<>();
-        for (FragmentInstance fragmentInstance : this.fragmentInstances) {
-            Integer fragmentInstanceId = fragmentInstance.getId();
-            DbEventMapping eventMapping = new DbEventMapping();
-            eventKeys.addAll(eventMapping.getRequestKeysForFragment(fragmentInstanceId));
-        }
-        return eventKeys;
-    }
+	/**
+	 * @return returns a List of all registered keys to events.
+	 */
+	public List<String> getRegisteredEventKeys() {
+		List<String> eventKeys = new ArrayList<>();
+		for (FragmentInstance fragmentInstance : this.fragmentInstances) {
+			Integer fragmentInstanceId = fragmentInstance.getId();
+			DbEventMapping eventMapping = new DbEventMapping();
+			eventKeys.addAll(eventMapping.getRequestKeysForFragment(fragmentInstanceId));
+		}
+		return eventKeys;
+	}
 
 	/**
 	 * Restarts the fragment specified by the fragment id.
@@ -191,8 +187,7 @@ public class ScenarioInstance {
 		}
 
 		//removes the old control node instances
-		List<AbstractControlNodeInstance> updatedList = new ArrayList<>(
-				this.getTerminatedControlNodeInstances());
+		List<AbstractControlNodeInstance> updatedList = new ArrayList<>(this.getTerminatedControlNodeInstances());
 		for (AbstractControlNodeInstance controlNodeInstance : updatedList) {
 			if (controlNodeInstance.getFragmentInstanceId() == fragmentInstanceId) {
 				this.controlNodeInstances.remove(controlNodeInstance);
@@ -206,8 +201,7 @@ public class ScenarioInstance {
 		}
 		if (fragmentInstance != null) {
 			int fragmentId = fragmentInstance.getFragmentId();
-			fragmentInstance = new FragmentInstance(
-					fragmentId, id, this);
+			fragmentInstance = new FragmentInstance(fragmentId, id, this);
 			fragmentInstances.add(fragmentInstance);
 		}
 		this.startAutomaticControlNodes();
@@ -223,24 +217,25 @@ public class ScenarioInstance {
 				((ActivityInstance) activityInstance).checkDataFlowEnabled();
 			}
 		}
-        checkTerminationCondition();
-    }
+		checkTerminationCondition();
+	}
 
-    /**
-     * Checks whether the
-     * @param controlNodeInstanceId The id of the control node instance, which was transferred
-     *                              to the state ready.
-     */
-    public void skipAlternativeControlNodes(int controlNodeInstanceId) {
-        List<XorGatewayInstance> gateways = this.getExecutingGateways();
-        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        int controlNodeId = dbControlNodeInstance.getControlNodeId(controlNodeInstanceId);
-        for (XorGatewayInstance gateway : gateways) {
-            if (gateway.containsControlNodeInFollowing(controlNodeId)) {
-                gateway.skipAlternativeBranches(controlNodeId);
-            }
-        }
-    }
+	/**
+	 * Checks whether the
+	 *
+	 * @param controlNodeInstanceId The id of the control node instance, which was transferred
+	 *                              to the state ready.
+	 */
+	public void skipAlternativeControlNodes(int controlNodeInstanceId) {
+		List<XorGatewayInstance> gateways = this.getExecutingGateways();
+		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+		int controlNodeId = dbControlNodeInstance.getControlNodeId(controlNodeInstanceId);
+		for (XorGatewayInstance gateway : gateways) {
+			if (gateway.containsControlNodeInFollowing(controlNodeId)) {
+				gateway.skipAlternativeBranches(controlNodeId);
+			}
+		}
+	}
 
 	/**
 	 * Checks if the list terminatedControlNodeInstances contains the control node.
@@ -249,8 +244,7 @@ public class ScenarioInstance {
 	 * @return true if the terminated control node instances contains the control node.
 	 */
 	public boolean terminatedControlNodeInstancesContainControlNodeID(int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance :
-                this.getTerminatedControlNodeInstances()) {
+		for (AbstractControlNodeInstance controlNodeInstance : this.getTerminatedControlNodeInstances()) {
 			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
 				return true;
 			}
@@ -280,9 +274,9 @@ public class ScenarioInstance {
 	 * @return true if the condition is true. false if not.
 	 */
 	public boolean checkTerminationCondition() {
-        this.canTerminate = this.terminationCondition.
-                checkTerminationCondition(this.dataManager.getDataObjects());
-        return this.canTerminate;
+		this.canTerminate = this.terminationCondition.
+				checkTerminationCondition(this.dataManager.getDataObjects());
+		return this.canTerminate;
 	}
 
 
@@ -290,7 +284,7 @@ public class ScenarioInstance {
 	 * Terminates a scenario instance.
 	 * Write the termination in the database and clears all lists.
 	 */
-    public void terminate() {
+	public void terminate() {
 		dbScenarioInstance.setTerminated(id, true);
 		controlNodeInstances.clear();
 	}
@@ -299,16 +293,17 @@ public class ScenarioInstance {
 	 * Starts automatic running control node instances.
 	 * For example it starts the email tasks.
 	 */
-	@SuppressWarnings("unchecked") public void startAutomaticControlNodes() {
-//		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(
-//                this.getEnabledControlNodeInstances());
-//        for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
-//			if (controlNodeInstance.getClass() == ActivityInstance.class
-//					&& ((ActivityInstance) controlNodeInstance).isAutomaticTask()) {
-//				((ActivityInstance) controlNodeInstance).begin();
-//			}
-//		}
-        // Don't begin automatic tasks at the moment.
+	@SuppressWarnings("unchecked")
+	public void startAutomaticControlNodes() {
+		//		List<AbstractControlNodeInstance> instancesClone = new ArrayList<>(
+		//                this.getEnabledControlNodeInstances());
+		//        for (AbstractControlNodeInstance controlNodeInstance : instancesClone) {
+		//			if (controlNodeInstance.getClass() == ActivityInstance.class
+		//					&& ((ActivityInstance) controlNodeInstance).isAutomaticTask()) {
+		//				((ActivityInstance) controlNodeInstance).begin();
+		//			}
+		//		}
+		// Don't begin automatic tasks at the moment.
 	}
 
 	/**
@@ -317,8 +312,7 @@ public class ScenarioInstance {
 	 * @param controlNodeId This is a id of a control node.
 	 * @return the control instance for the given control node id.
 	 */
-	public AbstractControlNodeInstance getControlNodeInstanceForControlNodeId(
-			int controlNodeId) {
+	public AbstractControlNodeInstance getControlNodeInstanceForControlNodeId(int controlNodeId) {
 		for (AbstractControlNodeInstance controlNodeInstance : controlNodeInstances) {
 			if (controlNodeInstance.getControlNodeId() == controlNodeId) {
 				return controlNodeInstance;
@@ -360,48 +354,42 @@ public class ScenarioInstance {
 	 * @return a ArrayList of enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getEnabledControlNodeInstances() {
-        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.READY))
-                .collect(Collectors.toList());
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.READY)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of flow enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getControlFlowEnabledControlNodeInstances() {
-        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
-                State.CONTROLFLOW_ENABLED)).collect(Collectors.toList());
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.CONTROLFLOW_ENABLED)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of data enabled control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getDataEnabledControlNodeInstances() {
-		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
-                State.DATAFLOW_ENABLED)).collect(Collectors.toList());
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.DATAFLOW_ENABLED)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of running control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getRunningControlNodeInstances() {
-        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
-                State.RUNNING)).collect(Collectors.toList());
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.RUNNING)).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return a ArrayList of terminated control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getTerminatedControlNodeInstances() {
-        return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
-                State.TERMINATED)).collect(Collectors.toList());
-    }
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.TERMINATED)).collect(Collectors.toList());
+	}
 
 	/**
 	 * @return a ArrayList of skipped control node instances.
 	 */
 	public List<AbstractControlNodeInstance> getSkippedControlNodeInstances() {
-		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(
-				State.SKIPPED)).collect(Collectors.toList());
+		return this.controlNodeInstances.stream().filter(x -> x.getState().equals(State.SKIPPED)).collect(Collectors.toList());
 	}
 
 	public List<FragmentInstance> getFragmentInstances() {
@@ -412,10 +400,7 @@ public class ScenarioInstance {
 	 * @return a ArrayList of executing gateways.
 	 */
 	public List<XorGatewayInstance> getExecutingGateways() {
-        return this.controlNodeInstances.stream()
-                .filter(x -> x.getClass() == XorGatewayInstance.class)
-                .map(x -> (XorGatewayInstance) x)
-                .collect(Collectors.toList());
+		return this.controlNodeInstances.stream().filter(x -> x.getClass() == XorGatewayInstance.class).map(x -> (XorGatewayInstance) x).collect(Collectors.toList());
 	}
 
 	/**
@@ -426,11 +411,11 @@ public class ScenarioInstance {
 		return dataAttributeInstances;
 	}
 
-    public boolean canTerminate() {
-        return canTerminate;
-    }
+	public boolean canTerminate() {
+		return canTerminate;
+	}
 
-    public DataManager getDataManager() {
-        return dataManager;
-    }
+	public DataManager getDataManager() {
+		return dataManager;
+	}
 }

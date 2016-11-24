@@ -45,11 +45,7 @@ public class ServiceManager {
 		SET json = '" + jsonObject.toString()
 		+ "' WHERE service = '" + services.get(service).getClass().getName() + "'");
 		*/
-		resultId = dbObject.executeInsertStatement(
-				"INSERT INTO janalyticsresults (service, json) "
-						+ "VALUES ('"
-						+ services.get(service).getClass().getName()
-						+ "', '" + jsonObject.toString() + "')");
+		resultId = dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service, json) " + "VALUES ('" + services.get(service).getClass().getName() + "', '" + jsonObject.toString() + "')");
 		/*if (!dbObject.executeExistStatement("SELECT * FROM janalyticsresults
 		WHERE service = '" + services.get(service).getClass().getName() + "'")) {
         *    dbObject.executeInsertStatement("INSERT INTO janalyticsresults (service, json)
@@ -77,11 +73,7 @@ public class ServiceManager {
 	 * @return a json with the result of the service.
 	 */
 	public JSONObject getResultForServiceViaId(String service, int resultId) {
-		String json = dbObject.executeStatementReturnsString(
-				"SELECT json FROM janalyticsresults "
-						+ "WHERE id = '" + resultId + "' AND service = '"
-						+ services.get(service).getClass().getName()
-						+ "'", "json");
+		String json = dbObject.executeStatementReturnsString("SELECT json FROM janalyticsresults " + "WHERE id = '" + resultId + "' AND service = '" + services.get(service).getClass().getName() + "'", "json");
 		return new JSONObject(json);
 	}
 

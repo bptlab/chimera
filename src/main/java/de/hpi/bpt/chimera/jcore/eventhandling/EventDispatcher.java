@@ -28,7 +28,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.quartz.JobBuilder.newJob;
@@ -40,268 +43,231 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @Path("eventdispatcher/")
 public final class EventDispatcher {
 
-    private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
-    private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url")
-            + PropertyLoader.getProperty("unicorn.path.deploy");
-    private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url")
-            + PropertyLoader.getProperty("chimera.path.deploy");
-    private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s";
-    private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/casestart/%s";
+	private static final String REST_PATH = PropertyLoader.getProperty("unicorn.path.query.rest");
+	private static final String REST_DEPLOY_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
+	private static final String SELF_DEPLOY_URL = PropertyLoader.getProperty("chimera.url") + PropertyLoader.getProperty("chimera.path.deploy");
+	private static final String SELF_PATH_NODES = "%s/api/eventdispatcher/scenario/%d/instance/%d/events/%s";
+	private static final String SELF_PATH_CASESTART = "%s/api/eventdispatcher/casestart/%s";
 
-    private static Logger logger = Logger.getLogger(EventDispatcher.class);
+	private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 
-    @Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
-    public static Response receiveEvent(
-            @PathParam("scenarioId") int scenarioId,
-            @PathParam("instanceId") int scenarioInstanceId,
-            @PathParam("requestKey") String requestId,
-            String eventJson) {
-        AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
-        if (eventJson.isEmpty() || "{}".equals(eventJson)) {
-            event.terminate("");
-        } else {
-            event.terminate(eventJson);
-        }
-        unregisterEvent(event);
-        return Response.accepted("Event received.").build();
-    }
+	@Path("scenario/{scenarioId}/instance/{instanceId}/events/{requestKey}")
+	public static Response receiveEvent(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("requestKey") String requestId, String eventJson) {
+		AbstractEvent event = findEvent(requestId, scenarioId, scenarioInstanceId);
+		if (eventJson.isEmpty() || "{}".equals(eventJson)) {
+			event.terminate("");
+		} else {
+			event.terminate(eventJson);
+		}
+		unregisterEvent(event);
+		return Response.accepted("Event received.").build();
+	}
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("casestart/{requestKey}")
-    public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
-        int scenarioId = new DbCaseStart().getScenarioId(requestKey);
-        int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
-        ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-        String queryId = new DbCaseStart().getQueryId(requestKey);
-        CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
-        try {
-            caseStarter.startInstance(eventJson, instance);
-            SseNotifier.notifyRefresh();
-        } catch (IllegalStateException e) {
-            logger.error("Could not start case from query", e);
-            return Response.status(Response.Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity(e.getMessage())
-                    .build();
-        }
-        return Response.ok("Event received.").build();
-    }
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("casestart/{requestKey}")
+	public static Response startCase(@PathParam("requestKey") String requestKey, String eventJson) {
+		int scenarioId = new DbCaseStart().getScenarioId(requestKey);
+		int scenarioInstanceId = ExecutionService.startNewScenarioInstanceStatic(scenarioId);
+		ScenarioInstance instance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+		String queryId = new DbCaseStart().getQueryId(requestKey);
+		CaseStarter caseStarter = new CaseStarter(scenarioId, queryId);
+		try {
+			caseStarter.startInstance(eventJson, instance);
+			SseNotifier.notifyRefresh();
+		} catch (IllegalStateException e) {
+			logger.error("Could not start case from query", e);
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(e.getMessage()).build();
+		}
+		return Response.ok("Event received.").build();
+	}
 
-    public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
-        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
-        return getEvent(scenarioInstance, requestId);
-    }
+	public static AbstractEvent findEvent(String requestId, int scenarioId, int instanceId) {
+		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
+		return getEvent(scenarioInstance, requestId);
+	}
 
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("scenario/{scenarioId}/instance/{instanceId}/events")
-    public static Response getRegisteredEvents(
-            @PathParam("instanceId") int scenarioInstanceId,
-            @PathParam("scenarioId") int scenarioId) {
-        ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
-        List<Integer> fragmentIds = scenarioInstance.getFragmentInstances().stream()
-                .map(FragmentInstance::getFragmentId)
-                .collect(Collectors.toList());
-        DbEventMapping eventMapping = new DbEventMapping();
-        List<String> requestKeys = fragmentIds.stream()
-                .map(eventMapping::getRequestKeysForFragment).flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        JSONArray jsonArray = new JSONArray(requestKeys);
-        return Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonArray.toString()).build();
-    }
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
+	public static Response getRegisteredEvents(@PathParam("instanceId") int scenarioInstanceId, @PathParam("scenarioId") int scenarioId) {
+		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, scenarioInstanceId);
+		List<Integer> fragmentIds = scenarioInstance.getFragmentInstances().stream().map(FragmentInstance::getFragmentId).collect(Collectors.toList());
+		DbEventMapping eventMapping = new DbEventMapping();
+		List<String> requestKeys = fragmentIds.stream().map(eventMapping::getRequestKeysForFragment).flatMap(Collection::stream).collect(Collectors.toList());
+		JSONArray jsonArray = new JSONArray(requestKeys);
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonArray.toString()).build();
+	}
 
 
-    public static void unregisterEvent(AbstractEvent event) {
-        if (isExclusiveEvent(event)) {
-            discardAllAlternatives(event);
-        } else {
-            unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
-        }
-    }
+	public static void unregisterEvent(AbstractEvent event) {
+		if (isExclusiveEvent(event)) {
+			discardAllAlternatives(event);
+		} else {
+			unregisterEvent(event.getControlNodeId(), event.getFragmentInstanceId());
+		}
+	}
 
-    private static void discardAllAlternatives(AbstractEvent event) {
-        DbEventMapping mapping = new DbEventMapping();
-        int fragmentInstanceId = event.getFragmentInstanceId();
-        List<Integer> alternativeEventNodes = mapping.getAlternativeEventsIds(event);
-        alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
-    }
+	private static void discardAllAlternatives(AbstractEvent event) {
+		DbEventMapping mapping = new DbEventMapping();
+		int fragmentInstanceId = event.getFragmentInstanceId();
+		List<Integer> alternativeEventNodes = mapping.getAlternativeEventsIds(event);
+		alternativeEventNodes.forEach(x -> unregisterEvent(x, fragmentInstanceId));
+	}
 
-    public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
-        final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-        String notificationPath = String.format(
-                SELF_PATH_CASESTART, SELF_DEPLOY_URL, requestId);
-        String notificationRuleId = sendQueryToEventService(
-                eventQuery, requestId, notificationPath);
-        new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
-    }
+	public static void registerCaseStartEvent(String eventQuery, int scenarioId, String id) {
+		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
+		String notificationPath = String.format(SELF_PATH_CASESTART, SELF_DEPLOY_URL, requestId);
+		String notificationRuleId = sendQueryToEventService(eventQuery, requestId, notificationPath);
+		new DbCaseStart().insertCaseStartMapping(requestId, scenarioId, notificationRuleId, id);
+	}
 
-    public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId,
-                                          int scenarioInstanceId, int scenarioId) {
-        String mappingKey = registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
-        Date terminationDate = event.getTerminationDate();
-        assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM-(-243)";
-        SchedulerFactory sf = new StdSchedulerFactory();
-        try {
-            Scheduler sched = sf.getScheduler();
-            JobDetail job = createJob(mappingKey, scenarioInstanceId, scenarioId);
-            SimpleTrigger trigger = (SimpleTrigger) newTrigger()
-                    .startAt(terminationDate)
-                    .build();
-            sched.start();
-            sched.scheduleJob(job, trigger);
-        } catch (SchedulerException e) {
-            logger.error(e.getMessage(), e);
-        }
+	public static void registerTimerEvent(TimerEventInstance event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
+		String mappingKey = registerEvent(event, fragmentInstanceId, scenarioInstanceId, scenarioId);
+		Date terminationDate = event.getTerminationDate();
+		assert (terminationDate.after(new Date())) : "Traveling back in time is not implemented yet, see feature request #CM-(-243)";
+		SchedulerFactory sf = new StdSchedulerFactory();
+		try {
+			Scheduler sched = sf.getScheduler();
+			JobDetail job = createJob(mappingKey, scenarioInstanceId, scenarioId);
+			SimpleTrigger trigger = (SimpleTrigger) newTrigger().startAt(terminationDate).build();
+			sched.start();
+			sched.scheduleJob(job, trigger);
+		} catch (SchedulerException e) {
+			logger.error(e.getMessage(), e);
+		}
 
-    }
+	}
 
-    private static JobDetail createJob(String mappingKey, int scenarioInstanceId, int scenarioId) {
-        JobDetail timeEventJob = newJob(TimeEventJob.class)
-                .withIdentity("1")
-                .build();
-        timeEventJob.getJobDataMap().put("mappingKey", mappingKey);
-        timeEventJob.getJobDataMap().put("scenarioInstanceId", scenarioInstanceId);
-        timeEventJob.getJobDataMap().put("scenarioId", scenarioId);
-        return timeEventJob;
-    }
+	private static JobDetail createJob(String mappingKey, int scenarioInstanceId, int scenarioId) {
+		JobDetail timeEventJob = newJob(TimeEventJob.class).withIdentity("1").build();
+		timeEventJob.getJobDataMap().put("mappingKey", mappingKey);
+		timeEventJob.getJobDataMap().put("scenarioInstanceId", scenarioInstanceId);
+		timeEventJob.getJobDataMap().put("scenarioId", scenarioId);
+		return timeEventJob;
+	}
 
-    private static boolean isExclusiveEvent(AbstractEvent event) {
-        DbEventMapping mapping = new DbEventMapping();
-        return mapping.isAlternativeEvent(event);
-    }
+	private static boolean isExclusiveEvent(AbstractEvent event) {
+		DbEventMapping mapping = new DbEventMapping();
+		return mapping.isAlternativeEvent(event);
+	}
 
-    private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
-        DbEventMapping eventMapping = new DbEventMapping();
-        EventFactory factory = new EventFactory(instance);
+	private static AbstractEvent getEvent(ScenarioInstance instance, String requestId) {
+		DbEventMapping eventMapping = new DbEventMapping();
+		EventFactory factory = new EventFactory(instance);
 
-        int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
-        int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
-        AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId,
-                fragmentInstanceId);
-        new DbLogEntry().logEvent(event.getControlNodeInstanceId(),
-                instance.getId(), "received");
-        return event;
-    }
+		int eventControlNodeId = eventMapping.getEventControlNodeId(requestId);
+		int fragmentInstanceId = eventMapping.getFragmentInstanceId(requestId);
+		AbstractEvent event = factory.getEventForControlNodeId(eventControlNodeId, fragmentInstanceId);
+		new DbLogEntry().logEvent(event.getControlNodeInstanceId(), instance.getId(), "received");
+		return event;
+	}
 
 
-    public static String registerEvent(
-            AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
-        final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
-        String query = insertAttributesIntoQueryString(
-                event.getQueryString(), scenarioInstanceId, scenarioId);
-        String notificationRuleId = sendQueryToEventService(
-                query, requestId, scenarioInstanceId, scenarioId);
-        DbEventMapping mapping = new DbEventMapping();
-        mapping.saveMappingToDatabase(
-                fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
-        new DbLogEntry().logEvent(event.getControlNodeInstanceId(), scenarioInstanceId, "registered");
-        return requestId;
-    }
+	public static String registerEvent(AbstractEvent event, int fragmentInstanceId, int scenarioInstanceId, int scenarioId) {
+		final String requestId = UUID.randomUUID().toString().replaceAll("\\-", "");
+		String query = insertAttributesIntoQueryString(event.getQueryString(), scenarioInstanceId, scenarioId);
+		String notificationRuleId = sendQueryToEventService(query, requestId, scenarioInstanceId, scenarioId);
+		DbEventMapping mapping = new DbEventMapping();
+		mapping.saveMappingToDatabase(fragmentInstanceId, requestId, event.getControlNodeId(), notificationRuleId);
+		new DbLogEntry().logEvent(event.getControlNodeInstanceId(), scenarioInstanceId, "registered");
+		return requestId;
+	}
 
-    public static String insertAttributesIntoQueryString(
-            String queryString, int scenarioInstanceId, int scenarioId) {
-        if (queryString.contains("#")) {
-            ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
-            for (DataAttributeInstance attribute : scenario
-                    .getDataManager().getDataAttributeInstances()) {
-                String dataattributePath = String.format("#%s.%s",
-                        attribute.getDataObject().getName(), attribute.getName());
-                queryString = queryString.replace(dataattributePath,
-                        attribute.getValue().toString());
-            }
-        }
-        return queryString;
-    }
+	public static String insertAttributesIntoQueryString(String queryString, int scenarioInstanceId, int scenarioId) {
+		if (queryString.contains("#")) {
+			ScenarioInstance scenario = new ScenarioInstance(scenarioId, scenarioInstanceId);
+			for (DataAttributeInstance attribute : scenario.getDataManager().getDataAttributeInstances()) {
+				String dataattributePath = String.format("#%s.%s", attribute.getDataObject().getName(), attribute.getName());
+				queryString = queryString.replace(dataattributePath, attribute.getValue().toString());
+			}
+		}
+		return queryString;
+	}
 
-    /**
-     * Saves that events are alternative to each other, so that they can be skipped when
-     * one of the is triggered.
-     * The events have to be registered
-     * @param events the events that are alternative to each other (e.g. behind a event
-     *               based gateway)
-     */
-    public static void registerExclusiveEvents(List<AbstractEvent> events) {
-        DbEventMapping mapping = new DbEventMapping();
-        mapping.saveAlternativeEvents(events);
-        events.forEach(AbstractEvent::enableControlFlow);
-    }
+	/**
+	 * Saves that events are alternative to each other, so that they can be skipped when
+	 * one of the is triggered.
+	 * The events have to be registered
+	 *
+	 * @param events the events that are alternative to each other (e.g. behind a event
+	 *               based gateway)
+	 */
+	public static void registerExclusiveEvents(List<AbstractEvent> events) {
+		DbEventMapping mapping = new DbEventMapping();
+		mapping.saveAlternativeEvents(events);
+		events.forEach(AbstractEvent::enableControlFlow);
+	}
 
-    private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId,
-                                         int scenarioId) {
-        String notificationPath = String.format(SELF_PATH_NODES,
-                SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
-        return sendQueryToEventService(rawQuery, requestId, notificationPath);
-    }
+	private static String sendQueryToEventService(String rawQuery, String requestId, int scenarioInstanceId, int scenarioId) {
+		String notificationPath = String.format(SELF_PATH_NODES, SELF_DEPLOY_URL, scenarioId, scenarioInstanceId, requestId);
+		return sendQueryToEventService(rawQuery, requestId, notificationPath);
+	}
 
-    private static String sendQueryToEventService(
-            String rawQuery, String requestId, String notificationPath) {
-        // since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
-        String query = StringEscapeUtils.unescapeHtml4(rawQuery);
-        logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
+	private static String sendQueryToEventService(String rawQuery, String requestId, String notificationPath) {
+		// since some symbols (mainly < and >) are escaped in the fragment xml, we need to unescape them.
+		String query = StringEscapeUtils.unescapeHtml4(rawQuery);
+		logger.debug("Sending EventQuery to Unicorn: " + query + " " + requestId);
 
-        JsonObject queryRequest = new JsonObject();
-        queryRequest.addProperty("queryString", query);
-        queryRequest.addProperty("notificationPath", notificationPath);
-        Gson gson = new Gson();
-        Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
-        client.property(ClientProperties.READ_TIMEOUT, 1000);
-        WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
-        try {
-            Response response = target.request()
-                    .post(Entity.json(gson.toJson(queryRequest)));
-            if (response.getStatus() != 200) {
-                // throw new RuntimeException("Query could not be registered");
-                logger.warn("Could not register Query \"" + query + "\"");
-                return "-1";
-            } else {
-                // return the UUID of the Notification Rule
-                // so that it can be removed later
-                return response.readEntity(String.class);
-            }
-        } catch (ProcessingException e) {
-            logger.warn("Could not register Query \"" + query+ "\"");
-            return "-1";
-        }
-    }
+		JsonObject queryRequest = new JsonObject();
+		queryRequest.addProperty("queryString", query);
+		queryRequest.addProperty("notificationPath", notificationPath);
+		Gson gson = new Gson();
+		Client client = ClientBuilder.newClient();
+		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
+		client.property(ClientProperties.READ_TIMEOUT, 1000);
+		WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH);
+		try {
+			Response response = target.request().post(Entity.json(gson.toJson(queryRequest)));
+			if (response.getStatus() != 200) {
+				// throw new RuntimeException("Query could not be registered");
+				logger.warn("Could not register Query \"" + query + "\"");
+				return "-1";
+			} else {
+				// return the UUID of the Notification Rule
+				// so that it can be removed later
+				return response.readEntity(String.class);
+			}
+		} catch (ProcessingException e) {
+			logger.warn("Could not register Query \"" + query + "\"");
+			return "-1";
+		}
+	}
 
-    public static void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
-        DbEventMapping eventMapping = new DbEventMapping();
-        String notificationRuleId = eventMapping.getNotificationRuleId(eventControlNodeId);
+	public static void unregisterEvent(int eventControlNodeId, int fragmentInstanceId) {
+		DbEventMapping eventMapping = new DbEventMapping();
+		String notificationRuleId = eventMapping.getNotificationRuleId(eventControlNodeId);
 
-        unregisterNotificationRule(notificationRuleId);
-        eventMapping.removeEventMapping(fragmentInstanceId, eventControlNodeId);
-    }
+		unregisterNotificationRule(notificationRuleId);
+		eventMapping.removeEventMapping(fragmentInstanceId, eventControlNodeId);
+	}
 
-    private static void unregisterNotificationRule(String notificationRuleId) {
-        Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
-        client.property(ClientProperties.READ_TIMEOUT, 1000);
-        try {
-            WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
-            Response response = target.request().delete();
-            if(response.getStatus() != 200) {
-                logger.debug("Could not unregister Query");
-            }
-        } catch (ProcessingException e) {
-            logger.debug("Could not unregister Query");
-        }
-    }
+	private static void unregisterNotificationRule(String notificationRuleId) {
+		Client client = ClientBuilder.newClient();
+		client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
+		client.property(ClientProperties.READ_TIMEOUT, 1000);
+		try {
+			WebTarget target = client.target(REST_DEPLOY_URL).path(REST_PATH + "/" + notificationRuleId);
+			Response response = target.request().delete();
+			if (response.getStatus() != 200) {
+				logger.debug("Could not unregister Query");
+			}
+		} catch (ProcessingException e) {
+			logger.debug("Could not unregister Query");
+		}
+	}
 
-    public static void unregisterCaseStartEvent(int scenarioId) {
-        DbCaseStart caseStart = new DbCaseStart();
-        List<String> requestKeys = caseStart.getRequestKeys(scenarioId);
-        List<String> notificationRuleIds = requestKeys.stream()
-                .map(x -> caseStart.getNotificationRuleId(scenarioId, x))
-                .collect(Collectors.toList());
+	public static void unregisterCaseStartEvent(int scenarioId) {
+		DbCaseStart caseStart = new DbCaseStart();
+		List<String> requestKeys = caseStart.getRequestKeys(scenarioId);
+		List<String> notificationRuleIds = requestKeys.stream().map(x -> caseStart.getNotificationRuleId(scenarioId, x)).collect(Collectors.toList());
 
-        notificationRuleIds.forEach(EventDispatcher::unregisterNotificationRule);
+		notificationRuleIds.forEach(EventDispatcher::unregisterNotificationRule);
 
-        requestKeys.forEach(caseStart::deleteCaseMapping);
-    }
+		requestKeys.forEach(caseStart::deleteCaseMapping);
+	}
 }

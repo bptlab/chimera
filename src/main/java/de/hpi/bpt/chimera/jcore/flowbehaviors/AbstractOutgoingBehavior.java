@@ -1,10 +1,8 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.database.DbControlFlow;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNode;
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 
 /**
  * This class represents generic outgoing behavior.
@@ -22,7 +20,7 @@ public abstract class AbstractOutgoingBehavior {
 	public abstract void terminate();
 
 
-    public abstract void skip();
+	public abstract void skip();
 
 	/**
 	 * Runs other methods after terminate a control node instance.
@@ -43,20 +41,20 @@ public abstract class AbstractOutgoingBehavior {
 		return scenarioInstance;
 	}
 
-	public int getControlNodeId() {
-		return controlNodeId;
-	}
-
-	public int getFragmentInstanceId() {
-		return fragmentInstanceId;
-	}
-
 	public void setScenarioInstance(ScenarioInstance scenarioInstance) {
 		this.scenarioInstance = scenarioInstance;
 	}
 
+	public int getControlNodeId() {
+		return controlNodeId;
+	}
+
 	public void setControlNodeId(int controlNodeId) {
 		this.controlNodeId = controlNodeId;
+	}
+
+	public int getFragmentInstanceId() {
+		return fragmentInstanceId;
 	}
 
 	public void setFragmentInstanceId(int fragmentInstanceId) {

@@ -7,9 +7,9 @@ import de.hpi.bpt.chimera.jcomparser.saving.IPersistable;
  * This class represents a DataAttribute.
  */
 public class DataAttribute implements IPersistable {
-    private final String editorId;
+	private final String editorId;
 
-    /**
+	/**
 	 * This is the databaseID of the dataClass belonging to this attribute.
 	 */
 	private int dataClassId = -1;
@@ -35,7 +35,18 @@ public class DataAttribute implements IPersistable {
 	public DataAttribute(String name, String type, String editorId) {
 		this.name = name;
 		this.type = type;
-        this.editorId = editorId;
+		this.editorId = editorId;
+	}
+
+	@Override
+	public int save() {
+		Connector conn = new Connector();
+		this.id = conn.insertDataAttribute(this.name, this.dataClassId, this.type);
+		return id;
+	}
+
+	public int getDataClassId() {
+		return dataClassId;
 	}
 
 	/**
@@ -45,18 +56,6 @@ public class DataAttribute implements IPersistable {
 	 */
 	public void setDataClassId(final int id) {
 		this.dataClassId = id;
-	}
-
-	@Override public int save() {
-		Connector conn = new Connector();
-		this.id = conn.insertDataAttribute(
-				this.name, this.dataClassId,
-						this.type);
-		return id;
-	}
-
-	public int getDataClassId() {
-		return dataClassId;
 	}
 
 	public int getId() {
@@ -71,7 +70,7 @@ public class DataAttribute implements IPersistable {
 		return name;
 	}
 
-    public String getEditorId() {
-        return this.editorId;
-    }
+	public String getEditorId() {
+		return this.editorId;
+	}
 }

@@ -26,11 +26,10 @@ public class DbGatewayInstance extends DbObject {
 	 * @return the state of the gateway instance as a String.
 	 */
 	public State getState(int id) {
-		String sql = "SELECT gateway_state FROM gatewayinstance "
-				+ "WHERE id = " + id;
+		String sql = "SELECT gateway_state FROM gatewayinstance " + "WHERE id = " + id;
 		String state = this.executeStatementReturnsString(sql, "gateway_state");
- 	    return State.valueOf(state.toUpperCase());
-    }
+		return State.valueOf(state.toUpperCase());
+	}
 
 	/**
 	 * This method sets the state of a gateway to a desirable one.
@@ -39,8 +38,7 @@ public class DbGatewayInstance extends DbObject {
 	 * @param state this is the desirable state of the gateway instance.
 	 */
 	public void setState(int id, String state) {
-		String sql = "UPDATE gatewayinstance SET gateway_state = '" + state
-				+ "' WHERE id = " + id;
+		String sql = "UPDATE gatewayinstance SET gateway_state = '" + state + "' WHERE id = " + id;
 		this.executeUpdateStatement(sql);
 	}
 

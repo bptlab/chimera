@@ -24,11 +24,8 @@ public class DbScenarioInstance extends DbObject {
 	 * @return if the check was positive(true) or not(false).
 	 */
 	public Boolean doesScenarioInstanceBelongToScenario(int scenarioId, int scenarioInstanceId) {
-		if (!exist || this.scenarioId != scenarioId
-				|| this.id != scenarioInstanceId) {
-			String sql = "SELECT id FROM scenarioinstance "
-					+ "WHERE scenario_id = " + scenarioId + " "
-					+ "AND id = " + scenarioInstanceId;
+		if (!exist || this.scenarioId != scenarioId || this.id != scenarioInstanceId) {
+			String sql = "SELECT id FROM scenarioinstance " + "WHERE scenario_id = " + scenarioId + " " + "AND id = " + scenarioInstanceId;
 			log.info(sql);
 			exist = this.executeExistStatement(sql);
 			this.scenarioId = scenarioId;
@@ -45,8 +42,7 @@ public class DbScenarioInstance extends DbObject {
 	 */
 	public Boolean existsScenarioInstance(int scenarioInstanceId) {
 		if (!exist || this.id != scenarioInstanceId) {
-			String sql = "SELECT id FROM scenarioinstance "
-					+ "WHERE id = " + scenarioInstanceId;
+			String sql = "SELECT id FROM scenarioinstance " + "WHERE id = " + scenarioInstanceId;
 			log.info(sql);
 			exist = this.executeExistStatement(sql);
 			this.id = scenarioInstanceId;
@@ -61,8 +57,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @return the database ID of the newly created scenario instance (Error: -1).
 	 */
 	public int createNewScenarioInstance(int scenarioId) {
-		String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + scenarioId
-				+ ", (SELECT name FROM scenario WHERE id = " + scenarioId + "))";
+		String sql = "INSERT INTO scenarioinstance (scenario_id, name) VALUES (" + scenarioId + ", (SELECT name FROM scenario WHERE id = " + scenarioId + "))";
 		log.info(sql);
 		return this.executeInsertStatement(sql);
 	}
@@ -76,8 +71,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @return the database ID of the newly created scenario instance (Error: -1).
 	 */
 	public int createNewScenarioInstance(int id, String name) {
-		String sql = "INSERT INTO scenarioinstance (scenario_id, name) "
-				+ "VALUES (" + id + "," + "'" + name + "'" + ")";
+		String sql = "INSERT INTO scenarioinstance (scenario_id, name) " + "VALUES (" + id + "," + "'" + name + "'" + ")";
 		log.info(sql);
 		return this.executeInsertStatement(sql);
 
@@ -90,8 +84,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @return the database ID of the latest scenario instance (Error: -1).
 	 */
 	public int getScenarioInstanceID(int scenarioId) {
-		String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenarioId
-				+ " ORDER BY id DESC";
+		String sql = "SELECT id FROM scenarioinstance WHERE scenario_id = " + scenarioId + " ORDER BY id DESC";
 		log.info(sql);
 		return this.executeStatementReturnsInt(sql, "id");
 	}
@@ -103,10 +96,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @return a list of database ID's of all scenario instances belonging to this scenario.
 	 */
 	public List<Integer> getScenarioInstances(int scenarioId) {
-		String sql =
-				"SELECT * FROM scenarioinstance "
-						+ "WHERE scenarioinstance.terminated = 0 "
-						+ "AND scenario_id = " + scenarioId;
+		String sql = "SELECT * FROM scenarioinstance " + "WHERE scenarioinstance.terminated = 0 " + "AND scenario_id = " + scenarioId;
 		log.info(sql);
 		return this.executeStatementReturnsListInt(sql, "id");
 	}
@@ -118,8 +108,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @return the database ID of the corresponding scenario.
 	 */
 	public int getScenarioId(int scenarioInstanceId) {
-		String sql = "SELECT scenario_id FROM scenarioinstance "
-				+ "WHERE id = " + scenarioInstanceId;
+		String sql = "SELECT scenario_id FROM scenarioinstance " + "WHERE id = " + scenarioInstanceId;
 		log.info(sql);
 		return this.executeStatementReturnsInt(sql, "scenario_id");
 	}
@@ -131,8 +120,7 @@ public class DbScenarioInstance extends DbObject {
 	 * @return if the scenario instance is terminated(1) or not(0) as an Integer.
 	 */
 	public int getTerminated(int id) {
-		String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = "
-				+ id;
+		String sql = "SELECT scenarioinstance.terminated FROM scenarioinstance WHERE id = " + id;
 		log.info(sql);
 		return this.executeStatementReturnsInt(sql, "terminated");
 	}
@@ -141,7 +129,7 @@ public class DbScenarioInstance extends DbObject {
 	 * This sets the terminated status of a scenario instance.
 	 *
 	 * @param scenarioInstanceId This is the database ID of a scenario instance.
-	 * @param terminated          This is the changed status of the scenario instance.
+	 * @param terminated         This is the changed status of the scenario instance.
 	 */
 	public void setTerminated(int scenarioInstanceId, boolean terminated) {
 		int terminatedAsInt;
@@ -150,23 +138,18 @@ public class DbScenarioInstance extends DbObject {
 		} else {
 			terminatedAsInt = 0;
 		}
-		String sql = "UPDATE scenarioinstance "
-				+ "SET scenarioinstance.terminated = " + terminatedAsInt
-				+ " WHERE id = " + scenarioInstanceId;
+		String sql = "UPDATE scenarioinstance " + "SET scenarioinstance.terminated = " + terminatedAsInt + " WHERE id = " + scenarioInstanceId;
 		log.info(sql);
 		this.executeUpdateStatement(sql);
 	}
 
 	/**
-	 *
-	 * @param scenarioID	This is the database ID of a scenario.
-	 * @param filterString	This is a filter for the query (may not be void)
+	 * @param scenarioID   This is the database ID of a scenario.
+	 * @param filterString This is a filter for the query (may not be void)
 	 * @return a Map of scenario instances matching the query.
 	 */
 	public Map<Integer, String> getScenarioInstancesLike(int scenarioID, String filterString) {
-		String sql = "SELECT * FROM scenarioinstance "
-				+ "WHERE scenarioinstance.terminated = 0 "
-				+ "AND scenario_id = " + scenarioID;
+		String sql = "SELECT * FROM scenarioinstance " + "WHERE scenarioinstance.terminated = 0 " + "AND scenario_id = " + scenarioID;
 		if (null != filterString && !filterString.isEmpty()) {
 			sql = sql + " AND name LIKE '%" + filterString + "%'";
 		}
@@ -176,13 +159,13 @@ public class DbScenarioInstance extends DbObject {
 
 	/**
 	 * Retrieve metadata for a given scenario instance.
+	 *
 	 * @param instanceId This is the database ID of a scenario instance.
 	 * @return a Map with detailed information about the scenario instance.
 	 */
 	public Map<String, Object> getInstanceMap(int instanceId) {
 		String sql = "SELECT * FROM scenarioinstance WHERE id = " + instanceId;
 		log.info(sql);
-		return this.executeStatementReturnsMapWithKeys(
-						sql, "id", "name", "terminated", "scenario_id");
+		return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "terminated", "scenario_id");
 	}
 }

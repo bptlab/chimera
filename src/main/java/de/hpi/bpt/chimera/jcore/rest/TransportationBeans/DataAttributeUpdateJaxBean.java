@@ -7,22 +7,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DataAttributeUpdateJaxBean {
-    private int id;
-    private String value;
+	private int id;
+	private String value;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return this.id;
+	}
 
-    public int getId() {
-        return this.id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getValue() {
-        return this.value;
-    }
+	public String getValue() {
+		return this.value;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 }

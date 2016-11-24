@@ -17,22 +17,21 @@ import java.io.StringWriter;
  *
  */
 public class XmlUtil {
-    public static String convertToString(Document xmlDoc) throws TransformerException {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringWriter writer = new StringWriter();
-        transformer.transform(new DOMSource(xmlDoc), new StreamResult(writer));
-        return writer.getBuffer().toString();
-    }
+	public static String convertToString(Document xmlDoc) throws TransformerException {
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		StringWriter writer = new StringWriter();
+		transformer.transform(new DOMSource(xmlDoc), new StreamResult(writer));
+		return writer.getBuffer().toString();
+	}
 
-    public static Document retrieveFromString(String xmlString) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            return builder.parse(new InputSource(
-                    new ByteArrayInputStream(xmlString.getBytes("utf-8"))));
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid xml");
-        }
-    }
+	public static Document retrieveFromString(String xmlString) {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setNamespaceAware(true);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			return builder.parse(new InputSource(new ByteArrayInputStream(xmlString.getBytes("utf-8"))));
+		} catch (Exception e) {
+			throw new RuntimeException("Invalid xml");
+		}
+	}
 }

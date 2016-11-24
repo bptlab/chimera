@@ -10,12 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class IntermediateThrowEvent extends AbstractDataControlNode {
 
-    @Override
-    public int save() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertControlNode(
-                this.getName(), "IntermediateThrowEvent", this.fragmentId, this.getId());
+	@Override
+	public int save() {
+		Connector connector = new Connector();
+		this.databaseId = connector.insertControlNode(this.getName(), "IntermediateThrowEvent", this.fragmentId, this.getId());
 
-        return databaseId;
-    }
+		return databaseId;
+	}
 }

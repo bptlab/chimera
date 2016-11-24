@@ -19,152 +19,133 @@ import java.util.List;
  */
 @XmlRootElement
 public class StateTransitionLog {
-    private Object oldValue;
-    private Object newValue;
-    private int loggedId;
-    private Date timeStamp;
-    private int cause;
+	String label;
+	private Object oldValue;
+	private Object newValue;
+	private int loggedId;
+	private Date timeStamp;
+	private int cause;
 
+	public static List<StateTransitionLog> getStateTransitions(int scenarioInstanceId, LogEntry.LogType type) {
+		String sql = "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " + "       a.logged_id as logged_id, a.label as label, b.cause as cause " + "FROM logentry a JOIN logentry b " + "ON a.logged_id = b.logged_id " + "AND a.type = b.type " + "AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE " + "    timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) " + "WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
+		sql = String.format(sql, scenarioInstanceId, type.name());
+		List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
+		addInitialTransitions(transitionLogs, scenarioInstanceId, type);
+		return transitionLogs;
+	}
 
-    String label;
+	private static void addInitialTransitions(List<StateTransitionLog> transitions, int scenarioInstanceId, LogEntry.LogType type) {
+		DbLogEntry logEntryDao = new DbLogEntry();
+		List<LogEntry> logEntries = logEntryDao.getCreationLogEntries(scenarioInstanceId, type);
+		for (LogEntry logEntry : logEntries) {
+			StateTransitionLog stateTransition = new StateTransitionLog();
+			stateTransition.setCause(logEntry.getCause());
+			stateTransition.setLoggedId(logEntry.getLoggedId());
+			stateTransition.setLabel(logEntry.getLabel());
+			stateTransition.setNewValue(logEntry.getNewValue());
+			stateTransition.setOldValue(JSONObject.NULL);
+			stateTransition.setTimeStamp(logEntry.getTimeStamp());
+			transitions.add(stateTransition);
+		}
+		transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
+	}
 
-    public static List<StateTransitionLog> getStateTransitions(
-            int scenarioInstanceId, LogEntry.LogType type) {
-        String sql = "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, "
-                + "       a.logged_id as logged_id, a.label as label, b.cause as cause "
-                + "FROM logentry a JOIN logentry b "
-                + "ON a.logged_id = b.logged_id "
-                + "AND a.type = b.type "
-                + "AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE "
-                + "    timestamp >= a.timestamp AND a.logged_id = logged_id AND id <> a.id) "
-                + "WHERE a.scenarioinstance_id = %d AND a.type = '%s';";
-        sql = String.format(sql, scenarioInstanceId, type.name());
-        List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
-        addInitialTransitions(transitionLogs, scenarioInstanceId, type);
-        return transitionLogs;
-    }
+	public static List<StateTransitionLog> getStateTransitions(int scenarioInstanceId) {
+		String sql = "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " + "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" + " ON a.logged_id = b.logged_id  AND a.type = b.type " + " AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" + " timestamp >= a.timestamp AND a.logged_id = logged_id AND " + "id <> a.id) " + " WHERE a.scenarioinstance_id = %d;";
+		sql = String.format(sql, scenarioInstanceId);
+		List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
+		addInitialTransitions(transitionLogs, scenarioInstanceId);
+		return transitionLogs;
+	}
 
-    private static void addInitialTransitions(
-            List<StateTransitionLog> transitions, int scenarioInstanceId, LogEntry.LogType type) {
-        DbLogEntry logEntryDao = new DbLogEntry();
-        List<LogEntry> logEntries = logEntryDao.getCreationLogEntries(scenarioInstanceId, type);
-        for (LogEntry logEntry : logEntries) {
-            StateTransitionLog stateTransition = new StateTransitionLog();
-            stateTransition.setCause(logEntry.getCause());
-            stateTransition.setLoggedId(logEntry.getLoggedId());
-            stateTransition.setLabel(logEntry.getLabel());
-            stateTransition.setNewValue(logEntry.getNewValue());
-            stateTransition.setOldValue(JSONObject.NULL);
-            stateTransition.setTimeStamp(logEntry.getTimeStamp());
-            transitions.add(stateTransition);
-        }
-        transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
-    }
+	/**
+	 * This method is used to add an created transition to each logged object.
+	 * e.g. When having an activity which has a transition init -> running logged.
+	 * a transition from null -> init would be added to represent creation.
+	 *
+	 * @param transitions Transitions created from database join
+	 */
+	private static void addInitialTransitions(List<StateTransitionLog> transitions, int scenarioInstanceId) {
+		DbLogEntry logEntryDao = new DbLogEntry();
+		List<LogEntry> logEntries = logEntryDao.getCreationLogEntries(scenarioInstanceId);
+		for (LogEntry logEntry : logEntries) {
+			StateTransitionLog stateTransition = new StateTransitionLog();
+			stateTransition.setCause(logEntry.getCause());
+			stateTransition.setLoggedId(logEntry.getLoggedId());
+			stateTransition.setLabel(logEntry.getLabel());
+			stateTransition.setNewValue(logEntry.getNewValue());
+			stateTransition.setOldValue(JSONObject.NULL);
+			stateTransition.setTimeStamp(logEntry.getTimeStamp());
+			transitions.add(stateTransition);
+		}
+		transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
+	}
 
-    public static List<StateTransitionLog> getStateTransitions(int scenarioInstanceId) {
-        String sql =
-                "SELECT b.new_value as new_value, a.label as label, a.new_value as old_value, b.timestamp as timestamp, " +
-                        "a.logged_id as logged_id, a.label as label, b.cause as cause FROM logentry a JOIN logentry b" +
-                        " ON a.logged_id = b.logged_id  AND a.type = b.type " +
-                        " AND b.timestamp = (SELECT MIN(timestamp) FROM logentry WHERE" +
-                        " timestamp >= a.timestamp AND a.logged_id = logged_id AND " +
-                        "id <> a.id) " +
-                        " WHERE a.scenarioinstance_id = %d;";
-        sql = String.format(sql, scenarioInstanceId);
-        List<StateTransitionLog> transitionLogs = parseStateTransitions(sql);
-        addInitialTransitions(transitionLogs, scenarioInstanceId);
-        return transitionLogs;
-    }
+	private static List<StateTransitionLog> parseStateTransitions(String sql) {
+		java.sql.Connection con = ConnectionWrapper.getInstance().connect();
+		List<StateTransitionLog> transitionLogs = new ArrayList<>();
+		try (Statement statement = con.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
+			while (rs.next()) {
+				StateTransitionLog transitionLog = new StateTransitionLog();
+				transitionLog.setCause(rs.getInt("cause"));
+				transitionLog.setLoggedId(rs.getInt("logged_id"));
+				transitionLog.setNewValue(rs.getString("new_value"));
+				transitionLog.setOldValue(rs.getString("old_value"));
+				transitionLog.setTimeStamp(rs.getTimestamp("timestamp"));
+				transitionLog.setLabel(rs.getString("label"));
+				transitionLogs.add(transitionLog);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return transitionLogs;
+	}
 
-    /**
-     * This method is used to add an created transition to each logged object.
-     * e.g. When having an activity which has a transition init -> running logged.
-     * a transition from null -> init would be added to represent creation.
-     *
-     * @param transitions Transitions created from database join
-     */
-    private static void addInitialTransitions(
-            List<StateTransitionLog> transitions, int scenarioInstanceId) {
-        DbLogEntry logEntryDao = new DbLogEntry();
-        List<LogEntry> logEntries = logEntryDao.getCreationLogEntries(scenarioInstanceId);
-        for (LogEntry logEntry : logEntries) {
-            StateTransitionLog stateTransition = new StateTransitionLog();
-            stateTransition.setCause(logEntry.getCause());
-            stateTransition.setLoggedId(logEntry.getLoggedId());
-            stateTransition.setLabel(logEntry.getLabel());
-            stateTransition.setNewValue(logEntry.getNewValue());
-            stateTransition.setOldValue(JSONObject.NULL);
-            stateTransition.setTimeStamp(logEntry.getTimeStamp());
-            transitions.add(stateTransition);
-        }
-        transitions.sort((l1, l2) -> l1.getTimeStamp().compareTo(l2.getTimeStamp()));
-    }
+	public Date getTimeStamp() {
+		return timeStamp;
+	}
 
-    private static List<StateTransitionLog> parseStateTransitions(String sql) {
-        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
-        List<StateTransitionLog> transitionLogs = new ArrayList<>();
-        try (Statement statement = con.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                StateTransitionLog transitionLog = new StateTransitionLog();
-                transitionLog.setCause(rs.getInt("cause"));
-                transitionLog.setLoggedId(rs.getInt("logged_id"));
-                transitionLog.setNewValue(rs.getString("new_value"));
-                transitionLog.setOldValue(rs.getString("old_value"));
-                transitionLog.setTimeStamp(rs.getTimestamp("timestamp"));
-                transitionLog.setLabel(rs.getString("label"));
-                transitionLogs.add(transitionLog);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return transitionLogs;
-    }
+	public void setTimeStamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
+	}
 
-    public Date getTimeStamp() {
-        return timeStamp;
-    }
+	public Object getOldValue() {
+		return oldValue;
+	}
 
-    public void setTimeStamp(Date timeStamp) {
-        this.timeStamp = timeStamp;
-    }
+	public void setOldValue(Object oldValue) {
+		this.oldValue = oldValue;
+	}
 
-    public Object getOldValue() {
-        return oldValue;
-    }
+	public int getLoggedId() {
+		return loggedId;
+	}
 
-    public void setOldValue(Object oldValue) {
-        this.oldValue = oldValue;
-    }
+	public void setLoggedId(int loggedId) {
+		this.loggedId = loggedId;
+	}
 
-    public int getLoggedId() {
-        return loggedId;
-    }
+	public Object getNewValue() {
+		return newValue;
+	}
 
-    public void setLoggedId(int loggedId) {
-        this.loggedId = loggedId;
-    }
+	public void setNewValue(String newValue) {
+		this.newValue = newValue;
+	}
 
-    public Object getNewValue() {
-        return newValue;
-    }
-    public int getCause() {
-        return cause;
-    }
+	public int getCause() {
+		return cause;
+	}
 
-    public void setCause(int cause) {
-        this.cause = cause;
-    }
+	public void setCause(int cause) {
+		this.cause = cause;
+	}
 
-    public void setNewValue(String newValue) {
-        this.newValue = newValue;
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	public void setLabel(String label) {
+		this.label = label;
+	}
 }

@@ -1,4 +1,5 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
+
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.*;
 
@@ -12,74 +13,66 @@ public class ParallelGatewaySplitBehavior extends AbstractParallelOutgoingBehavi
 	 * Initializes the ParallelGatewaySplitBehavior.
 	 *
 	 * @param gatewayId          This is the database id from the gateway.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+	 * @param scenarioInstance   This is an instance from the class ScenarioInstance.
 	 * @param fragmentInstanceId This is the database id from the fragment instance.
-	 * @param gatewayInstance     This is an instance from the class GatewayInstance.
+	 * @param gatewayInstance    This is an instance from the class GatewayInstance.
 	 */
-    public ParallelGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance,
-                                        int fragmentInstanceId, GatewayInstance gatewayInstance) {
+	public ParallelGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance, int fragmentInstanceId, GatewayInstance gatewayInstance) {
 		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
-        this.gatewayInstance = gatewayInstance;
+		this.gatewayInstance = gatewayInstance;
 	}
 
-	@Override public void terminate() {
-        ScenarioInstance scenarioInstance = this.getScenarioInstance();
-        scenarioInstance.updateDataFlow();
+	@Override
+	public void terminate() {
+		ScenarioInstance scenarioInstance = this.getScenarioInstance();
+		scenarioInstance.updateDataFlow();
 
-        this.enableFollowing();
+		this.enableFollowing();
 		this.runAutomaticTasks();
 	}
 
-    @Override
-    public void skip() {
+	@Override
+	public void skip() {
 
-    }
+	}
 
-    @Override protected AbstractControlNodeInstance createFollowingNodeInstance(
-			int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance
-				: this.getScenarioInstance().getControlNodeInstances()) {
-			if (controlNodeId
-					== controlNodeInstance.getControlNodeId()
-					&& !controlNodeInstance.getClass().equals(
-						ActivityInstance.class)
-					&& !controlNodeInstance.getState().equals(State.TERMINATED)) {
+	@Override
+	protected AbstractControlNodeInstance createFollowingNodeInstance(int controlNodeId) {
+		for (AbstractControlNodeInstance controlNodeInstance : this.getScenarioInstance().getControlNodeInstances()) {
+			if (controlNodeId == controlNodeInstance.getControlNodeId() && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}
 		String type = this.getDbControlNode().getType(controlNodeId);
-        ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
-        AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(
-                controlNodeId, getFragmentInstanceId(), getScenarioInstance());
-        this.setAutomaticExecutionToFalse(type, controlNodeInstance);
-        getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
-        return controlNodeInstance;
+		ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
+		AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(controlNodeId, getFragmentInstanceId(), getScenarioInstance());
+		this.setAutomaticExecutionToFalse(type, controlNodeInstance);
+		getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
+		return controlNodeInstance;
 	}
 
 	/**
-	 * @param type a type for automatic execution.
+	 * @param type                a type for automatic execution.
 	 * @param controlNodeInstance a control node instance.
 	 */
-	private void setAutomaticExecutionToFalse(String type,
-			AbstractControlNodeInstance controlNodeInstance) {
+	private void setAutomaticExecutionToFalse(String type, AbstractControlNodeInstance controlNodeInstance) {
 		switch (type) {
-		case "Activity":
-		case "EmailTask":
-		case "WebServiceTask":
-		case "SendTask":
-			if (!gatewayInstance.isAutomaticExecution()) {
-				((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
-			}
-			break;
-		case "AND":
-			if (!gatewayInstance.isAutomaticExecution()) {
-				((GatewayInstance) controlNodeInstance)
-						.setAutomaticExecution(false);
-			}
-			break;
-		default:
+			case "Activity":
+			case "EmailTask":
+			case "WebServiceTask":
+			case "SendTask":
+				if (!gatewayInstance.isAutomaticExecution()) {
+					((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
+				}
+				break;
+			case "AND":
+				if (!gatewayInstance.isAutomaticExecution()) {
+					((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
+				}
+				break;
+			default:
 		}
 	}
 }

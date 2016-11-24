@@ -18,50 +18,43 @@ var source = new EventSource(JEngine_Server_URL + '/' + InstanceName + '/sse');
         'ngRoute',
         'adminConfiguration',
         'ui.bootstrap'
-        ]);
+    ]);
 
     // Defining Routes for the AngularJS App
     jfrontend.config(['$routeProvider',
         function ($routeProvider) {
-            $routeProvider.
-                // route for scenario view
-                when('/scenario/', {
-                    templateUrl: 'app/views/scenario.html',
-                    controller: 'ScenarioController',
-                    controllerAs: 'scenarioCtrl'
-                }).
-                // route for scenario detail view
-                when('/scenario/:id/', {
-                    templateUrl: 'app/views/scenarioDetails.html',
-                    controller: 'ScenarioController',
-                    controllerAs: 'scenarioCtrl'
-                }).
-                // route for scenario instance detail view
-                when('/scenario/:id/instance/:instanceId/', {
-                    templateUrl: 'app/views/scenarioInstanceDetails.html',
-                    controller: 'ScenarioInstanceController',
-                    controllerAs: 'instanceCtrl'
-                }).
-                // route for mail task configuration
-                when('/admin/mail/', {
-                    templateUrl: 'app/views/mailConfigDetails.html',
-                    controller: 'mailConfig',
-                    controllerAs: 'mailC'
-                }).
-                // route for JUserManagemetn configuration
-                when('/admin/userMgmt/', {
-                    templateUrl: 'app/views/userMgmtConfig.html',
-                    controller: 'userMgmtController',
-                    controllerAs: 'userMgmtC'
-                }).
-                // route for user dashboard
-                when('/admin/user/', {
-                    templateUrl: 'app/views/user.html',
-                    controller: 'userMgmtController',
-                    controllerAs: 'userMgmtC'
-                }).
-                // default route
-                otherwise({redirectTo: '/scenario/'});
+            $routeProvider.// route for scenario view
+            when('/scenario/', {
+                templateUrl: 'app/views/scenario.html',
+                controller: 'ScenarioController',
+                controllerAs: 'scenarioCtrl'
+            }).// route for scenario detail view
+            when('/scenario/:id/', {
+                templateUrl: 'app/views/scenarioDetails.html',
+                controller: 'ScenarioController',
+                controllerAs: 'scenarioCtrl'
+            }).// route for scenario instance detail view
+            when('/scenario/:id/instance/:instanceId/', {
+                templateUrl: 'app/views/scenarioInstanceDetails.html',
+                controller: 'ScenarioInstanceController',
+                controllerAs: 'instanceCtrl'
+            }).// route for mail task configuration
+            when('/admin/mail/', {
+                templateUrl: 'app/views/mailConfigDetails.html',
+                controller: 'mailConfig',
+                controllerAs: 'mailC'
+            }).// route for JUserManagemetn configuration
+            when('/admin/userMgmt/', {
+                templateUrl: 'app/views/userMgmtConfig.html',
+                controller: 'userMgmtController',
+                controllerAs: 'userMgmtC'
+            }).// route for user dashboard
+            when('/admin/user/', {
+                templateUrl: 'app/views/user.html',
+                controller: 'userMgmtController',
+                controllerAs: 'userMgmtC'
+            }).// default route
+            otherwise({redirectTo: '/scenario/'});
         }
     ]);
 })();

@@ -1,109 +1,111 @@
 <!doctype html>
 <html ng-app="jfrontend">
-	<head>
-		<meta charset="utf-8">
-		<title>Chimera</title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width">
+<head>
+    <meta charset="utf-8">
+    <title>Chimera</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
 
-		<link rel="shortcut icon" type="image/png" href="favicon.ico" />
+    <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
 
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/1.0.8/css/sb-admin-2.min.css" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.5.0/metisMenu.min.css" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-		<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Roboto' />
-		<link rel="stylesheet" href="app/styles/main.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/1.0.8/css/sb-admin-2.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.5.0/metisMenu.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Roboto'/>
+    <link rel="stylesheet" href="app/styles/main.css"/>
 
-		<script>document.write("<base href=\"" + document.location + "\">")</script>
+    <script>document.write("<base href=\"" + document.location + "\">")</script>
 
-		<!-- CDN external sources -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-route.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.5.0/metisMenu.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/1.0.8/js/sb-admin-2.min.js"></script>
+    <!-- CDN external sources -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.5.0/metisMenu.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/1.0.8/js/sb-admin-2.min.js"></script>
 
-		<!-- bootstrap ui -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-animate.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-touch.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.2/ui-bootstrap-tpls.min.js"></script>
+    <!-- bootstrap ui -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-animate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.3/angular-touch.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.2/ui-bootstrap-tpls.min.js"></script>
 
-		<!-- Local sources -->
-		<script src="app/scripts/app.js"></script>
-		<script src="app/scripts/adminConfiguration.js"></script>
-		<script src="app/scripts/bpmn-io-packaged.js"></script>
+    <!-- Local sources -->
+    <script src="app/scripts/app.js"></script>
+    <script src="app/scripts/adminConfiguration.js"></script>
+    <script src="app/scripts/bpmn-io-packaged.js"></script>
 
-		<!-- load controllers -->
-		<script src="app/scripts/controllers/mailConfig.js"></script>
-		<script src="app/scripts/controllers/scenarioController.js"></script>
-		<script src="app/scripts/controllers/scenarioInstanceController.js"></script>
-		<script src="app/scripts/controllers/userMgmtController.js"></script>
-		<script src="app/scripts/controllers/webServiceConfig.js"></script>
+    <!-- load controllers -->
+    <script src="app/scripts/controllers/mailConfig.js"></script>
+    <script src="app/scripts/controllers/scenarioController.js"></script>
+    <script src="app/scripts/controllers/scenarioInstanceController.js"></script>
+    <script src="app/scripts/controllers/userMgmtController.js"></script>
+    <script src="app/scripts/controllers/webServiceConfig.js"></script>
 
-		<!-- load directives -->
-		<script src="app/scripts/directives/mailConfig/modals.js"></script>
-		<script src="app/scripts/directives/mailConfig/mailTasks.js"></script>
-		<script src="app/scripts/directives/scenarioDetails/instanceOverview.js"></script>
-		<script src="app/scripts/directives/scenarioDetails/scenarioMetaData.js"></script>
-		<script src="app/scripts/directives/scenarioDetails/modals.js"></script>
-		<script src="app/scripts/directives/userMgmt/roleManagement.js"></script>
-		<script src="app/scripts/directives/userMgmt/userManagement.js"></script>
-		<script src="app/scripts/directives/userMgmt/modals.js"></script>
-		<script src="app/scripts/directives/userOverview/viewUsers.js"></script>
-		<script src="app/scripts/directives/instanceDetails/statesOfData.js"></script>
-		<script src="app/scripts/directives/instanceDetails/logs.js"></script>
-		<script src="app/scripts/directives/instanceDetails/modals.js"></script>
-		<script src="app/scripts/directives/instanceDetails/openTasks.js"></script>
-		<script src="app/scripts/directives/instanceDetails/terminationCondition.js"></script>
-		<script src="app/scripts/directives/instanceDetails/unassignedTasks.js"></script>
+    <!-- load directives -->
+    <script src="app/scripts/directives/mailConfig/modals.js"></script>
+    <script src="app/scripts/directives/mailConfig/mailTasks.js"></script>
+    <script src="app/scripts/directives/scenarioDetails/instanceOverview.js"></script>
+    <script src="app/scripts/directives/scenarioDetails/scenarioMetaData.js"></script>
+    <script src="app/scripts/directives/scenarioDetails/modals.js"></script>
+    <script src="app/scripts/directives/userMgmt/roleManagement.js"></script>
+    <script src="app/scripts/directives/userMgmt/userManagement.js"></script>
+    <script src="app/scripts/directives/userMgmt/modals.js"></script>
+    <script src="app/scripts/directives/userOverview/viewUsers.js"></script>
+    <script src="app/scripts/directives/instanceDetails/statesOfData.js"></script>
+    <script src="app/scripts/directives/instanceDetails/logs.js"></script>
+    <script src="app/scripts/directives/instanceDetails/modals.js"></script>
+    <script src="app/scripts/directives/instanceDetails/openTasks.js"></script>
+    <script src="app/scripts/directives/instanceDetails/terminationCondition.js"></script>
+    <script src="app/scripts/directives/instanceDetails/unassignedTasks.js"></script>
 
-	<base href="/Chimera">
-	</head>
-	<body>
-	<div ng-controller="ScenarioInstanceController as instanceCtrl">
-        <!-- usage: instanceCtrl.addAlert('testAlert','success') -->
-		<uib-alert ng-repeat="alert in instanceCtrl.alerts" type="{{alert.type}}" close="instanceCtrl.closeAlert($index)" dismiss-on-timeout="10000">{{alert.msg}}</uib-alert>
-	</div>
+    <base href="/Chimera">
+</head>
+<body>
+<div ng-controller="ScenarioInstanceController as instanceCtrl">
+    <!-- usage: instanceCtrl.addAlert('testAlert','success') -->
+    <uib-alert ng-repeat="alert in instanceCtrl.alerts" type="{{alert.type}}" close="instanceCtrl.closeAlert($index)" dismiss-on-timeout="10000">
+        {{alert.msg}}
+    </uib-alert>
+</div>
 
-	<!-- Content: Side Menu -->
-		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-			<div class="navbar-header">
-				<a class="navbar-brand" ng-href="#/scenario">Chimera</a>
-			</div>
-		</nav>
+<!-- Content: Side Menu -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <a class="navbar-brand" ng-href="#/scenario">Chimera</a>
+    </div>
+</nav>
 
 
-		<!-- Main Wrapper -->
-		<div class="navbar-default sidebar" role="navigation">
-			<div class="sidebar-nav navbar-collapse">
-				<ul class="nav" id="side-menu">
-					<li>
-						<!-- Creates Menu Entries for the Scenarios -->
-						<a href="#/scenario"><i class="fa fa-check-square-o fa-fw"></i>
-							Scenarios
-							<span class="fa arrow"></span>
-						</a>
-						<!-- iterate over all scenario items within the scenarioCtrl and display them with ID and name as list -->
-						<ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
-							<li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
-								<a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
-							</li>
-						</ul>
-					</li>
+<!-- Main Wrapper -->
+<div class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+            <li>
+                <!-- Creates Menu Entries for the Scenarios -->
+                <a href="#/scenario"><i class="fa fa-check-square-o fa-fw"></i>
+                    Scenarios
+                    <span class="fa arrow"></span>
+                </a>
+                <!-- iterate over all scenario items within the scenarioCtrl and display them with ID and name as list -->
+                <ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
+                    <li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
+                        <a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
+                    </li>
+                </ul>
+            </li>
 
-					<li>
-						<a ng-href="#/scenario"><i class="fa fa-dashboard fa-fw"></i> Admin<span class="fa arrow"></span></a>
-						<ul class="nav nav-second-level">
-							<li><a href="#/admin/mail"><i class="fa fa-envelope-o fa-fw"></i> Mail Configuration</a></li>
-							<li><a href="#/admin/userMgmt"><i class="fa fa-users fa-fw"></i> User Management</a></li>
-							<li><a href="#/admin/user"><i class="fa fa-user fa-fw"></i> User Overview</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div ng-view id="page-wrapper"></div>
-	</body>
+            <li>
+                <a ng-href="#/scenario"><i class="fa fa-dashboard fa-fw"></i> Admin<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="#/admin/mail"><i class="fa fa-envelope-o fa-fw"></i> Mail Configuration</a></li>
+                    <li><a href="#/admin/userMgmt"><i class="fa fa-users fa-fw"></i> User Management</a></li>
+                    <li><a href="#/admin/user"><i class="fa fa-user fa-fw"></i> User Overview</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div ng-view id="page-wrapper"></div>
+</body>
 </html>

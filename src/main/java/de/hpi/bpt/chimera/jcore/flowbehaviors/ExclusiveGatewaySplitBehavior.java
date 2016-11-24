@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 
 /**
  * This class deals with the termination of exclusive gateways.
- *
+ * <p>
  * <p> Exclusive gateways can not be terminated like other control nodes, since
  * the control nodes after the gateway are exclusive to each other. So the gateway
  * has still influence on the execution, although it already activated the following control nodes.
- *
+ * <p>
  * <p> Nested gateways are supported by allowing multiple control nodes in each branch, that
  * follows the exclusive gateway.
- *
+ * <p>
  * <p> To ensure proper skipping of alternative branches each
  * {@link de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractExecutionBehavior},
  * has to call {@link ScenarioInstance#skipAlternativeControlNodes(int)}, when the
  * state of associated control node instances changes to running.
- *
+ * <p>
  * <p> When the exclusive gateway outgoing branches, are annotated with conditions
  * the control flow can be evaluated automatically {@link XORGrammarCompiler}. However
  * the modelling of this is not supported at the moment, so this feature would have to be
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  */
 public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehavior {
 	private static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class);
-    /**
+	/**
 	 * List of IDs of following control nodes.
 	 */
 	private List<List<Integer>> branches = new ArrayList<>();
@@ -47,11 +47,10 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * Initializes and creates an ExclusiveGatewaySplitBehavior.
 	 *
 	 * @param gatewayId          The id of the gateway.
-	 * @param scenarioInstance    An instance from the class ScenarioInstance.
+	 * @param scenarioInstance   An instance from the class ScenarioInstance.
 	 * @param fragmentInstanceId The id of the fragment instance.
 	 */
-	public ExclusiveGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance,
-			int fragmentInstanceId) {
+	public ExclusiveGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance, int fragmentInstanceId) {
 		this.setControlNodeId(gatewayId);
 		this.setScenarioInstance(scenarioInstance);
 		this.setFragmentInstanceId(fragmentInstanceId);
@@ -63,8 +62,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * Creates for every control node a bucket.
 	 */
 	private void initializeBranches() {
-		List<Integer> ids = this.getDbControlFlow()
-				.getFollowingControlNodes(getControlNodeId());
+		List<Integer> ids = this.getDbControlFlow().getFollowingControlNodes(getControlNodeId());
 		for (int id : ids) {
 			branches.add(expandBranch(id));
 		}
@@ -72,102 +70,95 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 
 	/**
 	 * Expands branch to cover all control nodes skipping intermediate
-     * gateways.
+	 * gateways.
 	 *
-	 * @param id        The id of the control node getting added.
+	 * @param id The id of the control node getting added.
 	 */
 	private List<Integer> expandBranch(int id) {
 		List<Integer> ids = new ArrayList<>();
 		ids.add(id);
-        String type = this.getDbControlNode().getType(id);
+		String type = this.getDbControlNode().getType(id);
 
 		if ("XOR".equals(type) || "AND".equals(type) || "EVENT_BASED".equals(type)) {
 			for (int controlNodeId : this.getDbControlFlow().getFollowingControlNodes(id)) {
 				ids.addAll(expandBranch(controlNodeId));
 			}
 		}
-        return ids;
+		return ids;
 	}
 
-	@Override public void terminate() {
-        ScenarioInstance scenarioInstance = this.getScenarioInstance();
-        scenarioInstance.updateDataFlow();
-        enableFollowing();
+	@Override
+	public void terminate() {
+		ScenarioInstance scenarioInstance = this.getScenarioInstance();
+		scenarioInstance.updateDataFlow();
+		enableFollowing();
 	}
 
-    @Override
-    public void skip() {
+	@Override
+	public void skip() {
 
-    }
+	}
 
-    /**
+	/**
 	 * Executes the XOR gateway and enable the following control nodes.
 	 */
 	public void execute() {
 		enableFollowing();
 	}
 
-	@Override protected AbstractControlNodeInstance createFollowingNodeInstance(
-			int controlNodeId) {
-		for (AbstractControlNodeInstance controlNodeInstance
-				: this.getScenarioInstance().getControlNodeInstances()) {
-			if (controlNodeId == controlNodeInstance.getControlNodeId()
-					&& !controlNodeInstance.getClass().equals(
-					ActivityInstance.class) && !controlNodeInstance
-					.getState().equals(State.TERMINATED)) {
+	@Override
+	protected AbstractControlNodeInstance createFollowingNodeInstance(int controlNodeId) {
+		for (AbstractControlNodeInstance controlNodeInstance : this.getScenarioInstance().getControlNodeInstances()) {
+			if (controlNodeId == controlNodeInstance.getControlNodeId() && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}
 		if (type == null || this.getControlNodeId() != controlNodeId) {
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
-        ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
-        AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(
-                controlNodeId, getFragmentInstanceId(), getScenarioInstance());
+		ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
+		AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(controlNodeId, getFragmentInstanceId(), getScenarioInstance());
 		setAutomaticExecutionToFalse(type, controlNodeInstance);
-        getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
-        return controlNodeInstance;
+		getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
+		return controlNodeInstance;
 	}
 
-	private void setAutomaticExecutionToFalse(String type,
-			AbstractControlNodeInstance controlNodeInstance) {
+	private void setAutomaticExecutionToFalse(String type, AbstractControlNodeInstance controlNodeInstance) {
 		switch (type) {
-		case "Activity":
-		case "EmailTask":
-		case "WebServiceTask":
-			((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
-			break;
-		case "XOR":
-		case "EVENT_BASED":
-			((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
-			break;
-		default:
-			break;
+			case "Activity":
+			case "EmailTask":
+			case "WebServiceTask":
+				((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
+				break;
+			case "XOR":
+			case "EVENT_BASED":
+				((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
+				break;
+			default:
+				break;
 		}
 	}
 
-    public void skipAlternativeBranches(int controlNodeId) {
-        for (List<Integer> branch : branches) {
-            if (!branch.contains(controlNodeId)) {
-                skipBranch(branch);
-            }
-        }
-    }
+	public void skipAlternativeBranches(int controlNodeId) {
+		for (List<Integer> branch : branches) {
+			if (!branch.contains(controlNodeId)) {
+				skipBranch(branch);
+			}
+		}
+	}
 
-    private void skipBranch(List<Integer> branch) {
-        for (int toSkip : branch) {
-            AbstractControlNodeInstance controlNodeInstance = this.getScenarioInstance()
-                    .getControlNodeInstanceForControlNodeId(toSkip);
-            controlNodeInstance.skip();
-        }
-    }
+	private void skipBranch(List<Integer> branch) {
+		for (int toSkip : branch) {
+			AbstractControlNodeInstance controlNodeInstance = this.getScenarioInstance().getControlNodeInstanceForControlNodeId(toSkip);
+			controlNodeInstance.skip();
+		}
+	}
 
 	/**
 	 * Evaluates Conditions for the control flow of an XOR gateway.
 	 */
 	public void evaluateConditions() {
-		Map<Integer, String> conditions = this.getDbControlFlow()
-				.getConditions( getControlNodeId());
+		Map<Integer, String> conditions = this.getDbControlFlow().getConditions(getControlNodeId());
 		Set<Integer> keys = conditions.keySet();
 		Iterator<Integer> key = keys.iterator();
 		Integer controlNodeId = 0;
@@ -184,13 +175,11 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		}
 		if (defaultExecution) {
 			if (defaultControlNode != -1) {
-				AbstractControlNodeInstance controlNodeInstance = super
-						.createFollowingNodeInstance(defaultControlNode);
+				AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(defaultControlNode);
 				controlNodeInstance.enableControlFlow();
 			}
 		} else {
-			AbstractControlNodeInstance controlNodeInstance = super
-					.createFollowingNodeInstance(controlNodeId);
+			AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(controlNodeId);
 			controlNodeInstance.enableControlFlow();
 		}
 
@@ -211,9 +200,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	private boolean evaluate(int i, Tree ast) {
 		boolean condition = checkCondition(ast, i);
 		if (ast.getChildCount() >= i + 4) {
-			if (ast.getChild(i + 3).toStringTree().equals("&")
-					|| ast.getChild(i + 3).toStringTree()
-					.equals(" & ")) {
+			if (ast.getChild(i + 3).toStringTree().equals("&") || ast.getChild(i + 3).toStringTree().equals(" & ")) {
 				return (condition & evaluate(i + 4, ast));
 			} else {
 				return (condition | evaluate(i + 4, ast));
@@ -225,57 +212,45 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 
 	/**
 	 * @param ast a tree (ast).
-	 * @param i index for the ast.
+	 * @param i   index for the ast.
 	 * @return the check result.
 	 */
 	private boolean checkCondition(Tree ast, int i) {
 		String left = ast.getChild(i).toStringTree();
 		String comparison = ast.getChild(i + 1).toStringTree();
 		String right = ast.getChild(i + 2).toStringTree();
-		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance()
-				.getDataAttributeInstances().values()) {
-			left = left.replace(
-					"#" + (dataAttributeInstance.getDataObject())
-							.getName() + "."
-							+ dataAttributeInstance.getName(),
-					dataAttributeInstance.getValue().toString());
-			right = right.replace(
-					"#" + (dataAttributeInstance.getDataObject())
-							.getName() + "."
-							+ dataAttributeInstance.getName(),
-					dataAttributeInstance.getValue().toString());
+		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance().getDataAttributeInstances().values()) {
+			left = left.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+			right = right.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
 		}
-		for (DataObject dataObject
-				: this.getScenarioInstance().getDataManager().getDataObjects()) {
-			left = left.replace("#" + dataObject.getName(),
-					dbState.getStateName(dataObject.getStateId()));
-			right = right.replace("#" + dataObject.getName(),
-					dbState.getStateName(dataObject.getStateId()));
+		for (DataObject dataObject : this.getScenarioInstance().getDataManager().getDataObjects()) {
+			left = left.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
+			right = right.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
 		}
 		try {
 			switch (comparison) {
-			case "=":
-				return left.equals(right);
-			case "<":
-				return Float.parseFloat(left) < Float.parseFloat(right);
-			case "<=":
-				return Float.parseFloat(left) <= Float.parseFloat(right);
-			case ">":
-				return Float.parseFloat(left) > Float.parseFloat(right);
-			case ">=":
-				return Float.parseFloat(left) >= Float.parseFloat(right);
-			case "!=":
-				return !left.equals(right);
-			case "!<":
-				return !(Float.parseFloat(left) < Float.parseFloat(right));
-			case "!<=":
-				return !(Float.parseFloat(left) <= Float.parseFloat(right));
-			case "!>":
-				return !(Float.parseFloat(left) > Float.parseFloat(right));
-			case "!>=":
-				return !(Float.parseFloat(left) >= Float.parseFloat(right));
-			default:
-				break;
+				case "=":
+					return left.equals(right);
+				case "<":
+					return Float.parseFloat(left) < Float.parseFloat(right);
+				case "<=":
+					return Float.parseFloat(left) <= Float.parseFloat(right);
+				case ">":
+					return Float.parseFloat(left) > Float.parseFloat(right);
+				case ">=":
+					return Float.parseFloat(left) >= Float.parseFloat(right);
+				case "!=":
+					return !left.equals(right);
+				case "!<":
+					return !(Float.parseFloat(left) < Float.parseFloat(right));
+				case "!<=":
+					return !(Float.parseFloat(left) <= Float.parseFloat(right));
+				case "!>":
+					return !(Float.parseFloat(left) > Float.parseFloat(right));
+				case "!>=":
+					return !(Float.parseFloat(left) >= Float.parseFloat(right));
+				default:
+					break;
 			}
 		} catch (NumberFormatException e) {
 			log.error("Error can't convert String to Float:", e);
@@ -285,9 +260,8 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		return false;
 	}
 
-    public boolean containsControlNodeInFollowing(int controlNodeId) {
-        List<Integer> allFollowing = branches.stream().flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        return allFollowing.contains(controlNodeId);
-    }
+	public boolean containsControlNodeInFollowing(int controlNodeId) {
+		List<Integer> allFollowing = branches.stream().flatMap(Collection::stream).collect(Collectors.toList());
+		return allFollowing.contains(controlNodeId);
+	}
 }
