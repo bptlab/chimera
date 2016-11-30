@@ -8,7 +8,7 @@ import java.util.List;
  * This class represents a set.
  */
 public abstract class AbstractSet implements IPersistable {
-    /**
+	/**
 	 * All DataNodes which are part of this Set.
 	 */
 	protected List<DataNode> dataNodes;
@@ -20,26 +20,26 @@ public abstract class AbstractSet implements IPersistable {
 	/**
 	 * The databaseID of the InputSet.
 	 */
-    protected int databaseId;
+	protected int databaseId;
 
 
-	@Override public int save() {
+	@Override
+	public int save() {
 		Connector connector = new Connector();
-		databaseId = connector.insertDataSet(this.getClass().getName()
-				.equals("de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.InputSet"));
+		databaseId = connector.insertDataSet(this.getClass().getName().equals("de.uni_potsdam.hpi.bpt.bp2014.jcomparser.xml.InputSet"));
 		return databaseId;
 	}
 
-    /**
-     * Returns the Database Id of the Input Set.
-     *
-     * @return the Database Id
-     */
-    public int getDatabaseId() {
-        return databaseId;
-    }
+	/**
+	 * Returns the Database Id of the Input Set.
+	 *
+	 * @return the Database Id
+	 */
+	public int getDatabaseId() {
+		return databaseId;
+	}
 
-    public void setDatabaseId(int databaseId) {
-        this.databaseId = databaseId;
-    }
+	public void setDatabaseId(int databaseId) {
+		this.databaseId = databaseId;
+	}
 }

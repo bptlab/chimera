@@ -15,42 +15,40 @@ import java.util.Map;
  * or event.
  */
 public class DataAttributeWriter {
-    static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
+	static final Logger LOGGER = Logger.getLogger(DataAttributeWriter.class);
 
-    private final int controlNodeInstanceId;
-    private final ScenarioInstance scenarioInstance;
-    Map<Integer, String> attributeIdToJsonPath;
+	private final int controlNodeInstanceId;
+	private final ScenarioInstance scenarioInstance;
+	Map<Integer, String> attributeIdToJsonPath;
 
-    /**
-     * Creates
-     * @param controlNodeId The id of the webservice task or event, writes the data attributes.
-     * @param scenarioInstance
-     */
-    public DataAttributeWriter(int controlNodeId, int controlNodeInstanceId, ScenarioInstance scenarioInstance) {
-        DbPathMapping pathMapping = new DbPathMapping();
-        this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
-        this.controlNodeInstanceId = controlNodeInstanceId;
-        this.scenarioInstance = scenarioInstance;
-    }
+	/**
+	 * Creates
+	 *
+	 * @param controlNodeId    The id of the webservice task or event, writes the data attributes.
+	 * @param scenarioInstance
+	 */
+	public DataAttributeWriter(int controlNodeId, int controlNodeInstanceId, ScenarioInstance scenarioInstance) {
+		DbPathMapping pathMapping = new DbPathMapping();
+		this.attributeIdToJsonPath = pathMapping.getPathsForAttributesOfControlNode(controlNodeId);
+		this.controlNodeInstanceId = controlNodeInstanceId;
+		this.scenarioInstance = scenarioInstance;
+	}
 
-    public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
-        Map<Integer, String> idToValue = new HashMap<>();
-        for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
-            int dataAttributeId = idToPathEntry.getKey();
-            // TODO safety check
-            int dataAttributeInstanceId = dataAttributeInstances.stream()
-                    .filter(x -> x.getDataAttributeId() == dataAttributeId)
-                    .map(x -> x.getId())
-                    .findFirst().get();
-            String jsonPath = idToPathEntry.getValue();
-            String value = JsonPath.read(json, jsonPath).toString();
-            idToValue.put(dataAttributeInstanceId, value);
-        }
+	public void writeDataAttributesFromJson(String json, List<DataAttributeInstance> dataAttributeInstances) {
+		Map<Integer, String> idToValue = new HashMap<>();
+		for (Map.Entry<Integer, String> idToPathEntry : attributeIdToJsonPath.entrySet()) {
+			int dataAttributeId = idToPathEntry.getKey();
+			// TODO safety check
+			int dataAttributeInstanceId = dataAttributeInstances.stream().filter(x -> x.getDataAttributeId() == dataAttributeId).map(x -> x.getId()).findFirst().get();
+			String jsonPath = idToPathEntry.getValue();
+			String value = JsonPath.read(json, jsonPath).toString();
+			idToValue.put(dataAttributeInstanceId, value);
+		}
 
-        scenarioInstance.getDataManager().setAttributeValues(this.controlNodeInstanceId, idToValue);
-    }
+		scenarioInstance.getDataManager().setAttributeValues(this.controlNodeInstanceId, idToValue);
+	}
 
-    public void setAttributeIdToJsonPath(Map<Integer, String> attributeIdToJsonPath) {
-        this.attributeIdToJsonPath = attributeIdToJsonPath;
-    }
+	public void setAttributeIdToJsonPath(Map<Integer, String> attributeIdToJsonPath) {
+		this.attributeIdToJsonPath = attributeIdToJsonPath;
+	}
 }

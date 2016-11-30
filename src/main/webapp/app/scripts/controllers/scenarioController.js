@@ -3,24 +3,22 @@
 angular.module('jfrontend')
     .controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
         function ($routeParams, $location, $http, $scope) {
-            $scope.$on('$viewContentLoaded', function() {
+            $scope.$on('$viewContentLoaded', function () {
                 console.log($routeParams.id);
                 //if we are within the scenario layer
                 if ($routeParams.id != null) {
-                // setting current id of scenario based on the URI
-                controller.currentScenario['id'] = $routeParams.id;
-                // fetching details for this scenario
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + controller.currentScenario['id'] + "/").
-                success(function (data) {
-                    controller.currentScenario['details'] = data;
-                }).
-                error(function () {
-                    console.log('request failed');
-                });
-                // requesting additional informations for this scenario
-                controller.getInstancesOfScenario(controller.currentScenario['id']);
-                controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
-            }
+                    // setting current id of scenario based on the URI
+                    controller.currentScenario['id'] = $routeParams.id;
+                    // fetching details for this scenario
+                    $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + controller.currentScenario['id'] + "/").success(function (data) {
+                        controller.currentScenario['details'] = data;
+                    }).error(function () {
+                        console.log('request failed');
+                    });
+                    // requesting additional informations for this scenario
+                    controller.getInstancesOfScenario(controller.currentScenario['id']);
+                    controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
+                }
             });
             // For accessing data from inside the $http context
             var controller = this;
@@ -30,8 +28,7 @@ angular.module('jfrontend')
             this.scenarios = {};
 
             // pre fetch all scenarios within the JEngine
-            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
-            success(function (data) {
+            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").success(function (data) {
                 controller.scenarios = data;
             });
 
@@ -40,8 +37,7 @@ angular.module('jfrontend')
                 // defining the algorithm for log analysis details
                 var algorithm = "de.uni_potsdam.hpi.bpt.bp2014.janalytics.ExampleAlgorithm";
                 //fetching all scenarios
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
-                success(function (data) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").success(function (data) {
                     // "persisting" data within stable environment
                     controller.currentScenario['instances'] = data;
                     // initializing execution of specified algorithm
@@ -54,30 +50,25 @@ angular.module('jfrontend')
                              controller.currentScenario['duration'] = data['meanScenarioInstanceRuntime'];
                              })*/
                         })
-                }).
-                error(function () {
+                }).error(function () {
                     console.log('request failed');
                 });
             };
 
             // retrieving the termination condition for this scenario
             this.getTerminationConditionOfScenario = function (id) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
-                success(function (data) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").success(function (data) {
                     controller.currentScenario['terminationcondition'] = data;
-                }).
-                error(function () {
+                }).error(function () {
                     console.log('request failed');
                 });
             };
 
             // requesting details for a specified scenario
             this.getScenarioDetails = function (id) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").
-                success(function (data) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/").success(function (data) {
                     controller.currentScenario['details'] = data;
-                }).
-                error(function () {
+                }).error(function () {
                     console.log('request failed');
                 });
             };
@@ -98,13 +89,11 @@ angular.module('jfrontend')
             this.deleteScenario = function (id) {
                 // send HTTP Delete package to JEngine
                 $http.delete(JEngine_Server_URL + "/" + JConfig_REST_Interface +
-                    "/scenario/" + id + "/?").
-                success(function (data) {
+                    "/scenario/" + id + "/?").success(function (data) {
                     console.log("deleting scenario was successful..");
                 });
                 //load new scenario list
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").
-                success(function (data) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").success(function (data) {
                     controller.scenarios = data;
                 });
                 //navigating to upper scenario level
@@ -113,11 +102,9 @@ angular.module('jfrontend')
 
             // retrieving the termination condition for this scenario
             this.getTerminationConditionOfScenario = function (id) {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").
-                success(function (data) {
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/terminationcondition/").success(function (data) {
                     controller.currentScenario['terminationcondition'] = data;
-                }).
-                error(function () {
+                }).error(function () {
                     console.log('request failed');
                 });
             };
@@ -129,29 +116,25 @@ angular.module('jfrontend')
                     // building the json content for naming the instance
                     var data = "{\"name\":\"" + $scope.instanceName + "\"}";
 
-                    $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/", data).
-                    success(function (response) {
+                    $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/", data).success(function (response) {
                         $location.path("/scenario/" + id + "/instance/" + response['id']);
-                    }).
-                    error(function () {
+                    }).error(function () {
                         console.log('request failed');
                     });
                     // otherwise use the post with default name
                 } else {
-                    $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").
-                    success(function (data) {
+                    $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").success(function (data) {
                         $location.path("/scenario/" + id + "/instance/" + data['id']);
-                    }).
-                    error(function () {
+                    }).error(function () {
                         console.log('request failed');
                     });
                 }
             };
-            
-            source.addEventListener('refresh', function(event) {
+
+            source.addEventListener('refresh', function (event) {
                 controller.getInstancesOfScenario(controller.currentScenario['id']);
                 controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
             });
-            
+
         }]
     );

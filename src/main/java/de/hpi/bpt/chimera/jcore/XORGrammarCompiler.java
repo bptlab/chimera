@@ -28,20 +28,20 @@ public class XORGrammarCompiler {
 			//printTree(ast);
 			return (CommonTree) ret.getTree();
 		} catch (RecognitionException e) {
-			throw new IllegalStateException(
-					"Recognition exception is never thrown, only declared.");
+			throw new IllegalStateException("Recognition exception is never thrown, only declared.");
 		}
 	}
 
 	/**
 	 * @param ast This is an ast of a tree.
 	 */
-	@SuppressWarnings("unused") private void printTree(CommonTree ast) {
+	@SuppressWarnings("unused")
+	private void printTree(CommonTree ast) {
 		print(ast, 0);
 	}
 
 	/**
-	 * @param tree This is a CommonTree.
+	 * @param tree  This is a CommonTree.
 	 * @param level This is a level in the Tree.
 	 */
 	private void print(CommonTree tree, int level) {

@@ -15,9 +15,7 @@ public class DbConfigurationConnection extends DbObject {
 	 */
 	public void deleteScenario(int scenarioID) {
 		DbObject dbObject = new DbObject();
-		String sql = "UPDATE scenario "
-				+ "SET deleted = 1 "
-				+ "WHERE id = " + scenarioID;
+		String sql = "UPDATE scenario " + "SET deleted = 1 " + "WHERE id = " + scenarioID;
 		dbObject.executeUpdateStatement(sql);
 	}
 
@@ -29,10 +27,7 @@ public class DbConfigurationConnection extends DbObject {
 	 */
 	public List<Integer> getRunningScenarioInstances(int scenarioID) {
 		DbObject dbObject = new DbObject();
-		String select = "SELECT id "
-				+ "FROM scenarioinstance "
-				+ "WHERE scenarioinstance.terminated = 0 "
-				+ "AND scenario_id = " + scenarioID;
+		String select = "SELECT id " + "FROM scenarioinstance " + "WHERE scenarioinstance.terminated = 0 " + "AND scenario_id = " + scenarioID;
 		return dbObject.executeStatementReturnsListInt(select, "id");
 	}
 }

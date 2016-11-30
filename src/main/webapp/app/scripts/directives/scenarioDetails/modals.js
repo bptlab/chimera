@@ -1,19 +1,19 @@
 angular.module('jfrontend')
-    .directive('modalDeleteInstance', function() {
+    .directive('modalDeleteInstance', function () {
         return {
             restrict: 'AE',
             templateUrl: 'app/views/directives/scenarioDetails/modalDeleteInstance.html'
         };
     })
-    .directive('modalNewInstance', function() {
+    .directive('modalNewInstance', function () {
         return {
             restrict: 'AE',
             templateUrl: 'app/views/directives/scenarioDetails/modalNewInstance.html'
         };
     })
-    .directive('modalTerminationCondition', function() {
+    .directive('modalTerminationCondition', function () {
         return {
             restrict: 'AE',
             templateUrl: 'app/views/directives/scenarioDetails/modalTerminationCondition.html'
         };
-});
+    });

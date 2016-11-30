@@ -16,23 +16,20 @@ public class EndEvent extends AbstractControlNodeInstance {
 	 * Creates and initializes a new end event instance.
 	 *
 	 * @param fragmentInstanceId This is the database id from the fragment instance.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+	 * @param scenarioInstance   This is an instance from the class ScenarioInstance.
 	 */
-	public EndEvent(int controlNodeId, int fragmentInstanceId,
-					ScenarioInstance scenarioInstance) {
-        this.setControlNodeId(controlNodeId);
-        this.scenarioInstance = scenarioInstance;
-        this.setFragmentInstanceId(fragmentInstanceId);
-        this.isSendEvent = isSendEvent();
-        this.setIncomingBehavior(new EndEventIncomingBehavior(
-                this, scenarioInstance, this.isSendEvent));
-        this.setState(State.INIT);
-    }
+	public EndEvent(int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance) {
+		this.setControlNodeId(controlNodeId);
+		this.scenarioInstance = scenarioInstance;
+		this.setFragmentInstanceId(fragmentInstanceId);
+		this.isSendEvent = isSendEvent();
+		this.setIncomingBehavior(new EndEventIncomingBehavior(this, scenarioInstance, this.isSendEvent));
+		this.setState(State.INIT);
+	}
 
 	private boolean isSendEvent() {
 		String isSendEventQuery = "SELECT * FROM sendevent WHERE controlnode_id = %d;";
 
-		return new DbObject().executeExistStatement(
-				String.format(isSendEventQuery, this.getControlNodeId()));
+		return new DbObject().executeExistStatement(String.format(isSendEventQuery, this.getControlNodeId()));
 	}
 }

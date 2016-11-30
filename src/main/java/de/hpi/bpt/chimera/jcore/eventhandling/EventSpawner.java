@@ -23,92 +23,84 @@ import java.util.List;
 
 public class EventSpawner {
 
-    private ScenarioInstance instance;
+	private static final String EVENT_URL = PropertyLoader.getProperty("unicorn.url") + PropertyLoader.getProperty("unicorn.path.deploy");
+	private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
+	private static final Logger log = Logger.getLogger(EventSpawner.class);
+	private ScenarioInstance instance;
 
-    private static final String EVENT_URL = PropertyLoader.getProperty("unicorn.url")
-            + PropertyLoader.getProperty("unicorn.path.deploy");
-    private static final String EVENT_PATH = PropertyLoader.getProperty("unicorn.path.event");
+	public EventSpawner(ScenarioInstance instance) {
+		this.instance = instance;
+	}
 
-    private static final Logger log = Logger.getLogger(EventSpawner.class);
+	public boolean spawnEvent(int controlNodeId) {
+		DataObject inputObject = getInputObject(controlNodeId);
+		assertIsEvent(inputObject);
+		Response response = buildAndSendEvent(inputObject);
+		return response.getStatus() == 200;
+	}
 
-    public EventSpawner(ScenarioInstance instance) {
-        this.instance = instance;
-    }
+	private DataObject getInputObject(int controlNodeId) {
+		DataManager manager = instance.getDataManager();
+		manager.loadFromDatabase();
+		List<DataObject> possibleInputs = manager.getAvailableInput(controlNodeId);
+		assert possibleInputs.size() == 1 : "There is only one input object allowed for send events/tasks.";
+		DataObject inputObject = possibleInputs.get(0);
+		return inputObject;
+	}
 
-    public boolean spawnEvent(int controlNodeId) {
-        DataObject inputObject = getInputObject(controlNodeId);
-        assertIsEvent(inputObject);
-        Response response = buildAndSendEvent(inputObject);
-        return response.getStatus() == 200;
-    }
+	private void assertIsEvent(DataObject inputObject) {
+		boolean isEvent = new DbDataClass().isEvent(inputObject.getDataClassId());
+		assert isEvent : "The input for the send event/task is not an event object.";
+	}
 
-    private DataObject getInputObject(int controlNodeId) {
-        DataManager manager = instance.getDataManager();
-        manager.loadFromDatabase();
-        List<DataObject> possibleInputs = manager
-                .getAvailableInput(controlNodeId);
-        assert possibleInputs.size() == 1 : "There is only one input object allowed for send events/tasks.";
-        DataObject inputObject = possibleInputs.get(0);
-        return inputObject;
-    }
+	private Response buildAndSendEvent(DataObject inputObject) {
+		Document eventXml = buildEventFromDataObject(inputObject);
+		return sendEvent(eventXml);
+	}
 
-    private void assertIsEvent(DataObject inputObject) {
-        boolean isEvent = new DbDataClass().isEvent(
-                inputObject.getDataClassId());
-        assert isEvent : "The input for the send event/task is not an event object.";
-    }
+	private Document buildEventFromDataObject(DataObject inputObject) {
+		List<DataAttributeInstance> attributes = inputObject.getDataAttributeInstances();
+		String eventName = inputObject.getName();
 
-    private Response buildAndSendEvent(DataObject inputObject) {
-        Document eventXml = buildEventFromDataObject(inputObject);
-        return sendEvent(eventXml);
-    }
+		try {
+			DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = db.newDocument();
 
-    private Document buildEventFromDataObject(DataObject inputObject) {
-        List<DataAttributeInstance> attributes =
-                inputObject.getDataAttributeInstances();
-        String eventName = inputObject.getName();
+			Element rootElement = createRootElement(doc, eventName);
+			doc.appendChild(rootElement);
+			appendAttributes(doc, rootElement, attributes);
 
-        try {
-            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = db.newDocument();
+			return doc;
+		} catch (ParserConfigurationException e) {
+			log.error("Event xml from send event/task could not be build.", e);
+			return null;
+		}
+	}
 
-            Element rootElement = createRootElement(doc, eventName);
-            doc.appendChild(rootElement);
-            appendAttributes(doc, rootElement, attributes);
+	private Response sendEvent(Document eventXml) {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(EVENT_URL).path(EVENT_PATH);
+		Response response = target.request(MediaType.APPLICATION_XML).post(Entity.xml(eventXml));
+		if (response.getStatus() != 200) {
+			log.warn("Event was not sent correctly. Response status: " + response.getStatus());
+		}
+		return response;
+	}
 
-            return doc;
-        } catch (ParserConfigurationException e) {
-            log.error("Event xml from send event/task could not be build.", e);
-            return null;
-        }
-    }
+	// <FoilEvent xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FoilEvent.xsd">
+	private Element createRootElement(Document doc, String eventName) {
+		Element ele = doc.createElement(eventName);
+		ele.setAttribute("xmlns", "");
+		ele.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		ele.setAttribute("xsi:noNamespaceSchemaLocation", eventName + ".xsd");
+		return ele;
+	}
 
-    private Response sendEvent(Document eventXml) {
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(EVENT_URL).path(EVENT_PATH);
-        Response response = target.request(MediaType.APPLICATION_XML)
-                .post(Entity.xml(eventXml));
-        if (response.getStatus() != 200) {
-            log.warn("Event was not sent correctly. Response status: " + response.getStatus());
-        }
-        return response;
-    }
-
-    // <FoilEvent xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FoilEvent.xsd">
-    private Element createRootElement(Document doc, String eventName) {
-        Element ele = doc.createElement(eventName);
-        ele.setAttribute("xmlns", "");
-        ele.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        ele.setAttribute("xsi:noNamespaceSchemaLocation", eventName + ".xsd");
-        return ele;
-    }
-
-    private void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {
-        attributes.stream().forEach(
-                attr -> {
-                    Element el = doc.createElement(attr.getName());
-                    el.appendChild(doc.createTextNode(attr.getValue().toString()));
-                    rootElement.appendChild(el);
-        });
-    }
+	private void appendAttributes(Document doc, Element rootElement, List<DataAttributeInstance> attributes) {
+		attributes.stream().forEach(attr -> {
+			Element el = doc.createElement(attr.getName());
+			el.appendChild(doc.createTextNode(attr.getValue().toString()));
+			rootElement.appendChild(el);
+		});
+	}
 }

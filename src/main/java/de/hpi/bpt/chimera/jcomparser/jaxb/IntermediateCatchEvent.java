@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "bpmn:intermediateCatchEvent")
 @XmlAccessorType(XmlAccessType.NONE)
 public class IntermediateCatchEvent extends AbstractDataControlNode {
-    /*"<bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_1le8d7a\"
+	/*"<bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_1le8d7a\"
                 griffin:eventquery="querY" name="Fell asleep while drinking coffee">\n" +
             "      <bpmn:incoming>SequenceFlow_12g1b5j</bpmn:incoming>\n" +
             "      <bpmn:outgoing>SequenceFlow_08s25px</bpmn:outgoing>\n" +
@@ -19,50 +19,46 @@ public class IntermediateCatchEvent extends AbstractDataControlNode {
     */
 
 
-    @XmlAttribute(name = "griffin:eventquery")
-    private String eventQuery;
+	@XmlAttribute(name = "griffin:eventquery")
+	private String eventQuery;
 
-    @XmlElement(name = "bpmn:timerEventDefinition")
-    private TimerDefinition timer;
+	@XmlElement(name = "bpmn:timerEventDefinition")
+	private TimerDefinition timer;
 
-    @Override
-    public int save() {
-        if (timer == null) {
-            saveIntermediateWithoutTimer();
-        } else {
-            saveTimerIntermediate();
-        }
-        return this.databaseId;
-    }
+	@Override
+	public int save() {
+		if (timer == null) {
+			saveIntermediateWithoutTimer();
+		} else {
+			saveTimerIntermediate();
+		}
+		return this.databaseId;
+	}
 
-    private void saveIntermediateWithoutTimer() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertControlNode(
-                this.getName(), "IntermediateCatchEvent", this.fragmentId, this.getId());
+	private void saveIntermediateWithoutTimer() {
+		Connector connector = new Connector();
+		this.databaseId = connector.insertControlNode(this.getName(), "IntermediateCatchEvent", this.fragmentId, this.getId());
 
-        connector.insertEvent("IntermediateCatchEvent", this.eventQuery,
-                this.fragmentId, this.getId(), this.databaseId);
-    }
+		connector.insertEvent("IntermediateCatchEvent", this.eventQuery, this.fragmentId, this.getId(), this.databaseId);
+	}
 
-    private void saveTimerIntermediate() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertControlNode(
-                this.getName(), "TimerEvent", this.fragmentId, this.getId());
-        connector.insertEvent("TimerEvent", this.eventQuery,
-                this.fragmentId, this.getId(), this.databaseId);
-        connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
-    }
+	private void saveTimerIntermediate() {
+		Connector connector = new Connector();
+		this.databaseId = connector.insertControlNode(this.getName(), "TimerEvent", this.fragmentId, this.getId());
+		connector.insertEvent("TimerEvent", this.eventQuery, this.fragmentId, this.getId(), this.databaseId);
+		connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
+	}
 
-    public String getEventQuery() {
-        return eventQuery;
-    }
+	public String getEventQuery() {
+		return eventQuery;
+	}
 
-    public void setEventQuery(String eventQuery) {
-        this.eventQuery = eventQuery;
-    }
+	public void setEventQuery(String eventQuery) {
+		this.eventQuery = eventQuery;
+	}
 
-    public TimerDefinition getTimer() {
-        return timer;
-    }
+	public TimerDefinition getTimer() {
+		return timer;
+	}
 
 }

@@ -20,12 +20,9 @@ public class DbFragment extends DbObject {
 
 	/**
 	 * Retrieves the BPMN XML strings for each fragment of a given scenario.
-     */
+	 */
 	public List<String> getXmlStringsForScenario(int scenarioId) {
-		String sql = "SELECT xml FROM fragment, fragmentxml "
-				+ "WHERE fragment.scenario_id = %d "
-				+ "AND fragmentxml.fragment_id = fragment.id";
-		return this.executeStatementReturnsListString(
-				String.format(sql, scenarioId), "xml");
+		String sql = "SELECT xml FROM fragment, fragmentxml " + "WHERE fragment.scenario_id = %d " + "AND fragmentxml.fragment_id = fragment.id";
+		return this.executeStatementReturnsListString(String.format(sql, scenarioId), "xml");
 	}
 }

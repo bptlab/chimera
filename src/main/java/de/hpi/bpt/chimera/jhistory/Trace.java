@@ -10,23 +10,22 @@ import java.util.List;
  *
  */
 public class Trace {
-    int scenarioInstanceId;
+	int scenarioInstanceId;
 
-    public Trace(int scenarioInstanceId) {
-        this.scenarioInstanceId = scenarioInstanceId;
-    }
+	public Trace(int scenarioInstanceId) {
+		this.scenarioInstanceId = scenarioInstanceId;
+	}
 
-    public void appendToLog(Element rootElement) {
-        Document doc = rootElement.getOwnerDocument();
-        Element traceXml = doc.createElement("trace");
-        List<LogEntry> logEntries = new DbLogEntry().getLogEntriesForScenarioInstance(
-                this.scenarioInstanceId);
-        for (LogEntry logEntry: logEntries) {
-            //ProM only cares about completed activities
-            if ("terminated".equals(logEntry.getNewValue())) {
-                logEntry.appendToTrace(traceXml);
-            }
-        }
-        rootElement.appendChild(traceXml);
-    }
+	public void appendToLog(Element rootElement) {
+		Document doc = rootElement.getOwnerDocument();
+		Element traceXml = doc.createElement("trace");
+		List<LogEntry> logEntries = new DbLogEntry().getLogEntriesForScenarioInstance(this.scenarioInstanceId);
+		for (LogEntry logEntry : logEntries) {
+			//ProM only cares about completed activities
+			if ("terminated".equals(logEntry.getNewValue())) {
+				logEntry.appendToTrace(traceXml);
+			}
+		}
+		rootElement.appendChild(traceXml);
+	}
 }

@@ -1,7 +1,6 @@
 package de.hpi.bpt.chimera.database.controlnodes;
 
 import de.hpi.bpt.chimera.database.DbObject;
-import org.apache.log4j.Logger;
 
 /**
  * This class is the representation of a controlNode in the database.
@@ -18,21 +17,18 @@ public class DbControlNode extends DbObject {
 	 * @return -1 if something went wrong else the database ID of the startEvent.
 	 */
 	public int getStartEventID(int fragmentId) {
-		String sql = "SELECT id FROM controlnode "
-				+ "WHERE type = 'StartEvent' "
-				+ "AND fragment_id = " + fragmentId;
+		String sql = "SELECT id FROM controlnode " + "WHERE type = 'StartEvent' " + "AND fragment_id = " + fragmentId;
 		return this.executeStatementReturnsInt(sql, "id");
 	}
 
-    /**
-     *
-     * @param controlNodeId Id of the control node
-     * @return fragment id the control node belongs to.
-     */
-    public int getFragmentId(int controlNodeId) {
-        String sql = "SELECT * FROM controlnode WHERE id = " + controlNodeId;
-        return this.executeStatementReturnsInt(sql, "fragment_id");
-    }
+	/**
+	 * @param controlNodeId Id of the control node
+	 * @return fragment id the control node belongs to.
+	 */
+	public int getFragmentId(int controlNodeId) {
+		String sql = "SELECT * FROM controlnode WHERE id = " + controlNodeId;
+		return this.executeStatementReturnsInt(sql, "fragment_id");
+	}
 
 	/**
 	 * This method returns the type of a controlNode.
@@ -58,15 +54,14 @@ public class DbControlNode extends DbObject {
 
 	/**
 	 * Retrieves whether a control node exists for a given id in a given scenario.
+	 *
 	 * @param controlNodeId Id of the control node.
-	 * @param scenarioId Id of the scenario.
-     * @return True, if a control node with that Id exists.
-     */
-    public boolean existControlNode(int controlNodeId, int scenarioId) {
-        String existControlNode = "SELECT * FROM controlnode, fragment WHERE " +
-                "controlnode.fragment_id = fragment.id AND " +
-                "controlnode.id = %d AND fragment.scenario_id = %d;";
-        existControlNode = String.format(existControlNode, controlNodeId, scenarioId);
-        return this.executeExistStatement(existControlNode);
-    }
+	 * @param scenarioId    Id of the scenario.
+	 * @return True, if a control node with that Id exists.
+	 */
+	public boolean existControlNode(int controlNodeId, int scenarioId) {
+		String existControlNode = "SELECT * FROM controlnode, fragment WHERE " + "controlnode.fragment_id = fragment.id AND " + "controlnode.id = %d AND fragment.scenario_id = %d;";
+		existControlNode = String.format(existControlNode, controlNodeId, scenarioId);
+		return this.executeExistStatement(existControlNode);
+	}
 }

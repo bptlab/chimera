@@ -1,10 +1,9 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.flowbehaviors.ExclusiveGatewaySplitBehavior;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNode;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbGatewayInstance;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 
 /**
  * Represents a gateway instance.
@@ -26,15 +25,14 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	 *
 	 * @param controlNodeId      This is the id of the control node.
 	 * @param fragmentInstanceId This is the id of the fragment instance.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+	 * @param scenarioInstance   This is an instance from the class ScenarioInstance.
 	 */
-	public GatewayInstance(int controlNodeId, int fragmentInstanceId,
-			ScenarioInstance scenarioInstance) {
-        this.automaticExecution = true;
+	public GatewayInstance(int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance) {
+		this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
 		this.setFragmentInstanceId(fragmentInstanceId);
-        this.setState(State.INIT);
+		this.setState(State.INIT);
 	}
 
 	/**
@@ -43,38 +41,37 @@ public class GatewayInstance extends AbstractControlNodeInstance {
 	 *
 	 * @param controlNodeId      This is the id of the control node.
 	 * @param fragmentInstanceId This is the id of the fragment instance.
-	 * @param scenarioInstance    This is an instance from the class ScenarioInstance.
+	 * @param scenarioInstance   This is an instance from the class ScenarioInstance.
 	 * @param instanceId         This is an id of the gateway instance.
 	 */
-	public GatewayInstance(int controlNodeId, int fragmentInstanceId,
-			ScenarioInstance scenarioInstance, int instanceId) {
+	public GatewayInstance(int controlNodeId, int fragmentInstanceId, ScenarioInstance scenarioInstance, int instanceId) {
 		this.automaticExecution = true;
 		this.scenarioInstance = scenarioInstance;
 		this.setControlNodeId(controlNodeId);
-        this.setControlNodeInstanceId(instanceId);
+		this.setControlNodeInstanceId(instanceId);
 		this.setFragmentInstanceId(fragmentInstanceId);
-        this.setState(dbGatewayInstance.getState(instanceId));
-    }
+		this.setState(dbGatewayInstance.getState(instanceId));
+	}
 
-	@Override public void terminate() {
-        setState(State.TERMINATED);
-        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
+	@Override
+	public void terminate() {
+		setState(State.TERMINATED);
+		dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
 		getOutgoingBehavior().terminate();
 	}
 
 	@Override
-    public void skip() {
-        setState(State.SKIPPED);
-        dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
-        getScenarioInstance().getExecutingGateways().remove(this);
+	public void skip() {
+		setState(State.SKIPPED);
+		dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
+		getScenarioInstance().getExecutingGateways().remove(this);
 	}
 
-    @Override
-    public void begin() {
-        setState(State.EXECUTING);
-        dbGatewayInstance.setState(
-                this.getControlNodeInstanceId(), getState().toString());
-    }
+	@Override
+	public void begin() {
+		setState(State.EXECUTING);
+		dbGatewayInstance.setState(this.getControlNodeInstanceId(), getState().toString());
+	}
 
 
 	// ******************************* Getter & Setter ***************************//

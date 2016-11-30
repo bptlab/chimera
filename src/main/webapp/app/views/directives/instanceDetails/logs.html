@@ -4,7 +4,7 @@
         <div class="panel-heading">
             <ul class="nav nav-pills">
                 <li class="active" ng-class="{active: logSelection=='activities'}"><a aria-expanded="true" data-toggle="tab"
-                                                                       ng-click="logSelection = 'activities'">Activity Log</a>
+                                                                                      ng-click="logSelection = 'activities'">Activity Log</a>
                 </li>
                 <li ng-class="{active: logSelection=='dataobject'}"><a aria-expanded="true" data-toggle="tab"
                                                                        ng-click="logSelection = 'dataobject'">Dataobject Log</a>
@@ -12,7 +12,10 @@
                 <li ng-class="{active: logSelection=='attributes'}"><a aria-expanded="true" data-toggle="tab"
                                                                        ng-click="logSelection = 'attributes'">Attribute Log</a>
                 </li>
-                <li class="pull-right"><button type="button" class="btn btn-default btn-xs" aria-expanded="false" data-toggle="collapse" data-target="#logs-collapse"><i class="fa fa-chevron-down"></i></button></li>
+                <li class="pull-right">
+                    <button type="button" class="btn btn-default btn-xs" aria-expanded="false" data-toggle="collapse" data-target="#logs-collapse"><i
+                            class="fa fa-chevron-down"></i></button>
+                </li>
             </ul>
 
             <!-- ./nav tabs options -->
@@ -64,7 +67,7 @@
                             <span ng-if="entry['newValue']">{{entry['newValue']}}</span>
                             <span ng-if="!entry['newValue']"><i>empty</i></span>
                             <div class="pull-right">{{entry['timeStamp']}} <i
-                                        class="fa fa-check-square-o text-success"></i></div>
+                                    class="fa fa-check-square-o text-success"></i></div>
                         </div>
                     </div>
                     <!-- ./switch case -->

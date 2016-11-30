@@ -12,28 +12,27 @@ import de.hpi.bpt.chimera.jcore.flowbehaviors.AbstractOutgoingBehavior;
  */
 public abstract class AbstractControlNodeInstance {
 	protected ScenarioInstance scenarioInstance;
+	protected State state;
 	private AbstractOutgoingBehavior outgoingBehavior;
 	private AbstractIncomingBehavior incomingBehavior;
-    private AbstractExecutionBehavior executionBehavior;
-
-    protected State state;
-
-    private int fragmentInstanceId;
+	private AbstractExecutionBehavior executionBehavior;
+	private int fragmentInstanceId;
 	private int controlNodeInstanceId;
 	private int controlNodeId;
 
 	public void enableControlFlow() {
 		incomingBehavior.enableControlFlow();
-    }
+	}
 
 
 	/**
 	 * Skips the control node.
-	 *
 	 */
 	public void skip() {
-        this.getOutgoingBehavior().skip();
-    };
+		this.getOutgoingBehavior().skip();
+	}
+
+	;
 
 	/**
 	 * Terminates the control node.
@@ -41,12 +40,12 @@ public abstract class AbstractControlNodeInstance {
 	 * @return true if the skip success. false if not.
 	 */
 	public void terminate() {
-        this.outgoingBehavior.terminate();
-    }
+		this.outgoingBehavior.terminate();
+	}
 
-    public void begin() {
-        this.getExecutionBehavior().begin();
-    }
+	public void begin() {
+		this.getExecutionBehavior().begin();
+	}
 
 	// ********************* Getter/Setter *********************//
 
@@ -99,21 +98,21 @@ public abstract class AbstractControlNodeInstance {
 		this.scenarioInstance = scenarioInstance;
 	}
 
-    public State getState() {
-        return state;
-    }
+	public State getState() {
+		return state;
+	}
 
-    public void setState(State state) {
-        DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
-        dbControlNodeInstance.setState(state, this.controlNodeInstanceId);
-        this.state = state;
-    }
+	public void setState(State state) {
+		DbControlNodeInstance dbControlNodeInstance = new DbControlNodeInstance();
+		dbControlNodeInstance.setState(state, this.controlNodeInstanceId);
+		this.state = state;
+	}
 
-    public AbstractExecutionBehavior getExecutionBehavior() {
-        return executionBehavior;
-    }
+	public AbstractExecutionBehavior getExecutionBehavior() {
+		return executionBehavior;
+	}
 
-    public void setExecutionBehavior(AbstractExecutionBehavior executionBehavior) {
-        this.executionBehavior = executionBehavior;
-    }
+	public void setExecutionBehavior(AbstractExecutionBehavior executionBehavior) {
+		this.executionBehavior = executionBehavior;
+	}
 }

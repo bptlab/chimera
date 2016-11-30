@@ -13,26 +13,25 @@ import javax.xml.bind.annotation.XmlRootElement;
  * of incoming control flows and one outgoing control flow.
  * Example String:
  * <bpmn:parallelGateway id="ParallelGateway_1kginh1">
- *  <bpmn:incoming>SequenceFlow_08t16y9</bpmn:incoming>
- *  <bpmn:incoming>SequenceFlow_1llhwid</bpmn:incoming>
- *  <bpmn:outgoing>SequenceFlow_08rfwur</bpmn:outgoing>
+ * <bpmn:incoming>SequenceFlow_08t16y9</bpmn:incoming>
+ * <bpmn:incoming>SequenceFlow_1llhwid</bpmn:incoming>
+ * <bpmn:outgoing>SequenceFlow_08rfwur</bpmn:outgoing>
  * </bpmn:parallelGateway>
  */
 @XmlRootElement(name = "bpmn:parallelGateway")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ParallelGateway extends AbstractControlNode {
-    @XmlAttribute(name = "name")
-    private String name = "";
+	@XmlAttribute(name = "name")
+	private String name = "";
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public int save() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertControlNode(
-                this.getName(), "AND", this.getFragmentId(), this.getId());
-        return this.databaseId;
-    }
+	@Override
+	public int save() {
+		Connector connector = new Connector();
+		this.databaseId = connector.insertControlNode(this.getName(), "AND", this.getFragmentId(), this.getId());
+		return this.databaseId;
+	}
 }

@@ -8,405 +8,406 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public class Helper {
 
-    /**
-     * @param sql
-     * @return
-     */
-    public static List<Map<String, Object>> executeStatementReturnsMap(String sql) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
+	/**
+	 * @param sql
+	 * @return
+	 */
+	public static List<Map<String, Object>> executeStatementReturnsMap(String sql) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
 
-            //query
-            ResultSet result;
-            boolean returningRows = stmt.execute(sql);
-            if (returningRows)
-                result = stmt.getResultSet();
-            else
-                return new ArrayList<>();
+			//query
+			ResultSet result;
+			boolean returningRows = stmt.execute(sql);
+			if (returningRows) {
+				result = stmt.getResultSet();
+			} else {
+				return new ArrayList<>();
+			}
 
-            //get metadata
-            ResultSetMetaData meta = result.getMetaData();
+			//get metadata
+			ResultSetMetaData meta = result.getMetaData();
 
-            //get column names
-            int columnCount = meta.getColumnCount();
-            ArrayList<String> columns = new ArrayList<String>();
-            for (int i = 1; i <= columnCount; i++)
-                columns.add(meta.getColumnName(i));
+			//get column names
+			int columnCount = meta.getColumnCount();
+			ArrayList<String> columns = new ArrayList<String>();
+			for (int i = 1; i <= columnCount; i++) {
+				columns.add(meta.getColumnName(i));
+			}
 
-            //fetch out rows
-            List<Map<String, Object>> rows =
-                    new ArrayList<>();
+			//fetch out rows
+			List<Map<String, Object>> rows = new ArrayList<>();
 
-            while (result.next()) {
-                Map<String, Object> row = new HashMap<String, Object>();
-                for (String columnName : columns) {
-                    Object value = result.getObject(columnName);
-                    row.put(columnName, value);
-                }
-                rows.add(row);
-            }
+			while (result.next()) {
+				Map<String, Object> row = new HashMap<String, Object>();
+				for (String columnName : columns) {
+					Object value = result.getObject(columnName);
+					row.put(columnName, value);
+				}
+				rows.add(row);
+			}
 
-            //close statement
-            stmt.close();
+			//close statement
+			stmt.close();
 
-            //pass back rows
-            return rows;
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return new ArrayList<>();
-    }
+			//pass back rows
+			return rows;
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return new ArrayList<>();
+	}
 
 
-    /**
-     * Executes the given select SQL statement and returns the result in List with Integer.
-     *
-     * @param sql         This is a given select SQL Statement.
-     * @param columnLabel This is the label of the column which is used as the result.
-     * @return List with Integer.
-     */
-    public static List<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs;
-        List<Integer> results = new ArrayList<>();
-        if (conn == null) {
-            return results;
-        }
+	/**
+	 * Executes the given select SQL statement and returns the result in List with Integer.
+	 *
+	 * @param sql         This is a given select SQL Statement.
+	 * @param columnLabel This is the label of the column which is used as the result.
+	 * @return List with Integer.
+	 */
+	public static List<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs;
+		List<Integer> results = new ArrayList<>();
+		if (conn == null) {
+			return results;
+		}
 
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                results.add(rs.getInt(columnLabel));
-            }
-            //Clean-up environment
-            rs.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
-    }
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				results.add(rs.getInt(columnLabel));
+			}
+			//Clean-up environment
+			rs.close();
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return results;
+	}
 
-    /**
-     * Executes the given select SQL statement and returns the result as String.
-     *
-     * @param sql         This is a given select SQL Statement.
-     * @param columnLabel This is the label of the column which is used as the result.
-     * @return String.
-     */
-    public static String executeStatementReturnsString(String sql, String columnLabel) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs;
-        String results = "";
-        if (conn == null) {
-            return results;
-        }
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                results = rs.getString(columnLabel);
-            }
-            //Clean-up environment
-            rs.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
-    }
+	/**
+	 * Executes the given select SQL statement and returns the result as String.
+	 *
+	 * @param sql         This is a given select SQL Statement.
+	 * @param columnLabel This is the label of the column which is used as the result.
+	 * @return String.
+	 */
+	public static String executeStatementReturnsString(String sql, String columnLabel) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs;
+		String results = "";
+		if (conn == null) {
+			return results;
+		}
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				results = rs.getString(columnLabel);
+			}
+			//Clean-up environment
+			rs.close();
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return results;
+	}
 
-    /**
-     * Executes the given select SQL statement and returns the result as int.
-     *
-     * @param sql         This is a given select SQL Statement.
-     * @param columnLabel This is the label of the column which is used as the result.
-     * @return int.
-     */
-    public int executeStatementReturnsInt(String sql, String columnLabel) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        int results = -1;
-        if (conn == null) {
-            return results;
-        }
+	/**
+	 * Executes the given select SQL statement and returns the result as boolean.
+	 *
+	 * @param sql This is a given select SQL Statement.
+	 * @return boolean.
+	 */
 
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                results = rs.getInt(columnLabel);
-            }
-            //Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
-    }
+	public static boolean executeStatementReturnsBoolean(String sql) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs = null;
+		Boolean results = false;
+		if (conn == null) {
+			return results;
+		}
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
 
-    /**
-     * Executes the given select SQL statement and returns the result as boolean.
-     *
-     * @param sql This is a given select SQL Statement.
-     * @return boolean.
-     */
+			//Clean-up environment
+			rs.close();
 
-    public static boolean executeStatementReturnsBoolean(String sql) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        Boolean results = false;
-        if (conn == null) {
-            return results;
-        }
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
+			results = true;
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return results;
+	}
 
-            //Clean-up environment
-            rs.close();
+	/**
+	 * Executes the given insert SQL statement.
+	 *
+	 * @param sql This is a given SQL Statement.
+	 * @return the generated key for the insert statement.
+	 */
+	public static int executeInsertStatement(String sql) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs = null;
+		if (conn == null) {
+			return -1;
+		}
+		int result = -1;
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+			rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return result;
+	}
 
-            results = true;
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return results;
-    }
+	/**
+	 * Executes the given SQL Statement. Which should be a update or insert statement.
+	 *
+	 * @param sql This is a given SQL Statement.
+	 */
+	public static boolean executeUpdateStatement(String sql) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs = null;
+		Boolean results = false;
+		if (conn == null) {
+			return results;
+		}
+		try {
+			//Execute a querystmt = conn.createStatement();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+					results = true;
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+				results = false;
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+					results = true;
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+				results = false;
+			}
+		}
+		return results;
+	}
 
-    /**
-     * Executes the given select SQL statement.
-     *
-     * @param sql This is a given SQL Statement.
-     * @return true if there is a result for the statement. false if not.
-     */
-    public boolean executeExistStatement(String sql) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) {
-            return false;
-        }
+	/**
+	 * Executes the given select SQL statement and returns the result as int.
+	 *
+	 * @param sql         This is a given select SQL Statement.
+	 * @param columnLabel This is the label of the column which is used as the result.
+	 * @return int.
+	 */
+	public int executeStatementReturnsInt(String sql, String columnLabel) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs = null;
+		int results = -1;
+		if (conn == null) {
+			return results;
+		}
 
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                return true;
-            }
-            //Clean-up environment
-            rs.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return false;
-    }
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				results = rs.getInt(columnLabel);
+			}
+			//Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return results;
+	}
 
-    /**
-     * Executes the given insert SQL statement.
-     *
-     * @param sql This is a given SQL Statement.
-     * @return the generated key for the insert statement.
-     */
-    public static int executeInsertStatement(String sql) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        if (conn == null) {
-            return -1;
-        }
-        int result = -1;
-        try {
-            //Execute a query
-            stmt = conn.createStatement();
-            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                result = rs.getInt(1);
-            }
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return result;
-    }
+	/**
+	 * Executes the given select SQL statement.
+	 *
+	 * @param sql This is a given SQL Statement.
+	 * @return true if there is a result for the statement. false if not.
+	 */
+	public boolean executeExistStatement(String sql) {
+		java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+		Statement stmt = null;
+		ResultSet rs = null;
+		if (conn == null) {
+			return false;
+		}
 
-    /**
-     * Executes the given SQL Statement. Which should be a update or insert statement.
-     *
-     * @param sql This is a given SQL Statement.
-     */
-    public static boolean executeUpdateStatement(String sql) {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        ResultSet rs = null;
-        Boolean results = false;
-        if (conn == null) {
-            return results;
-        }
-        try {
-            //Execute a querystmt = conn.createStatement();
-            stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                    results = true;
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-                results = false;
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                    results = true;
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-                results = false;
-            }
-        }
-        return results;
-    }
+		try {
+			//Execute a query
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				return true;
+			}
+			//Clean-up environment
+			rs.close();
+		} catch (SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		} finally {
+			//finally block used to close resources
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException se2) {
+				se2.printStackTrace();
+			}
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return false;
+	}
 }
