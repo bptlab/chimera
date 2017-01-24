@@ -10,24 +10,23 @@ import java.util.List;
  */
 public class OutputSet extends AbstractSet implements IPersistable {
 
-    public OutputSet(AbstractControlNode controlNode, List<DataNode> dataNodes) {
-        this.dataNodes = dataNodes;
-        this.controlNode = controlNode;
-    }
+	public OutputSet(AbstractControlNode controlNode, List<DataNode> dataNodes) {
+		this.dataNodes = dataNodes;
+		this.controlNode = controlNode;
+	}
 
-    @Override public int save() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertDataSet(false);
+	@Override
+	public int save() {
+		Connector connector = new Connector();
+		this.databaseId = connector.insertDataSet(false);
 
-        for (DataNode dataNode : this.dataNodes) {
-            connector.insertDataSetConsistOfDataNode(this.databaseId,
-                    dataNode.getDatabaseId());
-            connector.insertDataFlow(controlNode.getDatabaseId(), this.databaseId,
-                    false);
-        }
+		for (DataNode dataNode : this.dataNodes) {
+			connector.insertDataSetConsistOfDataNode(this.databaseId, dataNode.getDatabaseId());
+			connector.insertDataFlow(controlNode.getDatabaseId(), this.databaseId, false);
+		}
 
-        return databaseId;
-    }
+		return databaseId;
+	}
 
 
 }

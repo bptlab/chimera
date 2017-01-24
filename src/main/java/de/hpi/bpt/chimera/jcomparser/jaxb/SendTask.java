@@ -10,12 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class SendTask extends AbstractDataControlNode {
 
-    @Override
-    public int save() {
-        Connector connector = new Connector();
-        this.databaseId = connector.insertControlNode(
-                this.getName(), "SendTask", this.getFragmentId(), this.getId());
+	@Override
+	public int save() {
+		Connector connector = new Connector();
+		this.databaseId = connector.insertControlNode(this.getName(), "SendTask", this.getFragmentId(), this.getId());
 
-        return this.databaseId;
-    }
+		return this.databaseId;
+	}
 }

@@ -13,14 +13,14 @@ import java.util.*;
 public final class JsonUtil {
 
 	// hide default public constructor
-	private JsonUtil() { }
+	private JsonUtil() {
+	}
 
 	/**
 	 * @param content is an ArrayList<HashMap<String,Object>>
 	 * @return JSON Object as String
 	 */
-	public static String jsonWrapperArrayListHashMap(
-			ArrayList<HashMap<String, Object>> content) {
+	public static String jsonWrapperArrayListHashMap(ArrayList<HashMap<String, Object>> content) {
 		Gson gson = new Gson();
 		JSONArray json = new JSONArray(content);
 		return gson.toJson(json);
@@ -58,6 +58,7 @@ public final class JsonUtil {
 
 	/**
 	 * This class is a JSON containing a String.
+	 *
 	 * @param value a String.
 	 * @return a wrapped json.
 	 */
@@ -72,8 +73,7 @@ public final class JsonUtil {
 	 * @param labels  contains a String.
 	 * @return a wrapped json
 	 */
-	public static String jsonWrapperHashMap(List<Integer> content,
-			Map<Integer, String> labels) {
+	public static String jsonWrapperHashMap(List<Integer> content, Map<Integer, String> labels) {
 		Gson gson = new Gson();
 		JsonHashMapIntegerString json = new JsonHashMapIntegerString(content, labels);
 		return gson.toJson(json);
@@ -94,12 +94,20 @@ public final class JsonUtil {
 	 * @param states  contains a String
 	 * @return a wrapped json
 	 */
-	public static String jsonWrapperMultipleHashMap(List<Integer> content,
-			Map<Integer, String> labels, Map<Integer, String> states) {
+	public static String jsonWrapperMultipleHashMap(List<Integer> content, Map<Integer, String> labels, Map<Integer, String> states) {
 		Gson gson = new Gson();
-		JsonHashMapMultipleIntegerString json =
-				new JsonHashMapMultipleIntegerString(content, labels, states);
+		JsonHashMapMultipleIntegerString json = new JsonHashMapMultipleIntegerString(content, labels, states);
 		return gson.toJson(json);
+	}
+
+	/**
+	 * @param jsonLine line to be parsed
+	 * @return parsed json string
+	 */
+	public static Map parse(String jsonLine) {
+		Map jsonJavaRootObject = new Gson().fromJson(jsonLine, Map.class);
+		return jsonJavaRootObject;
+
 	}
 
 	/**
@@ -117,8 +125,7 @@ public final class JsonUtil {
 		 * @param labels This is a HashMap of database ID's
 		 *               and the corresponding labels as a String.
 		 */
-		public JsonHashMapIntegerString(List<Integer> ids,
-				Map<Integer, String> labels) {
+		public JsonHashMapIntegerString(List<Integer> ids, Map<Integer, String> labels) {
 			this.ids = ids;
 			this.label = labels;
 		}
@@ -134,13 +141,11 @@ public final class JsonUtil {
 		private Map<Integer, String> label;
 
 		/**
-		 *
-		 * @param ids		Database ID's for the given Objects in the HashMap.
-		 * @param labels	HashMap of database ID's and corresponding labels.
-		 * @param states	states
+		 * @param ids    Database ID's for the given Objects in the HashMap.
+		 * @param labels HashMap of database ID's and corresponding labels.
+		 * @param states states
 		 */
-		public JsonHashMapMultipleIntegerString(List<Integer> ids,
-				Map<Integer, String> labels, Map<Integer, String> states) {
+		public JsonHashMapMultipleIntegerString(List<Integer> ids, Map<Integer, String> labels, Map<Integer, String> states) {
 			this.ids = ids;
 			this.label = labels;
 			this.states = states;
@@ -209,15 +214,5 @@ public final class JsonUtil {
 		public JsonStringHashMap(Map<String, String> ids) {
 			this.ids = ids;
 		}
-	}
-
-	/**
-	 * @param jsonLine line to be parsed
-	 * @return parsed json string
-	 */
-	public static Map parse(String jsonLine) {
-		Map jsonJavaRootObject = new Gson().fromJson(jsonLine, Map.class);
-		return jsonJavaRootObject;
-
 	}
 }

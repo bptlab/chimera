@@ -13,62 +13,63 @@ import java.util.List;
 @XmlTransient
 public abstract class AbstractControlNode {
 
-    protected int databaseId;
+	protected int databaseId;
 
-    protected int fragmentId;
+	protected int fragmentId;
 
-    @XmlAttribute(name = "id")
-    private String id;
-    @XmlElement(name = "bpmn:incoming")
-    private List<String> incoming = new ArrayList<>();
-    @XmlElement(name = "bpmn:outgoing")
-    private List<String> outgoing = new ArrayList<>();
+	@XmlAttribute(name = "id")
+	private String id;
+	@XmlElement(name = "bpmn:incoming")
+	private List<String> incoming = new ArrayList<>();
+	@XmlElement(name = "bpmn:outgoing")
+	private List<String> outgoing = new ArrayList<>();
 
-    /**
-     * Saves the control node to the database and returns it's database id.
-     * @return database id which was created by autoincrement.
-     */
-    public abstract int save();
+	/**
+	 * Saves the control node to the database and returns it's database id.
+	 *
+	 * @return database id which was created by autoincrement.
+	 */
+	public abstract int save();
 
-    public int getDatabaseId() {
-        return databaseId;
-    }
+	public int getDatabaseId() {
+		return databaseId;
+	}
 
-    public void setDatabaseId(int databaseId) {
-        this.databaseId = databaseId;
-    }
+	public void setDatabaseId(int databaseId) {
+		this.databaseId = databaseId;
+	}
 
-    public int getFragmentId() {
-        return fragmentId;
-    }
+	public int getFragmentId() {
+		return fragmentId;
+	}
 
-    public void setFragmentId(int fragmentId) {
-        this.fragmentId = fragmentId;
-    }
+	public void setFragmentId(int fragmentId) {
+		this.fragmentId = fragmentId;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public List<String> getIncoming() {
-        return incoming;
-    }
+	public List<String> getIncoming() {
+		return incoming;
+	}
 
-    public void setIncoming(List<String> incoming) {
-        this.incoming = incoming;
-    }
+	public void setIncoming(List<String> incoming) {
+		this.incoming = incoming;
+	}
 
-    public List<String> getOutgoing() {
-        return outgoing;
-    }
+	public List<String> getOutgoing() {
+		return outgoing;
+	}
 
-    public void setOutgoing(List<String> outgoing) {
-        this.outgoing = outgoing;
-    }
+	public void setOutgoing(List<String> outgoing) {
+		this.outgoing = outgoing;
+	}
 
 }
 

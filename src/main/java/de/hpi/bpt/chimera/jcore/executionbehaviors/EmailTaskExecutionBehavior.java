@@ -1,13 +1,11 @@
 package de.hpi.bpt.chimera.jcore.executionbehaviors;
 
-import de.hpi.bpt.chimera.database.data.DbState;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.database.DbEmailConfiguration;
+import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -32,7 +30,8 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 		controlNodeId = activityInstance.getControlNodeId();
 	}
 
-	@Override public void begin() {
+	@Override
+	public void begin() {
 		this.setValues();
 		this.sendMail();
 	}
@@ -49,32 +48,15 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	}
 
 	private void setDataAttributes() {
-        DataManager dataManager = getScenarioInstance().getDataManager();
-		for (DataAttributeInstance dataAttributeInstance :
-                dataManager.getDataAttributeInstances()) {
-			message = message.replace(
-					"#" + (dataAttributeInstance.getDataObject())
-							.getName()
-							+ "."
-							+ dataAttributeInstance.getName(),
-					dataAttributeInstance.getValue().toString());
-			subject = subject.replace(
-					"#" + (dataAttributeInstance.getDataObject())
-							.getName()
-							+ "."
-							+ dataAttributeInstance.getName(),
-					dataAttributeInstance.getValue().toString());
-			receiverMail = receiverMail.replace(
-					"#" + (dataAttributeInstance.getDataObject())
-							.getName()
-							+ "."
-							+ dataAttributeInstance.getName(),
-					dataAttributeInstance.getValue().toString());
+		DataManager dataManager = getScenarioInstance().getDataManager();
+		for (DataAttributeInstance dataAttributeInstance : dataManager.getDataAttributeInstances()) {
+			message = message.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+			subject = subject.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+			receiverMail = receiverMail.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
 		}
 		DbState dbState = new DbState();
 		for (DataObject dataObject : dataManager.getDataObjects()) {
-			message = message.replace("$" + dataObject.getName(),
-					dbState.getStateName(dataObject.getStateId()));
+			message = message.replace("$" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
 		}
 	}
 

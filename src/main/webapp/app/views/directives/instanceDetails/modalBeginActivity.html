@@ -19,7 +19,7 @@
                             <h3 class="panel-title">{{dclass}}</h3>
                         </div>
                         <div class="panel-body form-group">
-                            <select class="form-control" 
+                            <select class="form-control"
                                     ng-model="obj"
                                     ng-init="obj=dobjects[0]; instanceCtrl.selectDataObject(dclass, obj.id, obj.attributeConfiguration)"
                                     ng-options="dobject as dobject.id for dobject in dobjects"
@@ -28,16 +28,16 @@
                         </div>
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>Attribute</th>
-                                    <th>Value</th>
-                                </tr>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="attr in obj.attributeConfiguration">
-                                    <td>{{attr['name']}}</td>
-                                    <td>{{attr['value']}}</td>
-                                </tr>
+                            <tr ng-repeat="attr in obj.attributeConfiguration">
+                                <td>{{attr['name']}}</td>
+                                <td>{{attr['value']}}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

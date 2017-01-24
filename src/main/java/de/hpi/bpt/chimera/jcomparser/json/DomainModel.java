@@ -27,7 +27,7 @@ public class DomainModel implements IPersistable {
 	 */
 	private int scenarioId;
 
-    /**
+	/**
 	 * A List of all aggregation between the dataClasses belonging to this domainModel.
 	 */
 	private List<Aggregation> aggregations = new ArrayList<>();
@@ -36,43 +36,36 @@ public class DomainModel implements IPersistable {
 	 */
 	private JSONObject domainModelJson;
 
-    private List<DataClass> dataClasses = new ArrayList<>();
+	private List<DataClass> dataClasses = new ArrayList<>();
 	/**
 	 * A map with all known OLCs for DataClasses (identified by name).
 	 */
 	private Map<String, Olc> olcs = new HashMap<>();
 
 
-    public DomainModel(final String element) {
-        try {
-            this.domainModelJson = new JSONObject(element);
-            this.versionNumber = this.domainModelJson.getInt("revision");
-            generateDataClassesAndEventTypes();
-            // TODO this.aggregations = generateAggregations();
-        } catch (JSONException e) {
-            log.error(e);
-            throw new JSONException("Illegal Domain Model JSON");
-        }
+	public DomainModel(final String element) {
+		try {
+			this.domainModelJson = new JSONObject(element);
+			this.versionNumber = this.domainModelJson.getInt("revision");
+			generateDataClassesAndEventTypes();
+			// TODO this.aggregations = generateAggregations();
+		} catch (JSONException e) {
+			log.error(e);
+			throw new JSONException("Illegal Domain Model JSON");
+		}
 	}
 
-    /**
-     * Creates a mapping from the name of the dataclass to the dataclass object itself.
-     * @return map from name to dataclass
-     */
-    public Map<String, DataClass> getMapFromNameToDataClass() {
-        Map<String, DataClass> nameToDataClass = new HashMap<>();
-        for (DataClass dataClass : dataClasses) {
-            nameToDataClass.put(dataClass.getName(), dataClass);
-        }
-        return nameToDataClass;
-    }
 	/**
-	 * This sets the scenario ID needed for the update.
+	 * Creates a mapping from the name of the dataclass to the dataclass object itself.
 	 *
-	 * @param id databaseID of the corresponding scenario.
+	 * @return map from name to dataclass
 	 */
-	public void setScenarioId(final int id) {
-		this.scenarioId = id;
+	public Map<String, DataClass> getMapFromNameToDataClass() {
+		Map<String, DataClass> nameToDataClass = new HashMap<>();
+		for (DataClass dataClass : dataClasses) {
+			nameToDataClass.put(dataClass.getName(), dataClass);
+		}
+		return nameToDataClass;
 	}
 
 	/**
@@ -80,7 +73,7 @@ public class DomainModel implements IPersistable {
 	 * and a Map of EventTypes with their modelID as keys.
 	 */
 	private void generateDataClassesAndEventTypes() {
-        try {
+		try {
 			JSONArray jsonDataClasses = this.domainModelJson.getJSONArray("dataclasses");
 			int length = jsonDataClasses.length();
 
@@ -96,8 +89,7 @@ public class DomainModel implements IPersistable {
 					//it on the fly by iterating over all data classes
 					//(basically like here)
 					if (currentClass.getOlc() != null) {
-						olcs.put(currentClass.getName(),
-								currentClass.getOlc());
+						olcs.put(currentClass.getName(), currentClass.getOlc());
 					}
 				}
 			}
@@ -112,10 +104,10 @@ public class DomainModel implements IPersistable {
 	 *
 	 * @return the integer 1.
 	 */
-	@Override public int save() {
+	@Override
+	public int save() {
 		Connector conn = new Connector();
-		conn.insertDomainModel(this.versionNumber,
-				this.scenarioId);
+		conn.insertDomainModel(this.versionNumber, this.scenarioId);
 		dataClasses.forEach(x -> x.save(scenarioId));
 		aggregations.forEach(Aggregation::save);
 		return 1;
@@ -127,6 +119,15 @@ public class DomainModel implements IPersistable {
 
 	public int getScenarioId() {
 		return scenarioId;
+	}
+
+	/**
+	 * This sets the scenario ID needed for the update.
+	 *
+	 * @param id databaseID of the corresponding scenario.
+	 */
+	public void setScenarioId(final int id) {
+		this.scenarioId = id;
 	}
 
 	public int getVersionNumber() {

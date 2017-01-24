@@ -8,26 +8,25 @@ import java.util.List;
  *
  */
 public class EventGatewayOutgoingBehavior extends AbstractOutgoingBehavior {
-    private final int fragmentInstanceId;
-    List<Integer> followingEventControlNodes;
+	private final int fragmentInstanceId;
+	List<Integer> followingEventControlNodes;
 
-    public EventGatewayOutgoingBehavior(List<Integer> followingEventControlNodes,
-                                        int fragmentInstanceId) {
-        this.followingEventControlNodes = followingEventControlNodes;
-        this.fragmentInstanceId = fragmentInstanceId;
-    }
+	public EventGatewayOutgoingBehavior(List<Integer> followingEventControlNodes, int fragmentInstanceId) {
+		this.followingEventControlNodes = followingEventControlNodes;
+		this.fragmentInstanceId = fragmentInstanceId;
+	}
 
-    @Override
-    public void terminate() {
-        // This will also try to delete the event which
-        DbEventMapping eventMapping = new DbEventMapping();
-        for (Integer eventControlNode : this.followingEventControlNodes) {
-            eventMapping.removeEventMapping(this.fragmentInstanceId, eventControlNode);
-        }
-    }
+	@Override
+	public void terminate() {
+		// This will also try to delete the event which
+		DbEventMapping eventMapping = new DbEventMapping();
+		for (Integer eventControlNode : this.followingEventControlNodes) {
+			eventMapping.removeEventMapping(this.fragmentInstanceId, eventControlNode);
+		}
+	}
 
-    @Override
-    public void skip() {
+	@Override
+	public void skip() {
 
-    }
+	}
 }

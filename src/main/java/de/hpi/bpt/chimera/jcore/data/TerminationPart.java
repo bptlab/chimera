@@ -10,12 +10,12 @@ import java.util.List;
  */
 public class TerminationPart extends DataConditions {
 
-    public TerminationPart(String conditionSetId) {
-        DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
-        this.dataClassToState = dbTerminationCondition.getDataClassToState(conditionSetId);
-    }
+	public TerminationPart(String conditionSetId) {
+		DbTerminationCondition dbTerminationCondition = new DbTerminationCondition();
+		this.dataClassToState = dbTerminationCondition.getDataClassToState(conditionSetId);
+	}
 
-    public boolean checkTermination(List<DataObject> dataObjects) {
-        return super.checkConditions(dataObjects);
-    }
+	public boolean checkTermination(List<DataObject> dataObjects) {
+		return super.checkConditions(dataObjects);
+	}
 }

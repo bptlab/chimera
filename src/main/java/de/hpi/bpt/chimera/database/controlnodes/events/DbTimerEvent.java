@@ -10,15 +10,13 @@ import de.hpi.bpt.chimera.jcore.controlnodes.TimerEventInstance;
  */
 public class DbTimerEvent extends DbObject {
 
-    /**
-     *
-     * @param controlNodeId
-     * @return
-     */
-    public String retrieveTimerDefinition(int controlNodeId) {
-        String retrieveTimerDefinition = "SELECT * FROM timerevent WHERE "
-                + "controlNodeDatabaseId = %d;";
-        String sql = String.format(retrieveTimerDefinition, controlNodeId);
-        return this.executeStatementReturnsString(sql, "timerDefinition");
-    }
+	/**
+	 * @param controlNodeId
+	 * @return
+	 */
+	public String retrieveTimerDefinition(int controlNodeId) {
+		String retrieveTimerDefinition = "SELECT * FROM timerevent WHERE " + "controlNodeDatabaseId = %d;";
+		String sql = String.format(retrieveTimerDefinition, controlNodeId);
+		return this.executeStatementReturnsString(sql, "timerDefinition");
+	}
 }

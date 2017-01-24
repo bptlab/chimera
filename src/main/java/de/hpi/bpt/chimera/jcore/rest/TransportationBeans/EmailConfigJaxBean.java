@@ -16,42 +16,44 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class EmailConfigJaxBean {
-    /**
-     * The receiver of the email.
-     * coded as an valid email address (as String)
-     */
-    private String receiver;
+	/**
+	 * The receiver of the email.
+	 * coded as an valid email address (as String)
+	 */
+	private String receiver;
 
-    /**
-     * The subject of the email.
-     * Could be any String but null.
-     */
-    private String subject;
-    /**
-     * The content of the email.
-     * Could be any String but null.
-     */
-    private String content;
+	/**
+	 * The subject of the email.
+	 * Could be any String but null.
+	 */
+	private String subject;
+	/**
+	 * The content of the email.
+	 * Could be any String but null.
+	 */
+	private String content;
 
-    public String getReceiver() {
-        return receiver;
-    }
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
+	public String getReceiver() {
+		return receiver;
+	}
 
-    public String getSubject() {
-        return subject;
-    }
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public String getSubject() {
+		return subject;
+	}
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 }

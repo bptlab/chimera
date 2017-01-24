@@ -14,12 +14,7 @@ public class DbFragmentInstance extends DbObject {
 	 * @return true if the fragment exists else false.
 	 */
 	public Boolean existFragment(int fragmentId, int scenarioInstanceId) {
-		String sql =
-				"SELECT id FROM fragmentinstance "
-						+ "WHERE fragmentinstance.terminated = 0 "
-						+ "AND scenarioinstance_id = "
-						+ scenarioInstanceId
-						+ " AND fragment_id =" + " " + fragmentId;
+		String sql = "SELECT id FROM fragmentinstance " + "WHERE fragmentinstance.terminated = 0 " + "AND scenarioinstance_id = " + scenarioInstanceId + " AND fragment_id =" + " " + fragmentId;
 		return this.executeExistStatement(sql);
 	}
 
@@ -31,8 +26,7 @@ public class DbFragmentInstance extends DbObject {
 	 * @return the database ID of the newly created fragment instance (Error: -1).
 	 */
 	public int createNewFragmentInstance(int fragmentId, int scenarioInstanceId) {
-		String sql = "INSERT INTO fragmentinstance (fragment_id, scenarioinstance_id) "
-				+ "VALUES (" + fragmentId + ", " + scenarioInstanceId + ")";
+		String sql = "INSERT INTO fragmentinstance (fragment_id, scenarioinstance_id) " + "VALUES (" + fragmentId + ", " + scenarioInstanceId + ")";
 		return this.executeInsertStatement(sql);
 	}
 
@@ -45,11 +39,7 @@ public class DbFragmentInstance extends DbObject {
 	 * @return the database ID of the fragment instance if existing else -1.
 	 */
 	public int getFragmentInstanceID(int fragmentId, int scenarioInstanceId) {
-		String sql =
-				"SELECT id FROM fragmentinstance "
-						+ "WHERE fragmentinstance.terminated = 0 "
-						+ "AND scenarioinstance_id = " + scenarioInstanceId
-						+ " AND fragment_id =" + " " + fragmentId;
+		String sql = "SELECT id FROM fragmentinstance " + "WHERE fragmentinstance.terminated = 0 " + "AND scenarioinstance_id = " + scenarioInstanceId + " AND fragment_id =" + " " + fragmentId;
 		return this.executeStatementReturnsInt(sql, "id");
 
 	}
@@ -60,8 +50,7 @@ public class DbFragmentInstance extends DbObject {
 	 * @param fragmentInstanceId This is the database ID of a fragment instance.
 	 */
 	public void terminateFragmentInstance(int fragmentInstanceId) {
-		String sql = "UPDATE fragmentinstance SET fragmentinstance.terminated = 1 "
-				+ "WHERE id = "	+ fragmentInstanceId;
+		String sql = "UPDATE fragmentinstance SET fragmentinstance.terminated = 1 " + "WHERE id = " + fragmentInstanceId;
 		this.executeUpdateStatement(sql);
 	}
 
@@ -72,8 +61,7 @@ public class DbFragmentInstance extends DbObject {
 	 * @return FragmentID.
 	 */
 	public int getFragmentID(int fragmentinstanceId) {
-		String sql = "SELECT fragment_id FROM fragmentinstance "
-				+ "WHERE id = " + fragmentinstanceId;
+		String sql = "SELECT fragment_id FROM fragmentinstance " + "WHERE id = " + fragmentinstanceId;
 		return this.executeStatementReturnsInt(sql, "fragment_id");
 	}
 }

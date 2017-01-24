@@ -8,15 +8,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class NamedJaxBean {
-    /**
-     * The name which should be assigned to the entity.
-     */
-    private String name;
+	/**
+	 * The name which should be assigned to the entity.
+	 */
+	private String name;
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

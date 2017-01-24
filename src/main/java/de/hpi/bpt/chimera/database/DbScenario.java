@@ -66,9 +66,7 @@ public class DbScenario extends DbObject {
 	 * @return a HashMap of the Database ids and their label.
 	 */
 	public Map<Integer, String> getScenariosLike(String filterString) {
-		String sql =
-				"SELECT id, name FROM scenario WHERE deleted = 0 "
-						+ "AND name LIKE '%" + filterString	+ "%'";
+		String sql = "SELECT id, name FROM scenario WHERE deleted = 0 " + "AND name LIKE '%" + filterString + "%'";
 		log.info(sql);
 		return this.executeStatementReturnsMap(sql, "id", "name");
 	}
@@ -81,9 +79,7 @@ public class DbScenario extends DbObject {
 	 * @return a Map with the scenario details.
 	 */
 	public Map<String, Object> getScenarioDetails(int id) {
-		String sql =
-				"SELECT id, name, modelversion FROM scenario "
-						+ "WHERE deleted = 0 AND id = "	+ id;
+		String sql = "SELECT id, name, modelversion FROM scenario " + "WHERE deleted = 0 AND id = " + id;
 		log.info(sql);
 		return this.executeStatementReturnsMapWithKeys(sql, "id", "name", "modelversion");
 	}
