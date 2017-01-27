@@ -135,13 +135,13 @@ public final class ConnectionWrapper {
 	 * TODO: Fix possible SQL injection
 	 */
 	private void updateSchema() {
-		log.info("Trying to update the schema");
 		try (java.sql.Connection conn = this.connect(); Statement stmt = conn.createStatement()) {
 			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(SCHEMA_DEFINITION_FILE);
 			if (is == null) {
 				throw new FileNotFoundException(String.format("The schema definition file %s could not be found.", SCHEMA_DEFINITION_FILE));
 			}
 			String schemaName = PropertyLoader.getProperty("mysql.schema");
+			log.info("Trying to update the schema <" + schemaName + "> using sql file " + SCHEMA_DEFINITION_FILE);
 			stmt.execute("DROP SCHEMA " + schemaName);
 			stmt.execute("CREATE SCHEMA " + schemaName);
 			stmt.execute("USE  " + schemaName);

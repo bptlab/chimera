@@ -6,6 +6,9 @@ import de.hpi.bpt.chimera.database.data.DbTerminationCondition;
 import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
 import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataTransitionException;
 import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataclassReferenceException;
+import de.hpi.bpt.chimera.jcore.Scenario;
+import de.hpi.bpt.chimera.jcore.ScenarioFactory;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class implements the REST interface for scenarios.
+ * This class implements the REST interface for dealing with scenarios.
  */
 @Path("interface/v2")
-public class ScenarioRestService {
+public class ScenarioRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(RestInterface.class);
 
 	/**
@@ -127,6 +130,26 @@ public class ScenarioRestService {
 		xmlJson.put("xml", new JSONArray(xmls));
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(xmlJson.toString()).build();
 	}
+
+	 /**
+   * Deletes a scenario with all its instances.
+   * Internally, this is realized by setting a 'deleted' flag in the database.
+   *
+   * @param scenarioID The ID of the scenario which is supposed to be deleted
+   * @return The status code if the operation was successful or not
+   * @throws Exception in case something goes wrong.
+   */
+  @DELETE
+  @Path("scenario/{scenarioId}/")
+  public Response deleteScenario(@PathParam("scenarioId") Integer scenarioId) throws Exception {
+    Scenario scenario = ScenarioFactory.createScenarioFromDatabase(scenarioId);
+    if (scenario.exists()) {
+      scenario.delete();
+      return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "scenario deletion successful.\"}").build();
+    } else {
+      return this.buildNotFoundResponse(String.format("Scenario with Id %s does not exist.", scenarioId));
+    }
+  }
 
 
 	/**
