@@ -88,7 +88,7 @@ angular.module('jfrontend')
             // give the user the possibility to delete a scenario where no instances are running
             this.deleteScenario = function (id) {
                 // send HTTP Delete package to JEngine
-                $http.delete(JEngine_Server_URL + "/" + JConfig_REST_Interface +
+                $http.delete(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + id + "/?").success(function (data) {
                     console.log("deleting scenario was successful..");
                 });
