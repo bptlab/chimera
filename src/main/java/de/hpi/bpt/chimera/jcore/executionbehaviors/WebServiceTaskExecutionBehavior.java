@@ -29,10 +29,10 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 	}
 
   /**
-   * Executes a web service task
+   * Executes a web service task.
    */
-  @Override
-  public void begin() {
+	@Override
+  public void execute() {
     WebTarget target = buildTarget();
     log.info("Target for web service call constructed: " + target.toString());
     Response response = executeWebserviceRequest(target);
@@ -45,7 +45,7 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 
   /**
    * Construct the target of the web service call. Query params encoded in the URL are added to the target object.
-   * 
+   *
    * @return a WebTarget
    */
   private WebTarget buildTarget() {

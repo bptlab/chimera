@@ -3,7 +3,9 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
 import de.hpi.bpt.chimera.database.controlnodes.DbActivityInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNode;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
+import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.ActivityExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.EmailTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.SendTaskExecutionBehavior;
@@ -212,5 +214,16 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public TaskOutgoingBehavior getOutgoingBehavior() {
 		return (TaskOutgoingBehavior) super.getOutgoingBehavior();
 	}
+
+	/**
+	 * Output sets of this activity instance.
+	 * TODO move to activity, äh first introduce a model level
+	 * @return
+	 */
+  public List<List<DataObject>> getOutputSets() {
+    int nodeId = dbControlNodeInstance.getControlNodeId(getControlNodeInstanceId());
+    List<Integer> outputSetIds = new DbDataFlow().getOutputSetsForControlNode(nodeId);
+    return null;
+  }
 
 }
