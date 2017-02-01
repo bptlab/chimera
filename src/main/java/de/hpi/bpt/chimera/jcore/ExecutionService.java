@@ -227,22 +227,6 @@ public class ExecutionService {
 	}
 
 	/**
-	 * Starts the execution of an activity which is enabled.
-	 *
-	 * @param scenarioInstanceId This is the id of the scenario instance.
-	 * @param activityId         This is the id of the activity.
-	 * @return true if the activity could been started. false if not.
-	 */
-	public void beginActivityInstance(int scenarioInstanceId, int activityId) {
-		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
-		for (AbstractControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
-			if (nodeInstance.getControlNodeId() == activityId) {
-				((ActivityInstance) nodeInstance).begin();
-			}
-		}
-	}
-
-	/**
 	 * Starts the execution of an activity specified by the params.
 	 * The state will only be changed if the activity is enabled.
 	 *
