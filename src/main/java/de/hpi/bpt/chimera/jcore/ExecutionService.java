@@ -248,13 +248,16 @@ public class ExecutionService {
 	 *
 	 * @param scenarioInstanceId This is the id of the scenario instance.
 	 * @param activityInstanceId Specifies the activity id.
+	 * @param selectedDataObjectIds - IDs of data objects selected by user this activity operates on
 	 * @return Indicates the success. True if the activity has been started, else false.
 	 */
-	public void beginActivityInstance(int scenarioInstanceId, int activityInstanceId, List<Integer> usedDataObjects) {
+	public void beginActivityInstance(int scenarioInstanceId, int activityInstanceId, List<Integer> selectedDataObjectIds) {
 		ScenarioInstance scenarioInstance = scenarioInstanceMap.get(scenarioInstanceId);
+		// check whether activity instance is enabled, can this try to begin a gateway?
 		for (AbstractControlNodeInstance nodeInstance : scenarioInstance.getEnabledControlNodeInstances()) {
 			if (nodeInstance.getControlNodeInstanceId() == activityInstanceId) {
-				((ActivityInstance) nodeInstance).begin(usedDataObjects);
+				((ActivityInstance) nodeInstance).begin(selectedDataObjectIds);
+				break; // no need to check further
 			}
 		}
 	}

@@ -28,21 +28,30 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 		super(activityInstance);
 	}
 
-	@Override
-	public void begin() {
-		WebTarget target = buildTarget();
-		Response response = executeWebserviceRequest(target);
-		if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
-			writeDataObjects(response);
-		} else {
-			log.warn("Web service task did not begin properly");
-		}
-	}
+  /**
+   * Executes a web service task
+   */
+  @Override
+  public void begin() {
+    WebTarget target = buildTarget();
+    log.info("Target for web service call constructed: " + target.toString());
+    Response response = executeWebserviceRequest(target);
+    if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
+      writeDataObjects(response);
+    } else {
+      log.warn("Web service task did not begin properly");
+    }
+  }
 
-	private WebTarget buildTarget() {
-		String link = dbWebServiceTask.getUrl(activityInstance.getControlNodeId());
-		DataManager dataManager = getScenarioInstance().getDataManager();
-		String replacedLink = insertDataObjectValues(link, new ArrayList<>(dataManager.getDataAttributeInstances()));
+  /**
+   * Construct the target of the web service call. Query params encoded in the URL are added to the target object.
+   * 
+   * @return a WebTarget
+   */
+  private WebTarget buildTarget() {
+    String link = dbWebServiceTask.getUrl(activityInstance.getControlNodeId());
+    DataManager dataManager = getScenarioInstance().getDataManager();
+    String replacedLink = insertDataObjectValues(link, new ArrayList<>(dataManager.getDataAttributeInstances()));
 
 		Client client = ClientBuilder.newClient();
 		// Split url into link part and query param part
@@ -88,13 +97,20 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 		}
 	}
 
-	private void writeDataObjects(Response response) {
-		String json = response.readEntity(String.class);
-		DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(activityInstance.getControlNodeId(), activityInstance.getControlNodeInstanceId(), activityInstance.getScenarioInstance());
-		List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
-		getPossibleDataObjects().values().stream().filter(x -> !x.isEmpty()).forEach(x -> dataAttributeInstances.addAll(x.get(new Random().nextInt(x.size())).getDataAttributeInstances()));
-		dataAttributeWriter.writeDataAttributesFromJson(json, dataAttributeInstances);
-	}
+  /**
+   * Store the response from the successfully called web service into data objects
+   * @param response - the successful response from the web service
+   */
+  private void writeDataObjects(Response response) {
+    String responseInJson = response.readEntity(String.class);
+    log.info("Received the following response: " + responseInJson);
+    DataAttributeWriter dataAttributeWriter = new DataAttributeWriter(activityInstance.getControlNodeId(),
+        activityInstance.getControlNodeInstanceId(), activityInstance.getScenarioInstance());
+    List<DataAttributeInstance> dataAttributeInstances = new ArrayList<>();
+    getPossibleDataObjects().values().stream().filter(x -> !x.isEmpty())
+        .forEach(x -> dataAttributeInstances.addAll(x.get(new Random().nextInt(x.size())).getDataAttributeInstances()));
+    dataAttributeWriter.writeDataAttributesFromJson(responseInJson, dataAttributeInstances);
+  }
 
 	private Map<Integer, List<DataObject>> getPossibleDataObjects() {
 		Map<Integer, List<DataObject>> possibleDataObjects = new HashMap<>();

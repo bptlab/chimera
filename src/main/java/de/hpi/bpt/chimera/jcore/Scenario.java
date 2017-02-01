@@ -3,8 +3,6 @@ package de.hpi.bpt.chimera.jcore;
 
 import java.util.List;
 
-import org.junit.internal.runners.model.EachTestNotifier;
-
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.DbScenarioInstance;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;

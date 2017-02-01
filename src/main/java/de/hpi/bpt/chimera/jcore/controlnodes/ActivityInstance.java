@@ -142,9 +142,12 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		}
 	}
 
-
-	public void begin(List<Integer> usedDataObjects) {
-		((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(usedDataObjects);
+	/**
+	 * Begin an enabled activity with provided data objects.
+	 * @param selectedDataObjectIds - IDs of selected data objects
+	 */
+	public void begin(List<Integer> selectedDataObjectIds) {
+	  ((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(selectedDataObjectIds);
 		this.setState(State.RUNNING);
 	}
 
