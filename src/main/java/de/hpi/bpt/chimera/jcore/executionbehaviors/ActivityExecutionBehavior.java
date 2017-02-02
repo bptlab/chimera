@@ -79,10 +79,7 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
     registerAttachedEvents();
     // now execute it!
     execute();
-    if (activityInstance.isAutomaticTask()) {
-      activityInstance.terminate();
-    }
-	}
+ }
 
 	/**
 	 * This method defines the behavior of the activity.

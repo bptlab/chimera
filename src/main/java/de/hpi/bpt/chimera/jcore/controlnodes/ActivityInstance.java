@@ -151,8 +151,15 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public void begin(List<Integer> selectedDataObjectIds) {
 	  ((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(selectedDataObjectIds);
 		this.setState(State.RUNNING);
+		if (this.isAutomaticTask()) {
+      this.terminate();
+    }
 	}
 
+	/**
+	 * @deprecated This is only called by Tests! Use begin(List<Integer>) instead which
+	 * expects a list of selected data objects the activity should work on
+	 */
 	@Override
 	public void begin() {
 		super.begin();
