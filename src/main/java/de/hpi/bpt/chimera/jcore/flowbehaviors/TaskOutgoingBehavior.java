@@ -65,7 +65,7 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 		int scenarioInstanceId = this.getScenarioInstance().getId();
 		new DbLogEntry().logActivity(this.activityInstance.getControlNodeInstanceId(), "terminated", scenarioInstanceId);
 		activityInstance.setState(State.TERMINATED);
-		cancelAttachedEvents();
+		unregisterAttachedEvents();
 		DbDataFlow dataFlow = new DbDataFlow();
 		List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
 		List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
@@ -224,7 +224,11 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 		dataObjectInstance.get().unlock();
 	}
 
-	private void cancelAttachedEvents() {
+	/**
+	 * Unregisters event subscriptions for attached events of this task.
+	 * This method makes only sense for control nodes that can have attached events, i.e. tasks.
+	 */
+	protected void unregisterAttachedEvents() {
 		DbBoundaryEvent boundaryEventDao = new DbBoundaryEvent();
 		int boundaryEventId = boundaryEventDao.getBoundaryEventForActivity(this.getControlNodeId());
 		// if activity has attached event

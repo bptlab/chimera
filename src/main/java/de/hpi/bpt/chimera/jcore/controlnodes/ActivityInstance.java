@@ -12,6 +12,8 @@ import de.hpi.bpt.chimera.jcore.executionbehaviors.SendTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.WebServiceTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskOutgoingBehavior;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.WebServiceTaskOutgoingBehavior;
+
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -125,6 +127,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 				break;
 			case "WebServiceTask":
 				this.setExecutionBehavior(new WebServiceTaskExecutionBehavior(this));
+				this.setOutgoingBehavior(new WebServiceTaskOutgoingBehavior(getControlNodeId(), scenarioInstance, getFragmentInstanceId(), this));
 				this.isAutomaticTask = true;
 				break;
 			//Added additional case: activities can be terminated every time

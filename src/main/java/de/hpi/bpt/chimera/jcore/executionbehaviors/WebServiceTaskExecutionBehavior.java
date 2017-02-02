@@ -6,6 +6,8 @@ import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.WebServiceTaskOutgoingBehavior;
+
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.client.*;
@@ -37,7 +39,9 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
     log.info("Target for web service call constructed: " + target.toString());
     Response response = executeWebserviceRequest(target);
     if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
-      writeDataObjects(response);
+      // store the response in the outgoing behavior
+      // TODO: Find a better way to achieve this
+      ((WebServiceTaskOutgoingBehavior) activityInstance.getOutgoingBehavior()).setResponse(response.readEntity(String.class));
     } else {
       log.warn("Web service task did not begin properly");
     }
@@ -97,8 +101,9 @@ public class WebServiceTaskExecutionBehavior extends ActivityExecutionBehavior {
 		}
 	}
 
-  /**
-   * Store the response from the successfully called web service into data objects
+	/**
+   * Store the response from the successfully called web service into data objects.
+   * @deprecated
    * @param response - the successful response from the web service
    */
   private void writeDataObjects(Response response) {

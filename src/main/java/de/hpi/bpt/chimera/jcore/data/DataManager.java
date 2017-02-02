@@ -122,10 +122,11 @@ public class DataManager {
 		return inputSet.isFulfilled(dataObjects);
 	}
 
-	public void initializeDataObject(int dataClassId, int stateId) {
+	public DataObject initializeDataObject(int dataClassId, int stateId) {
 		DataObject dataObject = new DataObject(dataClassId, scenarioInstance, stateId);
 		new DbLogEntry().logDataObjectCreation(dataObject.getId(), stateId, scenarioInstance.getId());
 		this.dataObjects.add(dataObject);
+		return dataObject;
 	}
 
 	/**
