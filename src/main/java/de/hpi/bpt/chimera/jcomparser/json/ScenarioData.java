@@ -46,6 +46,7 @@ public class ScenarioData {
 			JSONObject domainModelJson = scenarioJson.getJSONObject("domainmodel");
 			this.domainModel = new DomainModel(domainModelJson.toString());
 
+			// key 'startconditions' always there, but empty
 			if (scenarioJson.has("startconditions")) {
 				JSONArray startQueryArray = scenarioJson.getJSONArray("startconditions");
 				this.startQueries = StartQuery.parseStartQueries(startQueryArray);
