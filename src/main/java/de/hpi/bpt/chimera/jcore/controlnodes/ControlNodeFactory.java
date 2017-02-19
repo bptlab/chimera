@@ -6,9 +6,21 @@ import de.hpi.bpt.chimera.database.history.DbLogEntry;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 
 /**
- *
+ * I create instances of control nodes or load them from the database. Other control node instances
+ * call my methods when they terminate and want to continue the process flow.
  */
 public class ControlNodeFactory {
+
+	/**
+	 * Given the Id of a control node instance I look up its type in the database and create the
+	 * appropriate AbstractControlNodeInstance, e.g. a XorGatewayInstance.
+	 * TODO I have to find out, why I ignore Activities, EmailTasks, WebServiceTasks, and SendTasks,
+	 * 		who handles them?
+	 *
+	 * @param controlNodeInstanceId
+	 * @param scenarioInstance
+	 * @return a control node instance of the correct type
+	 */
 	public static AbstractControlNodeInstance loadControlNodeInstance(int controlNodeInstanceId, ScenarioInstance scenarioInstance) {
 		AbstractControlNodeInstance controlNodeInstance = null;
 		DbControlNodeInstance controlNodeDao = new DbControlNodeInstance();

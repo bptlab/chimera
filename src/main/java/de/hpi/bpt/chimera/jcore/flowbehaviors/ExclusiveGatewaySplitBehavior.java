@@ -91,7 +91,9 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	public void terminate() {
 		ScenarioInstance scenarioInstance = this.getScenarioInstance();
 		scenarioInstance.updateDataFlow();
-		enableFollowing();
+		// enableFollowing();
+		// do not enable all successors, just the one with fulfilled conditions
+		evaluateConditions();
 	}
 
 	@Override
@@ -125,17 +127,17 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 
 	private void setAutomaticExecutionToFalse(String type, AbstractControlNodeInstance controlNodeInstance) {
 		switch (type) {
-			case "Activity":
-			case "EmailTask":
-			case "WebServiceTask":
-				((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
-				break;
-			case "XOR":
-			case "EVENT_BASED":
-				((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
-				break;
-			default:
-				break;
+		case "Activity":
+		case "EmailTask":
+		case "WebServiceTask":
+			((ActivityInstance) controlNodeInstance).setAutomaticTask(false);
+			break;
+		case "XOR":
+		case "EVENT_BASED":
+			((GatewayInstance) controlNodeInstance).setAutomaticExecution(false);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -150,7 +152,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	private void skipBranch(List<Integer> branch) {
 		for (int toSkip : branch) {
 			AbstractControlNodeInstance controlNodeInstance = this.getScenarioInstance().getControlNodeInstanceForControlNodeId(toSkip);
-			controlNodeInstance.skip();
+			if (controlNodeInstance != null) controlNodeInstance.skip();
 		}
 	}
 
@@ -159,31 +161,28 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 */
 	public void evaluateConditions() {
 		Map<Integer, String> conditions = this.getDbControlFlow().getConditions(getControlNodeId());
-		Set<Integer> keys = conditions.keySet();
-		Iterator<Integer> key = keys.iterator();
-		Integer controlNodeId = 0;
-		boolean defaultExecution = true;
-		int defaultControlNode = -1;
-		while (key.hasNext()) {
-			controlNodeId = key.next();
-			if ((conditions.get(controlNodeId)).equals("DEFAULT")) {
+		Integer controlNodeId;
+		Integer defaultControlNode = -1;
+		String condition;
+		Set<Integer> toEnable = new HashSet<>();
+		Iterator<Integer> nodes = conditions.keySet().iterator();
+		while (nodes.hasNext()) {
+			controlNodeId = nodes.next();
+			condition = conditions.get(controlNodeId);
+			if (condition.equals("DEFAULT")) {
 				defaultControlNode = controlNodeId;
-			} else if (evaluateCondition(conditions.get(controlNodeId))) {
-				defaultExecution = false;
-				break;
+			} else if (evaluateCondition(condition)) { // condition true or empty
+				toEnable.add(controlNodeId);
 			}
 		}
-		if (defaultExecution) {
-			if (defaultControlNode != -1) {
-				AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(defaultControlNode);
-				controlNodeInstance.enableControlFlow();
-			}
-		} else {
-			AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(controlNodeId);
+		if (toEnable.isEmpty() && defaultControlNode != -1) toEnable.add(defaultControlNode);
+		for (Integer nodeId : toEnable) {
+			AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(nodeId);
 			controlNodeInstance.enableControlFlow();
 		}
-
 	}
+
+
 
 	/**
 	 * Evaluates one specific condition.
@@ -192,6 +191,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 * @return true if the condition ist true.
 	 */
 	public boolean evaluateCondition(String condition) {
+		if ("".equals(condition)) return true; // empty condition is true
 		XORGrammarCompiler compiler = new XORGrammarCompiler();
 		CommonTree ast = compiler.compile(condition);
 		return ast.getChildCount() > 0 && evaluate(0, ast);
@@ -229,28 +229,28 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 		}
 		try {
 			switch (comparison) {
-				case "=":
-					return left.equals(right);
-				case "<":
-					return Float.parseFloat(left) < Float.parseFloat(right);
-				case "<=":
-					return Float.parseFloat(left) <= Float.parseFloat(right);
-				case ">":
-					return Float.parseFloat(left) > Float.parseFloat(right);
-				case ">=":
-					return Float.parseFloat(left) >= Float.parseFloat(right);
-				case "!=":
-					return !left.equals(right);
-				case "!<":
-					return !(Float.parseFloat(left) < Float.parseFloat(right));
-				case "!<=":
-					return !(Float.parseFloat(left) <= Float.parseFloat(right));
-				case "!>":
-					return !(Float.parseFloat(left) > Float.parseFloat(right));
-				case "!>=":
-					return !(Float.parseFloat(left) >= Float.parseFloat(right));
-				default:
-					break;
+			case "=":
+				return left.equals(right);
+			case "<":
+				return Float.parseFloat(left) < Float.parseFloat(right);
+			case "<=":
+				return Float.parseFloat(left) <= Float.parseFloat(right);
+			case ">":
+				return Float.parseFloat(left) > Float.parseFloat(right);
+			case ">=":
+				return Float.parseFloat(left) >= Float.parseFloat(right);
+			case "!=":
+				return !left.equals(right);
+			case "!<":
+				return !(Float.parseFloat(left) < Float.parseFloat(right));
+			case "!<=":
+				return !(Float.parseFloat(left) <= Float.parseFloat(right));
+			case "!>":
+				return !(Float.parseFloat(left) > Float.parseFloat(right));
+			case "!>=":
+				return !(Float.parseFloat(left) >= Float.parseFloat(right));
+			default:
+				break;
 			}
 		} catch (NumberFormatException e) {
 			log.error("Error can't convert String to Float:", e);
