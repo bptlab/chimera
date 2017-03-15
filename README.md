@@ -1,5 +1,5 @@
 
-#Chimera
+# Welcome to Chimera
 Chimera is an engine for executing fragment based case models, an approach that allows for modelling flexible business processes. It was developed at the [Business Process Technology (BPT) group](http://bpt.hpi.uni-potsdam.de/Public/) at the Hasso Plattner Institute (HPI). It is provided under the MIT free and open source software license (see LICENSE.md). Chimera supports:
 
 * Execution and combination of [BPMN2](http://www.omg.org/spec/BPMN/2.0/) models based on data dependencies
