@@ -3,7 +3,6 @@ package de.hpi.bpt.chimera.jconfiguration.rest;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.database.DbEmailConfiguration;
 import de.hpi.bpt.chimera.database.DbScenario;
-import de.hpi.bpt.chimera.jconfiguration.Execution;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.util.JsonUtil;
 
@@ -28,22 +27,6 @@ import java.util.HashMap;
 @Path("config/v2")
 public class RestConfigurator {
 
-	/**
-	 * Deletes a scenario with all its instances.
-	 * internally realizes via a flag.
-	 *
-	 * @param scenarioID The ID of the scenario which is supposed to be deleted
-	 * @return The status code if the operation was successful or not
-	 * @throws Exception in case something goes wrong.
-	 */
-	@DELETE
-	@Path("scenario/{scenarioId}/")
-	public Response deleteScenario(@PathParam("scenarioId") Integer scenarioID) throws Exception {
-
-		Execution execution = new Execution();
-		execution.deleteScenario(scenarioID);
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "scenario deletion successful.\"}").build();
-	}
 
 	// ************************** EMAIL SERVICE TASKS **********************************/
 

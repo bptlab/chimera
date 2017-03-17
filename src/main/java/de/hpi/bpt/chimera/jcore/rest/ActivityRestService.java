@@ -354,8 +354,7 @@ public class ActivityRestService extends AbstractRestService {
 	 * @param scenarioId         The id of a scenario model.
 	 * @param scenarioInstanceId the id of an scenario instance.
 	 * @param activityInstanceId the id of the activity instance.
-	 * @param postBody           Json Object containing the data objects which are used
-	 *                           executing this activity
+	 * @param postBody           Json Object containing the data objects on which the activity operates
 	 * @return a message regarding the success of the operation
 	 * A 202 (ACCEPTED) means that the POST was successful.
 	 * A 400 (BAD_REQUEST) if the transition was not allowed.
@@ -363,20 +362,23 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
-	public Response beginActivity(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId, String postBody) {
-		boolean successful;
+	public Response beginActivity(@PathParam("scenarioId") int scenarioId,
+	          @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId, String postBody) {
 		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-		List<Integer> usedDataObjects = new ArrayList<>();
+		if (!executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId)) {
+		  return this.buildNotFoundResponse("{\"message\":\"Case does not exist.\"}");
+		}
+
+		List<Integer> selectedDataObjectIds = new ArrayList<>();
 		JSONObject postJson = new JSONObject(postBody);
 		if (postJson.has("dataobjects")) {
 			JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
 			for (int i = 0; i < dataObjectsJson.length(); i++) {
-				usedDataObjects.add(dataObjectsJson.getInt(i));
+				selectedDataObjectIds.add(dataObjectsJson.getInt(i));
 			}
 		}
-
-		executionService.beginActivityInstance(scenarioInstanceId, activityInstanceId, usedDataObjects);
+		// TODO: begin of activity could fail in which case another Response needs to be sent
+		executionService.beginActivityInstance(scenarioInstanceId, activityInstanceId, selectedDataObjectIds);
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
 	}
 
@@ -398,7 +400,8 @@ public class ActivityRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
 	public Response terminateActivity(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId, String postBody) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
+	
+	  ExecutionService executionService = ExecutionService.getInstance(scenarioId);
 		executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
 		boolean successful;
 		JSONObject postJson = new JSONObject(postBody);

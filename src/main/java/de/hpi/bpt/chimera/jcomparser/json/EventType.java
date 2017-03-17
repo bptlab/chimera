@@ -10,6 +10,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 /**
  * This class represents an EventType.
@@ -59,7 +60,7 @@ public class EventType extends DataClass {
 		client.property(ClientProperties.READ_TIMEOUT, 1000);
 		try {
 			Response response = client.target(REGISTRATION_URL).request().post(Entity.json(jsonString));
-			if (response.getStatus() != 204) {
+			if (response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
 				logger.warn("Unexpected response while registering Event Type. Status:" + response.getStatus());
 			}
 		} catch (ProcessingException e) {

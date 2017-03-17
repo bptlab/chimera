@@ -3,13 +3,17 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
 import de.hpi.bpt.chimera.database.controlnodes.DbActivityInstance;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNode;
 import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
+import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.ActivityExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.EmailTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.SendTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.WebServiceTaskExecutionBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskOutgoingBehavior;
+import de.hpi.bpt.chimera.jcore.flowbehaviors.WebServiceTaskOutgoingBehavior;
+
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -123,6 +127,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 				break;
 			case "WebServiceTask":
 				this.setExecutionBehavior(new WebServiceTaskExecutionBehavior(this));
+				this.setOutgoingBehavior(new WebServiceTaskOutgoingBehavior(getControlNodeId(), scenarioInstance, getFragmentInstanceId(), this));
 				this.isAutomaticTask = true;
 				break;
 			//Added additional case: activities can be terminated every time
@@ -142,12 +147,22 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		}
 	}
 
-
-	public void begin(List<Integer> usedDataObjects) {
-		((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(usedDataObjects);
+	/**
+	 * Begin an enabled activity with provided data objects.
+	 * @param selectedDataObjectIds - IDs of selected data objects
+	 */
+	public void begin(List<Integer> selectedDataObjectIds) {
+	  ((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(selectedDataObjectIds);
 		this.setState(State.RUNNING);
+		if (this.isAutomaticTask()) {
+      this.terminate();
+    }
 	}
 
+	/**
+	 * @deprecated This is only called by Tests! Use begin(List<Integer>) instead which
+	 * expects a list of selected data objects the activity should work on
+	 */
 	@Override
 	public void begin() {
 		super.begin();
@@ -209,5 +224,16 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	public TaskOutgoingBehavior getOutgoingBehavior() {
 		return (TaskOutgoingBehavior) super.getOutgoingBehavior();
 	}
+
+	/**
+	 * Output sets of this activity instance.
+	 * TODO move to activity, äh first introduce a model level
+	 * @return
+	 */
+  public List<List<DataObject>> getOutputSets() {
+    int nodeId = dbControlNodeInstance.getControlNodeId(getControlNodeInstanceId());
+    List<Integer> outputSetIds = new DbDataFlow().getOutputSetsForControlNode(nodeId);
+    return null;
+  }
 
 }

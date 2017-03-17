@@ -5,6 +5,9 @@ import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.util.ScriptRunner;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.database.DbObject;
+import de.hpi.bpt.chimera.jcore.Scenario;
+import de.hpi.bpt.chimera.jcore.ScenarioFactory;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,10 +34,13 @@ public class ExecutionTest {
         ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
         runner.runScript(new StringReader(insertScenarios));
         runner.runScript(new StringReader(insertScenarioInstances));
-        Execution exec = new Execution();
-        exec.deleteScenario(4);
-        exec.deleteScenario(5);
-        exec.deleteScenario(6);
+        
+        Scenario sc4 = ScenarioFactory.createScenarioFromDatabase(4);
+        Scenario sc5 = ScenarioFactory.createScenarioFromDatabase(5);
+        Scenario sc6 = ScenarioFactory.createScenarioFromDatabase(6);
+        sc4.delete();
+        sc5.delete();
+        sc6.delete();
         DbObject dbObject = new DbObject();
         String select = "SELECT deleted FROM scenario WHERE id = 4";
         List<Integer> deleted = dbObject.executeStatementReturnsListInt(select, "deleted");

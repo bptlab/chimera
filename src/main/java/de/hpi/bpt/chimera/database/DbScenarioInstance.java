@@ -2,6 +2,10 @@ package de.hpi.bpt.chimera.database;
 
 import org.apache.log4j.Logger;
 
+import com.mysql.jdbc.PreparedStatement;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -141,6 +145,23 @@ public class DbScenarioInstance extends DbObject {
 		String sql = "UPDATE scenarioinstance " + "SET scenarioinstance.terminated = " + terminatedAsInt + " WHERE id = " + scenarioInstanceId;
 		log.info(sql);
 		this.executeUpdateStatement(sql);
+	}
+	
+	/**
+	 * Deletes this case from database
+	 * @param caseId
+	 */
+	public void delete(int caseId) {
+	  Connection conn = ConnectionWrapper.getInstance().connect();
+	  try {
+      java.sql.PreparedStatement stmt = conn.prepareStatement("DELETE FROM scenarioinstance WHERE id = ?");
+      stmt.setInt(1, caseId);
+      stmt.execute();
+    } catch (SQLException e) {
+      log.info("Deletion failed on database level");
+    }
+	  
+	  
 	}
 
 	/**

@@ -31,6 +31,11 @@ public class SequenceFlow extends Edge {
 	 */
 	@XmlAttribute(name = "targetRef")
 	private String targetRef;
+	/**
+	 * The "name" of this flow, a String that might contain a condition.
+	 */
+	@XmlAttribute(name = "name")
+	private String condition;
 
 	public String getId() {
 		return id;
@@ -56,6 +61,14 @@ public class SequenceFlow extends Edge {
 		this.targetRef = targetRef;
 	}
 
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
 	/**
 	 * Saves a sequence flow by inserting it into the control flow table.
 	 *
@@ -66,7 +79,9 @@ public class SequenceFlow extends Edge {
 		int targetDatabaseId = nodeToDatabaseId.get(targetRef);
 		int sourceDatabaseId = nodeToDatabaseId.get(sourceRef);
 		Connector connector = new Connector();
-		connector.insertControlFlow(sourceDatabaseId, targetDatabaseId, "");
+		// TODO check if condition really is a condition according to the XORGrammar.g in src/main/resources
+		String conditionForDatabase = (condition == null) ? "" : condition;
+		connector.insertControlFlow(sourceDatabaseId, targetDatabaseId, conditionForDatabase);
 		return 0;
 	}
 

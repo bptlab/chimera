@@ -39,7 +39,6 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
 	 * <p>
 	 *
 	 * @throws IllegalArgumentException when there is more than one possible input selection.
-	 *                                  181
 	 */
 	public void begin() {
 		if (!activityInstance.getState().equals(State.READY)) {
@@ -71,21 +70,22 @@ public class ActivityExecutionBehavior extends AbstractExecutionBehavior {
 		}
 		((TaskIncomingControlFlowBehavior) activityInstance.getIncomingBehavior()).lockDataObjects(workingItems);
 		DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
-		int scenarioInstanceId = activityInstance.getScenarioInstance().getId();
-		dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId, activityInstance.getControlNodeInstanceId(), workingItems);
-		beginExecution();
-	}
-
-	private void beginExecution() {
 		ScenarioInstance scenarioInstance = activityInstance.getScenarioInstance();
 		int scenarioInstanceId = scenarioInstance.getId();
-		new DbLogEntry().logActivity(activityInstance.getControlNodeInstanceId(), "running", scenarioInstanceId);
-		scenarioInstance.updateDataFlow();
-		scenarioInstance.skipAlternativeControlNodes(activityInstance.getControlNodeInstanceId());
-		registerAttachedEvents();
-		if (activityInstance.isAutomaticTask()) {
-			activityInstance.terminate();
-		}
+		dbDataObjectSelection.saveDataObjectSelection(scenarioInstanceId, activityInstance.getControlNodeInstanceId(), workingItems);
+    new DbLogEntry().logActivity(activityInstance.getControlNodeInstanceId(), "running", scenarioInstanceId);
+    scenarioInstance.updateDataFlow();
+    scenarioInstance.skipAlternativeControlNodes(activityInstance.getControlNodeInstanceId());
+    registerAttachedEvents();
+    // now execute it!
+    execute();
+ }
+
+	/**
+	 * This method defines the behavior of the activity.
+	 */
+	public void execute() {
+	  //do nothing for human tasks
 	}
 
 	private void registerAttachedEvents() {
