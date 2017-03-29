@@ -1,0 +1,27 @@
+{
+  "__v": 1,
+  "_id": "570cad7d8952935353d422e9",
+  "domainmodel": {
+    "name": "IntermediateEventScenario",
+    "revision": 1,
+    "_id": "570cad7d8952935353d422ea",
+    "__v": 0,
+    "dataclasses": [
+
+    ]
+  },
+  "name": "IntermediateEventScenario",
+  "revision": 2,
+  "fragments": [
+    {
+      "__v": 0,
+      "_id": "570cad7d8952935353d422eb",
+      "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bpmn:definitions xmlns:bpmn=\"http:\/\/www.omg.org\/spec\/BPMN\/20100524\/MODEL\" xmlns:bpmndi=\"http:\/\/www.omg.org\/spec\/BPMN\/20100524\/DI\" xmlns:di=\"http:\/\/www.omg.org\/spec\/DD\/20100524\/DI\" xmlns:dc=\"http:\/\/www.omg.org\/spec\/DD\/20100524\/DC\" xmlns:xsi=\"http:\/\/www.w3.org\/2001\/XMLSchema-instance\" xmlns:griffin=\"http:\/\/wat\" id=\"Definitions_1\" targetNamespace=\"http:\/\/bpmn.io\/schema\/bpmn\">\n  <bpmn:process id=\"Process_1\" isExecutable=\"false\">\n    <bpmn:startEvent id=\"StartEvent_1\">\n      <bpmn:outgoing>SequenceFlow_0vy2x8y<\/bpmn:outgoing>\n    <\/bpmn:startEvent>\n    <bpmn:task id=\"Task_0wyhfye\" name=\"AfterEvent\">\n      <bpmn:incoming>SequenceFlow_0h87sgr<\/bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_1uw5t49<\/bpmn:outgoing>\n    <\/bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0vy2x8y\" sourceRef=\"StartEvent_1\" targetRef=\"Task_12y64xr\" \/>\n    <bpmn:endEvent id=\"EndEvent_0cah2hq\">\n      <bpmn:incoming>SequenceFlow_1uw5t49<\/bpmn:incoming>\n    <\/bpmn:endEvent>\n    <bpmn:sequenceFlow id=\"SequenceFlow_1uw5t49\" sourceRef=\"Task_0wyhfye\" targetRef=\"EndEvent_0cah2hq\" \/>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0h87sgr\" sourceRef=\"IntermediateCatchEvent_0rt4491\" targetRef=\"Task_0wyhfye\" \/>\n    <bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_0rt4491\" griffin:eventquery=\"SELECT * FROM EVENT\">\n      <bpmn:incoming>SequenceFlow_0ad6d6s<\/bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0h87sgr<\/bpmn:outgoing>\n      <bpmn:messageEventDefinition \/>\n    <\/bpmn:intermediateCatchEvent>\n    <bpmn:task id=\"Task_12y64xr\" name=\"BeforeEvent\">\n      <bpmn:incoming>SequenceFlow_0vy2x8y<\/bpmn:incoming>\n      <bpmn:outgoing>SequenceFlow_0ad6d6s<\/bpmn:outgoing>\n    <\/bpmn:task>\n    <bpmn:sequenceFlow id=\"SequenceFlow_0ad6d6s\" sourceRef=\"Task_12y64xr\" targetRef=\"IntermediateCatchEvent_0rt4491\" \/>\n  <\/bpmn:process>\n  <bpmndi:BPMNDiagram id=\"BPMNDiagram_1\">\n    <bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\">\n      <bpmndi:BPMNShape id=\"_BPMNShape_StartEvent_2\" bpmnElement=\"StartEvent_1\">\n        <dc:Bounds x=\"157\" y=\"173\" width=\"36\" height=\"36\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"130\" y=\"209\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_0wyhfye_di\" bpmnElement=\"Task_0wyhfye\">\n        <dc:Bounds x=\"516\" y=\"151\" width=\"100\" height=\"80\" \/>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0vy2x8y_di\" bpmnElement=\"SequenceFlow_0vy2x8y\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"193\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"264\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"295\" y=\"110\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"EndEvent_0cah2hq_di\" bpmnElement=\"EndEvent_0cah2hq\">\n        <dc:Bounds x=\"705\" y=\"173\" width=\"36\" height=\"36\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"678\" y=\"209\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_1uw5t49_di\" bpmnElement=\"SequenceFlow_1uw5t49\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"616\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"705\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"675\" y=\"181\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0h87sgr_di\" bpmnElement=\"SequenceFlow_0h87sgr\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"455\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"516\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"448.5\" y=\"181\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n      <bpmndi:BPMNShape id=\"IntermediateCatchEvent_0rt4491_di\" bpmnElement=\"IntermediateCatchEvent_0rt4491\">\n        <dc:Bounds x=\"419\" y=\"173\" width=\"36\" height=\"36\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"392\" y=\"209\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNShape id=\"Task_12y64xr_di\" bpmnElement=\"Task_12y64xr\">\n        <dc:Bounds x=\"264\" y=\"151\" width=\"100\" height=\"80\" \/>\n      <\/bpmndi:BPMNShape>\n      <bpmndi:BPMNEdge id=\"SequenceFlow_0ad6d6s_di\" bpmnElement=\"SequenceFlow_0ad6d6s\">\n        <di:waypoint xsi:type=\"dc:Point\" x=\"364\" y=\"191\" \/>\n        <di:waypoint xsi:type=\"dc:Point\" x=\"419\" y=\"191\" \/>\n        <bpmndi:BPMNLabel>\n          <dc:Bounds x=\"348\" y=\"236\" width=\"90\" height=\"20\" \/>\n        <\/bpmndi:BPMNLabel>\n      <\/bpmndi:BPMNEdge>\n    <\/bpmndi:BPMNPlane>\n  <\/bpmndi:BPMNDiagram>\n<\/bpmn:definitions>\n",
+      "name": "First Fragment",
+      "revision": 3
+    }
+  ],
+  "terminationconditions": [
+
+  ]
+}

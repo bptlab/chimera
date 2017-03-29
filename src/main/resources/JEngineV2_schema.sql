@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 -- Database: `JEngineV2`
 --
 
-CREATE DATABASE IF NOT EXISTS ${db.schema};
-USE ${db.schema};
+-- CREATE DATABASE IF NOT EXISTS ${db.schema};
+-- USE ${db.schema};
 
 
 CREATE TABLE IF NOT EXISTS `version` (
@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `activityinstance` (
   `automaticexecution` tinyint(1) NOT NULL DEFAULT '0',
   `canTerminate` tinyint(1) NOT NULL DEFAULT '0',
   `role_id` int(11) NOT NULL,
-  `activity_state` varchar(512) NOT NULL,
   `workitem_state` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -78,6 +77,20 @@ CREATE TABLE IF NOT EXISTS `boundaryeventref` (
   `attachedtoref` INTEGER NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `casestart`
+--
+
+CREATE TABLE IF NOT EXISTS `casestart` (
+  `eventkey` VARCHAR(512) NOT NULL,
+  `query_id` VARCHAR(512) NOT NULL,
+  `notificationrule_id` VARCHAR(512) NOT NULL,
+  `scenario_id` INT(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `configuration`
@@ -128,6 +141,7 @@ CREATE TABLE IF NOT EXISTS `controlnode` (
 CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Type` varchar(512) NOT NULL,
+  `state` varchar(512) NOT NULL,
   `controlnode_id` int(11) NOT NULL,
   `fragmentinstance_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -158,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` varchar(1024) NOT NULL,
   `dataattribute_id` int(11) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL,
+  `dataobject_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -171,6 +185,7 @@ CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
 CREATE TABLE IF NOT EXISTS `dataclass` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) NOT NULL,
+  `is_event` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -198,8 +213,6 @@ CREATE TABLE IF NOT EXISTS `datanode` (
   `scenario_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `dataclass_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `model_id` VARCHAR(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -211,27 +224,26 @@ CREATE TABLE IF NOT EXISTS `datanode` (
 
 CREATE TABLE IF NOT EXISTS `dataobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(256) NOT NULL,
-  `dataclass_id` int(11) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `start_state_id` int(11) NOT NULL,
+  `scenarioinstance_id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `dataclass_id` int(11) NOT NULL,
+  `locked` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dataobjectinstance`
+-- Table structure for table `dataobjectselection`
 --
 
-CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `scenarioinstance_id` int(11) NOT NULL,
-  `state_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `onchange` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `dataobjectselection` (
+  scenarioinstance_id INT(11) NOT NULL,
+  activityinstance_id INT(11) NOT NULL,
+  dataobject_id INT(11) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -329,20 +341,6 @@ CREATE TABLE IF NOT EXISTS `eventtypeattribute` (
 
 -- --------------------------------------------------------
 
-
---
--- Table structure for table `eventtype`
---
-
-CREATE TABLE IF NOT EXISTS `eventtype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `ExclusiveEvents`
 --
@@ -365,9 +363,19 @@ CREATE TABLE IF NOT EXISTS `fragment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `scenario_id` int(11) NOT NULL,
-  `modelid` VARCHAR(256) NOT NULL DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fragmentxml`
+--
+
+CREATE TABLE IF NOT EXISTS `fragmentxml` (
+  `fragment_id` int(11) NOT NULL,
+  `xml` TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -420,55 +428,6 @@ CREATE TABLE IF NOT EXISTS `gatewayinstance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `historyactivityinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `activityinstance_id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `oldstate` varchar(256) DEFAULT NULL,
-  `newstate` varchar(256) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `historydataattributeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historydataattributeinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dataattributeinstance_id` int(11) NOT NULL,
-  `oldvalue` varchar(256) DEFAULT NULL,
-  `newvalue` varchar(256) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `scenarioinstance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `historydataobjectinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `scenarioinstance_id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dataobjectinstance_id` int(11) NOT NULL,
-  `oldstate_id` int(11) DEFAULT NULL,
-  `newstate_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `janalyticsresults`
 --
@@ -480,17 +439,34 @@ CREATE TABLE IF NOT EXISTS `janalyticsresults` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reference`
+-- Table structure for table `logentry`
 --
 
-CREATE TABLE IF NOT EXISTS `reference` (
-  `controlnode_id1` int(11) NOT NULL,
-  `controlnode_id2` int(11) NOT NULL,
-  PRIMARY KEY (`controlnode_id1`,`controlnode_id2`)
+CREATE TABLE IF NOT EXISTS `logentry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `logged_id` int(11) NOT NULL,
+  `timestamp` TIMESTAMP(6) NOT NULL,
+  `label` VARCHAR(256) NOT NULL,
+  `type` VARCHAR(256) NOT NULL,
+  `new_value` VARCHAR(256),
+  `scenarioinstance_id` int(11) NOT NULL,
+  `cause` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Table structure for table `pathmapping`
+--
+
+CREATE TABLE IF NOT EXISTS `pathmapping` (
+  -- controlnode-id of the node receiving a JSON object,
+  -- e.g. WebServiceTask or MessageEvent
+  `controlnode_id` int(11) NOT NULL,
+  `dataattribute_id` int(11) NOT NULL,
+  `jsonpath` varchar(256)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -539,9 +515,7 @@ CREATE TABLE IF NOT EXISTS `scenario` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `modelid` VARCHAR(256) DEFAULT '-1',
   `modelversion` int(11) NOT NULL DEFAULT '-1',
-  `datamodelid` varchar(256) DEFAULT NULL,
   `datamodelversion` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -563,6 +537,38 @@ CREATE TABLE IF NOT EXISTS `scenarioinstance` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sendevent`
+--
+
+CREATE TABLE IF NOT EXISTS `sendevent` (
+  `controlnode_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `startquery`
+--
+
+CREATE TABLE IF NOT EXISTS `startquery` (
+  `id`               VARCHAR(512) NOT NULL,
+  `query`            VARCHAR(512) NOT NULL,
+  `scenario_id`      INT(11)      NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `startpart` (
+  `query_id`         VARCHAR(512) NOT NULL,
+  `dataclass`        INT(11) NOT NULL,
+  `state`            INT(11) NOT NULL,
+  `dataattribute_id` INT(11)      NOT NULL,
+  `jsonpath`         VARCHAR(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `state`
 --
 
@@ -572,6 +578,7 @@ CREATE TABLE IF NOT EXISTS `state` (
   `olc_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 
@@ -605,12 +612,9 @@ CREATE TABLE IF NOT EXISTS `successor` (
 
 CREATE TABLE IF NOT EXISTS `terminationcondition` (
   `conditionset_id` VARCHAR(512) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
+  `dataclass_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`),
-  KEY `dataobject_id` (`dataobject_id`),
-  KEY `state_id` (`state_id`)
+  `scenario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -649,44 +653,21 @@ CREATE TABLE IF NOT EXISTS `userismemberofrole` (
   PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `webservicetaskattribute`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetaskattribute` (
-  `order` int(11) NOT NULL,
-  `controlnode_id` int(11) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL,
-  `key` varchar(512) NOT NULL,
-  PRIMARY KEY (`order`,`controlnode_id`,`dataattribute_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `webservicetasklink`
+-- Table structure for table `webservicetask`
 --
 
-CREATE TABLE IF NOT EXISTS `webservicetasklink` (
+CREATE TABLE IF NOT EXISTS `webservicetask` (
   `controlnode_id` int(11) NOT NULL DEFAULT '0',
-  `link` varchar(2048) NOT NULL,
+  `url` varchar(2048) NOT NULL,
   `method` varchar(64) NOT NULL DEFAULT 'GET',
+  `body` text,
   PRIMARY KEY (`controlnode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `webservicetaskpost`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetaskpost` (
-  `controlnode_id` int(11) NOT NULL,
-  `post` text NOT NULL,
-  PRIMARY KEY (`controlnode_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -698,6 +679,35 @@ CREATE TABLE IF NOT EXISTS `workitemstate` (
   `state` varchar(512) NOT NULL,
   PRIMARY KEY (`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
+
+--
+-- JUserManagement tables
+--
+
+CREATE TABLE IF NOT EXISTS `um_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rolename` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE IF NOT EXISTS `um_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

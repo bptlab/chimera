@@ -22,28 +22,8 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
-
-CREATE TABLE IF NOT EXISTS `eventmapping` (
-  `fragmentInstanceId` int(11) NOT NULL,
-  `eventcontrolnodeid` int(11) NOT NULL,
-  `eventkey` VARCHAR(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
---
--- Tabellenstruktur für Tabelle `activityinstance`
---
-
-CREATE TABLE IF NOT EXISTS `activityinstance` (
-`id` int(11) NOT NULL,
-  `type` varchar(512) NOT NULL,
-  `automaticexecution` tinyint(1) NOT NULL DEFAULT '0',
-  `canTerminate` tinyint(1) NOT NULL DEFAULT '0',
-  `role_id` int(11) NOT NULL,
-  `activity_state` varchar(512) NOT NULL,
-  `workitem_state` varchar(512) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
-
+ALTER TABLE activityinstance
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6685;
 --
 -- Daten für Tabelle `activityinstance`
 --
@@ -5930,14 +5910,6 @@ INSERT INTO `activityinstance` (`id`, `type`, `automaticexecution`, `canTerminat
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `activitystate`
---
-
-CREATE TABLE IF NOT EXISTS `activitystate` (
-  `state` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Daten für Tabelle `activitystate`
 --
 
@@ -5951,54 +5923,6 @@ INSERT INTO `activitystate` (`state`) VALUES
 ('terminated');
 
 -- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `aggregation`
---
-
-CREATE TABLE IF NOT EXISTS `aggregation` (
-  `dataclass_id1` int(11) NOT NULL,
-  `dataclass_id2` int(11) NOT NULL,
-  `multiplicity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `attributeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `attributeinstance` (
-`id` int(11) NOT NULL,
-  `value` varchar(1024) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `configuration`
---
-
-CREATE TABLE IF NOT EXISTS `configuration` (
-`id` int(11) NOT NULL,
-  `behaviourdata` varchar(1024) NOT NULL,
-  `controlnode_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `controlflow`
---
-
-CREATE TABLE IF NOT EXISTS `controlflow` (
-  `controlnode_id1` int(11) NOT NULL,
-  `controlnode_id2` int(11) NOT NULL,
-  `condition` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `controlflow`
@@ -6253,193 +6177,184 @@ INSERT INTO `controlflow` (`controlnode_id1`, `controlnode_id2`, `condition`) VA
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `controlnode`
---
-
-CREATE TABLE IF NOT EXISTS `controlnode` (
-`id` int(11) NOT NULL,
-  `label` varchar(512) NOT NULL,
-  `type` varchar(512) NOT NULL,
-  `fragment_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=392 ;
+ALTER TABLE controlnode
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=392;
 
 --
 -- Daten für Tabelle `controlnode`
 --
 
 INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALUES
-(1, 'StartEventFragment1', 'Startevent', 1, 0),
+(1, 'StartEventFragment1', 'StartEvent', 1, 0),
 (2, 'Activity1Fragment1', 'Activity', 1, 0),
-(3, 'StartEventFragment2', 'Startevent', 2, 0),
+(3, 'StartEventFragment2', 'StartEvent', 2, 0),
 (4, 'Activity1Fragment2', 'Activity', 2, 0),
 (5, 'Activity2Fragment1', 'Activity', 1, 0),
 (6, 'Activity2Fragment1', 'Activity', 1, 0),
-(7, 'Endevent1Fragment1', 'Endevent', 1, 0),
-(8, 'Endevent1Fragment2', 'Endevent', 2, 0),
-(9, 'StartEventFragment3', 'Startevent', 3, 0),
+(7, 'EndEvent1Fragment1', 'EndEvent', 1, 0),
+(8, 'EndEvent1Fragment2', 'EndEvent', 2, 0),
+(9, 'StartEventFragment3', 'StartEvent', 3, 0),
 (10, 'ActivityFragment3', 'Activity', 3, 0),
-(11, 'EndEventFragment3', 'Endevent', 3, 0),
+(11, 'EndEventFragment3', 'EndEvent', 3, 0),
 (12, 'test1', 'Activity', 100, 0),
 (13, 'test2', 'Activity', 100, 0),
 (14, 'test3', 'Activity', 100, 0),
-(15, 'StartEventFragment4', 'Startevent', 4, 0),
+(15, 'StartEventFragment4', 'StartEvent', 4, 0),
 (16, 'ActivityFragment4', 'Activity', 4, 0),
-(17, 'EndeventFragment4', 'Endevent', 4, 0),
-(18, 'StarteventScenario3', 'Startevent', 5, 0),
+(17, 'EndEventFragment4', 'EndEvent', 4, 0),
+(18, 'StartEventScenario3', 'StartEvent', 5, 0),
 (19, 'Activity1Scenario3', 'Activity', 5, 0),
 (20, 'EmailTaskScenario3', 'EmailTask', 5, 0),
-(21, 'EndeventScenario3', 'Endevent', 5, 0),
+(21, 'EndEventScenario3', 'EndEvent', 5, 0),
 (100, 'TestAND', 'AND', 100, 0),
-(101, 'Startevent', 'Startevent', 101, 0),
+(101, 'StartEvent', 'StartEvent', 101, 0),
 (102, 'AND', 'AND', 101, 0),
 (103, 'Activity1', 'Activity', 101, 0),
 (104, 'Activity2', 'Activity', 101, 0),
 (105, 'AND Join', 'AND', 101, 0),
-(106, 'Endevent', 'Endevent', 101, 0),
-(107, '', 'Endevent', 102, 0),
-(108, '', 'Startevent', 102, 0),
+(106, 'EndEvent', 'EndEvent', 101, 0),
+(107, '', 'EndEvent', 102, 0),
+(108, '', 'StartEvent', 102, 0),
 (109, 'A1', 'Activity', 102, 0),
 (110, 'A2', 'Activity', 102, 0),
-(111, '', 'Startevent', 103, 0),
+(111, '', 'StartEvent', 103, 0),
 (112, 'B1', 'Activity', 103, 0),
-(113, '', 'Endevent', 103, 0),
+(113, '', 'EndEvent', 103, 0),
 (114, 'C2', 'Activity', 104, 0),
-(115, '', 'Endevent', 104, 0),
-(116, '', 'Startevent', 104, 0),
-(117, '', 'Endevent', 105, 0),
-(118, '', 'Startevent', 105, 0),
+(115, '', 'EndEvent', 104, 0),
+(116, '', 'StartEvent', 104, 0),
+(117, '', 'EndEvent', 105, 0),
+(118, '', 'StartEvent', 105, 0),
 (119, 'Act1', 'Activity', 105, 0),
 (120, 'Act1', 'Activity', 106, 0),
-(121, '', 'Endevent', 106, 0),
-(122, '', 'Startevent', 106, 0),
-(123, '', 'Endevent', 107, 0),
-(124, '', 'Startevent', 107, 0),
+(121, '', 'EndEvent', 106, 0),
+(122, '', 'StartEvent', 106, 0),
+(123, '', 'EndEvent', 107, 0),
+(124, '', 'StartEvent', 107, 0),
 (125, 'A1', 'Activity', 107, 0),
 (126, 'A2', 'Activity', 107, 0),
-(127, '', 'Startevent', 108, 0),
+(127, '', 'StartEvent', 108, 0),
 (128, 'B1', 'Activity', 108, 0),
-(129, '', 'Endevent', 108, 0),
+(129, '', 'EndEvent', 108, 0),
 (130, 'C2', 'Activity', 109, 0),
-(131, '', 'Endevent', 109, 0),
-(132, '', 'Startevent', 109, 0),
-(133, '', 'Startevent', 110, 0),
+(131, '', 'EndEvent', 109, 0),
+(132, '', 'StartEvent', 109, 0),
+(133, '', 'StartEvent', 110, 0),
 (134, 'RESET', 'Activity', 110, 0),
-(135, '', 'Endevent', 110, 0),
-(136, '', 'Startevent', 111, 0),
+(135, '', 'EndEvent', 110, 0),
+(136, '', 'StartEvent', 111, 0),
 (137, 'TestAct2', 'Activity', 111, 0),
-(138, '', 'Endevent', 111, 0),
+(138, '', 'EndEvent', 111, 0),
 (139, 'TestAct1', 'Activity', 112, 0),
 (140, 'TestAct2', 'Activity', 112, 0),
-(141, '', 'Startevent', 112, 0),
-(142, '', 'Endevent', 112, 0),
-(143, '', 'Startevent', 113, 0),
+(141, '', 'StartEvent', 112, 0),
+(142, '', 'EndEvent', 112, 0),
+(143, '', 'StartEvent', 113, 0),
 (144, 'RESET', 'Activity', 113, 0),
-(145, '', 'Endevent', 113, 0),
-(146, '', 'Startevent', 114, 0),
+(145, '', 'EndEvent', 113, 0),
+(146, '', 'StartEvent', 114, 0),
 (147, 'TestAct2', 'Activity', 114, 0),
-(148, '', 'Endevent', 114, 0),
+(148, '', 'EndEvent', 114, 0),
 (149, 'TestAct1', 'Activity', 115, 0),
 (150, 'TestAct2', 'Activity', 115, 0),
-(151, '', 'Startevent', 115, 0),
-(152, '', 'Endevent', 115, 0),
-(153, '', 'Startevent', 116, 0),
+(151, '', 'StartEvent', 115, 0),
+(152, '', 'EndEvent', 115, 0),
+(153, '', 'StartEvent', 116, 0),
 (154, 'RESET', 'Activity', 116, 0),
-(155, '', 'Endevent', 116, 0),
-(156, '', 'Startevent', 117, 0),
+(155, '', 'EndEvent', 116, 0),
+(156, '', 'StartEvent', 117, 0),
 (157, 'TestAct2', 'Activity', 117, 0),
-(158, '', 'Endevent', 117, 0),
+(158, '', 'EndEvent', 117, 0),
 (159, 'TestAct1', 'Activity', 118, 0),
 (160, 'TestAct2', 'Activity', 118, 0),
-(161, '', 'Startevent', 118, 0),
-(162, '', 'Endevent', 118, 0),
+(161, '', 'StartEvent', 118, 0),
+(162, '', 'EndEvent', 118, 0),
 (163, 'TestAct1', 'Activity', 119, 0),
 (164, 'TestAct2', 'Activity', 119, 0),
-(165, '', 'Startevent', 119, 0),
-(166, '', 'Endevent', 119, 0),
-(167, '', 'Startevent', 120, 0),
+(165, '', 'StartEvent', 119, 0),
+(166, '', 'EndEvent', 119, 0),
+(167, '', 'StartEvent', 120, 0),
 (168, 'TestAct2', 'Activity', 120, 0),
-(169, '', 'Endevent', 120, 0),
-(170, '', 'Startevent', 121, 0),
+(169, '', 'EndEvent', 120, 0),
+(170, '', 'StartEvent', 121, 0),
 (171, 'RESET', 'Activity', 121, 0),
-(172, '', 'Endevent', 121, 0),
+(172, '', 'EndEvent', 121, 0),
 (173, 'TestAct1', 'Activity', 122, 0),
 (174, 'TestAct2', 'Activity', 122, 0),
-(175, '', 'Startevent', 122, 0),
-(176, '', 'Endevent', 122, 0),
-(177, '', 'Startevent', 123, 0),
+(175, '', 'StartEvent', 122, 0),
+(176, '', 'EndEvent', 122, 0),
+(177, '', 'StartEvent', 123, 0),
 (178, 'TestAct2', 'Activity', 123, 0),
-(179, '', 'Endevent', 123, 0),
-(180, '', 'Startevent', 124, 0),
+(179, '', 'EndEvent', 123, 0),
+(180, '', 'StartEvent', 124, 0),
 (181, 'RESET', 'Activity', 124, 0),
-(182, '', 'Endevent', 124, 0),
+(182, '', 'EndEvent', 124, 0),
 (183, 'TestAct1', 'Activity', 125, 0),
 (184, 'TestAct2', 'Activity', 125, 0),
-(185, '', 'Endevent', 125, 0),
-(186, '', 'Startevent', 125, 0),
+(185, '', 'EndEvent', 125, 0),
+(186, '', 'StartEvent', 125, 0),
 (187, 'TestAct4', 'Activity', 125, 0),
-(188, '', 'Startevent', 126, 0),
+(188, '', 'StartEvent', 126, 0),
 (189, 'TestAct3', 'Activity', 126, 0),
-(190, '', 'Endevent', 126, 0),
+(190, '', 'EndEvent', 126, 0),
 (191, 'TestAct2', 'Activity', 126, 0),
-(192, '', 'Startevent', 127, 0),
+(192, '', 'StartEvent', 127, 0),
 (193, 'RESET', 'Activity', 127, 0),
-(194, '', 'Endevent', 127, 0),
-(195, '', 'Endevent', 128, 0),
+(194, '', 'EndEvent', 127, 0),
+(195, '', 'EndEvent', 128, 0),
 (196, 'act1', 'Activity', 128, 0),
 (197, 'act2', 'Activity', 128, 0),
-(198, '', 'Startevent', 128, 0),
+(198, '', 'StartEvent', 128, 0),
 (199, 'act1', 'Activity', 129, 0),
-(200, '', 'Endevent', 129, 0),
-(201, '', 'Startevent', 129, 0),
+(200, '', 'EndEvent', 129, 0),
+(201, '', 'StartEvent', 129, 0),
 (202, 'act1', 'Activity', 130, 0),
 (203, 'act3', 'Activity', 130, 0),
-(204, '', 'Endevent', 130, 0),
-(205, '', 'Startevent', 130, 0),
-(206, '', 'Endevent', 131, 0),
+(204, '', 'EndEvent', 130, 0),
+(205, '', 'StartEvent', 130, 0),
+(206, '', 'EndEvent', 131, 0),
 (207, 'act1', 'Activity', 131, 0),
 (208, 'act2', 'Activity', 131, 0),
-(209, '', 'Startevent', 131, 0),
+(209, '', 'StartEvent', 131, 0),
 (210, 'A1', 'Activity', 132, 0),
 (211, 'A2', 'Activity', 132, 0),
-(212, '', 'Endevent', 132, 0),
-(213, '', 'Startevent', 132, 0),
+(212, '', 'EndEvent', 132, 0),
+(213, '', 'StartEvent', 132, 0),
 (214, 'A3', 'Activity', 133, 0),
-(215, '', 'Startevent', 133, 0),
+(215, '', 'StartEvent', 133, 0),
 (216, 'A1', 'Activity', 133, 0),
-(217, '', 'Endevent', 133, 0),
+(217, '', 'EndEvent', 133, 0),
 (218, 'A4', 'Activity', 134, 0),
-(219, '', 'Startevent', 134, 0),
+(219, '', 'StartEvent', 134, 0),
 (220, 'A1', 'Activity', 134, 0),
-(221, '', 'Endevent', 134, 0),
-(222, '', 'Endevent', 135, 0),
-(223, '', 'Startevent', 135, 0),
+(221, '', 'EndEvent', 134, 0),
+(222, '', 'EndEvent', 135, 0),
+(223, '', 'StartEvent', 135, 0),
 (224, '', 'Activity', 135, 0),
 (225, '', 'Activity', 136, 0),
-(226, '', 'Startevent', 136, 0),
-(227, '', 'Endevent', 136, 0),
-(228, '', 'Endevent', 137, 0),
-(229, '', 'Startevent', 137, 0),
+(226, '', 'StartEvent', 136, 0),
+(227, '', 'EndEvent', 136, 0),
+(228, '', 'EndEvent', 137, 0),
+(229, '', 'StartEvent', 137, 0),
 (230, '', 'Activity', 137, 0),
 (231, '', 'Activity', 138, 0),
-(232, '', 'Startevent', 138, 0),
-(233, '', 'Endevent', 138, 0),
+(232, '', 'StartEvent', 138, 0),
+(233, '', 'EndEvent', 138, 0),
 (234, 'a1', 'Activity', 139, 0),
 (235, '', 'AND', 139, 0),
-(236, '', 'Endevent', 139, 0),
+(236, '', 'EndEvent', 139, 0),
 (237, 'a2', 'Activity', 139, 0),
 (238, 'a2', 'null', 139, 0),
 (239, 'a3', 'Activity', 139, 0),
 (240, '', 'AND', 139, 0),
-(241, '', 'Startevent', 139, 0),
+(241, '', 'StartEvent', 139, 0),
 (242, 'a0', 'Activity', 139, 0),
 (243, 'a2.1', 'Activity', 140, 0),
 (244, 'a2.2.2', 'Activity', 140, 0),
 (245, 'a2.2', 'Activity', 140, 0),
 (246, 'a1', 'Activity', 140, 0),
-(247, '', 'Startevent', 140, 0),
-(248, '', 'Endevent', 140, 0),
+(247, '', 'StartEvent', 140, 0),
+(248, '', 'EndEvent', 140, 0),
 (249, '', 'AND', 140, 0),
 (250, '', 'AND', 140, 0),
 (251, '', 'AND', 140, 0),
@@ -6448,8 +6363,8 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 (254, 'R?ckflug buchen', 'Activity', 141, 0),
 (255, '', 'AND', 141, 0),
 (256, '', 'AND', 141, 0),
-(257, '', 'Startevent', 141, 0),
-(258, '', 'Endevent', 141, 0),
+(257, '', 'StartEvent', 141, 0),
+(258, '', 'EndEvent', 141, 0),
 (259, 'Reiseziel akzeptieren', 'Activity', 141, 0),
 (260, '', 'AND', 141, 0),
 (261, '', 'AND', 141, 0),
@@ -6459,109 +6374,109 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 (265, 'R?ckflug buchen', 'Activity', 142, 0),
 (266, '', 'AND', 142, 0),
 (267, '', 'AND', 142, 0),
-(268, '', 'Startevent', 142, 0),
-(269, '', 'Endevent', 142, 0),
+(268, '', 'StartEvent', 142, 0),
+(269, '', 'EndEvent', 142, 0),
 (270, 'Reiseziel akzeptieren', 'Activity', 142, 0),
 (271, '', 'AND', 142, 0),
 (272, '', 'AND', 142, 0),
 (273, 'Hinflug buchen', 'Activity', 142, 0),
-(274, '', 'Endevent', 143, 0),
+(274, '', 'EndEvent', 143, 0),
 (275, 'Reiseziel w?hlen', 'Activity', 143, 0),
-(276, '', 'Startevent', 143, 0),
+(276, '', 'StartEvent', 143, 0),
 (277, '', 'Activity', 144, 0),
-(278, '', 'Endevent', 144, 0),
-(279, '', 'Startevent', 144, 0),
+(278, '', 'EndEvent', 144, 0),
+(279, '', 'StartEvent', 144, 0),
 (280, 'Reiseplanung beginnen', 'Activity', 145, 0),
 (281, 'Hotel buchen', 'Activity', 145, 0),
 (282, 'R?ckflug buchen', 'Activity', 145, 0),
 (283, '', 'AND', 145, 0),
 (284, '', 'AND', 145, 0),
-(285, '', 'Startevent', 145, 0),
-(286, '', 'Endevent', 145, 0),
+(285, '', 'StartEvent', 145, 0),
+(286, '', 'EndEvent', 145, 0),
 (287, 'Reiseziel akzeptieren', 'Activity', 145, 0),
 (288, '', 'AND', 145, 0),
 (289, '', 'AND', 145, 0),
 (290, 'Hinflug buchen', 'Activity', 145, 0),
-(291, '', 'Endevent', 146, 0),
+(291, '', 'EndEvent', 146, 0),
 (292, 'Reiseziel w?hlen', 'Activity', 146, 0),
-(293, '', 'Startevent', 146, 0),
+(293, '', 'StartEvent', 146, 0),
 (294, '', 'Activity', 147, 0),
-(295, '', 'Endevent', 147, 0),
-(296, '', 'Startevent', 147, 0),
+(295, '', 'EndEvent', 147, 0),
+(296, '', 'StartEvent', 147, 0),
 (297, 'Reiseplanung beginnen', 'Activity', 148, 0),
 (298, 'Hotel buchen', 'Activity', 148, 0),
 (299, 'R?ckflug buchen', 'Activity', 148, 0),
 (300, '', 'AND', 148, 0),
 (301, '', 'AND', 148, 0),
-(302, '', 'Startevent', 148, 0),
-(303, '', 'Endevent', 148, 0),
+(302, '', 'StartEvent', 148, 0),
+(303, '', 'EndEvent', 148, 0),
 (304, 'Reiseziel akzeptieren', 'Activity', 148, 0),
 (305, '', 'AND', 148, 0),
 (306, '', 'AND', 148, 0),
 (307, 'Hinflug buchen', 'Activity', 148, 0),
-(308, '', 'Endevent', 149, 0),
+(308, '', 'EndEvent', 149, 0),
 (309, 'Reiseziel w?hlen', 'Activity', 149, 0),
-(310, '', 'Startevent', 149, 0),
+(310, '', 'StartEvent', 149, 0),
 (311, '', 'Activity', 150, 0),
-(312, '', 'Endevent', 150, 0),
-(313, '', 'Startevent', 150, 0),
+(312, '', 'EndEvent', 150, 0),
+(313, '', 'StartEvent', 150, 0),
 (314, 'Reiseplanung beginnen', 'Activity', 151, 0),
 (315, 'Hotel buchen', 'Activity', 151, 0),
 (316, 'R?ckflug buchen', 'Activity', 151, 0),
 (317, '', 'AND', 151, 0),
 (318, '', 'AND', 151, 0),
-(319, '', 'Startevent', 151, 0),
-(320, '', 'Endevent', 151, 0),
+(319, '', 'StartEvent', 151, 0),
+(320, '', 'EndEvent', 151, 0),
 (321, 'Reiseziel akzeptieren', 'Activity', 151, 0),
 (322, '', 'AND', 151, 0),
 (323, '', 'AND', 151, 0),
 (324, 'Hinflug buchen', 'Activity', 151, 0),
-(325, '', 'Endevent', 152, 0),
+(325, '', 'EndEvent', 152, 0),
 (326, 'Reiseziel w?hlen', 'Activity', 152, 0),
-(327, '', 'Startevent', 152, 0),
+(327, '', 'StartEvent', 152, 0),
 (328, '', 'Activity', 153, 0),
-(329, '', 'Endevent', 153, 0),
-(330, '', 'Startevent', 153, 0),
-(331, '', 'Startevent', 154, 0),
+(329, '', 'EndEvent', 153, 0),
+(330, '', 'StartEvent', 153, 0),
+(331, '', 'StartEvent', 154, 0),
 (332, 'A1', 'Activity', 154, 0),
 (333, '', 'XOR', 154, 0),
 (334, '', 'XOR', 154, 0),
 (335, 'A2', 'Activity', 154, 0),
-(336, '', 'Endevent', 154, 0),
+(336, '', 'EndEvent', 154, 0),
 (337, 'A3', 'Activity', 154, 0),
 (338, '', 'XOR', 155, 0),
-(339, '', 'Startevent', 155, 0),
-(340, '', 'Endevent', 155, 0),
+(339, '', 'StartEvent', 155, 0),
+(340, '', 'EndEvent', 155, 0),
 (341, 'B2', 'Activity', 155, 0),
 (342, 'B1', 'Activity', 155, 0),
-(343, 'StartEvent1', 'Startevent', 156, 0),
+(343, 'StartEvent1', 'StartEvent', 156, 0),
 (344, 'send Mail', 'Activity', 156, 0),
-(345, 'EndEvent1', 'Endevent', 156, 0),
-(346, 'StartEvent1', 'Startevent', 157, 0),
+(345, 'EndEvent1', 'EndEvent', 156, 0),
+(346, 'StartEvent1', 'StartEvent', 157, 0),
 (347, 'send Mail', 'EmailTask', 157, 0),
-(348, 'EndEvent1', 'Endevent', 157, 0),
-(349, 'StartEvent1', 'Startevent', 158, 0),
+(348, 'EndEvent1', 'EndEvent', 157, 0),
+(349, 'StartEvent1', 'StartEvent', 158, 0),
 (350, 'send Mail', 'EmailTask', 158, 0),
-(351, 'EndEvent1', 'Endevent', 158, 0),
-(352, 'StartEvent1', 'Startevent', 159, 0),
+(351, 'EndEvent1', 'EndEvent', 158, 0),
+(352, 'StartEvent1', 'StartEvent', 159, 0),
 (353, 'send Mail', 'EmailTask', 159, 0),
-(354, 'EndEvent1', 'Endevent', 159, 0),
-(355, 'EndEvent1', 'Endevent', 160, 0),
+(354, 'EndEvent1', 'EndEvent', 159, 0),
+(355, 'EndEvent1', 'EndEvent', 160, 0),
 (356, 'senMail2', 'EmailTask', 160, 0),
 (357, 'send Mail', 'EmailTask', 160, 0),
 (358, 'testact', 'Activity', 160, 0),
-(359, 'StartEvent1', 'Startevent', 160, 0),
+(359, 'StartEvent1', 'StartEvent', 160, 0),
 (360, '', 'AND', 160, 0),
 (361, '', 'AND', 160, 0),
 (362, 'send Mail', 'EmailTask', 161, 0),
 (363, 'test Act1', 'Activity', 161, 0),
-(364, '', 'Endevent', 161, 0),
-(365, '', 'Startevent', 161, 0),
+(364, '', 'EndEvent', 161, 0),
+(365, '', 'StartEvent', 161, 0),
 (366, 'send Mail', 'EmailTask', 162, 0),
 (367, 'test Act1', 'Activity', 162, 0),
-(368, '', 'Endevent', 162, 0),
-(369, '', 'Startevent', 162, 0),
-(370, '', 'Endevent', 163, 1656035829),
+(368, '', 'EndEvent', 162, 0),
+(369, '', 'StartEvent', 162, 0),
+(370, '', 'EndEvent', 163, 1656035829),
 (371, '(act2) XOR Pfad 2', 'Activity', 163, 1825597619),
 (372, '', 'XOR', 163, 1942420226),
 (373, '', 'AND', 163, 254883637),
@@ -6572,30 +6487,22 @@ INSERT INTO `controlnode` (`id`, `label`, `type`, `fragment_id`, `modelid`) VALU
 (378, '(act1.1) AND Pfad', 'Activity', 163, 200970481),
 (379, '(act2.2) AND Pfad', 'Activity', 163, 1254038515),
 (380, '', 'XOR', 163, 1106006145),
-(381, '', 'Startevent', 163, 955294750),
+(381, '', 'StartEvent', 163, 955294750),
 (382, '', 'AND', 163, 397952438),
 (383, '(act2) XOR Pfad1', 'Activity', 163, 2035041782),
 (384, '(act1) XOR Pfad 2', 'Activity', 163, 592676136),
-(385, '', 'Endevent', 164, 1776570985),
-(386, '', 'Startevent', 164, 2011166525),
+(385, '', 'EndEvent', 164, 1776570985),
+(386, '', 'StartEvent', 164, 2011166525),
 (387, 'an Activity', 'Activity', 164, 1463696901),
-(388, '', 'Endevent', 165, 1317784466),
-(389, '', 'Startevent', 165, 2056152564),
+(388, '', 'EndEvent', 165, 1317784466),
+(389, '', 'StartEvent', 165, 2056152564),
 (390, 'Akt2', 'WebServiceTask', 165, 1388230620),
 (391, 'Akt1', 'Activity', 165, 1522877206);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `controlnodeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `controlnodeinstance` (
-`id` int(11) NOT NULL,
-  `Type` varchar(512) NOT NULL,
-  `controlnode_id` int(11) NOT NULL,
-  `fragmentinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6685 ;
+ALTER TABLE controlnodeinstance
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6685;
 
 --
 -- Daten für Tabelle `controlnodeinstance`
@@ -13217,65 +13124,41 @@ INSERT INTO `controlnodeinstance` (`id`, `Type`, `controlnode_id`, `fragmentinst
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `dataattribute`
---
-
-CREATE TABLE IF NOT EXISTS `dataattribute` (
-`ID` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `type` varchar(256) NOT NULL,
-  `default` varchar(1024) NOT NULL,
-  `dataclass_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+ALTER TABLE dataattribute
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Daten für Tabelle `dataattribute`
 --
 
 INSERT INTO `dataattribute` (`ID`, `name`, `type`, `default`, `dataclass_id`) VALUES
-(1, 'Preis', '', '', 35),
-(2, 'Attribut1', '', '', -1),
-(3, 'Attribut2', '', '', -1);
+(1, 'Preis', 'String', '', 35),
+(2, 'Attribut1', 'String', '', -1),
+(3, 'Attribut2', 'String', '', -1);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `dataattributeinstance`
---
-
-CREATE TABLE IF NOT EXISTS `dataattributeinstance` (
-`id` int(11) NOT NULL,
-  `value` varchar(1024) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL,
-  `dataobjectinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+ALTER TABLE dataattributeinstance
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Daten für Tabelle `dataattributeinstance`
 --
 
-INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobjectinstance_id`) VALUES
+INSERT INTO `dataattributeinstance` (`id`, `value`, `dataattribute_id`, `dataobject_id`) VALUES
 (1, '250', 1, 675);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `dataclass`
---
-
-CREATE TABLE IF NOT EXISTS `dataclass` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL,
-  `rootnode` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+ALTER TABLE dataclass
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Daten für Tabelle `dataclass`
 --
 
-INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
-(1, 'obejct1', 0),
+INSERT INTO `dataclass` (`id`, `name`, `is_event`) VALUES
+(1, 'object1', 0),
 (2, 'object2', 0),
 (3, 'A', 0),
 (4, 'A', 0),
@@ -13312,16 +13195,6 @@ INSERT INTO `dataclass` (`id`, `name`, `rootnode`) VALUES
 (35, 'Reiseplan', 0);
 
 -- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `dataflow`
---
-
-CREATE TABLE IF NOT EXISTS `dataflow` (
-  `controlnode_id` int(11) NOT NULL,
-  `dataset_id` int(11) NOT NULL,
-  `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `dataflow`
@@ -13474,952 +13347,883 @@ INSERT INTO `dataflow` (`controlnode_id`, `dataset_id`, `input`) VALUES
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `datanode`
---
-
-CREATE TABLE IF NOT EXISTS `datanode` (
-`id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  `state_id` int(11) NOT NULL,
-  `dataclass_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `modelid` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=117 ;
+ALTER TABLE datanode
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- Daten für Tabelle `datanode`
 --
 
-INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`, `dataobject_id`, `modelid`) VALUES
-(1, 1, 1, 1, 1, NULL),
-(2, 1, 2, 1, 1, NULL),
-(3, 1, 2, 1, 1, NULL),
-(4, 1, 3, 1, 1, NULL),
-(5, 1, 3, 1, 1, NULL),
-(6, 1, 4, 1, 1, NULL),
-(7, 1, 5, 2, 2, NULL),
-(8, 1, 6, 2, 2, NULL),
-(9, 1, 2, 1, 1, NULL),
-(10, 1, 6, 2, 2, NULL),
-(11, 101, 2, 1, 3, NULL),
-(12, 101, 3, 2, 4, NULL),
-(13, 101, 2, 1, 3, NULL),
-(14, 102, 7, 3, 7, NULL),
-(15, 102, 8, 3, 7, NULL),
-(16, 102, 9, 3, 7, NULL),
-(17, 102, 7, 3, 7, NULL),
-(18, 102, 9, 3, 7, NULL),
-(19, 102, 10, 3, 7, NULL),
-(20, 102, 8, 3, 7, NULL),
-(21, 104, 11, 4, 11, NULL),
-(22, 105, 12, 5, 7, NULL),
-(23, 105, 13, 5, 7, NULL),
-(24, 105, 14, 5, 7, NULL),
-(25, 105, 12, 5, 7, NULL),
-(26, 105, 14, 5, 7, NULL),
-(27, 105, 15, 5, 7, NULL),
-(28, 105, 13, 5, 7, NULL),
-(29, 106, 19, 7, 8, NULL),
-(30, 106, 20, 7, 8, NULL),
-(31, 106, 20, 7, 8, NULL),
-(32, 106, 21, 7, 8, NULL),
-(33, 106, 20, 7, 8, NULL),
-(34, 106, 19, 7, 8, NULL),
-(35, 106, 21, 7, 8, NULL),
-(36, 107, 25, 9, 9, NULL),
-(37, 107, 26, 9, 9, NULL),
-(38, 107, 26, 9, 9, NULL),
-(39, 107, 27, 9, 9, NULL),
-(40, 107, 26, 9, 9, NULL),
-(41, 107, 25, 9, 9, NULL),
-(42, 107, 27, 9, 9, NULL),
-(43, 108, 28, 10, 10, NULL),
-(44, 108, 29, 10, 10, NULL),
-(45, 108, 29, 10, 10, NULL),
-(46, 108, 30, 10, 10, NULL),
-(47, 108, 29, 10, 10, NULL),
-(48, 108, 28, 10, 10, NULL),
-(49, 108, 30, 10, 10, NULL),
-(50, 109, 31, 11, 11, NULL),
-(51, 109, 32, 11, 11, NULL),
-(52, 109, 33, 11, 11, NULL),
-(53, 109, 31, 11, 11, NULL),
-(54, 109, 33, 11, 11, NULL),
-(55, 109, 32, 11, 11, NULL),
-(56, 109, 31, 11, 11, NULL),
-(57, 110, 34, 12, 12, NULL),
-(58, 110, 35, 12, 12, NULL),
-(59, 110, 36, 12, 12, NULL),
-(60, 110, 34, 12, 12, NULL),
-(61, 110, 36, 12, 12, NULL),
-(62, 110, 35, 12, 12, NULL),
-(63, 110, 34, 12, 12, NULL),
-(64, 111, 37, 13, 13, NULL),
-(65, 111, 38, 13, 13, NULL),
-(66, 111, 39, 13, 13, NULL),
-(67, 111, 37, 13, 13, NULL),
-(68, 111, 39, 13, 13, NULL),
-(69, 111, 38, 13, 13, NULL),
-(70, 111, 37, 13, 13, NULL),
-(71, 112, 40, 14, 14, NULL),
-(72, 112, 40, 14, 14, NULL),
-(73, 112, 41, 14, 14, NULL),
-(74, 112, 42, 14, 14, NULL),
-(75, 112, 43, 14, 14, NULL),
-(76, 113, 44, 15, 15, NULL),
-(77, 113, 47, 15, 15, NULL),
-(78, 113, 46, 15, 15, NULL),
-(79, 113, 46, 15, 15, NULL),
-(80, 113, 47, 15, 15, NULL),
-(81, 114, 48, 16, 16, NULL),
-(82, 114, 48, 16, 16, NULL),
-(83, 114, 49, 16, 16, NULL),
-(84, 115, 50, 17, 17, NULL),
-(85, 115, 51, 17, 17, NULL),
-(86, 116, 52, 18, 18, NULL),
-(87, 116, 53, 18, 18, NULL),
-(88, 132, 93, 32, 19, NULL),
-(89, 132, 94, 32, 19, NULL),
-(90, 132, 95, 32, 19, NULL),
-(91, 132, 93, 32, 19, NULL),
-(92, 132, 95, 32, 19, NULL),
-(93, 132, 93, 32, 19, NULL),
-(94, 132, 93, 32, 19, NULL),
-(95, 133, 96, 33, 20, NULL),
-(96, 133, 97, 33, 20, NULL),
-(97, 133, 98, 33, 20, NULL),
-(98, 133, 96, 33, 20, NULL),
-(99, 133, 98, 33, 20, NULL),
-(100, 133, 96, 33, 20, NULL),
-(101, 133, 96, 33, 20, NULL),
-(102, 134, 99, 34, 21, NULL),
-(103, 134, 100, 34, 21, NULL),
-(104, 134, 101, 34, 21, NULL),
-(105, 134, 99, 34, 21, NULL),
-(106, 134, 101, 34, 21, NULL),
-(107, 134, 99, 34, 21, NULL),
-(108, 134, 99, 34, 21, NULL),
-(109, 135, 102, 35, 22, NULL),
-(110, 135, 103, 35, 22, NULL),
-(111, 135, 104, 35, 22, NULL),
-(112, 135, 102, 35, 22, NULL),
-(113, 135, 104, 35, 22, NULL),
-(114, 135, 102, 35, 22, NULL),
-(115, 135, 102, 35, 22, NULL),
-(116, 145, 105, -1, 23, 927142668);
+INSERT INTO `datanode` (`id`, `scenario_id`, `state_id`, `dataclass_id`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 2, 1),
+(4, 1, 3, 1),
+(5, 1, 3, 1),
+(6, 1, 4, 1),
+(7, 1, 5, 2),
+(8, 1, 6, 2),
+(9, 1, 2, 1),
+(10, 1, 6, 2),
+(11, 101, 2, 1),
+(12, 101, 3, 2),
+(13, 101, 2, 1),
+(14, 102, 7, 3),
+(15, 102, 8, 3),
+(16, 102, 9, 3),
+(17, 102, 7, 3),
+(18, 102, 9, 3),
+(19, 102, 10, 3),
+(20, 102, 8, 3),
+(21, 104, 11, 4),
+(22, 105, 12, 5),
+(23, 105, 13, 5),
+(24, 105, 14, 5),
+(25, 105, 12, 5),
+(26, 105, 14, 5),
+(27, 105, 15, 5),
+(28, 105, 13, 5),
+(29, 106, 19, 7),
+(30, 106, 20, 7),
+(31, 106, 20, 7),
+(32, 106, 21, 7),
+(33, 106, 20, 7),
+(34, 106, 19, 7),
+(35, 106, 21, 7),
+(36, 107, 25, 9),
+(37, 107, 26, 9),
+(38, 107, 26, 9),
+(39, 107, 27, 9),
+(40, 107, 26, 9),
+(41, 107, 25, 9),
+(42, 107, 27, 9),
+(43, 108, 28, 10),
+(44, 108, 29, 10),
+(45, 108, 29, 10),
+(46, 108, 30, 10),
+(47, 108, 29, 10),
+(48, 108, 28, 10),
+(49, 108, 30, 10),
+(50, 109, 31, 11),
+(51, 109, 32, 11),
+(52, 109, 33, 11),
+(53, 109, 31, 11),
+(54, 109, 33, 11),
+(55, 109, 32, 11),
+(56, 109, 31, 11),
+(57, 110, 34, 12),
+(58, 110, 35, 12),
+(59, 110, 36, 12),
+(60, 110, 34, 12),
+(61, 110, 36, 12),
+(62, 110, 35, 12),
+(63, 110, 34, 12),
+(64, 111, 37, 13),
+(65, 111, 38, 13),
+(66, 111, 39, 13),
+(67, 111, 37, 13),
+(68, 111, 39, 13),
+(69, 111, 38, 13),
+(70, 111, 37, 13),
+(71, 112, 40, 14),
+(72, 112, 40, 14),
+(73, 112, 41, 14),
+(74, 112, 42, 14),
+(75, 112, 43, 14),
+(76, 113, 44, 15),
+(77, 113, 47, 15),
+(78, 113, 46, 15),
+(79, 113, 46, 15),
+(80, 113, 47, 15),
+(81, 114, 48, 16),
+(82, 114, 48, 16),
+(83, 114, 49, 16),
+(84, 115, 50, 17),
+(85, 115, 51, 17),
+(86, 116, 52, 18),
+(87, 116, 53, 18),
+(88, 132, 93, 32),
+(89, 132, 94, 32),
+(90, 132, 95, 32),
+(91, 132, 93, 32),
+(92, 132, 95, 32),
+(93, 132, 93, 32),
+(94, 132, 93, 32),
+(95, 133, 96, 33),
+(96, 133, 97, 33),
+(97, 133, 98, 33),
+(98, 133, 96, 33),
+(99, 133, 98, 33),
+(100, 133, 96, 33),
+(101, 133, 96, 33),
+(102, 134, 99, 34),
+(103, 134, 100, 34),
+(104, 134, 101, 34),
+(105, 134, 99, 34),
+(106, 134, 101, 34),
+(107, 134, 99, 34),
+(108, 134, 99, 34),
+(109, 135, 102, 35),
+(110, 135, 103, 35),
+(111, 135, 104, 35),
+(112, 135, 102, 35),
+(113, 135, 104, 35),
+(114, 135, 102, 35),
+(115, 135, 102, 35),
+(116, 145, 105, -1);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `dataobject`
---
-
-CREATE TABLE IF NOT EXISTS `dataobject` (
-`id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `dataclass_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  `start_state_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+ALTER TABLE dataobject
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=744;
 
 --
 -- Daten für Tabelle `dataobject`
 --
 
-INSERT INTO `dataobject` (`id`, `name`, `dataclass_id`, `scenario_id`, `start_state_id`) VALUES
-(1, 'object1', 1, 1, 1),
-(2, 'object2', 2, 1, 5),
-(3, 'test1', 1, 101, 1),
-(4, 'test2', 2, 101, 3),
-(5, 'A', 3, 102, 7),
-(6, 'A', 4, 104, 11),
-(7, 'A', 5, 105, 12),
-(8, 'a', 7, 106, 19),
-(9, 'a', 9, 107, 25),
-(10, 'a', 10, 108, 28),
-(11, 'a', 11, 109, 32),
-(12, 'a', 12, 110, 35),
-(13, 'a', 13, 111, 38),
-(14, 'b', 14, 112, 40),
-(15, 'b', 15, 113, 46),
-(16, 'a', 16, 114, 48),
-(17, 'a', 17, 115, 50),
-(18, 'a', 18, 116, 52),
-(19, 'Reiseplan', 32, 132, 95),
-(20, 'Reiseplan', 33, 133, 98),
-(21, 'Reiseplan', 34, 134, 101),
-(22, 'Reiseplan', 35, 135, 104),
-(23, 'DO', -1, 145, 105);
+INSERT INTO dataobject(id, scenario_id, scenarioinstance_id, state_id, dataclass_id, locked) VALUES
+  (7, 1, 62, 1, 1, 0),
+  (8, 1, 62, 5, 2, 0),
+  (9, 1, 63, 1, 1, 0),
+  (10, 1, 63, 5, 2, 0),
+  (11, 1, 64, 1, 1, 0),
+  (12, 1, 64, 5, 2, 0),
+  (13, 1, 65, 1, 1, 0),
+  (14, 1, 65, 5, 2, 0),
+  (15, 1, 66, 1, 1, 0),
+  (16, 1, 66, 5, 2, 0),
+  (17, 1, 67, 1, 1, 0),
+  (18, 1, 67, 5, 2, 0),
+  (19, 1, 68, 1, 1, 0),
+  (20, 1, 68, 5, 2, 0),
+  (21, 1, 69, 1, 1, 0),
+  (22, 1, 69, 5, 2, 0),
+  (23, 1, 70, 2, 1, 0),
+  (24, 1, 0, 5, 2, 0),
+  (25, 1, 71, 1, 1, 0),
+  (26, 1, 71, 5, 2, 0),
+  (27, 1, 72, 1, 1, 0),
+  (28, 1, 72, 5, 2, 0),
+  (29, 1, 73, 1, 1, 0),
+  (30, 1, 73, 5, 2, 0),
+  (31, 1, 74, 1, 1, 0),
+  (32, 1, 74, 5, 2, 0),
+  (33, 1, 75, 1, 1, 0),
+  (34, 1, 75, 5, 2, 0),
+  (35, 1, 76, 1, 1, 0),
+  (36, 1, 76, 5, 2, 0),
+  (37, 1, 77, 1, 1, 0),
+  (38, 1, 77, 5, 2, 0),
+  (39, 1, 78, 3, 1, 0),
+  (40, 1, 78, 6, 2, 0),
+  (41, 1, 79, 4, 1, 0),
+  (42, 1, 79, 6, 2, 0),
+  (43, 1, 80, 4, 1, 0),
+  (44, 1, 80, 6, 2, 0),
+  (45, 1, 81, 1, 1, 0),
+  (46, 1, 81, 5, 2, 0),
+  (47, 1, 82, 3, 1, 0),
+  (48, 1, 82, 5, 2, 0),
+  (49, 1, 83, 2, 1, 0),
+  (50, 1, 83, 6, 2, 0),
+  (51, 1, 84, 2, 1, 0),
+  (52, 1, 84, 5, 2, 0),
+  (53, 1, 95, 2, 1, 0),
+  (54, 1, 95, 6, 2, 0),
+  (55, 1, 103, 1, 1, 0),
+  (56, 1, 103, 5, 2, 0),
+  (57, 1, 193, 1, 1, 0),
+  (58, 1, 193, 5, 2, 0),
+  (59, 1, 195, 1, 1, 0),
+  (60, 1, 195, 5, 2, 0),
+  (61, 1, 197, 1, 1, 0),
+  (62, 1, 197, 5, 2, 0),
+  (63, 1, 199, 1, 1, 0),
+  (64, 1, 199, 5, 2, 0),
+  (65, 1, 201, 1, 1, 0),
+  (66, 1, 201, 5, 2, 0),
+  (67, 1, 202, 1, 1, 0),
+  (68, 1, 202, 5, 2, 0),
+  (69, 1, 203, 1, 1, 0),
+  (70, 1, 203, 5, 2, 0),
+  (71, 1, 204, 1, 1, 0),
+  (72, 1, 204, 5, 2, 0),
+  (73, 1, 205, 1, 1, 0),
+  (74, 1, 205, 5, 2, 0),
+  (75, 1, 206, 2, 1, 0),
+  (76, 1, 206, 5, 2, 0),
+  (77, 1, 207, 1, 1, 0),
+  (78, 1, 207, 5, 2, 0),
+  (79, 1, 208, 1, 1, 0),
+  (80, 1, 208, 5, 2, 0),
+  (81, 1, 209, 1, 1, 0),
+  (82, 1, 209, 5, 2, 0),
+  (83, 1, 210, 1, 1, 0),
+  (84, 1, 210, 5, 2, 0),
+  (85, 1, 212, 1, 1, 0),
+  (86, 1, 212, 5, 2, 0),
+  (87, 1, 214, 1, 1, 0),
+  (88, 1, 214, 5, 2, 0),
+  (89, 1, 215, 1, 1, 0),
+  (90, 1, 215, 5, 2, 0),
+  (91, 1, 216, 1, 1, 0),
+  (92, 1, 216, 5, 2, 0),
+  (93, 1, 217, 1, 1, 0),
+  (94, 1, 217, 5, 2, 0),
+  (95, 1, 218, 1, 1, 0),
+  (96, 1, 218, 5, 2, 0),
+  (97, 1, 219, 1, 1, 0),
+  (98, 1, 219, 5, 2, 0),
+  (99, 1, 220, 1, 1, 0),
+  (100, 1, 220, 5, 2, 0),
+  (101, 1, 221, 1, 1, 0),
+  (102, 1, 221, 5, 2, 0),
+  (103, 1, 222, 1, 1, 0),
+  (104, 1, 222, 5, 2, 0),
+  (105, 1, 223, 2, 1, 0),
+  (106, 1, 223, 6, 2, 0),
+  (107, 1, 224, 1, 1, 0),
+  (108, 1, 224, 5, 2, 0),
+  (109, 1, 226, 1, 1, 0),
+  (110, 1, 226, 5, 2, 0),
+  (111, 1, 228, 1, 1, 0),
+  (112, 1, 228, 5, 2, 0),
+  (113, 1, 244, 1, 1, 0),
+  (114, 1, 244, 5, 2, 0),
+  (115, 1, 246, 1, 1, 0),
+  (116, 1, 246, 5, 2, 0),
+  (117, 1, 248, 1, 1, 0),
+  (118, 1, 248, 5, 2, 0),
+  (119, 1, 250, 1, 1, 0),
+  (120, 1, 250, 5, 2, 0),
+  (121, 1, 252, 1, 1, 0),
+  (122, 1, 252, 5, 2, 0),
+  (123, 1, 255, 1, 1, 0),
+  (124, 1, 255, 5, 2, 0),
+  (125, 1, 257, 1, 1, 0),
+  (126, 1, 257, 5, 2, 0),
+  (127, 1, 259, 1, 1, 0),
+  (128, 1, 259, 5, 2, 0),
+  (129, 1, 261, 1, 1, 0),
+  (130, 1, 261, 5, 2, 0),
+  (131, 1, 262, 1, 1, 0),
+  (132, 1, 262, 5, 2, 0),
+  (133, 1, 263, 4, 1, 0),
+  (134, 1, 263, 6, 2, 0),
+  (135, 1, 265, 1, 1, 0),
+  (136, 1, 265, 5, 2, 0),
+  (137, 1, 266, 1, 1, 0),
+  (138, 1, 266, 5, 2, 0),
+  (139, 1, 270, 1, 1, 0),
+  (140, 1, 270, 5, 2, 0),
+  (141, 1, 279, 1, 1, 0),
+  (142, 1, 279, 5, 2, 0),
+  (143, 1, 281, 1, 1, 0),
+  (144, 1, 281, 5, 2, 0),
+  (145, 1, 282, 1, 1, 0),
+  (146, 1, 282, 5, 2, 0),
+  (147, 1, 284, 1, 1, 0),
+  (148, 1, 284, 5, 2, 0),
+  (149, 1, 47, 1, 1, 0),
+  (150, 1, 47, 5, 2, 0),
+  (151, 1, 94, 1, 1, 0),
+  (152, 1, 94, 5, 2, 0),
+  (153, 1, 285, 1, 1, 0),
+  (154, 1, 285, 5, 2, 0),
+  (155, 1, 286, 4, 1, 0),
+  (156, 1, 286, 6, 2, 0),
+  (157, 1, 1, 1, 1, 0),
+  (158, 1, 1, 5, 2, 0),
+  (159, 1, 309, 4, 1, 0),
+  (160, 1, 309, 6, 2, 0),
+  (161, 1, 123, 2, 1, 0),
+  (162, 1, 123, 5, 2, 0),
+  (163, 1, 310, 4, 1, 0),
+  (164, 1, 310, 6, 2, 0),
+  (165, 1, 312, 4, 1, 0),
+  (166, 1, 312, 6, 2, 0),
+  (167, 1, 313, 3, 1, 0),
+  (168, 1, 313, 5, 2, 0),
+  (169, 1, 314, 2, 1, 0),
+  (170, 1, 314, 5, 2, 0),
+  (171, 1, 315, 2, 1, 0),
+  (172, 1, 315, 6, 2, 0),
+  (173, 1, 316, 4, 1, 0),
+  (174, 1, 316, 6, 2, 0),
+  (175, 1, 317, 2, 1, 0),
+  (176, 1, 317, 6, 2, 0),
+  (177, 1, 318, 3, 1, 0),
+  (178, 1, 318, 6, 2, 0),
+  (179, 1, 319, 2, 1, 0),
+  (180, 1, 319, 6, 2, 0),
+  (181, 1, 320, 3, 1, 0),
+  (182, 1, 320, 5, 2, 0),
+  (183, 1, 321, 1, 1, 0),
+  (184, 1, 321, 5, 2, 0),
+  (185, 1, 322, 1, 1, 0),
+  (186, 1, 322, 5, 2, 0),
+  (187, 1, 323, 4, 1, 0),
+  (188, 1, 323, 6, 2, 0),
+  (189, 1, 324, 2, 1, 0),
+  (190, 1, 324, 6, 2, 0),
+  (191, 1, 325, 4, 1, 0),
+  (192, 1, 325, 6, 2, 0),
+  (193, 1, 326, 3, 1, 0),
+  (194, 1, 326, 5, 2, 0),
+  (195, 1, 327, 3, 1, 0),
+  (196, 1, 327, 5, 2, 0),
+  (197, 1, 328, 2, 1, 0),
+  (198, 1, 328, 5, 2, 0),
+  (199, 1, 333, 2, 1, 0),
+  (200, 1, 333, 6, 2, 0),
+  (201, 1, 334, 4, 1, 0),
+  (202, 1, 334, 6, 2, 0),
+  (203, 1, 346, 2, 1, 0),
+  (204, 1, 346, 5, 2, 0),
+  (205, 1, 348, 3, 1, 0),
+  (206, 1, 348, 6, 2, 0),
+  (207, 1, 349, 2, 1, 0),
+  (208, 1, 349, 6, 2, 0),
+  (209, 1, 351, 2, 1, 0),
+  (210, 1, 351, 6, 2, 0),
+  (211, 1, 353, 4, 1, 0),
+  (212, 1, 353, 6, 2, 0),
+  (213, 1, 356, 4, 1, 0),
+  (214, 1, 356, 6, 2, 0),
+  (215, 1, 358, 1, 1, 0),
+  (216, 1, 358, 5, 2, 0),
+  (217, 1, 359, 2, 1, 0),
+  (218, 1, 359, 6, 2, 0),
+  (219, 1, 361, 2, 1, 0),
+  (220, 1, 361, 6, 2, 0),
+  (221, 1, 363, 4, 1, 0),
+  (222, 1, 363, 6, 2, 0),
+  (223, 1, 365, 2, 1, 0),
+  (224, 1, 365, 5, 2, 0),
+  (225, 1, 366, 1, 1, 0),
+  (226, 1, 366, 5, 2, 0),
+  (227, 1, 367, 4, 1, 0),
+  (228, 1, 367, 6, 2, 0),
+  (229, 1, 369, 2, 1, 0),
+  (230, 1, 369, 6, 2, 0),
+  (231, 1, 370, 3, 1, 0),
+  (232, 1, 370, 6, 2, 0),
+  (233, 1, 371, 3, 1, 0),
+  (234, 1, 371, 6, 2, 0),
+  (235, 1, 372, 3, 1, 0),
+  (236, 1, 372, 6, 2, 0),
+  (237, 1, 373, 3, 1, 0),
+  (238, 1, 373, 6, 2, 0),
+  (239, 1, 374, 3, 1, 0),
+  (240, 1, 374, 6, 2, 0),
+  (241, 1, 375, 2, 1, 0),
+  (242, 1, 375, 5, 2, 0),
+  (243, 1, 376, 3, 1, 0),
+  (244, 1, 376, 6, 2, 0),
+  (245, 1, 377, 3, 1, 0),
+  (246, 1, 377, 6, 2, 0),
+  (247, 1, 378, 3, 1, 0),
+  (248, 1, 378, 6, 2, 0),
+  (249, 1, 379, 2, 1, 0),
+  (250, 1, 379, 6, 2, 0),
+  (251, 1, 380, 2, 1, 0),
+  (252, 1, 380, 5, 2, 0),
+  (253, 1, 381, 2, 1, 1),
+  (254, 1, 381, 6, 2, 0),
+  (255, 1, 383, 4, 1, 0),
+  (256, 1, 383, 6, 2, 0),
+  (257, 1, 385, 2, 1, 1),
+  (258, 1, 385, 5, 2, 0),
+  (259, 1, 386, 3, 1, 0),
+  (260, 1, 386, 6, 2, 0),
+  (261, 1, 387, 2, 1, 1),
+  (262, 1, 387, 6, 2, 0),
+  (263, 1, 388, 3, 1, 0),
+  (264, 1, 388, 6, 2, 0),
+  (265, 1, 390, 4, 1, 0),
+  (266, 1, 390, 6, 2, 0),
+  (267, 1, 392, 2, 1, 0),
+  (268, 1, 392, 5, 2, 1),
+  (269, 1, 394, 4, 1, 0),
+  (270, 1, 394, 6, 2, 0),
+  (271, 1, 396, 2, 1, 0),
+  (272, 1, 396, 6, 2, 0),
+  (273, 1, 398, 4, 1, 0),
+  (274, 1, 398, 6, 2, 0),
+  (275, 1, 400, 4, 1, 0),
+  (276, 1, 400, 6, 2, 0),
+  (277, 1, 402, 4, 1, 0),
+  (278, 1, 402, 6, 2, 0),
+  (279, 1, 404, 4, 1, 0),
+  (280, 1, 404, 6, 2, 0),
+  (281, 1, 406, 4, 1, 0),
+  (282, 1, 406, 6, 2, 0),
+  (283, 1, 408, 3, 1, 0),
+  (284, 1, 408, 6, 2, 0),
+  (285, 1, 409, 4, 1, 0),
+  (286, 1, 409, 6, 2, 0),
+  (287, 1, 410, 2, 1, 0),
+  (288, 1, 410, 6, 2, 0),
+  (289, 1, 411, 2, 1, 0),
+  (290, 1, 411, 5, 2, 0),
+  (291, 1, 412, 2, 1, 0),
+  (292, 1, 412, 6, 2, 0),
+  (293, 1, 413, 4, 1, 0),
+  (294, 1, 413, 6, 2, 0),
+  (295, 1, 415, 2, 1, 0),
+  (296, 1, 415, 6, 2, 0),
+  (297, 1, 416, 2, 1, 0),
+  (298, 1, 416, 6, 2, 0),
+  (299, 1, 417, 2, 1, 0),
+  (300, 1, 417, 6, 2, 0),
+  (301, 1, 418, 1, 1, 0),
+  (302, 1, 418, 5, 2, 0),
+  (303, 1, 419, 1, 1, 0),
+  (304, 1, 419, 5, 2, 0),
+  (305, 1, 420, 1, 1, 0),
+  (306, 1, 420, 5, 2, 0),
+  (307, 1, 421, 2, 1, 0),
+  (308, 1, 421, 6, 2, 0),
+  (309, 1, 422, 4, 1, 0),
+  (310, 1, 422, 6, 2, 0),
+  (311, 102, 424, 7, 3, 0),
+  (312, 104, 426, 11, 4, 0),
+  (313, 104, 427, 11, 4, 0),
+  (314, 105, 428, 15, 5, 0),
+  (315, 105, 429, 12, 5, 0),
+  (316, 1, 430, 4, 1, 0),
+  (317, 1, 430, 6, 2, 0),
+  (318, 105, 432, 13, 5, 0),
+  (319, 1, 433, 4, 1, 0),
+  (320, 1, 433, 6, 2, 0),
+  (321, 105, 435, 13, 5, 0),
+  (322, 104, 436, 11, 4, 0),
+  (323, 105, 437, 15, 5, 0),
+  (324, 1, 438, 4, 1, 0),
+  (325, 1, 438, 6, 2, 0),
+  (326, 105, 440, 15, 5, 0),
+  (327, 1, 441, 4, 1, 0),
+  (328, 1, 441, 6, 2, 0),
+  (329, 105, 443, 15, 5, 0),
+  (330, 1, 444, 1, 1, 0),
+  (331, 1, 444, 5, 2, 0),
+  (332, 1, 445, 1, 1, 0),
+  (333, 1, 445, 5, 2, 0),
+  (334, 1, 446, 2, 1, 0),
+  (335, 1, 446, 5, 2, 0),
+  (336, 105, 447, 15, 5, 0),
+  (337, 1, 448, 1, 1, 0),
+  (338, 1, 448, 5, 2, 0),
+  (339, 1, 449, 4, 1, 0),
+  (340, 1, 449, 6, 2, 0),
+  (341, 105, 451, 15, 5, 0),
+  (342, 1, 452, 4, 1, 0),
+  (343, 1, 452, 6, 2, 0),
+  (344, 105, 454, 15, 5, 0),
+  (345, 105, 455, 15, 5, 0),
+  (346, 1, 456, 2, 1, 0),
+  (347, 1, 456, 5, 2, 1),
+  (348, 105, 458, 15, 5, 0),
+  (349, 1, 459, 2, 1, 0),
+  (350, 1, 459, 5, 2, 1),
+  (351, 1, 460, 4, 1, 0),
+  (352, 1, 460, 6, 2, 0),
+  (353, 1, 461, 4, 1, 0),
+  (354, 1, 461, 6, 2, 0),
+  (355, 105, 463, 15, 5, 0),
+  (356, 1, 464, 4, 1, 0),
+  (357, 1, 464, 6, 2, 0),
+  (358, 105, 466, 15, 5, 0),
+  (359, 1, 467, 4, 1, 0),
+  (360, 1, 467, 6, 2, 0),
+  (361, 105, 469, 15, 5, 0),
+  (362, 1, 470, 4, 1, 0),
+  (363, 1, 470, 6, 2, 0),
+  (364, 105, 472, 15, 5, 0),
+  (365, 1, 473, 4, 1, 0),
+  (366, 1, 473, 6, 2, 0),
+  (367, 105, 475, 15, 5, 0),
+  (368, 1, 476, 4, 1, 0),
+  (369, 1, 476, 6, 2, 0),
+  (370, 105, 478, 15, 5, 0),
+  (371, 1, 479, 4, 1, 0),
+  (372, 1, 479, 6, 2, 0),
+  (373, 105, 481, 15, 5, 0),
+  (374, 1, 482, 4, 1, 0),
+  (375, 1, 482, 6, 2, 0),
+  (376, 105, 484, 15, 5, 0),
+  (377, 1, 485, 4, 1, 0),
+  (378, 1, 485, 6, 2, 0),
+  (379, 105, 487, 15, 5, 0),
+  (380, 1, 488, 4, 1, 0),
+  (381, 1, 488, 6, 2, 0),
+  (382, 105, 490, 15, 5, 0),
+  (383, 1, 491, 1, 1, 0),
+  (384, 1, 491, 5, 2, 0),
+  (385, 1, 492, 1, 1, 0),
+  (386, 1, 492, 5, 2, 0),
+  (387, 1, 493, 4, 1, 0),
+  (388, 1, 493, 6, 2, 0),
+  (389, 1, 494, 4, 1, 0),
+  (390, 1, 494, 6, 2, 0),
+  (391, 105, 496, 15, 5, 0),
+  (392, 1, 497, 4, 1, 0),
+  (393, 1, 497, 6, 2, 0),
+  (394, 105, 499, 15, 5, 0),
+  (395, 106, 500, 19, 7, 0),
+  (396, 106, 501, 20, 7, 0),
+  (397, 106, 502, 20, 7, 0),
+  (398, 106, 503, 20, 7, 0),
+  (399, 106, 504, 20, 7, 0),
+  (400, 1, 505, 4, 1, 0),
+  (401, 1, 505, 6, 2, 0),
+  (402, 105, 507, 15, 5, 0),
+  (403, 106, 508, 21, 7, 0),
+  (404, 106, 509, 21, 7, 0),
+  (405, 106, 510, 21, 7, 0),
+  (406, 106, 511, 21, 7, 1),
+  (407, 106, 512, 20, 7, 0),
+  (408, 106, 513, 20, 7, 0),
+  (409, 106, 514, 20, 7, 0),
+  (410, 1, 515, 4, 1, 0),
+  (411, 1, 515, 6, 2, 0),
+  (412, 105, 517, 15, 5, 0),
+  (413, 106, 518, 20, 7, 0),
+  (414, 1, 519, 4, 1, 0),
+  (415, 1, 519, 6, 2, 0),
+  (416, 105, 521, 15, 5, 0),
+  (417, 106, 522, 20, 7, 0),
+  (418, 106, 523, 20, 7, 0),
+  (419, 106, 524, 21, 7, 1),
+  (420, 106, 525, 21, 7, 0),
+  (421, 106, 526, 20, 7, 0),
+  (422, 1, 527, 4, 1, 0),
+  (423, 1, 527, 6, 2, 0),
+  (424, 105, 529, 15, 5, 0),
+  (425, 106, 530, 20, 7, 0),
+  (426, 1, 531, 3, 1, 0),
+  (427, 1, 531, 6, 2, 0),
+  (428, 106, 532, 21, 7, 1),
+  (429, 106, 533, 20, 7, 0),
+  (430, 106, 534, 20, 7, 0),
+  (431, 106, 535, 20, 7, 0),
+  (432, 106, 536, 20, 7, 0),
+  (433, 106, 537, 20, 7, 0),
+  (434, 107, 538, 26, 9, 0),
+  (435, 111, 539, 37, 13, 0),
+  (436, 111, 540, 37, 13, 0),
+  (437, 107, 541, 25, 9, 0),
+  (438, 111, 542, 39, 13, 1),
+  (439, 111, 543, 37, 13, 0),
+  (440, 111, 544, 37, 13, 0),
+  (441, 111, 545, 37, 13, 0),
+  (442, 111, 546, 37, 13, 0),
+  (443, 112, 547, 40, 14, 0),
+  (444, 112, 548, 41, 14, 0),
+  (445, 112, 549, 41, 14, 0),
+  (446, 113, 550, 47, 15, 0),
+  (447, 113, 551, 47, 15, 0),
+  (448, 1, 552, 4, 1, 0),
+  (449, 1, 552, 6, 2, 0),
+  (450, 105, 554, 15, 5, 0),
+  (451, 111, 555, 37, 13, 0),
+  (452, 113, 556, 47, 15, 0),
+  (453, 113, 557, 47, 15, 0),
+  (454, 113, 558, 46, 15, 1),
+  (455, 113, 559, 46, 15, 1),
+  (456, 113, 560, 46, 15, 1),
+  (457, 1, 561, 1, 1, 0),
+  (458, 1, 561, 5, 2, 0),
+  (459, 113, 562, 46, 15, 1),
+  (460, 1, 563, 1, 1, 0),
+  (461, 1, 563, 5, 2, 0),
+  (462, 113, 564, 47, 15, 0),
+  (463, 114, 565, 48, 16, 0),
+  (464, 114, 566, 48, 16, 1),
+  (465, 114, 567, 49, 16, 0),
+  (466, 114, 568, 49, 16, 1),
+  (467, 114, 569, 48, 16, 0),
+  (468, 114, 570, 48, 16, 0),
+  (469, 114, 571, 48, 16, 0),
+  (470, 1, 572, 4, 1, 0),
+  (471, 1, 572, 6, 2, 0),
+  (472, 105, 574, 15, 5, 0),
+  (473, 111, 575, 37, 13, 0),
+  (474, 113, 576, 47, 15, 0),
+  (475, 114, 577, 48, 16, 0),
+  (476, 115, 578, 50, 17, 0),
+  (477, 115, 579, 51, 17, 0),
+  (478, 115, 580, 51, 17, 0),
+  (479, 116, 581, 52, 18, 0),
+  (480, 1, 582, 4, 1, 0),
+  (481, 1, 582, 6, 2, 0),
+  (482, 105, 584, 15, 5, 0),
+  (483, 111, 585, 37, 13, 0),
+  (484, 113, 586, 47, 15, 0),
+  (485, 114, 587, 48, 16, 0),
+  (486, 1, 590, 4, 1, 0),
+  (487, 1, 590, 6, 2, 0),
+  (488, 105, 592, 15, 5, 0),
+  (489, 111, 593, 37, 13, 0),
+  (490, 113, 594, 47, 15, 0),
+  (491, 114, 595, 48, 16, 0),
+  (492, 1, 598, 4, 1, 0),
+  (493, 1, 598, 6, 2, 0),
+  (494, 105, 600, 15, 5, 0),
+  (495, 111, 601, 37, 13, 0),
+  (496, 113, 602, 47, 15, 0),
+  (497, 114, 603, 48, 16, 0),
+  (498, 1, 605, 4, 1, 0),
+  (499, 1, 605, 6, 2, 0),
+  (500, 105, 607, 15, 5, 0),
+  (501, 111, 608, 37, 13, 0),
+  (502, 113, 609, 47, 15, 0),
+  (503, 114, 610, 48, 16, 0),
+  (504, 1, 612, 1, 1, 0),
+  (505, 1, 612, 5, 2, 0),
+  (506, 1, 614, 4, 1, 0),
+  (507, 1, 614, 6, 2, 0),
+  (508, 105, 616, 15, 5, 0),
+  (509, 111, 617, 37, 13, 0),
+  (510, 113, 618, 47, 15, 0),
+  (511, 114, 619, 48, 16, 0),
+  (512, 1, 621, 4, 1, 0),
+  (513, 1, 621, 6, 2, 0),
+  (514, 105, 623, 15, 5, 0),
+  (515, 111, 624, 37, 13, 0),
+  (516, 113, 625, 47, 15, 0),
+  (517, 114, 626, 48, 16, 0),
+  (518, 1, 628, 4, 1, 0),
+  (519, 1, 628, 6, 2, 0),
+  (520, 105, 630, 15, 5, 0),
+  (521, 111, 631, 37, 13, 0),
+  (522, 113, 632, 47, 15, 0),
+  (523, 114, 633, 48, 16, 0),
+  (524, 1, 635, 4, 1, 0),
+  (525, 1, 635, 6, 2, 0),
+  (526, 105, 637, 15, 5, 0),
+  (527, 111, 638, 37, 13, 0),
+  (528, 113, 639, 47, 15, 0),
+  (529, 114, 640, 48, 16, 0),
+  (530, 1, 642, 4, 1, 0),
+  (531, 1, 642, 6, 2, 0),
+  (532, 105, 644, 15, 5, 0),
+  (533, 111, 645, 37, 13, 0),
+  (534, 113, 646, 47, 15, 0),
+  (535, 114, 647, 48, 16, 0),
+  (536, 1, 649, 4, 1, 0),
+  (537, 1, 649, 6, 2, 0),
+  (538, 105, 651, 15, 5, 0),
+  (539, 111, 652, 37, 13, 0),
+  (540, 113, 653, 47, 15, 0),
+  (541, 114, 654, 48, 16, 0),
+  (542, 1, 656, 4, 1, 0),
+  (543, 1, 656, 6, 2, 0),
+  (544, 105, 658, 15, 5, 0),
+  (545, 111, 659, 37, 13, 0),
+  (546, 113, 660, 47, 15, 0),
+  (547, 114, 661, 48, 16, 0),
+  (548, 1, 663, 4, 1, 0),
+  (549, 1, 663, 6, 2, 0),
+  (550, 105, 665, 15, 5, 0),
+  (551, 111, 666, 37, 13, 0),
+  (552, 113, 667, 47, 15, 0),
+  (553, 114, 668, 48, 16, 0),
+  (554, 1, 670, 4, 1, 0),
+  (555, 1, 670, 6, 2, 0),
+  (556, 105, 672, 15, 5, 0),
+  (557, 111, 673, 37, 13, 0),
+  (558, 113, 674, 47, 15, 0),
+  (559, 114, 675, 48, 16, 0),
+  (560, 1, 677, 4, 1, 0),
+  (561, 1, 677, 6, 2, 0),
+  (562, 105, 679, 15, 5, 0),
+  (563, 111, 680, 37, 13, 0),
+  (564, 113, 681, 47, 15, 0),
+  (565, 114, 682, 48, 16, 0),
+  (566, 1, 684, 4, 1, 0),
+  (567, 1, 684, 6, 2, 0),
+  (568, 105, 686, 15, 5, 0),
+  (569, 111, 687, 37, 13, 0),
+  (570, 113, 688, 47, 15, 0),
+  (571, 114, 689, 48, 16, 0),
+  (572, 1, 691, 4, 1, 0),
+  (573, 1, 691, 6, 2, 0),
+  (574, 105, 693, 15, 5, 0),
+  (575, 111, 694, 37, 13, 0),
+  (576, 113, 695, 47, 15, 0),
+  (577, 114, 696, 48, 16, 0),
+  (578, 1, 698, 4, 1, 0),
+  (579, 1, 698, 6, 2, 0),
+  (580, 105, 700, 15, 5, 0),
+  (581, 111, 701, 37, 13, 0),
+  (582, 113, 702, 47, 15, 0),
+  (583, 114, 703, 48, 16, 0),
+  (584, 1, 705, 4, 1, 0),
+  (585, 1, 705, 6, 2, 0),
+  (586, 105, 707, 15, 5, 0),
+  (587, 111, 708, 37, 13, 0),
+  (588, 113, 709, 47, 15, 0),
+  (589, 114, 710, 48, 16, 0),
+  (590, 1, 712, 4, 1, 0),
+  (591, 1, 712, 6, 2, 0),
+  (592, 105, 714, 15, 5, 0),
+  (593, 111, 715, 37, 13, 0),
+  (594, 113, 716, 47, 15, 0),
+  (595, 114, 717, 48, 16, 0),
+  (596, 1, 719, 4, 1, 0),
+  (597, 1, 719, 6, 2, 0),
+  (598, 105, 721, 15, 5, 0),
+  (599, 111, 722, 37, 13, 0),
+  (600, 113, 723, 47, 15, 0),
+  (601, 114, 724, 48, 16, 0),
+  (602, 1, 726, 4, 1, 0),
+  (603, 1, 726, 6, 2, 0),
+  (604, 105, 728, 15, 5, 0),
+  (605, 111, 729, 37, 13, 0),
+  (606, 113, 730, 47, 15, 0),
+  (607, 114, 731, 48, 16, 0),
+  (608, 1, 733, 4, 1, 0),
+  (609, 1, 733, 6, 2, 0),
+  (610, 105, 735, 15, 5, 0),
+  (611, 111, 736, 37, 13, 0),
+  (612, 113, 737, 47, 15, 0),
+  (613, 114, 738, 48, 16, 0),
+  (614, 1, 740, 4, 1, 0),
+  (615, 1, 740, 6, 2, 0),
+  (616, 105, 742, 15, 5, 0),
+  (617, 111, 743, 37, 13, 0),
+  (618, 113, 744, 47, 15, 0),
+  (619, 114, 745, 48, 16, 0),
+  (620, 1, 747, 4, 1, 0),
+  (621, 1, 747, 6, 2, 0),
+  (622, 105, 749, 15, 5, 0),
+  (623, 111, 750, 37, 13, 0),
+  (624, 113, 751, 47, 15, 0),
+  (625, 114, 752, 48, 16, 0),
+  (626, 1, 754, 2, 1, 0),
+  (627, 1, 754, 5, 2, 0),
+  (628, 134, 755, 100, 34, 0),
+  (629, 1, 756, 4, 1, 0),
+  (630, 1, 756, 6, 2, 0),
+  (631, 105, 758, 15, 5, 0),
+  (632, 111, 759, 37, 13, 0),
+  (633, 113, 760, 47, 15, 0),
+  (634, 114, 761, 48, 16, 0),
+  (635, 1, 763, 4, 1, 0),
+  (636, 1, 763, 6, 2, 0),
+  (637, 105, 765, 15, 5, 0),
+  (638, 111, 766, 37, 13, 0),
+  (639, 113, 767, 47, 15, 0),
+  (640, 114, 768, 48, 16, 0),
+  (641, 1, 770, 4, 1, 0),
+  (642, 1, 770, 6, 2, 0),
+  (643, 105, 772, 15, 5, 0),
+  (644, 111, 773, 37, 13, 0),
+  (645, 113, 774, 47, 15, 0),
+  (646, 114, 775, 48, 16, 0),
+  (647, 1, 777, 4, 1, 0),
+  (648, 1, 777, 6, 2, 0),
+  (649, 105, 779, 15, 5, 0),
+  (650, 111, 780, 37, 13, 0),
+  (651, 113, 781, 47, 15, 0),
+  (652, 114, 782, 48, 16, 0),
+  (653, 1, 784, 4, 1, 0),
+  (654, 1, 784, 6, 2, 0),
+  (655, 105, 786, 15, 5, 0),
+  (656, 111, 787, 37, 13, 0),
+  (657, 113, 788, 47, 15, 0),
+  (658, 114, 789, 48, 16, 0),
+  (659, 1, 791, 4, 1, 0),
+  (660, 1, 791, 6, 2, 0),
+  (661, 105, 793, 15, 5, 0),
+  (662, 111, 794, 37, 13, 0),
+  (663, 113, 795, 47, 15, 0),
+  (664, 114, 796, 48, 16, 0),
+  (665, 134, 798, 101, 34, 0),
+  (666, 134, 799, 101, 34, 0),
+  (667, 134, 800, 101, 34, 0),
+  (668, 134, 801, 101, 34, 0),
+  (669, 134, 802, 101, 34, 0),
+  (670, 134, 803, 101, 34, 0),
+  (671, 134, 804, 101, 34, 0),
+  (672, 134, 805, 101, 34, 0),
+  (673, 134, 806, 101, 34, 0),
+  (674, 134, 807, 101, 34, 0),
+  (675, 135, 808, 104, 35, 0),
+  (676, 1, 809, 4, 1, 0),
+  (677, 1, 809, 6, 2, 0),
+  (678, 105, 811, 15, 5, 0),
+  (679, 111, 812, 37, 13, 0),
+  (680, 113, 813, 47, 15, 0),
+  (681, 114, 814, 48, 16, 0),
+  (682, 1, 816, 4, 1, 0),
+  (683, 1, 816, 6, 2, 0),
+  (684, 105, 818, 15, 5, 0),
+  (685, 111, 819, 37, 13, 0),
+  (686, 113, 820, 47, 15, 0),
+  (687, 114, 821, 48, 16, 0),
+  (688, 1, 823, 4, 1, 0),
+  (689, 1, 823, 6, 2, 0),
+  (690, 105, 825, 15, 5, 0),
+  (691, 111, 826, 37, 13, 0),
+  (692, 113, 827, 47, 15, 0),
+  (693, 114, 828, 48, 16, 0),
+  (694, 1, 836, 4, 1, 0),
+  (695, 1, 836, 6, 2, 0),
+  (696, 105, 838, 15, 5, 0),
+  (697, 111, 839, 37, 13, 0),
+  (698, 113, 840, 47, 15, 0),
+  (699, 114, 841, 48, 16, 0),
+  (700, 1, 846, 4, 1, 0),
+  (701, 1, 846, 6, 2, 0),
+  (702, 105, 848, 15, 5, 0),
+  (703, 111, 849, 37, 13, 0),
+  (704, 113, 850, 47, 15, 0),
+  (705, 114, 851, 48, 16, 0),
+  (706, 1, 853, 2, 1, 0),
+  (707, 1, 853, 5, 2, 0),
+  (708, 105, 855, 13, 5, 0),
+  (709, 111, 856, 39, 13, 0),
+  (710, 113, 857, 47, 15, 0),
+  (711, 114, 858, 48, 16, 0),
+  (712, 1, 860, 4, 1, 0),
+  (713, 1, 860, 6, 2, 0),
+  (714, 105, 862, 15, 5, 0),
+  (715, 111, 863, 37, 13, 0),
+  (716, 113, 864, 47, 15, 0),
+  (717, 114, 865, 48, 16, 0),
+  (718, 1, 867, 4, 1, 0),
+  (719, 1, 867, 6, 2, 0),
+  (720, 105, 869, 15, 5, 0),
+  (721, 111, 870, 37, 13, 0),
+  (722, 113, 871, 47, 15, 0),
+  (723, 114, 872, 48, 16, 0),
+  (724, 1, 895, 4, 1, 0),
+  (725, 1, 895, 6, 2, 0),
+  (726, 105, 897, 15, 5, 0),
+  (727, 111, 898, 37, 13, 0),
+  (728, 113, 899, 47, 15, 0),
+  (729, 114, 900, 48, 16, 0),
+  (730, 1, 915, 4, 1, 0),
+  (731, 1, 915, 6, 2, 0),
+  (732, 105, 917, 15, 5, 0),
+  (733, 111, 918, 37, 13, 0),
+  (734, 113, 919, 47, 15, 0),
+  (735, 114, 920, 48, 16, 0),
+  (736, 1, 951, 1, 1, 0),
+  (737, 1, 951, 5, 2, 0),
+  (738, 1, 952, 4, 1, 0),
+  (739, 1, 952, 6, 2, 0),
+  (740, 105, 954, 15, 5, 0),
+  (741, 111, 955, 37, 13, 0),
+  (742, 113, 956, 47, 15, 0),
+  (743, 114, 957, 48, 16, 0);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `dataobjectinstance`
---
-
-CREATE TABLE IF NOT EXISTS `dataobjectinstance` (
-`id` int(11) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  `state_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `onchange` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=744 ;
-
---
--- Daten für Tabelle `dataobjectinstance`
---
-
-INSERT INTO `dataobjectinstance` (`id`, `scenarioinstance_id`, `state_id`, `dataobject_id`, `onchange`) VALUES
-(7, 62, 1, 1, 0),
-(8, 62, 5, 2, 0),
-(9, 63, 1, 1, 0),
-(10, 63, 5, 2, 0),
-(11, 64, 1, 1, 0),
-(12, 64, 5, 2, 0),
-(13, 65, 1, 1, 0),
-(14, 65, 5, 2, 0),
-(15, 66, 1, 1, 0),
-(16, 66, 5, 2, 0),
-(17, 67, 1, 1, 0),
-(18, 67, 5, 2, 0),
-(19, 68, 1, 1, 0),
-(20, 68, 5, 2, 0),
-(21, 69, 1, 1, 0),
-(22, 69, 5, 2, 0),
-(23, 70, 2, 1, 0),
-(24, 0, 5, 2, 0),
-(25, 71, 1, 1, 0),
-(26, 71, 5, 2, 0),
-(27, 72, 1, 1, 0),
-(28, 72, 5, 2, 0),
-(29, 73, 1, 1, 0),
-(30, 73, 5, 2, 0),
-(31, 74, 1, 1, 0),
-(32, 74, 5, 2, 0),
-(33, 75, 1, 1, 0),
-(34, 75, 5, 2, 0),
-(35, 76, 1, 1, 0),
-(36, 76, 5, 2, 0),
-(37, 77, 1, 1, 0),
-(38, 77, 5, 2, 0),
-(39, 78, 3, 1, 0),
-(40, 78, 6, 2, 0),
-(41, 79, 4, 1, 0),
-(42, 79, 6, 2, 0),
-(43, 80, 4, 1, 0),
-(44, 80, 6, 2, 0),
-(45, 81, 1, 1, 0),
-(46, 81, 5, 2, 0),
-(47, 82, 3, 1, 0),
-(48, 82, 5, 2, 0),
-(49, 83, 2, 1, 0),
-(50, 83, 6, 2, 0),
-(51, 84, 2, 1, 0),
-(52, 84, 5, 2, 0),
-(53, 95, 2, 1, 0),
-(54, 95, 6, 2, 0),
-(55, 103, 1, 1, 0),
-(56, 103, 5, 2, 0),
-(57, 193, 1, 1, 0),
-(58, 193, 5, 2, 0),
-(59, 195, 1, 1, 0),
-(60, 195, 5, 2, 0),
-(61, 197, 1, 1, 0),
-(62, 197, 5, 2, 0),
-(63, 199, 1, 1, 0),
-(64, 199, 5, 2, 0),
-(65, 201, 1, 1, 0),
-(66, 201, 5, 2, 0),
-(67, 202, 1, 1, 0),
-(68, 202, 5, 2, 0),
-(69, 203, 1, 1, 0),
-(70, 203, 5, 2, 0),
-(71, 204, 1, 1, 0),
-(72, 204, 5, 2, 0),
-(73, 205, 1, 1, 0),
-(74, 205, 5, 2, 0),
-(75, 206, 2, 1, 0),
-(76, 206, 5, 2, 0),
-(77, 207, 1, 1, 0),
-(78, 207, 5, 2, 0),
-(79, 208, 1, 1, 0),
-(80, 208, 5, 2, 0),
-(81, 209, 1, 1, 0),
-(82, 209, 5, 2, 0),
-(83, 210, 1, 1, 0),
-(84, 210, 5, 2, 0),
-(85, 212, 1, 1, 0),
-(86, 212, 5, 2, 0),
-(87, 214, 1, 1, 0),
-(88, 214, 5, 2, 0),
-(89, 215, 1, 1, 0),
-(90, 215, 5, 2, 0),
-(91, 216, 1, 1, 0),
-(92, 216, 5, 2, 0),
-(93, 217, 1, 1, 0),
-(94, 217, 5, 2, 0),
-(95, 218, 1, 1, 0),
-(96, 218, 5, 2, 0),
-(97, 219, 1, 1, 0),
-(98, 219, 5, 2, 0),
-(99, 220, 1, 1, 0),
-(100, 220, 5, 2, 0),
-(101, 221, 1, 1, 0),
-(102, 221, 5, 2, 0),
-(103, 222, 1, 1, 0),
-(104, 222, 5, 2, 0),
-(105, 223, 2, 1, 0),
-(106, 223, 6, 2, 0),
-(107, 224, 1, 1, 0),
-(108, 224, 5, 2, 0),
-(109, 226, 1, 1, 0),
-(110, 226, 5, 2, 0),
-(111, 228, 1, 1, 0),
-(112, 228, 5, 2, 0),
-(113, 244, 1, 1, 0),
-(114, 244, 5, 2, 0),
-(115, 246, 1, 1, 0),
-(116, 246, 5, 2, 0),
-(117, 248, 1, 1, 0),
-(118, 248, 5, 2, 0),
-(119, 250, 1, 1, 0),
-(120, 250, 5, 2, 0),
-(121, 252, 1, 1, 0),
-(122, 252, 5, 2, 0),
-(123, 255, 1, 1, 0),
-(124, 255, 5, 2, 0),
-(125, 257, 1, 1, 0),
-(126, 257, 5, 2, 0),
-(127, 259, 1, 1, 0),
-(128, 259, 5, 2, 0),
-(129, 261, 1, 1, 0),
-(130, 261, 5, 2, 0),
-(131, 262, 1, 1, 0),
-(132, 262, 5, 2, 0),
-(133, 263, 4, 1, 0),
-(134, 263, 6, 2, 0),
-(135, 265, 1, 1, 0),
-(136, 265, 5, 2, 0),
-(137, 266, 1, 1, 0),
-(138, 266, 5, 2, 0),
-(139, 270, 1, 1, 0),
-(140, 270, 5, 2, 0),
-(141, 279, 1, 1, 0),
-(142, 279, 5, 2, 0),
-(143, 281, 1, 1, 0),
-(144, 281, 5, 2, 0),
-(145, 282, 1, 1, 0),
-(146, 282, 5, 2, 0),
-(147, 284, 1, 1, 0),
-(148, 284, 5, 2, 0),
-(149, 47, 1, 1, 0),
-(150, 47, 5, 2, 0),
-(151, 94, 1, 1, 0),
-(152, 94, 5, 2, 0),
-(153, 285, 1, 1, 0),
-(154, 285, 5, 2, 0),
-(155, 286, 4, 1, 0),
-(156, 286, 6, 2, 0),
-(157, 1, 1, 1, 0),
-(158, 1, 5, 2, 0),
-(159, 309, 4, 1, 0),
-(160, 309, 6, 2, 0),
-(161, 123, 2, 1, 0),
-(162, 123, 5, 2, 0),
-(163, 310, 4, 1, 0),
-(164, 310, 6, 2, 0),
-(165, 312, 4, 1, 0),
-(166, 312, 6, 2, 0),
-(167, 313, 3, 1, 0),
-(168, 313, 5, 2, 0),
-(169, 314, 2, 1, 0),
-(170, 314, 5, 2, 0),
-(171, 315, 2, 1, 0),
-(172, 315, 6, 2, 0),
-(173, 316, 4, 1, 0),
-(174, 316, 6, 2, 0),
-(175, 317, 2, 1, 0),
-(176, 317, 6, 2, 0),
-(177, 318, 3, 1, 0),
-(178, 318, 6, 2, 0),
-(179, 319, 2, 1, 0),
-(180, 319, 6, 2, 0),
-(181, 320, 3, 1, 0),
-(182, 320, 5, 2, 0),
-(183, 321, 1, 1, 0),
-(184, 321, 5, 2, 0),
-(185, 322, 1, 1, 0),
-(186, 322, 5, 2, 0),
-(187, 323, 4, 1, 0),
-(188, 323, 6, 2, 0),
-(189, 324, 2, 1, 0),
-(190, 324, 6, 2, 0),
-(191, 325, 4, 1, 0),
-(192, 325, 6, 2, 0),
-(193, 326, 3, 1, 0),
-(194, 326, 5, 2, 0),
-(195, 327, 3, 1, 0),
-(196, 327, 5, 2, 0),
-(197, 328, 2, 1, 0),
-(198, 328, 5, 2, 0),
-(199, 333, 2, 1, 0),
-(200, 333, 6, 2, 0),
-(201, 334, 4, 1, 0),
-(202, 334, 6, 2, 0),
-(203, 346, 2, 1, 0),
-(204, 346, 5, 2, 0),
-(205, 348, 3, 1, 0),
-(206, 348, 6, 2, 0),
-(207, 349, 2, 1, 0),
-(208, 349, 6, 2, 0),
-(209, 351, 2, 1, 0),
-(210, 351, 6, 2, 0),
-(211, 353, 4, 1, 0),
-(212, 353, 6, 2, 0),
-(213, 356, 4, 1, 0),
-(214, 356, 6, 2, 0),
-(215, 358, 1, 1, 0),
-(216, 358, 5, 2, 0),
-(217, 359, 2, 1, 0),
-(218, 359, 6, 2, 0),
-(219, 361, 2, 1, 0),
-(220, 361, 6, 2, 0),
-(221, 363, 4, 1, 0),
-(222, 363, 6, 2, 0),
-(223, 365, 2, 1, 0),
-(224, 365, 5, 2, 0),
-(225, 366, 1, 1, 0),
-(226, 366, 5, 2, 0),
-(227, 367, 4, 1, 0),
-(228, 367, 6, 2, 0),
-(229, 369, 2, 1, 0),
-(230, 369, 6, 2, 0),
-(231, 370, 3, 1, 0),
-(232, 370, 6, 2, 0),
-(233, 371, 3, 1, 0),
-(234, 371, 6, 2, 0),
-(235, 372, 3, 1, 0),
-(236, 372, 6, 2, 0),
-(237, 373, 3, 1, 0),
-(238, 373, 6, 2, 0),
-(239, 374, 3, 1, 0),
-(240, 374, 6, 2, 0),
-(241, 375, 2, 1, 0),
-(242, 375, 5, 2, 0),
-(243, 376, 3, 1, 0),
-(244, 376, 6, 2, 0),
-(245, 377, 3, 1, 0),
-(246, 377, 6, 2, 0),
-(247, 378, 3, 1, 0),
-(248, 378, 6, 2, 0),
-(249, 379, 2, 1, 0),
-(250, 379, 6, 2, 0),
-(251, 380, 2, 1, 0),
-(252, 380, 5, 2, 0),
-(253, 381, 2, 1, 1),
-(254, 381, 6, 2, 0),
-(255, 383, 4, 1, 0),
-(256, 383, 6, 2, 0),
-(257, 385, 2, 1, 1),
-(258, 385, 5, 2, 0),
-(259, 386, 3, 1, 0),
-(260, 386, 6, 2, 0),
-(261, 387, 2, 1, 1),
-(262, 387, 6, 2, 0),
-(263, 388, 3, 1, 0),
-(264, 388, 6, 2, 0),
-(265, 390, 4, 1, 0),
-(266, 390, 6, 2, 0),
-(267, 392, 2, 1, 0),
-(268, 392, 5, 2, 1),
-(269, 394, 4, 1, 0),
-(270, 394, 6, 2, 0),
-(271, 396, 2, 1, 0),
-(272, 396, 6, 2, 0),
-(273, 398, 4, 1, 0),
-(274, 398, 6, 2, 0),
-(275, 400, 4, 1, 0),
-(276, 400, 6, 2, 0),
-(277, 402, 4, 1, 0),
-(278, 402, 6, 2, 0),
-(279, 404, 4, 1, 0),
-(280, 404, 6, 2, 0),
-(281, 406, 4, 1, 0),
-(282, 406, 6, 2, 0),
-(283, 408, 3, 1, 0),
-(284, 408, 6, 2, 0),
-(285, 409, 4, 1, 0),
-(286, 409, 6, 2, 0),
-(287, 410, 2, 1, 0),
-(288, 410, 6, 2, 0),
-(289, 411, 2, 1, 0),
-(290, 411, 5, 2, 0),
-(291, 412, 2, 1, 0),
-(292, 412, 6, 2, 0),
-(293, 413, 4, 1, 0),
-(294, 413, 6, 2, 0),
-(295, 415, 2, 1, 0),
-(296, 415, 6, 2, 0),
-(297, 416, 2, 1, 0),
-(298, 416, 6, 2, 0),
-(299, 417, 2, 1, 0),
-(300, 417, 6, 2, 0),
-(301, 418, 1, 1, 0),
-(302, 418, 5, 2, 0),
-(303, 419, 1, 1, 0),
-(304, 419, 5, 2, 0),
-(305, 420, 1, 1, 0),
-(306, 420, 5, 2, 0),
-(307, 421, 2, 1, 0),
-(308, 421, 6, 2, 0),
-(309, 422, 4, 1, 0),
-(310, 422, 6, 2, 0),
-(311, 424, 7, 5, 0),
-(312, 426, 11, 6, 0),
-(313, 427, 11, 6, 0),
-(314, 428, 15, 7, 0),
-(315, 429, 12, 7, 0),
-(316, 430, 4, 1, 0),
-(317, 430, 6, 2, 0),
-(318, 432, 13, 7, 0),
-(319, 433, 4, 1, 0),
-(320, 433, 6, 2, 0),
-(321, 435, 13, 7, 0),
-(322, 436, 11, 6, 0),
-(323, 437, 15, 7, 0),
-(324, 438, 4, 1, 0),
-(325, 438, 6, 2, 0),
-(326, 440, 15, 7, 0),
-(327, 441, 4, 1, 0),
-(328, 441, 6, 2, 0),
-(329, 443, 15, 7, 0),
-(330, 444, 1, 1, 0),
-(331, 444, 5, 2, 0),
-(332, 445, 1, 1, 0),
-(333, 445, 5, 2, 0),
-(334, 446, 2, 1, 0),
-(335, 446, 5, 2, 0),
-(336, 447, 15, 7, 0),
-(337, 448, 1, 1, 0),
-(338, 448, 5, 2, 0),
-(339, 449, 4, 1, 0),
-(340, 449, 6, 2, 0),
-(341, 451, 15, 7, 0),
-(342, 452, 4, 1, 0),
-(343, 452, 6, 2, 0),
-(344, 454, 15, 7, 0),
-(345, 455, 15, 7, 0),
-(346, 456, 2, 1, 0),
-(347, 456, 5, 2, 1),
-(348, 458, 15, 7, 0),
-(349, 459, 2, 1, 0),
-(350, 459, 5, 2, 1),
-(351, 460, 4, 1, 0),
-(352, 460, 6, 2, 0),
-(353, 461, 4, 1, 0),
-(354, 461, 6, 2, 0),
-(355, 463, 15, 7, 0),
-(356, 464, 4, 1, 0),
-(357, 464, 6, 2, 0),
-(358, 466, 15, 7, 0),
-(359, 467, 4, 1, 0),
-(360, 467, 6, 2, 0),
-(361, 469, 15, 7, 0),
-(362, 470, 4, 1, 0),
-(363, 470, 6, 2, 0),
-(364, 472, 15, 7, 0),
-(365, 473, 4, 1, 0),
-(366, 473, 6, 2, 0),
-(367, 475, 15, 7, 0),
-(368, 476, 4, 1, 0),
-(369, 476, 6, 2, 0),
-(370, 478, 15, 7, 0),
-(371, 479, 4, 1, 0),
-(372, 479, 6, 2, 0),
-(373, 481, 15, 7, 0),
-(374, 482, 4, 1, 0),
-(375, 482, 6, 2, 0),
-(376, 484, 15, 7, 0),
-(377, 485, 4, 1, 0),
-(378, 485, 6, 2, 0),
-(379, 487, 15, 7, 0),
-(380, 488, 4, 1, 0),
-(381, 488, 6, 2, 0),
-(382, 490, 15, 7, 0),
-(383, 491, 1, 1, 0),
-(384, 491, 5, 2, 0),
-(385, 492, 1, 1, 0),
-(386, 492, 5, 2, 0),
-(387, 493, 4, 1, 0),
-(388, 493, 6, 2, 0),
-(389, 494, 4, 1, 0),
-(390, 494, 6, 2, 0),
-(391, 496, 15, 7, 0),
-(392, 497, 4, 1, 0),
-(393, 497, 6, 2, 0),
-(394, 499, 15, 7, 0),
-(395, 500, 19, 8, 0),
-(396, 501, 20, 8, 0),
-(397, 502, 20, 8, 0),
-(398, 503, 20, 8, 0),
-(399, 504, 20, 8, 0),
-(400, 505, 4, 1, 0),
-(401, 505, 6, 2, 0),
-(402, 507, 15, 7, 0),
-(403, 508, 21, 8, 0),
-(404, 509, 21, 8, 0),
-(405, 510, 21, 8, 0),
-(406, 511, 21, 8, 1),
-(407, 512, 20, 8, 0),
-(408, 513, 20, 8, 0),
-(409, 514, 20, 8, 0),
-(410, 515, 4, 1, 0),
-(411, 515, 6, 2, 0),
-(412, 517, 15, 7, 0),
-(413, 518, 20, 8, 0),
-(414, 519, 4, 1, 0),
-(415, 519, 6, 2, 0),
-(416, 521, 15, 7, 0),
-(417, 522, 20, 8, 0),
-(418, 523, 20, 8, 0),
-(419, 524, 21, 8, 1),
-(420, 525, 21, 8, 0),
-(421, 526, 20, 8, 0),
-(422, 527, 4, 1, 0),
-(423, 527, 6, 2, 0),
-(424, 529, 15, 7, 0),
-(425, 530, 20, 8, 0),
-(426, 531, 3, 1, 0),
-(427, 531, 6, 2, 0),
-(428, 532, 21, 8, 1),
-(429, 533, 20, 8, 0),
-(430, 534, 20, 8, 0),
-(431, 535, 20, 8, 0),
-(432, 536, 20, 8, 0),
-(433, 537, 20, 8, 0),
-(434, 538, 26, 9, 0),
-(435, 539, 37, 13, 0),
-(436, 540, 37, 13, 0),
-(437, 541, 25, 9, 0),
-(438, 542, 39, 13, 1),
-(439, 543, 37, 13, 0),
-(440, 544, 37, 13, 0),
-(441, 545, 37, 13, 0),
-(442, 546, 37, 13, 0),
-(443, 547, 40, 14, 0),
-(444, 548, 41, 14, 0),
-(445, 549, 41, 14, 0),
-(446, 550, 47, 15, 0),
-(447, 551, 47, 15, 0),
-(448, 552, 4, 1, 0),
-(449, 552, 6, 2, 0),
-(450, 554, 15, 7, 0),
-(451, 555, 37, 13, 0),
-(452, 556, 47, 15, 0),
-(453, 557, 47, 15, 0),
-(454, 558, 46, 15, 1),
-(455, 559, 46, 15, 1),
-(456, 560, 46, 15, 1),
-(457, 561, 1, 1, 0),
-(458, 561, 5, 2, 0),
-(459, 562, 46, 15, 1),
-(460, 563, 1, 1, 0),
-(461, 563, 5, 2, 0),
-(462, 564, 47, 15, 0),
-(463, 565, 48, 16, 0),
-(464, 566, 48, 16, 1),
-(465, 567, 49, 16, 0),
-(466, 568, 49, 16, 1),
-(467, 569, 48, 16, 0),
-(468, 570, 48, 16, 0),
-(469, 571, 48, 16, 0),
-(470, 572, 4, 1, 0),
-(471, 572, 6, 2, 0),
-(472, 574, 15, 7, 0),
-(473, 575, 37, 13, 0),
-(474, 576, 47, 15, 0),
-(475, 577, 48, 16, 0),
-(476, 578, 50, 17, 0),
-(477, 579, 51, 17, 0),
-(478, 580, 51, 17, 0),
-(479, 581, 52, 18, 0),
-(480, 582, 4, 1, 0),
-(481, 582, 6, 2, 0),
-(482, 584, 15, 7, 0),
-(483, 585, 37, 13, 0),
-(484, 586, 47, 15, 0),
-(485, 587, 48, 16, 0),
-(486, 590, 4, 1, 0),
-(487, 590, 6, 2, 0),
-(488, 592, 15, 7, 0),
-(489, 593, 37, 13, 0),
-(490, 594, 47, 15, 0),
-(491, 595, 48, 16, 0),
-(492, 598, 4, 1, 0),
-(493, 598, 6, 2, 0),
-(494, 600, 15, 7, 0),
-(495, 601, 37, 13, 0),
-(496, 602, 47, 15, 0),
-(497, 603, 48, 16, 0),
-(498, 605, 4, 1, 0),
-(499, 605, 6, 2, 0),
-(500, 607, 15, 7, 0),
-(501, 608, 37, 13, 0),
-(502, 609, 47, 15, 0),
-(503, 610, 48, 16, 0),
-(504, 612, 1, 1, 0),
-(505, 612, 5, 2, 0),
-(506, 614, 4, 1, 0),
-(507, 614, 6, 2, 0),
-(508, 616, 15, 7, 0),
-(509, 617, 37, 13, 0),
-(510, 618, 47, 15, 0),
-(511, 619, 48, 16, 0),
-(512, 621, 4, 1, 0),
-(513, 621, 6, 2, 0),
-(514, 623, 15, 7, 0),
-(515, 624, 37, 13, 0),
-(516, 625, 47, 15, 0),
-(517, 626, 48, 16, 0),
-(518, 628, 4, 1, 0),
-(519, 628, 6, 2, 0),
-(520, 630, 15, 7, 0),
-(521, 631, 37, 13, 0),
-(522, 632, 47, 15, 0),
-(523, 633, 48, 16, 0),
-(524, 635, 4, 1, 0),
-(525, 635, 6, 2, 0),
-(526, 637, 15, 7, 0),
-(527, 638, 37, 13, 0),
-(528, 639, 47, 15, 0),
-(529, 640, 48, 16, 0),
-(530, 642, 4, 1, 0),
-(531, 642, 6, 2, 0),
-(532, 644, 15, 7, 0),
-(533, 645, 37, 13, 0),
-(534, 646, 47, 15, 0),
-(535, 647, 48, 16, 0),
-(536, 649, 4, 1, 0),
-(537, 649, 6, 2, 0),
-(538, 651, 15, 7, 0),
-(539, 652, 37, 13, 0),
-(540, 653, 47, 15, 0),
-(541, 654, 48, 16, 0),
-(542, 656, 4, 1, 0),
-(543, 656, 6, 2, 0),
-(544, 658, 15, 7, 0),
-(545, 659, 37, 13, 0),
-(546, 660, 47, 15, 0),
-(547, 661, 48, 16, 0),
-(548, 663, 4, 1, 0),
-(549, 663, 6, 2, 0),
-(550, 665, 15, 7, 0),
-(551, 666, 37, 13, 0),
-(552, 667, 47, 15, 0),
-(553, 668, 48, 16, 0),
-(554, 670, 4, 1, 0),
-(555, 670, 6, 2, 0),
-(556, 672, 15, 7, 0),
-(557, 673, 37, 13, 0),
-(558, 674, 47, 15, 0),
-(559, 675, 48, 16, 0),
-(560, 677, 4, 1, 0),
-(561, 677, 6, 2, 0),
-(562, 679, 15, 7, 0),
-(563, 680, 37, 13, 0),
-(564, 681, 47, 15, 0),
-(565, 682, 48, 16, 0),
-(566, 684, 4, 1, 0),
-(567, 684, 6, 2, 0),
-(568, 686, 15, 7, 0),
-(569, 687, 37, 13, 0),
-(570, 688, 47, 15, 0),
-(571, 689, 48, 16, 0),
-(572, 691, 4, 1, 0),
-(573, 691, 6, 2, 0),
-(574, 693, 15, 7, 0),
-(575, 694, 37, 13, 0),
-(576, 695, 47, 15, 0),
-(577, 696, 48, 16, 0),
-(578, 698, 4, 1, 0),
-(579, 698, 6, 2, 0),
-(580, 700, 15, 7, 0),
-(581, 701, 37, 13, 0),
-(582, 702, 47, 15, 0),
-(583, 703, 48, 16, 0),
-(584, 705, 4, 1, 0),
-(585, 705, 6, 2, 0),
-(586, 707, 15, 7, 0),
-(587, 708, 37, 13, 0),
-(588, 709, 47, 15, 0),
-(589, 710, 48, 16, 0),
-(590, 712, 4, 1, 0),
-(591, 712, 6, 2, 0),
-(592, 714, 15, 7, 0),
-(593, 715, 37, 13, 0),
-(594, 716, 47, 15, 0),
-(595, 717, 48, 16, 0),
-(596, 719, 4, 1, 0),
-(597, 719, 6, 2, 0),
-(598, 721, 15, 7, 0),
-(599, 722, 37, 13, 0),
-(600, 723, 47, 15, 0),
-(601, 724, 48, 16, 0),
-(602, 726, 4, 1, 0),
-(603, 726, 6, 2, 0),
-(604, 728, 15, 7, 0),
-(605, 729, 37, 13, 0),
-(606, 730, 47, 15, 0),
-(607, 731, 48, 16, 0),
-(608, 733, 4, 1, 0),
-(609, 733, 6, 2, 0),
-(610, 735, 15, 7, 0),
-(611, 736, 37, 13, 0),
-(612, 737, 47, 15, 0),
-(613, 738, 48, 16, 0),
-(614, 740, 4, 1, 0),
-(615, 740, 6, 2, 0),
-(616, 742, 15, 7, 0),
-(617, 743, 37, 13, 0),
-(618, 744, 47, 15, 0),
-(619, 745, 48, 16, 0),
-(620, 747, 4, 1, 0),
-(621, 747, 6, 2, 0),
-(622, 749, 15, 7, 0),
-(623, 750, 37, 13, 0),
-(624, 751, 47, 15, 0),
-(625, 752, 48, 16, 0),
-(626, 754, 2, 1, 0),
-(627, 754, 5, 2, 0),
-(628, 755, 100, 21, 0),
-(629, 756, 4, 1, 0),
-(630, 756, 6, 2, 0),
-(631, 758, 15, 7, 0),
-(632, 759, 37, 13, 0),
-(633, 760, 47, 15, 0),
-(634, 761, 48, 16, 0),
-(635, 763, 4, 1, 0),
-(636, 763, 6, 2, 0),
-(637, 765, 15, 7, 0),
-(638, 766, 37, 13, 0),
-(639, 767, 47, 15, 0),
-(640, 768, 48, 16, 0),
-(641, 770, 4, 1, 0),
-(642, 770, 6, 2, 0),
-(643, 772, 15, 7, 0),
-(644, 773, 37, 13, 0),
-(645, 774, 47, 15, 0),
-(646, 775, 48, 16, 0),
-(647, 777, 4, 1, 0),
-(648, 777, 6, 2, 0),
-(649, 779, 15, 7, 0),
-(650, 780, 37, 13, 0),
-(651, 781, 47, 15, 0),
-(652, 782, 48, 16, 0),
-(653, 784, 4, 1, 0),
-(654, 784, 6, 2, 0),
-(655, 786, 15, 7, 0),
-(656, 787, 37, 13, 0),
-(657, 788, 47, 15, 0),
-(658, 789, 48, 16, 0),
-(659, 791, 4, 1, 0),
-(660, 791, 6, 2, 0),
-(661, 793, 15, 7, 0),
-(662, 794, 37, 13, 0),
-(663, 795, 47, 15, 0),
-(664, 796, 48, 16, 0),
-(665, 798, 101, 21, 0),
-(666, 799, 101, 21, 0),
-(667, 800, 101, 21, 0),
-(668, 801, 101, 21, 0),
-(669, 802, 101, 21, 0),
-(670, 803, 101, 21, 0),
-(671, 804, 101, 21, 0),
-(672, 805, 101, 21, 0),
-(673, 806, 101, 21, 0),
-(674, 807, 101, 21, 0),
-(675, 808, 104, 22, 0),
-(676, 809, 4, 1, 0),
-(677, 809, 6, 2, 0),
-(678, 811, 15, 7, 0),
-(679, 812, 37, 13, 0),
-(680, 813, 47, 15, 0),
-(681, 814, 48, 16, 0),
-(682, 816, 4, 1, 0),
-(683, 816, 6, 2, 0),
-(684, 818, 15, 7, 0),
-(685, 819, 37, 13, 0),
-(686, 820, 47, 15, 0),
-(687, 821, 48, 16, 0),
-(688, 823, 4, 1, 0),
-(689, 823, 6, 2, 0),
-(690, 825, 15, 7, 0),
-(691, 826, 37, 13, 0),
-(692, 827, 47, 15, 0),
-(693, 828, 48, 16, 0),
-(694, 836, 4, 1, 0),
-(695, 836, 6, 2, 0),
-(696, 838, 15, 7, 0),
-(697, 839, 37, 13, 0),
-(698, 840, 47, 15, 0),
-(699, 841, 48, 16, 0),
-(700, 846, 4, 1, 0),
-(701, 846, 6, 2, 0),
-(702, 848, 15, 7, 0),
-(703, 849, 37, 13, 0),
-(704, 850, 47, 15, 0),
-(705, 851, 48, 16, 0),
-(706, 853, 2, 1, 0),
-(707, 853, 5, 2, 0),
-(708, 855, 13, 7, 0),
-(709, 856, 39, 13, 0),
-(710, 857, 47, 15, 0),
-(711, 858, 48, 16, 0),
-(712, 860, 4, 1, 0),
-(713, 860, 6, 2, 0),
-(714, 862, 15, 7, 0),
-(715, 863, 37, 13, 0),
-(716, 864, 47, 15, 0),
-(717, 865, 48, 16, 0),
-(718, 867, 4, 1, 0),
-(719, 867, 6, 2, 0),
-(720, 869, 15, 7, 0),
-(721, 870, 37, 13, 0),
-(722, 871, 47, 15, 0),
-(723, 872, 48, 16, 0),
-(724, 895, 4, 1, 0),
-(725, 895, 6, 2, 0),
-(726, 897, 15, 7, 0),
-(727, 898, 37, 13, 0),
-(728, 899, 47, 15, 0),
-(729, 900, 48, 16, 0),
-(730, 915, 4, 1, 0),
-(731, 915, 6, 2, 0),
-(732, 917, 15, 7, 0),
-(733, 918, 37, 13, 0),
-(734, 919, 47, 15, 0),
-(735, 920, 48, 16, 0),
-(736, 951, 1, 1, 0),
-(737, 951, 5, 2, 0),
-(738, 952, 4, 1, 0),
-(739, 952, 6, 2, 0),
-(740, 954, 15, 7, 0),
-(741, 955, 37, 13, 0),
-(742, 956, 47, 15, 0),
-(743, 957, 48, 16, 0);
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `dataset`
---
-
-CREATE TABLE IF NOT EXISTS `dataset` (
-`id` int(11) NOT NULL,
-  `input` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=144 ;
-
+ALTER TABLE dataset
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
 --
 -- Daten für Tabelle `dataset`
 --
@@ -14572,15 +14376,6 @@ INSERT INTO `dataset` (`id`, `input`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `datasetconsistsofdatanode`
---
-
-CREATE TABLE IF NOT EXISTS `datasetconsistsofdatanode` (
-  `dataset_id` int(11) NOT NULL,
-  `datanode_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Daten für Tabelle `datasetconsistsofdatanode`
 --
 
@@ -14731,18 +14526,8 @@ INSERT INTO `datasetconsistsofdatanode` (`dataset_id`, `datanode_id`) VALUES
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `emailconfiguration`
---
-
-CREATE TABLE IF NOT EXISTS `emailconfiguration` (
-`id` int(11) NOT NULL,
-  `receivermailaddress` varchar(1024) NOT NULL,
-  `sendmailaddress` varchar(1024) NOT NULL,
-  `subject` varchar(2048) NOT NULL,
-  `message` text NOT NULL,
-  `controlnode_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+ALTER TABLE emailconfiguration
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Daten für Tabelle `emailconfiguration`
@@ -14759,148 +14544,91 @@ INSERT INTO `emailconfiguration` (`id`, `receivermailaddress`, `sendmailaddress`
 (8, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 366),
 (9, 'bp2014w1@byom.de', 'bp2014w01@framsteg.org', 'Test', 'Test Message', 390);
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `eventinstance`
---
-
-CREATE TABLE IF NOT EXISTS `eventinstance` (
-`id` int(11) NOT NULL,
-  `type` varchar(512) NOT NULL,
-  `event_state` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `eventlog`
---
-
-CREATE TABLE IF NOT EXISTS `eventlog` (
-`id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `controlnodeinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ExclusiveEvents`
---
-
-CREATE TABLE IF NOT EXISTS `ExclusiveEvents` (
-  `MappingKey` varchar(256) NOT NULL,
-  `FragmentInstanceId` int(11) NOT NULL,
-  `ScenarioInstanceId` int(11) NOT NULL,
-  `EventControlNodeId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `fragment`
---
-
-CREATE TABLE IF NOT EXISTS `fragment` (
-`id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `scenario_id` int(11) NOT NULL,
-  `modelid` bigint(11) NOT NULL DEFAULT '-1',
-  `modelversion` int(11) NOT NULL DEFAULT '-1'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=166 ;
-
+ALTER TABLE fragment
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
 --
 -- Daten für Tabelle `fragment`
 --
 
-INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelid`, `modelversion`) VALUES
-(1, 'fragment1', 1, 0, 0),
-(2, 'fragment2', 1, 0, 0),
-(3, 'fragment3', 1, 0, 0),
-(4, 'fragment4', 1, 0, 0),
-(5, 'Fragment1Scenario3', 3, 0, 0),
-(100, 'testfragment', 101, 0, 0),
-(101, 'fragmentScenario2', 2, 0, 0),
-(102, 'FragmentA', 102, 0, 0),
-(103, 'FragmentB', 102, 0, 0),
-(104, 'FragmentC', 102, 0, 0),
-(105, 'FragmentTest1', 103, 0, 0),
-(106, 'FragmentTest1', 104, 0, 0),
-(107, 'FragmentA', 105, 0, 0),
-(108, 'FragmentB', 105, 0, 0),
-(109, 'FragmentC', 105, 0, 0),
-(110, 'FragmentRESETReferenceTest1', 106, -1, -1),
-(111, 'FragmentBReferenceTest1', 106, -1, -1),
-(112, 'FragmentAReferenceTest1', 106, -1, -1),
-(113, 'FragmentRESETReferenceTest1', 107, 895316243, 0),
-(114, 'FragmentBReferenceTest1', 107, 1844511714, 0),
-(115, 'FragmentAReferenceTest1', 107, 466282425, 0),
-(116, 'FragmentRESETReferenceTest1', 108, 895316243, 0),
-(117, 'FragmentBReferenceTest1', 108, 1844511714, 0),
-(118, 'FragmentAReferenceTest1', 108, 466282425, 0),
-(119, 'FragmentAReferenceTest1', 109, 466282425, 0),
-(120, 'FragmentBReferenceTest1', 109, 1844511714, 0),
-(121, 'FragmentRESETReferenceTest1', 109, 895316243, 0),
-(122, 'FragmentAReferenceTest1', 110, 466282425, 0),
-(123, 'FragmentBReferenceTest1', 110, 1844511714, 0),
-(124, 'FragmentRESETReferenceTest1', 110, 895316243, 0),
-(125, 'FragmentAReferenceTest2_2', 111, 4230671258813802220, 1),
-(126, 'FragmentBReferenceTest2_2', 111, 8309794372883612434, 0),
-(127, 'FragmentRESETReferenceTest1', 111, 895316243, 0),
-(128, 'f1referencetest3', 112, 141716200, 0),
-(129, 'f2referencetest3', 112, 1961373012, 0),
-(130, 'f2referencetest3_2', 113, 1730281365287109860, 0),
-(131, 'f1referencetest3', 113, 141716200, 0),
-(132, 'RT4F1', 114, 1263317340, 1),
-(133, 'RT4F2', 114, 495044646, 0),
-(134, 'RT4F3', 114, 900060190, 0),
-(135, 'TT2F1', 115, 670842831, 0),
-(136, 'TT2F2', 115, 1117519927, 0),
-(137, 'TT2F1', 116, 670842831, 0),
-(138, 'TT2F2', 116, 1117519927, 0),
-(139, 'AT2F1', 117, 642496384, 0),
-(140, 'AT3F1', 118, 1638780909, 0),
-(141, 'ReiseTestF1', 131, 524485045, 0),
-(142, 'ReiseTestF1', 132, 524485045, 0),
-(143, 'ReiseTestF2', 132, 1524926060, 0),
-(144, 'ReiseTestF3', 132, 1344005092, 0),
-(145, 'ReiseTestF1', 133, 524485045, 0),
-(146, 'ReiseTestF2', 133, 1524926060, 0),
-(147, 'ReiseTestF3', 133, 1344005092, 0),
-(148, 'ReiseTestF1', 134, 524485045, 0),
-(149, 'ReiseTestF2', 134, 1524926060, 0),
-(150, 'ReiseTestF3', 134, 1344005092, 0),
-(151, 'ReiseTestF1', 135, 524485045, 0),
-(152, 'ReiseTestF2', 135, 1524926060, 0),
-(153, 'ReiseTestF3', 135, 1344005092, 0),
-(154, 'TXORF1', 136, 1157669566, 1),
-(155, 'TXORF2', 136, 285480555, 0),
-(156, 'TestEmailF1', 137, 1989849456, 0),
-(157, 'TestEmailF1', 138, 1989849456, 1),
-(158, 'TestEmailF1', 139, 1989849456, 1),
-(159, 'TestEmailF1', 140, 1989849456, 1),
-(160, 'TestEmail2F1', 141, 108787087166798180, 0),
-(161, 'TestEmail3F1', 142, 733657195, 0),
-(162, 'TestEmail3F1', 143, 733657195, 0),
-(163, 'XORTest2Fragment1', 144, 701819841, 0),
-(164, 'XORTest2Fragment2', 144, 1371733190, 0),
-(165, 'ServiceTaskFragment', 145, 89666159, 0);
+INSERT INTO `fragment` (`id`, `name`, `scenario_id`, `modelversion`) VALUES
+(1, 'fragment1', 1, 0),
+(2, 'fragment2', 1, 0),
+(3, 'fragment3', 1, 0),
+(4, 'fragment4', 1, 0),
+(5, 'Fragment1Scenario3', 3, 0),
+(100, 'testfragment', 101, 0),
+(101, 'fragmentScenario2', 2, 0),
+(102, 'FragmentA', 102, 0),
+(103, 'FragmentB', 102, 0),
+(104, 'FragmentC', 102, 0),
+(105, 'FragmentTest1', 103, 0),
+(106, 'FragmentTest1', 104, 0),
+(107, 'FragmentA', 105, 0),
+(108, 'FragmentB', 105, 0),
+(109, 'FragmentC', 105, 0),
+(110, 'FragmentRESETReferenceTest1', 106, -1),
+(111, 'FragmentBReferenceTest1', 106, -1),
+(112, 'FragmentAReferenceTest1', 106, -1),
+(113, 'FragmentRESETReferenceTest1', 107, 0),
+(114, 'FragmentBReferenceTest1', 107, 0),
+(115, 'FragmentAReferenceTest1', 107, 0),
+(116, 'FragmentRESETReferenceTest1', 108, 0),
+(117, 'FragmentBReferenceTest1', 108, 0),
+(118, 'FragmentAReferenceTest1', 108, 0),
+(119, 'FragmentAReferenceTest1', 109, 0),
+(120, 'FragmentBReferenceTest1', 109, 0),
+(121, 'FragmentRESETReferenceTest1', 109, 0),
+(122, 'FragmentAReferenceTest1', 110, 0),
+(123, 'FragmentBReferenceTest1', 110, 0),
+(124, 'FragmentRESETReferenceTest1', 110, 0),
+(125, 'FragmentAReferenceTest2_2', 111, 0),
+(126, 'FragmentBReferenceTest2_2', 111, 0),
+(127, 'FragmentRESETReferenceTest1', 111, 0),
+(128, 'f1referencetest3', 112, 0),
+(129, 'f2referencetest3', 112, 0),
+(130, 'f2referencetest3_2', 113, 0),
+(131, 'f1referencetest3', 113, 0),
+(132, 'RT4F1', 114, 0),
+(133, 'RT4F2', 114, 0),
+(134, 'RT4F3', 114, 0),
+(135, 'TT2F1', 115, 0),
+(136, 'TT2F2', 115, 0),
+(137, 'TT2F1', 116, 0),
+(138, 'TT2F2', 116, 0),
+(139, 'AT2F1', 117, 0),
+(140, 'AT3F1', 118, 0),
+(141, 'ReiseTestF1', 131, 0),
+(142, 'ReiseTestF1', 132, 0),
+(143, 'ReiseTestF2', 132, 0),
+(144, 'ReiseTestF3', 132, 0),
+(145, 'ReiseTestF1', 133, 0),
+(146, 'ReiseTestF2', 133, 0),
+(147, 'ReiseTestF3', 133, 0),
+(148, 'ReiseTestF1', 134, 0),
+(149, 'ReiseTestF2', 134, 0),
+(150, 'ReiseTestF3', 134, 0),
+(151, 'ReiseTestF1', 135, 0),
+(152, 'ReiseTestF2', 135, 0),
+(153, 'ReiseTestF3', 135, 0),
+(154, 'TXORF1', 136, 0),
+(155, 'TXORF2', 136, 0),
+(156, 'TestEmailF1', 137, 0),
+(157, 'TestEmailF1', 138, 0),
+(158, 'TestEmailF1', 139, 0),
+(159, 'TestEmailF1', 140, 0),
+(160, 'TestEmail2F1', 141, 0),
+(161, 'TestEmail3F1', 142, 0),
+(162, 'TestEmail3F1', 143, 0),
+(163, 'XORTest2Fragment1', 144, 0),
+(164, 'XORTest2Fragment2', 144, 0),
+(165, 'ServiceTaskFragment', 145, 0);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `fragmentinstance`
---
-
-CREATE TABLE IF NOT EXISTS `fragmentinstance` (
-`id` int(11) NOT NULL,
-  `terminated` tinyint(1) NOT NULL DEFAULT '0',
-  `fragment_id` int(11) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4419 ;
+ALTER TABLE fragmentinstance
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4419;
 
 --
 -- Daten für Tabelle `fragmentinstance`
@@ -19253,26 +18981,6 @@ INSERT INTO `fragmentinstance` (`id`, `terminated`, `fragment_id`, `scenarioinst
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `gatewayandeventstate`
---
-
-CREATE TABLE IF NOT EXISTS `gatewayandeventstate` (
-  `state` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `gatewayinstance`
---
-
-CREATE TABLE IF NOT EXISTS `gatewayinstance` (
-  `id` int(11) NOT NULL,
-  `type` varchar(512) NOT NULL,
-  `gateway_state` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Daten für Tabelle `gatewayinstance`
 --
 
@@ -20008,174 +19716,44 @@ INSERT INTO `gatewayinstance` (`id`, `type`, `gateway_state`) VALUES
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `historyactivityinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historyactivityinstance` (
-`id` int(11) NOT NULL,
-  `activityinstance_id` int(11) NOT NULL,
-  `label` varchar(512) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `oldstate` varchar(512) DEFAULT NULL,
-  `newstate` varchar(512) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `comment` text
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `historycontrolflow`
---
-
-CREATE TABLE IF NOT EXISTS `historycontrolflow` (
-`id` int(11) NOT NULL,
-  `controlnodeinstance_id1` int(11) NOT NULL,
-  `controlnodeinstance_id2` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `historydataobjectinstance`
---
-
-CREATE TABLE IF NOT EXISTS `historydataobjectinstance` (
-`id` int(11) NOT NULL,
-  `scenarioinstance_id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dataobjectinstance_id` int(11) NOT NULL,
-  `old_state_id` int(11) DEFAULT NULL,
-  `old_state_name` varchar(200) DEFAULT '',
-  `new_state_id` int(11) NOT NULL,
-  `new_state_name` varchar(200) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=69 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `reference`
---
-
-CREATE TABLE IF NOT EXISTS `reference` (
-  `controlnode_id1` int(11) NOT NULL,
-  `controlnode_id2` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `reference`
---
-
-INSERT INTO `reference` (`controlnode_id1`, `controlnode_id2`) VALUES
-(137, 140),
-(140, 137),
-(184, 191),
-(191, 184),
-(202, 207),
-(207, 202),
-(210, 216),
-(210, 220),
-(216, 210),
-(216, 220),
-(220, 210),
-(220, 216);
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `right`
---
-
-CREATE TABLE IF NOT EXISTS `right` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `role`
---
-
-CREATE TABLE IF NOT EXISTS `role` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `rolehasright`
---
-
-CREATE TABLE IF NOT EXISTS `rolehasright` (
-  `role_id` int(11) NOT NULL,
-  `right_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `scenario`
---
-
-CREATE TABLE IF NOT EXISTS `scenario` (
-`id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `modelid` bigint(11) DEFAULT '-1',
-  `modelversion` int(11) NOT NULL DEFAULT '-1',
-  `datamodelid` bigint(11) DEFAULT NULL,
-  `datamodelversion` int(11) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=146 ;
+ALTER TABLE scenario
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- Daten für Tabelle `scenario`
 --
 
-INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelid`, `modelversion`, `datamodelid`, `datamodelversion`) VALUES
-(1, 'HELLOWORLD', 0, 0, 0, NULL, NULL),
-(2, 'helloWorld2', 0, 0, 0, NULL, NULL),
-(3, 'EmailTest', 0, 0, 0, NULL, NULL),
-(100, 'TestScenario', 0, 0, 0, NULL, NULL),
-(101, 'Test Insert Scenario', 0, 0, 0, NULL, NULL),
-(103, 'ScenarioTest1', 0, 0, 0, NULL, NULL),
-(105, 'TestScenarioTerminationCondition', 0, 0, 0, NULL, NULL),
-(111, 'Test2_2ReferenceTest', 0, 483134892, 0, NULL, NULL),
-(113, 'referencetest3_2', 0, 1607828466, 0, NULL, NULL),
-(114, 'RT4Scenario', 0, 494340875, 0, NULL, NULL),
-(115, 'TT2Scenario', 0, 2003613382, 0, NULL, NULL),
-(116, 'TT2Scenario', 0, 2003613382, 0, NULL, NULL),
-(117, 'AT2Scenario', 0, 1149737035, 0, NULL, NULL),
-(118, 'AT3Scenario', 0, 668857574, 0, NULL, NULL),
-(134, 'ReiseTestScenario', 0, 1047638939, 0, NULL, NULL),
-(135, 'ReiseTestScenario', 0, 1047638939, 0, NULL, NULL),
-(136, 'TXOR1Scenario', 0, 1273761406, 0, NULL, NULL),
-(138, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
-(139, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
-(140, 'TestEmail1Scenario', 0, 368900431, 0, NULL, NULL),
-(141, 'TestEmail2Scenario', 0, 339737652, 0, NULL, NULL),
-(142, 'TestEmail3Scenario', 0, 93160132, 0, NULL, NULL),
-(143, 'TestEmail3Scenario', 0, 93160132, 1, NULL, NULL),
-(144, 'XORTest2Scenario', 0, 2081570932, 0, NULL, NULL),
-(145, 'ServiceTaskSzenario', 0, 1302055923, 0, 1856945235, 0);
+INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelversion`, `datamodelversion`) VALUES
+(1, 'HELLOWORLD', 0, 0, NULL),
+(2, 'helloWorld2', 0, 0, NULL),
+(3, 'EmailTest', 0, 0, NULL),
+(100, 'TestScenario', 0, 0, NULL),
+(101, 'Test Insert Scenario', 0, 0, NULL),
+(103, 'ScenarioTest1', 0, 0, NULL),
+(105, 'TestScenarioTerminationCondition', 0, 0, NULL),
+(111, 'Test2_2ReferenceTest', 0, 0, NULL),
+(113, 'referencetest3_2', 0, 0, NULL),
+(114, 'RT4Scenario', 0, 0, NULL),
+(115, 'TT2Scenario', 0, 0, NULL),
+(116, 'TT2Scenario', 0, 0, NULL),
+(117, 'AT2Scenario', 0, 0, NULL),
+(118, 'AT3Scenario', 0, 0, NULL),
+(134, 'ReiseTestScenario', 0, 0, NULL),
+(135, 'ReiseTestScenario', 0, 0, NULL),
+(136, 'TXOR1Scenario', 0, 0, NULL),
+(138, 'TestEmail1Scenario', 0, 0, NULL),
+(139, 'TestEmail1Scenario', 0, 0, NULL),
+(140, 'TestEmail1Scenario', 0, 0, NULL),
+(141, 'TestEmail2Scenario', 0, 0, NULL),
+(142, 'TestEmail3Scenario', 0, 0, NULL),
+(143, 'TestEmail3Scenario', 0, 1, NULL),
+(144, 'XORTest2Scenario', 0, 0, NULL),
+(145, 'ServiceTaskSzenario', 0, 0, 1856945235);
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `scenarioinstance`
---
-
-CREATE TABLE IF NOT EXISTS `scenarioinstance` (
-`id` int(11) NOT NULL,
-  `name` varchar(256) DEFAULT NULL,
-  `terminated` tinyint(1) NOT NULL DEFAULT '0',
-  `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=966 ;
+ALTER TABLE scenarioinstance
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=966;
 
 --
 -- Daten für Tabelle `scenarioinstance`
@@ -21103,15 +20681,8 @@ INSERT INTO `scenarioinstance` (`id`, `name`, `terminated`, `scenario_id`) VALUE
 
 -- --------------------------------------------------------
 
---
--- Tabellenstruktur für Tabelle `state`
---
-
-CREATE TABLE IF NOT EXISTS `state` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL,
-  `olc_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=107 ;
+ALTER TABLE state
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- Daten für Tabelle `state`
@@ -21225,395 +20796,17 @@ INSERT INTO `state` (`id`, `name`, `olc_id`) VALUES
 (106, 'init', -1);
 
 -- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `statetransition`
---
-
-CREATE TABLE IF NOT EXISTS `statetransition` (
-  `state_id1` int(11) NOT NULL,
-  `state_id2` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `successor`
---
-
-CREATE TABLE IF NOT EXISTS `successor` (
-  `controlnodeinstance_id1` int(11) NOT NULL,
-  `controlnodeinstance_id2` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `timerevent`
---
-
-CREATE TABLE IF NOT EXISTS `timerevent` (
-  `controlNodeDatabaseId` int(11) NOT NULL,
-  `timerDefinition` varchar(512) NOT NULL,
-  `fragmentId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `terminationcondition`
---
-
-CREATE TABLE IF NOT EXISTS `terminationcondition` (
-  `conditionset_id` int(11) NOT NULL,
-  `dataobject_id` int(11) NOT NULL,
-  `state_id` int(11) NOT NULL,
-  `scenario_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 --
 -- Daten für Tabelle `terminationcondition`
 --
 
-INSERT INTO `terminationcondition` (`conditionset_id`, `dataobject_id`, `state_id`, `scenario_id`) VALUES
-(1, 5, 10, 102),
-(1, 7, 15, 105),
-(1, 17, 51, 115),
-(1, 18, 53, 116);
+INSERT INTO `terminationcondition` (`conditionset_id`, `dataclass_id`, `state_id`, `scenario_id`) VALUES
+(1, 1, 10, 102),
+(1, 1, 15, 105),
+(1, 1, 51, 115),
+(1, 2, 53, 116);
 
 -- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `user`
---
-
-CREATE TABLE IF NOT EXISTS `user` (
-`id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL,
-  `email` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `userismemberofrole`
---
-
-CREATE TABLE IF NOT EXISTS `userismemberofrole` (
-  `user_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `webservicetaskattribute`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetaskattribute` (
-  `order` int(11) NOT NULL,
-  `controlnode_id` int(11) NOT NULL,
-  `dataattribute_id` int(11) NOT NULL,
-  `key` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `webservicetaskattribute`
---
-
-INSERT INTO `webservicetaskattribute` (`order`, `controlnode_id`, `dataattribute_id`, `key`) VALUES
-(1, 390, 12, 'ids'),
-(1, 390, 13, 'activities'),
-(2, 390, 13, '0');
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `webservicetasklink`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetasklink` (
-  `controlnode_id` int(11) NOT NULL DEFAULT '0',
-  `link` varchar(2048) NOT NULL,
-  `method` varchar(64) NOT NULL DEFAULT 'GET'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `webservicetasklink`
---
-
-INSERT INTO `webservicetasklink` (`controlnode_id`, `link`, `method`) VALUES
-(390, 'http://localhost:9998/interface/v2/scenario/155/', 'GET');
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `webservicetaskpost`
---
-
-CREATE TABLE IF NOT EXISTS `webservicetaskpost` (
-  `controlnode_id` int(11) NOT NULL,
-  `post` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `webservicetaskpost`
---
-
-INSERT INTO `webservicetaskpost` (`controlnode_id`, `post`) VALUES
-(390, '{"value":"post"}');
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `workitemstate`
---
-
-CREATE TABLE IF NOT EXISTS `workitemstate` (
-  `state` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `activityinstance`
---
-ALTER TABLE `activityinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `activitystate`
---
-ALTER TABLE `activitystate`
- ADD PRIMARY KEY (`state`);
-
---
--- Indexes for table `aggregation`
---
-ALTER TABLE `aggregation`
- ADD PRIMARY KEY (`dataclass_id1`);
-
---
--- Indexes for table `attributeinstance`
---
-ALTER TABLE `attributeinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `configuration`
---
-ALTER TABLE `configuration`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `controlflow`
---
-ALTER TABLE `controlflow`
- ADD PRIMARY KEY (`controlnode_id1`,`controlnode_id2`);
-
---
--- Indexes for table `controlnode`
---
-ALTER TABLE `controlnode`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `controlnodeinstance`
---
-ALTER TABLE `controlnodeinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dataattribute`
---
-ALTER TABLE `dataattribute`
- ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `dataattributeinstance`
---
-ALTER TABLE `dataattributeinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dataclass`
---
-ALTER TABLE `dataclass`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dataflow`
---
-ALTER TABLE `dataflow`
- ADD PRIMARY KEY (`controlnode_id`,`dataset_id`);
-
---
--- Indexes for table `datanode`
---
-ALTER TABLE `datanode`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dataobject`
---
-ALTER TABLE `dataobject`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dataobjectinstance`
---
-ALTER TABLE `dataobjectinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dataset`
---
-ALTER TABLE `dataset`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `datasetconsistsofdatanode`
---
-ALTER TABLE `datasetconsistsofdatanode`
- ADD PRIMARY KEY (`dataset_id`,`datanode_id`);
-
---
--- Indexes for table `emailconfiguration`
---
-ALTER TABLE `emailconfiguration`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `eventinstance`
---
-ALTER TABLE `eventinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `eventlog`
---
-ALTER TABLE `eventlog`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `fragment`
---
-ALTER TABLE `fragment`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `fragmentinstance`
---
-ALTER TABLE `fragmentinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `gatewayandeventstate`
---
-ALTER TABLE `gatewayandeventstate`
- ADD PRIMARY KEY (`state`);
-
---
--- Indexes for table `gatewayinstance`
---
-ALTER TABLE `gatewayinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `historyactivityinstance`
---
-ALTER TABLE `historyactivityinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `historycontrolflow`
---
-ALTER TABLE `historycontrolflow`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `historydataobjectinstance`
---
-ALTER TABLE `historydataobjectinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `reference`
---
-ALTER TABLE `reference`
- ADD PRIMARY KEY (`controlnode_id1`,`controlnode_id2`);
-
---
--- Indexes for table `right`
---
-ALTER TABLE `right`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `role`
---
-ALTER TABLE `role`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `rolehasright`
---
-ALTER TABLE `rolehasright`
- ADD PRIMARY KEY (`role_id`,`right_id`);
-
---
--- Indexes for table `scenario`
---
-ALTER TABLE `scenario`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `scenarioinstance`
---
-ALTER TABLE `scenarioinstance`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `state`
---
-ALTER TABLE `state`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `statetransition`
---
-ALTER TABLE `statetransition`
- ADD PRIMARY KEY (`state_id1`,`state_id2`);
-
---
--- Indexes for table `successor`
---
-ALTER TABLE `successor`
- ADD PRIMARY KEY (`controlnodeinstance_id1`,`controlnodeinstance_id2`);
-
---
--- Indexes for table `terminationcondition`
---
-ALTER TABLE `terminationcondition`
- ADD PRIMARY KEY (`conditionset_id`,`dataobject_id`,`state_id`), ADD KEY `dataobject_id` (`dataobject_id`), ADD KEY `state_id` (`state_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `userismemberofrole`
---
-ALTER TABLE `userismemberofrole`
- ADD PRIMARY KEY (`user_id`,`role_id`);
-
---
--- Indexes for table `workitemstate`
---
-ALTER TABLE `workitemstate`
- ADD PRIMARY KEY (`state`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -21625,9 +20818,9 @@ ALTER TABLE `workitemstate`
 ALTER TABLE `activityinstance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6685;
 --
--- AUTO_INCREMENT for table `attributeinstance`
+-- AUTO_INCREMENT for table `dataattributeinstance`
 --
-ALTER TABLE `attributeinstance`
+ALTER TABLE `dataattributeinstance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `configuration`
@@ -21668,11 +20861,6 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=117;
 -- AUTO_INCREMENT for table `dataobject`
 --
 ALTER TABLE `dataobject`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
---
--- AUTO_INCREMENT for table `dataobjectinstance`
---
-ALTER TABLE `dataobjectinstance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=744;
 --
 -- AUTO_INCREMENT for table `dataset`
@@ -21704,21 +20892,6 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=166;
 --
 ALTER TABLE `fragmentinstance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4419;
---
--- AUTO_INCREMENT for table `historyactivityinstance`
---
-ALTER TABLE `historyactivityinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=91;
---
--- AUTO_INCREMENT for table `historycontrolflow`
---
-ALTER TABLE `historycontrolflow`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `historydataobjectinstance`
---
-ALTER TABLE `historydataobjectinstance`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=69;
 --
 -- AUTO_INCREMENT for table `right`
 --
@@ -21752,10 +20925,3 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
---
--- Table structure for table `boundaryeventref`
-CREATE TABLE IF NOT EXISTS `boundaryeventref` (
-  `controlnode_id` INTEGER NOT NULL,
-  `attachedtoref` INTEGER NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;--

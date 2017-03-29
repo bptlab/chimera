@@ -1,0 +1,70 @@
+<div ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running']['activities'] track by $index"
+     id="{{'modalTerminate' + activityInstance['id']}}" class="modal fade">
+    <!--div class="modal-backdrop fade in"></div-->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line "></div>
+            <!-- Header of the Modal -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Terminate activity?</h4>
+            </div>
+            <!-- /.modal header -->
+            <!-- Body of the Modal -->
+            <div class="modal-body">
+                <!-- display all attributes and let the user edit them -->
+                <div ng-repeat="dataobject in instanceCtrl.workingItems[activityInstance['id']]">
+                    <b>{{dataobject.label}}:</b>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="attr in dataobject.attributeConfiguration">
+                            <td>{{attr['name']}}</td>
+                            <td><input type="text"
+                                       ng-name="attrvalue"
+                                       ng-model-options='{ debounce: 1000 }'
+                                       ng-model="attr['value']"
+                                       ng-change="instanceCtrl.setAttribute(attr['id'], attr['value'], activityInstance['id'])">
+                                <br></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- if outputsets are present display them with the option for termination -->
+                <div ng-if="instanceCtrl.activityOutputStates[activityInstance['id']]">
+                    <div class="panel">
+                        <div class="panel-header">
+                            Please select a state for each output.
+                        </div>
+                        <div class="panel-body form-group"
+                             ng-repeat="(dclass, possiblestates) in instanceCtrl.activityOutputStates[activityInstance['id']] track by $index">
+                            <label for="{{'select' + dclass}}">{{dclass}}</label>
+                            <select class="form-control" id="{{'select' + dclass}}"
+                                    ng-model="lestate"
+                                    ng-init="lestate=possiblestates[0]; instanceCtrl.selectState(dclass, lestate)"
+                                    ng-options="state for state in possiblestates"
+                                    ng-change="instanceCtrl.selectState(dclass, lestate)">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.modal body -->
+            <!-- Footer of the Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" ng-click="instanceCtrl.terminateActivity(activityInstance['id']);" data-dismiss="modal"
+                        class="btn btn-danger">Terminate
+                </button>
+            </div>
+            <!-- /.modal footer -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /. modal-dialog -->
+</div><!-- /.modal -->

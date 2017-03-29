@@ -1,0 +1,152 @@
+{
+  "__v": 2,
+  "_id": "57443157dbdc936e65f60bc2",
+  "name": "IOSet test",
+  "revision": 7,
+  "dataclasses": [
+    {
+      "_id": "57443181dbdc936e65f60bc5",
+      "is_event": false,
+      "name": "Customer",
+      "olc": {
+        "intermediateThrowEvent": [
+          {
+            "id": "State_11u8x6w",
+            "name": "init",
+            "outgoing": [
+              "SequenceFlow_1d9kpvm",
+              "SequenceFlow_0loss1o"
+            ]
+          },
+          {
+            "id": "State_0x8fy3i",
+            "name": "accepted",
+            "incoming": [
+              "SequenceFlow_1d9kpvm"
+            ]
+          },
+          {
+            "id": "State_1tme451",
+            "name": "rejected",
+            "incoming": [
+              "SequenceFlow_0loss1o"
+            ]
+          }
+        ],
+        "sequenceFlow": [
+          {
+            "id": "SequenceFlow_1d9kpvm",
+            "sourceRef": "State_11u8x6w",
+            "targetRef": "State_0x8fy3i"
+          },
+          {
+            "id": "SequenceFlow_0loss1o",
+            "sourceRef": "State_11u8x6w",
+            "targetRef": "State_1tme451"
+          }
+        ],
+        "state": [
+          {
+            "id": "State_11u8x6w",
+            "name": "init",
+            "outgoing": [
+              "SequenceFlow_1d9kpvm",
+              "SequenceFlow_0loss1o"
+            ]
+          },
+          {
+            "id": "State_0x8fy3i",
+            "name": "accepted",
+            "incoming": [
+              "SequenceFlow_1d9kpvm"
+            ]
+          },
+          {
+            "id": "State_1tme451",
+            "name": "rejected",
+            "incoming": [
+              "SequenceFlow_0loss1o"
+            ]
+          }
+        ]
+      },
+      "attributes": [
+        {
+          "name": "name",
+          "datatype": "String",
+          "_id": "574c39a470902df23e199cd5"
+        }
+      ]
+    },
+    {
+      "_id": "57443181dbdc936e65f60bc4",
+      "is_event": false,
+      "name": "Order",
+      "olc": {
+        "intermediateThrowEvent": [
+          {
+            "id": "State_11u8x6w",
+            "name": "init",
+            "outgoing": [
+              "SequenceFlow_1d9kpvm",
+              "SequenceFlow_0n1tphi"
+            ]
+          },
+          {
+            "id": "State_0x8fy3i",
+            "name": "accepted",
+            "incoming": [
+              "SequenceFlow_1d9kpvm"
+            ]
+          },
+          {
+            "id": "State_1godl63",
+            "name": "rejected",
+            "incoming": [
+              "SequenceFlow_0n1tphi"
+            ]
+          }
+        ],
+        "sequenceFlow": [
+          {
+            "id": "SequenceFlow_1d9kpvm",
+            "sourceRef": "State_11u8x6w",
+            "targetRef": "State_0x8fy3i"
+          },
+          {
+            "id": "SequenceFlow_0n1tphi",
+            "sourceRef": "State_11u8x6w",
+            "targetRef": "State_1godl63"
+          }
+        ],
+        "state": [
+          {
+            "id": "State_11u8x6w",
+            "name": "init",
+            "outgoing": [
+              "SequenceFlow_1d9kpvm",
+              "SequenceFlow_0n1tphi"
+            ]
+          },
+          {
+            "id": "State_0x8fy3i",
+            "name": "accepted",
+            "incoming": [
+              "SequenceFlow_1d9kpvm"
+            ]
+          },
+          {
+            "id": "State_1godl63",
+            "name": "rejected",
+            "incoming": [
+              "SequenceFlow_0n1tphi"
+            ]
+          }
+        ]
+      },
+      "attributes": [
+
+      ]
+    }
+  ]
+}

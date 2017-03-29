@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+    <bpmn:process id="jkdrsg" isExecutable="false">
+        <bpmn:startEvent id="start" name="start">
+            <bpmn:outgoing>startToAndSplit</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:endEvent id="end" name="end">
+            <bpmn:incoming>andJoinToEnd</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:task id="A" name="A">
+            <bpmn:incoming>andSplitToA</bpmn:incoming>
+            <bpmn:outgoing>AToAndJoin</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:parallelGateway id="andSplit" name="andSplit">
+            <bpmn:incoming>startToAndSplit</bpmn:incoming>
+            <bpmn:outgoing>andSplitToA</bpmn:outgoing>
+            <bpmn:outgoing>andSplitToXorSplit</bpmn:outgoing>
+        </bpmn:parallelGateway>
+        <bpmn:sequenceFlow id="startToAndSplit" sourceRef="start" targetRef="andSplit" />
+        <bpmn:sequenceFlow id="andSplitToA" sourceRef="andSplit" targetRef="A" />
+        <bpmn:exclusiveGateway id="xorSplit" name="xorSplit">
+            <bpmn:incoming>andSplitToXorSplit</bpmn:incoming>
+            <bpmn:outgoing>xorSplitToB</bpmn:outgoing>
+            <bpmn:outgoing>xorSplitToC</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:sequenceFlow id="andSplitToXorSplit" sourceRef="andSplit" targetRef="xorSplit" />
+        <bpmn:task id="B" name="B">
+            <bpmn:incoming>xorSplitToB</bpmn:incoming>
+            <bpmn:outgoing>BToXorJoin</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:sequenceFlow id="xorSplitToB" sourceRef="xorSplit" targetRef="B" />
+        <bpmn:task id="C" name="C">
+            <bpmn:incoming>xorSplitToC</bpmn:incoming>
+            <bpmn:outgoing>CToXorJoin</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:sequenceFlow id="xorSplitToC" sourceRef="xorSplit" targetRef="C" />
+        <bpmn:exclusiveGateway id="xorJoin" name="xorJoin">
+            <bpmn:incoming>BToXorJoin</bpmn:incoming>
+            <bpmn:incoming>CToXorJoin</bpmn:incoming>
+            <bpmn:outgoing>xorJoinToAndJoin</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:sequenceFlow id="BToXorJoin" sourceRef="B" targetRef="xorJoin" />
+        <bpmn:sequenceFlow id="CToXorJoin" sourceRef="C" targetRef="xorJoin" />
+        <bpmn:parallelGateway id="andJoin" name="andJoin">
+            <bpmn:incoming>xorJoinToAndJoin</bpmn:incoming>
+            <bpmn:incoming>AToAndJoin</bpmn:incoming>
+            <bpmn:outgoing>andJoinToEnd</bpmn:outgoing>
+        </bpmn:parallelGateway>
+        <bpmn:sequenceFlow id="xorJoinToAndJoin" sourceRef="xorJoin" targetRef="andJoin" />
+        <bpmn:sequenceFlow id="AToAndJoin" sourceRef="A" targetRef="andJoin" />
+        <bpmn:sequenceFlow id="andJoinToEnd" sourceRef="andJoin" targetRef="end" />
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="jkdrsg">
+            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start">
+                <dc:Bounds x="342" y="173" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="315" y="209" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="EndEvent_0cah2hq_di" bpmnElement="end">
+                <dc:Bounds x="972" y="100" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="945" y="136" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Task_1qn7ylo_di" bpmnElement="A">
+                <dc:Bounds x="540" y="78" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="ParallelGateway_047ol44_di" bpmnElement="andSplit">
+                <dc:Bounds x="431" y="166" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="378" y="211" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="SequenceFlow_0gqmd7j_di" bpmnElement="startToAndSplit">
+                <di:waypoint xsi:type="dc:Point" x="378" y="191" />
+                <di:waypoint xsi:type="dc:Point" x="431" y="191" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="359.5" y="181" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="SequenceFlow_1u1fj7a_di" bpmnElement="andSplitToA">
+                <di:waypoint xsi:type="dc:Point" x="456" y="166" />
+                <di:waypoint xsi:type="dc:Point" x="456" y="118" />
+                <di:waypoint xsi:type="dc:Point" x="540" y="118" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="411" y="126.5" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="ExclusiveGateway_04mft4w_di" bpmnElement="xorSplit" isMarkerVisible="true">
+                <dc:Bounds x="565" y="272" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="545" y="322" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="SequenceFlow_1lf611k_di" bpmnElement="andSplitToXorSplit">
+                <di:waypoint xsi:type="dc:Point" x="456" y="216" />
+                <di:waypoint xsi:type="dc:Point" x="456" y="297" />
+                <di:waypoint xsi:type="dc:Point" x="565" y="297" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="411" y="233" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="Task_10cx6i5_di" bpmnElement="B">
+                <dc:Bounds x="704" y="151" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="SequenceFlow_1bantq2_di" bpmnElement="xorSplitToB">
+                <di:waypoint xsi:type="dc:Point" x="590" y="272" />
+                <di:waypoint xsi:type="dc:Point" x="590" y="191" />
+                <di:waypoint xsi:type="dc:Point" x="704" y="191" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="545" y="221.5" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="Task_0oaym2n_di" bpmnElement="C">
+                <dc:Bounds x="704" y="257" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="SequenceFlow_0l774r5_di" bpmnElement="xorSplitToC">
+                <di:waypoint xsi:type="dc:Point" x="615" y="297" />
+                <di:waypoint xsi:type="dc:Point" x="704" y="297" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="614.5" y="287" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="ExclusiveGateway_1dxb7rh_di" bpmnElement="xorJoin" isMarkerVisible="true">
+                <dc:Bounds x="868" y="166" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="899" y="181" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="SequenceFlow_170tv15_di" bpmnElement="BToXorJoin">
+                <di:waypoint xsi:type="dc:Point" x="804" y="191" />
+                <di:waypoint xsi:type="dc:Point" x="868" y="191" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="791" y="181" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="SequenceFlow_0xon9h3_di" bpmnElement="CToXorJoin">
+                <di:waypoint xsi:type="dc:Point" x="804" y="297" />
+                <di:waypoint xsi:type="dc:Point" x="893" y="297" />
+                <di:waypoint xsi:type="dc:Point" x="893" y="216" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="803.5" y="287" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="ParallelGateway_16em2o5_di" bpmnElement="andJoin">
+                <dc:Bounds x="868" y="93" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="848" y="65" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="SequenceFlow_0kt31gu_di" bpmnElement="xorJoinToAndJoin">
+                <di:waypoint xsi:type="dc:Point" x="893" y="166" />
+                <di:waypoint xsi:type="dc:Point" x="893" y="143" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="848" y="144.5" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="SequenceFlow_0s4g28s_di" bpmnElement="AToAndJoin">
+                <di:waypoint xsi:type="dc:Point" x="640" y="118" />
+                <di:waypoint xsi:type="dc:Point" x="868" y="118" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="709" y="108" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="SequenceFlow_1t7y7fk_di" bpmnElement="andJoinToEnd">
+                <di:waypoint xsi:type="dc:Point" x="918" y="118" />
+                <di:waypoint xsi:type="dc:Point" x="972" y="118" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="848" y="72" width="90" height="20" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

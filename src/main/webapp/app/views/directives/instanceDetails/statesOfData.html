@@ -1,0 +1,27 @@
+<div class="col-lg-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Processing Status
+        </div>
+        <div class="panel-body">
+            <div class="pull-left">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>State</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="dataobject in instanceCtrl.instanceDetails.dataobjects['results']">
+                        <td>{{dataobject['id']}}</td>
+                        <td>{{dataobject['label']}}</td>
+                        <td>{{dataobject['state']}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

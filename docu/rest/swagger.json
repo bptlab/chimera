@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "0.1",
+        "version": "1.2",
         "title": "Chimera API"
     },
     "host": "localhost:8080",
@@ -18,7 +18,7 @@
     "paths": {
         "/scenario": {
             "get": {
-                "description": "This method allows to give an overview of all current scenarios.",
+                "description": "This method gives an overview of all current scenarios.",
                 "operationId": "getScenarios_",
                 "produces": [
                     "application/json"
@@ -27,7 +27,7 @@
                     {
                         "name": "filter",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "x-is-map": false,
                         "type": "string",
                         "description": "Specifies a search. Only scenarios which\n                     name contain the specified string will be\n                     returned."
@@ -60,8 +60,20 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": "(empty response)"
+                    "201": {
+                        "description": "Successfully created scenario."
+                    },
+                    "400": {
+                        "description": "Invalid fragment XML.",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorArray"
+                        }
+                    },
+                    "422": {
+                        "description": "Failed to process the scenario.",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorArray"
+                        }
                     }
                 }
             }
@@ -92,7 +104,10 @@
                         }
                     },
                     "404": {
-                        "description": "There is no scenario with the given id."
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -112,12 +127,12 @@
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "The ID of the scenario, its mail tasks will be returned."
+                        "description": "The ID of the scenario"
                     },
                     {
                         "name": "filter",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "x-is-map": false,
                         "type": "string",
                         "description": "A Filter String, only mail tasks with a label containing\n                     this filter String will be returned."
@@ -131,7 +146,10 @@
                         }
                     },
                     "404": {
-                        "description": "there is no scenario with the given id."
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -171,7 +189,10 @@
                         }
                     },
                     "404": {
-                        "description": "There is no emailtask in the scenario with the given ids."
+                        "description": "There is no emailtask in the scenario with the given ids.",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             }
@@ -196,7 +217,7 @@
                     {
                         "name": "filter",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "x-is-map": false,
                         "type": "string",
                         "description": "Specifies a search. Only scenarios which\n                     name contain the specified string will be\n                     returned."
@@ -210,12 +231,15 @@
                         }
                     },
                     "404": {
-                        "description": "There is no scenario with the given id."
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             },
             "put": {
-                "description": "Creates a new instance of a specified scenario.",
+                "description": "Creates a new instance of a specified scenario. The name of the instance can be specified in the request.",
                 "operationId": "Update_startNewNamedInstance_",
                 "produces": [
                     "application/json"
@@ -237,18 +261,27 @@
                         "x-is-map": false,
                         "description": "The name, which will be used for the new instance.",
                         "schema": {
-                            "$ref": "#/definitions/RestInterface-NamedJaxBean"
+                            "$ref": "#/definitions/NamedJaxBean"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "success"
+                    "201": {
+                        "description": "successfully created the instance.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioRef"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             },
             "post": {
-                "description": "Creates a new instance of a specified scenario.",
+                "description": "Creates a new instance of a specified scenario. The instance will have the same name as the scenario.",
                 "operationId": "Create_startNewInstance_",
                 "produces": [
                     "application/json"
@@ -266,10 +299,16 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "successfully created the instance."
+                        "description": "successfully created the instance.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioRef"
+                        }
                     },
-                    "400": {
-                        "description": "Bad Request."
+                    "404": {
+                        "description": "The scenario wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -303,13 +342,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Detailed information about the instance."
+                        "description": "Detailed information about the instance.",
+                        "schema": {
+                            "$ref": "#/definitions/ScenarioInstance"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
-            },
-            "put": {
-                "description": "This post can be used to terminate an existing scenario instance.",
-                "operationId": "Update_terminateScenarioInstance_",
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/events": {
+            "get": {
+                "description": "This method provides a list of registered events for the instance.",
+                "operationId": "getEvents_",
                 "produces": [
                     "application/json"
                 ],
@@ -321,7 +371,7 @@
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "The Id of the scenario."
+                        "description": "The ID of the scenario."
                     },
                     {
                         "name": "instanceID",
@@ -330,12 +380,121 @@
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "The Id of the instance to be terminated."
+                        "description": "The ID of the instance."
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "List of events for the scenario instance.",
+                        "schema": {
+                            "$ref": "#/definitions/EventList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/canTerminate": {
+            "get": {
+                "description": "This determines whether a given scenario instance can terminate.",
+                "operationId": "checkTermination_",
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Instance can be deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Termination condition is not fulfilled",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/terminate": {
+            "post": {
+                "description": "This method is used to terminate a scenario instance.",
+                "operationId": "Create_terminateScenarioInstance_",
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The ID of the instance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Instance has been terminated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Termination condition is not fulfilled",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -369,7 +528,7 @@
                     {
                         "name": "filter",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "x-is-map": false,
                         "type": "string",
                         "description": "Defines a search strings. Only activities\n                     with a label containing this String will be\n                     shown."
@@ -377,7 +536,7 @@
                     {
                         "name": "state",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "x-is-map": false,
                         "type": "string",
                         "description": "The state of the instance."
@@ -385,12 +544,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "A list with all activity instances for the scenario instance.",
+                        "schema": {
+                            "$ref": "#/definitions/Activities"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario or instance wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
         },
-        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}": {
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityID}": {
             "get": {
                 "description": "This method is used to get all the information for an activity.",
                 "operationId": "getActivity_",
@@ -428,7 +596,16 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "Information about the activity instance.",
+                        "schema": {
+                            "$ref": "#/definitions/Activity"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             },
@@ -473,28 +650,36 @@
                         "x-is-map": false,
                         "description": "data input.",
                         "schema": {
-                            "$ref": "#/definitions/RestInterface-DataAttributeUpdateJaxBean"
+                            "$ref": "#/definitions/Input"
                         }
                     }
                 ],
                 "responses": {
                     "202": {
-                        "description": "Input was accepted.",
+                        "description": "Successfully updated attribute.",
                         "schema": {
                             "$ref": "#/definitions/Message"
                         }
                     },
                     "400": {
-                        "description": "Bad Request.",
+                        "description": "Couldn't update the attributes.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
                     }
                 }
-            },
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/begin": {
             "post": {
                 "description": "Updates the state of an activity instance.",
-                "operationId": "updateActivityState_",
+                "operationId": "Create_beginActivity_",
                 "produces": [
                     "application/json"
                 ],
@@ -515,45 +700,43 @@
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "the id of an scenario instance."
+                        "description": "The id of an scenario instance."
                     },
                     {
-                        "name": "activityID",
+                        "name": "activityInstanceId",
                         "in": "path",
                         "required": true,
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "the control node id of the activity."
+                        "description": "The id of the activity instance."
                     },
                     {
-                        "name": "state",
-                        "in": "query",
+                        "name": "postBody",
+                        "in": "body",
                         "required": true,
                         "x-is-map": false,
-                        "type": "string",
-                        "description": "the new state of the activity."
-                    },
-                    {
-                        "name": "outputset",
-                        "in": "query",
-                        "required": true,
-                        "x-is-map": false,
-                        "default": -1,
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "the outputset of the activity."
+                        "description": "Information about the dataobjects for the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/postBody"
+                        }
                     }
                 ],
                 "responses": {
                     "202": {
-                        "description": "Input was accepted.",
+                        "description": "Successfully started the activity.",
                         "schema": {
                             "$ref": "#/definitions/Message"
                         }
                     },
                     "400": {
-                        "description": "Bad Request.",
+                        "description": "Couldn't start the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -561,7 +744,75 @@
                 }
             }
         },
-        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/input": {
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceId}/terminate": {
+            "post": {
+                "description": "Updates the state of an activity instance.",
+                "operationId": "Create_terminateActivity_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of a scenario model."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of an scenario instance."
+                    },
+                    {
+                        "name": "activityInstanceId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The id of the activity instance."
+                    },
+                    {
+                        "name": "postBody",
+                        "in": "body",
+                        "required": true,
+                        "x-is-map": false,
+                        "description": "Information about the dataobjects for the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/postBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successfully terminated the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Couldn't terminate the activity.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario / instance / activity wasn't found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstace/{activityInstanceID}/input": {
             "get": {
                 "description": "This method responds to a GET request by returning an array of inputSets.",
                 "operationId": "getInputDataObjects_",
@@ -588,7 +839,7 @@
                         "description": "The databaseID of the scenarioInstance belonging to the\n                              aforementioned scenario."
                     },
                     {
-                        "name": "activityID",
+                        "name": "activityInstanceID",
                         "in": "path",
                         "required": true,
                         "x-is-map": false,
@@ -599,15 +850,76 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "An array with information about the inputs of the activity",
+                        "schema": {
+                            "$ref": "#/definitions/IOList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario/scenarioInstance/activityInstance was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
         },
-        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/output": {
+        "/scenario/{scenarioID}/instance/{instanceID}/activityInstace/{activityInstanceID}/output": {
             "get": {
                 "description": "This method responds to a GET request by returning an array of outputSets.",
                 "operationId": "getOutputDataObjects_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenario."
+                    },
+                    {
+                        "name": "instanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the scenarioInstance belonging to the\n                              aforementioned scenario."
+                    },
+                    {
+                        "name": "activityInstanceID",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "The databaseID of the activityInstance belonging to this\n                              scenarioInstance."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array with information about the outputs of the activity",
+                        "schema": {
+                            "$ref": "#/definitions/IOList"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario/scenarioInstance/activityInstance was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/availableInput": {
+            "get": {
+                "description": "This method provides a list of available inputs.",
+                "operationId": "getAvailableInput_",
                 "produces": [
                     "application/json"
                 ],
@@ -637,20 +949,23 @@
                         "x-is-map": false,
                         "type": "integer",
                         "format": "int64",
-                        "description": "The databaseID of the activityInstance belonging to this\n                              scenarioInstance."
+                        "description": "The databaseID of the activity in this\n                              scenarioInstance."
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "success"
+                    "202": {
+                        "description": "An array with the available inputs",
+                        "schema": {
+                            "$ref": "#/definitions/DataSetList"
+                        }
                     }
                 }
             }
         },
-        "/scenario/{scenarioID}/instance/{instanceID}/activity/{activityID}/references": {
+        "/scenario/{scenarioID}/instance/{instanceID}/activityinstance/{activityInstanceId}/workingItems": {
             "get": {
-                "description": "This method implements the REST call for retrieving.",
-                "operationId": "getReferencesForActivity_",
+                "description": "This method provides a list of working items for an activity instance.",
+                "operationId": "getWorkingItems_",
                 "produces": [
                     "application/json"
                 ],
@@ -674,7 +989,7 @@
                         "description": "The databaseID of a scenarioInstance."
                     },
                     {
-                        "name": "activityID",
+                        "name": "activityInstanceId",
                         "in": "path",
                         "required": true,
                         "x-is-map": false,
@@ -684,8 +999,17 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "success"
+                    "202": {
+                        "description": "A list of working items",
+                        "schema": {
+                            "$ref": "#/definitions/WorkingItems"
+                        }
+                    },
+                    "404": {
+                        "description": "The scenario/scenarioInstance/activityInstance was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -719,7 +1043,7 @@
                     {
                         "name": "filter",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "x-is-map": false,
                         "type": "string",
                         "description": "A String which specifies a filter. Only Data\n                     Objects with a label containing this string\n                     will be returned."
@@ -732,21 +1056,11 @@
                             "$ref": "#/definitions/DataObjectList"
                         }
                     },
-                    "303": {
-                        "description": "The instance was found for a different scenario id.",
-                        "schema": {
-                            "description": "Correct URI",
-                            "format": "string"
-                        }
-                    },
                     "404": {
-                        "description": "There is no scenario / instance / data object for the given ids.",
+                        "description": "There is no scenario / instance for the given ids.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
-                    },
-                    "500": {
-                        "description": "Wrong scenario id - couldn't create correct URI for redirection"
                     }
                 }
             }
@@ -794,21 +1108,11 @@
                             "$ref": "#/definitions/DataObjectJaxBean"
                         }
                     },
-                    "303": {
-                        "description": "The instance was found for a different scenario id.",
-                        "schema": {
-                            "description": "Correct URI",
-                            "format": "string"
-                        }
-                    },
                     "404": {
                         "description": "There is no scenario / instance / data object for the given ids.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
-                    },
-                    "500": {
-                        "description": "Wrong scenario id - couldn't create correct URI for redirection"
                     }
                 }
             }
@@ -851,14 +1155,23 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "List of dataObjectInstances for the inputSet",
+                        "schema": {
+                            "$ref": "#/definitions/DataSetList"
+                        }
+                    },
+                    "404": {
+                        "description": "the scenario/scenarioInstance/inputSet can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
         },
         "/scenario/{scenarioID}/instance/{instanceID}/outputset/{outputsetID}": {
             "get": {
-                "description": "This method responds to a GET request\n by returning an array of dataObjectsInstances with their dataAttributeInstances\n belonging to an outputSet.",
+                "description": "This method responds to a GET request by returning an array of dataObjectsInstances with their dataAttributeInstances belonging to an outputSet.",
                 "operationId": "getOutputDataObjectsAndAttributes_",
                 "produces": [
                     "application/json"
@@ -894,13 +1207,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "success",
+                        "description": "List of dataObjectInstances for the outputSet",
                         "schema": {
-                            "$ref": "#/definitions/OutputsetList"
+                            "$ref": "#/definitions/DataSetList"
                         }
                     },
                     "404": {
-                        "description": "Not found.",
+                        "description": "the scenario/scenarioInstance/outputSet can't be found",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -934,7 +1247,44 @@
                         }
                     },
                     "404": {
-                        "description": "There is no scenario with the given id."
+                        "description": "the scenario can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/scenario/{scenarioId}/xml": {
+            "get": {
+                "description": "This method provides information about the termination condition.",
+                "operationId": "getFragmentXmlStrings_",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "scenarioId",
+                        "in": "path",
+                        "required": true,
+                        "x-is-map": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "This id specifies the scenario. The id is the\n                   primary key inside the database."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The scenario's fragments as XML.",
+                        "schema": {
+                            "$ref": "#/definitions/FragmentsXML"
+                        }
+                    },
+                    "404": {
+                        "description": "the scenario can't be found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -959,35 +1309,25 @@
         }
     },
     "definitions": {
-        "RestInterface-NamedJaxBean": {
-            "title": "RestInterface-NamedJaxBean",
+        "NamedJaxBean": {
+            "title": "NamedJaxBean",
             "type": "object",
             "properties": {
                 "name": {
                     "description": "The name which should be assigned to the entity.",
                     "type": "string"
                 }
-            },
-            "required": [
-                "name"
-            ]
+            }
         },
-        "RestInterface-DataAttributeUpdateJaxBean": {
-            "title": "RestInterface-DataAttributeUpdateJaxBean",
+        "Input": {
             "type": "object",
+            "description": "New values for the DataAttributes",
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "value": {
-                    "type": "string"
+                "(DataAttribute)": {
+                    "type": "string",
+                    "description": "new value for the specific DataAttribute"
                 }
-            },
-            "required": [
-                "id",
-                "value"
-            ]
+            }
         },
         "ScenarioList": {
             "type": "object",
@@ -1072,6 +1412,32 @@
                 }
             }
         },
+        "ScenarioInstance": {
+            "type": "object",
+            "properties": {
+                "activities": {
+                    "type": "string",
+                    "description": "URI to retrieve activities in the scenarioInstance."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the scenarioInstance."
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The ID of the scenarioInstance."
+                },
+                "terminated": {
+                    "type": "boolean"
+                },
+                "scenario_id": {
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The modelId of the scenario."
+                }
+            }
+        },
         "EmailtaskList": {
             "type": "object",
             "properties": {
@@ -1114,65 +1480,42 @@
                     }
                 },
                 "labels": {
-                    "type": "array",
-                    "description": "Labels of all known scenario instances.",
-                    "items": {
-                        "$ref": "#/definitions/InstanceLabel"
-                    }
+                    "$ref": "#/definitions/InstanceLabel"
                 },
                 "links": {
-                    "type": "array",
-                    "description": "References to all known scenario instances.",
-                    "items": {
-                        "$ref": "#/definitions/InstanceRef"
-                    }
+                    "$ref": "#/definitions/InstanceRef"
                 }
             }
         },
         "InstanceLabel": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "ID of the instance."
-                },
-                "label": {
+                "(id)": {
                     "type": "string",
-                    "description": "Label of the instance."
+                    "description": "Instance id with the respective label."
                 }
             }
         },
         "InstanceRef": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "ID of the scenario instance."
-                },
-                "link": {
+                "(id)": {
                     "type": "string",
-                    "description": "URI of the scenario instance."
+                    "description": "Instance id with the respective URL."
                 }
             }
         },
-        "TerinationCondition": {
+        "TerminationCondition": {
             "type": "object",
             "properties": {
                 "conditions": {
-                    "type": "array",
-                    "description": "The termination conditions for the scenario.",
-                    "items": {
-                        "$ref": "#/definitions/TerminationConditionList"
-                    }
+                    "$ref": "#/definitions/TerminationConditionList"
                 },
                 "setIDs": {
                     "type": "array",
                     "description": "IDs of the termination conditions.",
                     "items": {
-                        "type": "number",
-                        "format": "integer"
+                        "type": "string"
                     }
                 }
             }
@@ -1180,10 +1523,18 @@
         "TerminationConditionList": {
             "type": "object",
             "properties": {
-                "state": {
-                    "type": "string",
-                    "description": "State required for termination."
-                },
+                "(id)": {
+                    "type": "array",
+                    "description": "State required for termination.",
+                    "items": {
+                        "$ref": "#/definitions/TerminationConditionEntry"
+                    }
+                }
+            }
+        },
+        "TerminationConditionEntry": {
+            "type": "object",
+            "properties": {
                 "data_object": {
                     "type": "string",
                     "description": "Name of the associated data object."
@@ -1192,6 +1543,21 @@
                     "type": "number",
                     "format": "integer",
                     "description": "ID of the termination condition set."
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "FragmentsXML": {
+            "type": "object",
+            "properties": {
+                "xml": {
+                    "type": "array",
+                    "description": "List of all fragments as XML",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -1257,7 +1623,7 @@
         "DataObjectEntry": {
             "type": "object",
             "properties": {
-                "id": {
+                "(id)": {
                     "type": "array",
                     "description": "the name of this attribute is the actual ID of the data object (note that swagger cant do this).",
                     "items": {
@@ -1288,189 +1654,49 @@
                 }
             }
         },
-        "TerminationCondition": {
-            "type": "object",
-            "properties": {
-                "dataobjectname": {
-                    "type": "string",
-                    "description": "For each DataObject involved in this TerminationCondition, add a\nKey/Value-Pair where the Key is the name of the DataObject and the\nValue is the name of the state. \n"
-                }
+        "IOList": {
+            "type": "array",
+            "description": "Information about all IOObjects.",
+            "items": {
+                "$ref": "#/definitions/IOEntry"
             }
         },
-        "Fragment": {
+        "IOEntry": {
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "The fragments name."
-                },
-                "_id": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The fragments unique identifier."
-                },
-                "content": {
-                    "type": "string",
-                    "format": "integer",
-                    "description": "The BPMN-XML used to describe the content."
-                },
-                "revision": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The fragments revision. Gets increased everytime the fragment is updated."
-                }
-            }
-        },
-        "FragmentStructureObject": {
-            "type": "object"
-        },
-        "DomainModel": {
-            "type": "object",
-            "required": [
-                "name",
-                "dataclasses"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "The name of the domain model."
-                },
-                "_id": {
-                    "type": "number",
-                    "format": "long",
-                    "description": "The unique identifier of the domain model."
-                },
-                "revision": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The domain models revision. Gets increased everytime the domain model is updated."
-                },
-                "dataclasses": {
+                "(id)": {
                     "type": "array",
-                    "description": "The data classes belonging to the domain model.",
+                    "description": "the name of this attribute is the actual ID of the IO object (swagger cant do this).",
                     "items": {
-                        "$ref": "#/definitions/DataClass"
-                    }
-                },
-                "aggregations": {
-                    "type": "array",
-                    "description": "The aggregation relationships between the data classes of this domain model.",
-                    "items": {
-                        "$ref": "#/definitions/Aggregation"
+                        "$ref": "#/definitions/IOObject"
                     }
                 }
             }
         },
-        "DataClass": {
+        "IOObject": {
             "type": "object",
             "properties": {
-                "name": {
+                "(id)": {
                     "type": "string",
-                    "description": "The name of the data class."
+                    "description": "Name of the dataclass."
                 },
-                "_id": {
-                    "type": "number",
-                    "format": "long",
-                    "description": "The unique identifier the data class."
-                },
-                "is_event": {
-                    "type": "boolean",
-                    "description": "Describes whether the data class represents event data."
-                },
-                "attributes": {
+                "states": {
                     "type": "array",
-                    "description": "The attributes of the data class.",
                     "items": {
-                        "$ref": "#/definitions/DataClassAttribute"
-                    }
+                        "type": "string"
+                    },
+                    "description": "Possible States"
                 }
             }
         },
-        "DataClassAttribute": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "The name of the attribute."
-                },
-                "datatype": {
-                    "type": "string",
-                    "description": "The datatype of the attribute."
-                }
+        "EventList": {
+            "type": "array",
+            "description": "List of events.",
+            "items": {
+                "type": "string"
             }
         },
-        "ValidationReport": {
-            "type": "object",
-            "properties": {
-                "scenario": {
-                    "$ref": "#/definitions/ScenarioList"
-                },
-                "correct": {
-                    "type": "boolean",
-                    "description": "True if no errors were found. Otherwise false."
-                },
-                "errors": {
-                    "type": "array",
-                    "description": "All errors found.",
-                    "items": {
-                        "$ref": "#/definitions/ValidationError"
-                    }
-                }
-            }
-        },
-        "ValidationError": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "description": "The message for this error. This should be displayed to the user."
-                },
-                "type": {
-                    "type": "string",
-                    "description": "The type of the error."
-                },
-                "level": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The level of the error (1 Error, 2 Warning, 3 Notice)."
-                }
-            }
-        },
-        "FragmentList": {
-            "type": "object",
-            "properties": {
-                "content_length": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The number of fragments found."
-                },
-                "scenarios": {
-                    "type": "array",
-                    "description": "All fragments found.",
-                    "items": {
-                        "$ref": "#/definitions/Fragment"
-                    }
-                }
-            }
-        },
-        "DomainModelList": {
-            "type": "object",
-            "properties": {
-                "content_length": {
-                    "type": "number",
-                    "format": "integer",
-                    "description": "The number of domain models found."
-                },
-                "scenarios": {
-                    "type": "array",
-                    "description": "All models found.",
-                    "items": {
-                        "$ref": "#/definitions/DomainModel"
-                    }
-                }
-            }
-        },
-        "OutputsetList": {
+        "DataSetList": {
             "type": "array",
             "description": "All data objects found.",
             "items": {
@@ -1501,11 +1727,130 @@
                 "state": {
                     "type": "string",
                     "description": "The state of the data object."
+                }
+            }
+        },
+        "Activities": {
+            "type": "object",
+            "properties": {
+                "activities": {
+                    "$ref": "#/definitions/ActivityList"
                 },
-                "setId": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "description": "List of all activity ids"
+                }
+            }
+        },
+        "ActivityList": {
+            "type": "object",
+            "description": "Details for all activites",
+            "properties": {
+                "(id)": {
+                    "type": "object",
+                    "properties": {
+                        "activityid": {
+                            "type": "number",
+                            "format": "integer"
+                        },
+                        "link": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "number",
+                            "format": "integer"
+                        },
+                        "label": {
+                            "type": "string"
+                        },
+                        "state": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "Activity": {
+            "type": "object",
+            "description": "Details for an activity",
+            "properties": {
+                "id": {
                     "type": "number",
-                    "format": "integer",
-                    "description": "The setId of the dataobject."
+                    "format": "integer"
+                },
+                "inputSetLink": {
+                    "type": "string"
+                },
+                "outputSetLink": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Name of the activity (if existant)"
+                }
+            }
+        },
+        "WorkingItems": {
+            "type": "array",
+            "description": "List of working items",
+            "items": {
+                "$ref": "#/definitions/WorkingItem"
+            }
+        },
+        "WorkingItem": {
+            "type": "object",
+            "description": "Details for a working item",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "attributeConfiguration": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttributeConfiguration"
+                    }
+                }
+            }
+        },
+        "AttributeConfiguration": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number",
+                    "format": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "postBody": {
+            "type": "object",
+            "description": "Information about data objects.",
+            "properties": {
+                "dataobjects": {
+                    "type": "array",
+                    "description": "ids of the data objects",
+                    "items": {
+                        "type": "number",
+                        "format": "integer"
+                    }
                 }
             }
         },
@@ -1515,6 +1860,26 @@
                 "error": {
                     "type": "string",
                     "description": "Description of the error."
+                }
+            }
+        },
+        "ErrorArray": {
+            "type": "array",
+            "description": "List of errors",
+            "items": {
+                "$ref": "#/definitions/ErrorObject"
+            }
+        },
+        "ErrorObject": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "Description of the error."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Level of the error"
                 }
             }
         },
