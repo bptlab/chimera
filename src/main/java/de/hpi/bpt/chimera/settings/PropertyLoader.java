@@ -2,7 +2,6 @@ package de.hpi.bpt.chimera.settings;
 
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -14,13 +13,10 @@ public final class PropertyLoader {
 
 
 	public static final String PROPERTIES_FILE = "config.properties";
-	public static final String PROPERTIES_FOLDER = "resources";
 	private static final Logger log = Logger.getLogger(PropertyLoader.class);
 	private static Properties props = new Properties();
 
 	static {
-		String path = PROPERTIES_FOLDER + File.separator + PROPERTIES_FILE;
-		// TODO do this with path
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try (InputStream is = classLoader.getResourceAsStream(PROPERTIES_FILE)) {
 			props.load(is);
@@ -28,8 +24,6 @@ public final class PropertyLoader {
 			log.error("Property file not found! - " + e.getMessage(), e);
 		}
 	}
-
-	;
 
 	private PropertyLoader() {
 	}
