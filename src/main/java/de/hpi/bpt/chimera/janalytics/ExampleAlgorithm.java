@@ -24,7 +24,7 @@ public class ExampleAlgorithm implements AnalyticsService {
 	 * @return a JSONObject containing the scenarioID and the mean Instance-Runtime
 	 */ public JSONObject calculateResult(String[] args) {
 		// calculate MeanScenarioInstanceRunTime
-		int scenarioId = new Integer(args[0]);
+		int scenarioId = Integer.parseInt(args[0]);
 		long avgDuration = 0L;
 		long sumDuration = 0L;
 		int numberOfScenarioInstances = 0;
@@ -92,9 +92,9 @@ public class ExampleAlgorithm implements AnalyticsService {
 		 */
 		public long getDuration() {
 			if (endDate == null || startDate == null) {
-				return (-1);
+				return -1;
 			}
-			return (endDate.getTime() - startDate.getTime());
+			return endDate.getTime() - startDate.getTime();
 		}
 
 		/**
