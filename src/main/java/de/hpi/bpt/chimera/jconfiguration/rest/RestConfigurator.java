@@ -93,7 +93,7 @@ public class RestConfigurator {
 		EmailConfigJaxBean mailConfig = new EmailConfigJaxBean();
 		mailConfig.setReceiver(mail.getReceiverEmailAddress(mailTaskID));
 		if (!scenario.existScenario(scenarioID) || mailConfig.getReceiver().equals("")) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{}").build();
+			return Response.status(Response.Status.BAD_GATEWAY).type(MediaType.APPLICATION_JSON).entity("{}").build();
 		}
 		mailConfig.setMessage(mail.getMessage(mailTaskID));
 		mailConfig.setSubject(mail.getSubject(mailTaskID));

@@ -10,6 +10,7 @@ angular.module('jfrontend')
             this.emailtaskIDs = [];
             this.scenarioIDs = [];
             this.detailsForID = [];
+            
 
             //requesting initially all available scenarios
             $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/").success(function (data) {
@@ -41,6 +42,8 @@ angular.module('jfrontend')
 
             // Got all emailtasks with the given Id
             this.getAllMailtaskForScenarioID = function (id) {
+            	//save the given scenario ID to later identify the scenario 
+            	this.currentScenarioID=id;
                 $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").success(function (data) {
                     controller.emailtaskIDs = data['ids'];
                     //if the emailtaskIDs array is not empty, prefetch the first item details
@@ -53,8 +56,9 @@ angular.module('jfrontend')
             };
             // Got to the instance with the given Id
             this.getDetailsForMailtaskID = function (id) {
+            	//use the previously stored currentScenarioID and the emailtask ID to get the Mailtask Details
                 $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface +
-                    "/scenario/1/emailtask/" + id + "/?").success(function (data) {
+                    "/scenario/" + this.currentScenarioID +"/emailtask/" + id + "/?").success(function (data) {
                     // we are storing the data duplicated for faster access, once in the detailsForID array
                     controller.detailsForID = data;
                     // again in the form so the user can edit them directly
