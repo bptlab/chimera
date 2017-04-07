@@ -31,7 +31,7 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	}
 
 	@Override
-	public void begin() {
+	public void execute() {
 		this.setValues();
 		this.sendMail();
 	}
@@ -64,6 +64,7 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	 * Sends an e mail.
 	 */
 	private void sendMail() {
+		log.info("trying to send a mail");
 		Email email = new SimpleEmail();
 		email.setHostName(serverAddress);
 		email.setSmtpPort(port);
