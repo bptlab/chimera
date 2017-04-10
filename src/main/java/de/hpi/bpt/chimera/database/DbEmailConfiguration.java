@@ -64,7 +64,7 @@ public class DbEmailConfiguration extends DbObject {
 			return this.executeUpdateStatement(sql);
 		} else {
 			// TODO save a correct sendmailaddress
-			String sql = "INSERT INTO emailconfiguration (message, sendmailaddress, subject, receivermailaddress, controlnode_id) VALUES (" + "'" + message + "', 'TODO', '" + subject + "', '" + receiver + "', " + id + ")";
+			String sql = "INSERT INTO emailconfiguration (message, sendmailaddress, subject, receivermailaddress, controlnode_id) VALUES (" + "'" + message + "', 'TODO@TODO', '" + subject + "', '" + receiver + "', " + id + ")";
 			return this.executeInsertStatement(sql);
 		}
 	}

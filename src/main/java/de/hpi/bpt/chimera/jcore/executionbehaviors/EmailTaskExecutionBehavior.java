@@ -6,6 +6,9 @@ import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
+import de.hpi.bpt.chimera.settings.PropertyLoader;
+
+import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -18,10 +21,11 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	private static Logger log = Logger.getLogger(EmailTaskExecutionBehavior.class);
 	private final int controlNodeId;
 	private final DbEmailConfiguration emailConfiguration = new DbEmailConfiguration();
-	private final int port = 587;
-	private final String serverAddress = "exchange.framsteg.org";
+	private String hostName;
+	private int port;
 	private String receiverMail;
 	private String sendMail;
+	private String password;
 	private String subject;
 	private String message;
 
@@ -37,11 +41,16 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	}
 
 	/**
-	 * Sets the attributes for the e mail reading the information from database.
+	 * Sets the attributes for the e mail reading the information from
+	 * properties and database.
 	 */
 	private void setValues() {
+		hostName = PropertyLoader.getProperty("mailtask.hostname");
+		port = Integer.valueOf(PropertyLoader.getProperty("mailtask.port"));
+		sendMail = PropertyLoader.getProperty("mailtask.mail.username");
+		password = PropertyLoader.getProperty("mailtask.mail.password");
+
 		receiverMail = emailConfiguration.getReceiverEmailAddress(controlNodeId);
-		sendMail = emailConfiguration.getSendEmailAddress(controlNodeId);
 		subject = emailConfiguration.getSubject(controlNodeId);
 		message = emailConfiguration.getMessage(controlNodeId);
 		this.setDataAttributes();
@@ -64,11 +73,11 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 	 * Sends an e mail.
 	 */
 	private void sendMail() {
-		log.info("trying to send a mail");
 		Email email = new SimpleEmail();
-		email.setHostName(serverAddress);
+		email.setHostName(hostName);
 		email.setSmtpPort(port);
-		email.setAuthentication("bp2014w01@framsteg.org", "UjB9T8kAS8H9g4YC1f8U");
+		email.setAuthenticator(new DefaultAuthenticator(sendMail, password));
+		email.setSSLOnConnect(true);
 		try {
 			email.setFrom(sendMail);
 			email.setSubject(subject);
@@ -76,7 +85,7 @@ public class EmailTaskExecutionBehavior extends ActivityExecutionBehavior {
 			email.addTo(receiverMail);
 			email.send();
 		} catch (EmailException e) {
-			log.error("Error by sending e-Mail:", e);
+			log.error("Error by sending e-Mail - wrong e-Mail properties or wrong config.properties:", e);
 		}
 	}
 }
