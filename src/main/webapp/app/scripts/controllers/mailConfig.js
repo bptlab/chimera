@@ -42,6 +42,10 @@ angular.module('jfrontend')
 
             // Got all emailtasks with the given Id
             this.getAllMailtaskForScenarioID = function (id) {
+				//if no scenario selected do nothing
+				if(id==null){
+					return;
+				}
             	//save the given scenario ID to later identify the scenario 
             	this.currentScenarioID=id;
                 $http.get(JEngine_Server_URL + "/" + JConfig_REST_Interface + "/scenario/" + id + "/emailtask/").success(function (data) {
