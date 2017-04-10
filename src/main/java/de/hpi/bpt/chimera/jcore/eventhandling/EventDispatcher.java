@@ -13,7 +13,8 @@ import de.hpi.bpt.chimera.jcore.controlnodes.EventFactory;
 import de.hpi.bpt.chimera.jcore.controlnodes.TimerEventInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.executionbehaviors.TimeEventJob;
-import de.hpi.bpt.chimera.settings.PropertyLoader;
+import de.hpi.bpt.chimera.util.PropertyLoader;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;

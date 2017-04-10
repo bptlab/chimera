@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
-import de.hpi.bpt.chimera.settings.PropertyLoader;
+import de.hpi.bpt.chimera.util.PropertyLoader;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -1,6 +1,6 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.settings.PropertyLoader;
+import de.hpi.bpt.chimera.util.PropertyLoader;
 import de.hpi.bpt.chimera.util.ScriptRunner;
 import org.apache.log4j.Logger;
 

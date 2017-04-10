@@ -5,7 +5,8 @@ import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.settings.PropertyLoader;
+import de.hpi.bpt.chimera.util.PropertyLoader;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

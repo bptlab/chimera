@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.settings;
+package de.hpi.bpt.chimera.util;
 
 import org.apache.log4j.Logger;
 

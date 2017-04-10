@@ -1,7 +1,9 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
 import com.google.gson.Gson;
-import de.hpi.bpt.chimera.settings.PropertyLoader;
+
+import de.hpi.bpt.chimera.util.PropertyLoader;
+
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
 
