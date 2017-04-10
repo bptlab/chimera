@@ -21,9 +21,10 @@ public class ExecutionTest {
     //private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
     @Test
     public void testDeletion() throws IOException, SQLException {
-        String insertScenarios = "INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelversion`, `datamodelversion`) VALUES " +
+		// TODO test how already deleted scenarios are deleted
+		String insertScenarios = "INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelversion`, `datamodelversion`) VALUES " +
                 "(4, 'Testszenario', 0, 0, 0), " +
-                "(5, 'Testszenario', 1, 0, 0), " +
+				"(5, 'Testszenario', 0, 0, 0), " +
                 "(6, 'Testszenario', 0, 0, 0);";
         String insertScenarioInstances ="INSERT INTO `scenarioinstance` (`id`, `terminated`, `scenario_id`) VALUES " +
                 "(1, 1, 4), " +
@@ -39,7 +40,7 @@ public class ExecutionTest {
         Scenario sc5 = ScenarioFactory.createScenarioFromDatabase(5);
         Scenario sc6 = ScenarioFactory.createScenarioFromDatabase(6);
         sc4.delete();
-        sc5.delete();
+		sc5.delete();
         sc6.delete();
         DbObject dbObject = new DbObject();
         String select = "SELECT deleted FROM scenario WHERE id = 4";
@@ -50,7 +51,7 @@ public class ExecutionTest {
         Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());
         select = "SELECT deleted FROM scenario WHERE id = 6";
         deleted = dbObject.executeStatementReturnsListInt(select, "deleted");
-        Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());
+		Assert.assertEquals("Scenario not deleted", 1, deleted.get(0).intValue());
     }
 
 }
