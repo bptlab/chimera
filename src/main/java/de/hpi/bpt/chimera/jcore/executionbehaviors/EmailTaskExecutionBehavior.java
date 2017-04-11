@@ -1,18 +1,18 @@
 package de.hpi.bpt.chimera.jcore.executionbehaviors;
 
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.database.DbEmailConfiguration;
 import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.settings.PropertyLoader;
-
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
-import org.apache.log4j.Logger;
+import de.hpi.bpt.chimera.util.PropertyLoader;
 
 /**
  * Class defining the execution behavior of an Email Task.
