@@ -13,7 +13,9 @@ public class SendTask extends AbstractDataControlNode {
 	@Override
 	public int save() {
 		Connector connector = new Connector();
-		this.databaseId = connector.insertControlNode(this.getName(), "SendTask", this.getFragmentId(), this.getId());
+		// given SendTasks are saved as EmailTasks which then can be configured
+		// using the Admin Mailconfiguration tool of the Chimera frontend
+		this.databaseId = connector.insertControlNode(this.getName(), "EmailTask", this.getFragmentId(), this.getId());
 
 		return this.databaseId;
 	}

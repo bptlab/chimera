@@ -3,6 +3,7 @@
 .classpath
 .project
 .settings
+.checkstyle
 *.class
 *.iml
 resources/database_connection
@@ -11,3 +12,4 @@ target/*
 /target/
 src/main/resources/
 config.properties
+config_template.properties

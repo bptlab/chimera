@@ -155,8 +155,8 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	  ((ActivityExecutionBehavior) this.getExecutionBehavior()).begin(selectedDataObjectIds);
 		this.setState(State.RUNNING);
 		if (this.isAutomaticTask()) {
-      this.terminate();
-    }
+			this.terminate();
+		}
 	}
 
 	/**

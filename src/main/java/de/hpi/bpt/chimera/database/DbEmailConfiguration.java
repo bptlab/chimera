@@ -59,8 +59,14 @@ public class DbEmailConfiguration extends DbObject {
 	 * @return the integer status code of the operation
 	 */
 	public int setEmailConfiguration(int id, String receiver, String subject, String message) {
-		String sql = "UPDATE emailconfiguration SET message = '" + message + "', subject  = '" + subject + "', receivermailaddress = '" + receiver + "'WHERE controlnode_id = " + id;
-		return this.executeUpdateStatement(sql);
+		if (this.executeExistStatement("SELECT * FROM emailconfiguration WHERE controlnode_id =" + id)) {
+			String sql = "UPDATE emailconfiguration SET message = '" + message + "', subject  = '" + subject + "', receivermailaddress = '" + receiver + "'WHERE controlnode_id = " + id;
+			return this.executeUpdateStatement(sql);
+		} else {
+			// TODO save a correct sendmailaddress
+			String sql = "INSERT INTO emailconfiguration (message, sendmailaddress, subject, receivermailaddress, controlnode_id) VALUES (" + "'" + message + "', 'TODO@TODO', '" + subject + "', '" + receiver + "', " + id + ")";
+			return this.executeInsertStatement(sql);
+		}
 	}
 
 	/**
