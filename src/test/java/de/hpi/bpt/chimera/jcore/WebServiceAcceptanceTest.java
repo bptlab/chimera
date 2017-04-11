@@ -25,12 +25,17 @@ import static org.junit.Assert.assertEquals;
  * This class extends JerseyTest, because it's need the Rest Interface to check the Webservice Task functions.
  * The GET, PUT and POST Requests are send to the Rest Interface.
  */
+/*
+ * In addition the test checks whether an Webservice Task with multiple data
+ * objects runs automatically. The Webservice Task should execute without the
+ * users decision which data object shall be used by the Webservice Task.
+ */
 public class WebServiceAcceptanceTest  {
 
     String json;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8089);
+	public WireMockRule wireMockRule = new WireMockRule(8089);
 
     @After
     public void resetDatabase() throws IOException, SQLException {
@@ -91,7 +96,7 @@ public class WebServiceAcceptanceTest  {
     }
 
     private void assertDataAttributeInstanceHasValue(Collection<DataAttributeInstance> dataAttributes) {
-        long amountOfDataAttributesWithValues = dataAttributes.stream().filter(x -> "foo".equals(x.getValue())).count();
+		long amountOfDataAttributesWithValues = dataAttributes.stream().filter(x -> "foo".equals(x.getValue())).count();
         assertEquals(1L, amountOfDataAttributesWithValues);
     }
 }

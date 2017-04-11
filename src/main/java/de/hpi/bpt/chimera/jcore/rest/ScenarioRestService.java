@@ -141,14 +141,16 @@ public class ScenarioRestService extends AbstractRestService {
    */
   @DELETE
   @Path("scenario/{scenarioId}/")
-  public Response deleteScenario(@PathParam("scenarioId") Integer scenarioId) throws Exception {
-    Scenario scenario = ScenarioFactory.createScenarioFromDatabase(scenarioId);
-    if (scenario.exists()) {
-      scenario.delete();
-      return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "scenario deletion successful.\"}").build();
-    } else {
-      return this.buildNotFoundResponse(String.format("Scenario with Id %s does not exist.", scenarioId));
-    }
+	public Response deleteScenario(@PathParam("scenarioId") int scenarioId) {
+		Scenario scenario = ScenarioFactory.createScenarioFromDatabase(scenarioId);
+		if (scenario.exists()) {
+			scenario.delete();
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "scenario deletion successful.\"}").build();
+		} else {
+			// This is never called because a filter takes care of non existent
+			// scenarios
+			return this.buildNotFoundResponse(String.format("Id %s does not exist.", scenarioId));
+		}
   }
 
 
