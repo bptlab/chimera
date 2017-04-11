@@ -30,7 +30,7 @@ public class WebServiceAcceptanceTest  {
     String json;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8089);
+	public WireMockRule wireMockRule = new WireMockRule(8089);
 
     @After
     public void resetDatabase() throws IOException, SQLException {
@@ -91,7 +91,7 @@ public class WebServiceAcceptanceTest  {
     }
 
     private void assertDataAttributeInstanceHasValue(Collection<DataAttributeInstance> dataAttributes) {
-        long amountOfDataAttributesWithValues = dataAttributes.stream().filter(x -> "foo".equals(x.getValue())).count();
+		long amountOfDataAttributesWithValues = dataAttributes.stream().filter(x -> "attr1".equals(x.getValue())).count();
         assertEquals(1L, amountOfDataAttributesWithValues);
     }
 }

@@ -15,6 +15,7 @@ public class ScenarioFactory {
     if (dbScenario.existScenario(id)) {
       return new Scenario(id, dbScenario.getScenarioName(id));
     } else {
+			// TODO replace with Null Object
       return null;
     }
   }
