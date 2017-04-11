@@ -2,8 +2,7 @@ package de.hpi.bpt.chimera;
 
 //import com.ibatis.common.jdbc.ScriptRunner;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
-import de.hpi.bpt.chimera.settings.PropertyLoader;
-
+import de.hpi.bpt.chimera.util.PropertyLoader;
 import de.hpi.bpt.chimera.util.ScriptRunner;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;
