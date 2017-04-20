@@ -31,6 +31,7 @@ public final class ConnectionWrapper {
 	private String username;
 	private String password;
 	private String url;
+	private String testUrl;
 
 	/**
 	 * Builds a connection for the database with the credentials taken from the
@@ -56,12 +57,16 @@ public final class ConnectionWrapper {
 	 * @return the open connection.
 	 */
 	public java.sql.Connection connect() {
+		return connect(false);
+	}
+	public java.sql.Connection connect(boolean useTestDatabase) {
 		java.sql.Connection conn = null;
 		try {
 			// Register JDBC driver
 			Class.forName(JDBC_DRIVER);
-			// Open a connection
-			conn = DriverManager.getConnection(url, username, password);
+			// Open a connection to productive or test database depending on parameter
+			String urlToUse = useTestDatabase ? testUrl : url;
+			conn = DriverManager.getConnection(urlToUse, username, password);
 		} catch (ClassNotFoundException | SQLException e) {
 			// Handle errors for Class.forName
 			log.error("MySQL Connection Error:", e);
@@ -166,5 +171,6 @@ public final class ConnectionWrapper {
 		username = PropertyLoader.getProperty("mysql.username");
 		password = PropertyLoader.getProperty("mysql.password");
 		url = PropertyLoader.getProperty("mysql.url");
+		testUrl = PropertyLoader.getProperty("mysql.test.url");
 	}
 }
