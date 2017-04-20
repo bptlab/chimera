@@ -32,7 +32,7 @@ public class ExecutionTest {
                 "(3, 1, 5), " +
                 "(4, 1, 6), " +
                 "(5, 1, 6);";
-        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(true), false, false);
         runner.runScript(new StringReader(insertScenarios));
         runner.runScript(new StringReader(insertScenarioInstances));
         

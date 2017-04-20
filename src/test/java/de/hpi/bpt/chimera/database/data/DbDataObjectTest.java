@@ -48,7 +48,7 @@ public class DbDataObjectTest {
         dataObject.createDataObject(1, 1, 1, 1);
         // Since it is the first data object the id is 1
         String sql = "SELECT * From dataobject WHERE id = 1;";
-        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
+        java.sql.Connection con = ConnectionWrapper.getInstance().connect(true);
         try (Statement stat = con.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             if (rs.next()) {

@@ -25,12 +25,12 @@ public class AbstractDatabaseDependentTest {
     /**
      * TODO: The same database is used for testing and running (cf. CM-429 in Jira)
      */
-    private static final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.schema");
+    private static final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.test.schema");
 
     @AfterClass
     public static void resetDatabase() throws IOException, SQLException {
         clearDatabase();
-        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(true), false, false);
         runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
     }
 
@@ -43,7 +43,7 @@ public class AbstractDatabaseDependentTest {
     @Before
     public void setUpDatabase() throws IOException, SQLException {
         clearDatabase();
-        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
+        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(true), false, false);
         runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
         runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
     }
@@ -53,7 +53,7 @@ public class AbstractDatabaseDependentTest {
      */
     protected static void clearDatabase() {
       // connect() uses the url of the normal db, not the test db
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+        java.sql.Connection conn = ConnectionWrapper.getInstance().connect(true);
         Statement stmt = null;
         if (conn == null) {
             return;
