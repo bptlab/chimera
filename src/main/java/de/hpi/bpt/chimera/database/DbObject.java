@@ -19,15 +19,7 @@ public class DbObject {
 
 	private static final String SQL_ERROR = "SQL Error: ";
 	protected static Logger log = Logger.getLogger(DbObject.class);
-    private final boolean testing;
-	
-    public DbObject() {
-		this(false);
-	}
-	public DbObject(boolean testing) {
-		this.testing = testing;
-	}
-	
+
 	/**
 	 * Performs a sql insert statement.
 	 * This method contains an basic error handling. Resources will be closed.
@@ -37,7 +29,7 @@ public class DbObject {
 	 */
 	protected int performSQLInsertStatementWithAutoId(final String statement) {
 		int result = -1;
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			stmt.executeUpdate(statement, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
@@ -58,8 +50,7 @@ public class DbObject {
 	 */
 	public List<Integer> executeStatementReturnsListInt(String sql, String columnLabel) {
 		List<Integer> results = new ArrayList<>();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing);
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				results.add(rs.getInt(columnLabel));
@@ -80,8 +71,7 @@ public class DbObject {
 	 */
 	public List<String> executeStatementReturnsListString(String sql, String columnLabel) {
 		List<String> results = new ArrayList<>();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing);
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				results.add(rs.getString(columnLabel));
@@ -102,8 +92,7 @@ public class DbObject {
 	 */
 	public String executeStatementReturnsString(String sql, String columnLabel) {
 		String results = "";
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing);
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				results = rs.getString(columnLabel);
@@ -124,8 +113,7 @@ public class DbObject {
 	 */
 	public int executeStatementReturnsInt(String sql, String columnLabel) {
 		int result = -1;
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing);
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				result = rs.getInt(columnLabel);
@@ -146,8 +134,7 @@ public class DbObject {
 	 */
 	public Object executeStatementReturnsObject(String sql, String columnLabel) {
 		Object result = new Object();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing);
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				result = rs.getObject(columnLabel);
@@ -168,8 +155,7 @@ public class DbObject {
 	 */
 	public boolean executeStatementReturnsBoolean(String sql, String columnLabel) {
 		Boolean result = false;
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				result = rs.getBoolean(columnLabel);
@@ -189,8 +175,7 @@ public class DbObject {
 	 */
 	public boolean executeExistStatement(String sql) {
 		boolean result = false;
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			result = rs.next();
 			rs.close();
@@ -208,8 +193,7 @@ public class DbObject {
 	 */
 	public int executeInsertStatement(String sql) {
 		int result = -1;
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
@@ -230,8 +214,7 @@ public class DbObject {
 	 */
 	public int executeUpdateStatement(String sql) {
 		int rowId = 0;
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			rowId = stmt.executeUpdate(sql);
 		} catch (SQLException se) {
 			log.error(SQL_ERROR, se);
@@ -250,8 +233,8 @@ public class DbObject {
 	 */
 	public Map<Integer, String> executeStatementReturnsMap(String sql, String key, String value) {
 		Map<Integer, String> result = new HashMap<>();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
+
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				result.put(rs.getInt(key), rs.getString(value));
@@ -274,8 +257,7 @@ public class DbObject {
 	 */
 	protected Map<Integer, Integer> executeStatementReturnsMapIntInt(String sql, String key, String value) {
 		Map<Integer, Integer> result = new HashMap<>();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -296,8 +278,7 @@ public class DbObject {
 	 */
 	public Map<Integer, Map<String, Object>> executeStatementReturnsMapWithMapWithKeys(String sql, String... keys) {
 		Map<Integer, Map<String, Object>> keysValues = new HashMap<>();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing); 
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				keysValues.put(rs.getInt("id"), new HashMap<>());
@@ -323,8 +304,7 @@ public class DbObject {
 	 */
 	protected Map<String, Object> executeStatementReturnsMapWithKeys(String sql, String... keys) {
 		Map<String, Object> keysValues = new HashMap<>();
-		try (Connection conn = ConnectionWrapper.getInstance().connect(testing);
-				Statement stmt = conn.createStatement()) {
+		try (Connection conn = ConnectionWrapper.getInstance().connect(); Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				for (String key : keys) {
