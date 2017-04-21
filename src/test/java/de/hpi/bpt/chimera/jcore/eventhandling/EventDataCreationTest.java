@@ -1,28 +1,27 @@
 package de.hpi.bpt.chimera.jcore.eventhandling;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.data.DataObject;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.data.DataObject;
 
 /**
  *
  */
-public class EventDataCreationTest extends JerseyTest {
+public class EventDataCreationTest extends AbstractTest {
     WebTarget base;
 
 
@@ -31,17 +30,10 @@ public class EventDataCreationTest extends JerseyTest {
         base = target("eventdispatcher");
     }
 
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
     @Override
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class);
     }
-
 
     @Test
     public void testCreateDataObject() throws IOException {

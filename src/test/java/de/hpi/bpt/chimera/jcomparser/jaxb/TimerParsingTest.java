@@ -1,34 +1,29 @@
 package de.hpi.bpt.chimera.jcomparser.jaxb;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Test;
-import org.w3c.dom.Document;
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+import org.w3c.dom.Document;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.DbObject;
+import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
 
 /**
  *
  */
-public class TimerParsingTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
+public class TimerParsingTest extends AbstractDatabaseDependentTest {
+    
     private String timerDefinition = "<bpmn:intermediateCatchEvent id=\"IntermediateCatchEvent_11vnoe1\">" +
             "    <bpmn:incoming>SequenceFlow_1t3sfei</bpmn:incoming>" +
             "    <bpmn:outgoing>SequenceFlow_14j6mwh</bpmn:outgoing>" +

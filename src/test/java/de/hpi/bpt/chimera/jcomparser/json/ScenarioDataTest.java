@@ -1,41 +1,41 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.FileUtils;
+import org.easymock.EasyMock;
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.jcomparser.jaxb.DataNode;
 import de.hpi.bpt.chimera.jcomparser.saving.Fragment;
 import de.hpi.bpt.chimera.jcore.MockProvider;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Test;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
-import static org.easymock.EasyMock.*;
 
 /**
  *
  */
-public class ScenarioDataTest {
-    private static final Logger LOGGER = Logger.getLogger(ScenarioDataTest.class);
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class ScenarioDataTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testSave() throws Exception {
         String path = "src/test/resources/Scenarios/IOSetScenario.json";
         String jsonString = FileUtils.readFileToString(new File(path));
         ScenarioData data = new ScenarioData(jsonString);
-        int scenarioId = data.save();
-
+        data.save();
     }
 
     @Test

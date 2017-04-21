@@ -1,22 +1,21 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DbScenarioTest {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+
+public class DbScenarioTest extends AbstractDatabaseDependentTest {
 
     private static DbScenario dbScenario;
     private static Connector connector;
@@ -25,19 +24,13 @@ public class DbScenarioTest {
     private static int scenario2;
 
     @BeforeClass
-    public static void clearAndInitialize() throws IOException, SQLException {
+    public static void initialize() {
         dbScenario = new DbScenario();
         connector = new Connector();
-        clearFragments();
-        insertTestData();
     }
 
-    @AfterClass
-    public static void clearFragments() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-    private static void insertTestData() {
+    @Before
+    public void insertTestData() {
         scenario1 = connector.insertScenario("scenario1", 1);
         scenario2 = connector.insertScenario("scenario2", 1);
     }

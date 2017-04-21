@@ -1,40 +1,37 @@
 package de.hpi.bpt.chimera.integration;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.rest.*;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
-import net.javacrumbs.jsonunit.core.Option;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Test;
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.io.File;
+import java.io.IOException;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 
-import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
+import de.hpi.bpt.chimera.jcore.rest.ActivityRestService;
+import de.hpi.bpt.chimera.jcore.rest.DataDependencyRestService;
+import de.hpi.bpt.chimera.jcore.rest.DataObjectRestService;
+import de.hpi.bpt.chimera.jcore.rest.ScenarioInstanceRestService;
+import de.hpi.bpt.chimera.jcore.rest.ScenarioRestService;
+import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import net.javacrumbs.jsonunit.core.Option;
 /**
  *
  */
-public class EndToEndTest extends JerseyTest {
-
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class EndToEndTest extends AbstractTest {
 
     @Override
     protected Application configure() {

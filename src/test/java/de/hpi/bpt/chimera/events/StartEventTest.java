@@ -1,29 +1,23 @@
 package de.hpi.bpt.chimera.events;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
+import java.io.IOException;
+import java.util.List;
 
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
-import de.hpi.bpt.chimera.jcore.controlnodes.StartEvent;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.StartEvent;
 
 /**
  *
  */
-public class StartEventTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class StartEventTest extends AbstractDatabaseDependentTest {
 
     @Test
 	public void testStartEventRegistration() {

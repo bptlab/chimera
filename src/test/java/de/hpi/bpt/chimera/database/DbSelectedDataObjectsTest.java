@@ -1,16 +1,18 @@
 package de.hpi.bpt.chimera.database;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 
 /**
  *
  */
-public class DbSelectedDataObjectsTest {
+public class DbSelectedDataObjectsTest extends AbstractDatabaseDependentTest{
 
     @Test
     public void testSaveDataObjectSeletion() {

@@ -1,39 +1,29 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
-import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.data.DbDataClass;
-import de.hpi.bpt.chimera.jcomparser.jaxb.DataNode;
-import org.easymock.EasyMock;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.easymock.PowerMock.verify;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.easymock.EasyMock;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.data.DbDataClass;
+import de.hpi.bpt.chimera.jcomparser.jaxb.DataNode;
+
 /**
  *
  */
-public class DataClassTest  {
-    private Document document = new DocumentImpl(null);
+public class DataClassTest  extends AbstractDatabaseDependentTest {
     private String rootDataClass;
     private String normalDataClass;
-
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
 
     @Before
     public void setupRootDataClass(){

@@ -1,43 +1,35 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 
 /**
  *
  */
-public class DbFragmentTest {
+public class DbFragmentTest extends AbstractDatabaseDependentTest {
 
     private static DbFragment dbFragment;
     private static Connector connector;
-
-    private static int fragment1;
-    private static int fragment2;
 
     @BeforeClass
     public static void clearAndInitialize() throws IOException, SQLException {
         dbFragment = new DbFragment();
         connector = new Connector();
-        clearFragments();
-        insertTestData();
     }
 
-    @AfterClass
-    public static void clearFragments() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-    private static void insertTestData() {
-        fragment1 = connector.insertFragment("fragment1", 1, 1);
-        fragment2 = connector.insertFragment("fragment2", 1, 1);
+    @Before
+    public void insertTestData() {
+        int fragment1 = connector.insertFragment("fragment1", 1, 1);
+        int fragment2 = connector.insertFragment("fragment2", 1, 1);
         connector.insertFragmentXml(fragment1, "<xml 1>");
         connector.insertFragmentXml(fragment2, "<xml 2>");
     }

@@ -1,36 +1,26 @@
 package de.hpi.bpt.chimera.jconfiguration.rest;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.AbstractTest;
-import de.hpi.bpt.chimera.database.ConnectionWrapper;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.jcore.rest.RestInterface;
-import de.hpi.bpt.chimera.util.ScriptRunner;
-import net.javacrumbs.jsonunit.core.Option;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
 
-import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.database.ConnectionWrapper;
+import de.hpi.bpt.chimera.util.ScriptRunner;
 
 
-public class ScenarioConfigurationTest extends JerseyTest {
+public class ScenarioConfigurationTest extends AbstractTest {
     WebTarget base;
 
     @Override
@@ -48,11 +38,6 @@ public class ScenarioConfigurationTest extends JerseyTest {
 		ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
 		runner.runScript(new StringReader(insertScenarios));
 		runner.runScript(new StringReader(insertScenarioInstances));
-    }
-
-    @After
-    public void teardown() throws IOException, SQLException {
-		AbstractDatabaseDependentTest.resetDatabase();
     }
 
     /**
