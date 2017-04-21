@@ -32,6 +32,7 @@ public final class ConnectionWrapper {
 	private String password;
 	private String url;
 	private String testUrl;
+	private boolean testMode;
 
 	/**
 	 * Builds a connection for the database with the credentials taken from the
@@ -52,26 +53,35 @@ public final class ConnectionWrapper {
 	}
 
 	/**
-	 * Connects to the database and return the {@link java.sql.Connection} object.
+	 * Connects to either the production database (property {@literal mysql.schema})
+	 * or test database (property {@literal mysql.test.schema}) depending on the value
+	 * of the field {@value testMode}.
+	 * It returns the {@link java.sql.Connection} object.
 	 *
 	 * @return the open connection.
 	 */
 	public java.sql.Connection connect() {
-		return connect(false);
-	}
-	public java.sql.Connection connect(boolean useTestDatabase) {
 		java.sql.Connection conn = null;
 		try {
 			// Register JDBC driver
 			Class.forName(JDBC_DRIVER);
 			// Open a connection to productive or test database depending on parameter
-			String urlToUse = useTestDatabase ? testUrl : url;
+			String urlToUse = testMode ? testUrl : url;
 			conn = DriverManager.getConnection(urlToUse, username, password);
 		} catch (ClassNotFoundException | SQLException e) {
 			// Handle errors for Class.forName
 			log.error("MySQL Connection Error:", e);
 		}
 		return conn;
+	}
+
+	/**
+	 * Sets the mode of the ConnectionWrapper, which can be either true or false.
+	 * If it is true, the connection is established with the test database.
+	 * @param useTestDatabase
+	 */
+	public void setTestMode(boolean useTestDatabase) {
+		testMode = useTestDatabase;
 	}
 
 	/**
