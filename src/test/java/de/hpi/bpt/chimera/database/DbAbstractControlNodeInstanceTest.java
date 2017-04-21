@@ -1,33 +1,29 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jcore.MockProvider;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ControlNodeFactory;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.*;
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.ControlNodeFactory;
 
 /**
  *
  */
-public class DbAbstractControlNodeInstanceTest {
+public class DbAbstractControlNodeInstanceTest extends AbstractDatabaseDependentTest {
     int controlNodeId = 1;
     int fragmentInstanceId  = 1;
 
 
     @Before
-    public void setup() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
+    public void setup() {
         ExampleValueInserter exampleValueInserter = new ExampleValueInserter();
         exampleValueInserter.insertControlNode("mock", "Activity", 1, "modelId");
         ScenarioInstance scenarioInstance = EasyMock.createNiceMock(ScenarioInstance.class);

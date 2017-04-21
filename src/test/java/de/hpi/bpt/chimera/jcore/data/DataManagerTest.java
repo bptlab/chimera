@@ -1,33 +1,29 @@
 package de.hpi.bpt.chimera.jcore.data;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.ExampleValueInserter;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Test;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.easymock.EasyMock;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.ExampleValueInserter;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 
 /**
  *
  */
-public class DataManagerTest {
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class DataManagerTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testLoadDataObjects() {

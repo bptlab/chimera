@@ -1,29 +1,20 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 
 
-public class DbControlFlowTest {
+public class DbControlFlowTest extends AbstractDatabaseDependentTest {
     private final int STARTEVENT_ID = 1;
     private final int FIRST_FOLLOWING = 2;
     private final int SECOND_FOLLOWING = 3;
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
 
     @Test
     public void testGetFollowingControlNodes(){

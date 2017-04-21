@@ -1,28 +1,27 @@
 package de.hpi.bpt.chimera.jcore.controlnodes;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
 import de.hpi.bpt.chimera.database.data.DbState;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
-public class ReceiveActivityTest extends JerseyTest {
+public class ReceiveActivityTest extends AbstractTest {
     WebTarget base;
 
     @Override
@@ -32,16 +31,8 @@ public class ReceiveActivityTest extends JerseyTest {
 
     @Before
     public void setUpBase() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
         base = target("eventdispatcher");
     }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
 
     /**
      * The tested scenario is a linear sequence of the activities "before event" and "receive event"

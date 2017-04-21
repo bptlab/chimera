@@ -22,7 +22,7 @@ import de.hpi.bpt.chimera.util.ScriptRunner;
 public abstract class AbstractTest extends JerseyTest {
 
 	// TODO: actually this file is never used, rather the subclasses overwrite it
-	protected static String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
+	protected static String TEST_SQL_SEED_FILE = null;
     private final String SCHEMA_FILE = "src/main/resources/" + PropertyLoader.getProperty("database.schema.file");
     private final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.test.schema");
 
@@ -50,7 +50,8 @@ public abstract class AbstractTest extends JerseyTest {
             stmt.execute("USE " + TEST_DB_SCHEMA);
             ScriptRunner runner = new ScriptRunner(conn, false, false);
             runner.runScript(new FileReader(SCHEMA_FILE));
-            runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+            if (TEST_SQL_SEED_FILE != null) 
+            	runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
         } catch (SQLException | IOException se) {
             // TODO: log errors
             se.printStackTrace();

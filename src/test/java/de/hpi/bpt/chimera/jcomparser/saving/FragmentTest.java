@@ -1,28 +1,25 @@
 package de.hpi.bpt.chimera.jcomparser.saving;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcomparser.jaxb.AbstractDataControlNode;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.jcomparser.jaxb.AbstractDataControlNode;
 
 /**
  *
  */
-public class FragmentTest {
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class FragmentTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testGetAllActivities() throws JAXBException, IOException {

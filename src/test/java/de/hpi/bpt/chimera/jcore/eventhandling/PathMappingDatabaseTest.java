@@ -1,33 +1,31 @@
 package de.hpi.bpt.chimera.jcore.eventhandling;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbPathMapping;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.database.data.DbDataAttributeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static junit.framework.TestCase.assertTrue;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.fail;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.database.DbPathMapping;
+import de.hpi.bpt.chimera.database.data.DbDataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
 
 /**
  *
  */
-public class PathMappingDatabaseTest extends JerseyTest {
+public class PathMappingDatabaseTest extends AbstractTest {
 
     WebTarget base;
 
@@ -39,11 +37,6 @@ public class PathMappingDatabaseTest extends JerseyTest {
     @Before
     public void setUpBase() {
         base = target("eventdispatcher");
-    }
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test

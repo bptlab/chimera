@@ -1,21 +1,22 @@
 package de.hpi.bpt.chimera.database;
 
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.controlnodes.DbGatewayInstance;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import de.hpi.bpt.chimera.jcore.controlnodes.GatewayType;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import static org.junit.Assert.assertEquals;
-
-public class DbGatewayInstanceTest {
+public class DbGatewayInstanceTest extends AbstractDatabaseDependentTest {
 
     private static DbGatewayInstance dbGatewayInstance;
     private static Connector connector;
@@ -24,19 +25,12 @@ public class DbGatewayInstanceTest {
     public static void clearAndInitialize() throws IOException, SQLException {
         dbGatewayInstance = new DbGatewayInstance();
         connector = new Connector();
-        clearGatewayInstances();
-        insertTestData();
     }
 
-    @AfterClass
-    public static void clearGatewayInstances() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-    private static void insertTestData() {
+    @Before
+    public void insertTestData() {
         connector.insertGatewayInstance(1, GatewayType.AND.name(), State.INIT.name());
         connector.insertGatewayInstance(2, GatewayType.XOR.name(), State.INIT.name());
-
     }
 
     @Test

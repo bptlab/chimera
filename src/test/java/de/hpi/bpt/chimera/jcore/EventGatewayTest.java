@@ -1,36 +1,30 @@
 package de.hpi.bpt.chimera.jcore;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 /**
  *
  */
-public class EventGatewayTest extends JerseyTest {
+public class EventGatewayTest extends AbstractTest {
     WebTarget base;
 
     @Override
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class);
-    }
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Before

@@ -1,18 +1,18 @@
 package de.hpi.bpt.chimera.database;
 
+import static org.junit.Assert.assertEquals;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.data.DbDataAttributeInstance;
 import de.hpi.bpt.chimera.jcomparser.json.DataAttribute;
 import de.hpi.bpt.chimera.jcomparser.json.DataClass;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class DbDataAttributeTest {
+public class DbDataAttributeTest extends AbstractDatabaseDependentTest {
     private String dataclassString;
 
     @Before

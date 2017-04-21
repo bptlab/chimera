@@ -24,12 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class DbDataObjectTest {
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class DbDataObjectTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testSetState() {
@@ -48,7 +43,7 @@ public class DbDataObjectTest {
         dataObject.createDataObject(1, 1, 1, 1);
         // Since it is the first data object the id is 1
         String sql = "SELECT * From dataobject WHERE id = 1;";
-        java.sql.Connection con = ConnectionWrapper.getInstance().connect(true);
+        java.sql.Connection con = ConnectionWrapper.getInstance().connect();
         try (Statement stat = con.createStatement();
              ResultSet rs = stat.executeQuery(sql)) {
             if (rs.next()) {

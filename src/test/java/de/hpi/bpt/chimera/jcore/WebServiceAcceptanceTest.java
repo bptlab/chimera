@@ -1,46 +1,40 @@
 package de.hpi.bpt.chimera.jcore;
 
-//import com.ibatis.common.jdbc.ScriptRunner;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-
-import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
-import de.hpi.bpt.chimera.jcore.data.DataManager;
-import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collection;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataManager;
 
 /**
- * This class extends JerseyTest, because it's need the Rest Interface to check the Webservice Task functions.
- * The GET, PUT and POST Requests are send to the Rest Interface.
- */
-/*
  * In addition the test checks whether an Webservice Task with multiple data
  * objects runs automatically. The Webservice Task should execute without the
  * users decision which data object shall be used by the Webservice Task.
  */
-public class WebServiceAcceptanceTest  {
+public class WebServiceAcceptanceTest extends AbstractDatabaseDependentTest {
 
     String json;
 
     @Rule
 	public WireMockRule wireMockRule = new WireMockRule(8089);
-
-    @After
-    public void resetDatabase() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
 
     @Before
     public void setUp() throws IOException {

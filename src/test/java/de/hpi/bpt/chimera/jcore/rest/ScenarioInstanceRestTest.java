@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
  * Test methods in the {@link ScenarioInstanceRestService} for status codes, return types
  * and correct answers. Affects database while doing this.
  */
-public class ScenarioInstanceRestTest extends JerseyTest {
+public class ScenarioInstanceRestTest extends AbstractTest {
 
     private WebTarget base;
     private int scenarioId;
@@ -51,12 +51,6 @@ public class ScenarioInstanceRestTest extends JerseyTest {
         scenarioInstanceId = dbScenarioInstance.createNewScenarioInstance(
                 scenarioId, scenarioName);
         base = target("interface/v2");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test

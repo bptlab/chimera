@@ -1,40 +1,28 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.AbstractTest;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.database.DbFragmentInstance;
-import de.hpi.bpt.chimera.database.DbScenarioInstance;
-import de.hpi.bpt.chimera.database.ExampleValueInserter;
-import de.hpi.bpt.chimera.database.controlnodes.DbActivityInstance;
-import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
-import de.hpi.bpt.chimera.database.data.DbDataObject;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
-import net.javacrumbs.jsonunit.core.Option;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
 
-import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
-import static org.junit.Assert.*;
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.database.data.DbDataObject;
+import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import net.javacrumbs.jsonunit.core.Option;
 
 /**
  *
  */
-public class DataDependencyRestServiceTest extends JerseyTest {
+public class DataDependencyRestServiceTest extends AbstractTest {
 
     private WebTarget base;
 
@@ -48,22 +36,9 @@ public class DataDependencyRestServiceTest extends JerseyTest {
     @Before
     public void setUpBaseAndInitialize() throws Exception {
         base = target("interface/v2");
-    }
-
-    static {
-        try {
-            AbstractDatabaseDependentTest.resetDatabase();
-            ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/DataRestServiceTest.json");
-            new DbDataObject().createDataObject(1, 1, 1, 1);
-            new DbDataObject().createDataObject(1, 1, 2, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @AfterClass
-    public static void clearDataDependecies() throws Exception {
-        AbstractDatabaseDependentTest.resetDatabase();
+        ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/DataRestServiceTest.json");
+        new DbDataObject().createDataObject(1, 1, 1, 1);
+        new DbDataObject().createDataObject(1, 1, 2, 1);
     }
 
     @Test

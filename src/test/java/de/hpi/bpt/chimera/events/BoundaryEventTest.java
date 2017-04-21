@@ -1,29 +1,24 @@
 package de.hpi.bpt.chimera.events;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
-import de.hpi.bpt.chimera.jcore.controlnodes.BoundaryEvent;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.BoundaryEvent;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 
 /**
  *
  */
-public class BoundaryEventTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class BoundaryEventTest extends AbstractDatabaseDependentTest {
 
     //
     @Test

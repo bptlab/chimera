@@ -1,23 +1,24 @@
 package de.hpi.bpt.chimera.database;
 
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 
 /**
  *
  */
-public class DbScenarioInstanceTest {
+public class DbScenarioInstanceTest extends AbstractDatabaseDependentTest {
 
     private int SCENARIO_ID;
     private int SCENARIO_INSTANCE_ID;
@@ -29,11 +30,6 @@ public class DbScenarioInstanceTest {
         DbScenarioInstance dbScenarioInstance = new DbScenarioInstance();
         SCENARIO_INSTANCE_ID = dbScenarioInstance.
                 createNewScenarioInstance(SCENARIO_ID);
-    }
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test

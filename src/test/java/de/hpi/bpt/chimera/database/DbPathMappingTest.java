@@ -1,48 +1,35 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
 
 /**
  *
  */
-public class DbPathMappingTest {
-
-    @After
-    public void dropDatabase() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class DbPathMappingTest extends AbstractDatabaseDependentTest {
 
     @Test
-    public void testMappingSaving() {
-        try {
-            ScenarioInstance instance = ScenarioTestHelper.createScenarioInstance(
-                    "src/test/resources/Scenarios/JsonPathWebserviceScenarioGet.json");
-            Map<Integer, String> expectedPathMap = buildExpectedPathMap();
-            DbPathMapping dbPathMapping = new DbPathMapping();
+    public void testMappingSaving() throws IOException {
+        ScenarioTestHelper.createScenarioInstance("src/test/resources/Scenarios/JsonPathWebserviceScenarioGet.json");
+        Map<Integer, String> expectedPathMap = buildExpectedPathMap();
+		DbPathMapping dbPathMapping = new DbPathMapping();
 
-            DbObject dbConn = new DbObject();
-            int serviceTaskNodeId = dbConn.executeStatementReturnsInt(
-                    String.format("SELECT * FROM controlnode WHERE modelid = '%s'",
-                            "ServiceTask_165z0yh"), "id");
+		DbObject dbConn = new DbObject();
+		int serviceTaskNodeId = dbConn.executeStatementReturnsInt(
+		        String.format("SELECT * FROM controlnode WHERE modelid = '%s'",
+		                "ServiceTask_165z0yh"), "id");
 
-            assertEquals("The jsonpath mapping has not been saved correctly.",
-                    expectedPathMap,
-                    dbPathMapping.getPathsForAttributesOfControlNode(serviceTaskNodeId));
-        } catch (IOException e) {
-            fail("File could not be read.");
-        }
+		assertEquals("The jsonpath mapping has not been saved correctly.",
+		        expectedPathMap,
+		        dbPathMapping.getPathsForAttributesOfControlNode(serviceTaskNodeId));
     }
 
     private Map<Integer, String> buildExpectedPathMap() {

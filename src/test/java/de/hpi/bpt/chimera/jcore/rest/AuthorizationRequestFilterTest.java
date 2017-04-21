@@ -1,26 +1,23 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbScenarioInstance;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
 
-public class AuthorizationRequestFilterTest extends JerseyTest {
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.database.DbScenarioInstance;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+
+public class AuthorizationRequestFilterTest extends AbstractTest {
 
     private WebTarget base;
     private static Connector connector;
@@ -29,16 +26,6 @@ public class AuthorizationRequestFilterTest extends JerseyTest {
     private static int instanceId;
     private static int fragmentId;
     private static int controlNodeId;
-
-    static {
-        connector = new Connector();
-        scenarioId = connector.insertScenario("scenario1", 1);
-        instanceId = new DbScenarioInstance().createNewScenarioInstance(scenarioId);
-        fragmentId = connector.insertFragment("fragment1", scenarioId, 1);
-        controlNodeId = connector.insertControlNode("activity", "Activity", fragmentId, "aModelId");
-
-    }
-
 
     @Override
     protected Application configure() {
@@ -50,13 +37,12 @@ public class AuthorizationRequestFilterTest extends JerseyTest {
     @Before
     public void setUpBaseAndInitialize() {
         base = target("interface/v2");
+        connector = new Connector();
+        scenarioId = connector.insertScenario("scenario1", 1);
+        instanceId = new DbScenarioInstance().createNewScenarioInstance(scenarioId);
+        fragmentId = connector.insertFragment("fragment1", scenarioId, 1);
+        controlNodeId = connector.insertControlNode("activity", "Activity", fragmentId, "aModelId");
     }
-
-    @AfterClass
-    public static void cleanUp() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
 
     @Test
     public void testInvalidScenarioIdGet() {
