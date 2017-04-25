@@ -50,8 +50,10 @@ public abstract class AbstractTest extends JerseyTest {
             stmt.execute("USE " + TEST_DB_SCHEMA);
             ScriptRunner runner = new ScriptRunner(conn, false, false);
             runner.runScript(new FileReader(SCHEMA_FILE));
-            if (TEST_SQL_SEED_FILE != null) 
+            if (TEST_SQL_SEED_FILE != null) {
+            	System.out.println("====>>>>> Importing stuff into DB: " + TEST_SQL_SEED_FILE);
             	runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+            }
         } catch (SQLException | IOException se) {
             // TODO: log errors
             se.printStackTrace();
