@@ -1,26 +1,20 @@
 package de.hpi.bpt.chimera.jcore;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import org.junit.After;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
 
 /**
  *
  */
-public class TerminationConditionTest {
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class TerminationConditionTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testTerminationCondition() throws IOException {

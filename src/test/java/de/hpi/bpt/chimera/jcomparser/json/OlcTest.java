@@ -35,6 +35,6 @@ public class OlcTest {
     public void testOlcValidation() throws JAXBException, IOException {
         File file = new File("src/test/resources/Scenarios/OLCTestScenario.json");
         String json = FileUtils.readFileToString(file);
-        ScenarioData scenarioData = new ScenarioData(json);
+        new ScenarioData(json);
     }
 }

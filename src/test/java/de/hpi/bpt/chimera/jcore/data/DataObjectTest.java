@@ -1,36 +1,36 @@
 package de.hpi.bpt.chimera.jcore.data;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.data.DbDataObject;
-import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.database.DbCaseStart;
-import de.hpi.bpt.chimera.jcomparser.json.StartQuery;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.database.DbCaseStart;
+import de.hpi.bpt.chimera.database.data.DbDataObject;
+import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
+import de.hpi.bpt.chimera.jcomparser.json.StartQuery;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 /**
  *
  */
-public class DataObjectTest extends JerseyTest {
+public class DataObjectTest extends AbstractTest {
 
     WebTarget base;
 
@@ -42,13 +42,6 @@ public class DataObjectTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class);
-    }
-
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Test

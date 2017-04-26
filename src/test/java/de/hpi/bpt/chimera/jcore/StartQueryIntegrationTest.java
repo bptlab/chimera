@@ -1,38 +1,37 @@
 package de.hpi.bpt.chimera.jcore;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbCaseStart;
-import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
-import de.hpi.bpt.chimera.jcomparser.json.StartQuery;
-import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
-import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.database.DbCaseStart;
+import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
+import de.hpi.bpt.chimera.jcomparser.json.StartQuery;
+import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataObject;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 /**
  *
  */
-public class StartQueryIntegrationTest extends JerseyTest {
+public class StartQueryIntegrationTest extends AbstractTest {
 
     WebTarget base;
 
@@ -41,17 +40,10 @@ public class StartQueryIntegrationTest extends JerseyTest {
         base = target("eventdispatcher");
     }
 
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
     @Override
     protected Application configure() {
         return new ResourceConfig(EventDispatcher.class);
     }
-
 
     @Test
     public void testStartQueries() throws IOException, JAXBException {

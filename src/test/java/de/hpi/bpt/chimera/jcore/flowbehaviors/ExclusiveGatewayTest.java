@@ -1,26 +1,21 @@
 package de.hpi.bpt.chimera.jcore.flowbehaviors;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.ScenarioTestHelper;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import org.junit.After;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  *
  */
-public class ExclusiveGatewayTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class ExclusiveGatewayTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testNestedXorGateways() throws IOException {

@@ -1,28 +1,28 @@
 package de.hpi.bpt.chimera.jhistory.rest;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.rest.RestInterface;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
-import net.javacrumbs.jsonunit.core.Option;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.io.IOException;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
-import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.database.history.DbLogEntry;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.rest.RestInterface;
+import net.javacrumbs.jsonunit.core.Option;
 
 
 /**
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
  * database will be set up before and after the execution.
  * Define the database Properties inside the database_connection file.
  */
-public class HistoryRestServiceTest extends JerseyTest {
+public class HistoryRestServiceTest extends AbstractTest {
 
     /**
      * The base url of the jcore rest interface.
@@ -45,12 +45,6 @@ public class HistoryRestServiceTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(HistoryRestService.class);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Before

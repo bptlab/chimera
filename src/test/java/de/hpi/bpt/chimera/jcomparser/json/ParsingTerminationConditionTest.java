@@ -1,29 +1,27 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.json.JSONArray;
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.data.DbTerminationCondition;
 import de.hpi.bpt.chimera.jcore.MockProvider;
-import org.json.JSONArray;
-import org.junit.After;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  *
  */
-public class ParsingTerminationConditionTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-    @Test
+public class ParsingTerminationConditionTest extends AbstractDatabaseDependentTest {
+    
+	@Test
     public void testTerminationConditionString() {
         String terminationConditionStrings = "[\"A[end], B[another]\", \"A[approved]\"]";
         JSONArray array = new JSONArray(terminationConditionStrings);

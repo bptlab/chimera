@@ -1,39 +1,34 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.DbCaseStart;
 import de.hpi.bpt.chimera.database.DbObject;
 import de.hpi.bpt.chimera.database.controlnodes.events.DbStartQuery;
-import de.hpi.bpt.chimera.jcore.eventhandling.StartQueryPart;
 import de.hpi.bpt.chimera.jcore.MockProvider;
-import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import de.hpi.bpt.chimera.jcore.eventhandling.StartQueryPart;
 
 /**
  *
  */
-public class StartQueryTest {
+public class StartQueryTest extends AbstractDatabaseDependentTest {
 
     JSONArray startQueriesArray;
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
 
     @Before
     public void setup() throws IOException {

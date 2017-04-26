@@ -1,27 +1,20 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbObject;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.DbObject;
 
 /**
  *
  */
-public class DomainModelTest {
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class DomainModelTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testSave() throws IOException {
@@ -29,7 +22,6 @@ public class DomainModelTest {
         assertEquals(0, getNumberOfDataclasses());
         String domainModelJson = FileUtils.readFileToString(new File(path));
         DomainModel model = new DomainModel(domainModelJson);
-        List<DataClass> dataclasses = model.getDataClasses();
         model.save();
         assertEquals(2, getNumberOfDataclasses());
     }

@@ -1,25 +1,24 @@
 package de.hpi.bpt.chimera.jconfiguration;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-//import com.ibatis.common.jdbc.ScriptRunner;
-import de.hpi.bpt.chimera.util.ScriptRunner;
-import de.hpi.bpt.chimera.database.ConnectionWrapper;
-import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcore.Scenario;
-import de.hpi.bpt.chimera.jcore.ScenarioFactory;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.junit.Assert;
+import org.junit.Test;
 
-public class ExecutionTest {
-    //private static final String DEVELOPMENT_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
-    @Test
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.ConnectionWrapper;
+import de.hpi.bpt.chimera.database.DbObject;
+import de.hpi.bpt.chimera.jcore.Scenario;
+import de.hpi.bpt.chimera.jcore.ScenarioFactory;
+import de.hpi.bpt.chimera.util.ScriptRunner;
+
+
+public class ExecutionTest extends AbstractDatabaseDependentTest {
+
+	@Test
     public void testDeletion() throws IOException, SQLException {
 		// TODO test how already deleted scenarios are deleted
 		String insertScenarios = "INSERT INTO `scenario` (`id`, `name`, `deleted`, `modelversion`, `datamodelversion`) VALUES " +

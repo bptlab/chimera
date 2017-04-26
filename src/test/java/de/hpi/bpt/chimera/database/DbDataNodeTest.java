@@ -1,23 +1,22 @@
 package de.hpi.bpt.chimera.database;
 
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.data.DbDataNode;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.data.DbDataNode;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 
-public class DbDataNodeTest {
-
+public class DbDataNodeTest extends AbstractDatabaseDependentTest {
 
     private static DbDataNode dbDataNode;
     private static Connector connector;
@@ -26,25 +25,18 @@ public class DbDataNodeTest {
     private static int node2;
 
     @BeforeClass
-    public static void clearAndInitialize() throws IOException, SQLException {
+    public static void initialize() throws IOException, SQLException {
         dbDataNode = new DbDataNode();
         connector = new Connector();
-        clearDataNodes();
-        insertTestData();
     }
 
-    @AfterClass
-    public static void clearDataNodes() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-    private static void insertTestData() {
+    @Before 
+    public void insertTestData() {
         node1 = connector.insertDataNode(1, 1, 1);
         node2 = connector.insertDataNode(1, 2, 2);
         connector.insertDataSetConsistOfDataNode(1, node1);
         connector.insertDataSetConsistOfDataNode(1, node2);
     }
-
 
     @Test
     public void testGetDataStatesForDataSets(){

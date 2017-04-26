@@ -1,29 +1,25 @@
 package de.hpi.bpt.chimera.jconfiguration.rest;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbEmailConfiguration;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import de.hpi.bpt.chimera.jcore.rest.DataDependencyRestService;
-import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
-import net.javacrumbs.jsonunit.core.Option;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.sql.SQLException;
 
-import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
 
-public class EmailtaskConfigurationTest extends JerseyTest {
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.database.DbEmailConfiguration;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
+import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import net.javacrumbs.jsonunit.core.Option;
+
+public class EmailtaskConfigurationTest extends AbstractTest {
     WebTarget base;
 
     private int SCENARIO_ID;
@@ -50,11 +46,6 @@ public class EmailtaskConfigurationTest extends JerseyTest {
         String sql = String.format(insertMailConfiguration, EMAILTASK_ID);
         dbEmailConfiguration.executeInsertStatement(sql);
         base = target("config/v2");
-    }
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     /**

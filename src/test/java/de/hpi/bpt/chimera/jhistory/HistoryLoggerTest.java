@@ -1,30 +1,25 @@
 package de.hpi.bpt.chimera.jhistory;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
-import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
-import de.hpi.bpt.chimera.jcore.data.DataManager;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataManager;
 
 /**
  *
  */
-public class HistoryLoggerTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class HistoryLoggerTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testCreationUponInitialization() throws IOException {
