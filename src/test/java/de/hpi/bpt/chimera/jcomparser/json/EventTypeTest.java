@@ -1,25 +1,22 @@
 package de.hpi.bpt.chimera.jcomparser.json;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.DbObject;
-import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.DbObject;
 
 /**
  *
  */
-public class EventTypeTest {
-    @After
-    public void removeEventType() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class EventTypeTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testEventType() throws JAXBException {

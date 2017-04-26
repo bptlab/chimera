@@ -1,25 +1,19 @@
 package de.hpi.bpt.chimera.jhistory;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.history.DbLogEntry;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.json.JSONObject;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.history.DbLogEntry;
 
 /**
  *
  */
-public class StateTransitionLogTest {
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class StateTransitionLogTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testTransitionLog() {

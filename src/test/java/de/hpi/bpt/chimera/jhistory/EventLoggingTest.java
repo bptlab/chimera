@@ -1,35 +1,30 @@
 package de.hpi.bpt.chimera.jhistory;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.AbstractEvent;
+import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 
 /**
  *
  */
-public class EventLoggingTest extends JerseyTest {
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class EventLoggingTest extends AbstractTest {
+
     WebTarget base;
 
     @Override
@@ -41,7 +36,6 @@ public class EventLoggingTest extends JerseyTest {
     public void setUpBase() {
         base = target("eventdispatcher");
     }
-
 
     @Test
     public void testEventRegistrationLogging() throws IOException {

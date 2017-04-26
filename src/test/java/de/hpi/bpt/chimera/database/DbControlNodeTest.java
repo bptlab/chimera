@@ -1,19 +1,22 @@
 package de.hpi.bpt.chimera.database;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.database.controlnodes.DbControlNode;
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.database.controlnodes.DbControlNode;
+import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 
 
-public class DbControlNodeTest {
+public class DbControlNodeTest extends AbstractDatabaseDependentTest {
 
     private static final String START_EVENT = "StartEvent";
     private static final String ACTIVITY = "Activity";
@@ -24,22 +27,16 @@ public class DbControlNodeTest {
     private static int node2;
 
     @BeforeClass
-    public static void clearAndInitialize() throws IOException, SQLException {
+    public static void initialize() throws IOException, SQLException {
         dbControlNode = new DbControlNode();
         connector = new Connector();
-        clearControlNodes();
-        insertTestData();
     }
-
-    @AfterClass
-    public static void clearControlNodes() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
-
-    private static void insertTestData() {
-        node1 = connector.insertControlNode("node1", START_EVENT, 1, "");
-        node2 = connector.insertControlNode("node2", ACTIVITY, 1, "");
-        connector.insertFragment("fragment", 1, 1);
+    
+    @Before
+    public void setupTestData() {
+    	node1 = connector.insertControlNode("node1", START_EVENT, 1, "");
+    	node2 = connector.insertControlNode("node2", ACTIVITY, 1, "");
+    	connector.insertFragment("fragment", 1, 1);
     }
 
     @Test

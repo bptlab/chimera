@@ -16,14 +16,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Database: `JEngineV2`
---
-
-CREATE DATABASE IF NOT EXISTS ${db.schema};
-USE ${db.schema};
-
-
+-- Table for storing the schema version
 CREATE TABLE IF NOT EXISTS `version` (
   `version` tinyint(1) NOT NULL,
   PRIMARY KEY (`version`)

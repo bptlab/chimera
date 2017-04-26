@@ -1,40 +1,34 @@
 package de.hpi.bpt.chimera.jcomparser;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.jcore.rest.ScenarioRestService;
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.jcore.rest.ScenarioRestService;
 
 /**
  * This class should contain tests which are used to find out if the
  * correct exception is thrown when sending and invalid scenario via Rest
  */
-public class ScenarioParsingExceptionTest extends JerseyTest {
+public class ScenarioParsingExceptionTest extends AbstractTest {
     WebTarget base;
 
     @Override
     protected Application configure() {
         return new ResourceConfig(ScenarioRestService.class);
-    }
-
-    @After
-    public void teardown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Before

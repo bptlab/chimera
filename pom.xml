@@ -146,7 +146,11 @@
 		<!-- The value of the schema.version property has to be increased when 
 			the schema changes! -->
 		<schema.version>26</schema.version>
-		<db.schema>JEngineV2</db.schema>
+		<db.schema>chimeradb</db.schema>
+		<db.test.schema>chimeradb_test</db.test.schema>
+		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
+  		<db.url>${db.url.root}${db.schema}</db.url>
+		<db.test.url>${db.url.root}${db.test.schema}</db.test.url>
 		<powermock.version>1.6.1</powermock.version>
 		<jersey.version>2.17</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -359,8 +363,6 @@
 			<id>remote</id>
 			<properties>
 				<db.schema>JEngineV2</db.schema>
-				<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
-				<db.url>${db.url.root}${db.schema}</db.url>
 			</properties>
 			<build>
 				<plugins>
@@ -398,9 +400,7 @@
 				<!-- default values -->
 				<db.user>chimera</db.user>
 				<db.password>bp2015</db.password>
-				<db.schema>JEngineV2</db.schema>
-				<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
-				<db.url>${db.url.root}${db.schema}</db.url>
+				<db.schema>chimeradb</db.schema>
 			</properties>
 			<build>
 				<plugins>

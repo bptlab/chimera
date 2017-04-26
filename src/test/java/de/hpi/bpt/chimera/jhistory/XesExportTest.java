@@ -1,32 +1,32 @@
 package de.hpi.bpt.chimera.jhistory;
 
-import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
-import de.hpi.bpt.chimera.ScenarioTestHelper;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.rest.RestInterface;
-import de.hpi.bpt.chimera.jhistory.rest.HistoryRestService;
-import de.hpi.bpt.chimera.util.XmlUtil;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+import javax.xml.transform.TransformerException;
+
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
+import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.ScenarioTestHelper;
+import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.rest.RestInterface;
+import de.hpi.bpt.chimera.jhistory.rest.HistoryRestService;
+import de.hpi.bpt.chimera.util.XmlUtil;
 
 /**
  *
  */
-public class XesExportTest extends JerseyTest {
+public class XesExportTest extends AbstractTest {
     /**
      * The base url of the jcore rest interface.
      * Allows us to send requests to the {@link RestInterface}.
@@ -36,12 +36,6 @@ public class XesExportTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(HistoryRestService.class);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        AbstractDatabaseDependentTest.resetDatabase();
     }
 
     @Before

@@ -1,7 +1,9 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.AbstractTest;
+import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import de.hpi.bpt.chimera.jcore.rest.filters.AuthorizationRequestFilter;
+import de.hpi.bpt.chimera.util.ScriptRunner;
 import net.javacrumbs.jsonunit.core.Option;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONObject;
@@ -19,6 +21,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.SQLException;
+
 /**
  * Test methods of the ScenarioRestService {@link ScenarioRestService}
  */
@@ -27,10 +33,7 @@ public class ScenarioRestTest extends AbstractTest {
     /**
      * Sets up the seed file for the test database.
      */
-    static {
-        TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
-    }
-
+	private final String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2RESTTest_new.sql";
     private WebTarget base;
 
     @Override
@@ -43,6 +46,13 @@ public class ScenarioRestTest extends AbstractTest {
     @Before
     public void setUpBase() {
         base = target("interface/v2");
+        try (java.sql.Connection conn = ConnectionWrapper.getInstance().connect()) {
+        	ScriptRunner runner = new ScriptRunner(conn, false, false);
+        	runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+        } catch (SQLException | IOException se) {
+            // TODO: log errors
+            se.printStackTrace();
+        }
     }
 
     /**

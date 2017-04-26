@@ -1,86 +1,71 @@
 package de.hpi.bpt.chimera;
 
-//import com.ibatis.common.jdbc.ScriptRunner;
-import de.hpi.bpt.chimera.database.ConnectionWrapper;
-import de.hpi.bpt.chimera.util.PropertyLoader;
-import de.hpi.bpt.chimera.util.ScriptRunner;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
-import org.junit.Before;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+
+import de.hpi.bpt.chimera.database.ConnectionWrapper;
+import de.hpi.bpt.chimera.util.PropertyLoader;
+import de.hpi.bpt.chimera.util.ScriptRunner;
+
 
 /**
  * An Abstract class for Rest Tests
+ * FIXME this duplicates {@link AbstractDatabaseDependentTest}
  */
 public abstract class AbstractTest extends JerseyTest {
+
+	// TODO: actually this file is never used, rather the subclasses overwrite it
+	//protected static String TEST_SQL_SEED_FILE = null;
+    private final String SCHEMA_FILE = "src/main/resources/" + PropertyLoader.getProperty("database.schema.file");
+    private final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.test.schema");
+
     /**
-     * The Database Seed file.
+     * Turns on the test mode of the {@link ConnectionWrapper}. It now will connect to
+     * the test database.  
      */
-    protected static String TEST_SQL_SEED_FILE = "src/test/resources/JEngineV2_AcceptanceTests.sql";
-    private static final String DEVELOPMENT_SQL_SEED_FILE = PropertyLoader.getProperty("database.schema.file");
-    /**
-     * TODO: The same database is used for testing and running (cf. CM-429 in Jira)
-     */
-    private static final String TEST_DB_SCHEMA = PropertyLoader.getProperty("mysql.schema");
-    /**
-     * Sets up the database for RestTests.
-     *
-     * @throws IOException  An Error while reading the SQL-File occurred.
-     * @throws SQLException An Error while executing the SQL-Script occurred.
-     */
-    @Before
-    public void setUpDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
-        runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
-    }
-    
-    @AfterClass
-    public static void resetDatabase() throws IOException, SQLException {
-        clearDatabase();
-        ScriptRunner runner = new ScriptRunner(ConnectionWrapper.getInstance().connect(), false, false);
-        runner.runScript(new FileReader(DEVELOPMENT_SQL_SEED_FILE));
+    @BeforeClass
+    public static void setUpConnection() {
+    	ConnectionWrapper.getInstance().setTestMode(true);
     }
 
     /**
-     * Drops and recreates the database.
+     * Clears the database by dropping and recreating the test schema.
+     *
+     * @throws java.io.IOException  An Error while reading the SQL-File occurred.
+     * @throws java.sql.SQLException An Error while executing the SQL-Script occurred.
      */
-    protected static void clearDatabase() {
-        java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
-        Statement stmt = null;
-        if (conn == null) {
-            return;
-        }
-        try {
-            //Execute a querystmt = conn.createStatement();
-            stmt = conn.createStatement();
-            stmt.execute("DROP DATABASE IF EXISTS " + TEST_DB_SCHEMA);
+    @Before
+    public void clearDatabase() {
+    	try (java.sql.Connection conn = ConnectionWrapper.getInstance().connect();
+        		Statement stmt = conn.createStatement()) {
+    		stmt.execute("DROP DATABASE IF EXISTS " + TEST_DB_SCHEMA);
             stmt.execute("CREATE DATABASE " + TEST_DB_SCHEMA);
-        } catch (SQLException se) {
-            //Handle errors for JDBC
+            stmt.execute("USE " + TEST_DB_SCHEMA);
+            ScriptRunner runner = new ScriptRunner(conn, false, false);
+            runner.runScript(new FileReader(SCHEMA_FILE));
+//            if (TEST_SQL_SEED_FILE != null) {
+//            	System.out.println("====>>>>> Importing stuff into DB: " + TEST_SQL_SEED_FILE);
+//            	runner.runScript(new FileReader(TEST_SQL_SEED_FILE));
+//            }
+        } catch (SQLException | IOException se) {
+            // TODO: log errors
             se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException se2) {
-                se2.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
         }
+    }
+
+    /**
+     * Turn off the test mode of the {@link ConnectionWrapper}. It now will connect to
+     * the production database again.  
+     */
+    @AfterClass
+    public static void resetDatabase() throws IOException, SQLException {
+    	ConnectionWrapper.getInstance().setTestMode(false);
     }
 }

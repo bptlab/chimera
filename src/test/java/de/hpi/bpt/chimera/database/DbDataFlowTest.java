@@ -1,28 +1,20 @@
 package de.hpi.bpt.chimera.database;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+
 import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
 import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-import org.junit.After;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 
-public class DbDataFlowTest {
+public class DbDataFlowTest extends AbstractDatabaseDependentTest {
     private final int INPUTSET_ID = 1;
     private final int OUTPUTSET_ID = 2;
     private final int CONTROLNODE_ID = 1;
-
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
 
     @Test
     public void testGetInputSetsForControlNode(){

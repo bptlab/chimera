@@ -24,12 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class DbDataObjectTest {
-
-    @After
-    public void tearDown() throws IOException, SQLException {
-        AbstractDatabaseDependentTest.resetDatabase();
-    }
+public class DbDataObjectTest extends AbstractDatabaseDependentTest {
 
     @Test
     public void testSetState() {

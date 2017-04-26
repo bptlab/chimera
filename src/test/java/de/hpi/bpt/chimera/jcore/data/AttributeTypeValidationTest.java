@@ -1,32 +1,22 @@
 package de.hpi.bpt.chimera.jcore.data;
 
-import de.hpi.bpt.chimera.database.DbObject;
-import de.hpi.bpt.chimera.jcomparser.json.DataAttribute;
-import org.junit.After;
-import org.junit.Test;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class AttributeTypeValidationTest {
+import de.hpi.bpt.chimera.AbstractDatabaseDependentTest;
+import de.hpi.bpt.chimera.jcomparser.json.DataAttribute;
+
+public class AttributeTypeValidationTest extends AbstractDatabaseDependentTest {
 
     List<Integer> attrDbIds = new ArrayList<>();
-
-    @After
-    public void clearDatabase() {
-        DbObject dbObject = new DbObject();
-        String sql1 = "DELETE FROM dataattribute WHERE id = %d";
-        String sql2 = "DELETE FROM dataattributeinstance WHERE id = %d";
-        for (int id : attrDbIds) {
-            dbObject.executeUpdateStatement(String.format(sql1, id));
-            dbObject.executeUpdateStatement(String.format(sql2, id));
-        }
-    }
 
     @Test
     public void testSettingOfCorrectValues() {
