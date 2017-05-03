@@ -22,6 +22,7 @@ public class FragmentParser {
 		fragment.setContentXML(contentXML);
 
 		// TODO: validate fragment
+
 		// TODO: add specific content
 		return fragment;
 	}
