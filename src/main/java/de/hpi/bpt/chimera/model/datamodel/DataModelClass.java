@@ -2,10 +2,9 @@ package de.hpi.bpt.chimera.model.datamodel;
 
 import java.util.List;
 
-public class Class {
+public class DataModelClass {
 	private String name;
 	private List<DataAttribute> attributes;
-
 
 	public String getName() {
 		return name;
