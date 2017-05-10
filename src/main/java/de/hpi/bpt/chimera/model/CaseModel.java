@@ -17,9 +17,11 @@ public class CaseModel {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public int getVersionNumber() {
 		return versionNumber;
 	}
+
 	public void setVersionNumber(int versionNumber) {
 		this.versionNumber = versionNumber;
 	}

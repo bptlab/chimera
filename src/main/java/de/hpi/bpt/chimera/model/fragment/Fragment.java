@@ -1,10 +1,17 @@
 package de.hpi.bpt.chimera.model.fragment;
 
 public class Fragment {
+	private int id;
 	private String name;
 	private int versionNumber;
 	private String contentXML;
 
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}

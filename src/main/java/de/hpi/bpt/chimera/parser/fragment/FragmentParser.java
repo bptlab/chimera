@@ -23,7 +23,8 @@ public class FragmentParser {
 
 		// TODO: validate fragment
 
-		// TODO: add specific content
+		// TODO: add bpmn elements
+
 		return fragment;
 	}
 }

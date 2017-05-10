@@ -57,6 +57,7 @@ public class DataModelClassParser {
 		return dataAttributes;
 	}
 
+
 	// TODO: put this in validator
 	/*
 	 * checks if name of DataClass contains only unicode letters, numbers or
