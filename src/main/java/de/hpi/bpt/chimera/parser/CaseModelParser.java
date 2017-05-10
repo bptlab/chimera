@@ -17,8 +17,8 @@ public class CaseModelParser {
 	private CaseModelParser() {
 	}
 
-	public static CaseModel parseCaseModel(final String JsonString) {
-		JSONObject caseModelJson = new JSONObject(JsonString);
+	public static CaseModel parseCaseModel(final String jsonString) {
+		JSONObject caseModelJson = new JSONObject(jsonString);
 		CaseModel caseModel = new CaseModel();
 
 		String name = caseModelJson.getString("name");

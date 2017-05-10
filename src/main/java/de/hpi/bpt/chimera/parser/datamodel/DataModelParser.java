@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.hpi.bpt.chimera.model.datamodel.Class;
+import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 
 public class DataModelParser {
@@ -20,22 +20,22 @@ public class DataModelParser {
 		int versionNumber = datamodelJson.getInt("revision");
 		dataModel.setVersionNumber(versionNumber);
 
-		List<Class> classes = getClasses(datamodelJson.getJSONArray("dataclasses"));
-		dataModel.setClasses(classes);
+		List<DataModelClass> dataModelClasses = getDataModelClasses(datamodelJson.getJSONArray("dataclasses"));
+		dataModel.setDataModelClasses(dataModelClasses);
 
 		return dataModel;
 	}
 
-	private static List<Class> getClasses(final JSONArray classJsonArray) {
+	private static List<DataModelClass> getDataModelClasses(final JSONArray classJsonArray) {
 		int arraySize = classJsonArray.length();
-		List<Class> classes = new ArrayList<>();
+		List<DataModelClass> dataModelClasses = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject classJson = classJsonArray.getJSONObject(i);
-			Class currentClass = ClassParser.parseClass(classJson);
-			classes.add(currentClass);
+			DataModelClass currentClass = DataModelClassParser.parseDataModelClass(classJson);
+			dataModelClasses.add(currentClass);
 		}
 
-		return classes;
+		return dataModelClasses;
 	}
 }

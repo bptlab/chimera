@@ -4,8 +4,7 @@ import java.util.List;
 
 public class DataModel {
 	private int versionNumber;
-	private List<Class> classes;
-
+	private List<DataModelClass> dataModelClasses;
 
 	public int getVersionNumber() {
 		return versionNumber;
@@ -13,11 +12,12 @@ public class DataModel {
 	public void setVersionNumber(int versionNumber) {
 		this.versionNumber = versionNumber;
 	}
-	public List<Class> getClasses() {
-		return classes;
+	public List<DataModelClass> getDataModelClasses() {
+		return dataModelClasses;
 	}
-	public void setClasses(List<Class> classes) {
-		this.classes = classes;
+
+	public void setDataModelClasses(List<DataModelClass> dataModelClasses) {
+		this.dataModelClasses = dataModelClasses;
 	}
 
 }
