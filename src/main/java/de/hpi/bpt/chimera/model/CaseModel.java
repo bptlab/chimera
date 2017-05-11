@@ -2,14 +2,29 @@ package de.hpi.bpt.chimera.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
+@Entity
 public class CaseModel {
+	// TODO is this id unique, or should we add an auto generated id which then
+	// is for the database only?
+	@Id
 	private String id;
 	private String name;
 	private int versionNumber;
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private DataModel dataModel;
+	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Fragment> fragments;
 
 	public String getId() {

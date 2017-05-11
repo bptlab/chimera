@@ -13,3 +13,4 @@ target/*
 src/main/resources/
 config.properties
 config_template.properties
+src/main/resources/META-INF/persistence.xml

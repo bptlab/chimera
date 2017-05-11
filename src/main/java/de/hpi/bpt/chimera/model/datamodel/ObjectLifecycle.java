@@ -2,9 +2,22 @@ package de.hpi.bpt.chimera.model.datamodel;
 
 import java.util.List;
 
-//TODO: decide wether sequence flow needs to be implemented
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
+//TODO: decide wether sequence flow needs to be implemented
+@Entity
 public class ObjectLifecycle {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int dbId;
+
+	@OneToMany(cascade = CascadeType.PERSIST)
 	List<ObjectLifecycleState> objectLifecycleStates;
 
 	public void setObjectLifecycleStates(List<ObjectLifecycleState> objectLifecycleStates) {

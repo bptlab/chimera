@@ -3,6 +3,10 @@ package de.hpi.bpt.chimera.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -40,6 +44,7 @@ public class CaseModelParser {
 
 		return caseModel;
 	}
+
 
 	// TODO: put this in validator
 	private static void validateCaseModelJson(JSONObject caseModelJson) {

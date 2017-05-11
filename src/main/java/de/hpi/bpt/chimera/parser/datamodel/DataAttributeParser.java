@@ -15,7 +15,7 @@ public class DataAttributeParser {
 		String name = dataAttributeJson.getString("name");
 		dataAttribute.setName(name);
 		
-		String type = dataAttributeJson.getString("type");
+		String type = dataAttributeJson.getString("datatype");
 		dataAttribute.setType(type);
 
 		return dataAttribute;

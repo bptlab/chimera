@@ -1,9 +1,19 @@
 package de.hpi.bpt.chimera.model.fragment;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Transient;
+
+@Entity
 public class Fragment {
+	// TODO is this id unique, or should we add an auto generated id which is
+	// for the database only?
+	@Id
 	private String id;
 	private String name;
 	private int versionNumber;
+	@Lob
 	private String contentXML;
 
 	public String getId() {
