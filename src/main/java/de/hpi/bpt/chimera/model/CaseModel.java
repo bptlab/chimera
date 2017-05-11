@@ -6,10 +6,19 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
 public class CaseModel {
+	private String id;
 	private String name;
 	private int versionNumber;
 	private DataModel dataModel;
 	private List<Fragment> fragments;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

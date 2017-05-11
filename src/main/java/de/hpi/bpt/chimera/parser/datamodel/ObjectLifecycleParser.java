@@ -26,16 +26,28 @@ public class ObjectLifecycleParser {
 	public static ObjectLifecycle parseObjectLifecylce(JSONObject olcJson) {
 		ObjectLifecycle objectLifecycle = new ObjectLifecycle();
 
+		validateObjectLifecycle(olcJson);
+
 		Map<String, ObjectLifecycleState> mapIdToState = getMapIdToState(olcJson.getJSONArray("state"));
-		List<SequenceFlow> sequenceFlows = parseSequenceFlow(olcJson.getJSONArray("sequenceFlow"));
 		
+		List<SequenceFlow> sequenceFlows = new ArrayList<>();
+		if (olcJson.has("sequenceFlow"))
+			sequenceFlows = parseSequenceFlow(olcJson.getJSONArray("sequenceFlow"));
+
 		List<ObjectLifecycleState> olcStates = parseOlcStates(mapIdToState, sequenceFlows);
 		objectLifecycle.setObjectLifecycleStates(olcStates);
 		
 		return objectLifecycle;
 	}
 
-	/*
+	// TODO: put this in validator
+	private static void validateObjectLifecycle(JSONObject olcJson) {
+		if (!olcJson.has("state")) {
+			throw new IllegalArgumentException("Invalid olc - state missing");
+		}
+	}
+
+	/**
 	 * get all possible ObjectLifecycleState-Ids and the referring
 	 * ObjectLifecycleState with name attribute
 	 */
@@ -46,6 +58,7 @@ public class ObjectLifecycleParser {
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject olcStateJson = olcStateJsonArray.getJSONObject(i);
 			ObjectLifecycleState olcState = new ObjectLifecycleState();
+
 			String name = olcStateJson.getString("name");
 			olcState.setName(name);
 			String id = olcStateJson.getString("id");
@@ -55,8 +68,8 @@ public class ObjectLifecycleParser {
 		return mapIdToState;
 	}
 
-	/*
-	 * gets all Sequenceflows out of JsonPath and returns source and target in
+	/**
+	 * get all SequenceFlows out of JsonPath and returns source and target in
 	 * form of id of state
 	 */
 	private static List<SequenceFlow> parseSequenceFlow(JSONArray sequenceFlowJsonArray) {
@@ -75,9 +88,9 @@ public class ObjectLifecycleParser {
 	}
 
 	/*
-	 * converts the Olc-State-ids stored SequenceFlows into the referring states
-	 * with mapIdToState and add successor and predecessor which you get from
-	 * SequenceFlow to referring state
+	 * converts the Olc-State-ids stored in SequenceFlows into the referring
+	 * states with mapIdToState and add successor and predecessor which you get
+	 * from SequenceFlow to referring state
 	 */
 	private static List<ObjectLifecycleState> parseOlcStates(Map<String, ObjectLifecycleState> mapIdToState, List<SequenceFlow> sequenceFlows) {
 		for (SequenceFlow sequenceFlow : sequenceFlows) {

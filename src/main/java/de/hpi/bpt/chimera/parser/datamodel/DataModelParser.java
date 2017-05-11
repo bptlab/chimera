@@ -26,6 +26,9 @@ public class DataModelParser {
 		return dataModel;
 	}
 
+	/*
+	 * creates List of DataModelClasses with DataModelClassParser
+	 */
 	private static List<DataModelClass> getDataModelClasses(final JSONArray classJsonArray) {
 		int arraySize = classJsonArray.length();
 		List<DataModelClass> dataModelClasses = new ArrayList<>();

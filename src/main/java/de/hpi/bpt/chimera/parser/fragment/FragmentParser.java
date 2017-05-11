@@ -12,6 +12,9 @@ public class FragmentParser {
 	public static Fragment parseFragment(JSONObject fragmentJson) {
 		Fragment fragment = new Fragment();
 
+		String id = fragmentJson.getString("_id");
+		fragment.setId(id);
+
 		String name = fragmentJson.getString("name");
 		fragment.setName(name);
 

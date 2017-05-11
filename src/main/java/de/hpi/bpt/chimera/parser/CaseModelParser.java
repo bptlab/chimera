@@ -19,7 +19,12 @@ public class CaseModelParser {
 
 	public static CaseModel parseCaseModel(final String jsonString) {
 		JSONObject caseModelJson = new JSONObject(jsonString);
+		validateCaseModelJson(caseModelJson);
+
 		CaseModel caseModel = new CaseModel();
+
+		String id = caseModelJson.getString("_id");
+		caseModel.setId(id);
 
 		String name = caseModelJson.getString("name");
 		caseModel.setName(name);
@@ -36,6 +41,27 @@ public class CaseModelParser {
 		return caseModel;
 	}
 
+	// TODO: put this in validator
+	private static void validateCaseModelJson(JSONObject caseModelJson) {
+		if (!caseModelJson.has("_id"))
+			throw new IllegalArgumentException("Invalid Json CaseModel - id missing");
+		if (!caseModelJson.has("name"))
+			throw new IllegalArgumentException("Invalid Json CaseModel - name missing");
+		if (!caseModelJson.has("revision"))
+			throw new IllegalArgumentException("Invalid Json CaseModel - revision missing");
+		if (!caseModelJson.has("domainmodel"))
+			throw new IllegalArgumentException("Invalid Json CaseModel - domainmodel missing");
+		if (!caseModelJson.has("fragments"))
+			throw new IllegalArgumentException("Invalid Json CaseModel - fragments missing");
+	}
+
+	// TODO: put this in validator
+	private static void validateFragmentAmount(int fragmentAmount) {
+		if (fragmentAmount == 0) {
+			throw new IllegalArgumentException("Invalid CaseModel - no fragments specified");
+		}
+	}
+
 	private static List<Fragment> getFragments(JSONArray fragmentJsonArray) {
 		int arraySize = fragmentJsonArray.length();
 		validateFragmentAmount(arraySize);
@@ -47,12 +73,5 @@ public class CaseModelParser {
 			fragments.add(currentFragment);
 		}
 		return fragments;
-	}
-
-	// TODO: put this in validator
-	private static void validateFragmentAmount(int fragmentAmount) {
-		if (fragmentAmount == 0) {
-			throw new IllegalArgumentException("No fragments specified");
-		}
 	}
 }
