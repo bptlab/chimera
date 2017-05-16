@@ -3,11 +3,8 @@ package de.hpi.bpt.chimera.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.CaseModel;
@@ -21,43 +18,35 @@ public class CaseModelParser {
 	private CaseModelParser() {
 	}
 
+	/**
+	 * Parse CaseModel out of jsonString. Uses DataModelParser.
+	 * 
+	 * @param jsonString
+	 * @return CaseModel
+	 */
 	public static CaseModel parseCaseModel(final String jsonString) {
-		JSONObject caseModelJson = new JSONObject(jsonString);
-		validateCaseModelJson(caseModelJson);
-
 		CaseModel caseModel = new CaseModel();
+		try {
+			JSONObject caseModelJson = new JSONObject(jsonString);
 
-		String id = caseModelJson.getString("_id");
-		caseModel.setId(id);
+			String id = caseModelJson.getString("_id");
+			caseModel.setId(id);
 
-		String name = caseModelJson.getString("name");
-		caseModel.setName(name);
+			String name = caseModelJson.getString("name");
+			caseModel.setName(name);
 
-		int versionNumber = caseModelJson.getInt("revision");
-		caseModel.setVersionNumber(versionNumber);
+			int versionNumber = caseModelJson.getInt("revision");
+			caseModel.setVersionNumber(versionNumber);
 
-		DataModel dataModel = DataModelParser.parseDataModel(caseModelJson.getJSONObject("domainmodel"));
-		caseModel.setDataModel(dataModel);
+			DataModel dataModel = DataModelParser.parseDataModel(caseModelJson.getJSONObject("domainmodel"));
+			caseModel.setDataModel(dataModel);
 
-		List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"));
-		caseModel.setFragments(fragments);
-
+			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"));
+			caseModel.setFragments(fragments);
+		} catch (JSONException e) {
+			throw e;
+		}
 		return caseModel;
-	}
-
-
-	// TODO: put this in validator
-	private static void validateCaseModelJson(JSONObject caseModelJson) {
-		if (!caseModelJson.has("_id"))
-			throw new IllegalArgumentException("Invalid Json CaseModel - id missing");
-		if (!caseModelJson.has("name"))
-			throw new IllegalArgumentException("Invalid Json CaseModel - name missing");
-		if (!caseModelJson.has("revision"))
-			throw new IllegalArgumentException("Invalid Json CaseModel - revision missing");
-		if (!caseModelJson.has("domainmodel"))
-			throw new IllegalArgumentException("Invalid Json CaseModel - domainmodel missing");
-		if (!caseModelJson.has("fragments"))
-			throw new IllegalArgumentException("Invalid Json CaseModel - fragments missing");
 	}
 
 	// TODO: put this in validator
@@ -67,6 +56,12 @@ public class CaseModelParser {
 		}
 	}
 
+	/**
+	 * Create List of Fragments out of fragmentJsonArray. Uses FragmentParser.
+	 * 
+	 * @param fragmentJsonArray
+	 * @return List of Fragments
+	 */
 	private static List<Fragment> getFragments(JSONArray fragmentJsonArray) {
 		int arraySize = fragmentJsonArray.length();
 		validateFragmentAmount(arraySize);

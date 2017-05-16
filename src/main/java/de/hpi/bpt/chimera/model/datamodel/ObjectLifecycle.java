@@ -8,9 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
-//TODO: decide wether sequence flow needs to be implemented
 @Entity
 public class ObjectLifecycle {
 	@Id

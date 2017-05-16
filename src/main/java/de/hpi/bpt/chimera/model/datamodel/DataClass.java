@@ -15,4 +15,12 @@ public class DataClass extends DataModelClass {
 	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	ObjectLifecycle objectLifecycle;
+
+	public void setObjectLifecycle(ObjectLifecycle objectLifecycle) {
+		this.objectLifecycle = objectLifecycle;
+	}
+
+	public ObjectLifecycle getObjectLifecycle() {
+		return this.objectLifecycle;
+	}
 }

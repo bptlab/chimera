@@ -3,7 +3,6 @@ package de.hpi.bpt.chimera.model.fragment;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.Transient;
 
 @Entity
 public class Fragment {
