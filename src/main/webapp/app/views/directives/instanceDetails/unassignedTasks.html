@@ -1,25 +1,23 @@
 <div class="col-lg-3">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Unassigned Tasks
+            Enabled Activities
         </div>
         <!-- Body of the Panel -->
         <div class="panel-body">
             <div class="pull-left">
-                <table class="table table-striped">
+                <table class="table">
                     <tbody>
                     <tr style="cursor: pointer"
                         ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['ready']['activities']">
                         <td>
                             <div style="position: relative;">
-                                <p>{{activityInstance['label']}}
-                                    <input style="position: absolute; opacity: 0;">
-                                    <ins style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 0px none; opacity: 0;"
-                                         ng-click="instanceCtrl.getActivityInput(activityInstance['activityid']);"
-                                         data-toggle="modal"
-                                         data-target="{{'#modal' + activityInstance['id']}}"
-                                         tabindex="-1"></ins>
-                                </p>
+								{{activityInstance['label']}}
+                                <ins style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 0px none; opacity: 0;"
+                                    ng-click="instanceCtrl.getActivityInput(activityInstance['activityid']);"
+                                    data-toggle="modal"
+									data-target="{{'#modal' + activityInstance['id']}}"
+									tabindex="-1"></ins>
                             </div>
                         </td>
                     </tr>
