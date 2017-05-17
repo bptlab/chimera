@@ -5,17 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycle;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.validation.NameValidator;
 
 //TODO: add validation of ids and sequenceFlow
 
 public class ObjectLifecycleParser {
+	private static final Logger log = Logger.getLogger((ObjectLifecycleParser.class).getName());
 
+	/**
+	 * Assisting container to store ids of sequenceFlow.
+	 */
 	private static class SequenceFlow {
 		String source;
 		String target;
@@ -30,24 +36,41 @@ public class ObjectLifecycleParser {
 	 * @param olcJson
 	 * @return ObjectLifecycle
 	 */
-	public static ObjectLifecycle parseObjectLifecylce(JSONObject olcJson) throws JSONException {
+	public static ObjectLifecycle parseObjectLifecylce(JSONObject olcJson) {
 		ObjectLifecycle objectLifecycle = new ObjectLifecycle();
 		
 		try {
 			Map<String, ObjectLifecycleState> mapIdToState = getMapIdToState(olcJson.getJSONArray("state"));
+			NameValidator.validateNameFrequency(new ArrayList<>(mapIdToState.values()));
 
 			List<SequenceFlow> sequenceFlows = new ArrayList<>();
-			if (olcJson.has("sequenceFlow"))
+			if (olcJson.has("sequenceFlow")) {
 				sequenceFlows = parseSequenceFlow(olcJson.getJSONArray("sequenceFlow"));
-
+				validateSequenceFlow(mapIdToState, sequenceFlows);
+			}
 			List<ObjectLifecycleState> olcStates = parseOlcStates(mapIdToState, sequenceFlows);
 			objectLifecycle.setObjectLifecycleStates(olcStates);
 
 		} catch (JSONException e) {
-			throw e;
+			log.error(e);
+			throw new JSONException("Invalid ObjectLifecycle");
 		}
 
 		return objectLifecycle;
+	}
+
+	/**
+	 * Validate that every sequence flow refers to valid states.
+	 * 
+	 * @param mapIdToState
+	 * @param sequenceFlows
+	 */
+	private static void validateSequenceFlow(Map<String, ObjectLifecycleState> mapIdToState, List<SequenceFlow> sequenceFlows) {
+		for (SequenceFlow sequenceFlow : sequenceFlows) {
+			if (!mapIdToState.containsKey(sequenceFlow.source) || !mapIdToState.containsKey(sequenceFlow.target)) {
+				throw new IllegalArgumentException("Sequence flow contains unknown state id.");
+			}
+		}
 	}
 
 	/**
@@ -66,12 +89,15 @@ public class ObjectLifecycleParser {
 
 			try {
 				String name = olcStateJson.getString("name");
+				NameValidator.validateName(name);
 				olcState.setName(name);
+
 				String id = olcStateJson.getString("id");
 
 				mapIdToState.put(id, olcState);
 			} catch (JSONException e) {
-				throw e;
+				log.error(e);
+				throw new JSONException("Invalid ObjectLifecycle States");
 			}
 		}
 

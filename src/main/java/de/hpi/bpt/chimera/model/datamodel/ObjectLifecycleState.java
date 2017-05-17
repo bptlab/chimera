@@ -10,8 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import de.hpi.bpt.chimera.model.Nameable;
+
 @Entity
-public class ObjectLifecycleState {
+public class ObjectLifecycleState implements Nameable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;
@@ -27,10 +29,12 @@ public class ObjectLifecycleState {
 		this.predecessors = new ArrayList<>();
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}

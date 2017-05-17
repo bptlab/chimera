@@ -3,7 +3,7 @@ package de.hpi.bpt.chimera.parser.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +13,10 @@ import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.EventClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycle;
+import de.hpi.bpt.chimera.validation.NameValidator;
 
 public class DataModelClassParser {
+	private static final Logger log = Logger.getLogger((DataModelClassParser.class).getName());
 
 	private DataModelClassParser() {
 	}
@@ -34,7 +36,8 @@ public class DataModelClassParser {
 			// TODO: validate objectLifecylce
 			dataClass.setObjectLifecycle(objectLifecycle);
 		} catch (JSONException e) {
-			throw e;
+			log.error(e);
+			throw new JSONException("Invalid Dataclass");
 		}
 
 		return dataClass;
@@ -63,13 +66,14 @@ public class DataModelClassParser {
 	private static void parseDataModelClass(final JSONObject dataModelClassJson, DataModelClass dataModelClass) {
 		try {
 			String name = dataModelClassJson.getString("name");
-			validateName(name);
+			NameValidator.validateName(name);
 			dataModelClass.setName(name);
 
 			List<DataAttribute> dataAttributes = getDataAttributes(dataModelClassJson.getJSONArray("attributes"));
 			dataModelClass.setAttributes(dataAttributes);
 		} catch (JSONException e) {
-			throw e;
+			log.error(e);
+			throw new JSONException("Invalid DataModelClass");
 		}
 	}
 
@@ -90,20 +94,8 @@ public class DataModelClassParser {
 			dataAttributes.add(dataAttribute);
 		}
 
+		NameValidator.validateNameFrequency(dataAttributes);
+
 		return dataAttributes;
-	}
-
-
-	// TODO: put this in validator
-	/**
-	 * checks if name of DataClass contains only unicode letters, numbers or
-	 * space (' ')
-	 * 
-	 * @param name
-	 */
-	private static void validateName(String name) {
-		if (!StringUtils.isAlphanumericSpace(name)) {
-			throw new IllegalArgumentException(String.format("%s is not a valid class name", name));
-		}
 	}
 }

@@ -3,14 +3,19 @@ package de.hpi.bpt.chimera.parser.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
+import de.hpi.bpt.chimera.parser.CaseModelParser;
+import de.hpi.bpt.chimera.validation.NameValidator;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
+import de.hpi.bpt.chimera.model.Nameable;
 
 public class DataModelParser {
+	private static final Logger log = Logger.getLogger((DataModelParser.class).getName());
 
 	private DataModelParser() {
 	}
@@ -30,7 +35,8 @@ public class DataModelParser {
 			List<DataModelClass> dataModelClasses = getDataModelClasses(datamodelJson.getJSONArray("dataclasses"));
 			dataModel.setDataModelClasses(dataModelClasses);
 		} catch (JSONException e) {
-			throw e;
+			log.error(e);
+			throw new JSONException("Invalid DataModel");
 		}
 		return dataModel;
 	}
@@ -55,9 +61,12 @@ public class DataModelParser {
 				else
 					dataModelClasses.add(DataModelClassParser.parseDataClass(classJson));
 			} catch (JSONException e) {
-				throw e;
+				log.error(e);
+				throw new JSONException("Invalid DataModelClass");
 			}
 		}
+
+		NameValidator.validateNameFrequency(dataModelClasses);
 
 		return dataModelClasses;
 	}

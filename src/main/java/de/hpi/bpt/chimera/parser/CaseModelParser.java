@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,9 +13,10 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.datamodel.DataModelParser;
 import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
+import de.hpi.bpt.chimera.validation.NameValidator;
 
 public class CaseModelParser {
-
+	private static final Logger log = Logger.getLogger((CaseModelParser.class).getName());
 	private CaseModelParser() {
 	}
 
@@ -33,6 +35,7 @@ public class CaseModelParser {
 			caseModel.setId(id);
 
 			String name = caseModelJson.getString("name");
+			NameValidator.validateName(name);
 			caseModel.setName(name);
 
 			int versionNumber = caseModelJson.getInt("revision");
@@ -44,7 +47,8 @@ public class CaseModelParser {
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"));
 			caseModel.setFragments(fragments);
 		} catch (JSONException e) {
-			throw e;
+			log.error(e);
+			throw new JSONException("Invalid CaseModel");
 		}
 		return caseModel;
 	}
