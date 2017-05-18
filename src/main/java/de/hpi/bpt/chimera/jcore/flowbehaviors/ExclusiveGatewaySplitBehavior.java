@@ -5,6 +5,7 @@ import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.XORGrammarCompiler;
 import de.hpi.bpt.chimera.jcore.controlnodes.*;
 import de.hpi.bpt.chimera.jcore.data.DataAttributeInstance;
+import de.hpi.bpt.chimera.jcore.data.DataManager;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
@@ -16,22 +17,20 @@ import java.util.stream.Collectors;
 /**
  * This class deals with the termination of exclusive gateways.
  * <p>
- * <p> Exclusive gateways can not be terminated like other control nodes, since
- * the control nodes after the gateway are exclusive to each other. So the gateway
- * has still influence on the execution, although it already activated the following control nodes.
  * <p>
- * <p> Nested gateways are supported by allowing multiple control nodes in each branch, that
- * follows the exclusive gateway.
+ * Exclusive gateways can not be terminated like other control nodes, since the control nodes after the gateway are exclusive to each other. So the
+ * gateway has still influence on the execution, although it already activated the following control nodes.
  * <p>
- * <p> To ensure proper skipping of alternative branches each
- * {@link de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractExecutionBehavior},
- * has to call {@link ScenarioInstance#skipAlternativeControlNodes(int)}, when the
- * state of associated control node instances changes to running.
  * <p>
- * <p> When the exclusive gateway outgoing branches, are annotated with conditions
- * the control flow can be evaluated automatically {@link XORGrammarCompiler}. However
- * the modelling of this is not supported at the moment, so this feature would have to be
- * tested again.
+ * Nested gateways are supported by allowing multiple control nodes in each branch, that follows the exclusive gateway.
+ * <p>
+ * <p>
+ * To ensure proper skipping of alternative branches each {@link de.hpi.bpt.chimera.jcore.executionbehaviors.AbstractExecutionBehavior}, has to call
+ * {@link ScenarioInstance#skipAlternativeControlNodes(int)}, when the state of associated control node instances changes to running.
+ * <p>
+ * <p>
+ * When the exclusive gateway outgoing branches, are annotated with conditions the control flow can be evaluated automatically
+ * {@link XORGrammarCompiler}. However the modelling of this is not supported at the moment, so this feature would have to be tested again.
  */
 public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehavior {
 	private static Logger log = Logger.getLogger(ExclusiveGatewaySplitBehavior.class);
@@ -46,9 +45,12 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	/**
 	 * Initializes and creates an ExclusiveGatewaySplitBehavior.
 	 *
-	 * @param gatewayId          The id of the gateway.
-	 * @param scenarioInstance   An instance from the class ScenarioInstance.
-	 * @param fragmentInstanceId The id of the fragment instance.
+	 * @param gatewayId
+	 *            The id of the gateway.
+	 * @param scenarioInstance
+	 *            An instance from the class ScenarioInstance.
+	 * @param fragmentInstanceId
+	 *            The id of the fragment instance.
 	 */
 	public ExclusiveGatewaySplitBehavior(int gatewayId, ScenarioInstance scenarioInstance, int fragmentInstanceId) {
 		this.setControlNodeId(gatewayId);
@@ -58,8 +60,7 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	}
 
 	/**
-	 * Adds the ids of the following control nodes to the list.
-	 * Creates for every control node a bucket.
+	 * Adds the ids of the following control nodes to the list. Creates for every control node a bucket.
 	 */
 	private void initializeBranches() {
 		List<Integer> ids = this.getDbControlFlow().getFollowingControlNodes(getControlNodeId());
@@ -69,10 +70,10 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	}
 
 	/**
-	 * Expands branch to cover all control nodes skipping intermediate
-	 * gateways.
+	 * Expands branch to cover all control nodes skipping intermediate gateways.
 	 *
-	 * @param id The id of the control node getting added.
+	 * @param id
+	 *            The id of the control node getting added.
 	 */
 	private List<Integer> expandBranch(int id) {
 		List<Integer> ids = new ArrayList<>();
@@ -111,7 +112,8 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	@Override
 	protected AbstractControlNodeInstance createFollowingNodeInstance(int controlNodeId) {
 		for (AbstractControlNodeInstance controlNodeInstance : this.getScenarioInstance().getControlNodeInstances()) {
-			if (controlNodeId == controlNodeInstance.getControlNodeId() && !controlNodeInstance.getClass().equals(ActivityInstance.class) && !controlNodeInstance.getState().equals(State.TERMINATED)) {
+			if (controlNodeId == controlNodeInstance.getControlNodeId() && !controlNodeInstance.getClass().equals(ActivityInstance.class)
+					&& !controlNodeInstance.getState().equals(State.TERMINATED)) {
 				return controlNodeInstance;
 			}
 		}
@@ -119,7 +121,8 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 			type = this.getDbControlNode().getType(controlNodeId);
 		}
 		ControlNodeFactory controlNodeFactory = new ControlNodeFactory();
-		AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(controlNodeId, getFragmentInstanceId(), getScenarioInstance());
+		AbstractControlNodeInstance controlNodeInstance = controlNodeFactory.createControlNodeInstance(controlNodeId, getFragmentInstanceId(),
+				getScenarioInstance());
 		setAutomaticExecutionToFalse(type, controlNodeInstance);
 		getScenarioInstance().getControlNodeInstances().add(controlNodeInstance);
 		return controlNodeInstance;
@@ -152,7 +155,8 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	private void skipBranch(List<Integer> branch) {
 		for (int toSkip : branch) {
 			AbstractControlNodeInstance controlNodeInstance = this.getScenarioInstance().getControlNodeInstanceForControlNodeId(toSkip);
-			if (controlNodeInstance != null) controlNodeInstance.skip();
+			if (controlNodeInstance != null)
+				controlNodeInstance.skip();
 		}
 	}
 
@@ -175,23 +179,24 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 				toEnable.add(controlNodeId);
 			}
 		}
-		if (toEnable.isEmpty() && defaultControlNode != -1) toEnable.add(defaultControlNode);
+		if (toEnable.isEmpty() && defaultControlNode != -1)
+			toEnable.add(defaultControlNode);
 		for (Integer nodeId : toEnable) {
 			AbstractControlNodeInstance controlNodeInstance = super.createFollowingNodeInstance(nodeId);
 			controlNodeInstance.enableControlFlow();
 		}
 	}
 
-
-
 	/**
 	 * Evaluates one specific condition.
 	 *
-	 * @param condition The condition as String.
+	 * @param condition
+	 *            The condition as String.
 	 * @return true if the condition ist true.
 	 */
 	public boolean evaluateCondition(String condition) {
-		if ("".equals(condition)) return true; // empty condition is true
+		if ("".equals(condition))
+			return true; // empty condition is true
 		XORGrammarCompiler compiler = new XORGrammarCompiler();
 		CommonTree ast = compiler.compile(condition);
 		return ast.getChildCount() > 0 && evaluate(0, ast);
@@ -217,15 +222,32 @@ public class ExclusiveGatewaySplitBehavior extends AbstractParallelOutgoingBehav
 	 */
 	private boolean checkCondition(Tree ast, int i) {
 		String left = ast.getChild(i).toStringTree();
+		int childCount = ast.getChild(i).getChildCount();
 		String comparison = ast.getChild(i + 1).toStringTree();
 		String right = ast.getChild(i + 2).toStringTree();
-		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance().getDataAttributeInstances().values()) {
-			left = left.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
-			right = right.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
-		}
+//		for (DataAttributeInstance dataAttributeInstance : this.getScenarioInstance().getDataAttributeInstances().values()) {
+//			left = left.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+//			right = right.replace("#" + (dataAttributeInstance.getDataObject()).getName() + "." + dataAttributeInstance.getName(), dataAttributeInstance.getValue().toString());
+//		}
+		left = left.startsWith("#") ? left.substring(1) : left;  // get rid of leading #
 		for (DataObject dataObject : this.getScenarioInstance().getDataManager().getDataObjects()) {
-			left = left.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
-			right = right.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
+			if (left.startsWith(dataObject.getName())) { // found the data object
+				if (left.contains(".")) { // condition references attribute
+					// TODO: handle multiple '.' in condition
+					left = left.split("\\.")[1];
+					for (DataAttributeInstance dai : dataObject.getDataAttributeInstances()) {
+						if (left.equals(dai.getName())) { // found attribute
+							left = dai.getValue().toString();
+							break;
+						}
+					}
+				} else { // compare with data object state
+					left = left.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
+					right = right.replace("#" + dataObject.getName(), dbState.getStateName(dataObject.getStateId()));
+					
+				}
+				break;
+			}
 		}
 		try {
 			switch (comparison) {
