@@ -10,12 +10,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import de.hpi.bpt.chimera.model.Listable;
 import de.hpi.bpt.chimera.model.Nameable;
 
 @Entity
-public class ObjectLifecycleState implements Nameable {
+public class ObjectLifecycleState implements Nameable, Listable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	String name;

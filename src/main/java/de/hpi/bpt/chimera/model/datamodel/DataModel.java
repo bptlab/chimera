@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,9 +24,11 @@ public class DataModel {
 	public int getVersionNumber() {
 		return versionNumber;
 	}
+
 	public void setVersionNumber(int versionNumber) {
 		this.versionNumber = versionNumber;
 	}
+
 	public List<DataModelClass> getDataModelClasses() {
 		return dataModelClasses;
 	}
@@ -33,4 +37,12 @@ public class DataModel {
 		this.dataModelClasses = dataModelClasses;
 	}
 
+	public Map<String, DataModelClass> getNameToDataModelClass() {
+		Map<String, DataModelClass> nameToDataModelClass = new HashMap<>();
+
+		for (DataModelClass dataModelClass : dataModelClasses) {
+			nameToDataModelClass.put(dataModelClass.getName(), dataModelClass);
+		}
+		return nameToDataModelClass;
+	}
 }

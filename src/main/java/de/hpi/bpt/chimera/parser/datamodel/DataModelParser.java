@@ -9,10 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
-import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.validation.NameValidator;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
-import de.hpi.bpt.chimera.model.Nameable;
 
 public class DataModelParser {
 	private static final Logger log = Logger.getLogger((DataModelParser.class).getName());

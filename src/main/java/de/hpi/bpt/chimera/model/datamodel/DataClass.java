@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,5 +25,14 @@ public class DataClass extends DataModelClass {
 
 	public ObjectLifecycle getObjectLifecycle() {
 		return this.objectLifecycle;
+	}
+
+	public Map<String, ObjectLifecycleState> getNameToObjectLifecycleState() {
+		Map<String, ObjectLifecycleState> nameToObjectLifecycleState = new HashMap<>();
+
+		for (ObjectLifecycleState objectLifecycleState : this.objectLifecycle.getObjectLifecycleStates()) {
+			nameToObjectLifecycleState.put(objectLifecycleState.getName(), objectLifecycleState);
+		}
+		return nameToObjectLifecycleState;
 	}
 }

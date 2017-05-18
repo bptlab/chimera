@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 
@@ -20,6 +22,8 @@ public class CaseModel {
 	private int versionNumber;
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private DataModel dataModel;
+	@OneToOne(cascade = CascadeType.PERSIST)
+	private TerminationCondition terminationCondition;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Fragment> fragments;
 
@@ -34,6 +38,7 @@ public class CaseModel {
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -45,15 +50,27 @@ public class CaseModel {
 	public void setVersionNumber(int versionNumber) {
 		this.versionNumber = versionNumber;
 	}
+
 	public DataModel getDataModel() {
 		return dataModel;
 	}
+
 	public void setDataModel(DataModel dataModel) {
 		this.dataModel = dataModel;
 	}
+
+	public TerminationCondition getTerminationCondition() {
+		return terminationCondition;
+	}
+
+	public void setTerminationCondition(TerminationCondition terminationCondition) {
+		this.terminationCondition = terminationCondition;
+	}
+
 	public List<Fragment> getFragments() {
 		return fragments;
 	}
+
 	public void setFragments(List<Fragment> fragments) {
 		this.fragments = fragments;
 	}

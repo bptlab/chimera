@@ -10,8 +10,10 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.datamodel.DataModelParser;
+import de.hpi.bpt.chimera.parser.condition.TerminationConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
 import de.hpi.bpt.chimera.validation.NameValidator;
 
@@ -44,6 +46,11 @@ public class CaseModelParser {
 			DataModel dataModel = DataModelParser.parseDataModel(caseModelJson.getJSONObject("domainmodel"));
 			caseModel.setDataModel(dataModel);
 
+			// DataModel has to be parsed, before TerminationCondition can be
+			// parsed
+			TerminationCondition terminationCondition = TerminationConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), dataModel);
+			caseModel.setTerminationCondition(terminationCondition);
+			
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"));
 			caseModel.setFragments(fragments);
 		} catch (JSONException e) {

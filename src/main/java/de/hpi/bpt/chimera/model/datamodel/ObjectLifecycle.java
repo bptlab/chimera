@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class ObjectLifecycle {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	@OneToMany(cascade = CascadeType.PERSIST)

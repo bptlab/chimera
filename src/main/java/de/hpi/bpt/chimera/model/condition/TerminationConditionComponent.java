@@ -11,26 +11,26 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class TerminationCondition {
+public class TerminationConditionComponent {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	List<TerminationConditionComponent> conditions;
+	List<DataObjectStateCondition> conditions;
 
-	public TerminationCondition() {
+	public TerminationConditionComponent() {
 		this.conditions = new ArrayList<>();
 	}
 
-	public List<TerminationConditionComponent> getConditions() {
-		return conditions;
-	}
-
-	public void setConditions(List<TerminationConditionComponent> conditions) {
+	public void setConditions(List<DataObjectStateCondition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public void addConditionComponent(TerminationConditionComponent condition) {
+	public List<DataObjectStateCondition> getConditions() {
+		return this.conditions;
+	}
+
+	public void addCondition(DataObjectStateCondition condition) {
 		this.conditions.add(condition);
 	}
 }

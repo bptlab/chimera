@@ -9,10 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import de.hpi.bpt.chimera.model.Listable;
 import de.hpi.bpt.chimera.model.Nameable;
 
 @Entity
-public abstract class DataModelClass implements Nameable {
+public abstract class DataModelClass implements Nameable, Listable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;
