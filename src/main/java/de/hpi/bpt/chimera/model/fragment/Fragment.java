@@ -1,14 +1,17 @@
 package de.hpi.bpt.chimera.model.fragment;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
 @Entity
 public class Fragment {
-	// TODO is this id unique, or should we add an auto generated id which is
-	// for the database only?
 	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	private int dbId;
+
 	private String id;
 	private String name;
 	private int versionNumber;

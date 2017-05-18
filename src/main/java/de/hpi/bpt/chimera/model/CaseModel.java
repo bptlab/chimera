@@ -4,16 +4,23 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Persistence;
+import javax.persistence.Transient;
 
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
 public class CaseModel {
+
+
 	// TODO is this id unique, or should we add an auto generated id which then
 	// is for the database only?
 	@Id
@@ -26,6 +33,22 @@ public class CaseModel {
 	private TerminationCondition terminationCondition;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Fragment> fragments;
+
+
+	/**
+	 * Persists a the CaseModel to the database using the Java Persistence API
+	 * "EclipseLink".
+	 * 
+	 * @param caseModel
+	 *            the CaseModel that should be persisted.
+	 */
+	public void saveCaseModel() {
+		EntityManager entitiyManager = DomainModelPersistenceManager.getEntityManagerFactory().createEntityManager();
+
+		entitiyManager.getTransaction().begin();
+		entitiyManager.persist(this);
+		entitiyManager.getTransaction().commit();
+	}
 
 	public String getId() {
 		return id;

@@ -12,10 +12,24 @@ public class DomainModelPersistenceManager {
 	// name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 	// to <property name="eclipselink.ddl-generation" value="create-tables" />
 	// Otherwise the dababase will be reset every time.
-	private static final String PERSISTENCE_UNI_NAME = "domainModel";
+	private static final String PERSISTENCE_UNIT_NAME = "domainModel";
 	private static EntityManagerFactory entityManagerFactory;
+	private static boolean isEntityManagerFactoryInitialized = false;
 
 	private DomainModelPersistenceManager() {
+	}
+
+	/**
+	 * Gives back the EntityManagerFactory. If the EntityManagerFactory isn't
+	 * initilized, then first initialize it.
+	 * 
+	 * @return the EntityManagerFactory
+	 */
+	public static EntityManagerFactory getEntityManagerFactory() {
+		if (!isEntityManagerFactoryInitialized) {
+			entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+		}
+		return entityManagerFactory;
 	}
 
 	/**
@@ -26,8 +40,7 @@ public class DomainModelPersistenceManager {
 	 *            the CaseModel that should be persisted.
 	 */
 	public static void saveCaseModel(CaseModel caseModel) {
-		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNI_NAME);
-		EntityManager entitiyManager = entityManagerFactory.createEntityManager();
+		EntityManager entitiyManager = getEntityManagerFactory().createEntityManager();
 
 		entitiyManager.getTransaction().begin();
 		entitiyManager.persist(caseModel);

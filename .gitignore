@@ -8,9 +8,9 @@
 *.iml
 resources/database_connection
 target/*
+src/main/resources/META-INF/persistence.xml
 *~
 /target/
 src/main/resources/
 config.properties
 config_template.properties
-src/main/resources/META-INF/persistence.xml
