@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.Transient;
 
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
@@ -38,16 +39,13 @@ public class CaseModel {
 	/**
 	 * Persists a the CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
-	 * 
-	 * @param caseModel
-	 *            the CaseModel that should be persisted.
 	 */
 	public void saveCaseModel() {
-		EntityManager entitiyManager = DomainModelPersistenceManager.getEntityManagerFactory().createEntityManager();
+		EntityManager entityManager = DomainModelPersistenceManager.getEntityManagerFactory().createEntityManager();
 
-		entitiyManager.getTransaction().begin();
-		entitiyManager.persist(this);
-		entitiyManager.getTransaction().commit();
+		entityManager.getTransaction().begin();
+		entityManager.merge(this);
+		entityManager.getTransaction().commit();
 	}
 
 	public String getId() {

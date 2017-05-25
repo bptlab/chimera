@@ -36,9 +36,13 @@ public class DomainModelPersistenceManager {
 	 * Persists a given CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
 	 * 
+	 * @deprecated use {@link de.hpi.bpt.chimera.model.CaseModel#saveCaseModel()
+	 *             CaseModel.saveCaseModel()} instead.
+	 * 
 	 * @param caseModel
 	 *            the CaseModel that should be persisted.
 	 */
+	@Deprecated
 	public static void saveCaseModel(CaseModel caseModel) {
 		EntityManager entitiyManager = getEntityManagerFactory().createEntityManager();
 

@@ -32,23 +32,40 @@ public class CaseModelParserTest {
 	public void parseCaseModel() {
 
 
-		CaseModel cm;
-		cm = CaseModelParser.parseCaseModel(jsonString);
-		assertEquals("591330db1ed1325048306e40", cm.getId());
-		cm.saveCaseModel();
-
-		CaseModel cmb;
-		cmb = CaseModelParser.parseCaseModel(jsonString);
-		assertEquals("591330db1ed1325048306e40", cmb.getId());
-		cmb.saveCaseModel();
+		CaseModel cm1;
+		cm1 = CaseModelParser.parseCaseModel(jsonString);
+		assertEquals("591330db1ed1325048306e40", cm1.getId());
+		cm1.saveCaseModel();
 
 		CaseModel cm2;
-		cm2 =DomainModelPersistenceManager.loadCaseModel("591330db1ed1325048306e40");
-		assertEquals("The id hasn't saved correctly.", cm.getId(), cm2.getId());
-		assertEquals("The name hasn't saved correcty.", cm.getName(), cm2.getName());
-		assertEquals("The DataModel VersionNumber hasn't saved correcty.", cm.getDataModel().getVersionNumber(), cm2.getDataModel().getVersionNumber());
-		assertEquals("The First Fragments name hasn't saved correcty.", cm.getFragments().get(0).getName(), cm2.getFragments().get(0).getName());
-		assertEquals("The First DataModelClass' name hasn't  saved correcty.", cm.getDataModel().getDataModelClasses().get(0).getName(), cm2.getDataModel().getDataModelClasses().get(0).getName());
-		assertEquals("The OLC hasn't saved correctly", ((DataClass) (cm.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cm2.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
+		cm2 = CaseModelParser.parseCaseModel(jsonString);
+		cm2.setId("591330db1ed1325048306e41");
+		assertEquals("591330db1ed1325048306e41", cm2.getId());
+		cm2.saveCaseModel();
+
+		CaseModel cmLoaded;
+		cmLoaded = DomainModelPersistenceManager.loadCaseModel("591330db1ed1325048306e40");
+		assertEquals("The id wasn't saved correctly.", cm1.getId(), cmLoaded.getId());
+		assertEquals("The name wasn't saved correcty.", cm1.getName(), cmLoaded.getName());
+		assertEquals("The DataModel VersionNumber wasn't saved correcty.", cm1.getDataModel().getVersionNumber(), cmLoaded.getDataModel().getVersionNumber());
+		assertEquals("The First Fragments name wasn't saved correcty.", cm1.getFragments().get(0).getName(), cmLoaded.getFragments().get(0).getName());
+		assertEquals("The First DataModelClass' name wasn't  saved correcty.", cm1.getDataModel().getDataModelClasses().get(0).getName(), cmLoaded.getDataModel().getDataModelClasses().get(0).getName());
+		assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm1.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
+
+
+		CaseModel cm3;
+		cm3 = CaseModelParser.parseCaseModel(jsonString);
+		assertEquals("591330db1ed1325048306e40", cm1.getId());
+		cm3.setName(cm1.getName() + "_Version2");
+		cm3.saveCaseModel();
+
+		CaseModel cmLoaded2;
+		cmLoaded2 = DomainModelPersistenceManager.loadCaseModel("591330db1ed1325048306e40");
+		assertEquals("The id wasn't saved correctly.", cm3.getId(), cmLoaded2.getId());
+		assertEquals("The name wasn't saved correcty.", cm3.getName(), cmLoaded2.getName());
+		assertEquals("The DataModel VersionNumber wasn't saved correcty.", cm3.getDataModel().getVersionNumber(), cmLoaded2.getDataModel().getVersionNumber());
+		assertEquals("The First Fragments name wasn't saved correcty.", cm3.getFragments().get(0).getName(), cmLoaded2.getFragments().get(0).getName());
+		assertEquals("The First DataModelClass' name wasn't  saved correcty.", cm3.getDataModel().getDataModelClasses().get(0).getName(), cmLoaded2.getDataModel().getDataModelClasses().get(0).getName());
+		assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm3.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded2.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
 	}
 }
