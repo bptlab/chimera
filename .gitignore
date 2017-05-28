@@ -13,3 +13,6 @@ target/*
 src/main/resources/
 config.properties
 config_template.properties
+
+# Ignore MacOS Finder files
+.DS_Store
