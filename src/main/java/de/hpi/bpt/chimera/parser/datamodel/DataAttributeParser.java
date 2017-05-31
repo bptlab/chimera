@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
+import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 import de.hpi.bpt.chimera.validation.NameValidator;
 
 public class DataAttributeParser {
@@ -25,8 +26,9 @@ public class DataAttributeParser {
 			dataAttribute.setType(type);
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid DataAttribute");
+			throw new IllegalCaseModelException("Invalid DataAttribute");
 		}
+
 		return dataAttribute;
 	}
 }

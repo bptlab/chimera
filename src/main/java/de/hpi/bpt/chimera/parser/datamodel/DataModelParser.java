@@ -34,7 +34,7 @@ public class DataModelParser {
 			dataModel.setDataModelClasses(dataModelClasses);
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid DataModel");
+			throw new JSONException("Invalid DataModel->" + e.getMessage());
 		}
 		return dataModel;
 	}
@@ -60,7 +60,7 @@ public class DataModelParser {
 					dataModelClasses.add(DataModelClassParser.parseDataClass(classJson));
 			} catch (JSONException e) {
 				log.error(e);
-				throw new JSONException("Invalid DataModelClass");
+				throw new JSONException("Invalid DataModelClass->" + e.getMessage());
 			}
 		}
 

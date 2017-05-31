@@ -5,14 +5,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.persistence.Transient;
 
+import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
@@ -30,6 +27,8 @@ public class CaseModel {
 	private int versionNumber;
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private DataModel dataModel;
+	@OneToOne(cascade = CascadeType.PERSIST)
+	private List<CaseStartTrigger> startCaseTrigger;
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private TerminationCondition terminationCondition;
 	@OneToMany(cascade = CascadeType.PERSIST)
@@ -78,6 +77,14 @@ public class CaseModel {
 
 	public void setDataModel(DataModel dataModel) {
 		this.dataModel = dataModel;
+	}
+
+	public List<CaseStartTrigger> getStartCaseTrigger() {
+		return startCaseTrigger;
+	}
+
+	public void setStartCaseTrigger(List<CaseStartTrigger> startCaseTrigger) {
+		this.startCaseTrigger = startCaseTrigger;
 	}
 
 	public TerminationCondition getTerminationCondition() {

@@ -5,10 +5,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import de.hpi.bpt.chimera.model.Listable;
 import de.hpi.bpt.chimera.model.Nameable;
 
 @Entity
-public class DataAttribute implements Nameable {
+public class DataAttribute implements Listable, Nameable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;

@@ -13,6 +13,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.EventClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycle;
+import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 import de.hpi.bpt.chimera.validation.NameValidator;
 
 public class DataModelClassParser {
@@ -37,7 +38,7 @@ public class DataModelClassParser {
 			dataClass.setObjectLifecycle(objectLifecycle);
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid Dataclass");
+			throw new JSONException("Invalid Dataclass - " + e.getMessage());
 		}
 
 		return dataClass;
@@ -70,10 +71,12 @@ public class DataModelClassParser {
 			dataModelClass.setName(name);
 
 			List<DataAttribute> dataAttributes = getDataAttributes(dataModelClassJson.getJSONArray("attributes"));
-			dataModelClass.setAttributes(dataAttributes);
+			dataModelClass.setDataAttributes(dataAttributes);
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid DataModelClass");
+			throw new IllegalCaseModelException("Invalid DataModelClass - " + e.getMessage());
+		} catch (IllegalCaseModelException e) {
+			throw e;
 		}
 	}
 

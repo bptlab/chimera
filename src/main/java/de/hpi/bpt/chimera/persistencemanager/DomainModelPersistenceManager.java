@@ -12,7 +12,7 @@ public class DomainModelPersistenceManager {
 	// name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 	// to <property name="eclipselink.ddl-generation" value="create-tables" />
 	// Otherwise the dababase will be reset every time.
-	private static final String PERSISTENCE_UNIT_NAME = "domainModel";
+	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
 	private static EntityManagerFactory entityManagerFactory;
 	private static boolean isEntityManagerFactoryInitialized = false;
 

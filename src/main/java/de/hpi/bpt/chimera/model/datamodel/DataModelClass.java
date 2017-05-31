@@ -1,6 +1,8 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,7 +21,7 @@ public abstract class DataModelClass implements Nameable, Listable {
 	private int dbId;
 	private String name;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private List<DataAttribute> attributes;
+	private List<DataAttribute> dataAttributes;
 
 	@Override
 	public String getName() {
@@ -31,12 +33,20 @@ public abstract class DataModelClass implements Nameable, Listable {
 		this.name = name;
 	}
 
-	public List<DataAttribute> getAttributes() {
-		return attributes;
+	public List<DataAttribute> getDataAttributes() {
+		return dataAttributes;
 	}
 
-	public void setAttributes(List<DataAttribute> attributes) {
-		this.attributes = attributes;
+	public void setDataAttributes(List<DataAttribute> dataAttributes) {
+		this.dataAttributes = dataAttributes;
 	}
 
+	public Map<String, DataAttribute> getNameToDataAttribute() {
+		Map<String, DataAttribute> nameToDataAttribute = new HashMap<>();
+
+		for (DataAttribute dataAttribute : this.dataAttributes) {
+			nameToDataAttribute.put(dataAttribute.getName(), dataAttribute);
+		}
+		return nameToDataAttribute;
+	}
 }

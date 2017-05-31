@@ -53,7 +53,7 @@ public class ObjectLifecycleParser {
 
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid ObjectLifecycle");
+			throw new JSONException("Invalid ObjectLifecycle States -> " + e.getMessage());
 		}
 
 		return objectLifecycle;
@@ -82,6 +82,8 @@ public class ObjectLifecycleParser {
 	private static Map<String, ObjectLifecycleState> getMapIdToState(JSONArray olcStateJsonArray) {
 		int arraySize = olcStateJsonArray.length();
 		Map<String, ObjectLifecycleState> mapIdToState = new HashMap<>();
+		// if (true)
+		// throw new JSONException("Invalid ObjectLifecycle States");
 
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject olcStateJson = olcStateJsonArray.getJSONObject(i);
@@ -91,13 +93,12 @@ public class ObjectLifecycleParser {
 				String name = olcStateJson.getString("name");
 				NameValidator.validateName(name);
 				olcState.setName(name);
-
 				String id = olcStateJson.getString("id");
 
 				mapIdToState.put(id, olcState);
 			} catch (JSONException e) {
 				log.error(e);
-				throw new JSONException("Invalid ObjectLifecycle States");
+				throw new JSONException("Invalid ObjectLifecycle States - " + e.getMessage());
 			}
 		}
 

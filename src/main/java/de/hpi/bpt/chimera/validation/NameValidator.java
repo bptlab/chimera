@@ -6,20 +6,20 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import de.hpi.bpt.chimera.model.Nameable;
+import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 
 public class NameValidator {
 	private NameValidator() {
 	}
 
 	/**
-	 * Check if name of DataClass contains only unicode letters, numbers or
-	 * spaces (' ').
+	 * Check if name contains only unicode letters, numbers or spaces (' ').
 	 * 
 	 * @param name
 	 */
 	public static void validateName(String name) {
 		if (!StringUtils.isAlphanumericSpace(name)) {
-			throw new IllegalArgumentException(String.format("%s is not a valid name.", name));
+			throw new IllegalCaseModelException(String.format("%s is not a valid name", name));
 		}
 	}
 
@@ -36,7 +36,7 @@ public class NameValidator {
 		for (Nameable nameable : nameables) {
 			String name = nameable.getName();
 			if (names.contains(name)) {
-				throw new IllegalArgumentException(String.format("%s occurs more than once.", name));
+				throw new IllegalCaseModelException(String.format("%s occurs more than once", name));
 			}
 			names.add(name);
 		}

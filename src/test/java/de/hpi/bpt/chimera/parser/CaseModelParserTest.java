@@ -3,14 +3,21 @@ package de.hpi.bpt.chimera.parser;
 import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
-import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
+import de.hpi.bpt.chimera.model.datamodel.DataModel;
+import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
+import de.hpi.bpt.chimera.model.datamodel.EventClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycle;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.model.fragment.Fragment;
 
 public class CaseModelParserTest {
 	String jsonString = "";
@@ -30,42 +37,72 @@ public class CaseModelParserTest {
 
 	@Test
 	public void parseCaseModel() {
+		CaseModel caseModel;
+		caseModel = CaseModelParser.parseCaseModel(jsonString);
+		assertEquals("wrong CaseModel id", "591330db1ed1325048306e40", caseModel.getId());
+		assertEquals("wrong CaseModel name", "testScenario123", caseModel.getName());
+		assertEquals("wrong CaseModel version", 22, caseModel.getVersionNumber());
 
+		DataModel dataModel = caseModel.getDataModel();
+		assertEquals("wrong DataModel version", 21, dataModel.getVersionNumber());
 
-		CaseModel cm1;
-		cm1 = CaseModelParser.parseCaseModel(jsonString);
-		assertEquals("591330db1ed1325048306e40", cm1.getId());
-		cm1.saveCaseModel();
+		List<DataModelClass> dataModelClasses = dataModel.getDataModelClasses();
 
-		CaseModel cm2;
-		cm2 = CaseModelParser.parseCaseModel(jsonString);
-		cm2.setId("591330db1ed1325048306e41");
-		assertEquals("591330db1ed1325048306e41", cm2.getId());
-		cm2.saveCaseModel();
+		assertTrue("wrong DataModelClass type: DataClass", DataClass.class.isInstance(dataModelClasses.get(0)));
+		DataClass dataClass = (DataClass) dataModelClasses.get(0);
+		assertEquals("wrong DataClass name", "dataclass 1", dataClass.getName());
 
-		CaseModel cmLoaded;
-		cmLoaded = DomainModelPersistenceManager.loadCaseModel("591330db1ed1325048306e40");
-		assertEquals("The id wasn't saved correctly.", cm1.getId(), cmLoaded.getId());
-		assertEquals("The name wasn't saved correcty.", cm1.getName(), cmLoaded.getName());
-		assertEquals("The DataModel VersionNumber wasn't saved correcty.", cm1.getDataModel().getVersionNumber(), cmLoaded.getDataModel().getVersionNumber());
-		assertEquals("The First Fragments name wasn't saved correcty.", cm1.getFragments().get(0).getName(), cmLoaded.getFragments().get(0).getName());
-		assertEquals("The First DataModelClass' name wasn't  saved correcty.", cm1.getDataModel().getDataModelClasses().get(0).getName(), cmLoaded.getDataModel().getDataModelClasses().get(0).getName());
-		assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm1.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
+		assertTrue("wrong DataModelClass type: EventClass", EventClass.class.isInstance(dataModelClasses.get(1)));
+		EventClass eventClass = (EventClass) dataModelClasses.get(1);
+		assertEquals("wrong EventClass name", "eventclass1", eventClass.getName());
 
+		ObjectLifecycle objectLifecycle = dataClass.getObjectLifecycle();
 
-		CaseModel cm3;
-		cm3 = CaseModelParser.parseCaseModel(jsonString);
-		assertEquals("591330db1ed1325048306e40", cm1.getId());
-		cm3.setName(cm1.getName() + "_Version2");
-		cm3.saveCaseModel();
+		testObjectLifecycleStates(objectLifecycle.getObjectLifecycleStates());
 
-		CaseModel cmLoaded2;
-		cmLoaded2 = DomainModelPersistenceManager.loadCaseModel("591330db1ed1325048306e40");
-		assertEquals("The id wasn't saved correctly.", cm3.getId(), cmLoaded2.getId());
-		assertEquals("The name wasn't saved correcty.", cm3.getName(), cmLoaded2.getName());
-		assertEquals("The DataModel VersionNumber wasn't saved correcty.", cm3.getDataModel().getVersionNumber(), cmLoaded2.getDataModel().getVersionNumber());
-		assertEquals("The First Fragments name wasn't saved correcty.", cm3.getFragments().get(0).getName(), cmLoaded2.getFragments().get(0).getName());
-		assertEquals("The First DataModelClass' name wasn't  saved correcty.", cm3.getDataModel().getDataModelClasses().get(0).getName(), cmLoaded2.getDataModel().getDataModelClasses().get(0).getName());
-		assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm3.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded2.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
+		DataAttribute dataAttribute = dataClass.getAttributes().get(0);
+		assertEquals("wrong DataAttribute name", "testString", dataAttribute.getName());
+		assertEquals("wrong DataAttribute type", "String", dataAttribute.getType());
+
+		Fragment fragment = caseModel.getFragments().get(0);
+		assertEquals("wrong Fragment id", "591330db1ed1325048306e42", fragment.getId());
+		assertEquals("wrong Fragment name", "First Fragment", fragment.getName());
+		assertEquals("wrong Fragment version", 3, fragment.getVersionNumber());
+		// TODO: implement testing for fragment elements
+
+	}
+
+	private void testObjectLifecycleStates(List<ObjectLifecycleState> objectLifecycleStates) {
+		assertTrue("wrong ObjectLifecycleStates amount", objectLifecycleStates.size() == 3);
+
+		// has to handle olcStates in specific behavior because List is unsorted
+		// because of HashMap in ObjectLifecycleParser
+		ObjectLifecycleState state1 = null, state2 = null, state3 = null;
+		boolean state1_occured = false, state2_occured = false, state3_occured = false;
+
+		for (ObjectLifecycleState state : objectLifecycleStates) {
+			if (state.getName().equals("State 1")) {
+				state1 = state;
+				state1_occured = true;
+			}
+			else if (state.getName().equals("State 2")) {
+				state2 = state;
+				state2_occured = true;
+			}
+			else if (state.getName().equals("State 3")) {
+				state3 = state;
+				state3_occured = true;
+			}
+		}
+		assertTrue("wrong ObjectLifecycleStates", state1_occured && state2_occured && state3_occured);
+
+		assertTrue("wrong olcState predecessors", state1.getPredecessors().isEmpty());
+		assertEquals("wrong olcState successors", "State 2", state1.getSuccessors().get(0).getName());
+
+		assertEquals("wrong olcState successors", "State 1", state2.getPredecessors().get(0).getName());
+		assertTrue("wrong olcState successors", state2.getSuccessors().isEmpty());
+
+		assertTrue("wrong olcState predecessors", state3.getPredecessors().isEmpty());
+		assertTrue("wrong olcState successors", state3.getSuccessors().isEmpty());
 	}
 }

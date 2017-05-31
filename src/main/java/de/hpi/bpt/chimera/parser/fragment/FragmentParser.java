@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 import de.hpi.bpt.chimera.validation.NameValidator;
 
 public class FragmentParser {
@@ -31,7 +32,7 @@ public class FragmentParser {
 			fragment.setContentXML(contentXML);
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid fragment");
+			throw new IllegalCaseModelException("Invalid Fragment->" + e.getMessage());
 		}
 		// TODO: validate fragment
 
