@@ -60,7 +60,7 @@ public class CaseModelParserTest {
 
 		testObjectLifecycleStates(objectLifecycle.getObjectLifecycleStates());
 
-		DataAttribute dataAttribute = dataClass.getAttributes().get(0);
+		DataAttribute dataAttribute = dataClass.getDataAttributes().get(0);
 		assertEquals("wrong DataAttribute name", "testString", dataAttribute.getName());
 		assertEquals("wrong DataAttribute type", "String", dataAttribute.getType());
 
