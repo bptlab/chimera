@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
-import de.hpi.bpt.chimera.validation.NameValidator;
+import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class FragmentParser {
 	private static final Logger log = Logger.getLogger((FragmentParser.class).getName());
@@ -22,7 +22,7 @@ public class FragmentParser {
 			fragment.setId(id);
 
 			String name = fragmentJson.getString("name");
-			NameValidator.validateName(name);
+			NameValidation.validateName(name);
 			fragment.setName(name);
 
 			int versionNumber = fragmentJson.getInt("revision");

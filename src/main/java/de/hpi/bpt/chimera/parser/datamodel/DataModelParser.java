@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
-import de.hpi.bpt.chimera.validation.NameValidator;
+import de.hpi.bpt.chimera.validation.NameValidation;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 
 public class DataModelParser {
@@ -64,7 +64,7 @@ public class DataModelParser {
 			}
 		}
 
-		NameValidator.validateNameFrequency(dataModelClasses);
+		NameValidation.validateNameFrequency(dataModelClasses);
 
 		return dataModelClasses;
 	}

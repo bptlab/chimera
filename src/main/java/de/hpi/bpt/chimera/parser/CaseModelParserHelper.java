@@ -1,15 +1,14 @@
 package de.hpi.bpt.chimera.parser;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import de.hpi.bpt.chimera.model.Listable;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.datamodel.DataModelClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
+import de.hpi.bpt.chimera.validation.ParsingHelperValidation;
 
 /**
  * Assists CaseModelParser by storing NameToObject maps, so they do not have to
@@ -38,8 +37,8 @@ public class CaseModelParserHelper {
 	 * @return DataClass
 	 */
 	public DataClass getNameToDataClass(String dataClassName) {
-		validateMap(this.nameToDataModelClass, dataClassName);
-		validateType(this.nameToDataModelClass.get(dataClassName), DataClass.class);
+		ParsingHelperValidation.validateMap(this.nameToDataModelClass, dataClassName);
+		ParsingHelperValidation.validateType(this.nameToDataModelClass.get(dataClassName), DataClass.class);
 		return (DataClass) this.nameToDataModelClass.get(dataClassName);
 	}
 
@@ -57,12 +56,12 @@ public class CaseModelParserHelper {
 	 */
 	public DataAttribute getNameToDataAttribute(DataModelClass dataModelClass, String dataAttributeName) {
 		if (!this.dataClassAndNameToDataAttribute.containsKey(dataModelClass)) {
-			validateList(dataModel.getDataModelClasses(), dataModelClass);
+			ParsingHelperValidation.validateList(dataModel.getDataModelClasses(), dataModelClass);
 
 			this.dataClassAndNameToDataAttribute.put(dataModelClass, dataModelClass.getNameToDataAttribute());
 		}
 
-		validateMap(this.dataClassAndNameToDataAttribute.get(dataModelClass), dataAttributeName);
+		ParsingHelperValidation.validateMap(this.dataClassAndNameToDataAttribute.get(dataModelClass), dataAttributeName);
 		return this.dataClassAndNameToDataAttribute.get(dataModelClass).get(dataAttributeName);
 	}
 
@@ -80,31 +79,12 @@ public class CaseModelParserHelper {
 	 */
 	public ObjectLifecycleState getNameToObjectLifecycleState(DataClass dataClass, String objectLifecycleStateName) {
 		if (!this.dataClassAndNameToOLCState.containsKey(dataClass)) {
-			validateList(dataModel.getDataModelClasses(), dataClass);
+			ParsingHelperValidation.validateList(dataModel.getDataModelClasses(), dataClass);
 			
 			this.dataClassAndNameToOLCState.put(dataClass, dataClass.getNameToObjectLifecycleState());
 		} 
 		
-		validateMap(this.dataClassAndNameToOLCState.get(dataClass), objectLifecycleStateName);
+		ParsingHelperValidation.validateMap(this.dataClassAndNameToOLCState.get(dataClass), objectLifecycleStateName);
 		return this.dataClassAndNameToOLCState.get(dataClass).get(objectLifecycleStateName);
-	}
-
-	// TODO: put this in validation
-	private static void validateMap(Map<String, ? extends Listable> mapToCheck, String toCheck) {
-		if (!mapToCheck.containsKey(toCheck)) {
-			throw new IllegalArgumentException(String.format("%s does not exist", toCheck));
-		}
-	}
-
-	private static void validateList(List<? extends Listable> listToCheck, Listable objectToCheck) {
-		if (!listToCheck.contains(objectToCheck)) {
-			throw new IllegalArgumentException(String.format("%s does not exist", objectToCheck.toString()));
-		}
-	}
-
-	private static void validateType(Object o, @SuppressWarnings("rawtypes") Class clazz) {
-		if (!(clazz.isInstance(o))) {
-			throw new IllegalArgumentException(String.format("%s is not a %s", o.toString(), clazz.getName()));
-		}
 	}
 }

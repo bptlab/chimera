@@ -36,5 +36,17 @@ public class DataObjectStateCondition {
 		this.state = state;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof DataObjectStateCondition) {
+			DataObjectStateCondition toCompare = (DataObjectStateCondition) o;
+			return this.dataClass.equals(toCompare.getDataClass()) && this.state.equals(toCompare.getState());
+		}
+		return false;
+	}
 
+	@Override
+	public int hashCode() {
+		return (int) (((long) this.dataClass.hashCode() + (long) this.state.hashCode()) / 2);
+	}
 }

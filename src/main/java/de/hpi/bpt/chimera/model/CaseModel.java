@@ -17,10 +17,6 @@ import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
 public class CaseModel {
-
-
-	// TODO is this id unique, or should we add an auto generated id which then
-	// is for the database only?
 	@Id
 	private String id;
 	private String name;

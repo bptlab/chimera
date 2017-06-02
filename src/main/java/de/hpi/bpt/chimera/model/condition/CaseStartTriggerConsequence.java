@@ -33,4 +33,8 @@ public class CaseStartTriggerConsequence {
 	public void setMapping(List<DataAttributeJsonPath> mapping) {
 		this.mapping = mapping;
 	}
+
+	public void addMapping(List<DataAttributeJsonPath> mapping) {
+		this.mapping.addAll(mapping);
+	}
 }

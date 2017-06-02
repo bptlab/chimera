@@ -17,7 +17,8 @@ import de.hpi.bpt.chimera.parser.datamodel.DataModelParser;
 import de.hpi.bpt.chimera.parser.condition.CaseStartTriggerParser;
 import de.hpi.bpt.chimera.parser.condition.TerminationConditionParser;
 import de.hpi.bpt.chimera.parser.fragment.FragmentParser;
-import de.hpi.bpt.chimera.validation.NameValidator;
+import de.hpi.bpt.chimera.validation.FragmentValidation;
+import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class CaseModelParser {
 	private static final Logger log = Logger.getLogger((CaseModelParser.class).getName());
@@ -40,7 +41,7 @@ public class CaseModelParser {
 			caseModel.setId(id);
 
 			String name = caseModelJson.getString("name");
-			NameValidator.validateName(name);
+			NameValidation.validateName(name);
 			caseModel.setName(name);
 
 			int versionNumber = caseModelJson.getInt("revision");
@@ -50,7 +51,7 @@ public class CaseModelParser {
 			caseModel.setDataModel(dataModel);
 
 			// DataModel has to be parsed, before TerminationCondition and
-			// CaseStartTrigger can be parsed. Both parser get help by
+			// CaseStartTrigger can be parsed. Both parser need help by
 			// CaseModelParserHelper
 			CaseModelParserHelper parserHelper = new CaseModelParserHelper(dataModel);
 
@@ -62,7 +63,8 @@ public class CaseModelParser {
 			
 			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"));
 			caseModel.setFragments(fragments);
-		} catch (JSONException e) {
+
+		} catch (JSONException | IllegalArgumentException e) {
 			log.error(e);
 			throw new IllegalCaseModelException("Invalid CaseModel: " + e.getMessage());
 		} catch (IllegalCaseModelException e) {
@@ -77,7 +79,7 @@ public class CaseModelParser {
 	 * 
 	 * @param caseStartTriggerjsonArray
 	 * @param parserHelper
-	 * @return List<CaseStartTrigger>
+	 * @return List of CaseStartTrigger
 	 */
 	private static List<CaseStartTrigger> getCaseStartTrigger(JSONArray caseStartTriggerjsonArray, CaseModelParserHelper parserHelper) {
 		int arraySize = caseStartTriggerjsonArray.length();
@@ -97,11 +99,11 @@ public class CaseModelParser {
 	 * Create list of Fragments out of fragmentJsonArray. Uses FragmentParser.
 	 * 
 	 * @param fragmentJsonArray
-	 * @return List<Fragment>
+	 * @return List of Fragment
 	 */
 	private static List<Fragment> getFragments(JSONArray fragmentJsonArray) {
 		int arraySize = fragmentJsonArray.length();
-		validateFragmentAmount(arraySize);
+		FragmentValidation.validateFragmentAmount(arraySize);
 		List<Fragment> fragments = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {
@@ -110,12 +112,5 @@ public class CaseModelParser {
 			fragments.add(currentFragment);
 		}
 		return fragments;
-	}
-
-	// TODO: put this in validator
-	private static void validateFragmentAmount(int fragmentAmount) {
-		if (fragmentAmount == 0) {
-			throw new IllegalCaseModelException("Invalid CaseModel - no fragments specified");
-		}
 	}
 }

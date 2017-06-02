@@ -14,7 +14,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.EventClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycle;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
-import de.hpi.bpt.chimera.validation.NameValidator;
+import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class DataModelClassParser {
 	private static final Logger log = Logger.getLogger((DataModelClassParser.class).getName());
@@ -34,11 +34,11 @@ public class DataModelClassParser {
 
 		try {
 			ObjectLifecycle objectLifecycle = ObjectLifecycleParser.parseObjectLifecylce(dataClassJson.getJSONObject("olc"));
-			// TODO: validate objectLifecylce
 			dataClass.setObjectLifecycle(objectLifecycle);
+
 		} catch (JSONException e) {
 			log.error(e);
-			throw new JSONException("Invalid Dataclass - " + e.getMessage());
+			throw new IllegalCaseModelException("Invalid Dataclass - " + e.getMessage());
 		}
 
 		return dataClass;
@@ -67,12 +67,12 @@ public class DataModelClassParser {
 	private static void parseDataModelClass(final JSONObject dataModelClassJson, DataModelClass dataModelClass) {
 		try {
 			String name = dataModelClassJson.getString("name");
-			NameValidator.validateName(name);
+			NameValidation.validateName(name);
 			dataModelClass.setName(name);
 
 			List<DataAttribute> dataAttributes = getDataAttributes(dataModelClassJson.getJSONArray("attributes"));
 			dataModelClass.setDataAttributes(dataAttributes);
-		} catch (JSONException e) {
+		} catch (JSONException | IllegalArgumentException e) {
 			log.error(e);
 			throw new IllegalCaseModelException("Invalid DataModelClass - " + e.getMessage());
 		} catch (IllegalCaseModelException e) {
@@ -97,7 +97,7 @@ public class DataModelClassParser {
 			dataAttributes.add(dataAttribute);
 		}
 
-		NameValidator.validateNameFrequency(dataAttributes);
+		NameValidation.validateNameFrequency(dataAttributes);
 
 		return dataAttributes;
 	}

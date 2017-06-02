@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
-import de.hpi.bpt.chimera.validation.NameValidator;
+import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class DataAttributeParser {
 	private static final Logger log = Logger.getLogger((DataAttributeParser.class).getName());
@@ -19,7 +19,7 @@ public class DataAttributeParser {
 		
 		try {
 			String name = dataAttributeJson.getString("name");
-			NameValidator.validateName(name);
+			NameValidation.validateName(name);
 			dataAttribute.setName(name);
 
 			String type = dataAttributeJson.getString("datatype");
