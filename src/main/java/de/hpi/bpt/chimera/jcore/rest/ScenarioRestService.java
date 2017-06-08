@@ -1,5 +1,28 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.JAXBException;
+
+import org.apache.log4j.Logger;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import de.hpi.bpt.chimera.database.DbFragment;
 import de.hpi.bpt.chimera.database.DbScenario;
 import de.hpi.bpt.chimera.database.data.DbTerminationCondition;
@@ -8,19 +31,6 @@ import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataTransitionException;
 import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataclassReferenceException;
 import de.hpi.bpt.chimera.jcore.Scenario;
 import de.hpi.bpt.chimera.jcore.ScenarioFactory;
-
-import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class implements the REST interface for dealing with scenarios.
@@ -79,6 +89,21 @@ public class ScenarioRestService extends AbstractRestService {
 			log.error("Error: ", e);
 			return Response.status(400).type(MediaType.APPLICATION_JSON).entity(buildException("Invalid xml " + e.getMessage())).build();
 		}
+	}
+
+	/**
+	 * Import a case model
+	 *
+	 * @return a http response whether import succeeded or failed 
+	 */
+	@POST
+	@Path("upload")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response importCaseModel(@FormDataParam("file") InputStream file) {
+		log.info("A case model file was uploaded");
+		java.util.Scanner s = new java.util.Scanner(file).useDelimiter("\\A");
+	    String caseModelContent = s.hasNext() ? s.next() : "";
+		return postInstance(caseModelContent);
 	}
 
 	private String buildException(String text) {

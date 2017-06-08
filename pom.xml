@@ -192,7 +192,7 @@
 
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet-core</artifactId>
+			<artifactId>jersey-container-servlet</artifactId>
 			<!-- use the following artifactId if you don't need servlet 2.x compatibility -->
 			<!-- artifactId>jersey-container-servlet</artifactId -->
 		</dependency>
@@ -301,12 +301,10 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-inmemory</artifactId>
-			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ibatis</groupId>
@@ -335,7 +333,10 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
