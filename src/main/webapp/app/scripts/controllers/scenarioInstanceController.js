@@ -5,6 +5,14 @@ angular.module('jfrontend')
         function ($routeParams, $location, $http, $scope) {
             var instanceCtrl = this;
 
+            
+            //for uploading file via rest-api
+            var formdata = new FormData();
+            $scope.getTheFiles = function ($files) {
+                angular.forEach($files, function (value, key) {
+                    formdata.append(key, value);
+                });
+
             $scope.$on('$viewContentLoaded', function () {
                 console.log($routeParams.id, $routeParams.instanceId);
                 instanceCtrl.initialize();
@@ -319,6 +327,31 @@ angular.module('jfrontend')
                     console.log('Loading activity output states failed.');
                 });
             };
+
+            //upload file to REST-API
+            this.uploadFiles = function (attributeID) {            
+                
+                var request = {
+                    method: 'POST',
+                    url: (JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID),
+                    data: formdata,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                };
+
+                // send the files to REST-API
+                $http(request)
+                    .success(function (d) {
+                        alert(d);
+                    })
+                    .error(function () {
+                    });
+            }
+
+
+            //TODO: Download files
+
 
             // TODO support referenced activities again
             /* this.handleReferencedActivities = function (activityID) {
