@@ -361,8 +361,8 @@ function ($routeParams, $location, $http, $scope) {
 
     //for uploading file via rest-api
     var formdata = new FormData();
-    this.getTheFiles = function ($files) {
-        angular.forEach($files, function (value, key) {
+    this.getTheFiles = function ($file) {
+        angular.forEach($file, function (value, key) {
             formdata.append(key, value);
         })
     };    
