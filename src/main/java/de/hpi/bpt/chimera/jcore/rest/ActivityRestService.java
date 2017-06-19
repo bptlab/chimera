@@ -423,100 +423,92 @@ public class ActivityRestService extends AbstractRestService {
 			Map<String, String> dataClassNameToState = new HashMap<>();
 			for (Object dataClassName : postJson.keySet()) {
 				dataClassNameToState.put((String) dataClassName, postJson.getString((String) dataClassName));
-
+				
 			}
-
+			
 			executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId, dataClassNameToState);
 		} else {
 			executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId);
 		}
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 	}
-
-	//FILE UPLOAD BELOW.
-	/**
-	* Receives the uploaded files and stores it on the server via utility methods.
-	* @param attributeID	ID of the attribute that the uploaded file belongs to
-	* @return 202 (ACCEPTED) when the file was saved successfully.
-	* 500 when the file could not be uploaded and saved. Possible reasons are
-	* 1) Invalid form Data
-	* 2) The destination folder could not be created
-	* 3) The file could not be saved on the server
-	*/
-	private static final String UPLOAD_FOLDER = "./uploadedFiles/";
+	
+	
+	//Upload File to Server via REST below
 	@POST
+	@Path("files/{attributeID}/")  //Your Path or URL to call this service
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Path("files/{attributeID}/")
 	public Response uploadFile(
-			@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
-		// check if all form parameters are provided
+	@FormDataParam("file") InputStream uploadedInputStream,
+	@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
+		//Get the root path of the VM, were the file is to be stored.
+		String sRootPath = new File("").getAbsolutePath();
+		String uploadedFileLocation = sRootPath + "/uploadedFiles/" + attributeID + "/" + fileDetail.getFileName();
+		String uploadedFileGeneric = "C://bpt/bpt-apache-tomcat/bin/uploaded/" + attributeID;
+		createFolderIfNotExists(uploadedFileGeneric);
+		createFolderIfNotExists(uploadedFileLocation);
+		System.out.println(uploadedFileLocation);
+		// save it
+		File  objFile=new File(uploadedFileLocation);
+		if(objFile.exists())
+		{
+			objFile.delete();
+			
+		}
 		
-		if (uploadedInputStream == null || fileDetail == null)
-			return Response.status(400).entity("Invalid form data").build();
-		// create destination folder, if it not exists
+		saveToFile(uploadedInputStream, uploadedFileLocation);
+		
+		String output = "File uploaded via Jersey based RESTFul Webservice to: " + uploadedFileLocation;
+		
+		return Response.status(200).entity(output).build();
+		
+	}
+	private void saveToFile(InputStream uploadedInputStream,
+	String uploadedFileLocation) {
+		
 		try {
-			createFolderIfNotExists(UPLOAD_FOLDER);
-		} catch (SecurityException se) {
-			return Response.status(500)
-					.entity("Can not create destination folder on server")
-					.build();
-		}
-		String uploadedFileLocation = UPLOAD_FOLDER + attributeID;
-		try {
-			saveToFile(uploadedInputStream, uploadedFileLocation);
+			OutputStream out = null;
+			int read = 0;
+			byte[] bytes = new byte[1024];
+			
+			out = new FileOutputStream(new File(uploadedFileLocation));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
+			}
+			out.flush();
+			out.close();
 		} catch (IOException e) {
-			return Response.status(500).entity("Can not save file").build();
+			
+			e.printStackTrace();
 		}
-		return Response.status(202)
-				.entity("File saved to " + uploadedFileLocation).build();
-	}
-	
-
-	/**
-	 * Utility method to save InputStream data to target location/file
-	 * 
-	 * @param inStream	InputStream to be saved
-	 * @param target	full path to destination file
-	 */
-	private void saveToFile(InputStream inStream, String target)
-			throws IOException {
-		OutputStream out = null;
-		int read = 0;
-		byte[] bytes = new byte[1024];
-		out = new FileOutputStream(new File(target));
-		while ((read = inStream.read(bytes)) != -1) {
-			out.write(bytes, 0, read);
-		}
-		out.flush();
-		out.close();
-	}
-	
+		
+	}	
 	
 	/**
-	 * Creates a folder to desired location if it not already exists
-	 * 
-	 * @param dirName				full path to the folder
-	 * @throws SecurityException	in case you don't have permission to create the folder
-	 */
-	 	private void createFolderIfNotExists(String dirName)
-			throws SecurityException {
-		File theDir = new File(dirName);
-		if (!theDir.exists()) {
-			theDir.mkdir();
+	* 
+	* Creates a folder to desired location if it not already exists
+	* @param fullDirPath				full path to the folder
+	* @throws SecurityException	in case you don't have permission to create the folder
+	*/
+	private void createFolderIfNotExists(String fullDirPath)
+	throws SecurityException {
+		System.out.println("check for file folder");
+		File directory = new File(fullDirPath);
+		if (!directory.exists()) {
+			System.out.println("folder doesnt exist, creating one now");
+			directory.mkdir();
 		}
 	}
 
-	
 
 	@GET
 	@Path("/file/{attributeID}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response downloadFile(@PathParam("attributeID") String attributeID) {
-    	File file = new File("./FileUploads/"+ attributeID);
-    	ResponseBuilder response = Response.ok((Object) file);
-    	response.header("Content-Disposition", "attachment;filename=" +  attributeID);
-    	return response.build();
+		File file = new File("./FileUploads/"+ attributeID);
+		ResponseBuilder response = Response.ok((Object) file);
+		response.header("Content-Disposition", "attachment;filename=" +  attributeID);
+		return response.build();
 	} 
 }   
 

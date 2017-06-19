@@ -320,52 +320,28 @@ function ($routeParams, $location, $http, $scope) {
         });
     };
     
-    
-    //upload file to REST-API
-    this.uploadFiles = function (attributeID) {            
-
-        $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID, formdata, {
-            withCredentials: false,
-            headers: {
-                'Content-Type': undefined
-            },
-            transformRequest: angular.identity,
-            params: {
-                formdata
-            },
-            responseType: "arraybuffer"
-        })
-        .success(function(response, status, headers, config) {
-            console.log(response);
-            if (status == 200 || status == 202) {
-                console.log("File successfully uploaded")
-            }            else {
-                console.log("File Upload failed...")
-            }
-        })
-        .error(function(error, status, headers, config) {
-            console.log(error);
-        });
-    };
-    
     //TODO: Download files
     //download files via REST-API
     this.downloadFiles = function (attributeID) {            
         //does nothing so far
         console.log("Downloading is still to be implemented");
     };
+    
+    this.uploadFile = function(files, attributeID) {
+    var fd = new FormData();
+    //Take the first selected file
+    fd.append("file", files[0]);
+    var uploadUrl = new String;
+    uploadUrl = (JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID + "/");
+    $http.post(uploadUrl, fd, {
+        withCredentials: false,
+        headers: {'Content-Type': undefined },
+        transformRequest: angular.identity
+    }).success(console.log("successs") ).error( console.log("oh no") );
+
+};
 
 
-    //for uploading file via rest-api
-    var formdata = new FormData();
-    this.getTheFiles = function ($file) {
-        angular.forEach($file, function (value, key) {
-            formdata.append(key, value);
-        })
-    };    
-    
-    
-    
     // TODO support referenced activities again
     /* this.handleReferencedActivities = function (activityID) {
         //if outputsets is already defined, we dont touch them
