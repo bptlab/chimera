@@ -331,7 +331,7 @@ function ($routeParams, $location, $http, $scope) {
             },
             transformRequest: angular.identity,
             params: {
-                formdatad
+                formdata
             },
             responseType: "arraybuffer"
         })
@@ -339,15 +339,12 @@ function ($routeParams, $location, $http, $scope) {
             console.log(response);
             if (status == 200 || status == 202) {
                 console.log("File successfully uploaded")
-            } //do whatever in success
-            else {
+            }            else {
                 console.log("File Upload failed...")
             }
         })
         .error(function(error, status, headers, config) {
             console.log(error);
-            
-            // handle else calls
         });
     };
     
