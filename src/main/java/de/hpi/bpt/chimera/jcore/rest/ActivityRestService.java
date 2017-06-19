@@ -434,7 +434,15 @@ public class ActivityRestService extends AbstractRestService {
 	}
 
 	//FILE UPLOAD BELOW.
-
+	/**
+	* Receives the uploaded files and stores it on the server via utility methods.
+	* @param attributeID	ID of the attribute that the uploaded file belongs to
+	* @return 202 (ACCEPTED) when the file was saved successfully.
+	* 500 when the file could not be uploaded and saved. Possible reasons are
+	* 1) Invalid form Data
+	* 2) The destination folder could not be created
+	* 3) The file could not be saved on the server
+	*/
 	private static final String UPLOAD_FOLDER = "./uploadedFiles/";
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -460,7 +468,7 @@ public class ActivityRestService extends AbstractRestService {
 		} catch (IOException e) {
 			return Response.status(500).entity("Can not save file").build();
 		}
-		return Response.status(200)
+		return Response.status(202)
 				.entity("File saved to " + uploadedFileLocation).build();
 	}
 	
@@ -468,10 +476,8 @@ public class ActivityRestService extends AbstractRestService {
 	/**
 	 * Utility method to save InputStream data to target location/file
 	 * 
-	 * @param inStream
-	 *            - InputStream to be saved
-	 * @param target
-	 *            - full path to destination file
+	 * @param inStream	InputStream to be saved
+	 * @param target	full path to destination file
 	 */
 	private void saveToFile(InputStream inStream, String target)
 			throws IOException {
@@ -490,10 +496,8 @@ public class ActivityRestService extends AbstractRestService {
 	/**
 	 * Creates a folder to desired location if it not already exists
 	 * 
-	 * @param dirName
-	 *            - full path to the folder
-	 * @throws SecurityException
-	 *             - in case you don't have permission to create the folder
+	 * @param dirName				full path to the folder
+	 * @throws SecurityException	in case you don't have permission to create the folder
 	 */
 	 	private void createFolderIfNotExists(String dirName)
 			throws SecurityException {
@@ -514,71 +518,5 @@ public class ActivityRestService extends AbstractRestService {
     	response.header("Content-Disposition", "attachment;filename=" +  attributeID);
     	return response.build();
 	} 
-
-
-   /* @POST
-    @Path("file/{attributeID}/")
-    @Consumes("multipart/form-data")
-    public Response uploadFile(MultipartFormDataInput input, @PathParam("attributeID") String attributeID) throws IOException {
-          
-        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
- 
-        // Get file data to save
-        List<InputPart> inputParts = uploadForm.get("attachment");
- 
-        for (InputPart inputPart : inputParts) {
-            try {
- 
-                MultivaluedMap<String, String> header = inputPart.getHeaders();
-                String fileName = getFileName(header);
-   
-                // convert the uploaded file to inputstream
-                InputStream inputStream = inputPart.getBody(InputStream.class,
-                        null);
- 
-                byte[] bytes = IOUtils.toByteArray(inputStream);
-                // constructs upload file path
-                fileName = "./FileUploads/" + attributeID;
-                writeFile(bytes, fileName);
- 
-                  
-                return Response.status(200).entity("Uploaded file name : " + fileName)
-                        .build();
- 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
- 
-    private String getFileName(MultivaluedMap<String, String> header) {
- 
-        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
- 
-        for (String filename : contentDisposition) {
-            if ((filename.trim().startsWith("filename"))) {
- 
-                String[] name = filename.split("=");
- 
-                String finalFileName = name[1].trim().replaceAll("\"", "");
-                return finalFileName;
-            }
-        }
-        return "unknown";
-    }
- 
-    // Utility method that writes to file
-    private void writeFile(byte[] content, String filename) throws IOException {
-        File file = new File(filename);
-        if (!file.exists()) {
-            System.out.println("not exist> " + file.getAbsolutePath());
-            file.createNewFile();
-        }
-        FileOutputStream fop = new FileOutputStream(file);
-        fop.write(content);
-        fop.flush();
-        fop.close();
-    }*/
 }   
 
