@@ -92,6 +92,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "WebServiceTask");
 				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
 				break;
+			case "ScriptTask":
+				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "ScriptTask");
+				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), false);
 			case "SendTask":
 				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "SendTask");
 				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);

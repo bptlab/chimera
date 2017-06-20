@@ -183,6 +183,10 @@ public class Fragment {
 		return this.xmlWrapper.getWebServiceTasks();
 	}
 
+	public List<ScriptTask> getScriptTasks() {
+		return this.xmlWrapper.getScriptTasks();
+	}
+
 	public List<AbstractDataControlNode> getAllActivities() {
 		return this.xmlWrapper.getAllActivities();
 	}

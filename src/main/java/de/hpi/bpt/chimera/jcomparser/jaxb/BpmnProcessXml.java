@@ -34,6 +34,9 @@ public class BpmnProcessXml {
 	@XmlElement(name = "bpmn:serviceTask")
 	private List<WebServiceTask> webServiceTasks = new ArrayList<>();
 
+	@XmlElement(name = "bpmn:scriptTask")
+	private List<ScriptTask> scriptTasks = new ArrayList<>();
+
 	@XmlElement(name = "bpmn:receiveTask")
 	private List<ReceiveTask> receiveTasks = new ArrayList<>();
 
@@ -133,6 +136,10 @@ public class BpmnProcessXml {
 
 	public List<WebServiceTask> getWebServiceTasks() {
 		return webServiceTasks;
+	}
+
+	public List<ScriptTask> getScriptTasks() {
+		return scriptTasks;
 	}
 
 	public List<ParallelGateway> getAndGateways() {

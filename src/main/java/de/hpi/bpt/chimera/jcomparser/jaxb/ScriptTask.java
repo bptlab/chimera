@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "bpmn:ScriptTask")
+@XmlRootElement(name = "bpmn:scriptTask")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ScriptTask extends AbstractDataControlNode {
 
