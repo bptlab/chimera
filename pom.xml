@@ -145,7 +145,7 @@
 
 		<!-- The value of the schema.version property has to be increased when 
 			the schema changes! -->
-		<schema.version>26</schema.version>
+		<schema.version>27</schema.version>
 		<db.schema>chimeradb</db.schema>
 		<db.test.schema>chimeradb_test</db.test.schema>
 		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
