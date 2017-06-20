@@ -18,7 +18,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.*;
 import java.util.stream.Collectors;
-//import javax.ws.rs.core.MultivaluedMap;//
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -26,11 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-//import org.apache.commons.io.IOUtils;
-import java.io.OutputStream;
 import javax.ws.rs.core.Response.ResponseBuilder;
-//import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-//import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import java.sql.*;
 import java.io.ByteArrayOutputStream;
 import java.sql.Blob;
@@ -525,28 +520,26 @@ public class ActivityRestService extends AbstractRestService {
 		ResponseBuilder response = null;
 		
 		try {
-			while(rs.next()) { // for each row
+			while(rs.next()) {
 				// take the blob
-				while( rs.next() ) {
-					blob = rs.getBlob("file");
-					System.out.println("Read "+ blob.length() + " bytes ");
-					byte [] array = blob.getBytes( 1, ( int ) blob.length() );
-					File file = File.createTempFile("something-", ".binary", new File("."));
-					out = new FileOutputStream( file );
-					out.write( array );
-					response = Response.ok((Object) out, MediaType.APPLICATION_OCTET_STREAM);
-					out.close();}
-					blob.free();
-				}
-				su.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}	
-			String headerString = "attachment; filename="+ filename;
-			response.header("Content-Disposition", headerString);
-			return response.build();
-			
-		} 
-	}   
-	
-	
+				blob = rs.getBlob("file");
+				System.out.println("Read "+ blob.length() + " bytes ");
+				byte [] array = blob.getBytes( 1, ( int ) blob.length() );
+				File file = File.createTempFile("something-", ".binary", new File("."));
+				out = new FileOutputStream( file );
+				out.write( array );
+				response = Response.ok((Object) out, MediaType.APPLICATION_OCTET_STREAM);
+				out.close();
+			}
+			blob.free();
+			su.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		String headerString = "attachment; filename="+ filename;
+		response.header("Content-Disposition", headerString);
+		return response.build();
+		
+	} 
+}   
+
