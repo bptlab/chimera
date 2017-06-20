@@ -270,6 +270,11 @@ public class Connector extends DbObject {
 		this.executeInsertStatement(sql);
 	}
 
+	public void insertScriptTask(int controlNodeId, String scriptTaskFilePath) {
+		String sql = String.format("INSERT INTO scripttask (controlnode_id, scripttaskfile) " + "VALUES (%d, '%s')", controlNodeId, scriptTaskFilePath);
+		this.executeInsertStatement(sql);
+	}
+
 	public void insertStartQuery(String query, int scenarioId, String id) {
 		String sql = "INSERT INTO startquery (query, scenario_id, id) " + "VALUES ('%s', %d, '%s');";
 		sql = String.format(sql, query, scenarioId, id);
