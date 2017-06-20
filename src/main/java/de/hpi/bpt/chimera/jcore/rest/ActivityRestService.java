@@ -31,6 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.sql.Blob;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.OutputStream;
 
 /**
  * This class implements the REST interface for activities.
@@ -518,17 +519,22 @@ public class ActivityRestService extends AbstractRestService {
 		String filename = null;
 		FileOutputStream out = null;
 		ResponseBuilder response = null;
+		Response actualResponse = null;
 		
 		try {
 			while(rs.next()) {
 				// take the blob
 				blob = rs.getBlob("file");
+				filename = rs.getString("filename");
 				System.out.println("Read "+ blob.length() + " bytes ");
 				byte [] array = blob.getBytes( 1, ( int ) blob.length() );
 				File file = File.createTempFile("something-", ".binary", new File("."));
 				out = new FileOutputStream( file );
 				out.write( array );
-				response = Response.ok((Object) out, MediaType.APPLICATION_OCTET_STREAM);
+				response = Response.ok((Object) file, MediaType.APPLICATION_OCTET_STREAM);
+				String headerString = "attachment; filename="+ filename;
+				response.header("Content-Disposition", headerString);
+				actualResponse = response.build();
 				out.close();
 			}
 			blob.free();
@@ -536,10 +542,10 @@ public class ActivityRestService extends AbstractRestService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
-		String headerString = "attachment; filename="+ filename;
-		response.header("Content-Disposition", headerString);
-		return response.build();
+
+		return actualResponse;
 		
 	} 
+
 }   
 

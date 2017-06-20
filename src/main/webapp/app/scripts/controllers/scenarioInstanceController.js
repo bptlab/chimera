@@ -324,7 +324,7 @@ function ($routeParams, $location, $http, $scope) {
     //download files via REST-API
     this.downloadFile = function (attributeID) {            
         $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID).success(function (data) {
-            //needn't do anything
+            document.location = 'data:Application/octet-stream,' + encodeURIComponent(data);
         }).error(function () {
             console.log('Download failed');
         });
