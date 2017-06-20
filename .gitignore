@@ -16,3 +16,10 @@ config_template.properties
 
 # Ignore MacOS Finder files
 .DS_Store
+
+# Ignore Visual Studio Code related files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
