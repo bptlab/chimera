@@ -441,28 +441,56 @@ public class ActivityRestService extends AbstractRestService {
 	public Response uploadFile(
 	@FormDataParam("file") InputStream uploadedInputStream,
 	@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
-		//Get the root path of the VM, were the file is to be stored.
-		String sRootPath = new File("").getAbsolutePath();
-		String uploadedFileLocation = sRootPath + "/uploadedFiles/" + attributeID + "/" + fileDetail.getFileName();
-		String uploadedFileGeneric = "C://bpt/bpt-apache-tomcat/bin/uploaded/" + attributeID;
-		createFolderIfNotExists(uploadedFileGeneric);
-		createFolderIfNotExists(uploadedFileLocation);
-		System.out.println(uploadedFileLocation);
-		// save it
-		File  objFile=new File(uploadedFileLocation);
-		if(objFile.exists())
-		{
-			objFile.delete();
-			
+		
+		java.sql.Connection con = null;
+		byte[] fileToBeUploaded = null;
+		Blob fileUploadBlob = null;
+
+		try{
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[16384];
+		while ((nRead = uploadedInputStream.read(data, 0, data.length)) != -1) {
+			buffer.write(data, 0, nRead);
 		}
+		buffer.flush();
+		fileToBeUploaded =  buffer.toByteArray();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+
+		try {
+			fileUploadBlob = new SerialBlob(fileToBeUploaded);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try{
+		con = ConnectionWrapper.getInstance().connect();
+		String sql = "INSERT INTO fileUploads VALUES (?,?)";
+		PreparedStatement statement = con.prepareStatement(sql);
+		statement.setString(1, attributeID);
+		statement.setBlob(2, fileUploadBlob);
+		statement.executeUpdate();
+		} catch (SQLException e) {
+            String message = "ERROR: " + e.getMessage();
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                // closes the database connection
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+		}
+		//String output = "File uploaded via Jersey based RESTFul Webservice to: " + uploadedFileLocation;
 		
-		saveToFile(uploadedInputStream, uploadedFileLocation);
-		
-		String output = "File uploaded via Jersey based RESTFul Webservice to: " + uploadedFileLocation;
-		
-		return Response.status(200).entity(output).build();
-		
+		//return Response.status(200).entity(output).build();
+		return Response.status(200).entity("done").build();
 	}
+	
 	private void saveToFile(InputStream uploadedInputStream,
 	String uploadedFileLocation) {
 		
@@ -499,8 +527,8 @@ public class ActivityRestService extends AbstractRestService {
 			directory.mkdir();
 		}
 	}
-
-
+	
+	
 	@GET
 	@Path("/file/{attributeID}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
