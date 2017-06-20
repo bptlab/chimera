@@ -55,7 +55,9 @@ public class CaseStartTriggerParser {
 	}
 
 	/**
-	 * Parse the consequences of a CaseStartTrigger
+	 * Parse the consequences of a CaseStartTrigger. Every
+	 * DataObjectStateCondition exists only once. That means if two queries
+	 * refer to the same DataObjectStateCondition they will be put together.
 	 * 
 	 * @param triggerConsequenceJsonArray
 	 * @param parserHelper
@@ -83,12 +85,14 @@ public class CaseStartTriggerParser {
 				List<DataAttributeJsonPath> dataAttributeJsonPath = parseDataAttributeJsonPaths(triggerConsequenceJson.getJSONArray("mapping"), parserHelper, dataClass);
 				
 				if (conditionToTrigger.containsKey(dataObjectStateCondition)) {
-					// TODO: think about whether a certain DataAttribute needs
-					// more than one instantiations
+					// If DataObjectStateCondition already occurred the
+					// DataAttributeJsonPaths are just added.
 					CaseStartTriggerConsequence triggerConsequence = conditionToTrigger.get(dataObjectStateCondition);
 					triggerConsequence.addMapping(dataAttributeJsonPath);
 				} else {
-					CaseStartTriggerConsequence triggerConsequence = new CaseStartTriggerConsequence();
+					// If DataObjectStateCondition does not already occurred a
+					// new CaseStartTrigger gets created.
+					CaseStartTriggerConsequence triggerConsequence = new CaseStartTriggerConsequence(dataObjectStateCondition, dataAttributeJsonPath);
 					
 					triggerConsequence.setMapping(dataAttributeJsonPath);
 					conditionToTrigger.put(dataObjectStateCondition, triggerConsequence);
@@ -101,13 +105,14 @@ public class CaseStartTriggerParser {
 				throw e;
 			}
 		}
-
-		return new ArrayList<>(conditionToTrigger.values());
+		List<CaseStartTriggerConsequence> caseStartTriggers = new ArrayList<>(conditionToTrigger.values());
+		CaseStartTriggerValidation.validateCaseStartTriggers(caseStartTriggers);
+		return caseStartTriggers;
 	}
 
 	/**
-	 * Parse a DataAttributeJson object where the DataAttribute belongs to the
-	 * given DataClass.
+	 * Parse a DataAttributeJson. The DataAttribute belongs to the given
+	 * DataClass.
 	 * 
 	 * @param mappingJsonArray
 	 * @param parserHelper

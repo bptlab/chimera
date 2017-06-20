@@ -6,10 +6,6 @@ import java.util.Map;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.datamodel.SequenceFlow;
 
-//TODO: think about validating the states in JsonPath, means if there
-// income and outcome is a valid sequenceflow, beacuse it does not affect
-// parsing
-
 public class ObjectLifecycleValidation {
 
 	private ObjectLifecycleValidation() {

@@ -18,6 +18,11 @@ public class CaseStartTriggerConsequence {
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<DataAttributeJsonPath> mapping;
 
+	public CaseStartTriggerConsequence(DataObjectStateCondition dataObjectStateCondition, List<DataAttributeJsonPath> dataAttributeJsonPath) {
+		this.dataObjectState = dataObjectStateCondition;
+		this.mapping = dataAttributeJsonPath;
+	}
+
 	public DataObjectStateCondition getDataObjectState() {
 		return dataObjectState;
 	}

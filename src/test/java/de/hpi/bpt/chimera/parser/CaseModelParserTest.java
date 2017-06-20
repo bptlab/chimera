@@ -10,6 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
+import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
+import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
+import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
+import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
@@ -47,13 +53,29 @@ public class CaseModelParserTest {
 		assertEquals("wrong DataModel version", 21, dataModel.getVersionNumber());
 
 		List<DataModelClass> dataModelClasses = dataModel.getDataModelClasses();
+		testDataModelClasses(dataModelClasses);
 
+		TerminationCondition terminationCondition = caseModel.getTerminationCondition();
+		testTerminationCondition(terminationCondition, dataModelClasses);
+
+		List<CaseStartTrigger> caseStartTriggers = caseModel.getStartCaseTrigger();
+		testStartCondition(caseStartTriggers, dataModelClasses);
+
+		Fragment fragment = caseModel.getFragments().get(0);
+		assertEquals("wrong Fragment id", "591330db1ed1325048306e42", fragment.getId());
+		assertEquals("wrong Fragment name", "First Fragment", fragment.getName());
+		assertEquals("wrong Fragment version", 3, fragment.getVersionNumber());
+		// TODO: implement testing for fragment elements
+
+	}
+
+	private void testDataModelClasses(List<DataModelClass> dataModelClasses) {
 		assertTrue("wrong DataModelClass type: DataClass", DataClass.class.isInstance(dataModelClasses.get(0)));
 		DataClass dataClass = (DataClass) dataModelClasses.get(0);
 		assertEquals("wrong DataClass name", "dataclass 1", dataClass.getName());
 
-		assertTrue("wrong DataModelClass type: EventClass", EventClass.class.isInstance(dataModelClasses.get(1)));
-		EventClass eventClass = (EventClass) dataModelClasses.get(1);
+		assertTrue("wrong DataModelClass type: EventClass", EventClass.class.isInstance(dataModelClasses.get(2)));
+		EventClass eventClass = (EventClass) dataModelClasses.get(2);
 		assertEquals("wrong EventClass name", "eventclass1", eventClass.getName());
 
 		ObjectLifecycle objectLifecycle = dataClass.getObjectLifecycle();
@@ -63,13 +85,6 @@ public class CaseModelParserTest {
 		DataAttribute dataAttribute = dataClass.getDataAttributes().get(0);
 		assertEquals("wrong DataAttribute name", "testString", dataAttribute.getName());
 		assertEquals("wrong DataAttribute type", "String", dataAttribute.getType());
-
-		Fragment fragment = caseModel.getFragments().get(0);
-		assertEquals("wrong Fragment id", "591330db1ed1325048306e42", fragment.getId());
-		assertEquals("wrong Fragment name", "First Fragment", fragment.getName());
-		assertEquals("wrong Fragment version", 3, fragment.getVersionNumber());
-		// TODO: implement testing for fragment elements
-
 	}
 
 	private void testObjectLifecycleStates(List<ObjectLifecycleState> objectLifecycleStates) {
@@ -104,5 +119,56 @@ public class CaseModelParserTest {
 
 		assertTrue("wrong olcState predecessors", state3.getPredecessors().isEmpty());
 		assertTrue("wrong olcState successors", state3.getSuccessors().isEmpty());
+	}
+
+	private void testTerminationCondition(TerminationCondition terminationCondition, List<DataModelClass> dataModelClasses) {
+		List<TerminationConditionComponent> components = terminationCondition.getConditions();
+		assertEquals("wrong TerminationConditionComponent amount", 2, components.size());
+
+		TerminationConditionComponent component1 = components.get(0);
+		TerminationConditionComponent component2 = components.get(1);
+
+		assertEquals("wrong DataObjectStateCondition amount", 2, component1.getConditions().size());
+		assertEquals("wrong DataObjectStateCondition amount", 1, component2.getConditions().size());
+
+		DataObjectStateCondition objectStateCondition1 = component1.getConditions().get(0);
+		DataObjectStateCondition objectStateCondition2 = component1.getConditions().get(1);
+		DataObjectStateCondition objectStateCondition3 = component2.getConditions().get(0);
+
+		DataClass dataClass = (DataClass) dataModelClasses.get(0);
+		DataClass dc = (DataClass) dataModelClasses.get(1);
+		ObjectLifecycleState dc_state = dc.getObjectLifecycle().getObjectLifecycleStates().get(0);
+		assertTrue("wrong Dataclass mapping", objectStateCondition1.getDataClass().equals(dataClass));
+		assertTrue("wrong Dataclass mapping", objectStateCondition2.getDataClass().equals(dc));
+		assertTrue("wrong Olc-State mapping", objectStateCondition2.getState().equals(dc_state));
+		assertTrue("wrong Dataclass mapping", objectStateCondition3.getDataClass().equals(dataClass));
+		
+		assertTrue("wrong Dataclass matching", objectStateCondition1.getDataClass().equals(objectStateCondition3.getDataClass()));
+	}
+
+	private void testStartCondition(List<CaseStartTrigger> caseStartTriggers, List<DataModelClass> dataModelClasses) {
+		assertEquals("wrong CaseStartTrigger amount", 1, caseStartTriggers.size());
+		CaseStartTrigger trigger = caseStartTriggers.get(0);
+
+		assertEquals("wrong CaseStart", "StartCondition", trigger.getQueryExecutionPlan());
+		List<CaseStartTriggerConsequence> consequence = trigger.getTriggerConsequences();
+
+		assertEquals("wrong CaseStartTriggerConsequence amount", 2, consequence.size());
+
+		int dcPos = consequence.get(0).getDataObjectState().getDataClass().getName().equals("dc2") ? 0 : 1;
+
+		DataObjectStateCondition objectStateCondition1 = consequence.get(dcPos).getDataObjectState();
+
+		DataClass dc = (DataClass) dataModelClasses.get(1);
+		assertTrue("wrong DataClass mapping", objectStateCondition1.getDataClass().equals(dc));
+
+		ObjectLifecycleState state = dc.getObjectLifecycle().getObjectLifecycleStates().get(0);
+		assertTrue("wrong State mapping", objectStateCondition1.getState().equals(state));
+
+		int dataclassPos = dcPos == 0 ? 1 : 0;
+		DataAttributeJsonPath mapping = consequence.get(dataclassPos).getMapping().get(0);
+
+		DataAttribute attr = dataModelClasses.get(0).getDataAttributes().get(0);
+		assertTrue("wrong Attribute mapping", attr.equals(mapping.getDataAttribute()));
 	}
 }

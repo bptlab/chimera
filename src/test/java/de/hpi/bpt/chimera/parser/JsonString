@@ -46,6 +46,33 @@
 				"_id": "591331061ed1325048306e44"
 			}]
 		}, {
+			"name": "dc2",
+			"is_event": false,
+			"olc": {
+				"intermediateThrowEvent": [{
+					"id": "State_0vot1mz",
+					"name": "State 1"
+				}],
+				"state": [{
+					"id": "State_0vot1mz",
+					"name": "State 1"
+				}]
+			},
+			"_id": "591331061ed1325048306e43",
+			"attributes": [{
+				"name": "testString",
+				"datatype": "String",
+				"_id": "591331061ed1325048306e44"
+			}, {
+				"name": "testTestString",
+				"datatype": "String",
+				"_id": "591331061ed1325048306e45"
+			}, {
+				"name": "testTestTestString",
+				"datatype": "String",
+				"_id": "591331061ed1325048306e45"
+			}]
+		}, {
 			"name": "eventclass1",
 			"is_event": true,
 			"olc": {
@@ -88,11 +115,33 @@
 		"query": "StartCondition",
 		"_id": "591c359916134e2c3c8a007c",
 		"dataclasses": [{
-			"classname": "eventclass1",
+			"classname": "dc2",
 			"state": "State 1",
 			"_id": "591c359916134e2c3c8a007d",
 			"mapping": [{
 				"attr": "testString",
+				"path": "\"a\"",
+				"_id": "591c359916134e2c3c8a007e"
+			}, {
+				"attr": "testTestString",
+				"path": "\"a\"",
+				"_id": "591c359916134e2c3c8a007e"
+			}]
+		}, {
+			"classname": "dataclass 1",
+			"state": "State 2",
+			"_id": "591c359916134e2c3c8a007d",
+			"mapping": [{
+				"attr": "testString",
+				"path": "\"a\"",
+				"_id": "591c359916134e2c3c8a007e"
+			}]
+		}, {
+			"classname": "dc2",
+			"state": "State 1",
+			"_id": "591c359916134e2c3c8a007d",
+			"mapping": [{
+				"attr": "testTestTestString",
 				"path": "\"a\"",
 				"_id": "591c359916134e2c3c8a007e"
 			}]
@@ -105,5 +154,5 @@
         "name": "First Fragment",
         "__v": 0
     }],
-	"terminationconditions": ["dataclass 1[State 1], dataclass 1[State 2]", "dataclass 1[State 2]"]
+	"terminationconditions": ["dataclass 1[State 1], dc2[State 1]", "dataclass 1[State 2]"]
 }
