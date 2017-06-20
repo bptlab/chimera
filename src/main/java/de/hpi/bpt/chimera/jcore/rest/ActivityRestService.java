@@ -447,49 +447,51 @@ public class ActivityRestService extends AbstractRestService {
 	@FormDataParam("file") InputStream uploadedInputStream,
 	@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
 		
+		String filename = fileDetail.getFileName();
 		java.sql.Connection con = null;
 		byte[] fileToBeUploaded = null;
 		Blob fileUploadBlob = null;
-
+		
 		try{
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int nRead;
-		byte[] data = new byte[16384];
-		while ((nRead = uploadedInputStream.read(data, 0, data.length)) != -1) {
-			buffer.write(data, 0, nRead);
-		}
-		buffer.flush();
-		buffer.close();
-		fileToBeUploaded =  buffer.toByteArray();
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			int nRead;
+			byte[] data = new byte[16384];
+			while ((nRead = uploadedInputStream.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+			buffer.flush();
+			buffer.close();
+			fileToBeUploaded =  buffer.toByteArray();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-
+		
 		try {
 			fileUploadBlob = new SerialBlob(fileToBeUploaded);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		try{
-		con = ConnectionWrapper.getInstance().connect();
-		String sql = "INSERT INTO fileUploads VALUES (?,?)";
-		PreparedStatement statement = con.prepareStatement(sql);
-		statement.setString(1, attributeID);
-		statement.setBlob(2, fileUploadBlob);
-		statement.executeUpdate();
+			con = ConnectionWrapper.getInstance().connect();
+			String sql = "INSERT INTO fileUploads VALUES (?,?,?)";
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setString(1, attributeID);
+			statement.setBlob(2, fileUploadBlob);
+			statement.setString(3, filename);
+			statement.executeUpdate();
 		} catch (SQLException e) {
-            String message = "ERROR: " + e.getMessage();
-            e.printStackTrace();
-        } finally {
-            if (con != null) {
-                // closes the database connection
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+			String message = "ERROR: " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (con != null) {
+				// closes the database connection
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		//String output = "File uploaded via Jersey based RESTFul Webservice to: " + uploadedFileLocation;
 		
@@ -498,13 +500,53 @@ public class ActivityRestService extends AbstractRestService {
 	}	
 	
 	@GET
-	@Path("/file/{attributeID}")
+	@Path("/files/{attributeID}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response downloadFile(@PathParam("attributeID") String attributeID) {
-		File file = new File("./FileUploads/"+ attributeID);
-		ResponseBuilder response = Response.ok((Object) file);
-		response.header("Content-Disposition", "attachment;filename=" +  attributeID);
-		return response.build();
-	} 
-}   
-
+		
+		Connection con;
+		Statement su = null;
+		String sql = null;
+		ResultSet rs = null;
+		
+		
+		try {
+			con = ConnectionWrapper.getInstance().connect();
+			su=con.createStatement();
+			sql = "SELECT * FROM fileUploads WHERE ATTRIBUTE_ID = " + attributeID;
+			rs = su.executeQuery(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Blob blob = null;
+		String filename = null;
+		FileOutputStream out = null;
+		ResponseBuilder response = null;
+		
+		try {
+			while(rs.next()) { // for each row
+				// take the blob
+				while( rs.next() ) {
+					blob = rs.getBlob("file");
+					System.out.println("Read "+ blob.length() + " bytes ");
+					byte [] array = blob.getBytes( 1, ( int ) blob.length() );
+					File file = File.createTempFile("something-", ".binary", new File("."));
+					out = new FileOutputStream( file );
+					out.write( array );
+					response = Response.ok((Object) out, MediaType.APPLICATION_OCTET_STREAM);
+					out.close();}
+					blob.free();
+				}
+				su.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+			String headerString = "attachment; filename="+ filename;
+			response.header("Content-Disposition", headerString);
+			return response.build();
+			
+		} 
+	}   
+	
+	

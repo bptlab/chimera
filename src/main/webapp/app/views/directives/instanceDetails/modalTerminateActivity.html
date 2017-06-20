@@ -31,7 +31,7 @@
                                         <input type="file" name="file" ng-model="attr['id']" onchange="angular.element(this).scope().instanceCtrl.uploadFile(this.files, angular.element(this).scope().attr.id)"/>
                                         <!-- <input type="file" id="file" name="file" ngf-select="instanceCtrl.getTheFiles(this.files)"/>
                                         <input type="button" ng-click="instanceCtrl.uploadFiles(attr['id']); instanceCtrl.setAttribute(attr['id'], attr['value'], activityInstance['id'])" value="Upload" /> -->
-                                        <input type="button" ng-click="instanceCtrl.downloadFiles(attr['id'])" value="Download" />
+                                        <input type="button" ng-click="instanceCtrl.downloadFile(attr['id'])" value="Download" />
                                     <br></td>        
 
                                     <td ng-switch-default>

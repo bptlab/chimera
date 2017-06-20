@@ -322,9 +322,12 @@ function ($routeParams, $location, $http, $scope) {
     
     //TODO: Download files
     //download files via REST-API
-    this.downloadFiles = function (attributeID) {            
-        //does nothing so far
-        console.log("Downloading is still to be implemented");
+    this.downloadFile = function (attributeID) {            
+        $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID).success(function (data) {
+            //needn't do anything
+        }).error(function () {
+            console.log('Download failed');
+        });
     };
     
     this.uploadFile = function(files, attributeID) {
