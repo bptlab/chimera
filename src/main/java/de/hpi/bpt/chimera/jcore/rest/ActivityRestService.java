@@ -31,6 +31,11 @@ import java.io.OutputStream;
 import javax.ws.rs.core.Response.ResponseBuilder;
 //import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 //import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import java.sql.*;
+import java.io.ByteArrayOutputStream;
+import java.sql.Blob;
+import de.hpi.bpt.chimera.database.ConnectionWrapper;
+import javax.sql.rowset.serial.SerialBlob;
 
 /**
  * This class implements the REST interface for activities.
@@ -454,6 +459,7 @@ public class ActivityRestService extends AbstractRestService {
 			buffer.write(data, 0, nRead);
 		}
 		buffer.flush();
+		buffer.close();
 		fileToBeUploaded =  buffer.toByteArray();
 		} catch (IOException e){
 			e.printStackTrace();
@@ -489,45 +495,7 @@ public class ActivityRestService extends AbstractRestService {
 		
 		//return Response.status(200).entity(output).build();
 		return Response.status(200).entity("done").build();
-	}
-	
-	private void saveToFile(InputStream uploadedInputStream,
-	String uploadedFileLocation) {
-		
-		try {
-			OutputStream out = null;
-			int read = 0;
-			byte[] bytes = new byte[1024];
-			
-			out = new FileOutputStream(new File(uploadedFileLocation));
-			while ((read = uploadedInputStream.read(bytes)) != -1) {
-				out.write(bytes, 0, read);
-			}
-			out.flush();
-			out.close();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-		
 	}	
-	
-	/**
-	* 
-	* Creates a folder to desired location if it not already exists
-	* @param fullDirPath				full path to the folder
-	* @throws SecurityException	in case you don't have permission to create the folder
-	*/
-	private void createFolderIfNotExists(String fullDirPath)
-	throws SecurityException {
-		System.out.println("check for file folder");
-		File directory = new File(fullDirPath);
-		if (!directory.exists()) {
-			System.out.println("folder doesnt exist, creating one now");
-			directory.mkdir();
-		}
-	}
-	
 	
 	@GET
 	@Path("/file/{attributeID}")
