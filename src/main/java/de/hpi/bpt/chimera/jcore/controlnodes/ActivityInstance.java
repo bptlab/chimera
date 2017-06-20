@@ -6,10 +6,7 @@ import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
 import de.hpi.bpt.chimera.database.data.DbDataFlow;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.ActivityExecutionBehavior;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.EmailTaskExecutionBehavior;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.SendTaskExecutionBehavior;
-import de.hpi.bpt.chimera.jcore.executionbehaviors.WebServiceTaskExecutionBehavior;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.*;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskIncomingControlFlowBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.TaskOutgoingBehavior;
 import de.hpi.bpt.chimera.jcore.flowbehaviors.WebServiceTaskOutgoingBehavior;
@@ -129,6 +126,10 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 				this.setExecutionBehavior(new WebServiceTaskExecutionBehavior(this));
 				this.setOutgoingBehavior(new WebServiceTaskOutgoingBehavior(getControlNodeId(), scenarioInstance, getFragmentInstanceId(), this));
 				this.isAutomaticTask = true;
+				break;
+			case "ScriptTask":
+				this.setExecutionBehavior(new ScriptTaskExecutionBehavior(this));
+				this.isAutomaticTask = false;
 				break;
 			//Added additional case: activities can be terminated every time
 			case "SendTask":
