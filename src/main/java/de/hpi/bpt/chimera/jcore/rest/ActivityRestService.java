@@ -542,10 +542,49 @@ public class ActivityRestService extends AbstractRestService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
-
+		
 		return actualResponse;
 		
 	} 
-
-}   
-
+	
+	
+	@GET
+	@Path("/files/{attributeID}/filename")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response getFileName(@PathParam("attributeID") String attributeID) {
+		Connection con;
+		Statement su = null;
+		String sql = null;
+		ResultSet rs = null;
+		String filename = null;
+		
+		try {
+			con = ConnectionWrapper.getInstance().connect();
+			su=con.createStatement();
+			sql = "SELECT * FROM fileUploads WHERE ATTRIBUTE_ID = " + attributeID;
+			rs = su.executeQuery(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		ResponseBuilder response = null;
+		Response actualResponse = null;
+		
+		try {
+			while(rs.next()) {
+				// take the blob
+				filename = rs.getString("filename");
+				response = Response.ok(filename, MediaType.APPLICATION_OCTET_STREAM);
+				String headerString = "attachment; filename="+ filename;
+				response.header("Content-Disposition", headerString);
+				actualResponse = response.build();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return actualResponse;
+	}   
+}
+	

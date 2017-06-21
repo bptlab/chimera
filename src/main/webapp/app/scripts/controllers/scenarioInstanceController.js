@@ -322,29 +322,59 @@ function ($routeParams, $location, $http, $scope) {
     
     //TODO: Download files
     //download files via REST-API
-    this.downloadFile = function (attributeID) {            
-        $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID).success(function (data) {
-            document.location = 'data:Application/octet-stream,' + encodeURIComponent(data);
+    this.downloadFile = function (attributeID) {
+        
+        var fileName = null;      
+        $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID + "/filename").success(function (data) {
+            fileName = data;
+            console.log(fileName + " file name retreived");
+            var fileNameString = String(fileName);
+            var fileString = fileNameString.split('.');
+            var filetype = fileString[1];
+            console.log("found filetype with: " +filetype[1]);
+            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID).success(function (data) {
+                //var pom = document.createElement('a');
+                //var file = ('href', 'data:Application/octet-stream,' + encodeURIComponent(data));
+                //  document.location = 'data:Application/octet-stream,' + encodeURIComponent(data);
+                //pom.setAttribute('download', fileName);
+                //window.open(file);
+                var pom = document.createElement('a');
+                var arrtibuteString = 
+                pom.setAttribute('href', 'data:file/'+ filetype + "," + encodeURIComponent(data));
+                pom.setAttribute('download', fileName);
+                
+                if (document.createEvent) {
+                    var event = document.createEvent('MouseEvents');
+                    event.initEvent('click', true, true);
+                    pom.dispatchEvent(event);
+                }
+                else {
+                    pom.click();
+                }
+            }).error(function () {
+                console.log('Download failed');
+            });
         }).error(function () {
-            console.log('Download failed');
+            console.log('Filename Retreival failed');
         });
+        
     };
     
     this.uploadFile = function(files, attributeID) {
-    var fd = new FormData();
-    //Take the first selected file
-    fd.append("file", files[0]);
-    var uploadUrl = new String;
-    uploadUrl = (JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID + "/");
-    $http.post(uploadUrl, fd, {
-        withCredentials: false,
-        headers: {'Content-Type': undefined },
-        transformRequest: angular.identity
-    }).success(console.log("successs") ).error( console.log("oh no") );
-
-};
-
-
+        var fd = new FormData();
+        //Take the first selected file
+        fd.append("file", files[0]);
+        var uploadUrl = new String;
+        uploadUrl = (JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID + "/");
+        $http.post(uploadUrl, fd, {
+            withCredentials: false,
+            headers: {'Content-Type': undefined },
+            transformRequest: angular.identity
+        }).success(console.log("successs") ).error( console.log("oh no") );
+        
+    };
+    
+    
     // TODO support referenced activities again
     /* this.handleReferencedActivities = function (activityID) {
         //if outputsets is already defined, we dont touch them
