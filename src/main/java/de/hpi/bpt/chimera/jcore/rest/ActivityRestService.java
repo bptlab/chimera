@@ -32,6 +32,7 @@ import java.sql.Blob;
 import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * This class implements the REST interface for activities.
@@ -473,11 +474,12 @@ public class ActivityRestService extends AbstractRestService {
 			String sql = "INSERT INTO fileUploads VALUES (?,?,?)";
 			PreparedStatement statement = con.prepareStatement(sql);
 			statement.setString(1, attributeID);
-			statement.setBlob(2, fileUploadBlob);
+			statement.setBinaryStream(2, new ByteArrayInputStream(fileToBeUploaded),fileToBeUploaded.length);
+			//statement.setBlob(2, fileUploadBlob);
 			statement.setString(3, filename);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			String message = "ERROR: " + e.getMessage();
+			//String message = "ERROR: " + e.getMessage();
 			e.printStackTrace();
 		} finally {
 			if (con != null) {
@@ -527,10 +529,14 @@ public class ActivityRestService extends AbstractRestService {
 				blob = rs.getBlob("file");
 				filename = rs.getString("filename");
 				System.out.println("Read "+ blob.length() + " bytes ");
-				byte [] array = blob.getBytes( 1, ( int ) blob.length() );
+				//byte [] array = blob.getBytes( 1, ( int ) blob.length() );
+				
+				int blobLength = (int) blob.length();  
+				byte[] blobAsBytes = blob.getBytes(1, blobLength);
+
 				File file = File.createTempFile("something-", ".binary", new File("."));
 				out = new FileOutputStream( file );
-				out.write( array );
+				out.write( blobAsBytes );
 				response = Response.ok((Object) file, MediaType.APPLICATION_OCTET_STREAM);
 				String headerString = "attachment; filename="+ filename;
 				response.header("Content-Disposition", headerString);
