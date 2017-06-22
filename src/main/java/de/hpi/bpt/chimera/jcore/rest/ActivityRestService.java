@@ -447,12 +447,9 @@ public class ActivityRestService extends AbstractRestService {
 	@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
 				
 		String filename = fileDetail.getFileName();
-		File tempFile = null;
+		byte[] fileAsByte = null;
 		try {
-			tempFile = File.createTempFile("temp-", "filename");
-			try (FileOutputStream out = new FileOutputStream(tempFile)) {
-            IOUtils.copy(uploadedInputStream, out);
-        }	
+			fileAsByte = IOUtils.toByteArray(uploadedInputStream);	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -463,9 +460,8 @@ public class ActivityRestService extends AbstractRestService {
 			con = ConnectionWrapper.getInstance().connect();
 			String sql = "INSERT INTO fileUploads VALUES (?,?,?)";
 			PreparedStatement statement = con.prepareStatement(sql);
-			FileInputStream   fis = new FileInputStream(tempFile);
 			statement.setString(1, attributeID);
-			statement.setBinaryStream(2, fis, (int) tempFile.length());
+			statement.setBytes(2, fileAsByte);
 			statement.setString(3, filename);
 			statement.executeUpdate();
 		} catch (Exception e) {
