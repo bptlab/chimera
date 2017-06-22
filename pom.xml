@@ -172,7 +172,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>bep.chimera</groupId>
+			<groupId>bpt.chimera.skripttasklibrary</groupId>
 			<artifactId>scripttasklibrary</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
