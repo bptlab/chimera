@@ -4,9 +4,14 @@ import de.hpi.bpt.chimera.database.DbObject;
 
 public class DbScriptTask extends DbObject {
 
-    public String getScriptFilePath(int controlNodeId) {
-        String sql = "SELECT scripttaskfilepath FROM scripttask " + "WHERE controlnode_id = " + controlNodeId;
-        return this.executeStatementReturnsString(sql, "url");
+    public String getScriptTaskJar(int controlNodeId) {
+        String sql = "SELECT scripttaskjar FROM scripttask " + "WHERE controlnode_id = " + controlNodeId;
+        return this.executeStatementReturnsString(sql, "scripttaskjar");
+    }
+
+    public String getScriptTaskClassPath(int controlNodeId) {
+        String sql = "SELECT scripttaskclasspath FROM scripttask " + "WHERE controlnode_id = " + controlNodeId;
+        return this.executeStatementReturnsString(sql, "scripttaskclasspath");
     }
 
 }

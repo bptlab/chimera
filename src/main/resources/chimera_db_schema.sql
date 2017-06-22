@@ -670,7 +670,8 @@ CREATE TABLE IF NOT EXISTS `webservicetask` (
 
 CREATE TABLE IF NOT EXISTS `scripttask` (
   `controlnode_id` int(11) NOT NULL DEFAULT '0',
-  `scripttaskfilepath` varchar(2048) NOT NULL,
+  `scripttaskjar` varchar(2048) NOT NULL,
+  `scripttaskclasspath` varchar(2048) NOT NULL,
   PRIMARY KEY (`controlnode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

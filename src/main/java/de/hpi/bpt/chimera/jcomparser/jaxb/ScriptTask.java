@@ -12,14 +12,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class ScriptTask extends AbstractDataControlNode {
 
-    @XmlAttribute(name = "griffin:scripttaskfile")
-    String scriptTaskFilePath = "";
+    @XmlAttribute(name = "griffin:scripttaskjar")
+    String scriptTaskJar = "";
+
+    @XmlAttribute(name = "griffin:scripttaskclasspath")
+    String scriptTaskClassPath = "";
 
     @Override
     public int save() {
         Connector connector = new Connector();
         this.databaseId = connector.insertControlNode(this.getName(), "ScriptTask", this.getFragmentId(), this.getId());
-        connector.insertScriptTask(this.databaseId, scriptTaskFilePath);
+        connector.insertScriptTask(this.databaseId, scriptTaskJar, scriptTaskClassPath);
         return this.databaseId;
     }
 

@@ -145,7 +145,7 @@
 
 		<!-- The value of the schema.version property has to be increased when 
 			the schema changes! -->
-		<schema.version>27</schema.version>
+		<schema.version>28</schema.version>
 		<db.schema>chimeradb</db.schema>
 		<db.test.schema>chimeradb_test</db.test.schema>
 		<db.url.root>jdbc:mysql://localhost:3306/</db.url.root>
@@ -171,6 +171,14 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>bep.chimera</groupId>
+			<artifactId>scripttasklibrary</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/chimera-scripttask-library.jar</systemPath>
+		</dependency>
+
 		<!-- Dependencies for Unicorn EventQuery subscription -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
