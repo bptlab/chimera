@@ -32,6 +32,7 @@ public class ControlNodeFactory {
 			case "EmailTask":
 			case "WebServiceTask":
 			case "SendTask":
+			case "ScriptTask":
 			case "IntermediateThrowEvent":
 				controlNodeInstance = new ActivityInstance(controlNodeId, fragmentInstanceId, scenarioInstance, controlNodeInstanceId);
 				break;
@@ -78,6 +79,7 @@ public class ControlNodeFactory {
 			case "EmailTask":
 			case "WebServiceTask":
 			case "SendTask":
+			case "ScriptTask":
 			case "IntermediateThrowEvent":
 				controlNodeInstance = new ActivityInstance(controlNodeId, fragmentInstanceId, scenarioInstance);
 				new DbLogEntry().logActivity(controlNodeInstance.getControlNodeInstanceId(), "init", scenarioInstance.getId());

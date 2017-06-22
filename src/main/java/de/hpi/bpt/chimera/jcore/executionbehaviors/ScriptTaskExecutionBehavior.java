@@ -1,8 +1,11 @@
 package de.hpi.bpt.chimera.jcore.executionbehaviors;
 
+import de.hpi.bpt.chimera.database.DbSelectedDataObjects;
 import de.hpi.bpt.chimera.database.controlnodes.DbScriptTask;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import org.apache.log4j.Logger;
+
+import java.util.List;
 
 public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
 
@@ -21,6 +24,9 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
         // TODO run java code file
         String path = dbScriptTask.getScriptFilePath(controlNodeId);
         log.info("Affenschaukel - " + System.getProperty( "catalina.base" ));
+
+        DbSelectedDataObjects db = new DbSelectedDataObjects();
+        List<Integer> ids = db.getDataObjectSelection(getScenarioInstance().getId(), controlNodeId);
 
     }
 

@@ -94,7 +94,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 				break;
 			case "ScriptTask":
 				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "ScriptTask");
-				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), false);
+				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
 			case "SendTask":
 				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "SendTask");
 				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
@@ -132,7 +132,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 				break;
 			case "ScriptTask":
 				this.setExecutionBehavior(new ScriptTaskExecutionBehavior(this));
-				this.isAutomaticTask = false;
+				this.isAutomaticTask = true;
 				break;
 			//Added additional case: activities can be terminated every time
 			case "SendTask":
