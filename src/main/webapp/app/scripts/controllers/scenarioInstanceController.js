@@ -331,7 +331,7 @@ function ($routeParams, $location, $http, $scope) {
             var fileNameString = String(fileName);
             var fileString = fileNameString.split('.');
             var filetype = fileString[1];
-            console.log("found filetype with: " +filetype[1]);
+            console.log("found filetype with: " +filetype);
             $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID).success(function (data) {
                 //var pom = document.createElement('a');
                 //var file = ('href', 'data:Application/octet-stream,' + encodeURIComponent(data));

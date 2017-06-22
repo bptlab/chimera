@@ -33,6 +33,8 @@ import de.hpi.bpt.chimera.database.ConnectionWrapper;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.OutputStream;
 import java.io.ByteArrayInputStream;
+import org.apache.commons.io.*;
+import java.io.FileInputStream;
 
 /**
  * This class implements the REST interface for activities.
@@ -443,47 +445,34 @@ public class ActivityRestService extends AbstractRestService {
 	public Response uploadFile(
 	@FormDataParam("file") InputStream uploadedInputStream,
 	@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
-		
+				
 		String filename = fileDetail.getFileName();
-		java.sql.Connection con = null;
-		byte[] fileToBeUploaded = null;
-		Blob fileUploadBlob = null;
-		
-		try{
-			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			int nRead;
-			byte[] data = new byte[16384];
-			while ((nRead = uploadedInputStream.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
-			buffer.close();
-			fileToBeUploaded =  buffer.toByteArray();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		
+		File tempFile = null;
 		try {
-			fileUploadBlob = new SerialBlob(fileToBeUploaded);
+			tempFile = File.createTempFile("temp-", "filename");
+			try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            IOUtils.copy(uploadedInputStream, out);
+        }	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		java.sql.Connection con = null;
+			
 		try{
 			con = ConnectionWrapper.getInstance().connect();
 			String sql = "INSERT INTO fileUploads VALUES (?,?,?)";
 			PreparedStatement statement = con.prepareStatement(sql);
+			FileInputStream   fis = new FileInputStream(tempFile);
 			statement.setString(1, attributeID);
-			statement.setBinaryStream(2, new ByteArrayInputStream(fileToBeUploaded),fileToBeUploaded.length);
-			//statement.setBlob(2, fileUploadBlob);
+			statement.setBinaryStream(2, fis, (int) tempFile.length());
 			statement.setString(3, filename);
 			statement.executeUpdate();
-		} catch (SQLException e) {
-			//String message = "ERROR: " + e.getMessage();
+		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		}  
+		finally {
 			if (con != null) {
-				// closes the database connection
 				try {
 					con.close();
 				} catch (SQLException e) {
@@ -491,9 +480,6 @@ public class ActivityRestService extends AbstractRestService {
 				}
 			}
 		}
-		//String output = "File uploaded via Jersey based RESTFul Webservice to: " + uploadedFileLocation;
-		
-		//return Response.status(200).entity(output).build();
 		return Response.status(200).entity("done").build();
 	}	
 	
@@ -505,9 +491,7 @@ public class ActivityRestService extends AbstractRestService {
 		Connection con;
 		Statement su = null;
 		String sql = null;
-		ResultSet rs = null;
-		
-		
+		ResultSet rs = null;			
 		try {
 			con = ConnectionWrapper.getInstance().connect();
 			su=con.createStatement();
@@ -515,8 +499,7 @@ public class ActivityRestService extends AbstractRestService {
 			rs = su.executeQuery(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
+		}		
 		Blob blob = null;
 		String filename = null;
 		FileOutputStream out = null;
@@ -528,13 +511,11 @@ public class ActivityRestService extends AbstractRestService {
 				// take the blob
 				blob = rs.getBlob("file");
 				filename = rs.getString("filename");
-				System.out.println("Read "+ blob.length() + " bytes ");
-				//byte [] array = blob.getBytes( 1, ( int ) blob.length() );
 				
 				int blobLength = (int) blob.length();  
 				byte[] blobAsBytes = blob.getBytes(1, blobLength);
 
-				File file = File.createTempFile("something-", ".binary", new File("."));
+				File file = File.createTempFile("temp-", filename, new File("."));
 				out = new FileOutputStream( file );
 				out.write( blobAsBytes );
 				response = Response.ok((Object) file, MediaType.APPLICATION_OCTET_STREAM);
