@@ -2,8 +2,10 @@ package de.hpi.bpt.chimera.jcore.executionbehaviors;
 
 import bpt.chimera.scripttasklibrary.IChimeraContext;
 import bpt.chimera.scripttasklibrary.IChimeraDelegate;
+import bpt.chimera.scripttasktest.SimpleScriptTask;
 import de.hpi.bpt.chimera.database.controlnodes.DbScriptTask;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.scripttasks.context.ChimeraContext;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -61,18 +63,26 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
             paramInt[0] = Integer.TYPE;
 
             try{
+                Class cls = Class.forName(dbScriptTask.getScriptTaskClassPath(controlNodeId));
+                // TODO check if class typeof IChimeraDelegate
+                IChimeraDelegate delegate = (IChimeraDelegate) cls.newInstance();
+                delegate.execute(new ChimeraContext(activityInstance));
+
+
                 //load the AppTest at runtime
                 //Class cls = cl.loadClass("bpt.chimera.scripttasktest.SimpleScriptTask");
-                Class cls = Class.forName("bpt.chimera.scripttasktest.SimpleScriptTask", true, cl);
-                Object obj = cls.newInstance();
-                log.info("AFFE123 - " + cls.getName() + " -- " + obj.toString());
+                //Class cls = Class.forName("bpt.chimera.scripttasktest.SimpleScriptTask", true, cl);
+                //Object obj = cls.newInstance();
+                //log.info("AFFE123 - " + cls.getName() + " -- " + obj.toString());
 
                 //call the printIt method
                 //Method method = cls.getDeclaredMethod("test", noparams);
                 //method.invoke(obj, null);
-                for(Method method : obj.getClass().getDeclaredMethods()) {
+
+
+                /*for(Method method : obj.getClass().getDeclaredMethods()) {
                     log.info("AFFE1234");
-                }
+                }*/
                 //log.info("AFFE1234 - " + obj.getClass().getDeclaredMethods().length);
 
                 //call the printItString method, pass a String param
