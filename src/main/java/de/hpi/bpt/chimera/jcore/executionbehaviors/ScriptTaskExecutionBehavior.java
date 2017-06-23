@@ -4,6 +4,7 @@ import bpt.chimera.scripttasklibrary.IChimeraContext;
 import bpt.chimera.scripttasklibrary.IChimeraDelegate;
 import de.hpi.bpt.chimera.database.controlnodes.DbScriptTask;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.scripttasks.context.ChimeraContext;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -29,8 +30,8 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
         // TODO run java code file
         log.info("Affenschaukel - 0.25");
 
-        //String path = System.getProperty("catalina.base") + "\\webapps\\Chimera-Resources\\" + dbScriptTask.getScriptTaskJar(controlNodeId);
-        String path = "D:\\Programme\\SimpleScriptTask.jar";
+        String path = System.getProperty("catalina.base") + "\\webapps\\Chimera-Resources\\" + dbScriptTask.getScriptTaskJar(controlNodeId);
+        //String path = "D:\\Programme\\SimpleScriptTask.jar";
 
         File file  = new File(path);
 
@@ -41,7 +42,7 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
 
             ClassLoader cl = new URLClassLoader(urls);
 
-            //Class cls = cl.loadClass("bpt.chimera.scripttasktest.SimpleScriptTask");
+            Class cls = cl.loadClass("bpt.chimera.scripttasktest.SimpleScriptTask");
             //log.info("AFFE123 - " + cls.getName());
 
             //Method method = cls.getMethod("test");
@@ -50,29 +51,29 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
             // ------------------------------------------
 
             //no paramater
-            Class noparams[] = {};
+            //Class noparams[] = {};
 
             //String parameter
-            Class[] paramString = new Class[1];
-            paramString[0] = String.class;
+            //Class[] paramString = new Class[1];
+            //paramString[0] = String.class;
 
             //int parameter
-            Class[] paramInt = new Class[1];
-            paramInt[0] = Integer.TYPE;
+            //Class[] paramInt = new Class[1];d
+            //paramInt[0] = Integer.TYPE;
 
             try{
                 //load the AppTest at runtime
                 //Class cls = cl.loadClass("bpt.chimera.scripttasktest.SimpleScriptTask");
-                Class cls = Class.forName("bpt.chimera.scripttasktest.SimpleScriptTask", true, cl);
-                Object obj = cls.newInstance();
-                log.info("AFFE123 - " + cls.getName() + " -- " + obj.toString());
+                //Class cls = Class.forName("bpt.chimera.scripttasktest.SimpleScriptTask", true, cl);
+                //Object obj = cls.newInstance();
+                //log.info("AFFE123 - " + cls.getName() + " -- " + obj.toString());
 
                 //call the printIt method
                 //Method method = cls.getDeclaredMethod("test", noparams);
                 //method.invoke(obj, null);
-                for(Method method : obj.getClass().getDeclaredMethods()) {
-                    log.info("AFFE1234");
-                }
+                //for(Method method : obj.getClass().getDeclaredMethods()) {
+                //    log.info("AFFE1234");
+                //}
                 //log.info("AFFE1234 - " + obj.getClass().getDeclaredMethods().length);
 
                 //call the printItString method, pass a String param
@@ -95,9 +96,9 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
                 log.error(ex.getMessage());
             }
 
-            /*Object objClass = cls.newInstance();
-            Method method = cls.getMethod("test");
-            method.invoke(objClass);*/
+            Object objClass = cls.newInstance();
+            // Method method = cls.getMethod("test");
+            // method.invoke(objClass);
             //log.info("Affenschaukel - 2");
 
             /*Object objClass = cls.newInstance();
@@ -111,11 +112,11 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
             chimeraDelegate.execute(new ChimeraContext(activityInstance));
             log.info("Affenschaukel - 8");*/
 
-            /*if(objClass instanceof IChimeraDelegate) {
+            if(objClass instanceof IChimeraDelegate) {
                 log.info("Affenschaukel - 3");
                 IChimeraDelegate chimeraDelegate = (IChimeraDelegate) objClass;
                 chimeraDelegate.execute(new ChimeraContext(activityInstance)); // TODO insert context here
-            }*/
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
