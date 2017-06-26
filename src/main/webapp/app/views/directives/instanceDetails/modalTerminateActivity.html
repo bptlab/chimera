@@ -26,11 +26,9 @@
                         <tbody>
                         <tr ng-repeat="attr in dataobject.attributeConfiguration" ng-switch on="attr['type']">
                                 <td>{{attr['name']}}</td>
-                                <!-- Check whether attribute is of type file or not. If yes, display upload/download button --> 
+                                <!-- Check whether attribute is of type file or not. If yes, display upload/download button -->
                                     <td ng-switch-when="File">
                                         <input type="file" name="file" ng-model="attr['id']" onchange="angular.element(this).scope().instanceCtrl.uploadFile(this.files, angular.element(this).scope().attr.id)"/>
-                                        <!-- <input type="file" id="file" name="file" ngf-select="instanceCtrl.getTheFiles(this.files)"/>
-                                        <input type="button" ng-click="instanceCtrl.uploadFiles(attr['id']); instanceCtrl.setAttribute(attr['id'], attr['value'], activityInstance['id'])" value="Upload" /> -->
                                         <input type="button" ng-click="instanceCtrl.downloadFile(attr['id'])" value="Download" />
                                     <br></td>        
 

@@ -438,9 +438,16 @@ public class ActivityRestService extends AbstractRestService {
 	}
 	
 	
-	//Upload File to Server via REST below
+	/**
+	 * Uploads a file via the provided REST API into the database.
+	 *
+	 * @param attributeID	Id of attribute for which the file is to be stored.
+	 * @param uploadedInputStream	Stream representation of the file that is to be stored.
+	 * @param fileDetail	Details of said file.
+	 * @return 202 (ACCEPTED) means that the file was stored successfully.
+	 */
 	@POST
-	@Path("files/{attributeID}/")  //Your Path or URL to call this service
+	@Path("files/{attributeID}/")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(
 	@FormDataParam("file") InputStream uploadedInputStream,
@@ -479,9 +486,15 @@ public class ActivityRestService extends AbstractRestService {
 		return Response.status(200).entity("done").build();
 	}	
 	
+	/**
+	 * Retreives the file that is stored in the database and associated with the given attributeID.
+	 *
+	 * @param attributeID	Id of attribute the file is associated with.
+	 * @return Returns the file as a response.
+	 */
 	@GET
 	@Path("/files/{attributeID}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces(MediaType.WILDCARD)
 	public Response downloadFile(@PathParam("attributeID") String attributeID) {
 		
 		Connection con;
@@ -510,11 +523,18 @@ public class ActivityRestService extends AbstractRestService {
 				
 				int blobLength = (int) blob.length();  
 				byte[] blobAsBytes = blob.getBytes(1, blobLength);
-
+	
+				
+				File tempFileforDownload = File.createTempFile("temp-", filename, new File("."));
 				File file = File.createTempFile("temp-", filename, new File("."));
+
+				FileOutputStream fout = new FileOutputStream(tempFileforDownload);
+				IOUtils.copy(blob.getBinaryStream(), fout);
+
 				out = new FileOutputStream( file );
 				out.write( blobAsBytes );
-				response = Response.ok((Object) file, MediaType.APPLICATION_OCTET_STREAM);
+
+				response = Response.ok((Object) tempFileforDownload, MediaType.WILDCARD_TYPE);
 				String headerString = "attachment; filename="+ filename;
 				response.header("Content-Disposition", headerString);
 				actualResponse = response.build();
@@ -530,7 +550,12 @@ public class ActivityRestService extends AbstractRestService {
 		
 	} 
 	
-	
+	/**
+	 * Retreives the filename for the file stored in the database with the given attributeID
+	 *
+	 * @param attributeID	Id of attribute for which the filename is to be retrieved.
+	 * @return Returns the filename as a stream if present. Else, "null" as a stream is returned.
+	 */
 	@GET
 	@Path("/files/{attributeID}/filename")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
