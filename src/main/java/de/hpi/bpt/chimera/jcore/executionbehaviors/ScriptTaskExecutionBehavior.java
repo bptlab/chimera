@@ -1,14 +1,13 @@
 package de.hpi.bpt.chimera.jcore.executionbehaviors;
 
 import bpt.chimera.scripttasklibrary.IChimeraContext;
-import bpt.chimera.scripttasklibrary.IChimeraDelegate;
 import de.hpi.bpt.chimera.database.controlnodes.DbScriptTask;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.executionbehaviors.scripttasks.context.ChimeraContext;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -26,12 +25,13 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
 
     @Override
     public void execute() {
-        // TODO run java code file
-        log.info("Affenschaukel - 0.25");
 
+        // this line doesn't work with intellij idea debugger, because it will create new folder for tomcat
+        // C:\Users\Florian\.IntelliJIdea2017.1\system\tomcat\Unnamed_chimera-case-engine_3 ...
+        // TODO CHANGE
         //String path = System.getProperty("catalina.base") + "\\webapps\\Chimera-Resources\\" + dbScriptTask.getScriptTaskJar(controlNodeId);
-        String path = "D:\\Programme\\SimpleScriptTask.jar";
 
+        String path = "D:\\Programme\\SimpleScriptTask.jar";
         File file  = new File(path);
 
         URL url = null;
@@ -39,89 +39,16 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
             url = file.toURL();
             URL[] urls = new URL[]{url};
 
-            ClassLoader cl = new URLClassLoader(urls);
+            URLClassLoader cl = new URLClassLoader(urls, this.getClass().getClassLoader());
 
-            //Class cls = cl.loadClass("bpt.chimera.scripttasktest.SimpleScriptTask");
-            //log.info("AFFE123 - " + cls.getName());
+            Class cls = Class.forName(dbScriptTask.getScriptTaskClassPath(controlNodeId), true, cl);
+            Object obj = cls.newInstance();
 
-            //Method method = cls.getMethod("test");
-            //log.info("AFFE1234" + method.getName());
-
-            // ------------------------------------------
-
-            //no paramater
-            Class noparams[] = {};
-
-            //String parameter
-            Class[] paramString = new Class[1];
-            paramString[0] = String.class;
-
-            //int parameter
-            Class[] paramInt = new Class[1];
-            paramInt[0] = Integer.TYPE;
-
-            try{
-                //load the AppTest at runtime
-                //Class cls = cl.loadClass("bpt.chimera.scripttasktest.SimpleScriptTask");
-                Class cls = Class.forName("bpt.chimera.scripttasktest.SimpleScriptTask", true, cl);
-                Object obj = cls.newInstance();
-                log.info("AFFE123 - " + cls.getName() + " -- " + obj.toString());
-
-                //call the printIt method
-                //Method method = cls.getDeclaredMethod("test", noparams);
-                //method.invoke(obj, null);
-                for(Method method : obj.getClass().getDeclaredMethods()) {
-                    log.info("AFFE1234");
-                }
-                //log.info("AFFE1234 - " + obj.getClass().getDeclaredMethods().length);
-
-                //call the printItString method, pass a String param
-                /*method = cls.getDeclaredMethod("printItString", paramString);
-                method.invoke(obj, new String("mkyong"));
-
-                //call the printItInt method, pass a int param
-                method = cls.getDeclaredMethod("printItInt", paramInt);
-                method.invoke(obj, 123);
-
-                //call the setCounter method, pass a int param
-                method = cls.getDeclaredMethod("setCounter", paramInt);
-                method.invoke(obj, 999);
-
-                //call the printCounter method
-                method = cls.getDeclaredMethod("printCounter", noparams);
-                method.invoke(obj, null);*/
-
-            } catch(Exception ex){
-                log.error(ex.getMessage());
-            }
-
-            /*Object objClass = cls.newInstance();
-            Method method = cls.getMethod("test");
-            method.invoke(objClass);*/
-            //log.info("Affenschaukel - 2");
-
-            /*Object objClass = cls.newInstance();
-            log.info("Affenschaukel - 2.5");*/
-
-            /*Method method = cls.getMethod("test");
-            method.invoke(objClass);
-            log.info("Affenschaukel - 8");*/
-
-            /*IChimeraDelegate chimeraDelegate = (IChimeraDelegate) objClass;
-            chimeraDelegate.execute(new ChimeraContext(activityInstance));
-            log.info("Affenschaukel - 8");*/
-
-            /*if(objClass instanceof IChimeraDelegate) {
-                log.info("Affenschaukel - 3");
-                IChimeraDelegate chimeraDelegate = (IChimeraDelegate) objClass;
-                chimeraDelegate.execute(new ChimeraContext(activityInstance)); // TODO insert context here
-            }*/
+            Method method = cls.getDeclaredMethod("execute", IChimeraContext.class);
+            method.invoke(obj, new ChimeraContext(activityInstance));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
-
-        /*DbSelectedDataObjects db = new DbSelectedDataObjects();
-        List<Integer> ids = db.getDataObjectSelection(getScenarioInstance().getId(), controlNodeId);*/
 
     }
 

@@ -176,7 +176,7 @@
 			<artifactId>scripttasklibrary</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>/Users/marc/Desktop/chimera-scripttask-library.jar</systemPath>
+			<systemPath>D:/Dropbox/Studium/BEP/Chimera/chimera-scripttask-library.jar</systemPath>
 		</dependency>
 
 		<!-- Dependencies for Unicorn EventQuery subscription -->
