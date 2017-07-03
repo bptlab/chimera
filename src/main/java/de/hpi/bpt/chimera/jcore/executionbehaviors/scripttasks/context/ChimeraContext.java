@@ -57,7 +57,7 @@ public class ChimeraContext implements IChimeraContext {
                 for(DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
                     if(dataAttributeInstance.getName().equals(attributeName)) {
                         Map<Integer, String> map = new HashMap<>();
-                        map.put(dataAttributeInstance.getDataAttributeId(), value);
+                        map.put(dataAttributeInstance.getId(), value);
 
                         DataManager dataManager = new DataManager(activityInstance.getScenarioInstance());
                         dataManager.setAttributeValues(getActivityId(), map);
@@ -76,7 +76,7 @@ public class ChimeraContext implements IChimeraContext {
      * Return the id of the activity itself.
      */
     public int getActivityId() {
-        return activityInstance.getControlNodeId();
+        return activityInstance.getControlNodeInstanceId();
     }
     /**
      * Return the id of the fragment which owns this service task. 
