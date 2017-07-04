@@ -27,10 +27,18 @@ public class ChimeraContext implements IChimeraContext {
     public ChimeraContext(ActivityInstance activityInstance) {
         this.activityInstance = activityInstance;
 
+        updateDataObjects();
+    }
+
+    /**
+     * Updates the dataObjects object to get the newest values of the data objects
+     */
+    private void updateDataObjects() {
         DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
         List<Integer> dataIds = dbDataObjectSelection.getDataObjectSelection(getScenarioId(), getActivityId());
 
         DataManager dataManager = new DataManager(activityInstance.getScenarioInstance());
+        dataObjects.clear();
         for(int id : dataIds) {
             dataObjects.add(dataManager.getDataObjectForId(id).get());
         }
@@ -54,7 +62,7 @@ public class ChimeraContext implements IChimeraContext {
      * @return an object with the value of the attribute.
      */
     public Object getParam(String dataObjectName, String attributeName) {
-        // TODO rewrite... Update value after change
+        // TODO rewrite... Update value in 'dataObjects' after change
         for(DataObject dataObject : dataObjects) {
             if (dataObject.getName().equals(dataObjectName)) {
                 for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
@@ -84,6 +92,8 @@ public class ChimeraContext implements IChimeraContext {
 
                         DataManager dataManager = new DataManager(activityInstance.getScenarioInstance());
                         dataManager.setAttributeValues(getActivityId(), map);
+
+                        updateDataObjects();
                         return;
                     }
                 }
