@@ -12,13 +12,18 @@ import org.apache.log4j.Logger;
 import java.util.*;
 
 /**
- * Provide 
+ * Context object with restricted access to chimera functions
  */
 public class ChimeraContext implements IChimeraContext {
     private ActivityInstance activityInstance;
     private Logger logger = Logger.getLogger(ChimeraContext.class);
     private List<DataObject> dataObjects = new ArrayList<>();
 
+    /**
+     * Initialize the ChimeraContext
+     *
+     * @param activityInstance  The activity instance of the script task.
+     */
     public ChimeraContext(ActivityInstance activityInstance) {
         this.activityInstance = activityInstance;
 
@@ -26,18 +31,30 @@ public class ChimeraContext implements IChimeraContext {
         List<Integer> dataIds = dbDataObjectSelection.getDataObjectSelection(getScenarioId(), getActivityId());
 
         DataManager dataManager = new DataManager(activityInstance.getScenarioInstance());
-
         for(int id : dataIds) {
             dataObjects.add(dataManager.getDataObjectForId(id).get());
         }
     }
 
+    /**
+     * Writes a message to the log file.
+     *
+     * @param message   The message to log.
+     */
     @Override
     public void log(String message) {
         logger.info(message);
     }
 
+    /**
+     * Returns the value of a given input data object of the activity.
+     *
+     * @param dataObjectName    The name of the data object to get the value from.
+     * @param attributeName     The name of the attribute to get.
+     * @return an object with the value of the attribute.
+     */
     public Object getParam(String dataObjectName, String attributeName) {
+        // TODO rewrite... Update value after change
         for(DataObject dataObject : dataObjects) {
             if (dataObject.getName().equals(dataObjectName)) {
                 for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
@@ -50,8 +67,14 @@ public class ChimeraContext implements IChimeraContext {
         return null;
     }
 
+    /**
+     * Sets the value of a given input data object of the activity.
+     *
+     * @param dataObjectName    The name of the incoming data object.
+     * @param attributeName     The name of the attribute to change.
+     * @param value             The value to set to in the data object.
+     */
     public void setParam(String dataObjectName, String attributeName, String value) {
-        // TODO Geht die value nur als String?
         for(DataObject dataObject : dataObjects) {
             if(dataObject.getName().equals(dataObjectName)) {
                 for(DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
@@ -68,24 +91,31 @@ public class ChimeraContext implements IChimeraContext {
         }
     }
 
+    /**
+     * Returns the id of the current working scenario.
+     *
+     * @return an int with the current scenario id.
+     */
     public int getScenarioId() {
         return activityInstance.getScenarioInstance().getId();
     }
 
     /**
-     * Return the id of the activity itself.
+     * Returns the id of the current activity.
+     *
+     * @return an int with the current activity id.
      */
     public int getActivityId() {
         return activityInstance.getControlNodeInstanceId();
     }
+
     /**
-     * Return the id of the fragment which owns this service task. 
+     * Returns the id of the current executing fragment.
+     *
+     * @return an int with the current fragment id.
      */
     public int getFragmentId() {
         return activityInstance.getFragmentInstanceId();
     }
 
-    /*public List<Object> getDataObjects() {
-        return activityInstance.getScenarioInstance().getDataManager().getDataObjectForId(0);
-    }*/
 }

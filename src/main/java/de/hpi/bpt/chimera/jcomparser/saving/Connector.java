@@ -270,6 +270,13 @@ public class Connector extends DbObject {
 		this.executeInsertStatement(sql);
 	}
 
+	/**
+	 * Insert the information about a script task to the database.
+	 *
+	 * @param controlNodeId			The controlnode_id of the script task.
+	 * @param scriptTaskJar			The relative path to the jar file.
+	 * @param scriptTaskClassPath	The classpath to the java class inside the jar.
+	 */
 	public void insertScriptTask(int controlNodeId, String scriptTaskJar, String scriptTaskClassPath) {
 		String sql = String.format("INSERT INTO scripttask (controlnode_id, scripttaskjar, scripttaskclasspath) " + "VALUES (%d, '%s', '%s')", controlNodeId, scriptTaskJar, scriptTaskClassPath);
 		this.executeInsertStatement(sql);
