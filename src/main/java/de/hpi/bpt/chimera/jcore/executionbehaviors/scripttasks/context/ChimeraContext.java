@@ -55,13 +55,23 @@ public class ChimeraContext implements IChimeraContext {
     }
 
     /**
+     * Writes an error message to the log file.
+     *
+     * @param message   The message to log.
+     */
+    @Override
+    public void logError(String message) {
+        logger.error(message);
+    }
+
+    /**
      * Returns the value of a given input data object of the activity.
      *
      * @param dataObjectName    The name of the data object to get the value from.
      * @param attributeName     The name of the attribute to get.
      * @return an object with the value of the attribute.
      */
-    public Object getParam(String dataObjectName, String attributeName) {
+    public Object getAttribute(String dataObjectName, String attributeName) {
         for(DataObject dataObject : dataObjects) {
             if (dataObject.getName().equals(dataObjectName)) {
                 for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
@@ -81,7 +91,7 @@ public class ChimeraContext implements IChimeraContext {
      * @param attributeName     The name of the attribute to change.
      * @param value             The value to set to in the data object.
      */
-    public void setParam(String dataObjectName, String attributeName, String value) {
+    public void setAttribute(String dataObjectName, String attributeName, String value) {
         for(DataObject dataObject : dataObjects) {
             if(dataObject.getName().equals(dataObjectName)) {
                 for(DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
@@ -98,12 +108,13 @@ public class ChimeraContext implements IChimeraContext {
                 }
             }
         }
+
     }
 
     /**
      * Returns the id of the current working scenario.
      *
-     * @return an int with the current scenario id.
+     * @return an {@code int} with the current scenario id.
      */
     public int getScenarioId() {
         return activityInstance.getScenarioInstance().getId();
@@ -112,7 +123,7 @@ public class ChimeraContext implements IChimeraContext {
     /**
      * Returns the id of the current activity.
      *
-     * @return an int with the current activity id.
+     * @return an {@code int} with the current activity id.
      */
     public int getActivityId() {
         return activityInstance.getControlNodeInstanceId();
@@ -121,7 +132,7 @@ public class ChimeraContext implements IChimeraContext {
     /**
      * Returns the id of the current executing fragment.
      *
-     * @return an int with the current fragment id.
+     * @return an {@code int} with the current fragment id.
      */
     public int getFragmentId() {
         return activityInstance.getFragmentInstanceId();
