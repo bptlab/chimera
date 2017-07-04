@@ -62,7 +62,6 @@ public class ChimeraContext implements IChimeraContext {
      * @return an object with the value of the attribute.
      */
     public Object getParam(String dataObjectName, String attributeName) {
-        // TODO rewrite... Update value in 'dataObjects' after change
         for(DataObject dataObject : dataObjects) {
             if (dataObject.getName().equals(dataObjectName)) {
                 for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances()) {
