@@ -35,7 +35,7 @@ public class ChimeraContext implements IChimeraContext {
      */
     private void updateDataObjects() {
         DbSelectedDataObjects dbDataObjectSelection = new DbSelectedDataObjects();
-        List<Integer> dataIds = dbDataObjectSelection.getDataObjectSelection(getScenarioId(), getActivityId());
+        List<Integer> dataIds = dbDataObjectSelection.getDataObjectSelection(getScenarioInstanceId(), getActivityInstanceId());
 
         DataManager dataManager = new DataManager(activityInstance.getScenarioInstance());
         dataObjects.clear();
@@ -100,7 +100,7 @@ public class ChimeraContext implements IChimeraContext {
                         map.put(dataAttributeInstance.getId(), value);
 
                         DataManager dataManager = new DataManager(activityInstance.getScenarioInstance());
-                        dataManager.setAttributeValues(getActivityId(), map);
+                        dataManager.setAttributeValues(getActivityInstanceId(), map);
 
                         updateDataObjects();
                         return;
@@ -111,13 +111,14 @@ public class ChimeraContext implements IChimeraContext {
 
     }
 
+
     /**
-     * Returns the id of the current working scenario.
+     * Returns the Id of the activity instance currently executed.
      *
-     * @return an {@code int} with the current scenario id.
+     * @return the an {@code int} with the current activity instance id.
      */
-    public int getScenarioId() {
-        return activityInstance.getScenarioInstance().getId();
+    public int getActivityInstanceId() {
+        return activityInstance.getControlNodeInstanceId();
     }
 
     /**
@@ -126,15 +127,42 @@ public class ChimeraContext implements IChimeraContext {
      * @return an {@code int} with the current activity id.
      */
     public int getActivityId() {
-        return activityInstance.getControlNodeInstanceId();
+        return activityInstance.getControlNodeId();
     }
 
     /**
-     * Returns the id of the current executing fragment.
+     * Gets the name of the current activity.
      *
-     * @return an {@code int} with the current fragment id.
+     * @return a {@code String} with the name of the activity.
      */
-    public int getFragmentId() {
+    public String getActivityName() {
+        return activityInstance.getLabel();
+    }
+
+    /**
+     * Returns the id of the current scenario instance.
+     *
+     * @return an {@code int} with the current scenario instance id.
+     */
+    public int getScenarioInstanceId() {
+        return activityInstance.getScenarioInstance().getId();
+    }
+
+    /**
+     * Returns the id of the current scenario.
+     *
+     * @return an {@code int} with the current scenario id.
+     */
+    public int getScenarioId() {
+        return activityInstance.getScenarioInstance().getScenarioId();
+    }
+
+    /**
+     * Returns the id of the current fragment instance.
+     *
+     * @return an {@code int} with the current fragment instance id.
+     */
+    public int getFragmentInstanceId() {
         return activityInstance.getFragmentInstanceId();
     }
 

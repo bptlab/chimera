@@ -43,15 +43,9 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
      */
     @Override
     public void execute() {
-
-        // this line doesn't work with intellij idea debugger, because it will create new folder for tomcat
-        // C:\Users\Florian\.IntelliJIdea2017.1\system\tomcat\Unnamed_chimera-case-engine_3 ...
-        // TODO CHANGE
-        //String path = System.getProperty("catalina.base") + "\\webapps\\Chimera-Resources\\" + dbScriptTask.getScriptTaskJar(controlNodeId);
-
         this.setValues();
 
-        // get file object for jar file
+        // get file object of jar file
         File file;
         try {
             file = new File(scripttaskjar);
@@ -68,7 +62,7 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
             return;
         }
 
-        // build class loader for jar file
+        // build class loader of jar file
         URL[] urls = new URL[]{url};
         URLClassLoader cl = new URLClassLoader(urls, this.getClass().getClassLoader());
 
