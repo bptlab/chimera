@@ -1,5 +1,8 @@
 package de.hpi.bpt.chimera.persistencemanager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -36,7 +39,7 @@ public class DomainModelPersistenceManager {
 	 * Persists a given CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
 	 * 
-	 * @deprecated use {@link de.hpi.bpt.chimera.model.CaseModel#saveCaseModel()
+	 * @deprecated use {@link de.hpi.bpt.chimera.model.CaseModel#saveCaseModelToDB()
 	 *             CaseModel.saveCaseModel()} instead.
 	 * 
 	 * @param caseModel
@@ -44,11 +47,12 @@ public class DomainModelPersistenceManager {
 	 */
 	@Deprecated
 	public static void saveCaseModel(CaseModel caseModel) {
-		EntityManager entitiyManager = getEntityManagerFactory().createEntityManager();
+		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
 
-		entitiyManager.getTransaction().begin();
-		entitiyManager.persist(caseModel);
-		entitiyManager.getTransaction().commit();
+		entityManager.getTransaction().begin();
+		entityManager.merge(caseModel);
+		entityManager.getTransaction().commit();
+		CaseModelManager.makeOutdated();
 	}
 
 	/**
@@ -66,6 +70,14 @@ public class DomainModelPersistenceManager {
 		q.setParameter("id", id);
 
 		return (CaseModel) q.getSingleResult();
+	}
+
+	public static List<CaseModel> loadAllCaseModels() {
+		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
+		entityManager.getTransaction().begin();
+		Query q = entityManager.createQuery("SELECT cm FROM CaseModel cm");
+
+		return (List<CaseModel>) q.getResultList();
 	}
 
 }

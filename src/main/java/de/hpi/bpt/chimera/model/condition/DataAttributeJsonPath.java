@@ -1,8 +1,18 @@
 package de.hpi.bpt.chimera.model.condition;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
+@Entity
 public class DataAttributeJsonPath {
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	private int dbId;
+
 	private DataAttribute dataAttribute;
 	private String jsonPath;
 

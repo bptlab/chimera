@@ -13,6 +13,7 @@ import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
@@ -23,7 +24,7 @@ public class CaseModel {
 	private int versionNumber;
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private DataModel dataModel;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<CaseStartTrigger> startCaseTrigger;
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private TerminationCondition terminationCondition;
@@ -35,12 +36,13 @@ public class CaseModel {
 	 * Persists a the CaseModel to the database using the Java Persistence API
 	 * "EclipseLink".
 	 */
-	public void saveCaseModel() {
+	public void saveCaseModelToDB() {
 		EntityManager entityManager = DomainModelPersistenceManager.getEntityManagerFactory().createEntityManager();
 
 		entityManager.getTransaction().begin();
 		entityManager.merge(this);
 		entityManager.getTransaction().commit();
+		CaseModelManager.makeOutdated();
 	}
 
 	public String getId() {
