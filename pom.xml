@@ -181,8 +181,8 @@
 	<dependencies>
 		<!-- contains two interfaces which need to be implemented in order to use script tasks -->
 		<dependency>
-			<groupId>bpt.chimera.skripttasklibrary</groupId>
-			<artifactId>scripttasklibrary</artifactId>
+			<groupId>bpt.chimera.scripttasks</groupId>
+			<artifactId>interfaces</artifactId>
 			<version>1.0</version>
 		</dependency>
 
