@@ -170,13 +170,20 @@
 
 	</dependencyManagement>
 
+	<!-- local repository which contains shard libraries -->
+	<repositories>
+		<repository>
+			<id>chimera-repository</id>
+			<url>file://${basedir}/src/main/resources/chimera-repository</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+		<!-- contains two interfaces which need to be implemented in order to use script tasks -->
 		<dependency>
 			<groupId>bpt.chimera.skripttasklibrary</groupId>
 			<artifactId>scripttasklibrary</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>D:/Dropbox/Studium/BEP/Chimera/chimera-scripttask-library.jar</systemPath>
 		</dependency>
 
 		<!-- Dependencies for Unicorn EventQuery subscription -->
@@ -366,6 +373,7 @@
 			<version>2.4.0</version>
 		</dependency>
 	</dependencies>
+
 	<profiles>
 		<profile>
 			<id>remote</id>

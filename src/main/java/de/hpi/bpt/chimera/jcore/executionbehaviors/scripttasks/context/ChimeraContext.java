@@ -115,7 +115,7 @@ public class ChimeraContext implements IChimeraContext {
     /**
      * Returns the Id of the activity instance currently executed.
      *
-     * @return the an {@code int} with the current activity instance id.
+     * @return an {@code int} with the current activity instance id.
      */
     public int getActivityInstanceId() {
         return activityInstance.getControlNodeInstanceId();
