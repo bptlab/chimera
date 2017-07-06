@@ -170,7 +170,7 @@
 
 	</dependencyManagement>
 
-	<!-- local repository which contains shard libraries -->
+	<!-- local repository which contains shared libraries -->
 	<repositories>
 		<repository>
 			<id>chimera-repository</id>
