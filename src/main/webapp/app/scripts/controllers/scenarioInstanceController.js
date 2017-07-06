@@ -4,7 +4,7 @@ angular.module('jfrontend')
 .controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
 function ($routeParams, $location, $http, $scope) {
     var instanceCtrl = this;
-        
+    
     $scope.$on('$viewContentLoaded', function () {
         console.log($routeParams.id, $routeParams.instanceId);
         instanceCtrl.initialize();
@@ -324,33 +324,25 @@ function ($routeParams, $location, $http, $scope) {
     //download files via REST-API
     this.downloadFile = function (attributeID) {
         
-        var fileName = null;      
+        var fileNameType = null;      
         $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID + "/filename").success(function (data) {
-            fileName = data;
-            console.log(fileName + " file name retreived");
-            var fileNameString = String(fileName);
-            var fileString = fileNameString.split('.');
-            var filetype = fileString[1];
-            console.log("found filetype with: " +filetype);
-            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID).success(function (data) {
-                //var pom = document.createElement('a');
-                //var file = ('href', 'data:Application/octet-stream,' + encodeURIComponent(data));
-                //  document.location = 'data:Application/octet-stream,' + encodeURIComponent(data);
-                //pom.setAttribute('download', fileName);
-                //window.open(file);
-                var pom = document.createElement('a');
-                var arrtibuteString = 
-                pom.setAttribute('href', 'data:file/'+ filetype + "," + encodeURIComponent(data));
-                pom.setAttribute('download', fileName);
-                
-                if (document.createEvent) {
-                    var event = document.createEvent('MouseEvents');
-                    event.initEvent('click', true, true);
-                    pom.dispatchEvent(event);
-                }
-                else {
-                    pom.click();
-                }
+            fileNameType = data;
+            console.log(fileNameType + " file name retreived");
+            var fileNameTypeString = String(fileNameType);
+            var fileString = fileNameTypeString.split(';');
+            var fileMimetype = fileString[1];
+            var fileName  = fileString[0];
+            $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/files/" + attributeID ,{responseType: 'arraybuffer'}).success(function (data) {                           
+                var blob = new Blob( [ data ], { type: fileMimetype } );
+                var urlCreator = window.URL || window.webkitURL;
+                var fileUrl = urlCreator.createObjectURL( blob );
+                var a = document.createElement('a');
+                a.href = fileUrl;
+                a.target = '_blank';
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();   
+
             }).error(function () {
                 console.log('Download failed');
             });

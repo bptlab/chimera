@@ -698,6 +698,7 @@ CREATE TABLE IF NOT EXISTS `fileUploads` (
   `attribute_id` int(11) NOT NULL,
   `file` LONGBLOB NOT NULL,
   `filename` varchar(255) NOT NULL,
+  `filetype` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`attribute_id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
 
