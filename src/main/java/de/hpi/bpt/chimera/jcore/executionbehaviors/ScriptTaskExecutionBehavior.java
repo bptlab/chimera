@@ -95,8 +95,7 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
             try {
                 method.invoke(delegateInstance, new ChimeraContext(activityInstance));
             } catch (InvocationTargetException e) {
-                // TODO maybe we can add the name of the exception behind the text in the brackets
-                log.error("The class has thrown an error! ()");
+                log.error("The class has thrown an error!");
             } catch (IllegalAccessException e) {
                 log.error("The 'execute' method cannot be accessed!");
             }
@@ -110,8 +109,7 @@ public class ScriptTaskExecutionBehavior extends ActivityExecutionBehavior {
      * the database.
      */
     private void setValues() {
-        //scripttaskjar = dbScriptTask.getScriptTaskJar(controlNodeId);
-        scripttaskjar = "D:\\Programme\\SimpleScriptTask.jar";
+        scripttaskjar = System.getProperty("catalina.base") + "\\webapps\\Chimera-Resources\\" + dbScriptTask.getScriptTaskJar(controlNodeId);
         scripttaskclasspath = dbScriptTask.getScriptTaskClassPath(controlNodeId);
     }
 
