@@ -74,6 +74,10 @@ public class FragmentXmlWrapper {
 		return this.bpmnProcessXml.getWebServiceTasks();
 	}
 
+	public List<ScriptTask> getScriptTasks() {
+		return this.bpmnProcessXml.getScriptTasks();
+	}
+
 	public List<ReceiveTask> getReceiveTasks() {
 		return this.bpmnProcessXml.getReceiveTasks();
 	}
@@ -86,6 +90,7 @@ public class FragmentXmlWrapper {
 		List<? super AbstractDataControlNode> allActivities = new ArrayList<>();
 		allActivities.addAll(this.bpmnProcessXml.getTasks());
 		allActivities.addAll(this.bpmnProcessXml.getWebServiceTasks());
+		allActivities.addAll(this.bpmnProcessXml.getScriptTasks());
 		return (List<AbstractDataControlNode>) allActivities;
 	}
 

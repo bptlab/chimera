@@ -665,6 +665,20 @@ CREATE TABLE IF NOT EXISTS `webservicetask` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `scripttask`
+--
+
+CREATE TABLE IF NOT EXISTS `scripttask` (
+  `controlnode_id` int(11) NOT NULL DEFAULT '0',
+  `scripttaskjar` varchar(2048) NOT NULL,
+  `scripttaskclasspath` varchar(2048) NOT NULL,
+  PRIMARY KEY (`controlnode_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `workitemstate`
 --
 
@@ -687,6 +701,22 @@ CREATE TABLE IF NOT EXISTS `um_role` (
   `admin_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- File Upload Table
+-- 
+CREATE TABLE IF NOT EXISTS `fileUploads` (
+  `attribute_id` int(11) NOT NULL,
+  `file` LONGBLOB NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `filetype` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`attribute_id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+
 
 -- --------------------------------------------------------
 

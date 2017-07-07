@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,6 +19,27 @@ import javax.ws.rs.core.UriInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import java.sql.*;
+import java.io.ByteArrayOutputStream;
+import java.sql.Blob;
+import de.hpi.bpt.chimera.database.ConnectionWrapper;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
+import org.apache.commons.io.*;
+import java.io.FileInputStream;
+import javax.activation.MimetypesFileTypeMap;
+import javax.activation.MimeTypeParseException;
+import  javax.activation.MimeType;
+import javax.activation.FileTypeMap;
+import javax.activation.MimetypesFileTypeMap;
 /**
  * This class implements the REST interface for activities.
  */
@@ -409,13 +431,233 @@ public class ActivityRestService extends AbstractRestService {
 			Map<String, String> dataClassNameToState = new HashMap<>();
 			for (Object dataClassName : postJson.keySet()) {
 				dataClassNameToState.put((String) dataClassName, postJson.getString((String) dataClassName));
-
+				
 			}
-
+			
 			executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId, dataClassNameToState);
 		} else {
 			executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId);
 		}
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 	}
+	
+	
+	/**
+	 * Uploads a file via the provided REST API into the database.
+	 *
+	 * @param attributeID	Id of attribute for which the file is to be stored.
+	 * @param uploadedInputStream	Stream representation of the file that is to be stored.
+	 * @param fileDetail	Details of said file.
+	 * @return 202 (ACCEPTED) means that the file was stored successfully.
+	 * Not only the file, but its file name and respective mime-type are stored in the database.
+	 */
+	@POST
+	@Path("files/{attributeID}/")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadFile(
+	@FormDataParam("file") InputStream uploadedInputStream,
+	@FormDataParam("file") FormDataContentDisposition fileDetail, @PathParam("attributeID") String attributeID) {
+				
+		String filename = fileDetail.getFileName();
+		String filetype = null;
+		try{
+			filetype = getMimeType(filename);
+		} catch(MimeTypeParseException e){
+			filetype = "application/octet-stream";
+		}
+
+		byte[] fileAsByte = null;
+		try {
+			fileAsByte = IOUtils.toByteArray(uploadedInputStream);	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		java.sql.Connection con = null;
+			
+		try{
+			con = ConnectionWrapper.getInstance().connect();
+			String sql = "INSERT INTO fileUploads VALUES (?,?,?,?)";
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setString(1, attributeID);
+			statement.setBytes(2, fileAsByte);
+			statement.setString(3, filename);
+			statement.setString(4,filetype);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
+		finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return Response.status(200).entity("done").build();
+	}	
+	
+	/**
+	 * Retreives the file that is stored in the database and associated with the given attributeID.
+	 *
+	 * @param attributeID	Id of attribute the file is associated with.
+	 * @return Returns the file as a response.
+	 */
+	@GET
+	@Path("/files/{attributeID}")
+	@Produces(MediaType.WILDCARD)
+	public Response downloadFile(@PathParam("attributeID") String attributeID) {
+		
+		Connection con;
+		Statement su = null;
+		String sql = null;
+		ResultSet rs = null;			
+		try {
+			con = ConnectionWrapper.getInstance().connect();
+			su=con.createStatement();
+			sql = "SELECT * FROM fileUploads WHERE ATTRIBUTE_ID = " + attributeID;
+			rs = su.executeQuery(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		Blob blob = null;
+		String filename = null;
+		String filetype = null;
+		ResponseBuilder response = null;
+		Response actualResponse = null;
+		
+		try {
+				rs.next();
+				
+				blob = rs.getBlob("file");
+				filename = rs.getString("filename");
+				filetype = rs.getString("filetype");
+					
+				File tempFileforDownload = File.createTempFile("temp-", filename, new File("."));
+
+				FileOutputStream fout = new FileOutputStream(tempFileforDownload);
+				IOUtils.copy(blob.getBinaryStream(), fout);	
+				
+				response = Response.ok((Object) tempFileforDownload, filetype);
+				response.header("Content-Transfer-Encoding" , "base64");
+				response.header("Transfer-Encoding", "identity");
+				response.header("Content-Length", String.valueOf(tempFileforDownload.length()));
+				response.header("Content-Disposition", "attachment; filename="+ filename);
+
+				actualResponse = response.build();
+				fout.close();
+				
+				blob.free();
+				su.close();
+		} catch (Exception e) {
+			log.error(e);
+			e.printStackTrace();
+		}
+		
+		return actualResponse;
+		
+	} 
+
+	
+/**
+ * Determine the Mime type based on file extension
+ *
+ * @param fileName
+ * @return the mime type that was detected by checking the file ending. If no ending is present, the default is retuned.
+ * @throws MimeTypeParseException
+ */
+private static String getMimeType(String fileName) throws MimeTypeParseException {
+
+    if (fileName == null) {
+        return "application/octet-stream";
+    }
+    else {
+		MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
+        mimeTypes.addMimeTypes("application/msword doc DOC");
+        mimeTypes.addMimeTypes("application/vnd.ms-excel xls XLS");
+        mimeTypes.addMimeTypes("application/pdf pdf PDF");
+        mimeTypes.addMimeTypes("text/xml xml XML");
+        mimeTypes.addMimeTypes("text/html html htm HTML HTM");
+        mimeTypes.addMimeTypes("text/plain txt text TXT TEXT");
+        mimeTypes.addMimeTypes("image/gif gif GIF");
+        mimeTypes.addMimeTypes("image/ief ief");
+        mimeTypes.addMimeTypes("image/jpeg jpeg jpg jpe JPG");
+        mimeTypes.addMimeTypes("image/tiff tiff tif");
+        mimeTypes.addMimeTypes("image/png png PNG");
+        mimeTypes.addMimeTypes("image/x-xwindowdump xwd");
+        mimeTypes.addMimeTypes("application/postscript ai eps ps");
+        mimeTypes.addMimeTypes("application/rtf rtf");
+        mimeTypes.addMimeTypes("application/x-tex tex");
+        mimeTypes.addMimeTypes("application/x-texinfo texinfo texi");
+        mimeTypes.addMimeTypes("application/x-troff t tr roff");
+        mimeTypes.addMimeTypes("audio/basic au");
+        mimeTypes.addMimeTypes("audio/midi midi mid");
+        mimeTypes.addMimeTypes("audio/x-aifc aifc");
+        mimeTypes.addMimeTypes("audio/x-aiff aif aiff");
+        mimeTypes.addMimeTypes("audio/x-mpeg mpeg mpg");
+        mimeTypes.addMimeTypes("audio/x-wav wav");
+        mimeTypes.addMimeTypes("video/mpeg mpeg mpg mpe");
+        mimeTypes.addMimeTypes("video/quicktime qt mov");
+        mimeTypes.addMimeTypes("video/x-msvideo avi");
+    	return mimeTypes.getContentType(fileName);
+	}
+
 }
+
+
+
+	
+	/**
+	 * Retreives the filename for the file stored in the database with the given attributeID
+	 *
+	 * @param attributeID	Id of attribute for which the filename is to be retrieved.
+	 * @return Returns the filename and the mime-type comma-separated as a stream if present. 
+	 * Else, "null" as a stream is returned.
+	 */
+	@GET
+	@Path("/files/{attributeID}/filename")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response getFileName(@PathParam("attributeID") String attributeID) {
+		Connection con;
+		Statement su = null;
+		String sql = null;
+		ResultSet rs = null;
+		String filename = null;
+		String filetype = null;
+		String responseString = null;
+
+		try {
+			con = ConnectionWrapper.getInstance().connect();
+			su=con.createStatement();
+			sql = "SELECT * FROM fileUploads WHERE ATTRIBUTE_ID = " + attributeID;
+			rs = su.executeQuery(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		ResponseBuilder response = null;
+		Response actualResponse = null;
+		
+		try {
+			while(rs.next()) {
+				// take the blob
+				filename = rs.getString("filename");
+				filetype = rs.getString("filetype");
+				responseString = filename + ";" + filetype;
+				response = Response.ok(responseString, MediaType.APPLICATION_OCTET_STREAM);
+				String headerString = "attachment; filename="+ filename;
+				response.header("Content-Disposition", headerString);
+				actualResponse = response.build();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return actualResponse;
+	}   
+
+}
+	
