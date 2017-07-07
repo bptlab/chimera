@@ -702,6 +702,22 @@ CREATE TABLE IF NOT EXISTS `um_role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+
+-- --------------------------------------------------------
+
+--
+-- File Upload Table
+-- 
+CREATE TABLE IF NOT EXISTS `fileUploads` (
+  `attribute_id` int(11) NOT NULL,
+  `file` LONGBLOB NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `filetype` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`attribute_id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+
+
+
 -- --------------------------------------------------------
 
 --

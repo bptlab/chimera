@@ -145,6 +145,7 @@ public class DataAttributeInstance {
 				case "String":
 				case "Enum":
 				case "Class":
+				case "File":
 					break;
 				default:
 					throw new IllegalArgumentException("Attribute data type is not supported.");
