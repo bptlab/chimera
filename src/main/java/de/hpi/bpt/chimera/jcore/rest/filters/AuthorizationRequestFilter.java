@@ -12,6 +12,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 
 /**
@@ -19,21 +22,23 @@ import java.io.IOException;
  */
 @Provider
 public class AuthorizationRequestFilter implements ContainerRequestFilter {
+	private static Logger log = Logger.getLogger(AuthorizationRequestFilter.class);
 	String errorMsg = "{\"error\":\"There is no %s with id %d\"}";
 	private ContainerRequestContext requestContext;
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
+		log.info("I was in Provider");
 		this.requestContext = requestContext;
-		if (!isValidScenario()) {
-			abortIllegalScenario(requestContext.getMethod());
-		} else if (!isValidInstance()) {
-			abortInvalidInstance(requestContext.getMethod());
-		} else if (!isValidActivity()) {
-			abortIllegalActivity(requestContext.getMethod());
-		} else if (!isValidActivityInstance()) {
-			abortIllegalActivityInstance(requestContext.getMethod());
-		}
+		// if (!isValidScenario()) {
+		// abortIllegalScenario(requestContext.getMethod());
+		// } else if (!isValidInstance()) {
+		// abortInvalidInstance(requestContext.getMethod());
+		// } else if (!isValidActivity()) {
+		// abortIllegalActivity(requestContext.getMethod());
+		// } else if (!isValidActivityInstance()) {
+		// abortIllegalActivityInstance(requestContext.getMethod());
+		// }
 	}
 
 	private void abortIllegalActivity(String method) {
@@ -88,12 +93,14 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 	}
 
 	private boolean isValidScenario() {
-		MultivaluedMap<String, String> map = requestContext.getUriInfo().getPathParameters();
-		if (!map.containsKey("scenarioId")) {
-			return true;
-		}
-		int scenarioId = Integer.parseInt(map.getFirst("scenarioId"));
-		return new DbScenario().existScenario(scenarioId);
+		/*
+		 * MultivaluedMap<String, String> map =
+		 * requestContext.getUriInfo().getPathParameters(); if
+		 * (!map.containsKey("scenarioId")) { return true; } int scenarioId =
+		 * Integer.parseInt(map.getFirst("scenarioId")); return new
+		 * DbScenario().existScenario(scenarioId);
+		 */
+		return true;
 	}
 
 	private boolean isValidInstance() {

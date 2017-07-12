@@ -35,10 +35,8 @@ public class CaseModelManagerTest {
 
 		// Parse a CaseModel from jsonString and give it to the CaseModel
 		// manager
-		CaseModel cm1;
-		cm1 = CaseModelParser.parseCaseModel(jsonString);
+		CaseModel cm1 = CaseModelManager.parseCaseModel(jsonString);
 		assertEquals("591330db1ed1325048306e40", cm1.getId());
-		CaseModelManager.addCaseModel(cm1);
 
 		// Parse another CaseModel from jsonString, but this time save it to
 		// database directly
@@ -61,10 +59,9 @@ public class CaseModelManagerTest {
 		// generate a second Version from the first CaseModel and give it to the
 		// CaseModel manager
 		CaseModel cm3;
-		cm3 = CaseModelParser.parseCaseModel(jsonString);
+		cm3 = CaseModelManager.parseCaseModel(jsonString);
 		assertEquals("591330db1ed1325048306e40", cm1.getId());
 		cm3.setName(cm1.getName() + "_Version2");
-		CaseModelManager.addCaseModel(cm3);
 
 		// Load the first Model from the CaseModel manager again,
 		// but this time we should get the newer Version (cm3)
@@ -89,7 +86,7 @@ public class CaseModelManagerTest {
 		assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm2.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded3.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
 
 
-		for (Map.Entry<String, String> entry : CaseModelManager.getAllCaseModelInformation("").entrySet()) {
+		for (Map.Entry<String, String> entry : CaseModelManager.getAllCaseModelNameDetails("").entrySet()) {
 			System.out.println("Name:" + entry.getValue() + "Id:" + entry.getKey() + "\n");
 		}
 

@@ -8,9 +8,13 @@ import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataTransitionException;
 import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataclassReferenceException;
 import de.hpi.bpt.chimera.jcore.Scenario;
 import de.hpi.bpt.chimera.jcore.ScenarioFactory;
+import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -19,6 +23,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,17 +75,19 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postInstance(String scenario) {
+		log.error(scenario);
 		try {
-			ScenarioData newScenario = new ScenarioData(scenario);
-			newScenario.save();
+			CaseModelManager.parseCaseModel(scenario);
 			return Response.status(201).build();
-		} catch (IllegalArgumentException | InvalidDataTransitionException | InvalidDataclassReferenceException e) {
-			log.error("Error: ", e);
+		} catch (IllegalArgumentException | JSONException | IllegalCaseModelException e) {
+			log.error(e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
-		} catch (JAXBException e) {
-			log.error("Error: ", e);
-			return Response.status(400).type(MediaType.APPLICATION_JSON).entity(buildException("Invalid xml " + e.getMessage())).build();
 		}
+		/*
+		 * catch (JAXBException e) { log.error("Error: ", e); return
+		 * Response.status(400).type(MediaType.APPLICATION_JSON).entity(
+		 * buildException("Invalid xml " + e.getMessage())).build(); }
+		 */
 	}
 
 	private String buildException(String text) {
@@ -107,11 +116,14 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenario(@Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
-		DbScenario dbScenario = new DbScenario();
-		Map<String, Object> data = dbScenario.getScenarioDetails(scenarioId);
-		data.put("instances", uri.getAbsolutePath() + "/instance");
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(new JSONObject(data).toString()).build();
+	public Response getScenario(@Context UriInfo uri, @PathParam("scenarioId") String caseModelId) {
+		// DbScenario dbScenario = new DbScenario();
+		// Map<String, Object> data = dbScenario.getScenarioDetails(scenarioId);
+
+		Map<String, Object> jsonDetails = CaseModelManager.getCaseModelDetails(caseModelId);
+		jsonDetails.put("instances", uri.getAbsolutePath() + "/instance");
+
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(new JSONObject(jsonDetails).toString()).build();
 	}
 
 	/**
@@ -131,28 +143,27 @@ public class ScenarioRestService extends AbstractRestService {
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(xmlJson.toString()).build();
 	}
 
-	 /**
-   * Deletes a scenario with all its instances.
-   * Internally, this is realized by setting a 'deleted' flag in the database.
-   *
-   * @param scenarioID The ID of the scenario which is supposed to be deleted
-   * @return The status code if the operation was successful or not
-   * @throws Exception in case something goes wrong.
-   */
-  @DELETE
-  @Path("scenario/{scenarioId}/")
-	public Response deleteScenario(@PathParam("scenarioId") int scenarioId) {
-		Scenario scenario = ScenarioFactory.createScenarioFromDatabase(scenarioId);
-		if (scenario.exists()) {
-			scenario.delete();
-			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "scenario deletion successful.\"}").build();
-		} else {
-			// This is never called because a filter takes care of non existent
-			// scenarios
-			return this.buildNotFoundResponse(String.format("Id %s does not exist.", scenarioId));
+	/**
+	 * Deletes a scenario with all its instances. Internally, this is realized
+	 * by setting a 'deleted' flag in the database.
+	 *
+	 * @param scenarioID
+	 *            The ID of the scenario which is supposed to be deleted
+	 * @return The status code if the operation was successful or not
+	 * @throws Exception
+	 *             in case something goes wrong.
+	 */
+	@DELETE
+	@Path("scenario/{scenarioId}/")
+	public Response deleteScenario(@PathParam("scenarioId") String caseModelId) {
+		try {
+			CaseModelManager.deleteCaseModel(caseModelId);
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "casemodel deletion successful.\"}").build();
+		} catch (IllegalArgumentException e) {
+			log.error("deletion failed: " + e);
+			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-  }
-
+	}
 
 	/**
 	 * This method allows to give an overview of all scenarios.
@@ -173,18 +184,16 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenarios(@Context UriInfo uriInfo, @QueryParam("filter") String filterString) {
-		DbScenario scenario = new DbScenario();
-		Map<Integer, String> scenarios;
-		if (filterString == null || "".equals(filterString)) {
-			scenarios = scenario.getScenarios();
-		} else {
-			scenarios = scenario.getScenariosLike(filterString);
-		}
-		JSONObject jsonResult = mapToKeysAndResults(scenarios, "ids", "labels");
+	public Response getScenarios(@Context UriInfo uriInfo, @QueryParam("filter") String filter) {
+		String filterString = "";
+		if (filter != null)
+			filterString = filter;
+
+		Map<String, String> caseModelsDetails = CaseModelManager.getAllCaseModelNameDetails(filterString);
+		JSONObject jsonResult = mapToKeysAndResults(caseModelsDetails, "ids", "labels");
 		JSONObject refs = new JSONObject();
-		for (int id : scenarios.keySet()) {
-			refs.put(String.valueOf(id), uriInfo.getAbsolutePath() + "/" + id);
+		for (String id : caseModelsDetails.keySet()) {
+			refs.put(id, uriInfo.getAbsolutePath() + "/" + id);
 		}
 		jsonResult.put("links", refs);
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonResult.toString()).build();

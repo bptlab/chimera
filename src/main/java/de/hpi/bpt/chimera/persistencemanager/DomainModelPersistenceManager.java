@@ -23,14 +23,15 @@ public class DomainModelPersistenceManager {
 	}
 
 	/**
-	 * Gives back the EntityManagerFactory. If the EntityManagerFactory isn't
+	 * Returns the EntityManagerFactory. If the EntityManagerFactory isn't
 	 * initilized, then first initialize it.
 	 * 
-	 * @return the EntityManagerFactory
+	 * @return EntityManagerFactory
 	 */
 	public static EntityManagerFactory getEntityManagerFactory() {
 		if (!isEntityManagerFactoryInitialized) {
 			entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+			isEntityManagerFactoryInitialized = true;
 		}
 		return entityManagerFactory;
 	}
@@ -52,7 +53,6 @@ public class DomainModelPersistenceManager {
 		entityManager.getTransaction().begin();
 		entityManager.merge(caseModel);
 		entityManager.getTransaction().commit();
-		CaseModelManager.makeOutdated();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class DomainModelPersistenceManager {
 	 * @return the loaded CaseModel Object
 	 */
 	public static CaseModel loadCaseModel(String id) {
-		EntityManager em = entityManagerFactory.createEntityManager();
+		EntityManager em = getEntityManagerFactory().createEntityManager();
 		em.getTransaction().begin();
 		Query q = em.createQuery("SELECT c FROM CaseModel c WHERE c.id=:id");
 		q.setParameter("id", id);
@@ -75,9 +75,20 @@ public class DomainModelPersistenceManager {
 	public static List<CaseModel> loadAllCaseModels() {
 		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
-		Query q = entityManager.createQuery("SELECT cm FROM CaseModel cm");
+		List<CaseModel> caseModelList = entityManager.createQuery("SELECT c FROM CaseModel c").getResultList();
+		entityManager.getTransaction().commit();
 
-		return (List<CaseModel>) q.getResultList();
+		if (caseModelList == null)
+			return new ArrayList<>();
+		else
+			return caseModelList;
+	}
+
+	public static void deleteCaseModel(CaseModel cm) {
+		EntityManager em = getEntityManagerFactory().createEntityManager();
+		em.getTransaction().begin();
+		em.remove(cm);
+		em.getTransaction().commit();
 	}
 
 }

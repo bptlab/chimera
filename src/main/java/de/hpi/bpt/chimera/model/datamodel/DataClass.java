@@ -27,6 +27,12 @@ public class DataClass extends DataModelClass {
 		return this.objectLifecycle;
 	}
 
+	/**
+	 * Make a Map from name of ObjectLifecycle-State to the referring
+	 * ObjectLifecycle-State.
+	 * 
+	 * @return HashMap
+	 */
 	public Map<String, ObjectLifecycleState> getNameToObjectLifecycleState() {
 		Map<String, ObjectLifecycleState> nameToObjectLifecycleState = new HashMap<>();
 

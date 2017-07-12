@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.model.datamodel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,11 @@ public class DataModel {
 		this.dataModelClasses = dataModelClasses;
 	}
 
+	/**
+	 * Make a Map from name of DataModelClasses to the referring DataModelClass.
+	 * 
+	 * @return HashMap
+	 */
 	public Map<String, DataModelClass> getNameToDataModelClass() {
 		Map<String, DataModelClass> nameToDataModelClass = new HashMap<>();
 
@@ -44,5 +50,21 @@ public class DataModel {
 			nameToDataModelClass.put(dataModelClass.getName(), dataModelClass);
 		}
 		return nameToDataModelClass;
+	}
+
+	/**
+	 * Get all DataClasses of the DataModel.
+	 * 
+	 * @return List of DataClasses
+	 */
+	public List<DataClass> getDataClasses() {
+		List<DataClass> dataClasses = new ArrayList<>();
+		for (DataModelClass dataModelClass : dataModelClasses) {
+			if (dataModelClass instanceof DataClass) {
+				DataClass dataClass = (DataClass) dataModelClass;
+				dataClasses.add(dataClass);
+			}
+		}
+		return dataClasses;
 	}
 }

@@ -4,7 +4,9 @@ angular.module('jfrontend')
     .controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
         function ($routeParams, $location, $http, $scope) {
             $scope.$on('$viewContentLoaded', function () {
+            	// TODO: think wether this should be called everytime just CaseModel gets refreshed
                 console.log($routeParams.id);
+                
                 //if we are within the scenario layer
                 if ($routeParams.id != null) {
                     // setting current id of scenario based on the URI

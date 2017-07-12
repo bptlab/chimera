@@ -85,14 +85,17 @@
             <li>
                 <!-- Creates Menu Entries for the Scenarios -->
                 <a href="#/scenario"><i class="fa fa-check-square-o fa-fw"></i>
-                    Scenarios
+                    Case Models
                     <span class="fa arrow"></span>
                 </a>
                 <!-- iterate over all scenario items within the scenarioCtrl and display them with ID and name as list -->
                 <ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
-                    <li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels']">
-                        <a ng-href="#/scenario/{{key}}">{{key + ': ' + value}}</a>
+                    <li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels'] as results">
+                        <a ng-href="#/scenario/{{key}}">{{($index+1) + ': ' + value}}</a>
                     </li>
+                    <li ng-if="scenarioCtrl.scenarios['ids'].length === 0">
+      			<a><strong>No CaseModels deployed</strong></a>
+		    </li>
                 </ul>
             </li>
 

@@ -42,8 +42,8 @@ public class ScenarioInstanceRestService {
 	@Path("scenario/{scenarioId}/instance")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response startNewInstance(@Context UriInfo uri, @PathParam("scenarioId") int scenarioId) {
-		return initializeNewInstance(uri, scenarioId, "");
+	public Response startNewInstance(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
+		return initializeNewInstance(uri, cmId, "");
 	}
 
 	/**
@@ -68,24 +68,21 @@ public class ScenarioInstanceRestService {
 	@Path("scenario/{scenarioId}/instance")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response startNewNamedInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, NamedJaxBean name) {
+	public Response startNewNamedInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, NamedJaxBean name) {
 		if (name == null) {
-			return initializeNewInstance(uriInfo, scenarioId, "");
+			return initializeNewInstance(uriInfo, cmId, "");
 		} else {
-			return initializeNewInstance(uriInfo, scenarioId, name.getName());
+			return initializeNewInstance(uriInfo, cmId, name.getName());
 		}
 
 	}
 
-	private Response initializeNewInstance(UriInfo uriInfo, int scenarioId, String name) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		int instanceId;
-		if (name.isEmpty()) {
-			instanceId = executionService.startNewScenarioInstance();
-		} else {
-			instanceId = executionService.startNewScenarioInstance(name);
-		}
-		return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"id\":" + instanceId + ",\"link\":\"" + uriInfo.getAbsolutePath() + "/" + instanceId + "\"}").build();
+	private Response initializeNewInstance(UriInfo uriInfo, String cmId, String name) {
+		// ExecutionService executionService =
+		// ExecutionService.getInstance(scenarioId);
+		String caseId = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
+
+		return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"id\":\"" + caseId + "\",\"link\":\"" + uriInfo.getAbsolutePath() + "/" + caseId + "\"}").build();
 	}
 
 
@@ -198,12 +195,12 @@ public class ScenarioInstanceRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") int scenarioId, @QueryParam("filter") String filterString) {
-		DbScenarioInstance instance = new DbScenarioInstance();
+	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @QueryParam("filter") String filterString) {
 		JSONObject result = new JSONObject();
-		Map<Integer, String> data = instance.getScenarioInstancesLike(scenarioId, filterString);
+
+		Map<String, String> data = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId, filterString);
 		JSONObject links = new JSONObject();
-		for (int id : data.keySet()) {
+		for (String id : data.keySet()) {
 			links.put(String.valueOf(id), uri.getAbsolutePath() + "/" + id);
 		}
 		result.put("ids", new JSONArray(data.keySet()));

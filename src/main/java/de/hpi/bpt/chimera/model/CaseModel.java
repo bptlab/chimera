@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -13,13 +15,14 @@ import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
-import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
 public class CaseModel {
 	@Id
-	private String id;
+	private String cmId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int dbId;
 	private String name;
 	private int versionNumber;
 	@OneToOne(cascade = CascadeType.PERSIST)
@@ -42,15 +45,14 @@ public class CaseModel {
 		entityManager.getTransaction().begin();
 		entityManager.merge(this);
 		entityManager.getTransaction().commit();
-		CaseModelManager.makeOutdated();
 	}
 
 	public String getId() {
-		return id;
+		return cmId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String cmId) {
+		this.cmId = cmId;
 	}
 
 	public String getName() {
