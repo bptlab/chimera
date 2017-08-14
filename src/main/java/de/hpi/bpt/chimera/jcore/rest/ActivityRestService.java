@@ -474,15 +474,16 @@ public class ActivityRestService extends AbstractRestService {
 		}
 		
 		java.sql.Connection con = null;
+		PreparedStatement statement = null;
 			
 		try{
 			con = ConnectionWrapper.getInstance().connect();
 			String sql = "INSERT INTO fileUploads VALUES (?,?,?,?)";
-			PreparedStatement statement = con.prepareStatement(sql);
+			statement = con.prepareStatement(sql);
 			statement.setString(1, attributeID);
 			statement.setBytes(2, fileAsByte);
 			statement.setString(3, filename);
-			statement.setString(4,filetype);
+			statement.setString(4, filetype);
 			statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -490,6 +491,7 @@ public class ActivityRestService extends AbstractRestService {
 		finally {
 			if (con != null) {
 				try {
+					statement.close();
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -624,9 +626,6 @@ private static String getMimeType(String fileName) throws MimeTypeParseException
 		Statement su = null;
 		String sql = null;
 		ResultSet rs = null;
-		String filename = null;
-		String filetype = null;
-		String responseString = null;
 
 		try {
 			con = ConnectionWrapper.getInstance().connect();
@@ -638,25 +637,24 @@ private static String getMimeType(String fileName) throws MimeTypeParseException
 		}
 		
 		ResponseBuilder response = null;
-		Response actualResponse = null;
 		
 		try {
+			//FIXME loop returns only a response for last entry in rs
 			while(rs.next()) {
 				// take the blob
-				filename = rs.getString("filename");
-				filetype = rs.getString("filetype");
-				responseString = filename + ";" + filetype;
+				String filename = rs.getString("filename");
+				String filetype = rs.getString("filetype");
+				String responseString = filename + ";" + filetype;
 				response = Response.ok(responseString, MediaType.APPLICATION_OCTET_STREAM);
 				String headerString = "attachment; filename="+ filename;
 				response.header("Content-Disposition", headerString);
-				actualResponse = response.build();
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 		}
-		return actualResponse;
+		return response.build();
 	}   
 
 }

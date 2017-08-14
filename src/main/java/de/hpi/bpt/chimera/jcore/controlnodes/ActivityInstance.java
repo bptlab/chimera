@@ -70,7 +70,6 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 		} else {
 			this.setControlNodeInstanceId(instanceId);
 		}
-		;
 		this.setState(new DbControlNodeInstance().getState(getControlNodeInstanceId()));
 		this.initActivityInstance();
 	}
@@ -95,6 +94,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 			case "ScriptTask":
 				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "ScriptTask");
 				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
+				break;
 			case "SendTask":
 				dbActivityInstance.createNewActivityInstance(getControlNodeInstanceId(), "SendTask");
 				dbActivityInstance.setAutomaticExecution(getControlNodeInstanceId(), true);
@@ -168,6 +168,7 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 	 * expects a list of selected data objects the activity should work on
 	 */
 	@Override
+	@Deprecated
 	public void begin() {
 		super.begin();
 		this.setState(State.RUNNING);
@@ -231,8 +232,9 @@ public class ActivityInstance extends AbstractControlNodeInstance {
 
 	/**
 	 * Output sets of this activity instance.
+	 * FIXME this method always returns null, luckily it is not called and should probably be removed 
 	 * TODO move to activity, äh first introduce a model level
-	 * @return
+	 * @return null 
 	 */
   public List<List<DataObject>> getOutputSets() {
     int nodeId = dbControlNodeInstance.getControlNodeId(getControlNodeInstanceId());
