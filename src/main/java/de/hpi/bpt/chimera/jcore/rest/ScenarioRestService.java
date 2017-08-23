@@ -75,11 +75,12 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postInstance(String scenario) {
-		log.error(scenario);
 		try {
+			log.info("start parsing CaseModel");
 			CaseModelManager.parseCaseModel(scenario);
+			log.info("end parsing CaseModel");
 			return Response.status(201).build();
-		} catch (IllegalArgumentException | JSONException | IllegalCaseModelException e) {
+		} catch (Exception e) {
 			log.error(e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}

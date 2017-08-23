@@ -8,6 +8,9 @@ public class FragmentInstance {
 	private Fragment fragment;
 	private List<ControlNodeInstance> controlNodeInstances;
 
+	// TODO: re-implement the other functions which are given in
+	// ...core.FragmentInstance, like all the initialize functions
+
 	public FragmentInstance(Fragment fragment) {
 		this.fragment = fragment;
 		// TODO: implement the whole thing with the controlNodeInstances ...

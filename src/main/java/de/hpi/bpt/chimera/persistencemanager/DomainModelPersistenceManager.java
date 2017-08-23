@@ -66,7 +66,7 @@ public class DomainModelPersistenceManager {
 	public static CaseModel loadCaseModel(String id) {
 		EntityManager em = getEntityManagerFactory().createEntityManager();
 		em.getTransaction().begin();
-		Query q = em.createQuery("SELECT c FROM CaseModel c WHERE c.id=:id");
+		Query q = em.createQuery("SELECT c FROM CaseModel c WHERE c.cmId=:id");
 		q.setParameter("id", id);
 
 		return (CaseModel) q.getSingleResult();

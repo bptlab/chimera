@@ -20,8 +20,9 @@ public class ExecutionService {
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
 		String caseName = cm.getName();
-		if (name != "")
+		if (name != "") {
 			caseName = name;
+		}
 
 		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
 		if(caseExecutions.containsKey(cm.getId())) {

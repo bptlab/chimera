@@ -1,10 +1,14 @@
 package de.hpi.bpt.chimera.model.fragment;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
+
+import de.hpi.bpt.chimera.model.fragment.BpmnFragment.BpmnFragment;
 
 @Entity
 public class Fragment {
@@ -17,6 +21,9 @@ public class Fragment {
 	private int versionNumber;
 	@Lob
 	private String contentXML;
+
+	@OneToOne(cascade = CascadeType.PERSIST)
+	private BpmnFragment bpmnFragment;
 
 	public String getId() {
 		return id;
@@ -42,5 +49,13 @@ public class Fragment {
 	}
 	public void setContentXML(String contentXML) {
 		this.contentXML = contentXML;
+	}
+
+	public BpmnFragment getBpmnFragment() {
+		return bpmnFragment;
+	}
+
+	public void setBpmnFragment(BpmnFragment bpmnFragment) {
+		this.bpmnFragment = bpmnFragment;
 	}
 }
