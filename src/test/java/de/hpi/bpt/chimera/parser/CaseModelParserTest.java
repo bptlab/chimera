@@ -32,12 +32,13 @@ public class CaseModelParserTest {
 	@Before
 	public void getJsonString() {
 		try {
-			String file = getClass().getResource(fileName).getFile();
+			// String file = getClass().getResource(fileName).getFile();
+			String file = "src/test/resources/parser/JsonString";
 			FileInputStream inputStream = new FileInputStream(file);
 			jsonString = IOUtils.toString(inputStream);
 			inputStream.close();
 		} catch (Exception e) {
-			assertEquals("Error", 1, e);
+			assertEquals("Error", 2, e);
 		}
 	}
 

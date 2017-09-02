@@ -55,13 +55,9 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/terminationcondition")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getTerminationCondition(@PathParam("scenarioId") int scenarioID) {
-		DbTerminationCondition terminationCondition = new DbTerminationCondition();
-		Map<String, List<Map<String, Object>>> conditionSets = terminationCondition.getDetailedConditionsForScenario(scenarioID);
-		JSONObject conditions = new JSONObject(conditionSets);
-		JSONObject result = new JSONObject();
-		result.put("conditions", conditions);
-		result.put("setIDs", new JSONArray(conditionSets.keySet()));
+	public Response getTerminationCondition(@PathParam("scenarioId") String cmId) {
+		JSONObject result = CaseModelManager.getTerminationConditionOfCaseModel(cmId);
+		log.info(String.format("Successfully requested TerminationCondition of CaseModel: %s", cmId));
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -76,9 +72,8 @@ public class ScenarioRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postInstance(String scenario) {
 		try {
-			log.info("start parsing CaseModel");
 			CaseModelManager.parseCaseModel(scenario);
-			log.info("end parsing CaseModel");
+			log.info("Successfully parsed a CaseModel");
 			return Response.status(201).build();
 		} catch (Exception e) {
 			log.error(e);
@@ -136,12 +131,14 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/xml")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFragmentXmlStrings(@PathParam("scenarioId") int scenarioId) {
-		DbFragment dbFragment = new DbFragment();
-		List<String> xmls = dbFragment.getXmlStringsForScenario(scenarioId);
-		JSONObject xmlJson = new JSONObject();
-		xmlJson.put("xml", new JSONArray(xmls));
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(xmlJson.toString()).build();
+	public Response getFragmentXmlStrings(@PathParam("scenarioId") String cmId) {
+		/*
+		 * DbFragment dbFragment = new DbFragment(); List<String> xmls =
+		 * dbFragment.getXmlStringsForScenario(scenarioId); JSONObject xmlJson =
+		 * new JSONObject(); xmlJson.put("xml", new JSONArray(xmls));
+		 */
+		JSONObject xml = CaseModelManager.getFragmentXmlOfCaseModel(cmId);
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(xml.toString()).build();
 	}
 
 	/**

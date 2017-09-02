@@ -1,12 +1,19 @@
 package de.hpi.bpt.chimera.persistencemanager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
+import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
+import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 
@@ -96,5 +103,56 @@ public class CaseModelManager {
 		} else {
 			throw new IllegalArgumentException(String.format("CaseModel %s id does not exist", id));
 		}
+	}
+
+	/**
+	 * Receive information about the TerminationCondition of a specific
+	 * CaseModel. Information contains name of affected DataObject and name of
+	 * State.
+	 * 
+	 * @param cmId
+	 * @return JSONObject with information
+	 */
+	public static JSONObject getTerminationConditionOfCaseModel(String cmId) {
+		mayInstantiate();
+
+		JSONObject result = new JSONObject();
+		JSONObject conditions = new JSONObject();
+		if (caseModelMap.containsKey(cmId)) {
+			CaseModel cm = caseModelMap.get(cmId);
+			TerminationCondition terminationCondition = cm.getTerminationCondition();
+			int id = 1;
+			for (TerminationConditionComponent component : terminationCondition.getConditions()) {
+				JSONArray dataObjectStateConditions = new JSONArray();
+				for (DataObjectStateCondition dosc : component.getConditions()) {
+					JSONObject dataObjectStateCondition = new JSONObject();
+					dataObjectStateCondition.put("data_object", dosc.getDataClass().getName());
+					dataObjectStateCondition.put("state", dosc.getState().getName());
+					dataObjectStateConditions.put(dataObjectStateCondition);
+				}
+				conditions.put(String.format("%d", id++), dataObjectStateConditions);
+			}
+		}
+		result.put("conditions", conditions);
+		return result;
+	}
+
+	/**
+	 * Receive all Xml-Strings of all Fragments of a specific CaseModel.
+	 * 
+	 * @param cmId
+	 * @return JSONObject with information
+	 */
+	public static JSONObject getFragmentXmlOfCaseModel(String cmId) {
+		JSONObject result = new JSONObject();
+		if (caseModelMap.containsKey(cmId)) {
+			CaseModel cm = caseModelMap.get(cmId);
+			JSONArray fragmentXmls = new JSONArray();
+			for (Fragment fragment : cm.getFragments()) {
+				fragmentXmls.put(fragment.getContentXML());
+			}
+			result.put("xml", fragmentXmls);
+		}
+		return result;
 	}
 }

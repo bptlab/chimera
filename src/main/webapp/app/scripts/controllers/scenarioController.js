@@ -42,16 +42,19 @@ angular.module('jfrontend')
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/").success(function (data) {
                     // "persisting" data within stable environment
                     controller.currentScenario['instances'] = data;
+                    //TODO: implement "Average Duration"
                     // initializing execution of specified algorithm
+                    /*
                     $http.post(JEngine_Server_URL + "/" + JAnalytics_REST_Interface + "/services/" + algorithm, {"args": [id]})
                         .success(function (data) {
                             // retrieving results of algorithm as soon as POST is done successfully
                             controller.currentScenario['duration'] = data['meanScenarioInstanceRuntime'];
-                            /*$http.get(JEngine_Server_URL + JAnalytics_REST_Interface + "/services/" + algorithm)
+                            *//*$http.get(JEngine_Server_URL + JAnalytics_REST_Interface + "/services/" + algorithm)
                              .success(function (data) {
                              controller.currentScenario['duration'] = data['meanScenarioInstanceRuntime'];
-                             })*/
+                             })*//*
                         })
+                     */
                 }).error(function () {
                     console.log('request failed');
                 });
@@ -115,9 +118,11 @@ angular.module('jfrontend')
             this.createInstance = function (id) {
                 //if name was set we are using the PUT call
                 if ($scope.instanceName) {
+                	console.log($scope.instanceName);
                     // building the json content for naming the instance
                     var data = "{\"name\":\"" + $scope.instanceName + "\"}";
-
+                    console.log(data);
+                	var name = $scope.instanceName;
                     $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/", data).success(function (response) {
                         $location.path("/scenario/" + id + "/instance/" + response['id']);
                     }).error(function () {

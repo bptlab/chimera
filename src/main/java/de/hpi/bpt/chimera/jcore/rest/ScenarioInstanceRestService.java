@@ -24,6 +24,41 @@ public class ScenarioInstanceRestService {
 	private static Logger log = Logger.getLogger(RestInterface.class);
 
 	/**
+	 * This method provides information about all instances of one scenario. The
+	 * scenario is specified by an given id. If there is no scenario with the
+	 * specific id a 404 response with a meaningful error message will be
+	 * returned. If the Scenario exists a JSON-Array containing JSON-Objects
+	 * with important information about an instance of the scenario will be
+	 * returned.
+	 *
+	 * @param uri
+	 *            Request URI.
+	 * @param scenarioId
+	 *            The id of the scenario which instances should be returned.
+	 * @param filterString
+	 *            Specifies a search. Only scenarios which name contain the
+	 *            specified string will be returned.
+	 * @return A JSON-Object with an array of information about all instances of
+	 *         one specified scenario. The information contains the id and name.
+	 */
+	@GET
+	@Path("scenario/{scenarioId}/instance")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @QueryParam("filter") String filterString) {
+		JSONObject result = new JSONObject();
+
+		Map<String, String> data = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId, filterString);
+		JSONObject links = new JSONObject();
+		for (String id : data.keySet()) {
+			links.put(String.valueOf(id), uri.getAbsolutePath() + "/" + id);
+		}
+		result.put("ids", new JSONArray(data.keySet()));
+		result.put("labels", new JSONObject(data));
+		result.put("links", links);
+		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+	}
+
+	/**
 	 * Creates a new instance of a specified scenario.
 	 * This method assumes that the name of then new instance will be the same
 	 * as the name of the scenario.
@@ -43,7 +78,7 @@ public class ScenarioInstanceRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewInstance(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
-		return initializeNewInstance(uri, cmId, "");
+		return initializeNewInstance(uri, cmId);
 	}
 
 	/**
@@ -70,21 +105,40 @@ public class ScenarioInstanceRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewNamedInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, NamedJaxBean name) {
 		if (name == null) {
-			return initializeNewInstance(uriInfo, cmId, "");
+			return initializeNewInstance(uriInfo, cmId);
 		} else {
 			return initializeNewInstance(uriInfo, cmId, name.getName());
 		}
 
 	}
 
+	/**
+	 * Initialize a new Case.
+	 * 
+	 * @param uriInfo
+	 * @param cmId
+	 * @return Response
+	 */
+	private Response initializeNewInstance(UriInfo uriInfo, String cmId) {
+		return initializeNewInstance(uriInfo, cmId, "");
+	}
+
+	/**
+	 * Initialize a new Case with custom Name.
+	 * 
+	 * @param uriInfo
+	 * @param cmId
+	 * @param name
+	 * @return Response
+	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId, String name) {
 		// ExecutionService executionService =
 		// ExecutionService.getInstance(scenarioId);
 		String caseId = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
-
-		return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("{\"id\":\"" + caseId + "\",\"link\":\"" + uriInfo.getAbsolutePath() + "/" + caseId + "\"}").build();
+		String casePath = String.format("%s/%s", uriInfo.getAbsolutePath(), caseId);
+		String response = String.format("{\"id\":\"%s\",\"link\":\"%s\"}", caseId, casePath);
+		return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(response).build();
 	}
-
 
 	/**
 	 * This method provides detailed information about a scenario instance.
@@ -108,10 +162,13 @@ public class ScenarioInstanceRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
-		DbScenarioInstance instance = new DbScenarioInstance();
-		JSONObject result = new JSONObject(instance.getInstanceMap(instanceId));
-		result.put("activities", uriInfo.getAbsolutePath() + "/activity");
+	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
+		/*
+		 * DbScenarioInstance instance = new DbScenarioInstance(); JSONObject
+		 * result = new JSONObject(instance.getInstanceMap(instanceId));
+		 */
+		JSONObject result = de.hpi.bpt.chimera.execution.ExecutionService.getCaseInformation(caseId);
+		result.put("activities", uriInfo.getAbsolutePath() + "activity");
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -174,38 +231,5 @@ public class ScenarioInstanceRestService {
 		} else {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Termination condition is not fulfilled").build();
 		}
-	}
-
-	/**
-	 * This method provides information about all instances of one scenario.
-	 * The scenario is specified by an given id.
-	 * If there is no scenario with the specific id a 404 response with a meaningful
-	 * error message will be returned.
-	 * If the Scenario exists a JSON-Array containing JSON-Objects with
-	 * important information about an instance of the scenario will be returned.
-	 *
-	 * @param uri          Request URI.
-	 * @param scenarioId   The id of the scenario which instances should be returned.
-	 * @param filterString Specifies a search. Only scenarios which
-	 *                     name contain the specified string will be
-	 *                     returned.
-	 * @return A JSON-Object with an array of information about all instances of
-	 * one specified scenario. The information contains the id and name.
-	 */
-	@GET
-	@Path("scenario/{scenarioId}/instance")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @QueryParam("filter") String filterString) {
-		JSONObject result = new JSONObject();
-
-		Map<String, String> data = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId, filterString);
-		JSONObject links = new JSONObject();
-		for (String id : data.keySet()) {
-			links.put(String.valueOf(id), uri.getAbsolutePath() + "/" + id);
-		}
-		result.put("ids", new JSONArray(data.keySet()));
-		result.put("labels", new JSONObject(data));
-		result.put("links", links);
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 }
