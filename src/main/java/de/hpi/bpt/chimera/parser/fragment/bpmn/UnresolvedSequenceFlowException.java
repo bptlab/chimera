@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.parser.fragment.bpmnxml;
+package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 @SuppressWarnings("serial")
 public class UnresolvedSequenceFlowException extends RuntimeException {

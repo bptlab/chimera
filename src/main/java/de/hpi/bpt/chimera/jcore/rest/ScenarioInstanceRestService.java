@@ -168,7 +168,7 @@ public class ScenarioInstanceRestService {
 		 * result = new JSONObject(instance.getInstanceMap(instanceId));
 		 */
 		JSONObject result = de.hpi.bpt.chimera.execution.ExecutionService.getCaseInformation(caseId);
-		result.put("activities", uriInfo.getAbsolutePath() + "activity");
+		result.put("activities", uriInfo.getAbsolutePath() + "/activity");
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 

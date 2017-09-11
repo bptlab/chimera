@@ -7,17 +7,17 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class ActivityJaxBean {
-	private int id;
+	private String id;
 	private String label;
 	private String outputSetLink;
 	private String inputSetLink;
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setId(String activityInstanceId) {
+		this.id = activityInstanceId;
 	}
 
 	public String getLabel() {

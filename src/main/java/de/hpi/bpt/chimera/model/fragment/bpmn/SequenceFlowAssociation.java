@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.model.fragment.BpmnFragment;
+package de.hpi.bpt.chimera.model.fragment.bpmn;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

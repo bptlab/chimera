@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
-import de.hpi.bpt.chimera.parser.fragment.bpmnxml.BpmnXmlFragmentParser;
+import de.hpi.bpt.chimera.parser.fragment.bpmn.BpmnXmlFragmentParser;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
 public class FragmentParser {

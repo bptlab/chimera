@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.parser.fragment.bpmnxml;
+package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,8 @@ import java.util.Map;
 
 import de.hpi.bpt.chimera.jcomparser.jaxb.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.jcomparser.jaxb.SequenceFlow;
-import de.hpi.bpt.chimera.model.fragment.BpmnFragment.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.BpmnFragment.SequenceFlowAssociation;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 
 public class SequenceFlowResolver {
 	Map<String, SequenceFlowAssociation> associationMap = new HashMap();
@@ -29,7 +29,7 @@ public class SequenceFlowResolver {
 			sfa.setTargetRef(controlNode);
 			sfaList.add(sfa);
 		}
-		controlNode.setIncoming(sfaList);
+		controlNode.setIncomingControlNodes(sfaList);
 	}
 
 	public void resolveOutgoingSequenceFlow(List<String> OutgoingSequenceFlows, AbstractControlNode controlNode) {
@@ -39,7 +39,7 @@ public class SequenceFlowResolver {
 			sfa.setSourceRef(controlNode);
 			sfaList.add(sfa);
 		}
-		controlNode.setOutgoing(sfaList);
+		controlNode.setOutgoingControlNodes(sfaList);
 	}
 
 	public List<SequenceFlowAssociation> getResolvedSequenceFlowAssociations() throws UnresolvedSequenceFlowException {

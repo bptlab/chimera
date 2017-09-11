@@ -1,8 +1,11 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.commons.lang3.StringUtils;
@@ -56,214 +59,153 @@ public class ActivityRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activity")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioID, @PathParam("instanceId") int instanceID, @QueryParam("filter") String filterString, @QueryParam("state") String state) {
+	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString, @QueryParam("state") String stateName) {
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCase(caseId).getCaseExecutioner();
+		// common
 		if (StringUtils.isEmpty(filterString)) {
-			if (StringUtils.isEmpty(state)) {
-				return getAllActivitiesOfInstance(scenarioID, instanceID, uriInfo);
+			if (StringUtils.isEmpty(stateName)) {
+				// for log
+				return getAllActivitiesOfInstance(caseExecutioner, uriInfo);
 			}
-			return getAllActivitiesOfInstanceWithState(scenarioID, instanceID, state, uriInfo);
+			// for execution
+			return getAllActivitiesOfInstanceWithState(caseExecutioner, stateName, uriInfo);
 		}
-		if (StringUtils.isEmpty(state)) {
-			return getAllActivitiesOfInstanceWithFilter(scenarioID, instanceID, filterString, uriInfo);
+		// uncommon
+		if (StringUtils.isEmpty(stateName)) {
+			return getAllActivitiesOfInstanceWithFilter(caseExecutioner, filterString, uriInfo);
 		}
-		return getAllActivitiesWithFilterAndState(scenarioID, instanceID, filterString, state, uriInfo);
+		return getAllActivitiesWithFilterAndState(caseExecutioner, filterString, stateName, uriInfo);
 	}
 
 	/**
-	 * Returns a Response object.
-	 * The Object will be either a 200 with the activities in an JSON-Object
-	 * or an 400 with an error message if the state is invalid
+	 * Returns a Response Object for all activities with the instance Id. We
+	 * assume that the instanceId is correct. The Response will be a 200 with
+	 * json content. The Content will be a json object with information about
+	 * each activity.
 	 *
-	 * @param instanceID   The id of the scenario instance
-	 * @param filterString the filter string to be applied
-	 * @param state        the state of the activity
-	 * @return The Response object as described above.
-	 */
-	private Response getAllActivitiesWithFilterAndState(int scenarioID, int instanceID, String filterString, String state, UriInfo uriInfo) {
-		Collection<ActivityInstance> instances = getActivitiesOfState(state, scenarioID, instanceID);
-		if (!isLegalState(state)) {
-			this.buildNotFoundResponse("{\"error\":\"The state is not allowed " + state + "\"}");
-		}
-		Collection<ActivityInstance> selection = instances.stream().filter(instance -> instance.getLabel().contains(filterString)).collect(Collectors.toList());
-		JSONObject result = buildJSONObjectForActivities(selection, state, uriInfo);
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-	}
-
-	private boolean isLegalState(String state) {
-		List<String> allowedStates = Arrays.asList(READY, READY_DATA, READY_CF, TERMINATED, RUNNING);
-		return allowedStates.contains(state);
-	}
-
-	private Collection<ActivityInstance> getActivitiesOfState(String state, int scenarioId, int scenarioInstanceId) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-		switch (state) {
-			case READY:
-				return executionService.getEnabledActivities(scenarioInstanceId);
-			case TERMINATED:
-				return executionService.getTerminatedActivities(scenarioInstanceId);
-			case RUNNING:
-				return executionService.getRunningActivities(scenarioInstanceId);
-			case READY_DATA:
-				return executionService.getDataEnabledActivities(scenarioInstanceId);
-			case READY_CF:
-				return executionService.getControlFlowEnabledActivities(scenarioInstanceId);
-			default:
-				throw new IllegalArgumentException("State has to be one of ready, terminated or running");
-		}
-	}
-
-
-	/**
-	 * Returns a Response Object.
-	 * The Response Object will be a 200 with JSON content.
-	 * The Content will be a JSON Object, containing information about activities.
-	 * The Label of the activities mus correspond to the filter String and be
-	 * part of the scenario instance specified by the instanceId.
-	 *
-	 * @param instanceId   The id of the scenario instance.
-	 * @param filterString The string which will be the filter condition for the activity ids.
-	 * @return The created Response object with a 200 and a JSON.
-	 */
-	private Response getAllActivitiesOfInstanceWithFilter(int scenarioId, int instanceId, String filterString, UriInfo uriInfo) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		executionService.openExistingScenarioInstance(scenarioId, instanceId);
-		Map<String, Collection<ActivityInstance>> stateToActivities = new HashMap<>();
-		stateToActivities.put(READY, executionService.getEnabledActivities(instanceId));
-		stateToActivities.put(RUNNING, executionService.getRunningActivities(instanceId));
-		stateToActivities.put(TERMINATED, executionService.getTerminatedActivities(instanceId));
-		stateToActivities.put(READY_DATA, executionService.getDataEnabledActivities(instanceId));
-		stateToActivities.put(READY_CF, executionService.getControlFlowEnabledActivities(instanceId));
-
-		JSONArray ids = new JSONArray();
-		JSONObject activities = new JSONObject();
-		for (Map.Entry<String, Collection<ActivityInstance>> entry : stateToActivities.entrySet()) {
-			entry.getValue().stream().filter(instance -> instance.getLabel().contains(filterString)).forEach(instance -> {
-				ids.put(instance.getControlNodeInstanceId());
-				JSONObject activityJson = buildActivityJson(entry.getKey(), instance, uriInfo);
-				activities.put(String.valueOf(instance.getControlNodeInstanceId()), activityJson);
-			});
-		}
-		JSONObject result = new JSONObject();
-		result.put("ids", ids);
-		result.put("activities", activities);
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-	}
-
-	private JSONObject buildActivityJson(String state, ActivityInstance instance, UriInfo uriInfo) {
-		JSONObject activityJSON = new JSONObject();
-		activityJSON.put("id", instance.getControlNodeInstanceId());
-		activityJSON.put("label", instance.getLabel());
-		activityJSON.put("state", state);
-		activityJSON.put("link", uriInfo.getAbsolutePath() + "/" + instance.getControlNodeInstanceId());
-		return activityJSON;
-	}
-
-	/**
-	 * This method creates a Response object for all specified activities.
-	 * The activities are specified by an scenario instance and a state.
-	 * In addition UriInfo object is needed in order to create the links
-	 * to the activity instances.
-	 *
-	 * @param scenarioID The ID of the scenario (model).
-	 * @param instanceID The ID of the scenario instance.
-	 * @param state      A String identifying the state.
-	 * @param uriInfo    A UriInfo object, which holds the server context.
-	 * @return A Response object, which is either a 404 if the state is invalid,
-	 * or a 200 if with json content.
-	 */
-	private Response getAllActivitiesOfInstanceWithState(int scenarioID, int instanceID, String state, UriInfo uriInfo) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-		executionService.openExistingScenarioInstance(scenarioID, instanceID);
-		Collection<ActivityInstance> instances;
-		switch (state) {
-			case READY:
-				instances = executionService.getEnabledActivities(instanceID);
-				break;
-			case TERMINATED:
-				instances = executionService.getTerminatedActivities(instanceID);
-				break;
-			case RUNNING:
-				instances = executionService.getRunningActivities(instanceID);
-				break;
-			case READY_CF:
-				instances = executionService.getControlFlowEnabledActivities(instanceID);
-				break;
-			case READY_DATA:
-				instances = executionService.getDataEnabledActivities(instanceID);
-				break;
-			default:
-				return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The state " + "is not allowed " + state + "\"}").build();
-		}
-		JSONObject result = buildJSONObjectForActivities(instances, state, uriInfo);
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Returns a Response Object for all activities with the instance Id.
-	 * We assume that the instanceId is correct.
-	 * The Response will be a 200 with json content.
-	 * The Content will be a json object with information about each activity.
-	 *
-	 * @param instanceID the instance id of the scenario instance.
+	 * @param instanceID
+	 *            the instance id of the scenario instance.
 	 * @return The Response Object, with 200 and JSON Content.
 	 */
-	private Response getAllActivitiesOfInstance(int scenarioID, int instanceID, UriInfo uriInfo) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioID);
-		executionService.openExistingScenarioInstance(scenarioID, instanceID);
-		Map<String, Collection<ActivityInstance>> instances = new HashMap<>();
-		instances.put(READY, executionService.getEnabledActivities(instanceID));
-		instances.put(RUNNING, executionService.getRunningActivities(instanceID));
-		instances.put(TERMINATED, executionService.getTerminatedActivities(instanceID));
-		JSONArray ids = new JSONArray();
-		JSONObject activities = new JSONObject();
-		for (Map.Entry<String, Collection<ActivityInstance>> entry : instances.entrySet()) {
-			for (ActivityInstance instance : entry.getValue()) {
-				ids.put(instance.getControlNodeInstanceId());
-				JSONObject activityJSON = new JSONObject();
-				activityJSON.put("id", instance.getControlNodeInstanceId());
-				activityJSON.put("activityid", instance.getControlNodeId());
-				activityJSON.put("label", instance.getLabel());
-				activityJSON.put("state", entry.getKey());
-				activityJSON.put("link", uriInfo.getAbsolutePath() + "/" + instance.getControlNodeInstanceId());
-				activities.put(String.valueOf(instance.getControlNodeInstanceId()), activityJSON);
-			}
+	private Response getAllActivitiesOfInstance(CaseExecutioner caseExecutioner, UriInfo uriInfo) {
+		return getAllActivitiesOfInstanceWithFilter(caseExecutioner, "", uriInfo);
+	}
+
+	/**
+	 * Returns a Response Object. The Response Object will be a 200 with JSON
+	 * content. The Content will be a JSON Object, containing information about
+	 * activities. The Label of the activities must correspond to the filter
+	 * String and be part of the scenario instance specified by the instanceId.
+	 * 
+	 * @param caseExecutioner
+	 * @param filterString
+	 * @param uriInfo
+	 * @return The created Response object with a 200 and a JSON.
+	 */
+	private Response getAllActivitiesOfInstanceWithFilter(CaseExecutioner caseExecutioner, String filterString, UriInfo uriInfo) {
+		Collection<AbstractActivityInstance> activityInstances = new ArrayList<>();
+
+
+		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.READY));
+		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.RUNNING));
+		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.TERMINATED));
+		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.DATAFLOW_ENABLED));
+		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.CONTROLFLOW_ENABLED));
+
+		if (!filterString.isEmpty()) {
+			activityInstances = activityInstances.stream().filter(instance -> instance.getActivity().getName().contains(filterString)).collect(Collectors.toList());
 		}
-		JSONObject result = new JSONObject();
-		result.put("ids", ids);
-		result.put("activities", activities);
+
+		JSONObject result = buildJSONObjectForActivities(activityInstances, uriInfo);
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * This method creates a Response object for all specified activities. The
+	 * activities are specified by an scenario instance and a state. In addition
+	 * UriInfo object is needed in order to create the links to the activity
+	 * instances.
+	 * 
+	 * @param caseExecutioner
+	 * @param stateName
+	 * @param uriInfo
+	 * @return
+	 */
+	private Response getAllActivitiesOfInstanceWithState(CaseExecutioner caseExecutioner, String stateName, UriInfo uriInfo) {
+		return getAllActivitiesWithFilterAndState(caseExecutioner, "", stateName, uriInfo);
+	}
 
 	/**
-	 * Builds a JSON Object for a Map with data
-	 * corresponding to a set of activities.
+	 * Returns a Response object. The Object will be either a 200 with the
+	 * activities in an JSON-Object or an 400 with an error message if the state
+	 * is invalid.
+	 * 
+	 * @param caseExecutioner
+	 * @param filterString
+	 * @param stateName
+	 * @param uriInfo
+	 * @return
+	 */
+	private Response getAllActivitiesWithFilterAndState(CaseExecutioner caseExecutioner, String filterString, String stateName, UriInfo uriInfo) {
+		State state = State.fromString(stateName);
+		if (state == null) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The state " + "is not allowed " + state + "\"}").build();
+		}
+		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getAllActivitiesWithState(state);
+		if (!filterString.isEmpty()) {
+			activityInstances = activityInstances.stream().filter(instance -> instance.getActivity().getName().contains(filterString)).collect(Collectors.toList());
+		}
+
+		JSONObject result = buildJSONObjectForActivities(activityInstances, uriInfo);
+		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+	}
+
+	/*
+	 * private boolean isLegalState(String state) { List<String> allowedStates =
+	 * Arrays.asList(READY, READY_DATA, READY_CF, TERMINATED, RUNNING); return
+	 * allowedStates.contains(state); }
+	 */
+
+	/**
+	 * Build an JSON Object for an ActivityInstance.
+	 * 
+	 * @param activityInstance
+	 * @param state
+	 * @param uriInfo
+	 * @return
+	 */
+	private JSONObject buildActivityJson(AbstractActivityInstance activityInstance, UriInfo uriInfo) {
+		JSONObject activityJSON = new JSONObject();
+		activityJSON.put("id", activityInstance.getId());
+		activityJSON.put("label", activityInstance.getActivity().getName());
+		activityJSON.put("state", activityInstance.getState());
+		activityJSON.put("fragmentInstanceId", activityInstance.getFragmentInstance().getId());
+		activityJSON.put("link", uriInfo.getAbsolutePath() + "/" + activityInstance.getId());
+		return activityJSON;
+	}
+	
+	/**
+	 * Builds a JSON Object for a Map with data corresponding to a set of
+	 * activities.
 	 *
-	 * @param instances The Map containing information about the activity instances.
-	 *                  We Assume that the key is a the id and the value is a Map
-	 *                  from String to Object with the properties of the instance.
+	 * @param activityInstances
+	 *            The Map containing information about the activity instances.
+	 *            We Assume that the key is a the id and the value is a Map from
+	 *            String to Object with the properties of the instance.
 	 * @return The newly created JSON Object with the activity data.
 	 */
-	private JSONObject buildJSONObjectForActivities(Collection<ActivityInstance> instances, String state, UriInfo uriInfo) {
-		List<Integer> ids = new ArrayList<>(instances.size());
+	private JSONObject buildJSONObjectForActivities(Collection<AbstractActivityInstance> activityInstances, UriInfo uriInfo) {
+		List<String> ids = new ArrayList<>(activityInstances.size());
 		JSONArray activities = new JSONArray();
-		for (ActivityInstance instance : instances) {
-			JSONObject activityJSON = new JSONObject();
-			ids.add(instance.getControlNodeInstanceId());
-			activityJSON.put("id", instance.getControlNodeInstanceId());
-			activityJSON.put("activityid", instance.getControlNodeId());
-			activityJSON.put("label", instance.getLabel());
-			activityJSON.put("state", state);
-			activityJSON.put("link", uriInfo.getAbsolutePath() + "/" + instance.getControlNodeInstanceId());
-			activities.put(activityJSON);
+		for (AbstractActivityInstance activityInstance : activityInstances) {
+			activities.put(buildActivityJson(activityInstance, uriInfo));
+			ids.add(activityInstance.getId());
 		}
 		JSONObject result = new JSONObject();
 		result.put("ids", new JSONArray(ids));
 		result.put("activities", activities);
 		return result;
 	}
-
 
 	/**
 	 * This method is used to get all the information for an activity.
@@ -279,21 +221,19 @@ public class ActivityRestService extends AbstractRestService {
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
-	public Response getActivity(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId) {
+	public Response getActivity(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		if (!executionService.testActivityInstanceExists(activityInstanceId)) {
+		AbstractActivityInstance activityInstance = de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId, caseId, activityInstanceId);
+		if (activityInstance == null) {
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"There is no such " + "activity instance.\"}").build();
 		}
+
 		ActivityJaxBean activity = new ActivityJaxBean();
 		activity.setId(activityInstanceId);
-		ExecutionService.getInstance(scenarioId).openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-		List<AbstractControlNodeInstance> controlNodeInstances = executionService.getScenarioInstance(scenarioInstanceId).getControlNodeInstances();
-		controlNodeInstances.stream().filter(controlNodeInstance -> controlNodeInstance.getControlNodeInstanceId() == activityInstanceId).forEach(controlNodeInstance -> activity.setLabel(executionService.getLabelForControlNodeId(controlNodeInstance.getControlNodeId())));
+		activity.setLabel(activityInstance.getActivity().getName());
 		activity.setInputSetLink(uriInfo.getAbsolutePath() + "/input");
 		activity.setOutputSetLink(uriInfo.getAbsolutePath() + "/output");
 		return Response.ok(activity, MediaType.APPLICATION_JSON).build();
-
 	}
 
 
@@ -362,23 +302,27 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
-	public Response beginActivity(@PathParam("scenarioId") int scenarioId,
-	          @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId, String postBody) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		if (!executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId)) {
-		  return this.buildNotFoundResponse("{\"message\":\"Case does not exist.\"}");
-		}
-
-		List<Integer> selectedDataObjectIds = new ArrayList<>();
+	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, String postBody) {
+		/*
+		 * ExecutionService executionService =
+		 * ExecutionService.getInstance(scenarioId); if
+		 * (!executionService.openExistingScenarioInstance(scenarioId,
+		 * scenarioInstanceId)) { return
+		 * this.buildNotFoundResponse("{\"message\":\"Case does not exist.\"}");
+		 * }
+		 */
+		List<String> selectedDataObjectInstanceIds = new ArrayList<>();
 		JSONObject postJson = new JSONObject(postBody);
 		if (postJson.has("dataobjects")) {
 			JSONArray dataObjectsJson = postJson.getJSONArray("dataobjects");
 			for (int i = 0; i < dataObjectsJson.length(); i++) {
-				selectedDataObjectIds.add(dataObjectsJson.getInt(i));
+				selectedDataObjectInstanceIds.add(dataObjectsJson.getString(i));
 			}
 		}
 		// TODO: begin of activity could fail in which case another Response needs to be sent
-		executionService.beginActivityInstance(scenarioInstanceId, activityInstanceId, selectedDataObjectIds);
+		// ExecutionService.beginActivityInstance(scenarioInstanceId,
+		// activityInstanceId, selectedDataObjectIds);
+		de.hpi.bpt.chimera.execution.ExecutionService.beginActivityInstance(cmId, caseId, activityInstanceId, selectedDataObjectInstanceIds);
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
 	}
 
@@ -399,23 +343,24 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
-	public Response terminateActivity(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId, String postBody) {
-	
-	  ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
-		boolean successful;
+	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, String postBody) {
+
+		/*
+		 * ExecutionService executionService =
+		 * ExecutionService.getInstance(scenarioId);
+		 * executionService.openExistingScenarioInstance(scenarioId,
+		 * scenarioInstanceId); boolean successful;
+		 */
+
 		JSONObject postJson = new JSONObject(postBody);
-		if (postJson.length() != 0) {
-			Map<String, String> dataClassNameToState = new HashMap<>();
-			for (Object dataClassName : postJson.keySet()) {
-				dataClassNameToState.put((String) dataClassName, postJson.getString((String) dataClassName));
-
-			}
-
-			executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId, dataClassNameToState);
-		} else {
-			executionService.terminateActivityInstance(scenarioInstanceId, activityInstanceId);
+		Map<String, String> dataClassNameToState = new HashMap<>();
+		for (Object dataClassName : postJson.keySet()) {
+			dataClassNameToState.put((String) dataClassName, postJson.getString((String) dataClassName));
 		}
+		de.hpi.bpt.chimera.execution.ExecutionService.terminateActivity(cmId, caseId, activityInstanceId, dataClassNameToState);
+		// ExecutionService.terminateActivityInstance(scenarioInstanceId,
+		// activityInstanceId, dataClassNameToState);
+
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 	}
 }

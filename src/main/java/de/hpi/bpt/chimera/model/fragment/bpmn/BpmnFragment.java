@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.model.fragment.BpmnFragment;
+package de.hpi.bpt.chimera.model.fragment.bpmn;
 
 import java.util.ArrayList;
 import java.util.List;

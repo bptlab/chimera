@@ -44,6 +44,8 @@ public class EventOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 
 	public void terminate(String json) {
 		DbDataFlow dataFlow = new DbDataFlow();
+		// create ControlNodeInstances only of following DataClasses that are
+		// not preceding ControlNodes
 		List<Integer> inputClassIds = dataFlow.getPrecedingDataClassIds(this.getControlNodeId());
 		List<Integer> outputClassIds = dataFlow.getFollowingDataClassIds(this.getControlNodeId());
 		Set<Integer> toCreate = new HashSet<>(outputClassIds);

@@ -45,6 +45,7 @@ public class DataObjectStateCondition {
 		return false;
 	}
 
+	// TODO: improve the hashing
 	@Override
 	public int hashCode() {
 		return (int) (((long) this.dataClass.hashCode() + (long) this.state.hashCode()) / 2);

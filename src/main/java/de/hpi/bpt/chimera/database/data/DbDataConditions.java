@@ -32,6 +32,7 @@ public class DbDataConditions {
 		return loadDataDependency(outputSetIds);
 	}
 
+	// Get all DataObjects with their names referred to the name of states.
 	private Map<String, Set<String>> loadDataDependency(List<Integer> setIds) {
 		Map<Integer, Set<Integer>> inputIdToStateIds = new HashMap<>();
 		DbDataNode dbDataNode = new DbDataNode();

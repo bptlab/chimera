@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
-import de.hpi.bpt.chimera.model.fragment.BpmnFragment.BpmnFragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 
 @Entity
 public class Fragment {

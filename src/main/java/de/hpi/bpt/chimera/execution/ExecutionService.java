@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
@@ -21,9 +22,9 @@ public class ExecutionService {
 	 */
 	private static Map<String, List<CaseExecutioner>> caseExecutions = new HashMap<>();
 	/**
-	 * Map of CaseId to corresponding CaseExecution
+	 * Map of CaseId to corresponding CaseExecution (Case)
 	 */
-	private static Map<String, CaseExecutioner> mapIdCase = new HashMap<>();
+	private static Map<String, CaseExecutioner> cases = new HashMap<>();
 
 	private ExecutionService() {
 	}
@@ -39,12 +40,15 @@ public class ExecutionService {
 	public static String startCase(String cmId, String name) {
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
+		// If name of Case isn't specified use name of CaseModel
 		String caseName = cm.getName();
-		if (name != "")
+		if (!name.isEmpty())
 			caseName = name;
 
 		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
-
+		log.info("CaseExecutioner created");
+		caseExecutioner.startCase();
+		log.info("Case started");
 		// check whether there are running CaseExecutions to the CaseModel
 		if(caseExecutions.containsKey(cm.getId())) {
 			List<CaseExecutioner> caseExecutioners = caseExecutions.get(cm.getId());
@@ -56,7 +60,7 @@ public class ExecutionService {
 		}
 		
 		String caseId = caseExecutioner.getCase().getId();
-		mapIdCase.put(caseId, caseExecutioner);
+		cases.put(caseId, caseExecutioner);
 
 		log.info(String.format("Successfully started Case with Case-Id: %s", caseId));
 		return caseId;
@@ -89,6 +93,20 @@ public class ExecutionService {
 	}
 
 	/**
+	 * Get specific Case.
+	 * 
+	 * @param caseId
+	 * @return Case
+	 */
+	public static Case getCase(String caseId) {
+		if (cases.containsKey(caseId)) {
+			return cases.get(caseId).getCase();
+		} else {
+			// TODO: throw exception
+		}
+		return null;
+	}
+	/**
 	 * Receive information of a specific Case. The information contains the name
 	 * of the Case and the state of termination.
 	 * 
@@ -97,8 +115,8 @@ public class ExecutionService {
 	 */
 	public static JSONObject getCaseInformation(String caseId) {
 		JSONObject result = new JSONObject();
-		if (mapIdCase.containsKey(caseId)) {
-			CaseExecutioner caseExecutioner = mapIdCase.get(caseId);
+		if (cases.containsKey(caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
 			result.put("name", caseExecutioner.getCase().getName());
 			// TODO: implement state of termination
 			result.put("terminated", false);
@@ -107,4 +125,53 @@ public class ExecutionService {
 		return result;
 	}
 
+	/**
+	 * Begin a specific ActivityInstance.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @param activityInstanceId
+	 * @param selectedDataObjectInstanceIds
+	 */
+	public static void beginActivityInstance(String cmId, String caseId, String activityInstanceId, List<String> selectedDataObjectInstanceIds) {
+		if (cases.containsKey(caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			caseExecutioner.beginActivityInstance(activityInstanceId, selectedDataObjectInstanceIds);
+		} else {
+			// throw exception
+		}
+	}
+
+	/**
+	 * Terminate a specific ActivityInstance.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @param activityInstanceId
+	 * @param dataClassNameToState
+	 */
+	public static void terminateActivity(String cmId, String caseId, String activityInstanceId, Map<String, String> dataClassNameToState) {
+		if (cases.containsKey(caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			caseExecutioner.terminateActivityInstance(activityInstanceId, dataClassNameToState);
+		} else {
+			// throw exception
+		}
+	}
+
+	/**
+	 * Get an specific ActivityInstance.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @param activityInstanceId
+	 * @return AbstractAcitivtyInstance
+	 */
+	public static AbstractActivityInstance getActivityInstance(String cmId, String caseId, String activityInstanceId) {
+		if (cases.containsKey(caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			caseExecutioner.getActivityInstance(activityInstanceId);
+		}
+		return null;
+	}
 }

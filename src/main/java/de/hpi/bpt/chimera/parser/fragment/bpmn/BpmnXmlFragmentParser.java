@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.parser.fragment.bpmnxml;
+package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 
 import de.hpi.bpt.chimera.jcomparser.jaxb.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.jcomparser.saving.Fragment;
-import de.hpi.bpt.chimera.model.fragment.BpmnFragment.BpmnFragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 
 public class BpmnXmlFragmentParser {
 	private static Logger logger = Logger.getLogger(BpmnXmlFragmentParser.class.getName());
