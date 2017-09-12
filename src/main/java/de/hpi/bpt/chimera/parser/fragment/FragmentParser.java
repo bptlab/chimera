@@ -11,12 +11,22 @@ import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.BpmnXmlFragmentParser;
 import de.hpi.bpt.chimera.validation.NameValidation;
 
-public class FragmentParser {
+public final class FragmentParser {
 	private static final Logger log = Logger.getLogger((FragmentParser.class).getName());
 
 	private FragmentParser() {
 	}
 
+	/**
+	 * 
+	 * Parses a Fragment given as a JSONObject. Therefore calls the
+	 * BpmnXmlFragmentParser with the in the JSONObject given bpmn-xml-fragment,
+	 * which then creates the BpmnFragment.
+	 * 
+	 * @param fragmentJson
+	 * @param parserHelper
+	 * @return the built up Fragment object
+	 */
 	public static Fragment parseFragment(JSONObject fragmentJson, CaseModelParserHelper parserHelper) {
 		Fragment fragment = new Fragment();
 
