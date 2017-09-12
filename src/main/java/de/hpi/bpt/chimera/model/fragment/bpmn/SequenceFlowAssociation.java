@@ -16,10 +16,10 @@ public class SequenceFlowAssociation {
 
 	private String id;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private AbstractControlNode sourceRef = null;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private AbstractControlNode targetRef = null;
 
 	@Column(name = "SequenceFlowCondition")

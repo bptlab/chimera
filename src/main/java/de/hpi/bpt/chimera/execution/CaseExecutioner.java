@@ -10,6 +10,7 @@ import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
 public class CaseExecutioner {
 	private static Logger log = Logger.getLogger(CaseExecutioner.class);
@@ -36,7 +37,9 @@ public class CaseExecutioner {
 	// TODO: think about whether this should be put up here or in
 	// FragmentInstance
 	public void createDataObjectInstances(AbstractControlNode node) {
-		dataManager.createDataObjectInstances(node);
+		if (node instanceof AbstractDataControlNode) {
+			dataManager.createDataObjectInstances((AbstractDataControlNode) node);
+		}
 	}
 
 	/**
@@ -87,7 +90,8 @@ public class CaseExecutioner {
 		if (nodeInstance == null)
 			return;
 
-		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.READY) {
+		// TODO: think about instance has to be running
+		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.RUNNING) {
 			Map<String, DataObjectInstance> toUnlockDataObjectInstances = ((AbstractActivityInstance) nodeInstance).getSelectedDataObjectInstances();
 			dataManager.unlockDataObjectInstances(toUnlockDataObjectInstances);
 			dataManager.transitionDataObjectInstances(dataObjectTransitions);
@@ -129,6 +133,30 @@ public class CaseExecutioner {
 		}
 		return null;
 	}
+
+	/**
+	 * Get all Instances of DataObjects.
+	 * 
+	 * @return List of DataObjectInstance
+	 */
+	public List<DataObjectInstance> getDataObjectInstances() {
+		Collection<DataObjectInstance> instances = dataManager.getDataObjectInstances().values();
+		return new ArrayList<>(instances);
+	}
+
+	/**
+	 * Get a specific Instance of an DataObject.
+	 * 
+	 * @param instanceId
+	 * @return DataObjectInstance
+	 */
+	public DataObjectInstance getDataObjectInstance(String instanceId) {
+		if (dataManager.getDataObjectInstances().containsKey(instanceId)) {
+			return dataManager.getDataObjectInstances().get(instanceId);
+		}
+		return null;
+	}
+
 	// GETTER & SETTER
 	public Case getCase() {
 		return caze;

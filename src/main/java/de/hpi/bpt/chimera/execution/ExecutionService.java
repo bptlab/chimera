@@ -30,6 +30,16 @@ public class ExecutionService {
 	}
 
 	/**
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @return true if the Case exists
+	 */
+	public static boolean isExistingCase(String cmId, String caseId) {
+		return (caseExecutions.containsKey(cmId) && cases.containsKey(caseId));
+	}
+
+	/**
 	 * Start a Case of an CaseModel.
 	 * 
 	 * @param cmId
@@ -134,7 +144,7 @@ public class ExecutionService {
 	 * @param selectedDataObjectInstanceIds
 	 */
 	public static void beginActivityInstance(String cmId, String caseId, String activityInstanceId, List<String> selectedDataObjectInstanceIds) {
-		if (cases.containsKey(caseId)) {
+		if (isExistingCase(cmId, caseId)) {
 			CaseExecutioner caseExecutioner = cases.get(caseId);
 			caseExecutioner.beginActivityInstance(activityInstanceId, selectedDataObjectInstanceIds);
 		} else {
@@ -151,7 +161,7 @@ public class ExecutionService {
 	 * @param dataClassNameToState
 	 */
 	public static void terminateActivity(String cmId, String caseId, String activityInstanceId, Map<String, String> dataClassNameToState) {
-		if (cases.containsKey(caseId)) {
+		if (isExistingCase(cmId, caseId)) {
 			CaseExecutioner caseExecutioner = cases.get(caseId);
 			caseExecutioner.terminateActivityInstance(activityInstanceId, dataClassNameToState);
 		} else {
@@ -168,9 +178,42 @@ public class ExecutionService {
 	 * @return AbstractAcitivtyInstance
 	 */
 	public static AbstractActivityInstance getActivityInstance(String cmId, String caseId, String activityInstanceId) {
-		if (cases.containsKey(caseId)) {
+		if (isExistingCase(cmId, caseId)) {
 			CaseExecutioner caseExecutioner = cases.get(caseId);
-			caseExecutioner.getActivityInstance(activityInstanceId);
+			return caseExecutioner.getActivityInstance(activityInstanceId);
+		}
+		return null;
+	}
+
+	/**
+	 * Get all Instances of DataObjects of specific Case.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @return List of DataObjectInstance
+	 */
+	public static List<DataObjectInstance> getDataObjectInstances(String cmId, String caseId) {
+		if (isExistingCase(cmId, caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			return caseExecutioner.getDataObjectInstances();
+		} else {
+			// exception
+		}
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Get a specific DataObjectInstance.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @param instanceId
+	 * @return DataObjectInstance
+	 */
+	public static DataObjectInstance getDataObjectInstance(String cmId, String caseId, String instanceId) {
+		if (isExistingCase(cmId, caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			return caseExecutioner.getDataObjectInstance(instanceId);
 		}
 		return null;
 	}

@@ -19,13 +19,15 @@ public class BpmnFragment {
 
 
 	private String id;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private StartEvent startEvent;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Activity> activities = new ArrayList<>();
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<SequenceFlowAssociation> sequenceFlowAssociations = new ArrayList<>();
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<DataNode> dataNodes = new ArrayList<>();
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private EndEvent endEvent;
 
 	public String getId() {
@@ -54,6 +56,14 @@ public class BpmnFragment {
 
 	public void setSequenceFlowAssociations(List<SequenceFlowAssociation> sequenceFlowAssociations) {
 		this.sequenceFlowAssociations = sequenceFlowAssociations;
+	}
+
+	public List<DataNode> getDataNodes() {
+		return dataNodes;
+	}
+
+	public void setDataNodes(List<DataNode> dataNodes) {
+		this.dataNodes = dataNodes;
 	}
 
 	public void setTasks(List<Activity> activities) {

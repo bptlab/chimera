@@ -96,6 +96,8 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void terminate() {
+		if (!state.equals(State.RUNNING))
+			return;
 		this.fragmentInstance.getCase().getCaseExecutioner().createDataObjectInstances(activity);
 		this.fragmentInstance.enableFollowing(activity);
 		this.fragmentInstance.getCase().getCaseExecutioner().startAutomaticTasks();

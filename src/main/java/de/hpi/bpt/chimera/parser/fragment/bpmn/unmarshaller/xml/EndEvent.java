@@ -17,16 +17,4 @@ public class EndEvent extends AbstractDataControlNode {
 
 	@XmlElement(name = "bpmn:messageEventDefinition")
 	private MessageDefinition message;
-
-	@Override
-	public int save() {
-		Connector connector = new Connector();
-		this.databaseId = connector.insertControlNode(this.getName(), "EndEvent", this.getFragmentId(), this.getId());
-
-		if (message != null) {
-			connector.insertSendEvent(databaseId);
-		}
-
-		return this.databaseId;
-	}
 }

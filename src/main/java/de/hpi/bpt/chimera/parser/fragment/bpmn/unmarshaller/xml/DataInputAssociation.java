@@ -11,7 +11,8 @@ public class DataInputAssociation extends Edge {
 	@XmlAttribute
 	private String id;
 	@XmlElement(name = "bpmn:sourceRef")
-	private String sourceRef;
+
+	private String sourceDataObjectRef;
 
 	public String getId() {
 		return id;
@@ -21,12 +22,12 @@ public class DataInputAssociation extends Edge {
 		this.id = id;
 	}
 
-	public String getSourceRef() {
-		return sourceRef;
+	public String getSourceDataObjectRef() {
+		return sourceDataObjectRef;
 	}
 
-	public void setSourceRef(String sourceRef) {
-		this.sourceRef = sourceRef;
+	public void setSourceDataObjectRef(String sourceDataObjectRef) {
+		this.sourceDataObjectRef = sourceDataObjectRef;
 	}
 
 }

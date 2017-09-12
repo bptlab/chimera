@@ -9,13 +9,4 @@ import javax.persistence.Id;
 public class Activity extends AbstractDataControlNode {
 	// TODO This class only exists to specify control nodes as Tasks.
 	// Maybe leave it out?
-	private String name;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 }

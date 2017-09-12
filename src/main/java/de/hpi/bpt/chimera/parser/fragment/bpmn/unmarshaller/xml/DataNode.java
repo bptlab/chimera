@@ -39,7 +39,7 @@ public class DataNode {
 	private String jsonPath = "";
 
 	// GETTER
-	public String getId() {
+	public String getDataNodeObjectReferenceId() {
 		return dataObjectReferenceId;
 	}
 

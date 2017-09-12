@@ -1,6 +1,5 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml;
 
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -29,12 +28,12 @@ public class WebServiceTask extends AbstractDataControlNode {
 	@XmlAttribute(name = "griffin:webservicebody")
 	String webServiceBody = "";
 
-	@Override
-	public int save() {
-		Connector connector = new Connector();
-		this.databaseId = connector.insertControlNode(this.getName(), "WebServiceTask", this.getFragmentId(), this.getId());
-		connector.insertWebServiceTask(this.databaseId, StringEscapeUtils.unescapeHtml4(this.webServiceUrl), this.webServiceMethod, this.webServiceBody);
-		return this.databaseId;
-	}
-
+	/*
+	 * public int save() { Connector connector = new Connector();
+	 * this.databaseId = connector.insertControlNode(this.getName(),
+	 * "WebServiceTask", this.getFragmentId(), this.getId());
+	 * connector.insertWebServiceTask(this.databaseId,
+	 * StringEscapeUtils.unescapeHtml4(this.webServiceUrl),
+	 * this.webServiceMethod, this.webServiceBody); return this.databaseId; }
+	 */
 }

@@ -18,7 +18,8 @@ public class BpmnXmlFragmentParserTest {
 	@Before
 	public void getJsonString() {
 		try {
-			String file = getClass().getResource(fileName).getFile();
+			// String file = getClass().getResource(fileName).getFile();
+			String file = "src/test/resources/parser/JsonStringVerySimpleCaseModel";
 			FileInputStream inputStream = new FileInputStream(file);
 			jsonString = IOUtils.toString(inputStream);
 			inputStream.close();

@@ -1,27 +1,46 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import de.hpi.bpt.chimera.jcomparser.jaxb.DataInputAssociation;
-import de.hpi.bpt.chimera.jcomparser.jaxb.DataOutputAssociation;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 
 @Entity
-public class AbstractDataControlNode extends AbstractControlNode {
-	// TODO:implement this >>>see AbstractDataControlNode.java in package
-	// jcomparser.jaxb
+public abstract class AbstractDataControlNode extends AbstractControlNode {
+	private String name = "";
 
-	/*
-	 * private String name = "";
-	 * 
-	 * public String getName() { return name; }
-	 * 
-	 * public void setName(String name) { this.name = name; }
-	 */
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "dataflow_incomming")
+	private List<DataNode> incomingDataNodes = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "dataflow_outgoing")
+	private List<DataNode> outgoingDataNodes = new ArrayList<>();
 
+	// GETTER & SETTER
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<DataNode> getIncomingDataNodes() {
+		return incomingDataNodes;
+	}
+
+	public void setIncomingDataNodes(List<DataNode> incomingDataNodes) {
+		this.incomingDataNodes = incomingDataNodes;
+	}
+
+	public List<DataNode> getOutgoingDataNodes() {
+		return outgoingDataNodes;
+	}
+
+	public void setOutgoingDataNodes(List<DataNode> outgoingDataNodes) {
+		this.outgoingDataNodes = outgoingDataNodes;
+	}
 }

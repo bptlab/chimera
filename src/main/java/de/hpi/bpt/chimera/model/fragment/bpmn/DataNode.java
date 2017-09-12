@@ -1,11 +1,24 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn;
 
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+
+@Entity
 public class DataNode {
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	private int dbId;
+
 	private String id;
+
 	private String name;
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private DataObjectStateCondition dataObjectState;
 	private String jsonPath;
 
@@ -36,6 +49,4 @@ public class DataNode {
 	public void setJsonPath(String jsonPath) {
 		this.jsonPath = jsonPath;
 	}
-
-
 }

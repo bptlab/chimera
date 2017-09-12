@@ -13,23 +13,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
-public class AbstractControlNode {
+public abstract class AbstractControlNode {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	private String id;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "targetRef")
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "targetRef")
 	@JoinColumn(name = "targetRef")
 	private List<SequenceFlowAssociation> incomingControlNodes = new ArrayList<>();
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceRef")
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "sourceRef")
 	@JoinColumn(name = "sourceRef")
 	private List<SequenceFlowAssociation> outgoingControlNodes = new ArrayList<>();
-
-	private List<DataNode> incomingDataNodes = new ArrayList<>();
-
-	private List<DataNode> outgoingDataNodes = new ArrayList<>();
 
 	// GETTER & SETTER
 	public String getId() {
@@ -55,21 +51,4 @@ public class AbstractControlNode {
 	public void setOutgoingControlNodes(List<SequenceFlowAssociation> outgoingControlNodes) {
 		this.outgoingControlNodes = outgoingControlNodes;
 	}
-
-	public List<DataNode> getIncomingDataNodes() {
-		return incomingDataNodes;
-	}
-
-	public void setIncomingDataNodes(List<DataNode> incomingDataNodes) {
-		this.incomingDataNodes = incomingDataNodes;
-	}
-
-	public List<DataNode> getOutgoingDataNodes() {
-		return outgoingDataNodes;
-	}
-
-	public void setOutgoingDataNodes(List<DataNode> outgoingDataNodes) {
-		this.outgoingDataNodes = outgoingDataNodes;
-	}
-
 }

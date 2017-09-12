@@ -11,7 +11,7 @@ public class DataOutputAssociation extends Edge {
 	@XmlAttribute
 	private String id;
 	@XmlElement(name = "bpmn:targetRef")
-	private String targetRef;
+	private String targetDataObjectRef;
 
 	public String getId() {
 		return id;
@@ -21,12 +21,12 @@ public class DataOutputAssociation extends Edge {
 		this.id = id;
 	}
 
-	public String getTargetRef() {
-		return targetRef;
+	public String getTargetDataObjectRef() {
+		return targetDataObjectRef;
 	}
 
-	public void setTargetRef(String targetRef) {
-		this.targetRef = targetRef;
+	public void setTargetDataObjectRef(String targetDataObjectRef) {
+		this.targetDataObjectRef = targetDataObjectRef;
 	}
 
 }

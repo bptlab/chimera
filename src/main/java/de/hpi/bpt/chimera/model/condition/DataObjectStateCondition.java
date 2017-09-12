@@ -20,6 +20,16 @@ public class DataObjectStateCondition {
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private ObjectLifecycleState state;
 
+	public DataObjectStateCondition() {
+		this.dataClass = null;
+		this.state = null;
+	}
+
+	public DataObjectStateCondition(DataClass dataClass, ObjectLifecycleState state) {
+		this.dataClass = dataClass;
+		this.state = state;
+	}
+
 	public DataClass getDataClass() {
 		return dataClass;
 	}

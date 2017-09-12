@@ -1,12 +1,9 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml;
 
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Map;
 
 /**
  * A class used to store Sequence Flow elements from standard BPMN.
@@ -68,21 +65,4 @@ public class SequenceFlow extends Edge {
 	public void setCondition(String condition) {
 		this.condition = condition;
 	}
-
-	/**
-	 * Saves a sequence flow by inserting it into the control flow table.
-	 *
-	 * @param nodeToDatabaseId Map from nodeId to database Id
-	 * @return returns the databaseId of the saved edge
-	 */
-	public int save(Map<String, Integer> nodeToDatabaseId) {
-		int targetDatabaseId = nodeToDatabaseId.get(targetRef);
-		int sourceDatabaseId = nodeToDatabaseId.get(sourceRef);
-		Connector connector = new Connector();
-		// TODO check if condition really is a condition according to the XORGrammar.g in src/main/resources
-		String conditionForDatabase = (condition == null) ? "" : condition;
-		connector.insertControlFlow(sourceDatabaseId, targetDatabaseId, conditionForDatabase);
-		return 0;
-	}
-
 }

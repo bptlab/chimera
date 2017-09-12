@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
+import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class DataObjectInstance {
@@ -49,6 +50,10 @@ public class DataObjectInstance {
 
 	public DataClass getDataClass() {
 		return dataNode.getDataObjectState().getDataClass();
+	}
+
+	public ObjectLifecycleState getObjectLifecycleState() {
+		return dataNode.getDataObjectState().getState();
 	}
 
 	public List<DataAttributeInstance> getDataAttributeInstances() {

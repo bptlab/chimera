@@ -25,6 +25,7 @@ public class ObjectLifecycleState implements Nameable, Listable {
 	@JoinColumn
 	List<ObjectLifecycleState> successors;
 	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	List<ObjectLifecycleState> predecessors;
 
 	public ObjectLifecycleState() {

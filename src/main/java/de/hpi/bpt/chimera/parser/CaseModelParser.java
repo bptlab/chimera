@@ -61,7 +61,7 @@ public class CaseModelParser {
 			TerminationCondition terminationCondition = TerminationConditionParser.parseTerminationCondition(caseModelJson.getJSONArray("terminationconditions"), parserHelper);
 			caseModel.setTerminationCondition(terminationCondition);
 			
-			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"));
+			List<Fragment> fragments = getFragments(caseModelJson.getJSONArray("fragments"), parserHelper);
 			caseModel.setFragments(fragments);
 
 		} catch (JSONException | IllegalArgumentException e) {
@@ -99,16 +99,17 @@ public class CaseModelParser {
 	 * Create list of Fragments out of fragmentJsonArray. Uses FragmentParser.
 	 * 
 	 * @param fragmentJsonArray
+	 * @param parserHelper
 	 * @return List of Fragment
 	 */
-	private static List<Fragment> getFragments(JSONArray fragmentJsonArray) {
+	private static List<Fragment> getFragments(JSONArray fragmentJsonArray, CaseModelParserHelper parserHelper) {
 		int arraySize = fragmentJsonArray.length();
 		FragmentValidation.validateFragmentAmount(arraySize);
 		List<Fragment> fragments = new ArrayList<>();
 
 		for (int i = 0; i < arraySize; i++) {
 			JSONObject fragmentJson = fragmentJsonArray.getJSONObject(i);
-			Fragment currentFragment = FragmentParser.parseFragment(fragmentJson);
+			Fragment currentFragment = FragmentParser.parseFragment(fragmentJson, parserHelper);
 			fragments.add(currentFragment);
 		}
 		return fragments;

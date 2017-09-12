@@ -1,13 +1,11 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class DataManager {
@@ -31,7 +29,7 @@ public class DataManager {
 	 * 
 	 * @param controlNode
 	 */
-	public void createDataObjectInstances(AbstractControlNode controlNode) {
+	public void createDataObjectInstances(AbstractDataControlNode controlNode) {
 		for (DataNode dataNode : controlNode.getOutgoingDataNodes()) {
 			// TODO: think about whether implement this thing that DataClasses
 			// that are incomingDataNodes shell not be created as Instances or
@@ -102,5 +100,9 @@ public class DataManager {
 
 	public void setDataModel(DataModel dataModel) {
 		this.dataModel = dataModel;
+	}
+
+	public Map<String, DataObjectInstance> getDataObjectInstances() {
+		return dataObjectInstances;
 	}
 }

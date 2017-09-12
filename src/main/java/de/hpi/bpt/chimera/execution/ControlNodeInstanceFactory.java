@@ -4,10 +4,12 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.activity.TaskInstance;
+import de.hpi.bpt.chimera.execution.event.EndEventInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.EndEvent;
 
 public class ControlNodeInstanceFactory {
 	private static Logger log = Logger.getLogger(ControlNodeInstanceFactory.class);
@@ -28,6 +30,8 @@ public class ControlNodeInstanceFactory {
 		Class<? extends AbstractControlNode> clazz = controlNode.getClass();
 		if (clazz.equals(StartEvent.class)) {
 			return new StartEventInstance((StartEvent) controlNode, fragmentInstance);
+		} else if (clazz.equals(EndEvent.class)) {
+			return new EndEventInstance((EndEvent) controlNode, fragmentInstance);
 		} else if (controlNode instanceof Activity) {
 			return new TaskInstance((Activity) controlNode, fragmentInstance);
 		} else {

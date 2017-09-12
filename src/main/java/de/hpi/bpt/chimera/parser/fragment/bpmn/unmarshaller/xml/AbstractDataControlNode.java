@@ -1,7 +1,5 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml;
 
-import de.hpi.bpt.chimera.jcomparser.saving.AbstractControlNode;
-
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +12,11 @@ import java.util.List;
 public abstract class AbstractDataControlNode extends AbstractControlNode {
 	@XmlAttribute(name = "name")
 	protected String name = "";
-	@XmlElement(name = "bpmn:dataOutputAssociation")
-	protected List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
 	@XmlElement(name = "bpmn:dataInputAssociation")
 	protected List<DataInputAssociation> dataInputAssociations = new ArrayList<>();
+	@XmlElement(name = "bpmn:dataOutputAssociation")
+	protected List<DataOutputAssociation> dataOutputAssociations = new ArrayList<>();
+
 
 	public String getName() {
 		return name;
@@ -35,16 +34,27 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 		return dataInputAssociations;
 	}
 
-
-	public void setIncoming(String incoming) {
-		List<String> incomingList = new ArrayList<>();
-		incomingList.add(incoming);
-		this.setIncoming(incomingList);
+	/**
+	 * 
+	 * @return List of Ids of incoming DataNodeObjectReferences
+	 */
+	public List<String> getIncomingDataNodeObjectReferences() {
+		List<String> incomingDataNodeObjectReferences = new ArrayList<>();
+		for (DataInputAssociation dataInputAssociation : dataInputAssociations) {
+			incomingDataNodeObjectReferences.add(dataInputAssociation.getSourceDataObjectRef());
+		}
+		return incomingDataNodeObjectReferences;
 	}
 
-	public void setOutgoing(String outgoing) {
-		List<String> outgoingList = new ArrayList<>();
-		outgoingList.add(outgoing);
-		this.setOutgoing(outgoingList);
+	/**
+	 * 
+	 * @return List of Ids of outgoing DataNodeObjectReferences
+	 */
+	public List<String> getOutgoingDataNodeObjectReferences() {
+		List<String> outgoingDataNodeObjectReferences = new ArrayList<>();
+		for (DataOutputAssociation dataOutputAssociation : dataOutputAssociations) {
+			outgoingDataNodeObjectReferences.add(dataOutputAssociation.getTargetDataObjectRef());
+		}
+		return outgoingDataNodeObjectReferences;
 	}
 }

@@ -1,7 +1,5 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml;
 
-import de.hpi.bpt.chimera.jcomparser.saving.Connector;
-
 import javax.xml.bind.annotation.*;
 
 /**
@@ -24,30 +22,6 @@ public class IntermediateCatchEvent extends AbstractDataControlNode {
 
 	@XmlElement(name = "bpmn:timerEventDefinition")
 	private TimerDefinition timer;
-
-	@Override
-	public int save() {
-		if (timer == null) {
-			saveIntermediateWithoutTimer();
-		} else {
-			saveTimerIntermediate();
-		}
-		return this.databaseId;
-	}
-
-	private void saveIntermediateWithoutTimer() {
-		Connector connector = new Connector();
-		this.databaseId = connector.insertControlNode(this.getName(), "IntermediateCatchEvent", this.fragmentId, this.getId());
-
-		connector.insertEvent("IntermediateCatchEvent", this.eventQuery, this.fragmentId, this.getId(), this.databaseId);
-	}
-
-	private void saveTimerIntermediate() {
-		Connector connector = new Connector();
-		this.databaseId = connector.insertControlNode(this.getName(), "TimerEvent", this.fragmentId, this.getId());
-		connector.insertEvent("TimerEvent", this.eventQuery, this.fragmentId, this.getId(), this.databaseId);
-		connector.saveTimerDefinition(timer.getTimerDuration(), this.fragmentId, this.databaseId);
-	}
 
 	public String getEventQuery() {
 		return eventQuery;
