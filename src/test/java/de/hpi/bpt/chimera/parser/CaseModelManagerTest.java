@@ -86,9 +86,11 @@ public class CaseModelManagerTest {
 		assertEquals("The OLC wasn't saved correctly", ((DataClass) (cm2.getDataModel().getDataModelClasses().get(0))).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName(), ((DataClass) (cmLoaded3.getDataModel().getDataModelClasses()).get(0)).getObjectLifecycle().getObjectLifecycleStates().get(0).getSuccessors().get(0).getName());
 
 
-		for (Map.Entry<String, String> entry : CaseModelManager.getAllCaseModelNameDetails("").entrySet()) {
-			System.out.println("Name:" + entry.getValue() + "Id:" + entry.getKey() + "\n");
-		}
-
+		/*
+		 * for (Map.Entry<String, String> entry :
+		 * CaseModelManager.getAllCaseModelNameDetails("").entrySet()) {
+		 * System.out.println("Name:" + entry.getValue() + "Id:" +
+		 * entry.getKey() + "\n"); }
+		 */
 	}
 }

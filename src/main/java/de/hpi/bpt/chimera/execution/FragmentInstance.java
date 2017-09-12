@@ -37,7 +37,7 @@ public class FragmentInstance {
 	// ...core.FragmentInstance, like all the initialize functions
 
 	public FragmentInstance(Fragment fragment, Case caze) {
-		this.id = UUID.randomUUID().toString();
+		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstances = new HashMap<>();
@@ -68,14 +68,12 @@ public class FragmentInstance {
 	 */
 	public void updateDataFlow() {
 		// TODO: implement
-		/*
-		 * for (ControlNodeInstance nodeInstance :
-		 * controlNodeInstances.values()) { if (nodeInstance instanceof
-		 * AbstractActivityInstance)) { ((AbstractActivityInstance)
-		 * nodeInstance).checkDataFlowEnabled(); }
-		 * 
-		 * }
-		 */
+		for (ControlNodeInstance nodeInstance : controlNodeInstances.values()) { 
+			if (nodeInstance instanceof AbstractActivityInstance) {
+				((AbstractActivityInstance) nodeInstance).checkDataFlow();
+			}
+		 }
+		 
 		// checkTerminationCondition()
 	}
 
@@ -85,7 +83,7 @@ public class FragmentInstance {
 	 * 
 	 * @param node
 	 */
-	public void enableFollowing(AbstractControlNode controlNode) {
+	public void createFollowing(AbstractControlNode controlNode) {
 		for (SequenceFlowAssociation sequenceFlow : controlNode.getOutgoingControlNodes()) {
 			AbstractControlNode following = sequenceFlow.getTargetRef();
 			ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);

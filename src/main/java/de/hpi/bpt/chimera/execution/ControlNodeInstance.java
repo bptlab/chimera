@@ -13,7 +13,7 @@ public abstract class ControlNodeInstance implements Behaving {
 	protected State state;
 
 	public ControlNodeInstance(AbstractControlNode controlNode, FragmentInstance fragmentInstance) {
-		this.id = UUID.randomUUID().toString();
+		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.controlNode = controlNode;
 		this.fragmentInstance = fragmentInstance;
 	}

@@ -1,5 +1,7 @@
 package de.hpi.bpt.chimera.execution;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +87,51 @@ public class DataManager {
 		}
 		// TODO: do the transition
 	}
+
+	/**
+	 * Get DataObjectInstances that are instantiated by the DataNodes.
+	 * 
+	 * @param dataNodesToCheck
+	 * @return List of DataObjectInstances
+	 */
+	public List<DataObjectInstance> getExistingDataObjectInstances(List<DataNode> dataNodesToCheck) {
+		// create a Map of DataNode to DataObjectInstance
+		Map<DataNode, DataObjectInstance> dataNodeToInstanceAssociation = new HashMap<>();
+		for (DataObjectInstance instance : dataObjectInstances.values())
+			dataNodeToInstanceAssociation.put(instance.getDataNode(), instance);
+		// resolve Map
+		List<DataObjectInstance> existingInstances = new ArrayList<>();
+		for (DataNode dataNode : dataNodesToCheck) {
+			if (dataNodeToInstanceAssociation.containsKey(dataNode))
+				existingInstances.add(dataNodeToInstanceAssociation.get(dataNode));
+		}
+		return existingInstances;
+	}
+
+	/**
+	 * Check whether the DataNodes that shell be checked are instantiated by the
+	 * existing DataObjectInstances.
+	 * 
+	 * @param dataNodesToCheck
+	 * @return boolean
+	 */
+	public boolean isExistingDataObject(List<DataNode> dataNodesToCheck) {
+		List<DataNode> existingDataNodes = new ArrayList<>();
+		// make sure that even for DataNodes that occur twice exists two
+		// Instances.
+		for (DataObjectInstance dataObjectInstance : dataObjectInstances.values()) {
+			existingDataNodes.add(dataObjectInstance.getDataNode());
+		}
+		for (DataNode dataNodeToCheck : dataNodesToCheck) {
+			if (existingDataNodes.contains(dataNodeToCheck)) {
+				existingDataNodes.remove(dataNodeToCheck);
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// GETTER & SETTER
 	public Case getCaze() {
 		return caze;

@@ -1,20 +1,13 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
-import de.hpi.bpt.chimera.database.DbFragment;
-import de.hpi.bpt.chimera.database.DbScenario;
-import de.hpi.bpt.chimera.database.data.DbTerminationCondition;
-import de.hpi.bpt.chimera.jcomparser.json.ScenarioData;
-import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataTransitionException;
-import de.hpi.bpt.chimera.jcomparser.validation.InvalidDataclassReferenceException;
-import de.hpi.bpt.chimera.jcore.Scenario;
-import de.hpi.bpt.chimera.jcore.ScenarioFactory;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
+import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
+import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -22,12 +15,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class implements the REST interface for dealing with scenarios.
@@ -56,8 +48,23 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/terminationcondition")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTerminationCondition(@PathParam("scenarioId") String cmId) {
-		JSONObject result = CaseModelManager.getTerminationConditionOfCaseModel(cmId);
-		log.info(String.format("Successfully requested TerminationCondition of CaseModel: %s", cmId));
+		TerminationCondition terminationCondition = CaseModelManager.getTerminationConditionOfCaseModel(cmId);
+
+		JSONObject result = new JSONObject();
+		JSONObject conditions = new JSONObject();
+		int id = 1;
+		for (TerminationConditionComponent component : terminationCondition.getConditions()) {
+			JSONArray dataObjectStateConditions = new JSONArray();
+			for (DataObjectStateCondition dosc : component.getConditions()) {
+				JSONObject dataObjectStateCondition = new JSONObject();
+				dataObjectStateCondition.put("data_object", dosc.getDataClass().getName());
+				dataObjectStateCondition.put("state", dosc.getState().getName());
+				dataObjectStateConditions.put(dataObjectStateCondition);
+			}
+			conditions.put(String.format("%d", id++), dataObjectStateConditions);
+		}
+		result.put("conditions", conditions);
+
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -112,14 +119,18 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenario(@Context UriInfo uri, @PathParam("scenarioId") String caseModelId) {
+	public Response getScenario(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
 		// DbScenario dbScenario = new DbScenario();
 		// Map<String, Object> data = dbScenario.getScenarioDetails(scenarioId);
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		Map<String, Object> jsonDetails = CaseModelManager.getCaseModelDetails(caseModelId);
-		jsonDetails.put("instances", uri.getAbsolutePath() + "/instance");
+		JSONObject result = new JSONObject();
+		result.put("id", cm.getId());
+		result.put("name", cm.getName());
+		result.put("modelversion", cm.getVersionNumber());
+		result.put("instances", uri.getAbsolutePath() + "/instance");
 
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(new JSONObject(jsonDetails).toString()).build();
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**
@@ -137,8 +148,10 @@ public class ScenarioRestService extends AbstractRestService {
 		 * dbFragment.getXmlStringsForScenario(scenarioId); JSONObject xmlJson =
 		 * new JSONObject(); xmlJson.put("xml", new JSONArray(xmls));
 		 */
-		JSONObject xml = CaseModelManager.getFragmentXmlOfCaseModel(cmId);
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(xml.toString()).build();
+		List<String> xmlStrings = CaseModelManager.getFragmentXmlOfCaseModel(cmId);
+		JSONObject result = new JSONObject();
+		result.put("xml", new JSONArray(xmlStrings));
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**
@@ -182,34 +195,25 @@ public class ScenarioRestService extends AbstractRestService {
 	@GET
 	@Path("scenario")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenarios(@Context UriInfo uriInfo, @QueryParam("filter") String filter) {
-		String filterString = "";
-		if (filter != null)
-			filterString = filter;
+	public Response getScenarios(@Context UriInfo uriInfo, @DefaultValue("") @QueryParam("filter") String filterString) {
+		List<CaseModel> caseModels = CaseModelManager.getCaseModels();
 
-		Map<String, String> caseModelsDetails = CaseModelManager.getAllCaseModelNameDetails(filterString);
-		JSONObject jsonResult = mapToKeysAndResults(caseModelsDetails, "ids", "labels");
-		JSONObject refs = new JSONObject();
-		for (String id : caseModelsDetails.keySet()) {
-			refs.put(id, uriInfo.getAbsolutePath() + "/" + id);
+		if (!filterString.isEmpty()) {
+			caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
 		}
-		jsonResult.put("links", refs);
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(jsonResult.toString()).build();
-	}
 
-	/**
-	 * Creates a JSON object from an HashMap.
-	 * The keys will be listed separately.
-	 *
-	 * @param data        The HashMap which contains the data of the Object
-	 * @param keyLabel    The name which will be used
-	 * @param resultLabel The label of the results.
-	 * @return The newly created JSON Object.
-	 */
-	private JSONObject mapToKeysAndResults(Map data, String keyLabel, String resultLabel) {
+		List<String> ids = new ArrayList<>(caseModels.size());
+		JSONObject links = new JSONObject();
+		JSONObject labels = new JSONObject();
+		for (CaseModel cm : caseModels) {
+			ids.add(cm.getId());
+			links.put(cm.getId(), uriInfo.getAbsolutePath() + "/" + cm.getId());
+			labels.put(cm.getId(), cm.getName());
+		}
 		JSONObject result = new JSONObject();
-		result.put(keyLabel, new JSONArray(data.keySet()));
-		result.put(resultLabel, data);
-		return result;
+		result.put("ids", new JSONArray(ids));
+		result.put("links", links);
+		result.put("labels", labels);
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 }

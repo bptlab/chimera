@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
@@ -196,9 +197,9 @@ public class ActivityRestService extends AbstractRestService {
 	 */
 	private JSONObject buildJSONObjectForActivities(Collection<AbstractActivityInstance> activityInstances, UriInfo uriInfo) {
 		List<String> ids = new ArrayList<>(activityInstances.size());
-		JSONArray activities = new JSONArray();
+		JSONObject activities = new JSONObject();
 		for (AbstractActivityInstance activityInstance : activityInstances) {
-			activities.put(buildActivityJson(activityInstance, uriInfo));
+			activities.put(activityInstance.getId(), buildActivityJson(activityInstance, uriInfo));
 			ids.add(activityInstance.getId());
 		}
 		JSONObject result = new JSONObject();
@@ -279,13 +280,21 @@ public class ActivityRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
 	//TODO for some reason this appears to be the only endpoint with capital letters
-	public Response getWorkingItems(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+	public Response getWorkingItems(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
+		// ExecutionService executionService =
+		// ExecutionService.getInstance(scenarioId);
+		// executionService.openExistingScenarioInstance(scenarioId,
+		// scenarioInstanceId);
 
-		List<DataObjectJaxBean> selectedDataObjects = executionService.getSelectedWorkingItems(scenarioInstanceId, activityInstanceId);
-		JSONArray selectedDataObjectsJson = new JSONArray(selectedDataObjects);
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(selectedDataObjectsJson.toString()).build();
+		AbstractActivityInstance activityInstance = de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId, caseId, activityInstanceId);
+		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
+
+		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
+		for (DataObjectInstance instance : selectedInstances) {
+			resultBeans.add(new DataObjectJaxBean(instance));
+		}
+		JSONArray result = new JSONArray(resultBeans);
+		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**

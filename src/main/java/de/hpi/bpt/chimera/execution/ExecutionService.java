@@ -217,4 +217,22 @@ public class ExecutionService {
 		}
 		return null;
 	}
+
+	/**
+	 * Get the available DataInput for an ActivityInstance.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @param activityInstanceId
+	 * @return List of DataObjectInstance
+	 */
+	public static List<DataObjectInstance> getAvailableInputForAcitivityInstance(String cmId, String caseId, String activityInstanceId) {
+		if (isExistingCase(cmId, caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			return caseExecutioner.getAvailableInputForAcitivityInstance(activityInstanceId);
+		} else {
+			// exception
+		}
+		return new ArrayList<>();
+	}
 }

@@ -111,19 +111,19 @@ public class ExecutionService {
 		return scenarioInstance.getId();
 	}
 
-	public List<DataObjectJaxBean> getSelectedWorkingItems(int scenarioInstanceId, int activityInstanceId) {
-		ScenarioInstance scenarioInstance = this.getScenarioInstance(scenarioInstanceId);
-		DbSelectedDataObjects workItems = new DbSelectedDataObjects();
-		List<Integer> dataObjectIds = workItems.getDataObjectSelection(scenarioInstanceId, activityInstanceId);
-		List<DataObjectJaxBean> dataObjectJaxBeen = new ArrayList<>();
-		for (Integer dataObjectId : dataObjectIds) {
-			DataObject dataObject = new DataObject(dataObjectId, scenarioInstance);
-			DataObjectJaxBean dataObjectJaxBean = new DataObjectJaxBean(dataObject, this);
-			dataObjectJaxBeen.add(dataObjectJaxBean);
-		}
-		return dataObjectJaxBeen;
-	}
-
+	/*
+	 * public List<DataObjectJaxBean> getSelectedWorkingItems(int
+	 * scenarioInstanceId, int activityInstanceId) { ScenarioInstance
+	 * scenarioInstance = this.getScenarioInstance(scenarioInstanceId);
+	 * DbSelectedDataObjects workItems = new DbSelectedDataObjects();
+	 * List<Integer> dataObjectIds =
+	 * workItems.getDataObjectSelection(scenarioInstanceId, activityInstanceId);
+	 * List<DataObjectJaxBean> dataObjectJaxBeen = new ArrayList<>(); for
+	 * (Integer dataObjectId : dataObjectIds) { DataObject dataObject = new
+	 * DataObject(dataObjectId, scenarioInstance); DataObjectJaxBean
+	 * dataObjectJaxBean = new DataObjectJaxBean(dataObject, this);
+	 * dataObjectJaxBeen.add(dataObjectJaxBean); } return dataObjectJaxBeen; }
+	 */
 	/**
 	 * Open a existing scenario instance.
 	 *
@@ -440,27 +440,28 @@ public class ExecutionService {
 		return attributeInstances;
 	}
 
+
 	/**
 	 * This method generates an array of all dataAttributes for a given dataObject.
 	 *
 	 * @param dataObject This is the dataObject.
 	 * @return an array of DataAttributeJaxBean belonging to this dataObject.
 	 */
-	public DataAttributeJaxBean[] getDataAttributesForDataObjectInstance(DataObject dataObject) {
-		DataAttributeJaxBean[] dataAttributes = new DataAttributeJaxBean[dataObject.getDataAttributeInstances().size()];
-		int i = 0;
-		List<DataAttributeInstance> dataAttributeInstances = dataObject.getDataAttributeInstances();
-		for (DataAttributeInstance dataAttributeInstance : dataAttributeInstances) {
-			DataAttributeJaxBean dataAttribute = new DataAttributeJaxBean();
-			dataAttribute.setId(dataAttributeInstance.getId());
-			dataAttribute.setName(dataAttributeInstance.getName());
-			dataAttribute.setType(dataAttributeInstance.getType());
-			dataAttribute.setValue(dataAttributeInstance.getValue().toString());
-			dataAttributes[i] = dataAttribute;
-			i++;
-		}
-		return dataAttributes;
-	}
+	/*
+	 * public DataAttributeJaxBean[]
+	 * getDataAttributesForDataObjectInstance(DataObject dataObject) {
+	 * DataAttributeJaxBean[] dataAttributes = new
+	 * DataAttributeJaxBean[dataObject.getDataAttributeInstances().size()]; int
+	 * i = 0; List<DataAttributeInstance> dataAttributeInstances =
+	 * dataObject.getDataAttributeInstances(); for (DataAttributeInstance
+	 * dataAttributeInstance : dataAttributeInstances) { DataAttributeJaxBean
+	 * dataAttribute = new DataAttributeJaxBean();
+	 * dataAttribute.setId(dataAttributeInstance.getId());
+	 * dataAttribute.setName(dataAttributeInstance.getName());
+	 * dataAttribute.setType(dataAttributeInstance.getType());
+	 * dataAttribute.setValue(dataAttributeInstance.getValue().toString());
+	 * dataAttributes[i] = dataAttribute; i++; } return dataAttributes; }
+	 */
 
 	/**
 	 * Test for the existence of an activity instance in a given scenarioInstance.

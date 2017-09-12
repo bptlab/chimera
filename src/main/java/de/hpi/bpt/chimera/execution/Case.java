@@ -1,8 +1,6 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,7 +15,7 @@ public class Case {
 	// List<TerminationCondition>
 
 	public Case(String caseName, CaseModel caseModel, CaseExecutioner caseExecutioner) {
-		this.id = UUID.randomUUID().toString();
+		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.name = caseName;
 		this.caseExecutioner = caseExecutioner;
 		this.fragmentInstances = new HashMap<>();

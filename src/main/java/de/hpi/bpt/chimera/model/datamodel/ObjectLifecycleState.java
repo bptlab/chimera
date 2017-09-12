@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import de.hpi.bpt.chimera.model.Listable;
@@ -21,11 +22,12 @@ public class ObjectLifecycleState implements Nameable, Listable {
 	private int dbId;
 
 	String name;
+	// TODO: rework this so that the same information isn't saved twice
 	@OneToMany(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinTable(name = "objectlifecyclestate_successors")
 	List<ObjectLifecycleState> successors;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinTable(name = "objectlifecyclestate_predecessors")
 	List<ObjectLifecycleState> predecessors;
 
 	public ObjectLifecycleState() {

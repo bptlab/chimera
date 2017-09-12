@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.execution.activity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
@@ -8,6 +9,7 @@ import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	private Activity activity;
@@ -41,18 +43,23 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		if (state.equals(State.INIT)) {
 			state = State.CONTROLFLOW_ENABLED;
 		}
-		if (state.equals(State.DATAFLOW_ENABLED) || checkInputObjects()) {
+		if (state.equals(State.DATAFLOW_ENABLED) || fragmentInstance.getCase().getCaseExecutioner().isDataFlowEnabled(activity)) {
 			state = State.READY;
 		}
 	}
 
-	private boolean checkInputObjects() {
-		// TODO: Checks if the input data objects have the same state as the
-		// data object of the scenario instance.
-		return true;
+	/**
+	 * Used for updating the DataFlow of the ActivityInstance.
+	 */
+	public void checkDataFlow() {
+		if (fragmentInstance.getCase().getCaseExecutioner().isDataFlowEnabled(activity)) {
+			enableDataFlow();
+		} else {
+			disableDataFlow();
+		}
 	}
 
-	private void enableData() {
+	private void enableDataFlow() {
 		if (state.equals(State.INIT)) {
 			state = State.DATAFLOW_ENABLED;
 		} else if (state.equals(State.CONTROLFLOW_ENABLED)) {
@@ -60,7 +67,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		}
 	}
 
-	private void disableData() {
+	private void disableDataFlow() {
 		if (state.equals(State.DATAFLOW_ENABLED)) {
 			state = State.INIT;
 		} else if (state.equals(State.READY)) {
@@ -99,7 +106,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		if (!state.equals(State.RUNNING))
 			return;
 		this.fragmentInstance.getCase().getCaseExecutioner().createDataObjectInstances(activity);
-		this.fragmentInstance.enableFollowing(activity);
+		this.fragmentInstance.createFollowing(activity);
 		this.fragmentInstance.getCase().getCaseExecutioner().startAutomaticTasks();
 		this.state = State.TERMINATED;
 	}

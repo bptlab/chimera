@@ -64,7 +64,7 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 		// TODO: write DataAttributes with Json
 		this.fragmentInstance.updateDataFlow();
 		log.info("DataFlowUpdated");
-		this.fragmentInstance.enableFollowing(event);
+		this.fragmentInstance.createFollowing(event);
 		log.info("Following Enabled");
 		this.fragmentInstance.getCase().getCaseExecutioner().startAutomaticTasks();
 		this.state = State.TERMINATED;

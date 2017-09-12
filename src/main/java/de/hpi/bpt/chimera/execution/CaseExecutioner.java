@@ -11,6 +11,7 @@ import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class CaseExecutioner {
 	private static Logger log = Logger.getLogger(CaseExecutioner.class);
@@ -125,10 +126,10 @@ public class CaseExecutioner {
 	 * @param activityInstanceId
 	 * @return
 	 */
-	private ControlNodeInstance getControlNodeInstance(String activityInstanceId) {
+	private ControlNodeInstance getControlNodeInstance(String controlNodeId) {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
-			if (fragmentInstance.getControlNodeInstances().containsKey(activityInstanceId)) {
-				return fragmentInstance.getControlNodeInstances().get(activityInstanceId);
+			if (fragmentInstance.getControlNodeInstances().containsKey(controlNodeId)) {
+				return fragmentInstance.getControlNodeInstances().get(controlNodeId);
 			}
 		}
 		return null;
@@ -155,6 +156,31 @@ public class CaseExecutioner {
 			return dataManager.getDataObjectInstances().get(instanceId);
 		}
 		return null;
+	}
+
+	/**
+	 * Get the available DataInput for an ActivityInstance.
+	 * 
+	 * @param activityInstanceId
+	 * @return List of DataObjectInstance
+	 */
+	public List<DataObjectInstance> getAvailableInputForAcitivityInstance(String activityInstanceId) {
+		AbstractActivityInstance activityInstance = getActivityInstance(activityInstanceId);
+		List<DataNode> dataNodesToCheck = activityInstance.getActivity().getIncomingDataNodes();
+		return dataManager.getExistingDataObjectInstances(dataNodesToCheck);
+	}
+
+	/**
+	 * Check whether a ControlNode is DataFlow enabled.
+	 * 
+	 * @param controlNode
+	 * @return boolean
+	 */
+	public boolean isDataFlowEnabled(AbstractDataControlNode controlNode) {
+		List<DataNode> incomingDataNodes = controlNode.getIncomingDataNodes();
+		if (incomingDataNodes.isEmpty())
+			return true;
+		return dataManager.isExistingDataObject(incomingDataNodes);
 	}
 
 	// GETTER & SETTER

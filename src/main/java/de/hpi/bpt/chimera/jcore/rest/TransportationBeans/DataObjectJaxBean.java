@@ -1,9 +1,17 @@
 package de.hpi.bpt.chimera.jcore.rest.TransportationBeans;
 
+import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
 import de.hpi.bpt.chimera.jcore.data.DataObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * A JAX bean which is used for dataobject data.
@@ -18,10 +26,9 @@ public class DataObjectJaxBean {
 	private String label;
 
 	/**
-	 * The id the dataobject (not the instance) has inside
-	 * the database.
+	 * The id the dataobjectinstance.
 	 */
-	private int id;
+	private String id;
 	/**
 	 * The state inside the database of the dataobject
 	 * which is stored in the table.
@@ -35,25 +42,20 @@ public class DataObjectJaxBean {
 	 */
 	private DataAttributeJaxBean[] attributeConfiguration;
 
-	public DataObjectJaxBean() {
+	public DataObjectJaxBean(DataObjectInstance instance) {
+		setId(instance.getId());
+		setLabel(instance.getDataClass().getName());
+		setState(instance.getObjectLifecycleState().getName());
+
+		List<DataAttributeJaxBean> attributes = new ArrayList<>(instance.getDataAttributeInstances().size());
+		for (DataAttributeInstance dataAttributeInstance : instance.getDataAttributeInstances()) {
+			DataAttributeJaxBean attributeInstance = new DataAttributeJaxBean(dataAttributeInstance);
+			attributes.add(attributeInstance);
+		}
+
+		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[instance.getDataAttributeInstances().size()]);
+		setAttributeConfiguration(attributesArray);
 	}
-
-	;
-
-	public DataObjectJaxBean(DataObject dataObject) {
-		this.setId(dataObject.getId());
-		this.setLabel(dataObject.getName());
-		this.setState(dataObject.getStateName());
-	}
-
-	// TODO does this really need the execution service
-	public DataObjectJaxBean(DataObject dataObjectInstance, ExecutionService executionService) {
-		this.setId(dataObjectInstance.getId());
-		this.setLabel(dataObjectInstance.getName());
-		this.setState(dataObjectInstance.getStateName());
-		this.setAttributeConfiguration(executionService.getDataAttributesForDataObjectInstance(dataObjectInstance));
-	}
-
 
 	public String getLabel() {
 		return label;
@@ -63,11 +65,11 @@ public class DataObjectJaxBean {
 		this.label = label;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
