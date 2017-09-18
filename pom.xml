@@ -34,6 +34,11 @@
 				<!-- Deployment is configured in profile managed by jenkins <configuration> 
 					<url>http://172.16.64.113:8080/manager/text</url> <server>chimera113</server> 
 					<path>/Chimera</path> </configuration> -->
+					
+					<!--  for faster loca testing -->
+					 <configuration>
+          				<url>http://localhost:8080/manager/text</url>
+        			</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -173,7 +178,7 @@
 			<artifactId>activemq-all</artifactId>
 			<version>5.12.1</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
 			<artifactId>wiremock</artifactId>
