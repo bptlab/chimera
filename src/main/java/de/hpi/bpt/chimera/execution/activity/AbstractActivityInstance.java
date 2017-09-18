@@ -8,8 +8,8 @@ import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	private Activity activity;
@@ -30,7 +30,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		this.setActivity(activity);
 		this.isAutomaticTask = false;
 		this.selectedDataObjectInstances = new HashMap<>();
-		this.state = State.INIT;
+		setState(State.INIT);
 	}
 
 	/**
@@ -40,11 +40,11 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	@Override
 	public void enableControlFlow() {
 		this.selectedDataObjectInstances.clear();
-		if (state.equals(State.INIT)) {
-			state = State.CONTROLFLOW_ENABLED;
+		if (getState().equals(State.INIT)) {
+			setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (state.equals(State.DATAFLOW_ENABLED) || fragmentInstance.getCase().getCaseExecutioner().isDataFlowEnabled(activity)) {
-			state = State.READY;
+		if (getState().equals(State.DATAFLOW_ENABLED) || getCaseExecutioner().isDataFlowEnabled(activity)) {
+			setState(State.READY);
 		}
 	}
 
@@ -52,7 +52,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
 	public void checkDataFlow() {
-		if (fragmentInstance.getCase().getCaseExecutioner().isDataFlowEnabled(activity)) {
+		if (getCaseExecutioner().isDataFlowEnabled(activity)) {
 			enableDataFlow();
 		} else {
 			disableDataFlow();
@@ -60,18 +60,18 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	}
 
 	private void enableDataFlow() {
-		if (state.equals(State.INIT)) {
-			state = State.DATAFLOW_ENABLED;
-		} else if (state.equals(State.CONTROLFLOW_ENABLED)) {
-			state = State.READY;
+		if (getState().equals(State.INIT)) {
+			setState(State.DATAFLOW_ENABLED);
+		} else if (getState().equals(State.CONTROLFLOW_ENABLED)) {
+			setState(State.READY);
 		}
 	}
 
 	private void disableDataFlow() {
-		if (state.equals(State.DATAFLOW_ENABLED)) {
-			state = State.INIT;
-		} else if (state.equals(State.READY)) {
-			state = State.CONTROLFLOW_ENABLED;
+		if (getState().equals(State.DATAFLOW_ENABLED)) {
+			setState(State.INIT);
+		} else if (getState().equals(State.READY)) {
+			setState(State.CONTROLFLOW_ENABLED);
 		}
 	}
 
@@ -82,16 +82,16 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	@Override
 	public void begin() {
 		// assert ... maybe not needed
-		if (!state.equals(State.READY)) {
+		if (!getState().equals(State.READY)) {
 			return;
 		}
 		// TODO: think about whether selected DataObjectInstances should be set
 		// here or by CaseExecutioner
 		// saved here. By CaseExecutioner should be better.
-		this.fragmentInstance.updateDataFlow();
+		getFragmentInstance().updateDataFlow();
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
-		this.state = State.RUNNING;
+		setState(State.RUNNING);
 		if (this.isAutomaticTask) {
 			terminate();
 		}
@@ -103,20 +103,27 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void terminate() {
-		if (!state.equals(State.RUNNING))
+		if (!getState().equals(State.RUNNING))
 			return;
-		this.fragmentInstance.getCase().getCaseExecutioner().createDataObjectInstances(activity);
-		this.fragmentInstance.createFollowing(activity);
-		this.fragmentInstance.getCase().getCaseExecutioner().startAutomaticTasks();
-		this.state = State.TERMINATED;
+		this.getCaseExecutioner().createDataObjectInstances(activity);
+		this.getFragmentInstance().createFollowing(activity);
+		this.getCaseExecutioner().startAutomaticTasks();
+		// TODO: maybe state before creation of following
+		setState(State.TERMINATED);
 	}
 
 	@Override
 	public void skip() {
-		this.state = State.SKIPPED;
+		setState(State.SKIPPED);
 	}
 
 	// GETTER & SETTER
+	@Override
+	public void setState(State state) {
+		getCaseExecutioner().logActivityTransition(this, state);
+		super.setState(state);
+	}
+
 	public Activity getActivity() {
 		return activity;
 	}
@@ -131,5 +138,13 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 
 	public void setSelectedDataObjectInstances(Map<String, DataObjectInstance> selectedDataObjectInstances) {
 		this.selectedDataObjectInstances = selectedDataObjectInstances;
+	}
+
+	public boolean isAutomaticTask() {
+		return isAutomaticTask();
+	}
+
+	public void setAutomaticTask(boolean isAutomaticTask) {
+		this.isAutomaticTask = isAutomaticTask;
 	}
 }

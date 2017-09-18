@@ -35,8 +35,46 @@ public class ExecutionService {
 	 * @param caseId
 	 * @return true if the Case exists
 	 */
-	public static boolean isExistingCase(String cmId, String caseId) {
-		return (caseExecutions.containsKey(cmId) && cases.containsKey(caseId));
+	private static boolean isExistingCase(String cmId, String caseId) {
+		return CaseModelManager.isExistingCaseModel(cmId) && caseExecutions.containsKey(cmId) && cases.containsKey(caseId);
+	}
+
+	/**
+	 * 
+	 * @param cmId
+	 * @return true if the CaseModel exists
+	 */
+	private static boolean isExistingCaseModel(String cmId) {
+		return CaseModelManager.isExistingCaseModel(cmId);
+	}
+
+	/**
+	 * Get specific Case.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @return Case
+	 */
+	public static Case getCase(String cmId, String caseId) {
+		if (isExistingCase(cmId, caseId)) {
+			return cases.get(caseId).getCase();
+		} else {
+			// TODO: throw exception
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @return CaseExecutioner
+	 */
+	public static CaseExecutioner getCaseExecutioner(String cmId, String caseId) {
+		if (isExistingCase(cmId, caseId)) {
+			return cases.get(caseId);
+		}
+		return null;
 	}
 
 	/**
@@ -44,21 +82,22 @@ public class ExecutionService {
 	 * 
 	 * @param cmId
 	 * @param name
-	 *            of Case
+	 *            for Case
 	 * @return caseId
 	 */
 	public static String startCase(String cmId, String name) {
+		if (!isExistingCaseModel(cmId))
+			throw new IllegalArgumentException("Id of CaseModel is not assigned.");
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		// If name of Case isn't specified use name of CaseModel
+		// If name of Case isn't specified, use name of CaseModel
 		String caseName = cm.getName();
 		if (!name.isEmpty())
 			caseName = name;
 
 		CaseExecutioner caseExecutioner = new CaseExecutioner(cm, caseName);
-		log.info("CaseExecutioner created");
-		caseExecutioner.startCase();
-		log.info("Case started");
+		String caseId = caseExecutioner.getCase().getId();
+		cases.put(caseId, caseExecutioner);
 		// check whether there are running CaseExecutions to the CaseModel
 		if(caseExecutions.containsKey(cm.getId())) {
 			List<CaseExecutioner> caseExecutioners = caseExecutions.get(cm.getId());
@@ -66,16 +105,16 @@ public class ExecutionService {
 		} else {
 			List<CaseExecutioner> caseExecutioners = new ArrayList<>();
 			caseExecutioners.add(caseExecutioner);
-			caseExecutions.put(cm.getId(), caseExecutioners);
+			caseExecutions.put(cmId, caseExecutioners);
 		}
 		
-		String caseId = caseExecutioner.getCase().getId();
-		cases.put(caseId, caseExecutioner);
+		caseExecutioner.startCase();
+
 
 		log.info(String.format("Successfully started Case with Case-Id: %s", caseId));
 		return caseId;
 	}
-	
+
 	/**
 	 * Get all Cases of an CaseModel.
 	 * 
@@ -84,55 +123,13 @@ public class ExecutionService {
 	 *            for Names of Cases
 	 * @return Map of all Cases for Json
 	 */
-	public static Map<String, String> getAllCasesOfCaseModel(String cmId, String filter) {
-		String filterString = "";
-		if (filter != null)
-			filterString = filter;
-		Map<String, String> allCases = new HashMap<>();
-		if (caseExecutions.containsKey(cmId)) {
-			for (CaseExecutioner caseExecutioner : caseExecutions.get(cmId)) {
-				Case caze = caseExecutioner.getCase();
-				if (caze.getName().contains(filterString)) {
-					allCases.put(caze.getId(), caze.getName());
-				}
-			}
-		}
-
+	public static List<CaseExecutioner> getAllCasesOfCaseModel(String cmId) {
+		if (!isExistingCaseModel(cmId))
+			throw new IllegalArgumentException("Id of CaseModel is not assigned.");
+		if (!caseExecutions.containsKey(cmId))
+			return new ArrayList<>();
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
-		return allCases;
-	}
-
-	/**
-	 * Get specific Case.
-	 * 
-	 * @param caseId
-	 * @return Case
-	 */
-	public static Case getCase(String caseId) {
-		if (cases.containsKey(caseId)) {
-			return cases.get(caseId).getCase();
-		} else {
-			// TODO: throw exception
-		}
-		return null;
-	}
-	/**
-	 * Receive information of a specific Case. The information contains the name
-	 * of the Case and the state of termination.
-	 * 
-	 * @param caseId
-	 * @return JSONObject
-	 */
-	public static JSONObject getCaseInformation(String caseId) {
-		JSONObject result = new JSONObject();
-		if (cases.containsKey(caseId)) {
-			CaseExecutioner caseExecutioner = cases.get(caseId);
-			result.put("name", caseExecutioner.getCase().getName());
-			// TODO: implement state of termination
-			result.put("terminated", false);
-		}
-
-		return result;
+		return caseExecutions.get(cmId);
 	}
 
 	/**
@@ -234,5 +231,20 @@ public class ExecutionService {
 			// exception
 		}
 		return new ArrayList<>();
+	}
+
+	/**
+	 * Returns whether a Case fulfills their TerminationCondition.
+	 * 
+	 * @param cmId
+	 * @param caseId
+	 * @return boolean
+	 */
+	public static boolean caseCanTerminate(String cmId, String caseId) {
+		if (isExistingCase(cmId, caseId)) {
+			CaseExecutioner caseExecutioner = cases.get(caseId);
+			return caseExecutioner.canTerminate();
+		} 
+		return false;
 	}
 }

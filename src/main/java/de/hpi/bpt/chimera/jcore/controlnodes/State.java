@@ -5,7 +5,7 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
  */
 public enum State {
 	DATAFLOW_ENABLED("ready(Data)"), CONTROLFLOW_ENABLED("ready(ControlFlow)"), READY("ready"), EXECUTING, TERMINATED(
-			"terminated"), SKIPPED, INIT, RUNNING("running"), CANCEL, REGISTERED;
+			"terminated"), SKIPPED, INIT("init"), RUNNING("running"), CANCEL, REGISTERED;
 	
 	private String text;
 	

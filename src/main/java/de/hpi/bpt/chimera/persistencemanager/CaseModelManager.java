@@ -38,6 +38,16 @@ public class CaseModelManager {
 		}
 	}
 
+	/**
+	 * 
+	 * @param cmId
+	 * @return true if the CaseModel exists
+	 */
+	public static boolean isExistingCaseModel(String cmId) {
+		mayInstantiate();
+		return caseModels.containsKey(cmId);
+	}
+
 	public static CaseModel parseCaseModel(String jsonString) {
 		mayInstantiate();
 		try {

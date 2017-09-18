@@ -14,15 +14,13 @@ import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
-import de.hpi.bpt.chimera.model.fragment.bpmn.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
 public class FragmentInstance {
-	private static Logger log = Logger.getLogger(FragmentInstance.class);
-
 	private String id;
 	private Fragment fragment;
 	private Case caze;
@@ -50,17 +48,9 @@ public class FragmentInstance {
 	 */
 	public void start() {
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
-		if (startEvent == null) {
-			log.info("no startEvent specified");
-		}
-		else {
-			log.info("startEvent exists");
-		}
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
-		log.info("Created StartEventInstance");
 		controlNodeInstances.put(startEventInstance.getId(), startEventInstance);
 		startEventInstance.enableControlFlow();
-		log.info("ControlFlow of StartEventInstanceEnabled");
 	}
 
 	/**
@@ -72,7 +62,7 @@ public class FragmentInstance {
 			if (nodeInstance instanceof AbstractActivityInstance) {
 				((AbstractActivityInstance) nodeInstance).checkDataFlow();
 			}
-		 }
+		}
 		 
 		// checkTerminationCondition()
 	}
@@ -84,21 +74,21 @@ public class FragmentInstance {
 	 * @param node
 	 */
 	public void createFollowing(AbstractControlNode controlNode) {
-		for (SequenceFlowAssociation sequenceFlow : controlNode.getOutgoingControlNodes()) {
-			AbstractControlNode following = sequenceFlow.getTargetRef();
+		for (AbstractControlNode following : controlNode.getOutgoingControlNodes()) {
 			ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
-			log.info("Created Following ControlNodeInstance");
 			controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
 			nodeInstance.enableControlFlow();
-			log.info("Enabled Following ControlNodeInstance");
 		}
 	}
 
 	/**
-	 * @return all enabled ControlNodeInstances
+	 * 
+	 * @param controlNode
+	 * @return true if the ControlNode is instantiated
 	 */
-	public List<ControlNodeInstance> getEnabledControlNodeInstances() {
-		return controlNodeInstances.values().stream().filter(x -> x.getState().equals(State.READY)).collect(Collectors.toList());
+	public boolean isInstantiated(AbstractControlNode incommingControlNode) {
+		// TODO: implement
+		return controlNodeInstances.containsKey(incommingControlNode.getId());
 	}
 
 	// GETTER & SETTER

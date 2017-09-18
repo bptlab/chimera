@@ -46,7 +46,7 @@ public class SequenceFlowResolver {
 				sequenceFlowAssociations.add(sfa);
 			}
 		}
-		controlNode.setIncomingControlNodes(sequenceFlowAssociations);
+		controlNode.setIncomingSequenceFlows(sequenceFlowAssociations);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class SequenceFlowResolver {
 				sequenceFlowAssociations.add(sfa);
 			}
 		}
-		controlNode.setOutgoingControlNodes(sequenceFlowAssociations);
+		controlNode.setOutgoingSequenceFlows(sequenceFlowAssociations);
 	}
 
 	/**

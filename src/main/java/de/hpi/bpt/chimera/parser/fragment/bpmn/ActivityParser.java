@@ -3,8 +3,9 @@ package de.hpi.bpt.chimera.parser.fragment.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanActivity;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
 
@@ -23,14 +24,16 @@ public class ActivityParser {
 	 * @param dfResolver
 	 */
 	public static void parseActivities(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
-		fragment.setTasks(getActitityFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		List<Activity> activities = new ArrayList<>();
+		activities.addAll(getHumanActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		fragment.setTasks(activities);
 	}
 
-	public static List<Activity> getActitityFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
-		List<Activity> activityList = new ArrayList<>();
+	public static List<HumanActivity> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<HumanActivity> activityList = new ArrayList<>();
 
 		for (Task xmlTask : fragXmlWrap.getTasks()) {
-			Activity activity = new Activity();
+			HumanActivity activity = new HumanActivity();
 			activity.setId(xmlTask.getId());
 			activity.setName(xmlTask.getName());
 			sfResolver.resolveIncomingSequenceFlow(xmlTask.getIncomingSequenceFlows(), activity);

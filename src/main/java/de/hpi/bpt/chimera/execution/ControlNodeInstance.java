@@ -9,8 +9,8 @@ public abstract class ControlNodeInstance implements Behaving {
 	// TODO: think about how to implement the Id
 	private String id;
 	private AbstractControlNode controlNode;
-	protected FragmentInstance fragmentInstance;
-	protected State state;
+	private FragmentInstance fragmentInstance;
+	private State state;
 
 	public ControlNodeInstance(AbstractControlNode controlNode, FragmentInstance fragmentInstance) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
@@ -29,6 +29,15 @@ public abstract class ControlNodeInstance implements Behaving {
 	public FragmentInstance getFragmentInstance() {
 		return fragmentInstance;
 	}
+
+	public CaseExecutioner getCaseExecutioner() {
+		return fragmentInstance.getCase().getCaseExecutioner();
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
 	public State getState() {
 		return state;
 	}

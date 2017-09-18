@@ -7,7 +7,7 @@ import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
 public abstract class AbstractEventInstance extends ControlNodeInstance implements Behaving {
 	private static Logger log = Logger.getLogger(AbstractEventInstance.class);
@@ -19,7 +19,7 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 		this.event = event;
 		// TODO: maybe have to look whether ControlNode / AbstractEvent is
 		// already used in FragmentInstance. Then use State of this Instance.
-		this.state = State.INIT;
+		setState(State.INIT);
 	}
 
 	/**
@@ -27,8 +27,7 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 	 */
 	@Override
 	public void enableControlFlow() {
-		this.state = State.REGISTERED;
-		log.info("ControlFlow of Event enabled");
+		setState(State.REGISTERED);
 		this.begin();
 	}
 
@@ -48,7 +47,6 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 				// return;
 			}
 		} 
-		log.info("Begin Event execution");
 		terminate();
 	}
 
@@ -59,16 +57,12 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 	public void terminate() {
 		// TODO: use CaseExecutioner of Case of FragmentInstance
 		// this.fragmentInstance.createDataObjectInstances(this.getControlNode());
-		this.fragmentInstance.getCase().getCaseExecutioner().createDataObjectInstances(event);
-		log.info("DataObjectInstances created");
+		getCaseExecutioner().createDataObjectInstances(event);
 		// TODO: write DataAttributes with Json
-		this.fragmentInstance.updateDataFlow();
-		log.info("DataFlowUpdated");
-		this.fragmentInstance.createFollowing(event);
-		log.info("Following Enabled");
-		this.fragmentInstance.getCase().getCaseExecutioner().startAutomaticTasks();
-		this.state = State.TERMINATED;
-		log.info("Event terminated");
+		getFragmentInstance().updateDataFlow();
+		getFragmentInstance().createFollowing(event);
+		getCaseExecutioner().startAutomaticTasks();
+		setState(State.TERMINATED);
 	}
 
 	@Override

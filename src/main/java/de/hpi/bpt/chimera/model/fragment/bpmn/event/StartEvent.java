@@ -1,4 +1,4 @@
-package de.hpi.bpt.chimera.model.fragment.bpmn;
+package de.hpi.bpt.chimera.model.fragment.bpmn.event;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

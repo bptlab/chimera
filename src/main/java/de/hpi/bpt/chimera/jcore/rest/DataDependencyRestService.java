@@ -153,34 +153,6 @@ public class DataDependencyRestService extends AbstractRestService {
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
-	/**
-	 * Create a JSONObject for a DataObjectInstance.
-	 * 
-	 * @param instance
-	 * @return JSONObject
-	 */
-	private JSONObject buildJsonForDataObjectInstance(DataObjectInstance instance) {
-		JSONObject result = new JSONObject();
-		result.put("id", instance.getId());
-		result.put("label", instance.getDataClass().getName());
-		result.put("state", instance.getObjectLifecycleState().getName());
-		
-		JSONArray attributeConfiguration = new JSONArray();
-		for (DataAttributeInstance attributeInstance : instance.getDataAttributeInstances()) {
-			JSONObject attribute = new JSONObject();
-			attribute.put("name", attributeInstance.getDataAttribute().getName());
-			attribute.put("id", attributeInstance.getId());
-			attribute.put("type", attributeInstance.getDataAttribute().getType());
-			Object value = attributeInstance.getValue();
-			if (value == null)
-				value = "";
-			attribute.put("value", value);
-			attributeConfiguration.put(attribute);
-		}
-		result.put("attributeConfiguration", attributeConfiguration);
-		return result;
-	}
-
 	private String buildIOJson(Map<String, Set<String>> ioSets) {
 		JSONObject object = new JSONObject();
 		for (Map.Entry<String, Set<String>> entry : ioSets.entrySet()) {

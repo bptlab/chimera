@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import de.hpi.bpt.chimera.execution.DataObjectInstance;
+
 @Entity
 public class TerminationCondition {
 	@Id
@@ -32,5 +34,23 @@ public class TerminationCondition {
 
 	public void addConditionComponent(TerminationConditionComponent condition) {
 		this.conditions.add(condition);
+	}
+
+	/**
+	 * Check whether the TerminationCondition fulfills the
+	 * DataObjectStateCoditions.
+	 * 
+	 * @param existingConditions
+	 * @return boolean
+	 */
+	public boolean isFulfilled(List<DataObjectStateCondition> existingConditions) {
+		if (conditions.isEmpty())
+			return true;
+		for (TerminationConditionComponent component : conditions) {
+			if (component.isFulfilled(existingConditions)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

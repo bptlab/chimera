@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 

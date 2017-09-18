@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.execution.event;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.model.fragment.bpmn.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
 public class StartEventInstance extends AbstractEventInstance {
 

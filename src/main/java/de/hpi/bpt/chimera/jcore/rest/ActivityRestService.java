@@ -61,7 +61,7 @@ public class ActivityRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activity")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString, @QueryParam("state") String stateName) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCase(caseId).getCaseExecutioner();
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCase(cmId, caseId).getCaseExecutioner();
 		// common
 		if (StringUtils.isEmpty(filterString)) {
 			if (StringUtils.isEmpty(stateName)) {

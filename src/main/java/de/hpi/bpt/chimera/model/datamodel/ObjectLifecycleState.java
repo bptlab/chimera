@@ -21,14 +21,14 @@ public class ObjectLifecycleState implements Nameable, Listable {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
-	String name;
+	private String name;
 	// TODO: rework this so that the same information isn't saved twice
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "objectlifecyclestate_successors")
-	List<ObjectLifecycleState> successors;
+	private List<ObjectLifecycleState> successors;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "objectlifecyclestate_predecessors")
-	List<ObjectLifecycleState> predecessors;
+	private List<ObjectLifecycleState> predecessors;
 
 	public ObjectLifecycleState() {
 		this.successors = new ArrayList<>();

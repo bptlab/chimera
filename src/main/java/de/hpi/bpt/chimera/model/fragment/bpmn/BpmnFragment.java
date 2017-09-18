@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+
 @Entity
 public class BpmnFragment {
 	@Id

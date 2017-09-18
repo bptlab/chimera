@@ -1,8 +1,8 @@
 package de.hpi.bpt.chimera.parser.fragment.bpmn;
 
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.EndEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 
 public class EventParser {
