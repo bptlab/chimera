@@ -1,5 +1,7 @@
 package de.hpi.bpt.chimera.parser.datamodel;
 
+import java.util.UUID;
+
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +23,8 @@ public class DataAttributeParser {
 			String name = dataAttributeJson.getString("name");
 			NameValidation.validateName(name);
 			dataAttribute.setName(name);
+
+			dataAttribute.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 
 			String type = dataAttributeJson.getString("datatype");
 			dataAttribute.setType(type);

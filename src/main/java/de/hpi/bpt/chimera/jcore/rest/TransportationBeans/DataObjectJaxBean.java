@@ -2,16 +2,10 @@ package de.hpi.bpt.chimera.jcore.rest.TransportationBeans;
 
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
-import de.hpi.bpt.chimera.jcore.ExecutionService;
-import de.hpi.bpt.chimera.jcore.data.DataObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * A JAX bean which is used for dataobject data.
@@ -29,6 +23,12 @@ public class DataObjectJaxBean {
 	 * The id the dataobjectinstance.
 	 */
 	private String id;
+
+	/**
+	 * The dataclass of the datanode. The label not the id will be saved.
+	 */
+	private String dataclass;
+
 	/**
 	 * The state inside the database of the dataobject
 	 * which is stored in the table.
@@ -44,11 +44,12 @@ public class DataObjectJaxBean {
 
 	public DataObjectJaxBean(DataObjectInstance instance) {
 		setId(instance.getId());
-		setLabel(instance.getDataClass().getName());
+		setLabel(instance.getDataNode().getName());
+		setDataclass(instance.getDataClass().getName());
 		setState(instance.getObjectLifecycleState().getName());
 
 		List<DataAttributeJaxBean> attributes = new ArrayList<>(instance.getDataAttributeInstances().size());
-		for (DataAttributeInstance dataAttributeInstance : instance.getDataAttributeInstances()) {
+		for (DataAttributeInstance dataAttributeInstance : instance.getDataAttributeInstances().values()) {
 			DataAttributeJaxBean attributeInstance = new DataAttributeJaxBean(dataAttributeInstance);
 			attributes.add(attributeInstance);
 		}
@@ -71,6 +72,14 @@ public class DataObjectJaxBean {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getDataclass() {
+		return dataclass;
+	}
+
+	public void setDataclass(String dataclass) {
+		this.dataclass = dataclass;
 	}
 
 	public String getState() {

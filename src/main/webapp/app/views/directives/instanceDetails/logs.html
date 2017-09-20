@@ -46,7 +46,7 @@
                     <!-- depending of the option of the dropdown: here display dataobject log -->
                     <div ng-switch-when="dataobject">
                         <div ng-repeat="entry in instanceCtrl.instanceDetails.dataobjectlogs track by $index">
-                            <h4 class="text-success">{{entry['label']}} ({{entry['loggedId']}})</h4>
+                            <h4 class="text-success">{{entry['label']}} ({{entry['objectReferenceId']}})</h4>
                             <span ng-if="entry['oldValue']">{{entry['oldValue']}}</span>
                             <span ng-if="!entry['oldValue']"><i>no state</i></span>
                             <i class="fa fa-long-arrow-right"></i>

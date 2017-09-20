@@ -13,7 +13,7 @@ public class DataObjectLog extends LogEntry {
 
 	public DataObjectLog(DataObjectInstance instance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
 		super();
-		this.setLabel(instance.getDataClass().getName());
+		this.setLabel(instance.getDataNode().getName());
 		this.setObjectReferenceId(instance.getId());
 		if (oldState == null)
 			this.setOldValue("no state");

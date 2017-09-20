@@ -1,10 +1,9 @@
 package de.hpi.bpt.chimera.execution;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
@@ -13,17 +12,40 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 public class DataObjectInstance {
 	private String id;
 	private DataNode dataNode;
-	// TODO: think about whether to create a copy of the dataNode (something
-	// like an instance) or always change the dataNode when the
-	// DataObjectInstance changes the state while transition
-	private List<DataAttributeInstance> dataAttributeInstances;
+	private CaseExecutioner caseExecutioner;
 	private boolean locked;
+	/**
+	 * Map of id of DataAttributeInstance to DataAttributeInstance.
+	 */
+	private Map<String, DataAttributeInstance> dataAttributeInstances;
 
-	public DataObjectInstance(DataNode dataNode) {
+	/**
+	 * 
+	 * @param dataNode
+	 * @param caseExecutioner
+	 */
+	public DataObjectInstance(DataNode dataNode, CaseExecutioner caseExecutioner) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
-		this.dataNode = dataNode;
 		this.locked = false;
-		instantiateDataAttributes(dataNode.getDataObjectState().getDataClass());
+		this.caseExecutioner = caseExecutioner;
+		this.dataNode = dataNode;
+		caseExecutioner.logDataObjectTransition(this, null, dataNode.getObjectLifecycleState());
+		instantiateDataAttributes(dataNode.getDataClass(), caseExecutioner);
+	}
+
+	/**
+	 * Constructor with predefined values for the DataAttributes.
+	 * 
+	 * @param dataNode
+	 * @param attributeValues
+	 */
+	public DataObjectInstance(DataNode dataNode, CaseExecutioner caseExecutioner, Map<String, Object> attributeValues) {
+		this.id = UUID.randomUUID().toString().replace("-", "");
+		this.locked = false;
+		this.caseExecutioner = caseExecutioner;
+		this.dataNode = dataNode;
+		caseExecutioner.logDataObjectTransition(this, null, dataNode.getObjectLifecycleState());
+		instantiateDataAttributesWithValues(dataNode.getDataClass(), caseExecutioner, attributeValues);
 	}
 
 	/**
@@ -31,11 +53,35 @@ public class DataObjectInstance {
 	 * 
 	 * @param dataClass
 	 */
-	private void instantiateDataAttributes(DataClass dataClass) {
-		dataAttributeInstances = new ArrayList<>();
+	private void instantiateDataAttributes(DataClass dataClass, CaseExecutioner caseExecutioner) {
+		instantiateDataAttributesWithValues(dataClass, caseExecutioner, new HashMap<>());
+	}
+
+	private void instantiateDataAttributesWithValues(DataClass dataClass, CaseExecutioner caseExecutioner, Map<String, Object> attributeValues) {
+		dataAttributeInstances = new HashMap<>();
 		for (DataAttribute attribute : dataClass.getDataAttributes()) {
-			DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute);
-			dataAttributeInstances.add(attributeInstance);
+			if (attributeValues.containsKey(attribute.getId())) {
+				DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute, caseExecutioner, attributeValues.get(attribute.getId()));
+				dataAttributeInstances.put(attributeInstance.getId(), attributeInstance);
+			} else {
+				DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute, caseExecutioner);
+				dataAttributeInstances.put(attributeInstance.getId(), attributeInstance);
+			}
+		}
+	}
+
+	/**
+	 * Edit value of DataAttribute Instances.
+	 * 
+	 * @param attributeValues
+	 */
+	public void setDataAttributeValues(Map<String, Object> attributeValues) {
+		for (Map.Entry<String, Object> attributeValue : attributeValues.entrySet()) {
+			String attributeInstanceId = attributeValue.getKey();
+			if (dataAttributeInstances.containsKey(attributeInstanceId)) {
+				DataAttributeInstance dataAttribute = dataAttributeInstances.get(attributeInstanceId);
+				dataAttribute.setValue(attributeValue.getValue());
+			}
 		}
 	}
 
@@ -49,22 +95,23 @@ public class DataObjectInstance {
 	}
 
 	public void setDataNode(DataNode dataNode) {
+		caseExecutioner.logDataObjectTransition(this, dataNode.getObjectLifecycleState());
 		this.dataNode = dataNode;
 	}
 
 	public DataClass getDataClass() {
-		return dataNode.getDataObjectState().getDataClass();
+		return dataNode.getDataClass();
 	}
 
 	public ObjectLifecycleState getObjectLifecycleState() {
 		return dataNode.getDataObjectState().getState();
 	}
 
-	public List<DataAttributeInstance> getDataAttributeInstances() {
+	public Map<String, DataAttributeInstance> getDataAttributeInstances() {
 		return dataAttributeInstances;
 	}
 
-	public void setDataAttributeInstances(List<DataAttributeInstance> dataAttributeInstances) {
+	public void setDataAttributeInstances(Map<String, DataAttributeInstance> dataAttributeInstances) {
 		this.dataAttributeInstances = dataAttributeInstances;
 	}
 

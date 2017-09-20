@@ -13,49 +13,86 @@
             <!-- /.modal header -->
             <!-- Body of the Modal -->
             <div class="modal-body">
-                <!-- display all attributes and let the user edit them -->
-                <div ng-repeat="dataobject in instanceCtrl.workingItems[activityInstance['id']]">
-                    <b>{{dataobject.label}}:</b>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Attribute</th>
-                            <th>Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="attr in dataobject.attributeConfiguration">
-                            <td>{{attr['name']}}</td>
-                            <td><input type="text"
+            	<div ng-if="instanceCtrl.availableOutput[activityInstance['id']].length===0">
+            		No Data Output available.
+            	</div>
+            	<!-- display all output datanodes -->
+            	<div ng-repeat="datanode in instanceCtrl.availableOutput[activityInstance['id']] track by $index">
+            		<h3>{{datanode.label}} - {{datanode.id}}</h3>
+            		<ul>
+            			<li>({{datanode.dataclass}} - {{datanode.state}})</li>
+            		</ul>
+            		<br>
+            		<!-- If the task has possible Input for the datanode -->
+                	<div ng-hide="datanode.possibleInput.dataobjects.length===0">
+            			<label>Create a new DataObject:
+                			<input type="checkbox"
+                   				ng-model="createNewDataObject" 
+                   				ng-click="instanceCtrl.setNewDataObjectCreation(datanode.id, createNewDataObject)">
+                		</label>
+                		<!-- if you don't want to create the datanode new, then select dataobject used for the transition -->
+                		<div ng-hide="createNewDataObject">
+                    		<p>Select input for Data Object</p>
+                    		<div class="panel-body form-group">
+                        		<select ng-model="dataobjectSelection" 
+                        			ng-change="instanceCtrl.setDataObjectTransition(dataobjectSelection, datanode.id)" 
+                        			ng-init="dataobjectSelection=datanode.possibleInput.dataobjects[0].id;
+                                		instanceCtrl.setDataObjectTransition(dataobjectSelection, datanode.id)">
+                            		<option ng-repeat="input in datanode.possibleInput.dataobjects track by input.id" 
+                          			value="{{input.id}}">
+                          			{{input.label}} ({{input.state}})
+                          			</option>
+                      			</select>
+                 			</div>
+                 		</div><br>
+                	</div>
+                	<div ng-if="datanode.possibleInput.dataobjects.length===0 || createNewDataObject" 
+                		ng-init="instanceCtrl.setNewDataObjectCreation(datanode.id, true)">
+                		<br>A new Data Object will be created.<br>
+           			</div>
+                	<div ng-show="datanode.attributeConfiguration.length===0">
+             			<br>Dataclass does not have Attributes.<br>
+                	</div>
+                	<!-- if the dataclass of the datanode has attributes -->
+                	<div ng-hide="datanode.attributeConfiguration.length===0">
+                		<h4>Attribute Values</h4>
+                		<table class="table">
+                    		<thead>
+                        	<tr>
+                        		<th>Attribute</th>
+                            	<th>Value</th>
+                        	</tr>
+                        	</thead>
+                        	<tbody>
+                        		<!-- edit attribute value -->
+                        		<tr ng-repeat="attr in datanode.possibleInput.attributeConfiguration[dataobjectSelection]"
+                            		ng-hide="createNewDataObject">
+                            	<td>{{attr['name']}}</td>
+                            	<td><input type="text"
                                        ng-name="attrvalue"
                                        ng-model-options='{ debounce: 1000 }'
                                        ng-model="attr['value']"
-                                       ng-change="instanceCtrl.setAttribute(attr['id'], attr['value'], activityInstance['id'])">
-                                <br></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- if outputsets are present display them with the option for termination -->
-                <div ng-if="instanceCtrl.activityOutputStates[activityInstance['id']]">
-                    <div class="panel">
-                        <div class="panel-header">
-                            Please select a state for each output.
-                        </div>
-                        <div class="panel-body form-group"
-                             ng-repeat="(dclass, possiblestates) in instanceCtrl.activityOutputStates[activityInstance['id']] track by $index">
-                            <label for="{{'select' + dclass}}">{{dclass}}</label>
-                            <select class="form-control" id="{{'select' + dclass}}"
-                                    ng-model="lestate"
-                                    ng-init="lestate=possiblestates[0]; instanceCtrl.selectState(dclass, lestate)"
-                                    ng-options="state for state in possiblestates"
-                                    ng-change="instanceCtrl.selectState(dclass, lestate)">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- /.modal body -->
-            <!-- Footer of the Modal -->
+                                       ng-change="instanceCtrl.setAttributeTransition(dataobjectSelection, attr['id'], attr['value'])">
+                             	<br></td>
+                        		</tr>
+                        		<!-- attribute value for dataobject creation -->
+                        		<tr ng-repeat="attr in datanode.attributeConfiguration"
+                            		ng-show="createNewDataObject || datanode.possibleInput.dataobjects.length === 0">
+                           	 	<td>{{attr['name']}}</td>
+                            	<td><input type="text"
+                                       ng-name="attrvalue"
+                                       ng-model-options='{ debounce: 1000 }'
+                                       ng-model="attr['value']"
+                                       ng-change="instanceCtrl.setAttributeTransition(datanode.id, attr['id'], attr['value'])">
+                             	<br></td>
+                        		</tr>
+                        	</tbody>
+                		</table>
+                	</div>
+            	</div> 
+        	</div>
+        	<!-- /.modal body --> 
+        	<!-- Footer of the Modal -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" ng-click="instanceCtrl.terminateActivity(activityInstance['id']);" data-dismiss="modal"
@@ -63,7 +100,6 @@
                 </button>
             </div>
             <!-- /.modal footer -->
-        </div>
         <!-- /.modal-content -->
     </div>
     <!-- /. modal-dialog -->

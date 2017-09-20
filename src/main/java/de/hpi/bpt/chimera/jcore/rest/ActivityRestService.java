@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataManagerBean;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.ExecutionService;
@@ -250,27 +251,34 @@ public class ActivityRestService extends AbstractRestService {
 	 */
 	@PUT
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
-	public Response setDataAttribute(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int scenarioInstanceId, @PathParam("activityInstanceId") int activityInstanceId, final String input) {
-		ExecutionService executionService = ExecutionService.getInstance(scenarioId);
-		executionService.openExistingScenarioInstance(scenarioId, scenarioInstanceId);
+	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 
-		Map<Integer, String> idToValue = new HashMap<>();
-		JSONObject object = new JSONObject(input);
+		Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
 
-		for (Object key : object.keySet()) {
-			String keyString = String.valueOf(key);
-			idToValue.put(Integer.valueOf(keyString), object.getString(keyString));
-		}
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		caseExecutioner.setDataAttributeValues(dataAttributeValues);
 
-		boolean successful = executionService.setDataAttributeValues(scenarioInstanceId, activityInstanceId, idToValue);
-
-		if (input != null && successful) {
-			return this.buildAcceptedResponse("{\"message\":\"attribute value was " + "changed successfully.\"}");
-		} else {
-			return this.buildBadRequestResponse("{\"error\":\"error within the " + "update of attributes\"}");
-		}
+		return Response.status(201).build();
 	}
 
+	private Map<String, Map<String, Object>> parseDataAttribueValues(String post) {
+		Map<String, Map<String, Object>> dataAttributeValues = new HashMap<>();
+		JSONObject dataObjectJson = new JSONObject(post);
+		for (Object dataObject : dataObjectJson.keySet()) {
+			if (dataObject.getClass() != String.class)
+				continue;
+			String dataObjectId = (String) dataObject;
+
+			JSONObject attributeJson = dataObjectJson.getJSONObject(dataObjectId);
+			Map<String, Object> dataAttributeValue = new HashMap<>();
+			for (Object attribute : attributeJson.keySet()) {
+				String attributeId = (String) attribute;
+				dataAttributeValue.put(attributeId, attributeJson.get(attributeId));
+			}
+			dataAttributeValues.put(dataObjectId, dataAttributeValue);
+		}
+		return dataAttributeValues;
+	}
 	/**
 	 * @param scenarioId         The id of the scenario.
 	 * @param scenarioInstanceId The id of the scenario instance.
@@ -352,23 +360,11 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
-	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, String postBody) {
-
-		/*
-		 * ExecutionService executionService =
-		 * ExecutionService.getInstance(scenarioId);
-		 * executionService.openExistingScenarioInstance(scenarioId,
-		 * scenarioInstanceId); boolean successful;
-		 */
-
+	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
 		JSONObject postJson = new JSONObject(postBody);
-		Map<String, String> dataClassNameToState = new HashMap<>();
-		for (Object dataClassName : postJson.keySet()) {
-			dataClassNameToState.put((String) dataClassName, postJson.getString((String) dataClassName));
-		}
-		de.hpi.bpt.chimera.execution.ExecutionService.terminateActivity(cmId, caseId, activityInstanceId, dataClassNameToState);
-		// ExecutionService.terminateActivityInstance(scenarioInstanceId,
-		// activityInstanceId, dataClassNameToState);
+		DataManagerBean dataManagerBean = new DataManagerBean(postJson);
+		
+		de.hpi.bpt.chimera.execution.ExecutionService.terminateActivity(cmId, caseId, activityInstanceId, dataManagerBean);
 
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 	}

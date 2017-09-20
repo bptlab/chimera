@@ -10,13 +10,15 @@
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
+                        <th>Dataclass</th>
                         <th>State</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="dataobject in instanceCtrl.instanceDetails.dataobjects['results']">
+                    <tr ng-repeat="dataobject in instanceCtrl.instanceDetails.dataobjects">
                         <td>{{dataobject['id']}}</td>
                         <td>{{dataobject['label']}}</td>
+                        <td>{{dataobject['dataclass']}}</td>
                         <td>{{dataobject['state']}}</td>
                     </tr>
                     </tbody>

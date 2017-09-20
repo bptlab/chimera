@@ -10,4 +10,10 @@ angular.module('jfrontend')
             restrict: 'AE',
             templateUrl: 'app/views/directives/instanceDetails/modalTerminateActivity.html'
         };
+    })
+    .directive('modalInfoActivity', function () {
+        return {
+            restrict: 'AE',
+            templateUrl: 'app/views/directives/instanceDetails/modalInfoActivity.html'
+        };
     });

@@ -18,6 +18,9 @@ public class DataAttributeLog extends LogEntry {
 			this.setOldValue("empty");
 		else
 			this.setOldValue(oldValue.toString());
-		this.setNewValue(newValue.toString());
+		if (newValue == null)
+			this.setOldValue("empty");
+		else
+			this.setNewValue(newValue.toString());
 	}
 }

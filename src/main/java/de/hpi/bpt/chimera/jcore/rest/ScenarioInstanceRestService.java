@@ -224,10 +224,13 @@ public class ScenarioInstanceRestService {
 	 */
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/canTerminate")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response checkTermination(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
-		if (de.hpi.bpt.chimera.execution.ExecutionService.caseCanTerminate(cmId, caseId)) {
-			return Response.status(Response.Status.OK).type(MediaType.TEXT_PLAIN).entity("Case can be deleted").build();
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner != null) {
+			JSONObject result = new JSONObject();
+			result.put("canTerminate", caseExecutioner.canTerminate());
+			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Termination condition is not fulfilled").build();
 		}

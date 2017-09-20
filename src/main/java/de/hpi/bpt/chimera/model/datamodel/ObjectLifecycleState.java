@@ -35,6 +35,15 @@ public class ObjectLifecycleState implements Nameable, Listable {
 		this.predecessors = new ArrayList<>();
 	}
 
+	/**
+	 * 
+	 * @param objectLifecycleState
+	 * @return true if the objectLifecycleState is a successor of this State
+	 */
+	public boolean isSucceeding(ObjectLifecycleState objectLifecycleState) {
+		return successors.contains(objectLifecycleState);
+	}
+
 	@Override
 	public void setName(String name) {
 		this.name = name;

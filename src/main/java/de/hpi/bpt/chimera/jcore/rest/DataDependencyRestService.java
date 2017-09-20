@@ -1,13 +1,9 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
-import de.hpi.bpt.chimera.database.controlnodes.DbControlNodeInstance;
-import de.hpi.bpt.chimera.database.data.DbDataConditions;
-import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.jcore.ExecutionService;
-import de.hpi.bpt.chimera.jcore.ScenarioInstance;
-import de.hpi.bpt.chimera.jcore.data.DataObject;
+import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataNodeJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
@@ -23,12 +19,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This class implements the REST interface for data based elements.
@@ -65,15 +61,20 @@ public class DataDependencyRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/input")
 	public Response getInputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId, @PathParam("activityInstanceId") int activityInstanceId) {
-
-		int activityId = new DbControlNodeInstance().getControlNodeId(activityInstanceId);
-		Map<String, Set<String>> inputSets = new DbDataConditions().loadInputSets(activityId);
-		if (inputSets.size() == 0) {
-			String errorMsg = "{\"error\":\"There is no input set for activity instance %d\"}";
-			errorMsg = String.format(errorMsg, activityInstanceId);
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(errorMsg).build();
-		}
-		return Response.ok(buildIOJson(inputSets), MediaType.APPLICATION_JSON).build();
+		/*
+		 * int activityId = new
+		 * DbControlNodeInstance().getControlNodeId(activityInstanceId);
+		 * Map<String, Set<String>> inputSets = new
+		 * DbDataConditions().loadInputSets(activityId); if (inputSets.size() ==
+		 * 0) { String errorMsg =
+		 * "{\"error\":\"There is no input set for activity instance %d\"}";
+		 * errorMsg = String.format(errorMsg, activityInstanceId); return
+		 * Response.status(Response.Status.NOT_FOUND).type(MediaType.
+		 * APPLICATION_JSON).entity(errorMsg).build(); } return
+		 * Response.ok(buildIOJson(inputSets),
+		 * MediaType.APPLICATION_JSON).build();
+		 */
+		return null;
 	}
 
 
@@ -135,9 +136,6 @@ public class DataDependencyRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/availableInput")
 	public Response getAvailableInput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		// AbstractActivityInstance activityInstance =
-		// de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId,
-		// caseId, activityInstanceId);
 		List<DataObjectInstance> availableInput = de.hpi.bpt.chimera.execution.ExecutionService.getAvailableInputForAcitivityInstance(cmId, caseId, activityInstanceId);
 
 		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
@@ -146,11 +144,62 @@ public class DataDependencyRestService extends AbstractRestService {
 		}
 		JSONArray result = new JSONArray(resultBeans);
 
+		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+	}
+
+	@GET
+	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/availableOutput")
+	public Response getAvailableOutput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Case does not exist.").build();
+		}
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Activity Instance does not exist.").build();
+		}
+
+		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
+
+		JSONArray result = new JSONArray();
+		for (DataNode dataNode : activityInstance.getActivity().getOutgoingDataNodes()) {
+			JSONObject resultDataNode = new JSONObject(new DataNodeJaxBean(dataNode));
+			JSONObject possibleInput = buildDataObjectsJson(dataNode, selectedInstances);
+			resultDataNode.put("possibleInput", possibleInput);
+			result.put(resultDataNode);
+		}
+
 		// List<DataObjectJaxBean> outputBeans = possibleInputs.stream().map(x
 		// -> buildDataObjectJaxBean(x,
 		// executionService)).collect(Collectors.toList());
 		// JSONArray array = new JSONArray(outputBeans);
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+	}
+
+	/**
+	 * Create possible Input for DataNode with selected Instances of activity.
+	 * 
+	 * @param dataNode
+	 * @param selectedInstances
+	 * @return JSONObject
+	 */
+	private JSONObject buildDataObjectsJson(DataNode dataNode, Collection<DataObjectInstance> selectedInstances) {
+		JSONObject result = new JSONObject();
+
+		JSONArray dataObjects = new JSONArray();
+		JSONObject attributeConfiguration = new JSONObject();
+
+		for (DataObjectInstance dataObjectInstance : selectedInstances) {
+			if (dataNode.getDataClass().equals(dataObjectInstance.getDataClass()) && dataObjectInstance.getObjectLifecycleState().isSucceeding(dataNode.getObjectLifecycleState())) {
+				DataObjectJaxBean possibleInputObject = new DataObjectJaxBean(dataObjectInstance);
+				dataObjects.put(new JSONObject(possibleInputObject));
+				attributeConfiguration.put(dataObjectInstance.getId(), new JSONArray(possibleInputObject.getAttributeConfiguration()));
+			}
+		}
+
+		result.put("dataobjects", dataObjects);
+		result.put("attributeConfiguration", attributeConfiguration);
+		return result;
 	}
 
 	private String buildIOJson(Map<String, Set<String>> ioSets) {

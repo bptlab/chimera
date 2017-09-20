@@ -157,10 +157,10 @@ public class ExecutionService {
 	 * @param activityInstanceId
 	 * @param dataClassNameToState
 	 */
-	public static void terminateActivity(String cmId, String caseId, String activityInstanceId, Map<String, String> dataClassNameToState) {
+	public static void terminateActivity(String cmId, String caseId, String activityInstanceId, DataManagerBean dataManagerBean) {
 		if (isExistingCase(cmId, caseId)) {
 			CaseExecutioner caseExecutioner = cases.get(caseId);
-			caseExecutioner.terminateActivityInstance(activityInstanceId, dataClassNameToState);
+			caseExecutioner.terminateActivityInstance(activityInstanceId, dataManagerBean);
 		} else {
 			// throw exception
 		}

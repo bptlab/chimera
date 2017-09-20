@@ -24,8 +24,13 @@ angular.module('jfrontend')
             this.activityInputAttributes = {};
             this.workingItems = {};
             this.selectedDataObjectIds = {};
+            
+            // activity instance termination
+            this.availableOutput = {};
+            this.newDataObjectCreation = {};
+            this.dataObjectTransition = {};
             this.attributeValues = {};
-
+            
             this.alerts = [];
 
             this.addAlert = function (alert, type) {
@@ -222,7 +227,49 @@ angular.module('jfrontend')
             };
 
             this.terminateActivity = function (activityInstanceId) {
+            	var values = {};
+                values['ids'] = [];
+                values['new_creation'] = [];
+                values['transition'] = [];
+                values['datanode_attribute_values'] = {};
+                values['dataobject_attribute_values'] = {};
+                values['transition_to_datanode'] = {};
+                instanceCtrl.availableOutput[activityInstanceId].forEach(function (datanode) {
+                	values['ids'].push(datanode.id);
+                    if (instanceCtrl.newDataObjectCreation[datanode.id]) {
+                        values['new_creation'].push(datanode.id);
+                       	values['datanode_attribute_values'][datanode.id] = instanceCtrl.attributeValues[datanode.id];
+                    } else {
+                    	values['transition'].push(instanceCtrl.dataObjectTransition[datanode.id]);
+                    	values['transition_to_datanode'][instanceCtrl.dataObjectTransition[datanode.id]] = datanode.id;
+                    	values['dataobject_attribute_values'][instanceCtrl.dataObjectTransition[datanode.id]] = instanceCtrl.attributeValues[instanceCtrl.dataObjectTransition[datanode.id]];
+                    }
+                });
+                console.log(JSON.stringify(values));
+                /*
+            	this.availableOutput[activityInstanceId].forEach(function (datanode) {
+                    if (instanceCtrl.newDataObjectCreation[datanode.id]) {
+                    	var valueMap = {};
+                        valueMap['attribute_values'] = instanceCtrl.attributeValues[datanode.id];
+                    	console.log('create ' + JSON.stringify(valueMap));
+                    	$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+                                "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+                                "/activityinstance/" + activityInstanceId + "/datanode/" + datanode.id + "/new/", JSON.stringify(valueMap)).success(function (data) {
+                            }).error(function () {
+                                console.log('DataNode creation failed.');
+                            });
+                    } else {
+                    	var valueMap = {}; 
+                    	var fromId = instanceCtrl.dataObjectTransition[datanode.id];
+                        valueMap['attribute_values'] = instanceCtrl.attributeValues[fromId];
+                        valueMap['from_id'] = fromId;
+                        valueMap['to_id'] = datanode.id;
+                    	console.log('transition: ' + JSON.stringify(valueMap));
+                    }
+                });
+                */
                 // save attribute values
+                /*
                 if (instanceCtrl.changeAttributeObject.hasOwnProperty(activityInstanceId)) {
                     var valueMap = instanceCtrl.changeAttributeObject[activityInstanceId].idToValue;
 
@@ -236,11 +283,11 @@ angular.module('jfrontend')
 
                     instanceCtrl.initializeDataobjectAttributelogInstances();
                 }
-
+				*/
                 // terminate activity with selected states
                 $http.post(JEngine_Server_URL + "/" + JCore_REST_Interface +
                     "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
-                    "/activityinstance/" + activityInstanceId + "/terminate", instanceCtrl.selectedStates).success(function (data) {
+                    "/activityinstance/" + activityInstanceId + "/terminate", JSON.stringify(values)).success(function (data) {
                     instanceCtrl.instanceDetails.activityInstances = {};
                     instanceCtrl.selectedStates = {};
                     //reloading content so the dashboard is uptodate
@@ -260,11 +307,11 @@ angular.module('jfrontend')
 
             // check whether the scenario instance can terminate
             this.canTerminate = function () {
-                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/canTerminate").success(function () {
-                    instanceCtrl.instanceDetails.canTerminate = true;
+                $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/canTerminate").success(function (data) {
+                    instanceCtrl.instanceDetails.canTerminate = data['canTerminate'];
                 }).error(function () {
                     instanceCtrl.instanceDetails.canTerminate = false;
-                    console.log('Instance cannot be terminated yet.');
+                    console.log('request failed');
                 });
             };
 
@@ -302,16 +349,56 @@ angular.module('jfrontend')
                     });
             };
 
-            this.getActivityOutput = function (activityInstanceId) {
+            this.getWorkingItems = function (activityInstanceId) {
+            	instanceCtrl.attributeValues = {};
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
-                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/workingItems')
+                	+ '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/workingItems')
                     .success(function (data) {
                         instanceCtrl.workingItems[activityInstanceId] = data;
                     }).error(function () {
-                    console.log('Loading activity input failed.');
+                    console.log('Loading activity working items failed.');
+                })
+            };
+            
+            this.setAttributeValues = function (activityInstanceId) {
+            	$http.put(JEngine_Server_URL + "/" + JCore_REST_Interface +
+            			"/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId +
+                        "/activityinstance/" + activityInstanceId, JSON.stringify(instanceCtrl.attributeValues)).success(function (data) {
+                    console.log('Attributes changed.')
+                }).error(function () {
+                	console.log('Saving attribute values failed.');
+                });
+            }
+            
+            this.getActivityOutput = function (activityInstanceId) {
+            	this.availableOutput = {};
+            	this.newDataObjectCreation = {};
+                $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/' + $routeParams.id
+                    + '/instance/' + $routeParams.instanceId + '/activityinstance/' + activityInstanceId + '/availableOutput')
+                    .success(function (data) {
+                        instanceCtrl.availableOutput[activityInstanceId] = data;
+                    }).error(function () {
+                    console.log('Loading activity output failed.');
                 })
             };
 
+            // from -> to
+            this.setDataObjectTransition = function(incommingDataObjectId, dataNodeId) {
+        		// to -> from
+            	this.dataObjectTransition[dataNodeId] = incommingDataObjectId;
+            };
+            
+            this.setAttributeTransition = function(dataObjectId, attributeId, value) {
+            	if(!this.attributeValues.hasOwnProperty(dataObjectId)) {
+            		this.attributeValues[dataObjectId] = {};
+                }
+            	this.attributeValues[dataObjectId][attributeId] = value;
+            };
+            
+            this.setNewDataObjectCreation = function(id, value) {
+                 this.newDataObjectCreation[id] = value;
+            };
+            
             this.getActivityOutputStates = function (activityInstanceId) {
                 $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + $routeParams.id + "/instance/" + $routeParams.instanceId + "/activityinstance/" + activityInstanceId + "/output").success(function (data) {
                     instanceCtrl.activityOutputStates[activityInstanceId] = data;

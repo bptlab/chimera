@@ -1,19 +1,16 @@
 package de.hpi.bpt.chimera.execution;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class DataManager {
 	private Case caze;
-	// TerminationCondition t = caze.getCaseModel().getTerminationConditions();
 	private DataModel dataModel;
 	/**
 	 * Map of Id of DataObjectInstance to DataObjectInstance
@@ -27,6 +24,24 @@ public class DataManager {
 	}
 
 	/**
+	 * Create new DataObjects.
+	 * 
+	 * @param outgoingDataNodes
+	 * @param dataManagerBean
+	 */
+	public void createDataObjectInstances(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
+		for (String newCreationId : dataManagerBean.getNewCreations()) {
+			for (DataNode dataNode : outgoingDataNodes) {
+				if (dataNode.getId().equals(newCreationId)) {
+					Map<String, Object> attributeValues = dataManagerBean.getDataNodeAttributeValuesById(newCreationId);
+					DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caze.getCaseExecutioner(), attributeValues);
+					this.dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Create new DataObjectInstances with the outgoing DataNodes of an specific
 	 * ControlNode.
 	 * 
@@ -34,11 +49,36 @@ public class DataManager {
 	 */
 	public void createDataObjectInstances(AbstractDataControlNode controlNode) {
 		for (DataNode dataNode : controlNode.getOutgoingDataNodes()) {
-			// TODO: think about whether implement this thing that DataClasses
-			// that are incomingDataNodes shell not be created as Instances or
-			// get rid of this while parsing
-			DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode);
+			DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caze.getCaseExecutioner());
 			dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
+		}
+	}
+
+	public void createDataObjectInstance(DataNode dataNode, Map<String, Object> attributeValues) {
+		DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caze.getCaseExecutioner(), attributeValues);
+		this.dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
+	}
+
+	/**
+	 * Handle the transition of DataNodes.
+	 * 
+	 * @param dataManagerBean
+	 */
+	public void transitionDataObjectInstances(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
+		for (Map.Entry<String, String> transition : dataManagerBean.getTransitions().entrySet()) {
+			String dataObjectId = transition.getKey();
+			String dataNodeId = transition.getValue();
+			if (!dataObjectInstances.containsKey(dataObjectId))
+				continue;
+			DataObjectInstance objectInstance = dataObjectInstances.get(dataObjectId);
+			for (DataNode dataNode : outgoingDataNodes) {
+				if (dataNode.getId().equals(dataNodeId)) {
+					objectInstance.setDataNode(dataNode);
+
+					Map<String, Object> attributeValues = dataManagerBean.getDataObjectAttributeValuesById(dataObjectId);
+					objectInstance.setDataAttributeValues(attributeValues);
+				}
+			}
 		}
 	}
 
@@ -74,19 +114,6 @@ public class DataManager {
 				dataObjectInstance.unlock();
 			}
 		}
-	}
-
-	/**
-	 * Handle the transition of the Object-LifecycleStates of the Instances of
-	 * DataObject.
-	 * 
-	 * @param dataObjectTransitions
-	 */
-	public void transitionDataObjectInstances(Map<String, String> dataObjectTransitions) {
-		if (dataObjectTransitions.isEmpty()) {
-			return;
-		}
-		// TODO: do the transition
 	}
 
 	/**
@@ -131,6 +158,22 @@ public class DataManager {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Set value of DataObjects.
+	 * 
+	 * @param dataAttributeValues
+	 */
+	public void setDataAttributeValues(Map<String, Map<String, Object>> dataAttributeValues) {
+		for (Map.Entry<String, Map<String, Object>> transition : dataAttributeValues.entrySet()) {
+			String dataObjectId = transition.getKey();
+			if (!dataObjectInstances.containsKey(dataObjectId))
+				continue;
+			DataObjectInstance dataObject = dataObjectInstances.get(dataObjectId);
+			Map<String, Object> attributeValues = transition.getValue();
+			dataObject.setDataAttributeValues(attributeValues);
+		}
 	}
 
 	// GETTER & SETTER

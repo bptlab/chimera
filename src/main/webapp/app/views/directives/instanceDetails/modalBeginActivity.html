@@ -13,6 +13,9 @@
             <!-- ./ panel header -->
             <!-- Body of the Modal -->
             <div class="modal-body">
+            	<div ng-if="instanceCtrl.availableInput[activityInstance['id']].length===0">
+            		No Data Object for Input available.
+            	</div>
                 <div ng-repeat="(dclass, dobjects) in instanceCtrl.availableInput[activityInstance['id']]">
                     <div class="panel">
                         <div class="panel-header">

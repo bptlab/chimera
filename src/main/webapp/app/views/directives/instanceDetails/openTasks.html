@@ -10,9 +10,20 @@
                     <table class="table table-striped">
                         <tbody>
                         <tr ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running']['activities']  track by $index">
-                            <td>{{activityInstance['label']}}</td>
+                            <td>
+                            	<div style="position: relative; cursor: pointer">
+                                	<p>{{activityInstance['label']}}
+                                    <input style="position: absolute; opacity: 0;">
+                                    <ins style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 0px none; opacity: 0;"
+                                         ng-click="instanceCtrl.getWorkingItems(activityInstance['id']);"
+                                         data-toggle="modal"
+                                         data-target="{{'#modalInfo' + activityInstance['id']}}"
+                                         tabindex="-1"></ins>
+                                	</p>
+                            	</div>
+                            </td>
                             <td><a type="button" data-toggle="modal"
-                                   ng-click="instanceCtrl.getActivityOutputStates(activityInstance['id']);instanceCtrl.getActivityOutput(activityInstance['id'])"
+                                   ng-click="instanceCtrl.getActivityOutput(activityInstance['id'])"
                                    data-target="{{'#modalTerminate' + activityInstance['id']}}"><i
                                     class="fa fa-check"></i></a></td>
 

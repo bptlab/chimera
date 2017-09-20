@@ -8,13 +8,28 @@ import de.hpi.bpt.chimera.jcore.eventhandling.SseNotifier;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
 public class DataAttributeInstance {
+
 	private String id;
 	private DataAttribute dataAttribute;
 	private Object value;
+	private CaseExecutioner caseExecutioner;
 
-	public DataAttributeInstance(DataAttribute attribute) {
+	public DataAttributeInstance(DataAttribute attribute, CaseExecutioner caseExecutioner) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.setDataAttribute(attribute);
+		this.caseExecutioner = caseExecutioner;
+		caseExecutioner.logDataAttributeTransition(this, null);
+	}
+
+	public DataAttributeInstance(DataAttribute attribute, CaseExecutioner caseExecutioner, Object value) {
+		this.id = UUID.randomUUID().toString().replace("-", "");
+		this.setDataAttribute(attribute);
+		this.caseExecutioner = caseExecutioner;
+		try {
+			setValue(value);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
 	public String getId() {
@@ -42,6 +57,7 @@ public class DataAttributeInstance {
 		// data attribute
 		Class<? extends Object> clazz = dataAttribute.getType().getClass();
 		if (clazz.isInstance(value)) {
+			caseExecutioner.logDataAttributeTransition(this, value);
 			this.value = value;
 		} else {
 			String errorMsg = String.format("Could not set value of DataAttribute %s. Expected: %s, Received: %s", dataAttribute.getName(), dataAttribute.getType().getClass().getName(), value.getClass().getName());
@@ -83,6 +99,14 @@ public class DataAttributeInstance {
 			SseNotifier.notifyWarning("Data attribute " + dataAttribute.getName() + " could not be set " + "because the entered value did not match its data type.");
 			throw new IllegalArgumentException(excp);
 		}
+	}
+
+	public CaseExecutioner getCaseExecutioner() {
+		return caseExecutioner;
+	}
+
+	public void setCaseExecutioner(CaseExecutioner caseExecutioner) {
+		this.caseExecutioner = caseExecutioner;
 	}
 
 

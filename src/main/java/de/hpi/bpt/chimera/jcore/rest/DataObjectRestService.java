@@ -3,12 +3,13 @@ package de.hpi.bpt.chimera.jcore.rest;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,16 +37,18 @@ public class DataObjectRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDataObjects(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString) {
+	public Response getDataObjects(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString) {
 
 		List<DataObjectInstance> dataObjectInstances = ExecutionService.getDataObjectInstances(cmId, caseId);
 
-		if (filterString != null && !filterString.isEmpty()) {
+		if (!filterString.isEmpty()) {
 			dataObjectInstances = dataObjectInstances.stream().filter(instance -> instance.getId().contains(filterString)).collect(Collectors.toList());
 		}
 
-
-		JSONObject result = buildListForDataObjects(dataObjectInstances);
+		JSONArray result = new JSONArray();
+		for (DataObjectInstance instance : dataObjectInstances) {
+			result.put(new JSONObject(new DataObjectJaxBean(instance)));
+		}
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -56,39 +59,7 @@ public class DataObjectRestService extends AbstractRestService {
 
 		DataObjectInstance dataObjectInstance = ExecutionService.getDataObjectInstance(cmId, caseId, instanceId);
 
-		JSONObject result = buildJsonForDataObject(dataObjectInstance);
+		JSONObject result = new JSONObject(new DataObjectJaxBean(dataObjectInstance));
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Creates an array of DataObjects.
-	 * The data objects will be created out of the information
-	 * received from the execution Service.
-	 * The array elements will be of type {@link DataObjectJaxBean ), hence JSON and
-	 * XML can be generated automatically.
-	 *
-	 * @param uriInfo       A Context object of the server request
-	 * @param dataObjectIds an Arraqy of IDs used for the dataobjects inside the database.
-	 * @return A array with a DataObject for each entry in dataObjectIds
-	 */
-	private JSONObject buildListForDataObjects(List<DataObjectInstance> dataObjectInstances) {
-		List<String> ids = new ArrayList<>(dataObjectInstances.size());
-		JSONObject results = new JSONObject();
-		for (DataObjectInstance instance : dataObjectInstances) {
-			results.put(instance.getId(), buildJsonForDataObject(instance));
-			ids.add(instance.getId());
-		}
-		JSONObject result = new JSONObject();
-		result.put("ids", new JSONObject(ids));
-		result.put("results", results);
-		return result;
-	}
-
-	private JSONObject buildJsonForDataObject(DataObjectInstance instance) {
-		JSONObject dataObject = new JSONObject();
-		dataObject.put("id", instance.getId());
-		dataObject.put("label", instance.getDataClass().getName());
-		dataObject.put("state", instance.getObjectLifecycleState().getName());
-		return dataObject;
 	}
 }
