@@ -11,7 +11,7 @@ public class EventParser {
 	}
 
 	/**
-	 * Parse the Events for a for a BPMN-Fragment out of the FragmentXmlWrapper.
+	 * Parse the Events for a BPMN-Fragment out of the FragmentXmlWrapper.
 	 * 
 	 * @param fragment
 	 * @param fragXmlWrap

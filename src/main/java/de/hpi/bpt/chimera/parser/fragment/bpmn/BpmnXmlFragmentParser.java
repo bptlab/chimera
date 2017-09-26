@@ -55,6 +55,8 @@ public final class BpmnXmlFragmentParser {
 			log.info("parsed Events");
 			ActivityParser.parseActivities(fragment, fragXmlWrap, sfResolver, dfResolver);
 			log.info("parsed Activities");
+			GatewayParser.parseGateways(fragment, fragXmlWrap, sfResolver);
+			log.info("parsed Gateways");
 			fragment.setSequenceFlowAssociations(sfResolver.getResolvedSequenceFlowAssociations());
 			log.info("set sfa");
 			fragment.setDataNodes(dfResolver.getResolvedDataNodes());
