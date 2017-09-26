@@ -32,6 +32,10 @@ public class FragmentInstance {
 	 * Map of Id of ControlNodeInstance to ControlNodeInstance.
 	 */
 	private Map<String, ControlNodeInstance> controlNodeInstances;
+	/**
+	 * Map of Id of ControlNode to the corresponding ControlNodeInstanc.
+	 */
+	private Map<String, ControlNodeInstance> controlNodeToInstanceMap;
 
 	// TODO: re-implement the other functions which are given in
 	// ...core.FragmentInstance, like all the initialize functions
@@ -41,6 +45,7 @@ public class FragmentInstance {
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstances = new HashMap<>();
+		this.controlNodeToInstanceMap = new HashMap<>();
 		// TODO: implement the whole thing with the controlNodeInstances ...
 	}
 
@@ -59,6 +64,7 @@ public class FragmentInstance {
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
 		log.info("Created StartEventInstance");
 		controlNodeInstances.put(startEventInstance.getId(), startEventInstance);
+		controlNodeToInstanceMap.put(startEventInstance.getControlNode().getId(), startEventInstance);
 		startEventInstance.enableControlFlow();
 		log.info("ControlFlow of StartEventInstanceEnabled");
 	}
@@ -88,9 +94,16 @@ public class FragmentInstance {
 	public void enableFollowing(AbstractControlNode controlNode) {
 		for (SequenceFlowAssociation sequenceFlow : controlNode.getOutgoingControlNodes()) {
 			AbstractControlNode following = sequenceFlow.getTargetRef();
-			ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
-			log.info("Created Following ControlNodeInstance");
-			controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
+			ControlNodeInstance nodeInstance;
+			if (controlNodeToInstanceMap.containsKey(following.getId())) {
+				log.info("Following ControlNodeInstance already in cache.");
+				nodeInstance = controlNodeToInstanceMap.get(following.getId());
+			} else {
+				log.info("Created Following ControlNodeInstance.");
+				nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
+				controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
+				controlNodeToInstanceMap.put(following.getId(), nodeInstance);
+			}
 			nodeInstance.enableControlFlow();
 			log.info("Enabled Following ControlNodeInstance");
 		}
