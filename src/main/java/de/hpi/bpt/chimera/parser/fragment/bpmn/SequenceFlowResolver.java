@@ -78,10 +78,11 @@ public class SequenceFlowResolver {
 		List<SequenceFlowAssociation> sfaList = new ArrayList<>();
 
 		for (Map.Entry<String, SequenceFlowAssociation> entry : associationMap.entrySet()) {
-			if (entry.getValue().getSourceRef() != null && entry.getValue().getTargetRef() != null)
+			if (entry.getValue().getSourceRef() != null && entry.getValue().getTargetRef() != null) {
 				sfaList.add(entry.getValue());
-			else
+			} else {
 				throw new UnresolvedSequenceFlowException("there is at least one Sequence Flow Association which ins't attached to a Controlnode on both sides - id: " + entry.getKey());
+			}
 		}
 
 		return sfaList;

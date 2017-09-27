@@ -14,13 +14,15 @@ import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
+import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.StartEvent;
 
 public class FragmentInstance {
+	private static Logger log = Logger.getLogger(FragmentInstance.class);
+
 	private String id;
 	private Fragment fragment;
 	private Case caze;
@@ -30,15 +32,20 @@ public class FragmentInstance {
 	 * Map of Id of ControlNodeInstance to ControlNodeInstance.
 	 */
 	private Map<String, ControlNodeInstance> controlNodeInstances;
+	/**
+	 * Map of Id of ControlNode to the corresponding ControlNodeInstanc.
+	 */
+	private Map<String, ControlNodeInstance> controlNodeToInstanceMap;
 
 	// TODO: re-implement the other functions which are given in
 	// ...core.FragmentInstance, like all the initialize functions
 
 	public FragmentInstance(Fragment fragment, Case caze) {
-		this.id = UUID.randomUUID().toString().replace("-", "");
+		this.id = UUID.randomUUID().toString();
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstances = new HashMap<>();
+		this.controlNodeToInstanceMap = new HashMap<>();
 		// TODO: implement the whole thing with the controlNodeInstances ...
 	}
 
@@ -48,9 +55,18 @@ public class FragmentInstance {
 	 */
 	public void start() {
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
+		if (startEvent == null) {
+			log.info("no startEvent specified");
+		}
+		else {
+			log.info("startEvent exists");
+		}
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
+		log.info("Created StartEventInstance");
 		controlNodeInstances.put(startEventInstance.getId(), startEventInstance);
+		controlNodeToInstanceMap.put(startEventInstance.getControlNode().getId(), startEventInstance);
 		startEventInstance.enableControlFlow();
+		log.info("ControlFlow of StartEventInstanceEnabled");
 	}
 
 	/**
@@ -58,12 +74,14 @@ public class FragmentInstance {
 	 */
 	public void updateDataFlow() {
 		// TODO: implement
-		for (ControlNodeInstance nodeInstance : controlNodeInstances.values()) { 
-			if (nodeInstance instanceof AbstractActivityInstance) {
-				((AbstractActivityInstance) nodeInstance).checkDataFlow();
-			}
-		}
-		 
+		/*
+		 * for (ControlNodeInstance nodeInstance :
+		 * controlNodeInstances.values()) { if (nodeInstance instanceof
+		 * AbstractActivityInstance)) { ((AbstractActivityInstance)
+		 * nodeInstance).checkDataFlowEnabled(); }
+		 * 
+		 * }
+		 */
 		// checkTerminationCondition()
 	}
 
@@ -73,22 +91,29 @@ public class FragmentInstance {
 	 * 
 	 * @param node
 	 */
-	public void createFollowing(AbstractControlNode controlNode) {
-		for (AbstractControlNode following : controlNode.getOutgoingControlNodes()) {
-			ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
-			controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
+	public void enableFollowing(AbstractControlNode controlNode) {
+		for (SequenceFlowAssociation sequenceFlow : controlNode.getOutgoingControlNodes()) {
+			AbstractControlNode following = sequenceFlow.getTargetRef();
+			ControlNodeInstance nodeInstance;
+			if (controlNodeToInstanceMap.containsKey(following.getId())) {
+				log.info("Following ControlNodeInstance already in cache.");
+				nodeInstance = controlNodeToInstanceMap.get(following.getId());
+			} else {
+				log.info("Created Following ControlNodeInstance.");
+				nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
+				controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
+				controlNodeToInstanceMap.put(following.getId(), nodeInstance);
+			}
 			nodeInstance.enableControlFlow();
+			log.info("Enabled Following ControlNodeInstance");
 		}
 	}
 
 	/**
-	 * 
-	 * @param controlNode
-	 * @return true if the ControlNode is instantiated
+	 * @return all enabled ControlNodeInstances
 	 */
-	public boolean isInstantiated(AbstractControlNode incommingControlNode) {
-		// TODO: implement
-		return controlNodeInstances.containsKey(incommingControlNode.getId());
+	public List<ControlNodeInstance> getEnabledControlNodeInstances() {
+		return controlNodeInstances.values().stream().filter(x -> x.getState().equals(State.READY)).collect(Collectors.toList());
 	}
 
 	// GETTER & SETTER

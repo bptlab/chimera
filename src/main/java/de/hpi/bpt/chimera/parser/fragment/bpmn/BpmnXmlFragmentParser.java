@@ -9,12 +9,26 @@ import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.XmlUnmarshaller;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 
-public class BpmnXmlFragmentParser {
+public final class BpmnXmlFragmentParser {
 	private static Logger log = Logger.getLogger(BpmnXmlFragmentParser.class.getName());
 
 	private BpmnXmlFragmentParser() {
 	}
 
+	/**
+	 * Parses a given XMl-String which represents a Fragment. Therefore first,
+	 * all the Sequence- and Dataflows are parsed and stored. Then all
+	 * Activities, Events and Datanodes are parsed using the former parsed
+	 * Sequence- and Dataflows. So in Activities, Events, Datanodes aren't
+	 * separated from their "Flows" any more. In the end a BpmFragment data
+	 * structure is built up, where every Activiy/Event/Datanode has a reference
+	 * to its incoming and and outgoing Sequence- or Dataflows and therby a
+	 * reference to its predecessors and successors.
+	 * 
+	 * @param xmlFragmentString
+	 * @param parserHelper
+	 * @return the built BpmnFragment
+	 */
 	public static BpmnFragment parseBpmnXmlFragment(String xmlFragmentString, CaseModelParserHelper parserHelper) {
 		BpmnFragment fragment = new BpmnFragment();
 
@@ -25,10 +39,10 @@ public class BpmnXmlFragmentParser {
 			fragment.setId(fragXmlWrap.getId());
 
 			// it's important to first create a new SequenceFlowResolver
-			// After that all Parser can youse this resolver to resolve their
+			// After that all Parser can use this resolver to resolve their
 			// Associations and register themselves as the End of these
 			// Associations in the Resolver
-			// You have parse alle ControlNodes so that for every Outgoing and
+			// You have to parse all ControlNodes so that for every Outgoing and
 			// Incoming Association for every ControlNode the Resolver is called
 			// IN THE END the Resolver holds all the resolved Associations which
 			// then can be added to the final parsed fragment
@@ -41,6 +55,8 @@ public class BpmnXmlFragmentParser {
 			log.info("parsed Events");
 			ActivityParser.parseActivities(fragment, fragXmlWrap, sfResolver, dfResolver);
 			log.info("parsed Activities");
+			GatewayParser.parseGateways(fragment, fragXmlWrap, sfResolver);
+			log.info("parsed Gateways");
 			fragment.setSequenceFlowAssociations(sfResolver.getResolvedSequenceFlowAssociations());
 			log.info("set sfa");
 			fragment.setDataNodes(dfResolver.getResolvedDataNodes());

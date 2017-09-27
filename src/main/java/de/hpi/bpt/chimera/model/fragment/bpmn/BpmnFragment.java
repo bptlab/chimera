@@ -23,17 +23,27 @@ public class BpmnFragment {
 
 
 	private String id;
+	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private StartEvent startEvent;
+	
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Activity> activities = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<ParallelGateway> parallelGateways = new ArrayList<>();
+	
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<SequenceFlowAssociation> sequenceFlowAssociations = new ArrayList<>();
+	
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<DataNode> dataNodes = new ArrayList<>();
+	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private EndEvent endEvent;
 
+	
+	
 	public String getId() {
 		return id;
 	}
@@ -81,4 +91,13 @@ public class BpmnFragment {
 	public void setEndEvent(EndEvent endEvent) {
 		this.endEvent = endEvent;
 	}
+
+	public List<ParallelGateway> getParallelGateways() {
+		return parallelGateways;
+	}
+
+	public void setParallelGateways(List<ParallelGateway> parallelGateways) {
+		this.parallelGateways = parallelGateways;
+	}
+
 }
