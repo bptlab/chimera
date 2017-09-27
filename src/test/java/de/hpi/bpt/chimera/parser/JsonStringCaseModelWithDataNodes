@@ -34,7 +34,11 @@
 				}]
 			},
 			"_id": "59b6fdd58eea331ea4b0440e",
-			"attributes": []
+			"attributes": [{
+				"name": "test",
+				"datatype": "String",
+				"_id": "5913322c827a6b20d03572a8"
+			}]
 		}]
 	},
 	"name": "simple casemodel",
@@ -48,5 +52,5 @@
 		"name": "First Fragment",
 		"__v": 0
 	}],
-	"terminationconditions": []
+	"terminationconditions": ["dataclass 1[State 2]"]
 }
