@@ -1,25 +1,16 @@
 package de.hpi.bpt.chimera.execution.event;
 
-import org.apache.log4j.Logger;
-
-import de.hpi.bpt.chimera.execution.Behaving;
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.jcore.eventhandling.EventDispatcher;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.AbstractEvent;
 
-public abstract class AbstractEventInstance extends ControlNodeInstance implements Behaving {
-	private static Logger log = Logger.getLogger(AbstractEventInstance.class);
-
-	private AbstractEvent event;
+public abstract class AbstractEventInstance extends ControlNodeInstance {
 
 	public AbstractEventInstance(AbstractEvent event, FragmentInstance fragmentInstance) {
 		super(event, fragmentInstance);
-		this.event = event;
 		// TODO: maybe have to look whether ControlNode / AbstractEvent is
 		// already used in FragmentInstance. Then use State of this Instance.
-		setState(State.INIT);
 	}
 
 	/**
@@ -36,8 +27,8 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 	 */
 	@Override
 	public void begin() {
-		if (event.hasEventQuerry()) {
-			String eventQuerry = event.getEventQuerry();
+		if (getControlNode().hasEventQuerry()) {
+			String eventQuerry = getControlNode().getEventQuerry();
 			if (!(eventQuerry.trim().isEmpty())) {
 				// TODO: registerEvent in Unicorn
 				// EventDispatcher.registerEvent(event,
@@ -57,10 +48,10 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 	public void terminate() {
 		// TODO: use CaseExecutioner of Case of FragmentInstance
 		// this.fragmentInstance.createDataObjectInstances(this.getControlNode());
-		getCaseExecutioner().createDataObjectInstances(event);
+		getCaseExecutioner().createDataObjectInstances(getControlNode());
 		// TODO: write DataAttributes with Json
 		getFragmentInstance().updateDataFlow();
-		getFragmentInstance().createFollowing(event);
+		getFragmentInstance().createFollowing(getControlNode());
 		getCaseExecutioner().startAutomaticTasks();
 		setState(State.TERMINATED);
 	}
@@ -68,4 +59,11 @@ public abstract class AbstractEventInstance extends ControlNodeInstance implemen
 	@Override
 	public void skip() {
 	}
+
+	// GETTER & SETTER
+	@Override
+	public AbstractEvent getControlNode() {
+		return (AbstractEvent) super.getControlNode();
+	}
+
 }

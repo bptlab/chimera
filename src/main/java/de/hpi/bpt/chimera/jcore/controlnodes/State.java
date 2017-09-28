@@ -4,8 +4,8 @@ package de.hpi.bpt.chimera.jcore.controlnodes;
  *
  */
 public enum State {
-	DATAFLOW_ENABLED("ready(Data)"), CONTROLFLOW_ENABLED("ready(ControlFlow)"), READY("ready"), EXECUTING, TERMINATED(
-			"terminated"), SKIPPED, INIT("init"), RUNNING("running"), CANCEL, REGISTERED;
+	DATAFLOW_ENABLED("ready(Data)"), CONTROLFLOW_ENABLED("ready(ControlFlow)"), READY("ready"), EXECUTING("executing"), TERMINATED(
+			"terminated"), SKIPPED("skipped"), INIT("init"), RUNNING("running"), CANCEL("cancel"), REGISTERED("registered");
 	
 	private String text;
 	

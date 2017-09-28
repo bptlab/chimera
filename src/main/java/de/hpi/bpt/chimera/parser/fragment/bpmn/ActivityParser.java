@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanActivity;
+import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
 
@@ -29,11 +29,11 @@ public class ActivityParser {
 		fragment.setTasks(activities);
 	}
 
-	public static List<HumanActivity> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
-		List<HumanActivity> activityList = new ArrayList<>();
+	public static List<HumanTask> getHumanActivitiesFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver, DataFlowResolver dfResolver) {
+		List<HumanTask> activityList = new ArrayList<>();
 
 		for (Task xmlTask : fragXmlWrap.getTasks()) {
-			HumanActivity activity = new HumanActivity();
+			HumanTask activity = new HumanTask();
 			activity.setId(xmlTask.getId());
 			activity.setName(xmlTask.getName());
 			sfResolver.resolveIncomingSequenceFlow(xmlTask.getIncomingSequenceFlows(), activity);

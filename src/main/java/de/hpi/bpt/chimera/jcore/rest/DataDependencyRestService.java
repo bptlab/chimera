@@ -109,7 +109,7 @@ public class DataDependencyRestService extends AbstractRestService {
 
 		AbstractActivityInstance activityInstance = de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId, caseId, activityInstanceId);
 
-		List<DataNode> outgoingDataNodes = activityInstance.getActivity().getOutgoingDataNodes();
+		List<DataNode> outgoingDataNodes = activityInstance.getControlNode().getOutgoingDataNodes();
 
 		Map<String, Set<String>> dataClassStateAssociation = new HashMap<>();
 		for (DataNode dataNode : outgoingDataNodes) {
@@ -162,7 +162,7 @@ public class DataDependencyRestService extends AbstractRestService {
 		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
 
 		JSONArray result = new JSONArray();
-		for (DataNode dataNode : activityInstance.getActivity().getOutgoingDataNodes()) {
+		for (DataNode dataNode : activityInstance.getControlNode().getOutgoingDataNodes()) {
 			JSONObject resultDataNode = new JSONObject(new DataNodeJaxBean(dataNode));
 			JSONObject possibleInput = buildDataObjectsJson(dataNode, selectedInstances);
 			resultDataNode.put("possibleInput", possibleInput);

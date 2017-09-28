@@ -4,14 +4,10 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataManagerBean;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
-import de.hpi.bpt.chimera.jcore.ExecutionService;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.ActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,13 +24,6 @@ import java.util.stream.Collectors;
  */
 @Path("interface/v2")
 public class ActivityRestService extends AbstractRestService {
-	private static final String READY = "ready";
-	private static final String READY_DATA = "ready(Data)";
-	private static final String READY_CF = "ready(ControlFlow)";
-	private static final String RUNNING = "running";
-	private static final String TERMINATED = "terminated";
-	private static Logger log = Logger.getLogger(RestInterface.class);
-
 	/**
 	 * Returns a JSON-Object containing information about all activity
 	 * instances of a specified scenario instance.
@@ -115,7 +104,7 @@ public class ActivityRestService extends AbstractRestService {
 		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.CONTROLFLOW_ENABLED));
 
 		if (!filterString.isEmpty()) {
-			activityInstances = activityInstances.stream().filter(instance -> instance.getActivity().getName().contains(filterString)).collect(Collectors.toList());
+			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
 		}
 
 		JSONObject result = buildJSONObjectForActivities(activityInstances, uriInfo);
@@ -155,7 +144,7 @@ public class ActivityRestService extends AbstractRestService {
 		}
 		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getAllActivitiesWithState(state);
 		if (!filterString.isEmpty()) {
-			activityInstances = activityInstances.stream().filter(instance -> instance.getActivity().getName().contains(filterString)).collect(Collectors.toList());
+			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
 		}
 
 		JSONObject result = buildJSONObjectForActivities(activityInstances, uriInfo);
@@ -179,7 +168,7 @@ public class ActivityRestService extends AbstractRestService {
 	private JSONObject buildActivityJson(AbstractActivityInstance activityInstance, UriInfo uriInfo) {
 		JSONObject activityJSON = new JSONObject();
 		activityJSON.put("id", activityInstance.getId());
-		activityJSON.put("label", activityInstance.getActivity().getName());
+		activityJSON.put("label", activityInstance.getControlNode().getName());
 		activityJSON.put("state", activityInstance.getState());
 		activityJSON.put("fragmentInstanceId", activityInstance.getFragmentInstance().getId());
 		activityJSON.put("link", uriInfo.getAbsolutePath() + "/" + activityInstance.getId());
@@ -232,7 +221,7 @@ public class ActivityRestService extends AbstractRestService {
 
 		ActivityJaxBean activity = new ActivityJaxBean();
 		activity.setId(activityInstanceId);
-		activity.setLabel(activityInstance.getActivity().getName());
+		activity.setLabel(activityInstance.getControlNode().getName());
 		activity.setInputSetLink(uriInfo.getAbsolutePath() + "/input");
 		activity.setOutputSetLink(uriInfo.getAbsolutePath() + "/output");
 		return Response.ok(activity, MediaType.APPLICATION_JSON).build();

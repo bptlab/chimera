@@ -12,8 +12,6 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
-	private Activity activity;
-	// standard for human task is false
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
@@ -27,10 +25,8 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 */
 	public AbstractActivityInstance(Activity activity, FragmentInstance fragmentInstance) {
 		super(activity, fragmentInstance);
-		this.setActivity(activity);
 		this.isAutomaticTask = false;
 		this.selectedDataObjectInstances = new HashMap<>();
-		setState(State.INIT);
 	}
 
 	/**
@@ -43,7 +39,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		if (getState().equals(State.INIT)) {
 			setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || getCaseExecutioner().isDataFlowEnabled(activity)) {
+		if (getState().equals(State.DATAFLOW_ENABLED) || getCaseExecutioner().isDataFlowEnabled(getControlNode())) {
 			setState(State.READY);
 		}
 	}
@@ -52,7 +48,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
 	public void checkDataFlow() {
-		if (getCaseExecutioner().isDataFlowEnabled(activity)) {
+		if (getCaseExecutioner().isDataFlowEnabled(getControlNode())) {
 			enableDataFlow();
 		} else {
 			disableDataFlow();
@@ -105,8 +101,8 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	public void terminate() {
 		if (!getState().equals(State.RUNNING))
 			return;
-		// this.getCaseExecutioner().createDataObjectInstances(activity);
-		this.getFragmentInstance().createFollowing(activity);
+
+		this.getFragmentInstance().createFollowing(getControlNode());
 		this.getCaseExecutioner().startAutomaticTasks();
 		// TODO: maybe state before creation of following
 		setState(State.TERMINATED);
@@ -125,12 +121,9 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		super.setState(state);
 	}
 
-	public Activity getActivity() {
-		return activity;
-	}
-
-	public void setActivity(Activity activity) {
-		this.activity = activity;
+	@Override
+	public Activity getControlNode() {
+		return (Activity) super.getControlNode();
 	}
 
 	public Map<String, DataObjectInstance> getSelectedDataObjectInstances() {

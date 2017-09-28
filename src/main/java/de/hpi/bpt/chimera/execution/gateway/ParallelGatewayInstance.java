@@ -2,61 +2,10 @@ package de.hpi.bpt.chimera.execution.gateway;
 
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 
 public class ParallelGatewayInstance extends AbstractGatewayInstance {
-
-	public ParallelGatewayInstance(ParallelGateway gateway, FragmentInstance fragmentInstance) {
-		super(gateway, fragmentInstance);
-	}
-
-	@Override
-	public void enableControlFlow() {
-		if (getState().equals(State.INIT))
-			setState(State.CONTROLFLOW_ENABLED);
-		begin();
-	}
-
-	/**
-	 * Check that all incoming Instances of ControlNodes are terminated. Then
-	 * terminate this Parallel Gateway.
-	 */
-	@Override
-	public void begin() {
-		for (AbstractControlNode incommingControlNode : getControlNode().getIncomingControlNodes()) {
-			if (!getFragmentInstance().isInstantiated(incommingControlNode))
-				return;
-		}
-	}
-
-	@Override
-	public void terminate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void skip() {
-		// TODO Auto-generated method stub
-
-	}
-}
-package de.hpi.bpt.chimera.execution.gateway;
-
-import org.apache.log4j.Logger;
-
-import de.hpi.bpt.chimera.execution.ControlNodeInstance;
-import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.ParallelGateway;
-
-public class ParallelGatewayInstance extends ControlNodeInstance {
 	private ParallelGateway parallelGateway;
-	private int enabledInputCount = 0;
-	private static Logger log = Logger.getLogger(ControlNodeInstance.class);
-
 
 	/**
 	 * Create a new ParallelGatewayInstance
@@ -67,43 +16,36 @@ public class ParallelGatewayInstance extends ControlNodeInstance {
 	public ParallelGatewayInstance(ParallelGateway parallelGateway, FragmentInstance fragmentInstance) {
 		super(parallelGateway, fragmentInstance);
 		this.setParallelGateway(parallelGateway);
-		this.state = State.INIT;
+		this.setState(State.INIT);
 	}
 
 
 	@Override
 	public void enableControlFlow() {
-		int noOfincomingControlFlows = this.getParallelGateway().getIncomingControlNodes().size();
-		enabledInputCount++;
-		log.info(String.format("A controlflow of a ParallelGateway was enabled (%d of %d)", enabledInputCount, noOfincomingControlFlows));
-		if (enabledInputCount == noOfincomingControlFlows) {
-			this.state = State.RUNNING;
-			this.getFragmentInstance().enableFollowing(this.getParallelGateway());
-			this.getFragmentInstance().getCase().getCaseExecutioner().startAutomaticTasks();
-			this.enabledInputCount = 0;
+		if (getFragmentInstance().areInstantiated(parallelGateway.getIncomingControlNodes())) {
+			setState(State.READY);
+			begin();
 		}
 	}
 
 
 	@Override
 	public void begin() {
-		// Is there anything to do here?
+		setState(State.EXECUTING);
+		terminate();
 	}
 
 
 	@Override
 	public void terminate() {
-		// Is there anything to do here?
-
+		getFragmentInstance().createFollowing(parallelGateway);
+		setState(State.TERMINATED);
 	}
 
 
 	@Override
 	public void skip() {
-		this.state = State.SKIPPED;
-		this.enabledInputCount = 0;
-		// TODO Is there anything else to do here?
-
+		setState(State.SKIPPED);
 	}
 
 

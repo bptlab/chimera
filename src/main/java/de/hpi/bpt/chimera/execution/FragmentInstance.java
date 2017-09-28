@@ -4,25 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
+import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
+import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
-import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
-import de.hpi.bpt.chimera.model.fragment.bpmn.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 
 public class FragmentInstance {
-	private static Logger log = Logger.getLogger(FragmentInstance.class);
-
 	private String id;
 	private Fragment fragment;
 	private Case caze;
@@ -35,18 +27,14 @@ public class FragmentInstance {
 	/**
 	 * Map of Id of ControlNode to the corresponding ControlNodeInstanc.
 	 */
-	private Map<String, ControlNodeInstance> controlNodeToInstanceMap;
-
-	// TODO: re-implement the other functions which are given in
-	// ...core.FragmentInstance, like all the initialize functions
+	private Map<String, ControlNodeInstance> controlNodes;
 
 	public FragmentInstance(Fragment fragment, Case caze) {
 		this.id = UUID.randomUUID().toString();
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstances = new HashMap<>();
-		this.controlNodeToInstanceMap = new HashMap<>();
-		// TODO: implement the whole thing with the controlNodeInstances ...
+		this.controlNodes = new HashMap<>();
 	}
 
 	/**
@@ -55,34 +43,20 @@ public class FragmentInstance {
 	 */
 	public void start() {
 		StartEvent startEvent = fragment.getBpmnFragment().getStartEvent();
-		if (startEvent == null) {
-			log.info("no startEvent specified");
-		}
-		else {
-			log.info("startEvent exists");
-		}
 		StartEventInstance startEventInstance = (StartEventInstance) ControlNodeInstanceFactory.createControlNodeInstance(startEvent, this);
-		log.info("Created StartEventInstance");
-		controlNodeInstances.put(startEventInstance.getId(), startEventInstance);
-		controlNodeToInstanceMap.put(startEventInstance.getControlNode().getId(), startEventInstance);
+		addControlNodeInstance(startEventInstance);
 		startEventInstance.enableControlFlow();
-		log.info("ControlFlow of StartEventInstanceEnabled");
 	}
 
 	/**
 	 * Update DataFlow of all ActivityInstances.
 	 */
 	public void updateDataFlow() {
-		// TODO: implement
-		/*
-		 * for (ControlNodeInstance nodeInstance :
-		 * controlNodeInstances.values()) { if (nodeInstance instanceof
-		 * AbstractActivityInstance)) { ((AbstractActivityInstance)
-		 * nodeInstance).checkDataFlowEnabled(); }
-		 * 
-		 * }
-		 */
-		// checkTerminationCondition()
+		for (ControlNodeInstance nodeInstance : controlNodeInstances.values()) { 
+			if (nodeInstance instanceof AbstractActivityInstance) {
+				((AbstractActivityInstance) nodeInstance).checkDataFlow();
+			}
+		} 
 	}
 
 	/**
@@ -91,29 +65,58 @@ public class FragmentInstance {
 	 * 
 	 * @param node
 	 */
-	public void enableFollowing(AbstractControlNode controlNode) {
-		for (SequenceFlowAssociation sequenceFlow : controlNode.getOutgoingControlNodes()) {
-			AbstractControlNode following = sequenceFlow.getTargetRef();
-			ControlNodeInstance nodeInstance;
-			if (controlNodeToInstanceMap.containsKey(following.getId())) {
-				log.info("Following ControlNodeInstance already in cache.");
-				nodeInstance = controlNodeToInstanceMap.get(following.getId());
+	public void createFollowing(AbstractControlNode controlNode) {
+		for (AbstractControlNode following : controlNode.getOutgoingControlNodes()) {
+			if (isInstantiated(following)) {
+				ControlNodeInstance nodeInstance = controlNodes.get(following.getId());
+				nodeInstance.enableControlFlow();
 			} else {
-				log.info("Created Following ControlNodeInstance.");
-				nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
-				controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
-				controlNodeToInstanceMap.put(following.getId(), nodeInstance);
+				ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
+				addControlNodeInstance(nodeInstance);
+				nodeInstance.enableControlFlow();
 			}
-			nodeInstance.enableControlFlow();
-			log.info("Enabled Following ControlNodeInstance");
 		}
 	}
 
 	/**
-	 * @return all enabled ControlNodeInstances
+	 * 
+	 * @param controlNodes
+	 * @return
 	 */
-	public List<ControlNodeInstance> getEnabledControlNodeInstances() {
-		return controlNodeInstances.values().stream().filter(x -> x.getState().equals(State.READY)).collect(Collectors.toList());
+	public boolean checkExclusiveGatewayBehaviour(ControlNodeInstance instance, List<ControlNodeInstance> instancesToRemove) {
+		return false;
+	}
+
+	// HELPER METHODS
+	/**
+	 * 
+	 * @param nodeInstance
+	 */
+	private void addControlNodeInstance(ControlNodeInstance nodeInstance) {
+		controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
+		controlNodes.put(nodeInstance.getControlNode().getId(), nodeInstance);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @return true if the ControlNode is instantiated.
+	 */
+	public boolean isInstantiated(AbstractControlNode node) {
+		return controlNodes.containsKey(node.getId());
+	}
+
+	/**
+	 * 
+	 * @param nodes
+	 * @return true if all ControlNodes are instantiated.
+	 */
+	public boolean areInstantiated(List<AbstractControlNode> nodes) {
+		for (AbstractControlNode node : nodes) {
+			if (!isInstantiated(node))
+				return false;
+		}
+		return true;
 	}
 
 	// GETTER & SETTER

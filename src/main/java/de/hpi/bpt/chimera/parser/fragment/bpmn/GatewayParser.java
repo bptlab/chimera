@@ -3,11 +3,9 @@ package de.hpi.bpt.chimera.parser.fragment.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.bpt.chimera.model.fragment.bpmn.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
-import de.hpi.bpt.chimera.model.fragment.bpmn.ParallelGateway;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
-import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.Task;
 
 public class GatewayParser {
 	private GatewayParser() {

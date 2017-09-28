@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 
 @Entity
 public class BpmnFragment {

@@ -182,7 +182,7 @@ public class CaseExecutioner {
 	 */
 	public List<DataObjectInstance> getAvailableInputForAcitivityInstance(String activityInstanceId) {
 		AbstractActivityInstance activityInstance = getActivityInstance(activityInstanceId);
-		List<DataNode> dataNodesToCheck = activityInstance.getActivity().getIncomingDataNodes();
+		List<DataNode> dataNodesToCheck = activityInstance.getControlNode().getIncomingDataNodes();
 		return dataManager.getExistingDataObjectInstances(dataNodesToCheck);
 	}
 
@@ -275,7 +275,7 @@ public class CaseExecutioner {
 
 	public void createDataObjectInstance(String activityInstanceId, String dataNodeId, Map<String, Object> attributeValues) {
 		AbstractActivityInstance instance = this.getActivityInstance(activityInstanceId);
-		for (DataNode dataNode : instance.getActivity().getOutgoingDataNodes()) {
+		for (DataNode dataNode : instance.getControlNode().getOutgoingDataNodes()) {
 			if (dataNode.getId().equals(dataNodeId)) {
 				dataManager.createDataObjectInstance(dataNode, attributeValues);
 			}
