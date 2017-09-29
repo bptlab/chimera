@@ -1,8 +1,10 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
-import de.hpi.bpt.chimera.execution.Case;
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
+import de.hpi.bpt.chimera.jcore.rest.beans.caze.CaseOverviewJaxBean;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,18 +15,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * This class implements the REST interface for scenario instances.
  */
 @Path("interface/v2")
-public class ScenarioInstanceRestService {
-	private static Logger log = Logger.getLogger(RestInterface.class);
+public class ScenarioInstanceRestService extends AbstractRestService {
+	private static final Logger log = Logger.getLogger(RestInterface.class);
 
 	/**
 	 * This method provides information about all instances of one scenario. The
@@ -48,29 +47,20 @@ public class ScenarioInstanceRestService {
 	@Path("scenario/{scenarioId}/instance")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @DefaultValue("") @QueryParam("filter") String filterString) {
-		List<CaseExecutioner> caseExecutions = new ArrayList<>();
-		try {
-			caseExecutions = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId);
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
+		if (!CaseModelManager.isExistingCaseModel(cmId)) {
+			return CASEMODEL_NOT_FOUND;
 		}
+
+		List<CaseExecutioner> caseExecutions = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId);
 
 		if (!filterString.isEmpty())
 			caseExecutions = caseExecutions.stream().filter(instance -> instance.getCase().getName().contains(filterString)).collect(Collectors.toList());
 
-		Map<String, String> caseIdToName = new HashMap<>();
+		JSONArray result = new JSONArray();
 		for (CaseExecutioner caseExecutioner : caseExecutions) {
-			caseIdToName.put(caseExecutioner.getCase().getId(), caseExecutioner.getCase().getName());
+			result.put(new JSONObject(new CaseOverviewJaxBean(caseExecutioner)));
 		}
 
-		JSONObject result = new JSONObject();
-		result.put("ids", new JSONArray(caseIdToName.keySet()));
-		result.put("labels", new JSONObject(caseIdToName));
-		JSONObject links = new JSONObject();
-		for (String id : caseIdToName.keySet()) {
-			links.put(String.valueOf(id), uri.getAbsolutePath() + "/" + id);
-		}
-		result.put("links", links);
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -149,13 +139,13 @@ public class ScenarioInstanceRestService {
 	 * @return Response
 	 */
 	private Response initializeNewInstance(UriInfo uriInfo, String cmId, String name) {
-		// ExecutionService executionService =
-		// ExecutionService.getInstance(scenarioId);
-		String caseId = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.startCase(cmId, name);
 
-		JSONObject result = new JSONObject();
-		result.put("id", caseId);
-		result.put("link", uriInfo.getAbsolutePath() + "/" + caseId);
+		if (caseExecutioner == null) {
+			return Response.status(Response.Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity("Case instantiation failed").build();
+		}
+
+		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 		return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
@@ -184,14 +174,10 @@ public class ScenarioInstanceRestService {
 	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Case does not exist.").build();
+			return CASE_NOT_FOUND;
 		}
-		JSONObject result = new JSONObject();
-		result.put("id", caseId);
-		result.put("name", caseExecutioner.getCase().getName());
-		result.put("terminated", caseExecutioner.isTerminated());
-		// result.put("scenarioId", cmId);
-		result.put("activities", uriInfo.getAbsolutePath() + "/activity");
+
+		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -208,6 +194,7 @@ public class ScenarioInstanceRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/events")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEvents(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
+		// TODO
 		ScenarioInstance scenarioInstance = new ScenarioInstance(scenarioId, instanceId);
 		List<String> eventKeys = scenarioInstance.getRegisteredEventKeys();
 		return Response.ok(MediaType.APPLICATION_JSON).entity(eventKeys).build();
@@ -227,13 +214,13 @@ public class ScenarioInstanceRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response checkTermination(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		if (caseExecutioner != null) {
-			JSONObject result = new JSONObject();
-			result.put("canTerminate", caseExecutioner.canTerminate());
-			return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
-		} else {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Termination condition is not fulfilled").build();
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
 		}
+
+		JSONObject result = new JSONObject();
+		result.put("canTerminate", caseExecutioner.canTerminate());
+		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
 	/**
@@ -249,6 +236,7 @@ public class ScenarioInstanceRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/terminate")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response terminateScenarioInstance(@PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId) {
+		// TODO
 		ScenarioInstance instance = new ScenarioInstance(scenarioId, instanceId);
 		if (instance.canTerminate()) {
 			instance.terminate();

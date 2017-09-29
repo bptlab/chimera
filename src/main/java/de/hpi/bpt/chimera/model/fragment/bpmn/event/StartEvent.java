@@ -1,9 +1,6 @@
 package de.hpi.bpt.chimera.model.fragment.bpmn.event;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
 public class StartEvent extends AbstractEvent {

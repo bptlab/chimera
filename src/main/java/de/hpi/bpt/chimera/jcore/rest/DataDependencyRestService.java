@@ -58,6 +58,7 @@ public class DataDependencyRestService extends AbstractRestService {
 	 * is non-existing or if the activity has no inputSet & with an error message
 	 * instead of the array.
 	 */
+	@Deprecated
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/input")
 	public Response getInputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") int scenarioId, @PathParam("instanceId") int instanceId, @PathParam("activityInstanceId") int activityInstanceId) {
@@ -103,11 +104,18 @@ public class DataDependencyRestService extends AbstractRestService {
 	 * is non-existing or if the activity has no outputSet & with an error message
 	 * instead of the array.
 	 */
+	@Deprecated
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/output")
 	public Response getOutputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-
-		AbstractActivityInstance activityInstance = de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId, caseId, activityInstanceId);
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
+			return ACTIVITY_INSTANCE_NOT_FOUND;
+		}
 
 		List<DataNode> outgoingDataNodes = activityInstance.getControlNode().getOutgoingDataNodes();
 
@@ -136,7 +144,14 @@ public class DataDependencyRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/availableInput")
 	public Response getAvailableInput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		List<DataObjectInstance> availableInput = de.hpi.bpt.chimera.execution.ExecutionService.getAvailableInputForAcitivityInstance(cmId, caseId, activityInstanceId);
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
+		if (caseExecutioner.getActivityInstance(activityInstanceId) == null) {
+			return ACTIVITY_INSTANCE_NOT_FOUND;
+		}
+		List<DataObjectInstance> availableInput = caseExecutioner.getAvailableInputForAcitivityInstance(activityInstanceId);
 
 		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
 		for (DataObjectInstance instance : availableInput) {
@@ -152,11 +167,11 @@ public class DataDependencyRestService extends AbstractRestService {
 	public Response getAvailableOutput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Case does not exist.").build();
+			return CASE_NOT_FOUND;
 		}
 		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 		if (activityInstance == null) {
-			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity("Activity Instance does not exist.").build();
+			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
 
 		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();

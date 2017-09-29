@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -47,6 +48,7 @@ public class CaseModel {
 		entityManager.getTransaction().commit();
 	}
 
+	// GETTER & SETTER
 	public String getId() {
 		return cmId;
 	}
@@ -101,5 +103,13 @@ public class CaseModel {
 
 	public void setFragments(List<Fragment> fragments) {
 		this.fragments = fragments;
+	}
+
+	public List<String> getContentXmlStrings() {
+		List<String> contentXmlStrings = new ArrayList<>();
+		for (Fragment fragment : fragments) {
+			contentXmlStrings.add(fragment.getContentXML());
+		}
+		return contentXmlStrings;
 	}
 }

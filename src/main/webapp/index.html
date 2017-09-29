@@ -90,10 +90,10 @@
                 </a>
                 <!-- iterate over all scenario items within the scenarioCtrl and display them with ID and name as list -->
                 <ul ng-controller="ScenarioController as scenarioCtrl" id="scenarioEntries" class="nav nav-second-level collapse">
-                    <li ng-repeat="(key, value) in scenarioCtrl.scenarios['labels'] as results">
-                        <a ng-href="#/scenario/{{key}}">{{($index+1) + ': ' + value}}</a>
+                    <li ng-repeat="caseModel in scenarioCtrl.scenarios as results">
+                        <a ng-href="#/scenario/{{caseModel.id}}">{{($index+1) + ': ' + caseModel.name}}</a>
                     </li>
-                    <li ng-if="scenarioCtrl.scenarios['ids'].length === 0">
+                    <li ng-if="scenarioCtrl.scenarios.length === 0">
       					<a><strong>No CaseModels deployed</strong></a>
 		    		</li>
                 </ul>

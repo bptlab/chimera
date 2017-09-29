@@ -21,7 +21,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class CaseExecutioner {
-	private static Logger log = Logger.getLogger(CaseExecutioner.class);
+	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	private Case caze;
 	private CaseModel caseModel;

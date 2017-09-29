@@ -99,42 +99,4 @@ public class CaseModelManager {
 			throw new IllegalArgumentException(String.format("CaseModel %s id does not exist", id));
 		}
 	}
-
-	/**
-	 * Receive the TerminationCondition of a specific CaseModel.
-	 * 
-	 * @param cmId
-	 * @return TerminationCondition
-	 */
-	public static TerminationCondition getTerminationConditionOfCaseModel(String cmId) {
-		mayInstantiate();
-
-		if (caseModels.containsKey(cmId)) {
-			CaseModel cm = caseModels.get(cmId);
-			return cm.getTerminationCondition();
-		} else {
-			// exception
-		}
-		return null;
-	}
-
-	/**
-	 * Receive the Xml-Strings of all Fragments of a specific CaseModel.
-	 * 
-	 * @param cmId
-	 * @return List of Xml-Strings of FragmentContent
-	 */
-	public static List<String> getFragmentXmlOfCaseModel(String cmId) {
-		mayInstantiate();
-		List<String> xmlStrings = new ArrayList<>();
-		if (caseModels.containsKey(cmId)) {
-			CaseModel cm = caseModels.get(cmId);
-			for (Fragment fragment : cm.getFragments()) {
-				xmlStrings.add(fragment.getContentXML());
-			}
-		} else {
-			// exception
-		}
-		return xmlStrings;
-	}
 }

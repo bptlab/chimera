@@ -5,8 +5,9 @@ import de.hpi.bpt.chimera.execution.DataManagerBean;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.ActivityJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.activity.ActivityJaxBean;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,7 +52,10 @@ public class ActivityRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activity")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString, @QueryParam("state") String stateName) {
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCase(cmId, caseId).getCaseExecutioner();
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
 		// common
 		if (StringUtils.isEmpty(filterString)) {
 			if (StringUtils.isEmpty(stateName)) {
@@ -107,7 +111,11 @@ public class ActivityRestService extends AbstractRestService {
 			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
 		}
 
-		JSONObject result = buildJSONObjectForActivities(activityInstances, uriInfo);
+		JSONArray result = new JSONArray();
+		for (AbstractActivityInstance activityInstance : activityInstances) {
+			result.put(new JSONObject(new ActivityJaxBean(activityInstance)));
+		}
+
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -140,14 +148,18 @@ public class ActivityRestService extends AbstractRestService {
 	private Response getAllActivitiesWithFilterAndState(CaseExecutioner caseExecutioner, String filterString, String stateName, UriInfo uriInfo) {
 		State state = State.fromString(stateName);
 		if (state == null) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The state " + "is not allowed " + state + "\"}").build();
+			return stateNotFoundResponse(stateName);
 		}
 		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getAllActivitiesWithState(state);
 		if (!filterString.isEmpty()) {
 			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
 		}
 
-		JSONObject result = buildJSONObjectForActivities(activityInstances, uriInfo);
+		JSONArray result = new JSONArray();
+		for (AbstractActivityInstance activityInstance : activityInstances) {
+			result.put(new JSONObject(new ActivityJaxBean(activityInstance)));
+		}
+
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
@@ -156,47 +168,6 @@ public class ActivityRestService extends AbstractRestService {
 	 * Arrays.asList(READY, READY_DATA, READY_CF, TERMINATED, RUNNING); return
 	 * allowedStates.contains(state); }
 	 */
-
-	/**
-	 * Build an JSON Object for an ActivityInstance.
-	 * 
-	 * @param activityInstance
-	 * @param state
-	 * @param uriInfo
-	 * @return
-	 */
-	private JSONObject buildActivityJson(AbstractActivityInstance activityInstance, UriInfo uriInfo) {
-		JSONObject activityJSON = new JSONObject();
-		activityJSON.put("id", activityInstance.getId());
-		activityJSON.put("label", activityInstance.getControlNode().getName());
-		activityJSON.put("state", activityInstance.getState());
-		activityJSON.put("fragmentInstanceId", activityInstance.getFragmentInstance().getId());
-		activityJSON.put("link", uriInfo.getAbsolutePath() + "/" + activityInstance.getId());
-		return activityJSON;
-	}
-	
-	/**
-	 * Builds a JSON Object for a Map with data corresponding to a set of
-	 * activities.
-	 *
-	 * @param activityInstances
-	 *            The Map containing information about the activity instances.
-	 *            We Assume that the key is a the id and the value is a Map from
-	 *            String to Object with the properties of the instance.
-	 * @return The newly created JSON Object with the activity data.
-	 */
-	private JSONObject buildJSONObjectForActivities(Collection<AbstractActivityInstance> activityInstances, UriInfo uriInfo) {
-		List<String> ids = new ArrayList<>(activityInstances.size());
-		JSONObject activities = new JSONObject();
-		for (AbstractActivityInstance activityInstance : activityInstances) {
-			activities.put(activityInstance.getId(), buildActivityJson(activityInstance, uriInfo));
-			ids.add(activityInstance.getId());
-		}
-		JSONObject result = new JSONObject();
-		result.put("ids", new JSONArray(ids));
-		result.put("activities", activities);
-		return result;
-	}
 
 	/**
 	 * This method is used to get all the information for an activity.
@@ -213,17 +184,17 @@ public class ActivityRestService extends AbstractRestService {
 	@GET
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response getActivity(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-
-		AbstractActivityInstance activityInstance = de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId, caseId, activityInstanceId);
-		if (activityInstance == null) {
-			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"There is no such " + "activity instance.\"}").build();
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
 		}
 
-		ActivityJaxBean activity = new ActivityJaxBean();
-		activity.setId(activityInstanceId);
-		activity.setLabel(activityInstance.getControlNode().getName());
-		activity.setInputSetLink(uriInfo.getAbsolutePath() + "/input");
-		activity.setOutputSetLink(uriInfo.getAbsolutePath() + "/output");
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
+			return ACTIVITY_INSTANCE_NOT_FOUND;
+		}
+
+		ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
 		return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -241,10 +212,13 @@ public class ActivityRestService extends AbstractRestService {
 	@PUT
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}")
 	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
 
 		Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
 
-		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		caseExecutioner.setDataAttributeValues(dataAttributeValues);
 
 		return Response.status(201).build();
@@ -278,19 +252,22 @@ public class ActivityRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/workingItems")
 	//TODO for some reason this appears to be the only endpoint with capital letters
 	public Response getWorkingItems(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
-		// ExecutionService executionService =
-		// ExecutionService.getInstance(scenarioId);
-		// executionService.openExistingScenarioInstance(scenarioId,
-		// scenarioInstanceId);
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
 
-		AbstractActivityInstance activityInstance = de.hpi.bpt.chimera.execution.ExecutionService.getActivityInstance(cmId, caseId, activityInstanceId);
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
+			return ACTIVITY_INSTANCE_NOT_FOUND;
+		}
+
 		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
 
-		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
+		JSONArray result = new JSONArray();
 		for (DataObjectInstance instance : selectedInstances) {
-			resultBeans.add(new DataObjectJaxBean(instance));
+			result.put(new JSONObject(new DataObjectJaxBean(instance)));
 		}
-		JSONArray result = new JSONArray(resultBeans);
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
@@ -308,15 +285,12 @@ public class ActivityRestService extends AbstractRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/begin")
-	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, String postBody) {
-		/*
-		 * ExecutionService executionService =
-		 * ExecutionService.getInstance(scenarioId); if
-		 * (!executionService.openExistingScenarioInstance(scenarioId,
-		 * scenarioInstanceId)) { return
-		 * this.buildNotFoundResponse("{\"message\":\"Case does not exist.\"}");
-		 * }
-		 */
+	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
+
 		List<String> selectedDataObjectInstanceIds = new ArrayList<>();
 		JSONObject postJson = new JSONObject(postBody);
 		if (postJson.has("dataobjects")) {
@@ -328,7 +302,7 @@ public class ActivityRestService extends AbstractRestService {
 		// TODO: begin of activity could fail in which case another Response needs to be sent
 		// ExecutionService.beginActivityInstance(scenarioInstanceId,
 		// activityInstanceId, selectedDataObjectIds);
-		de.hpi.bpt.chimera.execution.ExecutionService.beginActivityInstance(cmId, caseId, activityInstanceId, selectedDataObjectInstanceIds);
+		caseExecutioner.beginActivityInstance(activityInstanceId, selectedDataObjectInstanceIds);
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
 	}
 
@@ -350,10 +324,18 @@ public class ActivityRestService extends AbstractRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/terminate")
 	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
+		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
+
+		if (caseExecutioner.getActivityInstance(activityInstanceId) == null) {
+			return ACTIVITY_INSTANCE_NOT_FOUND;
+		}
 		JSONObject postJson = new JSONObject(postBody);
 		DataManagerBean dataManagerBean = new DataManagerBean(postJson);
-		
-		de.hpi.bpt.chimera.execution.ExecutionService.terminateActivity(cmId, caseId, activityInstanceId, dataManagerBean);
+
+		caseExecutioner.terminateActivityInstance(activityInstanceId, dataManagerBean);
 
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity terminated.\"}").build();
 	}

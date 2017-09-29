@@ -55,8 +55,8 @@ angular.module('jfrontend')
                 $http.get(JEngine_Server_URL + '/' + JCore_REST_Interface + '/scenario/'
                     + $routeParams.id + '/xml')
                     .success(function (data) {
-                        instanceCtrl.fragmentXmlStrings = data.xml;
-
+                        instanceCtrl.fragmentXmlStrings = data;
+                        
                         var index = 0;
                         instanceCtrl.fragmentXmlStrings.forEach(function (xml) {
                             var divId = 'renderXml' + index;

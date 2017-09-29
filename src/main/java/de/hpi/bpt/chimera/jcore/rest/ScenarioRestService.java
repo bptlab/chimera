@@ -1,9 +1,9 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
+import de.hpi.bpt.chimera.jcore.rest.beans.casemodel.CaseModelDetailsJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.casemodel.CaseModelOverviewJaxBean;
+import de.hpi.bpt.chimera.jcore.rest.beans.casemodel.ConditionsJaxBean;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
-import de.hpi.bpt.chimera.model.condition.TerminationCondition;
-import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 import org.apache.log4j.Logger;
@@ -16,9 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,43 +27,36 @@ public class ScenarioRestService extends AbstractRestService {
 	private static Logger log = Logger.getLogger(RestInterface.class);
 
 	/**
-	 * This method provides information about the termination condition.
-	 * Of the specified Scenario.
-	 * The termination condition is a set of sets of conditions.
-	 * Only if all conditions of one set are true the scenario will
-	 * terminate.
-	 * If the scenario does not exists a 404 with an error will be returned.
-	 * If the scenario exists the JSON representation of the condition set
-	 * will be returned.
+	 * This method allows to give an overview of all scenarios. The response
+	 * will return a JSON-Array containing the basic information of all
+	 * scenarios currently inside the database. If different versions of an
+	 * scenarios exist only the latest ones will be added to the json.
 	 *
-	 * @param scenarioID This id specifies the scenario. The id is the
-	 *                   primary key inside the database.
-	 * @return Returns a response object. It will either  be a 200 or
-	 * 404. The content will be either the JSON representation of the termination
-	 * condition or an JSON object with the error message.
+	 * @param uriInfo
+	 *            Specifies the context. For example the uri of the request.
+	 * @param filterString
+	 *            Specifies a search. Only scenarios which name contain the
+	 *            specified string will be returned.
+	 * @return Returns a JSON-Object with an Array with entries for every
+	 *         Scenario. Each Entry is a JSON-Object with a label and id of a
+	 *         scenario.
 	 */
 	@GET
-	@Path("scenario/{scenarioId}/terminationcondition")
+	@Path("scenario")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getTerminationCondition(@PathParam("scenarioId") String cmId) {
-		TerminationCondition terminationCondition = CaseModelManager.getTerminationConditionOfCaseModel(cmId);
+	public Response getScenarios(@Context UriInfo uriInfo, @DefaultValue("") @QueryParam("filter") String filterString) {
+		List<CaseModel> caseModels = CaseModelManager.getCaseModels();
 
-		JSONObject result = new JSONObject();
-		JSONObject conditions = new JSONObject();
-		int id = 1;
-		for (TerminationConditionComponent component : terminationCondition.getConditions()) {
-			JSONArray dataObjectStateConditions = new JSONArray();
-			for (DataObjectStateCondition dosc : component.getConditions()) {
-				JSONObject dataObjectStateCondition = new JSONObject();
-				dataObjectStateCondition.put("data_object", dosc.getDataClass().getName());
-				dataObjectStateCondition.put("state", dosc.getState().getName());
-				dataObjectStateConditions.put(dataObjectStateCondition);
-			}
-			conditions.put(String.format("%d", id++), dataObjectStateConditions);
+		if (!filterString.isEmpty()) {
+			caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
 		}
-		result.put("conditions", conditions);
 
-		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+		JSONArray result = new JSONArray();
+		for (CaseModel cm : caseModels) {
+			result.put(new JSONObject(new CaseModelOverviewJaxBean(cm)));
+		}
+
+		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	/**
@@ -86,20 +77,6 @@ public class ScenarioRestService extends AbstractRestService {
 			log.error(e);
 			return Response.status(422).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-		/*
-		 * catch (JAXBException e) { log.error("Error: ", e); return
-		 * Response.status(400).type(MediaType.APPLICATION_JSON).entity(
-		 * buildException("Invalid xml " + e.getMessage())).build(); }
-		 */
-	}
-
-	private String buildException(String text) {
-		JSONArray result = new JSONArray();
-		JSONObject content = new JSONObject();
-		content.put("text", text);
-		content.put("type", "danger");
-		result.put(content);
-		return result.toString();
 	}
 
 	/**
@@ -120,37 +97,14 @@ public class ScenarioRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenario(@Context UriInfo uri, @PathParam("scenarioId") String cmId) {
-		// DbScenario dbScenario = new DbScenario();
-		// Map<String, Object> data = dbScenario.getScenarioDetails(scenarioId);
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		JSONObject result = new JSONObject();
-		result.put("id", cm.getId());
-		result.put("name", cm.getName());
-		result.put("modelversion", cm.getVersionNumber());
-		result.put("instances", uri.getAbsolutePath() + "/instance");
+		if (cm == null) {
+			return CASEMODEL_NOT_FOUND;
+		}
 
-		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
-	}
+		JSONObject result = new JSONObject(new CaseModelDetailsJaxBean(cm));
 
-	/**
-	 * Get the fragment bpmn-xml representations for all fragments of a scenario.
-	 *
-	 * @param scenarioId The id of the scenario.
-	 * @return a JsonObject containing a JSONArray with all fragment xml strings.
-	 */
-	@GET
-	@Path("scenario/{scenarioId}/xml")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFragmentXmlStrings(@PathParam("scenarioId") String cmId) {
-		/*
-		 * DbFragment dbFragment = new DbFragment(); List<String> xmls =
-		 * dbFragment.getXmlStringsForScenario(scenarioId); JSONObject xmlJson =
-		 * new JSONObject(); xmlJson.put("xml", new JSONArray(xmls));
-		 */
-		List<String> xmlStrings = CaseModelManager.getFragmentXmlOfCaseModel(cmId);
-		JSONObject result = new JSONObject();
-		result.put("xml", new JSONArray(xmlStrings));
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
@@ -177,43 +131,63 @@ public class ScenarioRestService extends AbstractRestService {
 	}
 
 	/**
-	 * This method allows to give an overview of all scenarios.
-	 * The response will return a JSON-Array containing the basic
-	 * information of all scenarios currently inside the database.
-	 * If different versions of an scenarios exist only the latest
-	 * ones will be added to the json.
+	 * This method provides information about the termination condition. Of the
+	 * specified Scenario. The termination condition is a set of sets of
+	 * conditions. Only if all conditions of one set are true the scenario will
+	 * terminate. If the scenario does not exists a 404 with an error will be
+	 * returned. If the scenario exists the JSON representation of the condition
+	 * set will be returned.
 	 *
-	 * @param uriInfo      Specifies the context. For example the uri
-	 *                     of the request.
-	 * @param filterString Specifies a search. Only scenarios which
-	 *                     name contain the specified string will be
-	 *                     returned.
-	 * @return Returns a JSON-Object with an Array with entries for
-	 * every Scenario.
-	 * Each Entry is a JSON-Object with a label and id of a scenario.
+	 * @param scenarioID
+	 *            This id specifies the scenario. The id is the primary key
+	 *            inside the database.
+	 * @return Returns a response object. It will either be a 200 or 404. The
+	 *         content will be either the JSON representation of the termination
+	 *         condition or an JSON object with the error message.
 	 */
 	@GET
-	@Path("scenario")
+	@Path("scenario/{scenarioId}/terminationcondition")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScenarios(@Context UriInfo uriInfo, @DefaultValue("") @QueryParam("filter") String filterString) {
-		List<CaseModel> caseModels = CaseModelManager.getCaseModels();
+	public Response getTerminationCondition(@PathParam("scenarioId") String cmId) {
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
-		if (!filterString.isEmpty()) {
-			caseModels = caseModels.stream().filter(cm -> cm.getName().contains(filterString)).collect(Collectors.toList());
+		if (cm == null) {
+			return CASEMODEL_NOT_FOUND;
 		}
 
-		List<String> ids = new ArrayList<>(caseModels.size());
-		JSONObject links = new JSONObject();
-		JSONObject labels = new JSONObject();
-		for (CaseModel cm : caseModels) {
-			ids.add(cm.getId());
-			links.put(cm.getId(), uriInfo.getAbsolutePath() + "/" + cm.getId());
-			labels.put(cm.getId(), cm.getName());
+		JSONObject result = new JSONObject(new ConditionsJaxBean(cm.getTerminationCondition()));
+
+		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
+	}
+
+
+	private String buildException(String text) {
+		JSONArray result = new JSONArray();
+		JSONObject content = new JSONObject();
+		content.put("text", text);
+		content.put("type", "danger");
+		result.put(content);
+		return result.toString();
+	}
+
+
+	/**
+	 * Get the fragment bpmn-xml representations for all fragments of a scenario.
+	 *
+	 * @param scenarioId The id of the scenario.
+	 * @return a JsonObject containing a JSONArray with all fragment xml strings.
+	 */
+	@GET
+	@Path("scenario/{scenarioId}/xml")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFragmentXmlStrings(@PathParam("scenarioId") String cmId) {
+		CaseModel cm = CaseModelManager.getCaseModel(cmId);
+
+		if (cm == null) {
+			return CASEMODEL_NOT_FOUND;
 		}
-		JSONObject result = new JSONObject();
-		result.put("ids", new JSONArray(ids));
-		result.put("links", links);
-		result.put("labels", labels);
+
+		JSONArray result = new JSONArray(cm.getContentXmlStrings());
 		return Response.ok().type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 }

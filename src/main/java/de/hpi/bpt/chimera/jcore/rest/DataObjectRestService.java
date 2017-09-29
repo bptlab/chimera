@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
+import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataObjectInstance;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
@@ -38,8 +39,12 @@ public class DataObjectRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/dataobject")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDataObjects(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString) {
+		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
 
-		List<DataObjectInstance> dataObjectInstances = ExecutionService.getDataObjectInstances(cmId, caseId);
+		List<DataObjectInstance> dataObjectInstances = caseExecutioner.getDataObjectInstances();
 
 		if (!filterString.isEmpty()) {
 			dataObjectInstances = dataObjectInstances.stream().filter(instance -> instance.getId().contains(filterString)).collect(Collectors.toList());
@@ -56,8 +61,15 @@ public class DataObjectRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/dataobject/{objectId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDataObject(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("objectId") String instanceId) {
+		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
+		if (caseExecutioner == null) {
+			return CASE_NOT_FOUND;
+		}
 
-		DataObjectInstance dataObjectInstance = ExecutionService.getDataObjectInstance(cmId, caseId, instanceId);
+		DataObjectInstance dataObjectInstance = caseExecutioner.getDataObjectInstance(instanceId);
+		if (dataObjectInstance == null) {
+			return DATAOBJECT_NOT_FOUND;
+		}
 
 		JSONObject result = new JSONObject(new DataObjectJaxBean(dataObjectInstance));
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();

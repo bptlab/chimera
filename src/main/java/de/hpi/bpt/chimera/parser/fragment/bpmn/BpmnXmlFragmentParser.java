@@ -47,20 +47,15 @@ public final class BpmnXmlFragmentParser {
 			// IN THE END the Resolver holds all the resolved Associations which
 			// then can be added to the final parsed fragment
 			SequenceFlowResolver sfResolver = new SequenceFlowResolver(fragXmlWrap);
-			log.info("created sfResolver");
 			// ^has to be called first
 			DataFlowResolver dfResolver = new DataFlowResolver(fragXmlWrap, parserHelper);
-			log.info("created dfResolver");
+
 			EventParser.parseEvents(fragment, fragXmlWrap, sfResolver, dfResolver);
-			log.info("parsed Events");
 			ActivityParser.parseActivities(fragment, fragXmlWrap, sfResolver, dfResolver);
-			log.info("parsed Activities");
 			GatewayParser.parseGateways(fragment, fragXmlWrap, sfResolver);
-			log.info("parsed Gateways");
+
 			fragment.setSequenceFlowAssociations(sfResolver.getResolvedSequenceFlowAssociations());
-			log.info("set sfa");
 			fragment.setDataNodes(dfResolver.getResolvedDataNodes());
-			log.info("set datanodes");
 			// ^has to be called last
 		} catch (JAXBException e) {
 			log.error(e);

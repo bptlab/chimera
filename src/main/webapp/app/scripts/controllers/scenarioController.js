@@ -121,8 +121,7 @@ angular.module('jfrontend')
                 	console.log($scope.instanceName);
                     // building the json content for naming the instance
                     var data = "{\"name\":\"" + $scope.instanceName + "\"}";
-                    console.log(data);
-                	var name = $scope.instanceName;
+
                     $http.put(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + id + "/instance/", data).success(function (response) {
                         $location.path("/scenario/" + id + "/instance/" + response['id']);
                     }).error(function () {

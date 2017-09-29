@@ -9,7 +9,7 @@
                 <div ng-if="!todo_terminated">
                     <table class="table table-striped">
                         <tbody>
-                        <tr ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running']['activities']  track by $index">
+                        <tr ng-repeat="activityInstance in instanceCtrl.instanceDetails.activityInstances['running'] track by $index">
                             <td>
                             	<div style="position: relative; cursor: pointer">
                                 	<p>{{activityInstance['label']}}
