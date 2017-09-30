@@ -22,7 +22,7 @@ public class Fragment {
 	@Lob
 	private String contentXML;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private BpmnFragment bpmnFragment;
 
 	public String getId() {

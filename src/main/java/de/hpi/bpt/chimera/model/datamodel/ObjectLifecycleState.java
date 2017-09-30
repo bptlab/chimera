@@ -18,15 +18,15 @@ import de.hpi.bpt.chimera.model.Nameable;
 @Entity
 public class ObjectLifecycleState implements Nameable, Listable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;
 
 	private String name;
 	// TODO: rework this so that the same information isn't saved twice
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "objectlifecyclestate_successors")
 	private List<ObjectLifecycleState> successors;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "objectlifecyclestate_predecessors")
 	private List<ObjectLifecycleState> predecessors;
 

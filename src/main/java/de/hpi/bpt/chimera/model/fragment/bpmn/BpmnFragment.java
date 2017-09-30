@@ -25,22 +25,22 @@ public class BpmnFragment {
 
 	private String id;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private StartEvent startEvent;
 	
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Activity> activities = new ArrayList<>();
 	
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<ParallelGateway> parallelGateways = new ArrayList<>();
 	
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<SequenceFlowAssociation> sequenceFlowAssociations = new ArrayList<>();
 	
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataNode> dataNodes = new ArrayList<>();
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private EndEvent endEvent;
 
 	

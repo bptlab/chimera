@@ -26,13 +26,13 @@ public class CaseModel {
 	private int dbId;
 	private String name;
 	private int versionNumber;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataModel dataModel;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<CaseStartTrigger> startCaseTrigger;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private TerminationCondition terminationCondition;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Fragment> fragments;
 
 

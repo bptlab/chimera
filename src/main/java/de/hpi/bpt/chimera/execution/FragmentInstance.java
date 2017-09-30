@@ -6,13 +6,9 @@ import java.util.Map;
 import java.util.UUID;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
-import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
-import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
-import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 
 public class FragmentInstance {
 	private String id;
@@ -30,7 +26,7 @@ public class FragmentInstance {
 	private Map<String, ControlNodeInstance> controlNodes;
 
 	public FragmentInstance(Fragment fragment, Case caze) {
-		this.id = UUID.randomUUID().toString();
+		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.fragment = fragment;
 		this.caze = caze;
 		this.controlNodeInstances = new HashMap<>();

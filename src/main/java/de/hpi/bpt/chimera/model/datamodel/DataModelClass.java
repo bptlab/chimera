@@ -20,7 +20,7 @@ public abstract class DataModelClass implements Nameable, Listable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int dbId;
 	private String name;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttribute> dataAttributes;
 
 	@Override

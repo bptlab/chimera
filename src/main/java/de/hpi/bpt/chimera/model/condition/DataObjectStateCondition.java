@@ -13,11 +13,11 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @Entity
 public class DataObjectStateCondition {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataClass dataClass;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private ObjectLifecycleState state;
 
 	public DataObjectStateCondition() {

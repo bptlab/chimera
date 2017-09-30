@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataAttributeJaxBean;
 import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;

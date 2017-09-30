@@ -120,9 +120,9 @@ public class ScenarioRestService extends AbstractRestService {
 	 */
 	@DELETE
 	@Path("scenario/{scenarioId}/")
-	public Response deleteScenario(@PathParam("scenarioId") String caseModelId) {
+	public Response deleteScenario(@PathParam("scenarioId") String cmId) {
 		try {
-			CaseModelManager.deleteCaseModel(caseModelId);
+			CaseModelManager.deleteCaseModel(cmId);
 			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"" + "casemodel deletion successful.\"}").build();
 		} catch (IllegalArgumentException e) {
 			log.error("deletion failed: " + e);

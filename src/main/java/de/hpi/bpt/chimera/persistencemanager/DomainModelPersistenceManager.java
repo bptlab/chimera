@@ -84,10 +84,11 @@ public class DomainModelPersistenceManager {
 			return caseModelList;
 	}
 
-	public static void deleteCaseModel(CaseModel cm) {
+	public static void deleteCaseModel(String cmId) {
 		EntityManager em = getEntityManagerFactory().createEntityManager();
+		CaseModel cmToRemove = em.find(CaseModel.class, cmId);
 		em.getTransaction().begin();
-		em.remove(cm);
+		em.remove(cmToRemove);
 		em.getTransaction().commit();
 	}
 

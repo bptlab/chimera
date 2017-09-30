@@ -15,9 +15,9 @@ public class CaseStartTriggerConsequence {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataObjectStateCondition dataObjectState;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataAttributeJsonPath> mapping;
 
 	// no-argument constructor is needed by EclipseLink to persist and restore

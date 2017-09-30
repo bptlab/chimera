@@ -11,7 +11,7 @@ import de.hpi.bpt.chimera.model.Nameable;
 @Entity
 public class DataAttribute implements Listable, Nameable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	private String id;

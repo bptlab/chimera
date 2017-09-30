@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
@@ -89,14 +90,23 @@ public class CaseModelManager {
 		return new ArrayList<>(caseModelList);
 	}
 
-	// TODO:
-	public static void deleteCaseModel(String id) {
+	/**
+	 * Delete a certain CaseModel.
+	 * 
+	 * @param cmId
+	 */
+	public static void deleteCaseModel(String cmId) {
 		mayInstantiate();
-		if (caseModels.containsKey(id)) {
-			DomainModelPersistenceManager.deleteCaseModel(caseModels.get(id));
-			caseModels.remove(id);
+		if (caseModels.containsKey(cmId)) {
+			try {
+				ExecutionService.deleteCaseModel(cmId);
+				DomainModelPersistenceManager.deleteCaseModel(cmId);
+				caseModels.remove(cmId);
+			} catch (Exception e) {
+				throw e;
+			}
 		} else {
-			throw new IllegalArgumentException(String.format("CaseModel %s id does not exist", id));
+			throw new IllegalArgumentException(String.format("CaseModel %s id does not exist", cmId));
 		}
 	}
 }

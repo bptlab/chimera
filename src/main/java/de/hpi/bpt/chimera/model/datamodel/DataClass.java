@@ -13,10 +13,10 @@ import javax.persistence.OneToOne;
 @Entity
 public class DataClass extends DataModelClass {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	ObjectLifecycle objectLifecycle;
 
 	public void setObjectLifecycle(ObjectLifecycle objectLifecycle) {

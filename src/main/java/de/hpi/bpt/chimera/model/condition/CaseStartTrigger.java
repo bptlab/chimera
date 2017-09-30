@@ -15,7 +15,7 @@ public class CaseStartTrigger {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	private String queryExecutionPlan;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<CaseStartTriggerConsequence> triggerConsequences;
 
 	public String getQueryExecutionPlan() {

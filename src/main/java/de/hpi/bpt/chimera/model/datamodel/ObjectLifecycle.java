@@ -15,7 +15,7 @@ public class ObjectLifecycle {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	List<ObjectLifecycleState> objectLifecycleStates;
 
 	public void setObjectLifecycleStates(List<ObjectLifecycleState> objectLifecycleStates) {

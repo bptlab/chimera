@@ -15,11 +15,11 @@ import javax.persistence.OneToMany;
 @Entity
 public class DataModel {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
 	private int versionNumber;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DataModelClass> dataModelClasses;
 
 	public int getVersionNumber() {

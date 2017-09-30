@@ -12,10 +12,10 @@ import javax.persistence.OneToMany;
 public abstract class AbstractDataControlNode extends AbstractControlNode {
 	private String name = "";
 
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "dataflow_incomming")
 	private List<DataNode> incomingDataNodes = new ArrayList<>();
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "dataflow_outgoing")
 	private List<DataNode> outgoingDataNodes = new ArrayList<>();
 

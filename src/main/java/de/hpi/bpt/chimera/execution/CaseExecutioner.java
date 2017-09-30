@@ -38,7 +38,7 @@ public class CaseExecutioner {
 		this.terminated = false;
 		this.caseModel = caseModel;
 		this.caze = new Case(caseName, caseModel, this);
-		this.dataManager = new DataManager(caze, caseModel.getDataModel());
+		this.dataManager = new DataManager(caseModel.getDataModel(), this);
 	}
 
 	/**

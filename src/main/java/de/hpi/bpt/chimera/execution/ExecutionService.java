@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
@@ -105,5 +104,25 @@ public class ExecutionService {
 		}
 		log.info(String.format("Successfully requested all Case-Informations of CaseModel-Id: %s", cmId));
 		return caseExecutions.get(cmId);
+	}
+
+	/**
+	 * Delete a the Case Executions of a certain CaseModel.
+	 * 
+	 * @param cmId
+	 */
+	public static void deleteCaseModel(String cmId) {
+		if (caseExecutions.containsKey(cmId)) {
+			// TODO: adapt for persistence manager
+			List<CaseExecutioner> executions = caseExecutions.get(cmId);
+			for (CaseExecutioner caseExecutioner : executions) {
+				cases.remove(caseExecutioner.getCase().getId(), caseExecutioner);
+			}
+			caseExecutions.remove(cmId);
+		} else {
+			log.info("Delete CaseModel without cases");
+			// throw new IllegalArgumentException(String.format("CaseModel %s id
+			// does not exist in Case executions", cmId));
+		}
 	}
 }

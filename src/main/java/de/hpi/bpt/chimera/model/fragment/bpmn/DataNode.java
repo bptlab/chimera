@@ -20,7 +20,7 @@ public class DataNode {
 	private String id;
 
 	private String name;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataObjectStateCondition dataObjectState;
 	private String jsonPath;
 

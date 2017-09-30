@@ -10,16 +10,16 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class DataManager {
-	private Case caze;
+	private CaseExecutioner caseExecutioner;
 	private DataModel dataModel;
 	/**
 	 * Map of Id of DataObjectInstance to DataObjectInstance
 	 */
 	private Map<String, DataObjectInstance> dataObjectInstances;
 
-	public DataManager(Case caze, DataModel dataModel) {
-		this.caze = caze;
-		this.dataModel = dataModel;
+	public DataManager(DataModel dataModel, CaseExecutioner caseExecutioner) {
+		this.setDataModel(dataModel);
+		this.setCaseExecutioner(caseExecutioner);
 		this.dataObjectInstances = new HashMap<>();
 	}
 
@@ -34,7 +34,7 @@ public class DataManager {
 			for (DataNode dataNode : outgoingDataNodes) {
 				if (dataNode.getId().equals(newCreationId)) {
 					Map<String, Object> attributeValues = dataManagerBean.getDataNodeAttributeValuesById(newCreationId);
-					DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caze.getCaseExecutioner(), attributeValues);
+					DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caseExecutioner, attributeValues);
 					this.dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
 				}
 			}
@@ -49,13 +49,13 @@ public class DataManager {
 	 */
 	public void createDataObjectInstances(AbstractDataControlNode controlNode) {
 		for (DataNode dataNode : controlNode.getOutgoingDataNodes()) {
-			DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caze.getCaseExecutioner());
+			DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caseExecutioner);
 			dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
 		}
 	}
 
 	public void createDataObjectInstance(DataNode dataNode, Map<String, Object> attributeValues) {
-		DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caze.getCaseExecutioner(), attributeValues);
+		DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caseExecutioner, attributeValues);
 		this.dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
 	}
 
@@ -177,20 +177,20 @@ public class DataManager {
 	}
 
 	// GETTER & SETTER
-	public Case getCaze() {
-		return caze;
-	}
-
-	public void setCaze(Case caze) {
-		this.caze = caze;
-	}
-
 	public DataModel getDataModel() {
 		return dataModel;
 	}
 
 	public void setDataModel(DataModel dataModel) {
 		this.dataModel = dataModel;
+	}
+
+	public CaseExecutioner getCaseExecutioner() {
+		return caseExecutioner;
+	}
+
+	public void setCaseExecutioner(CaseExecutioner caseExecutioner) {
+		this.caseExecutioner = caseExecutioner;
 	}
 
 	public Map<String, DataObjectInstance> getDataObjectInstances() {

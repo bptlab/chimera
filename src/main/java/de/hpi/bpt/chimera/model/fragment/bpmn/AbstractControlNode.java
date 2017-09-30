@@ -22,11 +22,11 @@ public abstract class AbstractControlNode {
 	private int dbId;
 
 	private String id;
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "targetRef")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "targetRef")
 	@JoinColumn(name = "targetRef")
 	private List<SequenceFlowAssociation> incomingSequenceFlows = new ArrayList<>();
 
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "sourceRef")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceRef")
 	@JoinColumn(name = "sourceRef")
 	private List<SequenceFlowAssociation> outgoingSequenceFlows = new ArrayList<>();
 

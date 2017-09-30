@@ -17,7 +17,7 @@ public class TerminationConditionComponent {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL)
 	List<DataObjectStateCondition> conditions;
 
 	public TerminationConditionComponent() {
