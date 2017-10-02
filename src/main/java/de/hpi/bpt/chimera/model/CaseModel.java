@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -19,6 +20,7 @@ import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.persistencemanager.DomainModelPersistenceManager;
 
 @Entity
+@NamedQuery(name = "CaseModel.getAll", query = "SELECT c FROM CaseModel c")
 public class CaseModel {
 	@Id
 	private String cmId;

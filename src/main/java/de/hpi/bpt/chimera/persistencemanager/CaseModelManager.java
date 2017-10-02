@@ -7,16 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
-import de.hpi.bpt.chimera.model.condition.TerminationCondition;
-import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
-import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.parser.CaseModelParser;
 import de.hpi.bpt.chimera.parser.IllegalCaseModelException;
 
@@ -74,7 +67,8 @@ public class CaseModelManager {
 		if (caseModels.containsKey(id)) {
 			cm = caseModels.get(id);
 		} else {
-			cm = DomainModelPersistenceManager.loadCaseModel(id);
+			// cm = DomainModelPersistenceManager.loadCaseModel(id);
+			return null;
 		}
 		return cm;
 	}
@@ -106,7 +100,7 @@ public class CaseModelManager {
 				throw e;
 			}
 		} else {
-			throw new IllegalArgumentException(String.format("CaseModel %s id does not exist", cmId));
+			throw new IllegalArgumentException(String.format("CaseModel id: %s is not assigned", cmId));
 		}
 	}
 }

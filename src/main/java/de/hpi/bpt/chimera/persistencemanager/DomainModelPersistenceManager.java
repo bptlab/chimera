@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
-
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class DomainModelPersistenceManager {
@@ -63,20 +61,16 @@ public class DomainModelPersistenceManager {
 	 *            database.
 	 * @return the loaded CaseModel Object
 	 */
-	public static CaseModel loadCaseModel(String id) {
+	public static CaseModel loadCaseModel(String cmId) {
 		EntityManager em = getEntityManagerFactory().createEntityManager();
-		em.getTransaction().begin();
-		Query q = em.createQuery("SELECT c FROM CaseModel c WHERE c.cmId=:id");
-		q.setParameter("id", id);
-
-		return (CaseModel) q.getSingleResult();
+		return em.find(CaseModel.class, cmId);
 	}
 
 	public static List<CaseModel> loadAllCaseModels() {
-		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-		List<CaseModel> caseModelList = entityManager.createQuery("SELECT c FROM CaseModel c").getResultList();
-		entityManager.getTransaction().commit();
+		EntityManager em = getEntityManagerFactory().createEntityManager();
+		em.getTransaction().begin();
+		List<CaseModel> caseModelList = em.createNamedQuery("CaseModel.getAll", CaseModel.class).getResultList();
+		em.getTransaction().commit();
 
 		if (caseModelList == null)
 			return new ArrayList<>();
@@ -87,6 +81,8 @@ public class DomainModelPersistenceManager {
 	public static void deleteCaseModel(String cmId) {
 		EntityManager em = getEntityManagerFactory().createEntityManager();
 		CaseModel cmToRemove = em.find(CaseModel.class, cmId);
+		if (cmToRemove == null)
+			throw new IllegalArgumentException(String.format("CaseModel id : %s is not assigned.", cmId));
 		em.getTransaction().begin();
 		em.remove(cmToRemove);
 		em.getTransaction().commit();

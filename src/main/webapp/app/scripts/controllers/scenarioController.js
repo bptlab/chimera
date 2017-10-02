@@ -1,8 +1,8 @@
 'use strict';
-
+//TODO: fix usage of $window.location.reload()
 angular.module('jfrontend')
-    .controller('ScenarioController', ['$routeParams', '$location', '$http', '$scope',
-        function ($routeParams, $location, $http, $scope) {
+    .controller('ScenarioController', ['$routeParams', '$location', '$window', '$http', '$scope',
+        function ($routeParams, $location, $window, $http, $scope) {
             $scope.$on('$viewContentLoaded', function () {
             	// TODO: think wether this should be called everytime just CaseModel gets refreshed
                 console.log($routeParams.id);
@@ -14,12 +14,14 @@ angular.module('jfrontend')
                     // fetching details for this scenario
                     $http.get(JEngine_Server_URL + "/" + JCore_REST_Interface + "/scenario/" + controller.currentScenario['id'] + "/").success(function (data) {
                         controller.currentScenario['details'] = data;
+                        // requesting additional informations for this scenario
+                        controller.getInstancesOfScenario(controller.currentScenario['id']);
+                        controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
                     }).error(function () {
                         console.log('request failed');
+                        $location.path('scenario/');
+                        $window.location.reload();
                     });
-                    // requesting additional informations for this scenario
-                    controller.getInstancesOfScenario(controller.currentScenario['id']);
-                    controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
                 }
             });
             // For accessing data from inside the $http context
@@ -81,6 +83,7 @@ angular.module('jfrontend')
             // navigating to the specified scenario
             this.goToDetailsFrom = function (id) {
                 $location.path('scenario/' + $routeParams.id + '/instance/' + id);
+                $window.location.reload();
             };
 
             // helper for accessing scenario details for a scenario
@@ -103,6 +106,7 @@ angular.module('jfrontend')
                 });
                 //navigating to upper scenario level
                 $location.path("/scenario/");
+                $location.reload();
             };
 
             // retrieving the termination condition for this scenario
@@ -138,6 +142,7 @@ angular.module('jfrontend')
             };
 
             source.addEventListener('refresh', function (event) {
+            	console.log('refreshing')
                 controller.getInstancesOfScenario(controller.currentScenario['id']);
                 controller.getTerminationConditionOfScenario(controller.currentScenario['id']);
             });

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('jfrontend')
-    .controller('ScenarioInstanceController', ['$routeParams', '$location', '$http', '$scope',
-        function ($routeParams, $location, $http, $scope) {
+    .controller('ScenarioInstanceController', ['$routeParams', '$location', '$window', '$http', '$scope',
+        function ($routeParams, $location, $window, $http, $scope) {
             var instanceCtrl = this;
 
             $scope.$on('$viewContentLoaded', function () {
@@ -173,6 +173,8 @@ angular.module('jfrontend')
                     }
                 }).error(function () {
                     console.log('request failed');
+                    $location.path('/scenario/');
+                    $window.location.reload();
                 });
             };
 
@@ -181,6 +183,7 @@ angular.module('jfrontend')
             // Got to the instance with the given Id
             this.goToDetailsFrom = function (id) {
                 $location.path("/scenario/" + $routeParams.id + "/instance/" + id);
+                $window.location.reload();
             };
 
             // returns the current instance object
@@ -221,6 +224,7 @@ angular.module('jfrontend')
                     instanceCtrl.activityInputAttributes = {};
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
+                    $window.location.reload();
                 }).error(function () {
                     console.log('request failed');
                 });
@@ -292,6 +296,7 @@ angular.module('jfrontend')
                     instanceCtrl.selectedStates = {};
                     //reloading content so the dashboard is uptodate
                     instanceCtrl.refreshPage();
+                    $window.location.reload();
                 }).error(function () {
                     console.log('request failed');
                 });
@@ -455,6 +460,7 @@ angular.module('jfrontend')
 
             // Event Listener for receiving events from the backend and refreshing the page
             source.addEventListener('refresh', function (event) {
+            	console.log('inst refreshing');
                 instanceCtrl.refreshPage();
             });
 
