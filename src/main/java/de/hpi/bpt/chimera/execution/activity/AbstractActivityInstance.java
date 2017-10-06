@@ -102,10 +102,10 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		if (!getState().equals(State.RUNNING))
 			return;
 
+		// TODO: maybe state after creation of following
+		setState(State.TERMINATED);
 		this.getFragmentInstance().createFollowing(getControlNode());
 		this.getCaseExecutioner().startAutomaticTasks();
-		// TODO: maybe state before creation of following
-		setState(State.TERMINATED);
 	}
 
 

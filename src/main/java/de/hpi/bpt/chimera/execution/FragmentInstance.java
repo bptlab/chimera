@@ -4,8 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
+import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
+import de.hpi.bpt.chimera.jcore.controlnodes.State;
+import de.hpi.bpt.chimera.jcore.controlnodes.XorGatewayInstance;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
@@ -113,6 +118,29 @@ public class FragmentInstance {
 				return false;
 		}
 		return true;
+	}
+
+
+	/**
+	 * 
+	 * @param nodes
+	 * @return true if the ControlNode is terminated.
+	 */
+	public boolean isTerminated(AbstractControlNode node) {
+		if (controlNodes.containsKey(node.getId()) && controlNodes.get(node.getId()).getState() == State.TERMINATED) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
+	// Gateways ist better
+	/**
+	 * @return a ArrayList of executing gateways.
+	 */
+	public Map<String, AbstractGatewayInstance> getExecutingGateways() {
+		return this.controlNodeInstances.entrySet().stream().filter(x -> (x.getValue().getClass().equals(XorGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (AbstractGatewayInstance) p.getValue()));
 	}
 
 	// GETTER & SETTER
