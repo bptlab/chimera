@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.FragmentXmlWrapper;
 
@@ -21,6 +22,7 @@ public class GatewayParser {
 	 */
 	public static void parseGateways(BpmnFragment fragment, FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver) {
 		fragment.setParallelGateways(getParallelGatewayFromXmlWrapper(fragXmlWrap, sfResolver));
+		fragment.setExclusiveGateways(getExclusiveGatewayFromXmlWrapper(fragXmlWrap, sfResolver));
 	}
 
 	/**
@@ -44,5 +46,20 @@ public class GatewayParser {
 			parallelGatewayList.add(parallelGateway);
 		}
 		return parallelGatewayList;
+	}
+
+
+	public static List<ExclusiveGateway> getExclusiveGatewayFromXmlWrapper(FragmentXmlWrapper fragXmlWrap, SequenceFlowResolver sfResolver) {
+		List<ExclusiveGateway> exclusiveGatewayList = new ArrayList<>();
+
+		for (de.hpi.bpt.chimera.parser.fragment.bpmn.unmarshaller.xml.ExclusiveGateway xmlExclusiveGateway : fragXmlWrap.getXorGateways()) {
+			ExclusiveGateway exclusiveGateway = new ExclusiveGateway();
+			exclusiveGateway.setId(xmlExclusiveGateway.getId());
+			exclusiveGateway.setName(xmlExclusiveGateway.getName());
+			sfResolver.resolveIncomingSequenceFlow(xmlExclusiveGateway.getIncomingSequenceFlows(), exclusiveGateway);
+			sfResolver.resolveOutgoingSequenceFlow(xmlExclusiveGateway.getOutgoingSequenceFlows(), exclusiveGateway);
+			exclusiveGatewayList.add(exclusiveGateway);
+		}
+		return exclusiveGatewayList;
 	}
 }

@@ -90,6 +90,7 @@ public class CaseExecutioner {
 		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.READY) {
 			Map<String, DataObjectInstance> lockedDataObjectInstances = dataManager.lockDataObjectInstances(selectedDataObjectInstanceIds);
 			((AbstractActivityInstance) nodeInstance).setSelectedDataObjectInstances(lockedDataObjectInstances);
+			nodeInstance.getFragmentInstance().skipAlternativeControlNodes(nodeInstance);
 			nodeInstance.begin();
 			return;
 		}

@@ -28,7 +28,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		log.info("I was in Provider");
+		// TODO comment the following line in, or refactor this complete filter,
+		// so that the reminder isn't necessary anymore.
+		// log.info("I was in Provider");
 		this.requestContext = requestContext;
 		// if (!isValidScenario()) {
 		// abortIllegalScenario(requestContext.getMethod());

@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
+import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 
 @Entity
@@ -34,6 +35,9 @@ public class BpmnFragment {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<ParallelGateway> parallelGateways = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<ExclusiveGateway> exclusiveGateways = new ArrayList<>();
+
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<SequenceFlowAssociation> sequenceFlowAssociations = new ArrayList<>();
 	
@@ -100,5 +104,14 @@ public class BpmnFragment {
 	public void setParallelGateways(List<ParallelGateway> parallelGateways) {
 		this.parallelGateways = parallelGateways;
 	}
+
+	public List<ExclusiveGateway> getExclusiveGateways() {
+		return exclusiveGateways;
+	}
+
+	public void setExclusiveGateways(List<ExclusiveGateway> exclusiveGateways) {
+		this.exclusiveGateways = exclusiveGateways;
+	}
+
 
 }

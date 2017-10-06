@@ -5,17 +5,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.execution.event.StartEventInstance;
 import de.hpi.bpt.chimera.execution.gateway.AbstractGatewayInstance;
+import de.hpi.bpt.chimera.execution.gateway.ExclusiveGatewayInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.jcore.controlnodes.XorGatewayInstance;
 import de.hpi.bpt.chimera.model.fragment.Fragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
 
 public class FragmentInstance {
+	private static final Logger log = Logger.getLogger(FragmentInstance.class);
+
 	private String id;
 	private Fragment fragment;
 	private Case caze;
@@ -139,9 +142,48 @@ public class FragmentInstance {
 	/**
 	 * @return a ArrayList of executing gateways.
 	 */
-	public Map<String, AbstractGatewayInstance> getExecutingGateways() {
-		return this.controlNodeInstances.entrySet().stream().filter(x -> (x.getValue().getClass().equals(XorGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (AbstractGatewayInstance) p.getValue()));
+	public Map<String, ExclusiveGatewayInstance> getExecutingExclusiveGateways() {
+		return this.controlNodeInstances.entrySet().stream().filter(x -> (x.getValue().getClass().equals(ExclusiveGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (ExclusiveGatewayInstance) p.getValue()));
 	}
+
+	/**
+	 * 
+	 * @param controlNodeId
+	 * @return the Instance of the ControlNode with the given Id. Null if that
+	 *         ControlNode isn't instantiated yet.
+	 */
+	public ControlNodeInstance getControlNodeInstance(String controlNodeId) {
+		// TODO is it possible that someone calls this method for a controllnode
+		// that isn't instantiated yet?
+		if (controlNodes.containsKey(controlNodeId)) {
+			return controlNodes.get(controlNodeId);
+		} else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Checks whether the given ControlNodeInstance is part of a branch of an
+	 * executing Gateway.In this case all the ControlNodeInstances of all the
+	 * other branches of this Gateway will be skipped. (used for activities
+	 * after ExclusiveGateways)
+	 *
+	 * @param controlNodeInstance
+	 *            The control node instance, which was transferred to the state
+	 *            ready.
+	 */
+	public void skipAlternativeControlNodes(ControlNodeInstance controlNodeInstance) {
+		Map<String, ExclusiveGatewayInstance> gateways = this.getExecutingExclusiveGateways();
+		for (ExclusiveGatewayInstance gateway : gateways.values()) {
+			if (gateway.containsControlNodeInFollowing(controlNodeInstance.getControlNode())) {
+				// log.info(String.format("skipping alternatives for the
+				// following Gateway: %s", gateway.getId()));
+				gateway.skipAlternativeBranches(controlNodeInstance.getControlNode());
+			}
+		}
+	}
+
 
 	// GETTER & SETTER
 	public String getId() {

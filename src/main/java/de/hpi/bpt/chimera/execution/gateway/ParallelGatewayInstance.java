@@ -79,7 +79,7 @@ public class ParallelGatewayInstance extends AbstractGatewayInstance {
 		}
 		// looks that all predecessors are terminated or executing Gateways
 		for (AbstractControlNode node : predecessors) {
-			if (!getFragmentInstance().isTerminated(node) && !getFragmentInstance().getExecutingGateways().containsKey(node)) {
+			if (!getFragmentInstance().isTerminated(node) && !getFragmentInstance().getExecutingExclusiveGateways().containsKey(node)) {
 				return false;
 			}
 		}
