@@ -72,7 +72,7 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 		Set<Integer> toCreate = new HashSet<>(outputClassIds);
 		toCreate.removeAll(inputClassIds);
 		if (dataClassNameToStateName.isEmpty()) {
-			dataClassNameToStateName = loadOnlyOutputSet();
+			dataClassNameToStateName = loadSingleOutputSet();
 		}
 
 		createDataObjects(toCreate, dataClassNameToStateName);
@@ -125,7 +125,7 @@ public class TaskOutgoingBehavior extends AbstractParallelOutgoingBehavior {
 	 *
 	 * @return Map from data class id to state id, if the dataobject has only one possible output set
 	 */
-	private Map<String, String> loadOnlyOutputSet() {
+	private Map<String, String> loadSingleOutputSet() {
 		DbDataFlow dbDataFlow = new DbDataFlow();
 		List<Integer> outputSets = dbDataFlow.getOutputSetsForControlNode(this.getControlNodeId());
 		if (outputSets.size() > 1) {

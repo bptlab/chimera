@@ -2,7 +2,7 @@ package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataManagerBean;
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
@@ -262,10 +262,10 @@ public class ActivityRestService extends AbstractRestService {
 			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
 
-		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
+		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
 
 		JSONArray result = new JSONArray();
-		for (DataObjectInstance instance : selectedInstances) {
+		for (DataObject instance : selectedInstances) {
 			result.put(new JSONObject(new DataObjectJaxBean(instance)));
 		}
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();

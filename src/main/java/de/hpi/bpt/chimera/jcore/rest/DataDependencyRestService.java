@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataNodeJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
@@ -151,10 +151,10 @@ public class DataDependencyRestService extends AbstractRestService {
 		if (caseExecutioner.getActivityInstance(activityInstanceId) == null) {
 			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
-		List<DataObjectInstance> availableInput = caseExecutioner.getAvailableInputForAcitivityInstance(activityInstanceId);
+		List<DataObject> availableInput = caseExecutioner.getAvailableInputForAcitivityInstance(activityInstanceId);
 
 		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
-		for (DataObjectInstance instance : availableInput) {
+		for (DataObject instance : availableInput) {
 			resultBeans.add(new DataObjectJaxBean(instance));
 		}
 		JSONArray result = new JSONArray(resultBeans);
@@ -174,7 +174,7 @@ public class DataDependencyRestService extends AbstractRestService {
 			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
 
-		Collection<DataObjectInstance> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
+		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
 
 		JSONArray result = new JSONArray();
 		for (DataNode dataNode : activityInstance.getControlNode().getOutgoingDataNodes()) {
@@ -198,13 +198,13 @@ public class DataDependencyRestService extends AbstractRestService {
 	 * @param selectedInstances
 	 * @return JSONObject
 	 */
-	private JSONObject buildDataObjectsJson(DataNode dataNode, Collection<DataObjectInstance> selectedInstances) {
+	private JSONObject buildDataObjectsJson(DataNode dataNode, Collection<DataObject> selectedInstances) {
 		JSONObject result = new JSONObject();
 
 		JSONArray dataObjects = new JSONArray();
 		JSONObject attributeConfiguration = new JSONObject();
 
-		for (DataObjectInstance dataObjectInstance : selectedInstances) {
+		for (DataObject dataObjectInstance : selectedInstances) {
 			if (dataNode.getDataClass().equals(dataObjectInstance.getDataClass()) && dataObjectInstance.getObjectLifecycleState().isSucceeding(dataNode.getObjectLifecycleState())) {
 				DataObjectJaxBean possibleInputObject = new DataObjectJaxBean(dataObjectInstance);
 				dataObjects.put(new JSONObject(possibleInputObject));

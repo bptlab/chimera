@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 
 @Entity
 public class TerminationConditionComponent {

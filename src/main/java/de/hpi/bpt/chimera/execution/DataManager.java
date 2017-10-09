@@ -9,18 +9,22 @@ import de.hpi.bpt.chimera.model.datamodel.DataModel;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
+/**
+ * I manage the data objects of a case.
+ */
 public class DataManager {
+
 	private CaseExecutioner caseExecutioner;
 	private DataModel dataModel;
 	/**
 	 * Map of Id of DataObjectInstance to DataObjectInstance
 	 */
-	private Map<String, DataObjectInstance> dataObjectInstances;
+	private Map<String, DataObject> dataObjects;
 
 	public DataManager(DataModel dataModel, CaseExecutioner caseExecutioner) {
 		this.setDataModel(dataModel);
 		this.setCaseExecutioner(caseExecutioner);
-		this.dataObjectInstances = new HashMap<>();
+		this.dataObjects = new HashMap<>();
 	}
 
 	/**
@@ -29,13 +33,13 @@ public class DataManager {
 	 * @param outgoingDataNodes
 	 * @param dataManagerBean
 	 */
-	public void createDataObjectInstances(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
+	public void createDataObject(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
 		for (String newCreationId : dataManagerBean.getNewCreations()) {
 			for (DataNode dataNode : outgoingDataNodes) {
 				if (dataNode.getId().equals(newCreationId)) {
 					Map<String, Object> attributeValues = dataManagerBean.getDataNodeAttributeValuesById(newCreationId);
-					DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caseExecutioner, attributeValues);
-					this.dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
+					DataObject dataObjectInstance = new DataObject(dataNode, caseExecutioner, attributeValues);
+					this.dataObjects.put(dataObjectInstance.getId(), dataObjectInstance);
 				}
 			}
 		}
@@ -44,19 +48,14 @@ public class DataManager {
 	/**
 	 * Create new DataObjectInstances with the outgoing DataNodes of an specific
 	 * ControlNode.
-	 * 
+	 * TODO: what about input DOs?
 	 * @param controlNode
 	 */
-	public void createDataObjectInstances(AbstractDataControlNode controlNode) {
+	public void createDataObject(AbstractDataControlNode controlNode) {
 		for (DataNode dataNode : controlNode.getOutgoingDataNodes()) {
-			DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caseExecutioner);
-			dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
+			DataObject dataObjectInstance = new DataObject(dataNode, caseExecutioner);
+			dataObjects.put(dataObjectInstance.getId(), dataObjectInstance);
 		}
-	}
-
-	public void createDataObjectInstance(DataNode dataNode, Map<String, Object> attributeValues) {
-		DataObjectInstance dataObjectInstance = new DataObjectInstance(dataNode, caseExecutioner, attributeValues);
-		this.dataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
 	}
 
 	/**
@@ -64,13 +63,13 @@ public class DataManager {
 	 * 
 	 * @param dataManagerBean
 	 */
-	public void transitionDataObjectInstances(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
+	public void transitionDataObject(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
 		for (Map.Entry<String, String> transition : dataManagerBean.getTransitions().entrySet()) {
 			String dataObjectId = transition.getKey();
 			String dataNodeId = transition.getValue();
-			if (!dataObjectInstances.containsKey(dataObjectId))
+			if (!dataObjects.containsKey(dataObjectId))
 				continue;
-			DataObjectInstance objectInstance = dataObjectInstances.get(dataObjectId);
+			DataObject objectInstance = dataObjects.get(dataObjectId);
 			for (DataNode dataNode : outgoingDataNodes) {
 				if (dataNode.getId().equals(dataNodeId)) {
 					objectInstance.setDataNode(dataNode);
@@ -89,11 +88,11 @@ public class DataManager {
 	 *            of dataObjectInstanceIds
 	 * @return Map of DataObjectInstances mapped by their ids
 	 */
-	public Map<String, DataObjectInstance> lockDataObjectInstances(List<String> dataObjectInstanceIds) {
-		Map<String, DataObjectInstance> lockedDataObjectInstances = new HashMap<>();
+	public Map<String, DataObject> lockDataObjects(List<String> dataObjectInstanceIds) {
+		Map<String, DataObject> lockedDataObjectInstances = new HashMap<>();
 		for (String id : dataObjectInstanceIds) {
-			if (dataObjectInstances.containsKey(id)) {
-				DataObjectInstance dataObjectInstance = dataObjectInstances.get(id);
+			if (dataObjects.containsKey(id)) {
+				DataObject dataObjectInstance = dataObjects.get(id);
 				dataObjectInstance.lock();
 				lockedDataObjectInstances.put(dataObjectInstance.getId(), dataObjectInstance);
 			}
@@ -106,11 +105,11 @@ public class DataManager {
 	 * 
 	 * @param toUnlockDataObjectInstances
 	 */
-	public void unlockDataObjectInstances(Map<String, DataObjectInstance> toUnlockDataObjectInstances) {
+	public void unlockDataObjects(Map<String, DataObject> toUnlockDataObjectInstances) {
 		// toUnlockDataObjectInstances.values().forEach(DataObjectInstance::unlock);
-		for (Map.Entry<String, DataObjectInstance> entry : toUnlockDataObjectInstances.entrySet()) {
-			if (dataObjectInstances.containsKey(entry.getKey())) {
-				DataObjectInstance dataObjectInstance = dataObjectInstances.get(entry.getKey());
+		for (Map.Entry<String, DataObject> entry : toUnlockDataObjectInstances.entrySet()) {
+			if (dataObjects.containsKey(entry.getKey())) {
+				DataObject dataObjectInstance = dataObjects.get(entry.getKey());
 				dataObjectInstance.unlock();
 			}
 		}
@@ -119,16 +118,17 @@ public class DataManager {
 	/**
 	 * Get DataObjectInstances that are instantiated by the DataNodes.
 	 * 
+	 * TODO get all DOs that fulfill the DataObjectStateCondition of the DataNodes
 	 * @param dataNodesToCheck
 	 * @return List of DataObjectInstances
 	 */
-	public List<DataObjectInstance> getExistingDataObjectInstances(List<DataNode> dataNodesToCheck) {
+	public List<DataObject> getExistingDataObjects(List<DataNode> dataNodesToCheck) {
 		// create a Map of DataNode to DataObjectInstance
-		Map<DataNode, DataObjectInstance> dataNodeToInstanceAssociation = new HashMap<>();
-		for (DataObjectInstance instance : dataObjectInstances.values())
+		Map<DataNode, DataObject> dataNodeToInstanceAssociation = new HashMap<>();
+		for (DataObject instance : dataObjects.values())
 			dataNodeToInstanceAssociation.put(instance.getDataNode(), instance);
 		// resolve Map
-		List<DataObjectInstance> existingInstances = new ArrayList<>();
+		List<DataObject> existingInstances = new ArrayList<>();
 		for (DataNode dataNode : dataNodesToCheck) {
 			if (dataNodeToInstanceAssociation.containsKey(dataNode))
 				existingInstances.add(dataNodeToInstanceAssociation.get(dataNode));
@@ -147,7 +147,7 @@ public class DataManager {
 		List<DataNode> existingDataNodes = new ArrayList<>();
 		// make sure that even for DataNodes that occur twice exists two
 		// Instances.
-		for (DataObjectInstance dataObjectInstance : dataObjectInstances.values()) {
+		for (DataObject dataObjectInstance : dataObjects.values()) {
 			existingDataNodes.add(dataObjectInstance.getDataNode());
 		}
 		for (DataNode dataNodeToCheck : dataNodesToCheck) {
@@ -168,9 +168,9 @@ public class DataManager {
 	public void setDataAttributeValues(Map<String, Map<String, Object>> dataAttributeValues) {
 		for (Map.Entry<String, Map<String, Object>> transition : dataAttributeValues.entrySet()) {
 			String dataObjectId = transition.getKey();
-			if (!dataObjectInstances.containsKey(dataObjectId))
+			if (!dataObjects.containsKey(dataObjectId))
 				continue;
-			DataObjectInstance dataObject = dataObjectInstances.get(dataObjectId);
+			DataObject dataObject = dataObjects.get(dataObjectId);
 			Map<String, Object> attributeValues = transition.getValue();
 			dataObject.setDataAttributeValues(attributeValues);
 		}
@@ -193,7 +193,7 @@ public class DataManager {
 		this.caseExecutioner = caseExecutioner;
 	}
 
-	public Map<String, DataObjectInstance> getDataObjectInstances() {
-		return dataObjectInstances;
+	public Map<String, DataObject> getDataObjectInstances() {
+		return dataObjects;
 	}
 }

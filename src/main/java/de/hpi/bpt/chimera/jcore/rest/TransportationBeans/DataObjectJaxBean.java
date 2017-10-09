@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest.TransportationBeans;
 
 import de.hpi.bpt.chimera.execution.DataAttributeInstance;
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class DataObjectJaxBean {
 	 */
 	private DataAttributeJaxBean[] attributeConfiguration;
 
-	public DataObjectJaxBean(DataObjectInstance instance) {
+	public DataObjectJaxBean(DataObject instance) {
 		setId(instance.getId());
 		setLabel(instance.getDataNode().getName());
 		setDataclass(instance.getDataClass().getName());

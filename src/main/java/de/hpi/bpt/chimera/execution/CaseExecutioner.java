@@ -53,7 +53,7 @@ public class CaseExecutioner {
 	// FragmentInstance
 	public void createDataObjectInstances(AbstractControlNode node) {
 		if (node instanceof AbstractDataControlNode) {
-			dataManager.createDataObjectInstances((AbstractDataControlNode) node);
+			dataManager.createDataObject((AbstractDataControlNode) node);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class CaseExecutioner {
 			return;
 
 		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.READY) {
-			Map<String, DataObjectInstance> lockedDataObjectInstances = dataManager.lockDataObjectInstances(selectedDataObjectInstanceIds);
+			Map<String, DataObject> lockedDataObjectInstances = dataManager.lockDataObjects(selectedDataObjectInstanceIds);
 			((AbstractActivityInstance) nodeInstance).setSelectedDataObjectInstances(lockedDataObjectInstances);
 			nodeInstance.getFragmentInstance().skipAlternativeControlNodes(nodeInstance);
 			nodeInstance.begin();
@@ -108,11 +108,11 @@ public class CaseExecutioner {
 
 		// TODO: think about instance has to be running
 		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.RUNNING) {
-			Map<String, DataObjectInstance> toUnlockDataObjectInstances = ((AbstractActivityInstance) nodeInstance).getSelectedDataObjectInstances();
-			dataManager.unlockDataObjectInstances(toUnlockDataObjectInstances);
+			Map<String, DataObject> toUnlockDataObjectInstances = ((AbstractActivityInstance) nodeInstance).getSelectedDataObjectInstances();
+			dataManager.unlockDataObjects(toUnlockDataObjectInstances);
 			AbstractDataControlNode controlNode = (AbstractDataControlNode) nodeInstance.getControlNode();
-			dataManager.transitionDataObjectInstances(controlNode.getOutgoingDataNodes(), dataManagerBean);
-			dataManager.createDataObjectInstances(controlNode.getOutgoingDataNodes(), dataManagerBean);
+			dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
+			dataManager.createDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
 			nodeInstance.terminate();
 		}
 	}
@@ -157,8 +157,8 @@ public class CaseExecutioner {
 	 * 
 	 * @return List of DataObjectInstance
 	 */
-	public List<DataObjectInstance> getDataObjectInstances() {
-		Collection<DataObjectInstance> instances = dataManager.getDataObjectInstances().values();
+	public List<DataObject> getDataObjectInstances() {
+		Collection<DataObject> instances = dataManager.getDataObjectInstances().values();
 		return new ArrayList<>(instances);
 	}
 
@@ -168,7 +168,7 @@ public class CaseExecutioner {
 	 * @param instanceId
 	 * @return DataObjectInstance
 	 */
-	public DataObjectInstance getDataObjectInstance(String instanceId) {
+	public DataObject getDataObjectInstance(String instanceId) {
 		if (dataManager.getDataObjectInstances().containsKey(instanceId)) {
 			return dataManager.getDataObjectInstances().get(instanceId);
 		}
@@ -181,7 +181,7 @@ public class CaseExecutioner {
 	 * @param activityInstanceId
 	 * @return List of DataObjectInstance
 	 */
-	public List<DataObjectInstance> getAvailableInputForAcitivityInstance(String activityInstanceId) {
+	public List<DataObject> getAvailableInputForAcitivityInstance(String activityInstanceId) {
 		AbstractActivityInstance activityInstance = getActivityInstance(activityInstanceId);
 		List<DataNode> dataNodesToCheck = activityInstance.getControlNode().getIncomingDataNodes();
 		return dataManager.getExistingDataObjectInstances(dataNodesToCheck);
@@ -207,9 +207,9 @@ public class CaseExecutioner {
 	 * @return boolean
 	 */
 	public boolean canTerminate() {
-		List<DataObjectInstance> dataObjectInstances = this.getDataObjectInstances();
+		List<DataObject> dataObjectInstances = this.getDataObjectInstances();
 		List<DataObjectStateCondition> existingConditions = new ArrayList<>();
-		for (DataObjectInstance dataObjectInstance : dataObjectInstances)
+		for (DataObject dataObjectInstance : dataObjectInstances)
 			existingConditions.add(dataObjectInstance.getDataNode().getDataObjectState());
 		return caseModel.getTerminationCondition().isFulfilled(existingConditions);
 	}
@@ -236,14 +236,14 @@ public class CaseExecutioner {
 	 * @param dataObjectInstance
 	 * @param newState
 	 */
-	public void logDataObjectTransition(DataObjectInstance instance, ObjectLifecycleState newState) {
+	public void logDataObjectTransition(DataObject instance, ObjectLifecycleState newState) {
 		DataObjectLog dataObjectLog = new DataObjectLog(instance, instance.getObjectLifecycleState(), newState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
 		sortLogs(dataObjectLogs);
 	}
 
-	public void logDataObjectTransition(DataObjectInstance dataObjectInstance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
+	public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
 		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, oldState, newState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
@@ -273,15 +273,6 @@ public class CaseExecutioner {
 		logEntries.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
 	}
 
-
-	public void createDataObjectInstance(String activityInstanceId, String dataNodeId, Map<String, Object> attributeValues) {
-		AbstractActivityInstance instance = this.getActivityInstance(activityInstanceId);
-		for (DataNode dataNode : instance.getControlNode().getOutgoingDataNodes()) {
-			if (dataNode.getId().equals(dataNodeId)) {
-				dataManager.createDataObjectInstance(dataNode, attributeValues);
-			}
-		}
-	}
 
 	public void setDataAttributeValues(Map<String, Map<String, Object>> dataAttributeValues) {
 		dataManager.setDataAttributeValues(dataAttributeValues);

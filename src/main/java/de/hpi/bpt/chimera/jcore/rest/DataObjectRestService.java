@@ -1,7 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 
@@ -44,14 +44,14 @@ public class DataObjectRestService extends AbstractRestService {
 			return CASE_NOT_FOUND;
 		}
 
-		List<DataObjectInstance> dataObjectInstances = caseExecutioner.getDataObjectInstances();
+		List<DataObject> dataObjectInstances = caseExecutioner.getDataObjectInstances();
 
 		if (!filterString.isEmpty()) {
 			dataObjectInstances = dataObjectInstances.stream().filter(instance -> instance.getId().contains(filterString)).collect(Collectors.toList());
 		}
 
 		JSONArray result = new JSONArray();
-		for (DataObjectInstance instance : dataObjectInstances) {
+		for (DataObject instance : dataObjectInstances) {
 			result.put(new JSONObject(new DataObjectJaxBean(instance)));
 		}
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
@@ -66,7 +66,7 @@ public class DataObjectRestService extends AbstractRestService {
 			return CASE_NOT_FOUND;
 		}
 
-		DataObjectInstance dataObjectInstance = caseExecutioner.getDataObjectInstance(instanceId);
+		DataObject dataObjectInstance = caseExecutioner.getDataObjectInstance(instanceId);
 		if (dataObjectInstance == null) {
 			return DATAOBJECT_NOT_FOUND;
 		}

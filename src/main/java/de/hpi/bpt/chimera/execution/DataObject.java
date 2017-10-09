@@ -9,7 +9,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
-public class DataObjectInstance {
+public class DataObject {
 	private String id;
 	private DataNode dataNode;
 	private CaseExecutioner caseExecutioner;
@@ -24,7 +24,7 @@ public class DataObjectInstance {
 	 * @param dataNode
 	 * @param caseExecutioner
 	 */
-	public DataObjectInstance(DataNode dataNode, CaseExecutioner caseExecutioner) {
+	public DataObject(DataNode dataNode, CaseExecutioner caseExecutioner) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.locked = false;
 		this.caseExecutioner = caseExecutioner;
@@ -39,7 +39,7 @@ public class DataObjectInstance {
 	 * @param dataNode
 	 * @param attributeValues
 	 */
-	public DataObjectInstance(DataNode dataNode, CaseExecutioner caseExecutioner, Map<String, Object> attributeValues) {
+	public DataObject(DataNode dataNode, CaseExecutioner caseExecutioner, Map<String, Object> attributeValues) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.locked = false;
 		this.caseExecutioner = caseExecutioner;

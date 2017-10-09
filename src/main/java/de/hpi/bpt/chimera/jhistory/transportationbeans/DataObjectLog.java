@@ -4,14 +4,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.NONE)
 public class DataObjectLog extends LogEntry {
 
-	public DataObjectLog(DataObjectInstance instance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
+	public DataObjectLog(DataObject instance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
 		super();
 		this.setLabel(instance.getDataNode().getName());
 		this.setObjectReferenceId(instance.getId());

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
-import de.hpi.bpt.chimera.execution.DataObjectInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
@@ -15,7 +15,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
-	private Map<String, DataObjectInstance> selectedDataObjectInstances;
+	private Map<String, DataObject> selectedDataObjectInstances;
 
 	/**
 	 * Create a new AbstractActivityInstance.
@@ -126,11 +126,11 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		return (Activity) super.getControlNode();
 	}
 
-	public Map<String, DataObjectInstance> getSelectedDataObjectInstances() {
+	public Map<String, DataObject> getSelectedDataObjectInstances() {
 		return selectedDataObjectInstances;
 	}
 
-	public void setSelectedDataObjectInstances(Map<String, DataObjectInstance> selectedDataObjectInstances) {
+	public void setSelectedDataObjectInstances(Map<String, DataObject> selectedDataObjectInstances) {
 		this.selectedDataObjectInstances = selectedDataObjectInstances;
 	}
 
