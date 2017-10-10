@@ -48,6 +48,8 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		List<String> ids = new ArrayList<>();
 		ids.add(controlNode.getId());
 
+		// Expanding each branch along outgoing Gateways until the first non
+		// Gateway ControlNode appears
 		if (controlNode.getClass().equals(ExclusiveGateway.class) || controlNode.getClass().equals(ParallelGateway.class) || controlNode.getClass().equals(EventBasedGateway.class)) {
 			for (AbstractControlNode outgoingNode : controlNode.getOutgoingControlNodes()) {
 				ids.addAll(expandBranch(outgoingNode));
@@ -73,8 +75,15 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		this.terminate();
 	}
 
-
+	/**
+	 * Skips all the ControlNodes with the given ControlNodeIds
+	 *
+	 * @param branch
+	 *            The list of ControlNodeIds that should be skipped.
+	 */
 	private void skipBranch(List<String> branch) {
+		// Gets the ControlNodesInstances for the given Ids and calls skip for
+		// each of the ControlNodeInstances.
 		for (String toSkip : branch) {
 			ControlNodeInstance node = this.getFragmentInstance().getControlNodeInstance(toSkip);
 			if (node != null) {
@@ -85,16 +94,30 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		}
 	}
 
+	/**
+	 * Returns true, if the given ControlNode follows this Gateway (directly or
+	 * with some other Gateways in between). Returns false otherwise.
+	 * 
+	 * @param controlNode
+	 *            The ControlNode which is tested
+	 * @return true when the Controlnode is in following, false otherwise
+	 */
 	public boolean containsControlNodeInFollowing(AbstractControlNode controlNode) {
 		List<String> allFollowing = branches.stream().flatMap(Collection::stream).collect(Collectors.toList());
 		return allFollowing.contains(controlNode.getId());
 	}
 
+	/**
+	 * Automatically begins the Gateway.
+	 */
 	@Override
 	public void enableControlFlow() {
 		begin();
 	}
 
+	/**
+	 * Instantiates the following ControlNodes (and starts automatic tasks).
+	 */
 	@Override
 	public void begin() {
 		setState(State.EXECUTING);
@@ -104,20 +127,30 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		// this.terminate();
 	}
 
+	/**
+	 * Terminates an executing Gateway (sets its state to TERMINATED).
+	 */
 	@Override
 	public void terminate() {
 		if (!getState().equals(State.EXECUTING))
 			return;
-		// Check exclusive behaviour
 		setState(State.TERMINATED);
 	}
 
+	/**
+	 * Skips the gateway (e.g. when this Gateway is part of a branch after an
+	 * ExclusiveGateway but the user selects another branch) Sets the state of
+	 * the Gateway to SKIPPED.
+	 */
 	@Override
 	public void skip() {
 		// TODO Auto-generated method stub
 		this.setState(State.SKIPPED);
 	}
 
+	/**
+	 * returns the ExclusiveGateway to this ExclusiveGatewayInstance.
+	 */
 	@Override
 	public ExclusiveGateway getControlNode() {
 		return (ExclusiveGateway) super.getControlNode();
