@@ -55,7 +55,7 @@ public final class BpmnXmlFragmentParser {
 			GatewayParser.parseGateways(fragment, fragXmlWrap, sfResolver);
 
 			fragment.setSequenceFlowAssociations(sfResolver.getResolvedSequenceFlowAssociations());
-			fragment.setDataNodes(dfResolver.getResolvedDataNodes());
+			fragment.setConditions(dfResolver.getResolvedDataNodes());
 			// ^has to be called last
 		} catch (JAXBException e) {
 			log.error(e);

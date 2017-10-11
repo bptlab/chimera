@@ -10,41 +10,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import de.hpi.bpt.chimera.execution.DataObject;
-
 @Entity
-public class TerminationConditionComponent {
+public class ConditionSet {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	@OneToMany(cascade = CascadeType.ALL)
-	List<DataObjectStateCondition> conditions;
+	List<DataStateCondition> conditions;
 
-	public TerminationConditionComponent() {
+	public ConditionSet() {
 		this.conditions = new ArrayList<>();
 	}
 
-	public void setConditions(List<DataObjectStateCondition> conditions) {
+	public ConditionSet(List<DataStateCondition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public List<DataObjectStateCondition> getConditions() {
+	public void setConditions(List<DataStateCondition> conditions) {
+		this.conditions = conditions;
+	}
+
+	public List<DataStateCondition> getConditions() {
 		return this.conditions;
 	}
 
-	public void addCondition(DataObjectStateCondition condition) {
+	public void addCondition(DataStateCondition condition) {
 		this.conditions.add(condition);
 	}
 
 	/**
-	 * Check whether the TerminationConditionComponent fulfills the
-	 * DataObjectStateCoditions.
+	 * Check whether the ConditionSet fulfills the existing
+	 * DataObjectStateCoditions. Therefore all Conditions in the ConditionSet
+	 * have to exist (And-Behavior).
 	 * 
 	 * @param existingConditions
 	 * @return boolean
 	 */
-	public boolean isFulfilled(List<DataObjectStateCondition> existingConditions) {
-		for (DataObjectStateCondition condition : conditions) {
+	public boolean isFulfilled(List<DataStateCondition> existingConditions) {
+		for (DataStateCondition condition : conditions) {
 			if (!existingConditions.contains(condition))
 				return false;
 		}

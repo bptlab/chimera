@@ -2,14 +2,14 @@ package de.hpi.bpt.chimera.jcore.rest.beans.casemodel;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 
 @XmlRootElement
 public class DataObjectStateConditionJaxBean {
 	private String dataclass;
 	private String state;
 
-	public DataObjectStateConditionJaxBean(DataObjectStateCondition condition) {
+	public DataObjectStateConditionJaxBean(DataStateCondition condition) {
 		setDataclass(condition.getDataClass().getName());
 		setState(condition.getState().getName());
 	}

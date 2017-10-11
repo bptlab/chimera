@@ -11,7 +11,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @Entity
-public class DataObjectStateCondition {
+public class DataStateCondition {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
@@ -20,12 +20,14 @@ public class DataObjectStateCondition {
 	@OneToOne(cascade = CascadeType.ALL)
 	private ObjectLifecycleState state;
 
-	public DataObjectStateCondition() {
+	// TODO: add Feature: JsonPath
+
+	public DataStateCondition() {
 		this.dataClass = null;
 		this.state = null;
 	}
 
-	public DataObjectStateCondition(DataClass dataClass, ObjectLifecycleState state) {
+	public DataStateCondition(DataClass dataClass, ObjectLifecycleState state) {
 		this.dataClass = dataClass;
 		this.state = state;
 	}
@@ -34,8 +36,8 @@ public class DataObjectStateCondition {
 		return dataClass;
 	}
 
-	public void setDataClass(DataClass dataModelClass) {
-		this.dataClass = dataModelClass;
+	public void setDataClass(DataClass dataClass) {
+		this.dataClass = dataClass;
 	}
 
 	public ObjectLifecycleState getState() {
@@ -46,18 +48,38 @@ public class DataObjectStateCondition {
 		this.state = state;
 	}
 
+	public String getDataClassName() {
+		return dataClass.getName();
+	}
+
+	public String getStateName() {
+		return state.getName();
+	}
+
+	/**
+	 * Compares the DataStateConditions by (the names of) Dataclass and
+	 * ObjectLifecycleState.
+	 * 
+	 * @param condition
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof DataObjectStateCondition) {
-			DataObjectStateCondition toCompare = (DataObjectStateCondition) o;
-			return this.dataClass.equals(toCompare.getDataClass()) && this.state.equals(toCompare.getState());
+		if (o instanceof DataStateCondition) {
+			DataStateCondition condition = (DataStateCondition) o;
+			// return
+			// this.getDataClassName().equals(condition.getDataClassName()) &&
+			// this.getStateName().equals(condition.getStateName());
+			return this.dataClass.equals(condition.getDataClass()) && this.state.equals(condition.getState());
 		}
 		return false;
 	}
 
-	// TODO: improve the hashing
+	// TODO: think about hashing
+
 	@Override
 	public int hashCode() {
 		return (int) (((long) this.dataClass.hashCode() + (long) this.state.hashCode()) / 2);
 	}
+
 }

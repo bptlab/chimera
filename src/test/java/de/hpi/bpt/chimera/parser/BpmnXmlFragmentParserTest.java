@@ -34,8 +34,8 @@ public class BpmnXmlFragmentParserTest {
 
 		// Parse a CaseModel from jsonString and give it to the CaseModel
 		// manager
-		CaseModel cm1 = CaseModelManager.parseCaseModel(jsonString);
-
+		// CaseModel cm1 = CaseModelManager.parseCaseModel(jsonString);
+		CaseModel cm1 = CaseModelParser.parseCaseModel(jsonString);
 		assertEquals(cm1.getFragments().get(0).getBpmnFragment().getStartEvent().getOutgoingControlNodes().get(0), cm1.getFragments().get(0).getBpmnFragment().getEndEvent().getIncomingControlNodes().get(0));
 	}
 

@@ -10,43 +10,42 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import de.hpi.bpt.chimera.execution.DataObject;
-
 @Entity
 public class TerminationCondition {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 	@OneToMany(cascade = CascadeType.ALL)
-	List<TerminationConditionComponent> conditions;
+	List<ConditionSet> conditions;
 
 	public TerminationCondition() {
 		this.conditions = new ArrayList<>();
 	}
 
-	public List<TerminationConditionComponent> getConditions() {
+	public List<ConditionSet> getConditions() {
 		return conditions;
 	}
 
-	public void setConditions(List<TerminationConditionComponent> conditions) {
+	public void setConditions(List<ConditionSet> conditions) {
 		this.conditions = conditions;
 	}
 
-	public void addConditionComponent(TerminationConditionComponent condition) {
+	public void addConditionComponent(ConditionSet condition) {
 		this.conditions.add(condition);
 	}
 
 	/**
 	 * Check whether the TerminationCondition fulfills the
-	 * DataObjectStateCoditions.
+	 * DataObjectStateCoditions. Therefore one ConditionSet has to be fulfilled
+	 * (Or-Behavior).
 	 * 
 	 * @param existingConditions
 	 * @return boolean
 	 */
-	public boolean isFulfilled(List<DataObjectStateCondition> existingConditions) {
+	public boolean isFulfilled(List<DataStateCondition> existingConditions) {
 		if (conditions.isEmpty())
 			return true;
-		for (TerminationConditionComponent component : conditions) {
+		for (ConditionSet component : conditions) {
 			if (component.isFulfilled(existingConditions)) {
 				return true;
 			}

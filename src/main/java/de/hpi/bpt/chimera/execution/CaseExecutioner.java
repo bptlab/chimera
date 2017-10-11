@@ -14,7 +14,7 @@ import de.hpi.bpt.chimera.jhistory.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
@@ -208,7 +208,7 @@ public class CaseExecutioner {
 	 */
 	public boolean canTerminate() {
 		List<DataObject> dataObjectInstances = this.getDataObjectInstances();
-		List<DataObjectStateCondition> existingConditions = new ArrayList<>();
+		List<DataStateCondition> existingConditions = new ArrayList<>();
 		for (DataObject dataObjectInstance : dataObjectInstances)
 			existingConditions.add(dataObjectInstance.getDataNode().getDataObjectState());
 		return caseModel.getTerminationCondition().isFulfilled(existingConditions);

@@ -3,6 +3,7 @@ package de.hpi.bpt.chimera.parser.fragment.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.fragment.bpmn.BpmnFragment;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.HumanTask;
@@ -38,8 +39,10 @@ public class ActivityParser {
 			activity.setName(xmlTask.getName());
 			sfResolver.resolveIncomingSequenceFlow(xmlTask.getIncomingSequenceFlows(), activity);
 			sfResolver.resolveOutgoingSequenceFlow(xmlTask.getOutgoingSequenceFlows(), activity);
-			dfResolver.resolveIncomingDataFlow(xmlTask.getIncomingDataNodeObjectReferences(), activity);
-			dfResolver.resolveOutgoingDataFlow(xmlTask.getOutgoingDataNodeObjectReferences(), activity);
+			List<ConditionSet> preCondition = dfResolver.resolveDataFlow(xmlTask.getIncomingDataNodeObjectReferences());
+			activity.setPreCondition(preCondition);
+			List<ConditionSet> postCondition = dfResolver.resolveDataFlow(xmlTask.getOutgoingDataNodeObjectReferences());
+			activity.setPostCondition(postCondition);
 			activityList.add(activity);
 		}
 		return activityList;

@@ -13,9 +13,9 @@ import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
 import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
-import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
@@ -123,18 +123,18 @@ public class CaseModelParserTest {
 	}
 
 	private void testTerminationCondition(TerminationCondition terminationCondition, List<DataModelClass> dataModelClasses) {
-		List<TerminationConditionComponent> components = terminationCondition.getConditions();
+		List<ConditionSet> components = terminationCondition.getConditions();
 		assertEquals("wrong TerminationConditionComponent amount", 2, components.size());
 
-		TerminationConditionComponent component1 = components.get(0);
-		TerminationConditionComponent component2 = components.get(1);
+		ConditionSet component1 = components.get(0);
+		ConditionSet component2 = components.get(1);
 
 		assertEquals("wrong DataObjectStateCondition amount", 2, component1.getConditions().size());
 		assertEquals("wrong DataObjectStateCondition amount", 1, component2.getConditions().size());
 
-		DataObjectStateCondition objectStateCondition1 = component1.getConditions().get(0);
-		DataObjectStateCondition objectStateCondition2 = component1.getConditions().get(1);
-		DataObjectStateCondition objectStateCondition3 = component2.getConditions().get(0);
+		DataStateCondition objectStateCondition1 = component1.getConditions().get(0);
+		DataStateCondition objectStateCondition2 = component1.getConditions().get(1);
+		DataStateCondition objectStateCondition3 = component2.getConditions().get(0);
 
 		DataClass dataClass = (DataClass) dataModelClasses.get(0);
 		DataClass dc = (DataClass) dataModelClasses.get(1);
@@ -158,7 +158,7 @@ public class CaseModelParserTest {
 
 		int dcPos = consequence.get(0).getDataObjectState().getDataClass().getName().equals("dc2") ? 0 : 1;
 
-		DataObjectStateCondition objectStateCondition1 = consequence.get(dcPos).getDataObjectState();
+		DataStateCondition objectStateCondition1 = consequence.get(dcPos).getDataObjectState();
 
 		DataClass dc = (DataClass) dataModelClasses.get(1);
 		assertTrue("wrong DataClass mapping", objectStateCondition1.getDataClass().equals(dc));

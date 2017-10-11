@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
 import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
@@ -67,12 +67,12 @@ public class CaseStartTriggerParser {
 		int arraySize = triggerConsequenceJsonArray.length();
 		// for easier handling the CaseStartTriggerConsequence are stored in a
 		// HashMap referred to their DataObjectStateConditions
-		Map<DataObjectStateCondition, CaseStartTriggerConsequence> conditionToTrigger = new HashMap<>();
+		Map<DataStateCondition, CaseStartTriggerConsequence> conditionToTrigger = new HashMap<>();
 
 		for (int i = 0; i < arraySize; i++) {
 			try {
 				JSONObject triggerConsequenceJson = triggerConsequenceJsonArray.getJSONObject(i);
-				DataObjectStateCondition dataObjectStateCondition = new DataObjectStateCondition();
+				DataStateCondition dataObjectStateCondition = new DataStateCondition();
 
 				String dataClassName = triggerConsequenceJson.getString("classname");
 				DataClass dataClass = parserHelper.getNameToDataClass(dataClassName);

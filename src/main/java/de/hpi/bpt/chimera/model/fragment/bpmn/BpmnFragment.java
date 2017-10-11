@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.EndEvent;
 import de.hpi.bpt.chimera.model.fragment.bpmn.event.StartEvent;
@@ -42,7 +43,7 @@ public class BpmnFragment {
 	private List<SequenceFlowAssociation> sequenceFlowAssociations = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<DataNode> dataNodes = new ArrayList<>();
+	private List<DataStateCondition> conditions = new ArrayList<>();
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private EndEvent endEvent;
@@ -77,12 +78,12 @@ public class BpmnFragment {
 		this.sequenceFlowAssociations = sequenceFlowAssociations;
 	}
 
-	public List<DataNode> getDataNodes() {
-		return dataNodes;
+	public List<DataStateCondition> getConditions() {
+		return conditions;
 	}
 
-	public void setDataNodes(List<DataNode> dataNodes) {
-		this.dataNodes = dataNodes;
+	public void setConditions(List<DataStateCondition> conditions) {
+		this.conditions = conditions;
 	}
 
 	public void setTasks(List<Activity> activities) {

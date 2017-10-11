@@ -7,9 +7,9 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import de.hpi.bpt.chimera.model.condition.DataObjectStateCondition;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.condition.TerminationCondition;
-import de.hpi.bpt.chimera.model.condition.TerminationConditionComponent;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
@@ -53,8 +53,8 @@ public class TerminationConditionParser {
 	 * @param dataModel
 	 * @return TerminationConditionComponent
 	 */
-	private static TerminationConditionComponent parseConditionComponent(String conditionString, CaseModelParserHelper parserHelper) {
-		TerminationConditionComponent conditionComponent = new TerminationConditionComponent();
+	private static ConditionSet parseConditionComponent(String conditionString, CaseModelParserHelper parserHelper) {
+		ConditionSet conditionComponent = new ConditionSet();
 
 		for (String component : conditionString.split(",")) {
 			Pattern pattern = Pattern.compile("\\s?(.*)\\[(.*?)\\]");
@@ -65,7 +65,7 @@ public class TerminationConditionParser {
 			String dataClassName = match.group(1);
 			String objectLifecycleStateName = match.group(2);
 
-			DataObjectStateCondition condition = new DataObjectStateCondition();
+			DataStateCondition condition = new DataStateCondition();
 			
 			DataClass dataClass = parserHelper.getNameToDataClass(dataClassName);
 			condition.setDataClass(dataClass);
