@@ -103,8 +103,10 @@ public class CaseExecutioner {
 	 */
 	public void terminateActivityInstance(String activityInstanceId, DataManagerBean dataManagerBean) {
 		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
-		if (nodeInstance == null)
+		if (nodeInstance == null) {
+			log.info("nothing terminated, because there is no ControlNodeInstance with the given Id");
 			return;
+		}
 
 		// TODO: think about instance has to be running
 		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.RUNNING) {
@@ -114,6 +116,8 @@ public class CaseExecutioner {
 			dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
 			dataManager.createDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
 			nodeInstance.terminate();
+		} else {
+			log.info("no activtiy terminated because the given ControlNodeInstance Id refers to a ControlNodeInstance which isn't from type AbstractActivityInstance, or the ActivityInstance isn't in state RUNNING.");
 		}
 	}
 
@@ -138,7 +142,7 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Get an ControlNodeInstance over all FragmentInstances of the Case.
+	 * Get a ControlNodeInstance over all FragmentInstances of the Case.
 	 * 
 	 * @param activityInstanceId
 	 * @return
@@ -184,7 +188,7 @@ public class CaseExecutioner {
 	public List<DataObject> getAvailableInputForAcitivityInstance(String activityInstanceId) {
 		AbstractActivityInstance activityInstance = getActivityInstance(activityInstanceId);
 		List<DataNode> dataNodesToCheck = activityInstance.getControlNode().getIncomingDataNodes();
-		return dataManager.getExistingDataObjectInstances(dataNodesToCheck);
+		return dataManager.getExistingDataObjects(dataNodesToCheck);
 	}
 
 	/**

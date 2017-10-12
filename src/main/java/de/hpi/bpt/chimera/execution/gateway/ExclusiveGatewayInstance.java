@@ -2,14 +2,22 @@ package de.hpi.bpt.chimera.execution.gateway;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
+import de.hpi.bpt.chimera.execution.DataAttributeInstance;
+import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
-import de.hpi.bpt.chimera.jcore.controlnodes.AbstractControlNodeInstance;
+import de.hpi.bpt.chimera.execution.xorgrammarcompiler.XORGrammarCompiler;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.EventBasedGateway;
@@ -121,7 +129,8 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	@Override
 	public void begin() {
 		setState(State.EXECUTING);
-		getFragmentInstance().createFollowing(getControlNode());
+		// getFragmentInstance().createFollowing(getControlNode());
+		this.evaluateConditions();
 		// TODO is it right to start automatic Tasks here?
 		this.getFragmentInstance().getCase().getCaseExecutioner().startAutomaticTasks();
 		// this.terminate();
@@ -154,5 +163,126 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	@Override
 	public ExclusiveGateway getControlNode() {
 		return (ExclusiveGateway) super.getControlNode();
+	}
+
+
+	/**
+	 * Evaluates Conditions for the control flow of an XOR gateway.
+	 */
+	public void evaluateConditions() {
+		Map<AbstractControlNode, String> conditions = this.getControlNode().getOutgoingSequenceFlows().stream().collect(Collectors.toMap(item -> item.getTargetRef(), item -> item.getCondition()));
+		// Map<Integer, String> conditions =
+		// this.getDbControlFlow().getConditions(getControlNodeId());
+		AbstractControlNode controlNode;
+		AbstractControlNode defaultControlNode = null;
+		String condition;
+		Set<AbstractControlNode> toEnable = new HashSet<>();
+		Iterator<AbstractControlNode> nodes = conditions.keySet().iterator();
+		while (nodes.hasNext()) {
+			controlNode = nodes.next();
+			condition = conditions.get(controlNode);
+			if (condition.equals("DEFAULT")) {
+				defaultControlNode = controlNode;
+			} else if (evaluateCondition(condition)) { // condition true or
+														// empty
+				toEnable.add(controlNode);
+			}
+		}
+		if (toEnable.isEmpty() && defaultControlNode != null)
+			toEnable.add(defaultControlNode);
+		for (AbstractControlNode node : toEnable) {
+			ControlNodeInstance controlNodeInstance = this.getFragmentInstance().createControlNodeInstance(node);
+			controlNodeInstance.enableControlFlow();
+		}
+	}
+
+
+	/**
+	 * Evaluates one specific condition.
+	 *
+	 * @param condition
+	 *            The condition as String.
+	 * @return true if the condition ist true.
+	 */
+	public boolean evaluateCondition(String condition) {
+		if ("".equals(condition))
+			return true; // empty condition is true
+		XORGrammarCompiler compiler = new XORGrammarCompiler();
+		CommonTree ast = compiler.compile(condition);
+		return ast.getChildCount() > 0 && evaluate(0, ast);
+	}
+
+	private boolean evaluate(int i, Tree ast) {
+		boolean condition = checkCondition(ast, i);
+		if (ast.getChildCount() >= i + 4) {
+			if (ast.getChild(i + 3).toStringTree().equals("&") || ast.getChild(i + 3).toStringTree().equals(" & ")) {
+				return (condition & evaluate(i + 4, ast));
+			} else {
+				return (condition | evaluate(i + 4, ast));
+			}
+		} else {
+			return condition;
+		}
+	}
+
+	/**
+	 * @param ast
+	 *            a tree (ast).
+	 * @param i
+	 *            index for the ast.
+	 * @return the check result.
+	 */
+	private boolean checkCondition(Tree ast, int i) {
+		String left = ast.getChild(i).toStringTree();
+		String comparison = ast.getChild(i + 1).toStringTree();
+		String right = ast.getChild(i + 2).toStringTree();
+
+		for (DataObject dataObject : this.getCaseExecutioner().getDataObjectInstances()) {
+			String dataObjectName = dataObject.getDataClass().getName();
+			for (DataAttributeInstance dataAttributeInstance : dataObject.getDataAttributeInstances().values()) {
+				left = left.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());
+				right = right.replace("#" + dataObjectName + "." + dataAttributeInstance.getDataAttribute().getName(), dataAttributeInstance.getValue().toString());
+			}
+		}
+		// TODO
+		// for (DataObject dataObject :
+		// this.getCaseExecutioner().getDataObjectInstances()) {
+		// left = left.replace("#" + dataObject.getDataClass().getName(),
+		// dbState.getStateName(dataObject.getStateId()));
+		// right = right.replace("#" + dataObject.getDataClass().getName(),
+		// dbState.getStateName(dataObject.getStateId()));
+		// }
+
+		try {
+			switch (comparison) {
+			case "=":
+				return left.equals(right);
+			case "<":
+				return Float.parseFloat(left) < Float.parseFloat(right);
+			case "<=":
+				return Float.parseFloat(left) <= Float.parseFloat(right);
+			case ">":
+				return Float.parseFloat(left) > Float.parseFloat(right);
+			case ">=":
+				return Float.parseFloat(left) >= Float.parseFloat(right);
+			case "!=":
+				return !left.equals(right);
+			case "!<":
+				return !(Float.parseFloat(left) < Float.parseFloat(right));
+			case "!<=":
+				return !(Float.parseFloat(left) <= Float.parseFloat(right));
+			case "!>":
+				return !(Float.parseFloat(left) > Float.parseFloat(right));
+			case "!>=":
+				return !(Float.parseFloat(left) >= Float.parseFloat(right));
+			default:
+				break;
+			}
+		} catch (NumberFormatException e) {
+			log.error("Error can't convert String to Float:", e);
+		} catch (NullPointerException e) {
+			log.error("Error can't convert String to Float, String is null:", e);
+		}
+		return false;
 	}
 }

@@ -82,6 +82,16 @@ public class FragmentInstance {
 		}
 	}
 
+	public ControlNodeInstance createControlNodeInstance(AbstractControlNode controlNode) {
+		if (isInstantiated(controlNode)) {
+			return controlNodes.get(controlNode.getId());
+		} else {
+			ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(controlNode, this);
+			addControlNodeInstance(nodeInstance);
+			return nodeInstance;
+		}
+	}
+
 	/**
 	 * 
 	 * @param controlNodes
