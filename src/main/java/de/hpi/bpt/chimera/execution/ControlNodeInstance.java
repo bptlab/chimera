@@ -34,6 +34,10 @@ public abstract class ControlNodeInstance implements Behaving {
 		return fragmentInstance.getCase().getCaseExecutioner();
 	}
 
+	public DataManager getDataManager() {
+		return getCaseExecutioner().getDataManager();
+	}
+
 	public void setState(State state) {
 		this.state = state;
 	}

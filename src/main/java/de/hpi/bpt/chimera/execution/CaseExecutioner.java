@@ -14,6 +14,7 @@ import de.hpi.bpt.chimera.jhistory.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
@@ -51,6 +52,7 @@ public class CaseExecutioner {
 	}
 	// TODO: think about whether this should be put up here or in
 	// FragmentInstance
+	@Deprecated
 	public void createDataObjectInstances(AbstractControlNode node) {
 		if (node instanceof AbstractDataControlNode) {
 			dataManager.createDataObject((AbstractDataControlNode) node);
@@ -88,10 +90,12 @@ public class CaseExecutioner {
 			return;
 
 		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.READY) {
-			Map<String, DataObject> lockedDataObjectInstances = dataManager.lockDataObjects(selectedDataObjectInstanceIds);
-			((AbstractActivityInstance) nodeInstance).setSelectedDataObjectInstances(lockedDataObjectInstances);
-			nodeInstance.getFragmentInstance().skipAlternativeControlNodes(nodeInstance);
-			nodeInstance.begin();
+			AbstractActivityInstance activtyInstance = (AbstractActivityInstance) nodeInstance;
+			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjectInstanceIds);
+			activtyInstance.setSelectedDataObjects(lockedDataObjects);
+			// TODO: has this to be before lock?
+			activtyInstance.getFragmentInstance().skipAlternativeControlNodes(nodeInstance);
+			activtyInstance.begin();
 			return;
 		}
 	}
@@ -108,12 +112,13 @@ public class CaseExecutioner {
 
 		// TODO: think about instance has to be running
 		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.RUNNING) {
-			Map<String, DataObject> toUnlockDataObjectInstances = ((AbstractActivityInstance) nodeInstance).getSelectedDataObjectInstances();
-			dataManager.unlockDataObjects(toUnlockDataObjectInstances);
+			AbstractActivityInstance activtyInstance = (AbstractActivityInstance) nodeInstance;
+			List<DataObject> toUnlockDataObjects = activtyInstance.getSelectedDataObjectInstances();
+			dataManager.unlockDataObjects(toUnlockDataObjects);
 			AbstractDataControlNode controlNode = (AbstractDataControlNode) nodeInstance.getControlNode();
-			dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
-			dataManager.createDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
-			nodeInstance.terminate();
+			// dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
+			// dataManager.createDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
+			activtyInstance.terminate();
 		}
 	}
 
@@ -150,68 +155,6 @@ public class CaseExecutioner {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Get all Instances of DataObjects.
-	 * 
-	 * @return List of DataObjectInstance
-	 */
-	public List<DataObject> getDataObjectInstances() {
-		Collection<DataObject> instances = dataManager.getDataObjectInstances().values();
-		return new ArrayList<>(instances);
-	}
-
-	/**
-	 * Get a specific Instance of an DataObject.
-	 * 
-	 * @param instanceId
-	 * @return DataObjectInstance
-	 */
-	public DataObject getDataObjectInstance(String instanceId) {
-		if (dataManager.getDataObjectInstances().containsKey(instanceId)) {
-			return dataManager.getDataObjectInstances().get(instanceId);
-		}
-		return null;
-	}
-
-	/**
-	 * Get the available DataInput for an ActivityInstance.
-	 * 
-	 * @param activityInstanceId
-	 * @return List of DataObjectInstance
-	 */
-	public List<DataObject> getAvailableInputForAcitivityInstance(String activityInstanceId) {
-		AbstractActivityInstance activityInstance = getActivityInstance(activityInstanceId);
-		List<DataNode> dataNodesToCheck = activityInstance.getControlNode().getIncomingDataNodes();
-		return dataManager.getExistingDataObjectInstances(dataNodesToCheck);
-	}
-
-	/**
-	 * Check whether a ControlNode is DataFlow enabled.
-	 * 
-	 * @param controlNode
-	 * @return boolean
-	 */
-	public boolean isDataFlowEnabled(AbstractDataControlNode controlNode) {
-		List<DataNode> incomingDataNodes = controlNode.getIncomingDataNodes();
-		if (incomingDataNodes.isEmpty())
-			return true;
-		return dataManager.isExistingDataObject(incomingDataNodes);
-	}
-
-	/**
-	 * Returns whether the Case fulfills the TerminationCondition of the
-	 * CaseModel.
-	 * 
-	 * @return boolean
-	 */
-	public boolean canTerminate() {
-		List<DataObject> dataObjectInstances = this.getDataObjectInstances();
-		List<DataStateCondition> existingConditions = new ArrayList<>();
-		for (DataObject dataObjectInstance : dataObjectInstances)
-			existingConditions.add(dataObjectInstance.getDataNode().getDataObjectState());
-		return caseModel.getTerminationCondition().isFulfilled(existingConditions);
 	}
 
 	/**

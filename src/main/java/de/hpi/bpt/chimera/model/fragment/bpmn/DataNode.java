@@ -12,6 +12,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @Entity
+@Deprecated
 public class DataNode {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)

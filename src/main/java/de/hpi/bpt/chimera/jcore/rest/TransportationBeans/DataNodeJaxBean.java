@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
@@ -18,7 +19,7 @@ public class DataNodeJaxBean {
 	/**
 	 * The id the datanode.
 	 */
-	private String id;
+	// private String id;
 
 	/**
 	 * The dataclass of the datanode. The label not the id will be saved.
@@ -35,19 +36,19 @@ public class DataNodeJaxBean {
 	 */
 	private DataAttributeJaxBean[] attributeConfiguration;
 
-	public DataNodeJaxBean(DataNode dataNode) {
-		setId(dataNode.getId());
-		setLabel(dataNode.getName());
-		setDataclass(dataNode.getDataClass().getName());
-		setState(dataNode.getObjectLifecycleState().getName());
+	public DataNodeJaxBean(DataStateCondition condition) {
+		// setId(condition.getId());
+		setLabel(condition.getDataClassName());
+		setDataclass(condition.getDataClassName());
+		setState(condition.getStateName());
 
-		List<DataAttributeJaxBean> attributes = new ArrayList<>(dataNode.getDataClass().getDataAttributes().size());
-		for (DataAttribute dataAttribute : dataNode.getDataClass().getDataAttributes()) {
+		List<DataAttributeJaxBean> attributes = new ArrayList<>(condition.getDataClass().getDataAttributes().size());
+		for (DataAttribute dataAttribute : condition.getDataClass().getDataAttributes()) {
 			DataAttributeJaxBean attribute = new DataAttributeJaxBean(dataAttribute);
 			attributes.add(attribute);
 		}
 
-		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[dataNode.getDataClass().getDataAttributes().size()]);
+		DataAttributeJaxBean[] attributesArray = attributes.toArray(new DataAttributeJaxBean[condition.getDataClass().getDataAttributes().size()]);
 		setAttributeConfiguration(attributesArray);
 	}
 
@@ -58,7 +59,7 @@ public class DataNodeJaxBean {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-
+/*
 	public String getId() {
 		return id;
 	}
@@ -66,7 +67,7 @@ public class DataNodeJaxBean {
 	public void setId(String id) {
 		this.id = id;
 	}
-
+*/
 	public String getDataclass() {
 		return dataclass;
 	}

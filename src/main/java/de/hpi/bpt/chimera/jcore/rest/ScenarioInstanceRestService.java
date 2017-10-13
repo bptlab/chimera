@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.rest.beans.caze.CaseOverviewJaxBean;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
@@ -218,8 +219,10 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 			return CASE_NOT_FOUND;
 		}
 
+		DataManager dataManager = caseExecutioner.getDataManager();
 		JSONObject result = new JSONObject();
-		result.put("canTerminate", caseExecutioner.canTerminate());
+
+		result.put("canTerminate", dataManager.canTerminate());
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 

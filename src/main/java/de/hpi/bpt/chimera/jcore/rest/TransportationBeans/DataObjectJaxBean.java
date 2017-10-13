@@ -44,7 +44,7 @@ public class DataObjectJaxBean {
 
 	public DataObjectJaxBean(DataObject instance) {
 		setId(instance.getId());
-		setLabel(instance.getDataNode().getName());
+		setLabel(instance.getDataClass().getName());
 		setDataclass(instance.getDataClass().getName());
 		setState(instance.getObjectLifecycleState().getName());
 

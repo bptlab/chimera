@@ -262,7 +262,7 @@ public class ActivityRestService extends AbstractRestService {
 			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
 
-		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
+		List<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
 
 		JSONArray result = new JSONArray();
 		for (DataObject instance : selectedInstances) {

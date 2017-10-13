@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import de.hpi.bpt.chimera.execution.DataObject;
+
 @Entity
 public class ConditionSet {
 	@Id
@@ -46,7 +48,7 @@ public class ConditionSet {
 	 * @param existingConditions
 	 * @return boolean
 	 */
-	public boolean isFulfilled(List<DataStateCondition> existingConditions) {
+	public boolean isFulfilled(List<? extends ConditionStatable> existingConditions) {
 		for (DataStateCondition condition : conditions) {
 			if (!existingConditions.contains(condition))
 				return false;

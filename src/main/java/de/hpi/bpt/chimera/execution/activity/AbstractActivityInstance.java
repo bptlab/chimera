@@ -1,5 +1,6 @@
 package de.hpi.bpt.chimera.execution.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	private boolean isAutomaticTask;
 	// TODO: find out what canTerminate is exactly needed for
 	// private boolean canTerminate;
-	private Map<String, DataObject> selectedDataObjectInstances;
+	private List<DataObject> selectedDataObjects;
 
 	/**
 	 * Create a new AbstractActivityInstance.
@@ -26,7 +27,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	public AbstractActivityInstance(Activity activity, FragmentInstance fragmentInstance) {
 		super(activity, fragmentInstance);
 		this.isAutomaticTask = false;
-		this.selectedDataObjectInstances = new HashMap<>();
+		this.selectedDataObjects = new ArrayList<>();
 	}
 
 	/**
@@ -35,20 +36,21 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 */
 	@Override
 	public void enableControlFlow() {
-		this.selectedDataObjectInstances.clear();
+		this.selectedDataObjects.clear();
 		if (getState().equals(State.INIT)) {
 			setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || getCaseExecutioner().isDataFlowEnabled(getControlNode())) {
+		if (getState().equals(State.DATAFLOW_ENABLED) || getDataManager().isDataFlowEnabled(getControlNode())) {
 			setState(State.READY);
 		}
+		// if is automatic task begin automatically?
 	}
 
 	/**
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
 	public void checkDataFlow() {
-		if (getCaseExecutioner().isDataFlowEnabled(getControlNode())) {
+		if (getDataManager().isDataFlowEnabled(getControlNode())) {
 			enableDataFlow();
 		} else {
 			disableDataFlow();
@@ -88,7 +90,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
-		if (this.isAutomaticTask) {
+		if (this.isAutomaticTask && getControlNode().getPostCondition().size() <= 1) {
 			terminate();
 		}
 	}
@@ -126,12 +128,12 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		return (Activity) super.getControlNode();
 	}
 
-	public Map<String, DataObject> getSelectedDataObjectInstances() {
-		return selectedDataObjectInstances;
+	public List<DataObject> getSelectedDataObjectInstances() {
+		return selectedDataObjects;
 	}
 
-	public void setSelectedDataObjectInstances(Map<String, DataObject> selectedDataObjectInstances) {
-		this.selectedDataObjectInstances = selectedDataObjectInstances;
+	public void setSelectedDataObjects(List<DataObject> selectedDataObjects) {
+		this.selectedDataObjects = selectedDataObjects;
 	}
 
 	public boolean isAutomaticTask() {

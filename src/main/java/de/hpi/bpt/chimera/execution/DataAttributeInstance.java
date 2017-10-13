@@ -12,19 +12,20 @@ public class DataAttributeInstance {
 	private String id;
 	private DataAttribute dataAttribute;
 	private Object value;
-	private CaseExecutioner caseExecutioner;
+	private DataObject dataObject;
 
-	public DataAttributeInstance(DataAttribute attribute, CaseExecutioner caseExecutioner) {
+	public DataAttributeInstance(DataAttribute attribute, DataObject dataObject) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.setDataAttribute(attribute);
-		this.caseExecutioner = caseExecutioner;
-		caseExecutioner.logDataAttributeTransition(this, null);
+		this.setDataObject(dataObject);
+		getCaseExecutioner().logDataAttributeTransition(this, null);
 	}
 
+	@Deprecated
 	public DataAttributeInstance(DataAttribute attribute, CaseExecutioner caseExecutioner, Object value) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.setDataAttribute(attribute);
-		this.caseExecutioner = caseExecutioner;
+		this.setDataObject(dataObject);
 		try {
 			setValue(value);
 		} catch (IllegalArgumentException e) {
@@ -57,7 +58,7 @@ public class DataAttributeInstance {
 		// data attribute
 		Class<? extends Object> clazz = dataAttribute.getType().getClass();
 		if (clazz.isInstance(value)) {
-			caseExecutioner.logDataAttributeTransition(this, value);
+			getCaseExecutioner().logDataAttributeTransition(this, value);
 			this.value = value;
 		} else {
 			String errorMsg = String.format("Could not set value of DataAttribute %s. Expected: %s, Received: %s", dataAttribute.getName(), dataAttribute.getType().getClass().getName(), value.getClass().getName());
@@ -101,13 +102,15 @@ public class DataAttributeInstance {
 		}
 	}
 
+	public DataObject getDataObject() {
+		return dataObject;
+	}
+
+	public void setDataObject(DataObject dataObject) {
+		this.dataObject = dataObject;
+	}
+
 	public CaseExecutioner getCaseExecutioner() {
-		return caseExecutioner;
+		return dataObject.getCaseExecutioner();
 	}
-
-	public void setCaseExecutioner(CaseExecutioner caseExecutioner) {
-		this.caseExecutioner = caseExecutioner;
-	}
-
-
 }

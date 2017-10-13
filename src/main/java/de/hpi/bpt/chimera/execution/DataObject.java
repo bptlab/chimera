@@ -4,15 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import de.hpi.bpt.chimera.model.condition.ConditionStatable;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
-public class DataObject {
+public class DataObject implements ConditionStatable {
 	private String id;
-	private DataNode dataNode;
-	private CaseExecutioner caseExecutioner;
+	private DataStateCondition condition;
+	private DataManager dataManager;
 	private boolean locked;
 	/**
 	 * Map of id of DataAttributeInstance to DataAttributeInstance.
@@ -24,13 +26,28 @@ public class DataObject {
 	 * @param dataNode
 	 * @param caseExecutioner
 	 */
-	public DataObject(DataNode dataNode, CaseExecutioner caseExecutioner) {
+	public DataObject(DataStateCondition condition, DataManager dataManager) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
-		this.locked = false;
-		this.caseExecutioner = caseExecutioner;
-		this.dataNode = dataNode;
-		caseExecutioner.logDataObjectTransition(this, null, dataNode.getObjectLifecycleState());
-		instantiateDataAttributes(dataNode.getDataClass(), caseExecutioner);
+		this.lock();
+		this.setDataManger(dataManager);
+		this.condition = new DataStateCondition(condition);
+		// getCaseExecutioner().logDataObjectTransition(this, null,
+		// dataNode.getObjectLifecycleState());
+		instantiateDataAttributes(condition.getDataClass());
+	}
+
+	/**
+	 * Clear the existing DataAttributeInstances and instantiate all
+	 * DataAttributes of the DataClass.
+	 * 
+	 * @param dataClass
+	 */
+	private void instantiateDataAttributes(DataClass dataClass) {
+		dataAttributeInstances = new HashMap<>();
+		for (DataAttribute attribute : dataClass.getDataAttributes()) {
+			DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute, this);
+			dataAttributeInstances.put(attributeInstance.getId(), attributeInstance);
+		}
 	}
 
 	/**
@@ -39,11 +56,12 @@ public class DataObject {
 	 * @param dataNode
 	 * @param attributeValues
 	 */
+	@Deprecated
 	public DataObject(DataNode dataNode, CaseExecutioner caseExecutioner, Map<String, Object> attributeValues) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
-		this.locked = false;
-		this.caseExecutioner = caseExecutioner;
-		this.dataNode = dataNode;
+		this.lock();
+		// this.setCaseExecutioner(caseExecutioner);
+		// this.dataNode = dataNode;
 		caseExecutioner.logDataObjectTransition(this, null, dataNode.getObjectLifecycleState());
 		instantiateDataAttributesWithValues(dataNode.getDataClass(), caseExecutioner, attributeValues);
 	}
@@ -54,9 +72,10 @@ public class DataObject {
 	 * @param dataClass
 	 */
 	private void instantiateDataAttributes(DataClass dataClass, CaseExecutioner caseExecutioner) {
-		instantiateDataAttributesWithValues(dataClass, caseExecutioner, new HashMap<>());
+
 	}
 
+	@Deprecated
 	private void instantiateDataAttributesWithValues(DataClass dataClass, CaseExecutioner caseExecutioner, Map<String, Object> attributeValues) {
 		dataAttributeInstances = new HashMap<>();
 		for (DataAttribute attribute : dataClass.getDataAttributes()) {
@@ -64,8 +83,10 @@ public class DataObject {
 				DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute, caseExecutioner, attributeValues.get(attribute.getId()));
 				dataAttributeInstances.put(attributeInstance.getId(), attributeInstance);
 			} else {
-				DataAttributeInstance attributeInstance = new DataAttributeInstance(attribute, caseExecutioner);
-				dataAttributeInstances.put(attributeInstance.getId(), attributeInstance);
+				// DataAttributeInstance attributeInstance = new
+				// DataAttributeInstance(attribute, caseExecutioner);
+				// dataAttributeInstances.put(attributeInstance.getId(),
+				// attributeInstance);
 			}
 		}
 	}
@@ -90,21 +111,26 @@ public class DataObject {
 		return id;
 	}
 
-	public DataNode getDataNode() {
-		return dataNode;
+	public void setDataNode(DataNode dataNode) {
+		getCaseExecutioner().logDataObjectTransition(this, dataNode.getObjectLifecycleState());
+		// this.dataNode = dataNode;
 	}
 
-	public void setDataNode(DataNode dataNode) {
-		caseExecutioner.logDataObjectTransition(this, dataNode.getObjectLifecycleState());
-		this.dataNode = dataNode;
+	@Override
+	public DataStateCondition getCondition() {
+		return condition;
+	}
+
+	public void setCondition(DataStateCondition condition) {
+		this.condition = condition;
 	}
 
 	public DataClass getDataClass() {
-		return dataNode.getDataClass();
+		return condition.getDataClass();
 	}
 
 	public ObjectLifecycleState getObjectLifecycleState() {
-		return dataNode.getDataObjectState().getState();
+		return condition.getState();
 	}
 
 	public Map<String, DataAttributeInstance> getDataAttributeInstances() {
@@ -113,6 +139,18 @@ public class DataObject {
 
 	public void setDataAttributeInstances(Map<String, DataAttributeInstance> dataAttributeInstances) {
 		this.dataAttributeInstances = dataAttributeInstances;
+	}
+
+	public void setDataManger(DataManager dataManager) {
+		this.dataManager = dataManager;
+	}
+
+	public DataManager getDataManager() {
+		return dataManager;
+	}
+
+	public CaseExecutioner getCaseExecutioner() {
+		return dataManager.getCaseExecutioner();
 	}
 
 	public boolean isLocked() {

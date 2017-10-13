@@ -11,7 +11,7 @@ import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 
 @Entity
-public class DataStateCondition {
+public class DataStateCondition implements ConditionStatable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
@@ -30,6 +30,22 @@ public class DataStateCondition {
 	public DataStateCondition(DataClass dataClass, ObjectLifecycleState state) {
 		this.dataClass = dataClass;
 		this.state = state;
+	}
+
+	/**
+	 * Copies the condition by referring to the same DataClass and
+	 * ObjectLifecycleState.
+	 * 
+	 * @param condition
+	 */
+	public DataStateCondition(DataStateCondition condition) {
+		this.dataClass = condition.getDataClass();
+		this.state = condition.getState();
+	}
+
+	@Override
+	public DataStateCondition getCondition() {
+		return this;
 	}
 
 	public DataClass getDataClass() {
@@ -65,8 +81,9 @@ public class DataStateCondition {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof DataStateCondition) {
-			DataStateCondition condition = (DataStateCondition) o;
+		if (o instanceof ConditionStatable) {
+			DataStateCondition condition = ((ConditionStatable) o).getCondition();
+
 			// return
 			// this.getDataClassName().equals(condition.getDataClassName()) &&
 			// this.getStateName().equals(condition.getStateName());

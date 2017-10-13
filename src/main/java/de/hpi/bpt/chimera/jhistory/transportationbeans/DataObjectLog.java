@@ -11,10 +11,11 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 @XmlAccessorType(XmlAccessType.NONE)
 public class DataObjectLog extends LogEntry {
 
-	public DataObjectLog(DataObject instance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
+	public DataObjectLog(DataObject dataObject, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
 		super();
-		this.setLabel(instance.getDataNode().getName());
-		this.setObjectReferenceId(instance.getId());
+		// this.setLabel(instance.getDataNode().getName());
+		this.setLabel(dataObject.getDataClass().getName());
+		this.setObjectReferenceId(dataObject.getId());
 		if (oldState == null)
 			this.setOldValue("no state");
 		else

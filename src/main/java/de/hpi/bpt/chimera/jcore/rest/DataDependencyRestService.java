@@ -1,10 +1,13 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataNodeJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
+import de.hpi.bpt.chimera.model.condition.ConditionSet;
+import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 import org.json.JSONArray;
@@ -109,6 +112,8 @@ public class DataDependencyRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/output")
 	public Response getOutputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+		return CASE_NOT_FOUND;
+		/*
 		if (caseExecutioner == null) {
 			return CASE_NOT_FOUND;
 		}
@@ -132,6 +137,7 @@ public class DataDependencyRestService extends AbstractRestService {
 		}
 
 		return Response.ok(buildIOJson(dataClassStateAssociation), MediaType.APPLICATION_JSON).build();
+		*/
 	}
 
 	/**
@@ -148,14 +154,17 @@ public class DataDependencyRestService extends AbstractRestService {
 		if (caseExecutioner == null) {
 			return CASE_NOT_FOUND;
 		}
-		if (caseExecutioner.getActivityInstance(activityInstanceId) == null) {
+		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
+		if (activityInstance == null) {
 			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
-		List<DataObject> availableInput = caseExecutioner.getAvailableInputForAcitivityInstance(activityInstanceId);
+
+		DataManager dataManager = caseExecutioner.getDataManager();
+		Set<DataObject> availableInput = dataManager.getAvailableDataObjects(activityInstance.getControlNode());
 
 		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
-		for (DataObject instance : availableInput) {
-			resultBeans.add(new DataObjectJaxBean(instance));
+		for (DataObject dataObject : availableInput) {
+			resultBeans.add(new DataObjectJaxBean(dataObject));
 		}
 		JSONArray result = new JSONArray(resultBeans);
 
@@ -166,6 +175,7 @@ public class DataDependencyRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/availableOutput")
 	public Response getAvailableOutput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
+
 		if (caseExecutioner == null) {
 			return CASE_NOT_FOUND;
 		}
@@ -174,21 +184,29 @@ public class DataDependencyRestService extends AbstractRestService {
 			return ACTIVITY_INSTANCE_NOT_FOUND;
 		}
 
-		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances().values();
+		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
 
-		JSONArray result = new JSONArray();
-		for (DataNode dataNode : activityInstance.getControlNode().getOutgoingDataNodes()) {
-			JSONObject resultDataNode = new JSONObject(new DataNodeJaxBean(dataNode));
-			JSONObject possibleInput = buildDataObjectsJson(dataNode, selectedInstances);
-			resultDataNode.put("possibleInput", possibleInput);
-			result.put(resultDataNode);
+		Set<DataStateCondition> availableConditions = new HashSet<>();
+		for (ConditionSet conditionSet : activityInstance.getControlNode().getPostCondition()) {
+			for (DataStateCondition condition : conditionSet.getConditions()) {
+				availableConditions.add(condition);
+			}
 		}
-
+		JSONArray result = new JSONArray();
+		for (DataStateCondition condition : availableConditions) {
+			JSONObject resultCondition = new JSONObject(new DataNodeJaxBean(condition));
+			// JSONObject possibleInput = buildDataObjectsJson(dataNode,
+			// selectedInstances);
+			// resultCondition.put("possibleInput", possibleInput);
+			result.put(resultCondition);
+		}
+		
 		// List<DataObjectJaxBean> outputBeans = possibleInputs.stream().map(x
 		// -> buildDataObjectJaxBean(x,
 		// executionService)).collect(Collectors.toList());
 		// JSONArray array = new JSONArray(outputBeans);
 		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+
 	}
 
 	/**
