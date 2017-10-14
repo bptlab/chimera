@@ -20,4 +20,9 @@ public class HumanTaskInstance extends AbstractActivityInstance {
 	public HumanTask getControlNode() {
 		return (HumanTask) super.getControlNode();
 	}
+
+	@Override
+	public void execute() {
+
+	}
 }

@@ -93,6 +93,9 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
+
+		execute();
+
 		if (this.isAutomaticTask) {
 			terminate();
 		}
@@ -119,6 +122,8 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	public void skip() {
 		setState(State.SKIPPED);
 	}
+
+	public abstract void execute();
 
 	// GETTER & SETTER
 	@Override

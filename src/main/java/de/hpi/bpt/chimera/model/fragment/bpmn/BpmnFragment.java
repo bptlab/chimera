@@ -47,7 +47,9 @@ public class BpmnFragment {
 	@OneToOne(cascade = CascadeType.ALL)
 	private EndEvent endEvent;
 
-	
+	public void addTasks(List<Activity> tasks) {
+		activities.addAll(tasks);
+	}
 	
 	public String getId() {
 		return id;
