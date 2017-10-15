@@ -31,7 +31,7 @@ public class ActivityParser {
 		fragment.addTasks(humanActivities);
 
 		List<Activity> mailActivities = new ArrayList<>();
-		humanActivities.addAll(getEmailActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
+		mailActivities.addAll(getEmailActivitiesFromXmlWrapper(fragXmlWrap, sfResolver, dfResolver));
 		fragment.addTasks(mailActivities);
 	}
 

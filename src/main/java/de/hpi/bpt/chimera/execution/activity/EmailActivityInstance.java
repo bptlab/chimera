@@ -52,9 +52,9 @@ public class EmailActivityInstance extends AbstractActivityInstance {
 		password = PropertyLoader.getProperty("mailtask.mail.password");
 
 		// TODO
-		receiverMail = "ENTER_A_MAILADRESSE_HERE";// emailConfiguration.getReceiverEmailAddress(controlNodeId);
-		subject = "Test";// emailConfiguration.getSubject(controlNodeId);
-		message = "Testmessage!!!";// emailConfiguration.getMessage(controlNodeId);
+		receiverMail = this.getControlNode().getEmailConfiguration().getReceiverEmailAddress();
+		subject = this.getControlNode().getEmailConfiguration().getSubject();
+		message = this.getControlNode().getEmailConfiguration().getMessage();
 		this.setDataAttributes();
 	}
 
