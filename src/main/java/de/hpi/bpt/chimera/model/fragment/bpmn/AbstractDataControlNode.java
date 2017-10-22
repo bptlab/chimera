@@ -7,20 +7,25 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.ExtendedDataStateCondition;
+import de.hpi.bpt.chimera.model.condition.MetaCondition;
 
 @Entity
 public abstract class AbstractDataControlNode extends AbstractControlNode {
 	private String name = "";
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "dataflow_incomming")
-	private List<ConditionSet> preCondition = new ArrayList<>();
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "dataflow_outgoing")
-	private List<ConditionSet> postCondition = new ArrayList<>();
+	@OneToOne(cascade = CascadeType.ALL)
+	private MetaCondition preCondition;
+	@OneToOne(cascade = CascadeType.ALL)
+	private MetaCondition postCondition;
+
+	public AbstractDataControlNode() {
+		this.preCondition = new MetaCondition();
+		this.postCondition = new MetaCondition();
+	}
 
 	// GETTER & SETTER
 	public String getName() {
@@ -31,19 +36,19 @@ public abstract class AbstractDataControlNode extends AbstractControlNode {
 		this.name = name;
 	}
 
-	public List<ConditionSet> getPreCondition() {
+	public MetaCondition getPreCondition() {
 		return preCondition;
 	}
 
-	public void setPreCondition(List<ConditionSet> preCondition) {
+	public void setPreCondition(MetaCondition preCondition) {
 		this.preCondition = preCondition;
 	}
 
-	public List<ConditionSet> getPostCondition() {
+	public MetaCondition getPostCondition() {
 		return postCondition;
 	}
 
-	public void setPostCondition(List<ConditionSet> postCondition) {
+	public void setPostCondition(MetaCondition postCondition) {
 		this.postCondition = postCondition;
 	}
 }

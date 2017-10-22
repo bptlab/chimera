@@ -8,6 +8,7 @@ import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataNodeJaxBean;
 import de.hpi.bpt.chimera.jcore.rest.TransportationBeans.DataObjectJaxBean;
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.MetaCondition;
 import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 import org.json.JSONArray;
@@ -112,7 +113,7 @@ public class DataDependencyRestService extends AbstractRestService {
 	@Path("scenario/{scenarioId}/instance/{instanceId}/activityinstance/{activityInstanceId}/output")
 	public Response getOutputDataObjects(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
-		return CASE_NOT_FOUND;
+		return caseNotFoundResponse(cmId, caseId);
 		/*
 		if (caseExecutioner == null) {
 			return CASE_NOT_FOUND;
@@ -152,16 +153,18 @@ public class DataDependencyRestService extends AbstractRestService {
 	public Response getAvailableInput(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 		if (activityInstance == null) {
-			return ACTIVITY_INSTANCE_NOT_FOUND;
+			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
 
 		DataManager dataManager = caseExecutioner.getDataManager();
-		Set<DataObject> availableInput = dataManager.getAvailableDataObjects(activityInstance.getControlNode());
-
+		MetaCondition activityPreCondition = activityInstance.getControlNode().getPreCondition();
+		List<ConditionSet> fulfilledConditionSets = activityPreCondition.getFulfilledConditions(dataManager.getDataStateConditions());
+		Set<DataObject> availableInput = dataManager.getAvailableDataObjects(fulfilledConditionSets);
+		
 		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
 		for (DataObject dataObject : availableInput) {
 			resultBeans.add(new DataObjectJaxBean(dataObject));
@@ -177,17 +180,17 @@ public class DataDependencyRestService extends AbstractRestService {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 		if (activityInstance == null) {
-			return ACTIVITY_INSTANCE_NOT_FOUND;
+			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
 
 		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
 
 		Set<DataStateCondition> availableConditions = new HashSet<>();
-		for (ConditionSet conditionSet : activityInstance.getControlNode().getPostCondition()) {
+		for (ConditionSet conditionSet : activityInstance.getControlNode().getPostCondition().getConditionSets()) {
 			for (DataStateCondition condition : conditionSet.getConditions()) {
 				availableConditions.add(condition);
 			}

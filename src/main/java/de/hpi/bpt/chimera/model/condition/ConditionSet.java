@@ -12,6 +12,10 @@ import javax.persistence.OneToMany;
 
 import de.hpi.bpt.chimera.execution.DataObject;
 
+/**
+ * List of {@link DataStateCondition}{@code s} and can only be used if all
+ * conditions are represented in the {@link DataManager}
+ */
 @Entity
 public class ConditionSet {
 	@Id
@@ -48,7 +52,7 @@ public class ConditionSet {
 	 * @param existingConditions
 	 * @return boolean
 	 */
-	public boolean isFulfilled(List<? extends ConditionStatable> existingConditions) {
+	public boolean isFulfilled(List<DataStateCondition> existingConditions) {
 		for (DataStateCondition condition : conditions) {
 			if (!existingConditions.contains(condition))
 				return false;

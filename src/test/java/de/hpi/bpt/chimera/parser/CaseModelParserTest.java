@@ -123,7 +123,7 @@ public class CaseModelParserTest {
 	}
 
 	private void testTerminationCondition(TerminationCondition terminationCondition, List<DataModelClass> dataModelClasses) {
-		List<ConditionSet> components = terminationCondition.getConditions();
+		List<ConditionSet> components = terminationCondition.getConditionSets();
 		assertEquals("wrong TerminationConditionComponent amount", 2, components.size());
 
 		ConditionSet component1 = components.get(0);

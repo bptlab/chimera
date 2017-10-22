@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.jcore.rest;
 
 import de.hpi.bpt.chimera.execution.CaseExecutioner;
+import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.execution.DataManagerBean;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
@@ -54,7 +55,7 @@ public class ActivityRestService extends AbstractRestService {
 	public Response getActivitiesOfInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @QueryParam("filter") String filterString, @QueryParam("state") String stateName) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 		// common
 		if (StringUtils.isEmpty(filterString)) {
@@ -100,12 +101,11 @@ public class ActivityRestService extends AbstractRestService {
 	private Response getAllActivitiesOfInstanceWithFilter(CaseExecutioner caseExecutioner, String filterString, UriInfo uriInfo) {
 		Collection<AbstractActivityInstance> activityInstances = new ArrayList<>();
 
-
-		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.READY));
-		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.RUNNING));
-		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.TERMINATED));
-		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.DATAFLOW_ENABLED));
-		activityInstances.addAll(caseExecutioner.getAllActivitiesWithState(State.CONTROLFLOW_ENABLED));
+		activityInstances.addAll(caseExecutioner.getActivitiesWithState(State.READY));
+		activityInstances.addAll(caseExecutioner.getActivitiesWithState(State.RUNNING));
+		activityInstances.addAll(caseExecutioner.getActivitiesWithState(State.TERMINATED));
+		activityInstances.addAll(caseExecutioner.getActivitiesWithState(State.DATAFLOW_ENABLED));
+		activityInstances.addAll(caseExecutioner.getActivitiesWithState(State.CONTROLFLOW_ENABLED));
 
 		if (!filterString.isEmpty()) {
 			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
@@ -150,7 +150,7 @@ public class ActivityRestService extends AbstractRestService {
 		if (state == null) {
 			return stateNotFoundResponse(stateName);
 		}
-		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getAllActivitiesWithState(state);
+		Collection<AbstractActivityInstance> activityInstances = caseExecutioner.getActivitiesWithState(state);
 		if (!filterString.isEmpty()) {
 			activityInstances = activityInstances.stream().filter(instance -> instance.getControlNode().getName().contains(filterString)).collect(Collectors.toList());
 		}
@@ -186,12 +186,12 @@ public class ActivityRestService extends AbstractRestService {
 	public Response getActivity(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 		if (activityInstance == null) {
-			return ACTIVITY_INSTANCE_NOT_FOUND;
+			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
 
 		ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
@@ -214,12 +214,13 @@ public class ActivityRestService extends AbstractRestService {
 	public Response setDataAttribute(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String post) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		Map<String, Map<String, Object>> dataAttributeValues = parseDataAttribueValues(post);
 
-		caseExecutioner.setDataAttributeValues(dataAttributeValues);
+		DataManager dataManager = caseExecutioner.getDataManager();
+		dataManager.setDataAttributeValues(dataAttributeValues);
 
 		return Response.status(201).build();
 	}
@@ -254,12 +255,12 @@ public class ActivityRestService extends AbstractRestService {
 	public Response getWorkingItems(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
 		if (activityInstance == null) {
-			return ACTIVITY_INSTANCE_NOT_FOUND;
+			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
 
 		List<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
@@ -288,7 +289,7 @@ public class ActivityRestService extends AbstractRestService {
 	public Response beginActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		List<String> selectedDataObjectInstanceIds = new ArrayList<>();
@@ -326,11 +327,11 @@ public class ActivityRestService extends AbstractRestService {
 	public Response terminateActivity(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("activityInstanceId") String activityInstanceId, @DefaultValue("") String postBody) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		if (caseExecutioner.getActivityInstance(activityInstanceId) == null) {
-			return ACTIVITY_INSTANCE_NOT_FOUND;
+			return activityInstanceNotFoundResponse(activityInstanceId);
 		}
 		JSONObject postJson = new JSONObject(postBody);
 		DataManagerBean dataManagerBean = new DataManagerBean(postJson);

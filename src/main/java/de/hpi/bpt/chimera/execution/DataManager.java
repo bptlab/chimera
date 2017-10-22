@@ -21,15 +21,12 @@ public class DataManager {
 
 	private CaseExecutioner caseExecutioner;
 	private DataModel dataModel;
-	/**
-	 * Map of Id of DataObjectInstance to DataObjectInstance
-	 */
-	private Map<String, DataObject> dataObjects;
+	private Map<String, DataObject> dataObjectIdToDataObject;
 
 	public DataManager(DataModel dataModel, CaseExecutioner caseExecutioner) {
 		this.setDataModel(dataModel);
 		this.setCaseExecutioner(caseExecutioner);
-		this.dataObjects = new HashMap<>();
+		this.dataObjectIdToDataObject = new HashMap<>();
 	}
 
 	/**
@@ -38,13 +35,14 @@ public class DataManager {
 	 * @param outgoingDataNodes
 	 * @param dataManagerBean
 	 */
+	@Deprecated
 	public void createDataObject(List<DataNode> outgoingDataNodes, DataManagerBean dataManagerBean) {
 		for (String newCreationId : dataManagerBean.getNewCreations()) {
 			for (DataNode dataNode : outgoingDataNodes) {
 				if (dataNode.getId().equals(newCreationId)) {
 					Map<String, Object> attributeValues = dataManagerBean.getDataNodeAttributeValuesById(newCreationId);
 					DataObject dataObjectInstance = new DataObject(dataNode, caseExecutioner, attributeValues);
-					this.dataObjects.put(dataObjectInstance.getId(), dataObjectInstance);
+					this.dataObjectIdToDataObject.put(dataObjectInstance.getId(), dataObjectInstance);
 				}
 			}
 		}
@@ -75,9 +73,9 @@ public class DataManager {
 		for (Map.Entry<String, String> transition : dataManagerBean.getTransitions().entrySet()) {
 			String dataObjectId = transition.getKey();
 			String dataNodeId = transition.getValue();
-			if (!dataObjects.containsKey(dataObjectId))
+			if (!dataObjectIdToDataObject.containsKey(dataObjectId))
 				continue;
-			DataObject objectInstance = dataObjects.get(dataObjectId);
+			DataObject objectInstance = dataObjectIdToDataObject.get(dataObjectId);
 			for (DataNode dataNode : outgoingDataNodes) {
 				if (dataNode.getId().equals(dataNodeId)) {
 					objectInstance.setDataNode(dataNode);
@@ -90,17 +88,19 @@ public class DataManager {
 	}
 
 	/**
-	 * Lock the Instances of DataObjects. And returns these Instances.
+	 * Lock those {@link DataObject}{@code s} that are referred by the
+	 * dataObjectIds and returns these Instances.
 	 * 
-	 * @param List
-	 *            of dataObjectInstanceIds
+	 * @param dataObjectIds
+	 *            - list of {@code ids} which referring DataObjects shall be
+	 *            locked
 	 * @return List of locked DataObjects
 	 */
-	public List<DataObject> lockDataObjects(List<String> dataObjectInstanceIds) {
+	public List<DataObject> lockDataObjects(List<String> dataObjectIds) {
 		List<DataObject> lockedDataObjects = new ArrayList<>();
-		for (String id : dataObjectInstanceIds) {
-			if (dataObjects.containsKey(id)) {
-				DataObject dataObject = dataObjects.get(id);
+		for (String id : dataObjectIds) {
+			if (dataObjectIdToDataObject.containsKey(id)) {
+				DataObject dataObject = dataObjectIdToDataObject.get(id);
 				dataObject.lock();
 				lockedDataObjects.add(dataObject);
 			}
@@ -109,14 +109,15 @@ public class DataManager {
 	}
 
 	/**
-	 * Unlock the Instances of DataObjects.
+	 * Unlock certain {@link DataObject}{@code s}.
 	 * 
-	 * @param toUnlockDataObjectInstances
+	 * @param dataObjects
+	 *            - that shall be unlocked
 	 */
-	public void unlockDataObjects(List<DataObject> toUnlockDataObjectInstances) {
-		// toUnlockDataObjectInstances.values().forEach(DataObjectInstance::unlock);
-		for (DataObject dataObjectToUnlock : toUnlockDataObjectInstances) {
-			if (dataObjects.containsKey(dataObjectToUnlock.getId())) {
+	public void unlockDataObjects(List<DataObject> dataObjects) {
+		// toUnlockDataObjects.values().forEach(DataObjectInstance::unlock);
+		for (DataObject dataObjectToUnlock : dataObjects) {
+			if (dataObjectIdToDataObject.containsKey(dataObjectToUnlock.getId())) {
 				dataObjectToUnlock.unlock();
 			}
 		}
@@ -147,43 +148,34 @@ public class DataManager {
 		return existingInstances;
 	}
 	*/
-	/**
-	 * Get all ConditionSets of the PreCondition of an AbstractDataControlNode
-	 * that are fulfill the existing Conditions.
-	 * 
-	 * @param controlNode
-	 * @return
-	 */
-	public List<ConditionSet> getAvailableConditions(AbstractDataControlNode controlNode) {
-		List<ConditionSet> availableCondititionSets = new ArrayList<>();
-		for (ConditionSet conditionSet : controlNode.getPreCondition()) {
-			if (conditionSet.isFulfilled(getDataObjects())) {
-				availableCondititionSets.add(conditionSet);
-			}
-		}
-		return availableCondititionSets;
-	}
 
 	/**
-	 * Get all DataObjects that have the same DataStateCondition (equal
-	 * DataClass and ObjectLifecycleState) as the available conditions of the
-	 * preCondition with no duplicates.
+	 * Get the {@link DataStateCondition}s of all unlocked {@link DataObject}s.
 	 * 
-	 * @param controlNode
-	 * @return
+	 * @return List of DataStateConditions which referring DataObject is
+	 *         unlocked
 	 */
-	public Set<DataObject> getAvailableDataObjects(AbstractDataControlNode controlNode) {
-		List<ConditionSet> availableCondititionSets = getAvailableConditions(controlNode);
-		return getAvailableDataObjects(availableCondititionSets);
+	public List<DataStateCondition> getDataStateConditions() {
+		List<DataStateCondition> existingConditions = new ArrayList<>();
+
+		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
+			if (!dataObject.isLocked()) {
+				existingConditions.add(dataObject.getCondition());
+			}
+		}
+		return existingConditions;
 	}
 
 	/**
 	 * Get all DataObjects that have the same DataStateCondition (equal
 	 * DataClass and ObjectLifecycleState) as the conditions in the
-	 * conditionSets with no duplicates.
+	 * conditionSets.
 	 * 
 	 * @param conditionSets
-	 * @return
+	 *            - list of ConditionSets which DataStateCondition shall be
+	 *            checked
+	 * @return Set of DataObjects that have the same DataStateCondition as one
+	 *         of DataStateConditions in the conditionSets
 	 */
 	public Set<DataObject> getAvailableDataObjects(List<ConditionSet> conditionSets) {
 		Set<DataObject> availableDataObjects = new HashSet<>();
@@ -207,62 +199,13 @@ public class DataManager {
 	public Set<DataObject> getAvailableDataObjects(DataStateCondition condition) {
 		Set<DataObject> availableDataObjects = new HashSet<>();
 
-		for (DataObject dataObject : dataObjects.values()) {
+		for (DataObject dataObject : dataObjectIdToDataObject.values()) {
 			if (condition.equals(dataObject.getCondition())) {
 				availableDataObjects.add(dataObject);
 			}
 		}
 
 		return availableDataObjects;
-	}
-	/**
-	 * Check whether a ControlNode is DataFlow enabled.
-	 * 
-	 * @param controlNode
-	 * @return boolean
-	 */
-	public boolean isDataFlowEnabled(AbstractDataControlNode controlNode) {
-		List<ConditionSet> preCondition = controlNode.getPreCondition();
-		if (preCondition.isEmpty()) {
-			return true;
-		}
-
-		return isExistingDataObject(preCondition);
-	}
-
-	/**
-	 * Check whether the DataNodes that shell be checked are instantiated by the
-	 * existing DataObjectInstances.
-	 * 
-	 * @param condition
-	 * @return boolean
-	 */
-	private boolean isExistingDataObject(List<ConditionSet> conditions) {
-		// TODO: make sure that even for DataNodes that occur twice exists two
-		// Instances.
-		if (conditions.isEmpty()) {
-			return true;
-		}
-
-		List<DataObject> existingConditions = getDataObjects();
-		for (ConditionSet condition : conditions) {
-			if (condition.isFulfilled(existingConditions)) {
-				return true;
-			}
-		}
-
-		return false;
-
-		/*
-		 * List<DataNode> existingDataNodes = new ArrayList<>();
-		 * 
-		 * for (DataObject dataObjectInstance : dataObjects.values()) {
-		 * existingDataNodes.add(dataObjectInstance.getDataNode()); } for
-		 * (DataNode dataNodeToCheck : condition) { if
-		 * (existingDataNodes.contains(dataNodeToCheck)) {
-		 * existingDataNodes.remove(dataNodeToCheck); } else { return false; } }
-		 * return true;
-		 */
 	}
 
 	/**
@@ -273,39 +216,23 @@ public class DataManager {
 	public void setDataAttributeValues(Map<String, Map<String, Object>> dataAttributeValues) {
 		for (Map.Entry<String, Map<String, Object>> transition : dataAttributeValues.entrySet()) {
 			String dataObjectId = transition.getKey();
-			if (!dataObjects.containsKey(dataObjectId))
+			if (!dataObjectIdToDataObject.containsKey(dataObjectId))
 				continue;
-			DataObject dataObject = dataObjects.get(dataObjectId);
+			DataObject dataObject = dataObjectIdToDataObject.get(dataObjectId);
 			Map<String, Object> attributeValues = transition.getValue();
 			dataObject.setDataAttributeValues(attributeValues);
 		}
 	}
 
 	/**
-	 * Returns whether the Case fulfills the TerminationCondition of the
-	 * CaseModel.
+	 * Get a specific DataObject by id.
 	 * 
-	 * @return boolean
+	 * @param dataObjectId
+	 * @return DataObject
 	 */
-	public boolean canTerminate() {
-		/*
-		List<DataStateCondition> existingConditions = new ArrayList<>();
-		for (DataObject dataObjectInstance : dataObjectInstances)
-			existingConditions.add(dataObjectInstance.getDataNode().getDataObjectState());
-		return caseModel.getTerminationCondition().isFulfilled(existingConditions);
-		*/
-		return false;
-	}
-
-	/**
-	 * Get a specific Instance of an DataObject.
-	 * 
-	 * @param instanceId
-	 * @return DataObjectInstance
-	 */
-	public DataObject getDataObject(String dataObjectId) {
-		if (dataObjects.containsKey(dataObjectId)) {
-			return dataObjects.get(dataObjectId);
+	public DataObject getDataObjectById(String dataObjectId) {
+		if (dataObjectIdToDataObject.containsKey(dataObjectId)) {
+			return dataObjectIdToDataObject.get(dataObjectId);
 		}
 		return null;
 	}
@@ -327,17 +254,7 @@ public class DataManager {
 		this.caseExecutioner = caseExecutioner;
 	}
 
-	public Map<String, DataObject> getDataObjectsMap() {
-		return dataObjects;
-	}
-
-	/**
-	 * Get all DataObjects.
-	 * 
-	 * @return List of DataObjectInstance
-	 */
-	public List<DataObject> getDataObjects() {
-		Collection<DataObject> coll = dataObjects.values();
-		return new ArrayList<>(coll);
+	public Map<String, DataObject> getDataObjectMap() {
+		return dataObjectIdToDataObject;
 	}
 }

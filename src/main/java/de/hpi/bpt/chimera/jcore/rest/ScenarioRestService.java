@@ -100,7 +100,7 @@ public class ScenarioRestService extends AbstractRestService {
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
 		if (cm == null) {
-			return CASEMODEL_NOT_FOUND;
+			return casemodelNotFoundResponse(cmId);
 		}
 
 		JSONObject result = new JSONObject(new CaseModelDetailsJaxBean(cm));
@@ -152,7 +152,7 @@ public class ScenarioRestService extends AbstractRestService {
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
 		if (cm == null) {
-			return CASEMODEL_NOT_FOUND;
+			return casemodelNotFoundResponse(cmId);
 		}
 
 		JSONObject result = new JSONObject(new ConditionsJaxBean(cm.getTerminationCondition()));
@@ -184,7 +184,7 @@ public class ScenarioRestService extends AbstractRestService {
 		CaseModel cm = CaseModelManager.getCaseModel(cmId);
 
 		if (cm == null) {
-			return CASEMODEL_NOT_FOUND;
+			return casemodelNotFoundResponse(cmId);
 		}
 
 		JSONArray result = new JSONArray(cm.getContentXmlStrings());

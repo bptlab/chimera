@@ -1,15 +1,11 @@
 package de.hpi.bpt.chimera.execution.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
 import de.hpi.bpt.chimera.execution.DataObject;
 import de.hpi.bpt.chimera.execution.FragmentInstance;
 import de.hpi.bpt.chimera.jcore.controlnodes.State;
-import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.activity.Activity;
 
 public abstract class AbstractActivityInstance extends ControlNodeInstance {
@@ -40,7 +36,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		if (getState().equals(State.INIT)) {
 			setState(State.CONTROLFLOW_ENABLED);
 		}
-		if (getState().equals(State.DATAFLOW_ENABLED) || getDataManager().isDataFlowEnabled(getControlNode())) {
+		if (getState().equals(State.DATAFLOW_ENABLED) || getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			setState(State.READY);
 		}
 		// if is automatic task begin automatically?
@@ -50,7 +46,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 	 * Used for updating the DataFlow of the ActivityInstance.
 	 */
 	public void checkDataFlow() {
-		if (getDataManager().isDataFlowEnabled(getControlNode())) {
+		if (getControlNode().getPreCondition().isFulfilled(getDataManager().getDataStateConditions())) {
 			enableDataFlow();
 		} else {
 			disableDataFlow();
@@ -90,7 +86,7 @@ public abstract class AbstractActivityInstance extends ControlNodeInstance {
 		// TODO: implement skipBehaviour
 		// TODO: implement creation of possible attached BoundaryEvent
 		setState(State.RUNNING);
-		if (this.isAutomaticTask && getControlNode().getPostCondition().size() <= 1) {
+		if (this.isAutomaticTask && getControlNode().getPostCondition().getConditionSets().size() <= 1) {
 			terminate();
 		}
 	}

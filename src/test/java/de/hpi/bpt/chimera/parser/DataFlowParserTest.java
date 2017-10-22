@@ -40,8 +40,8 @@ public class DataFlowParserTest {
 
 		Activity task = cm.getFragments().get(0).getBpmnFragment().getTasks().get(0);
 		assertEquals(12, cm.getFragments().get(0).getBpmnFragment().getConditions().size());
-		List<ConditionSet> preCondition = task.getPreCondition();
-		List<ConditionSet> postCondition = task.getPostCondition();
+		List<ConditionSet> preCondition = task.getPreCondition().getConditionSets();
+		List<ConditionSet> postCondition = task.getPostCondition().getConditionSets();
 
 		// PreCondition
 		assertEquals(6, preCondition.size());

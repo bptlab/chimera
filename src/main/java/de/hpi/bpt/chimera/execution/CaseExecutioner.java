@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.activity.AbstractActivityInstance;
@@ -14,15 +13,11 @@ import de.hpi.bpt.chimera.jhistory.transportationbeans.DataAttributeLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.DataObjectLog;
 import de.hpi.bpt.chimera.jhistory.transportationbeans.LogEntry;
 import de.hpi.bpt.chimera.model.CaseModel;
-import de.hpi.bpt.chimera.model.condition.ConditionSet;
-import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
-import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractControlNode;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
-import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
 
 public class CaseExecutioner {
-	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
+	// private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	private Case caze;
 	private CaseModel caseModel;
@@ -50,22 +45,15 @@ public class CaseExecutioner {
 			fragmentInstance.start();
 		}
 	}
-	// TODO: think about whether this should be put up here or in
-	// FragmentInstance
-	@Deprecated
-	public void createDataObjectInstances(AbstractControlNode node) {
-		if (node instanceof AbstractDataControlNode) {
-			dataManager.createDataObject((AbstractDataControlNode) node);
-		}
-	}
 
 	/**
-	 * Get all ActivityInstances that are in a specific State.
+	 * Get all ActivityInstances in all Fragment Instances that are in a
+	 * specific State.
 	 * 
 	 * @param state
 	 * @return Collection of ActivityInstances
 	 */
-	public Collection<AbstractActivityInstance> getAllActivitiesWithState(State state) {
+	public Collection<AbstractActivityInstance> getActivitiesWithState(State state) {
 		Collection<AbstractActivityInstance> activityInstances = new ArrayList<>();
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
 			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstances().values()) {
@@ -116,16 +104,21 @@ public class CaseExecutioner {
 			List<DataObject> toUnlockDataObjects = activtyInstance.getSelectedDataObjectInstances();
 			dataManager.unlockDataObjects(toUnlockDataObjects);
 			AbstractDataControlNode controlNode = (AbstractDataControlNode) nodeInstance.getControlNode();
-			// dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
-			// dataManager.createDataObject(controlNode.getOutgoingDataNodes(), dataManagerBean);
+			// dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(),
+			// dataManagerBean);
+			// dataManager.createDataObject(controlNode.getOutgoingDataNodes(),
+			// dataManagerBean);
 			activtyInstance.terminate();
 		}
 	}
 
 	/**
-	 * Get a specific ActivityInstance.
+	 * Get a specific ActivityInstance by an id.
 	 * 
 	 * @param activityInstanceId
+	 * @return the associated AbstractActivityInstance, or {@code null} if the
+	 *         id is not assigned, or {@code null} if the id is associated to a
+	 *         ControlNodeInstance which is not an ActivityInstance
 	 */
 	public AbstractActivityInstance getActivityInstance(String activityInstanceId) {
 		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
@@ -143,10 +136,12 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Get an ControlNodeInstance over all FragmentInstances of the Case.
+	 * Get an ControlNodeInstance over all FragmentInstances of the Case by an
+	 * id.
 	 * 
-	 * @param activityInstanceId
-	 * @return
+	 * @param controlNodeId
+	 * @return the associated ControlNodeInstance, or {@code null} if the id is
+	 *         not assigned
 	 */
 	private ControlNodeInstance getControlNodeInstance(String controlNodeId) {
 		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
@@ -158,15 +153,19 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Log the transition of the State of an ActivityInstance.
+	 * Log the transition of the {@link State} of an
+	 * {@link AbstractActivityInstance}. Therefore only log certain
+	 * {@link State} transitions.
 	 * 
 	 * @param activityInstance
+	 *            - that shall be logged
 	 * @param newState
+	 *            - of the ActivityInstance
 	 */
-	public void logActivityTransition(AbstractActivityInstance instance, State newState) {
+	public void logActivityTransition(AbstractActivityInstance activityInstance, State newState) {
 		List<State> stateable = new ArrayList<>( Arrays.asList(State.INIT, State.RUNNING, State.TERMINATED) );
 		if (stateable.contains(newState)) {
-			ActivityLog activityLog = new ActivityLog(instance, instance.getState(), newState);
+			ActivityLog activityLog = new ActivityLog(activityInstance, activityInstance.getState(), newState);
 			activityLogs.add(activityLog);
 			// TODO: think about necessary
 			sortLogs(activityLogs);
@@ -174,33 +173,38 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Log the transition of an ObjectLifecycleState of an DataObject.
+	 * Log the transition of an {@link ObjectLifecycleState} of an
+	 * {@link DataObject}.
 	 * 
 	 * @param dataObjectInstance
-	 * @param newState
+	 *            - that shall be logged
+	 * @param newObjectLifecycleState
+	 *            - of the DataObject
 	 */
-	public void logDataObjectTransition(DataObject instance, ObjectLifecycleState newState) {
-		DataObjectLog dataObjectLog = new DataObjectLog(instance, instance.getObjectLifecycleState(), newState);
+	public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState newObjectLifecycleState) {
+		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, dataObjectInstance.getObjectLifecycleState(), newObjectLifecycleState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
 		sortLogs(dataObjectLogs);
 	}
 
-	public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState oldState, ObjectLifecycleState newState) {
-		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, oldState, newState);
+	public void logDataObjectTransition(DataObject dataObjectInstance, ObjectLifecycleState oldObjectLifecycleState, ObjectLifecycleState newObjectLifecycleState) {
+		DataObjectLog dataObjectLog = new DataObjectLog(dataObjectInstance, oldObjectLifecycleState, newObjectLifecycleState);
 		dataObjectLogs.add(dataObjectLog);
 		// TODO: think about necessary
 		sortLogs(dataObjectLogs);
 	}
 
 	/**
-	 * Log the transition of the value of an DataAttributeInstance.
+	 * Log the transition of the value of an {@link DataAttributeInstance}.
 	 * 
-	 * @param instance
+	 * @param dataAttributeInstance
+	 *            - that shall be logged
 	 * @param newValue
+	 *            - of the DataAttributeInstance
 	 */
-	public void logDataAttributeTransition(DataAttributeInstance instance, Object newValue) {
-		DataAttributeLog dataAttributeLog = new DataAttributeLog(instance, instance.getValue(), newValue);
+	public void logDataAttributeTransition(DataAttributeInstance dataAttributeInstance, Object newValue) {
+		DataAttributeLog dataAttributeLog = new DataAttributeLog(dataAttributeInstance, dataAttributeInstance.getValue(), newValue);
 		dataAttributeLogs.add(dataAttributeLog);
 		// TODO: think about necessary
 		sortLogs(dataAttributeLogs);
@@ -211,14 +215,10 @@ public class CaseExecutioner {
 	 * comes first.
 	 * 
 	 * @param logEntries
+	 *            - that shall be sorted
 	 */
 	private void sortLogs(List<? extends LogEntry> logEntries) {
 		logEntries.sort((l1, l2) -> l2.getTimeStamp().compareTo(l1.getTimeStamp()));
-	}
-
-
-	public void setDataAttributeValues(Map<String, Map<String, Object>> dataAttributeValues) {
-		dataManager.setDataAttributeValues(dataAttributeValues);
 	}
 
 	// GETTER & SETTER

@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +44,11 @@ public class DataObjectRestService extends AbstractRestService {
 	public Response getDataObjects(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @DefaultValue("") @QueryParam("filter") String filterString) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		DataManager dataManager = caseExecutioner.getDataManager();
-		List<DataObject> dataObjects = dataManager.getDataObjects();
+		Collection<DataObject> dataObjects = dataManager.getDataObjectMap().values();
 
 		if (!filterString.isEmpty()) {
 			dataObjects = dataObjects.stream().filter(instance -> instance.getId().contains(filterString)).collect(Collectors.toList());
@@ -65,12 +67,12 @@ public class DataObjectRestService extends AbstractRestService {
 	public Response getDataObject(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId, @PathParam("objectId") String dataObjectId) {
 		CaseExecutioner caseExecutioner = ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 		DataManager dataManager = caseExecutioner.getDataManager();
-		DataObject dataObject = dataManager.getDataObject(dataObjectId);
+		DataObject dataObject = dataManager.getDataObjectById(dataObjectId);
 		if (dataObject == null) {
-			return DATAOBJECT_NOT_FOUND;
+			return dataObjectNotFoundResponse(dataObjectId);
 		}
 
 		JSONObject result = new JSONObject(new DataObjectJaxBean(dataObject));

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
+import de.hpi.bpt.chimera.model.condition.MetaCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataClass;
 import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.parser.CaseModelParserHelper;
@@ -49,7 +50,7 @@ public class DataFlowResolver {
 	 * 
 	 * @param dataNodeReferences
 	 */
-	public List<ConditionSet> resolveDataFlow(List<String> dataNodeReferences) {
+	public MetaCondition resolveDataFlow(List<String> dataNodeReferences) {
 		List<DataStateCondition> resolvedConditions = resolveDataNodeReferences(dataNodeReferences);
 
 		List<DataStateCondition> definiteConditions = getDefiniteConditions(resolvedConditions);
@@ -65,7 +66,7 @@ public class DataFlowResolver {
 			conditionSets.add(new ConditionSet(conditions));
 		}
 
-		return conditionSets;
+		return new MetaCondition(conditionSets);
 	}
 
 	/**

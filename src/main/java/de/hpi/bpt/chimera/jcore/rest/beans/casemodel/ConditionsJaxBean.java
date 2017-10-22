@@ -16,8 +16,8 @@ public class ConditionsJaxBean {
 
 	public ConditionsJaxBean(TerminationCondition terminationCondition) {
 
-		List<DataObjectStateConditionJaxBean[]> terminationConditionJaxBean = new ArrayList<>(terminationCondition.getConditions().size());
-		for (ConditionSet component : terminationCondition.getConditions()) {
+		List<DataObjectStateConditionJaxBean[]> terminationConditionJaxBean = new ArrayList<>(terminationCondition.getConditionSets().size());
+		for (ConditionSet component : terminationCondition.getConditionSets()) {
 
 			List<DataObjectStateConditionJaxBean> componentJaxBean = new ArrayList<>(component.getConditions().size());
 			for (DataStateCondition condition : component.getConditions()) {
@@ -27,7 +27,7 @@ public class ConditionsJaxBean {
 			DataObjectStateConditionJaxBean[] componentArray = componentJaxBean.toArray(new DataObjectStateConditionJaxBean[component.getConditions().size()]);
 			terminationConditionJaxBean.add(componentArray);
 		}
-		DataObjectStateConditionJaxBean[][] terminationConditionArray = terminationConditionJaxBean.toArray(new DataObjectStateConditionJaxBean[terminationCondition.getConditions().size()][]);
+		DataObjectStateConditionJaxBean[][] terminationConditionArray = terminationConditionJaxBean.toArray(new DataObjectStateConditionJaxBean[terminationCondition.getConditionSets().size()][]);
 		setConditions(terminationConditionArray);
 	}
 

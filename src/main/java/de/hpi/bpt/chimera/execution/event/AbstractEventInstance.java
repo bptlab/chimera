@@ -48,7 +48,9 @@ public abstract class AbstractEventInstance extends ControlNodeInstance {
 	public void terminate() {
 		// TODO: use CaseExecutioner of Case of FragmentInstance
 		// this.fragmentInstance.createDataObjectInstances(this.getControlNode());
-		getCaseExecutioner().createDataObjectInstances(getControlNode());
+
+		// getCaseExecutioner().createDataObjectInstances(getControlNode());
+
 		// TODO: write DataAttributes with Json
 		getFragmentInstance().updateDataFlow();
 		getFragmentInstance().createFollowing(getControlNode());

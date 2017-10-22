@@ -4,6 +4,7 @@ import de.hpi.bpt.chimera.execution.CaseExecutioner;
 import de.hpi.bpt.chimera.execution.DataManager;
 import de.hpi.bpt.chimera.jcore.ScenarioInstance;
 import de.hpi.bpt.chimera.jcore.rest.beans.caze.CaseOverviewJaxBean;
+import de.hpi.bpt.chimera.model.condition.TerminationCondition;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
 import org.apache.log4j.Logger;
@@ -49,7 +50,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScenarioInstances(@Context UriInfo uri, @PathParam("scenarioId") String cmId, @DefaultValue("") @QueryParam("filter") String filterString) {
 		if (!CaseModelManager.isExistingCaseModel(cmId)) {
-			return CASEMODEL_NOT_FOUND;
+			return casemodelNotFoundResponse(cmId);
 		}
 
 		List<CaseExecutioner> caseExecutions = de.hpi.bpt.chimera.execution.ExecutionService.getAllCasesOfCaseModel(cmId);
@@ -175,7 +176,7 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	public Response getScenarioInstance(@Context UriInfo uriInfo, @PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
 		JSONObject result = new JSONObject(new CaseOverviewJaxBean(caseExecutioner));
@@ -216,13 +217,15 @@ public class ScenarioInstanceRestService extends AbstractRestService {
 	public Response checkTermination(@PathParam("scenarioId") String cmId, @PathParam("instanceId") String caseId) {
 		CaseExecutioner caseExecutioner = de.hpi.bpt.chimera.execution.ExecutionService.getCaseExecutioner(cmId, caseId);
 		if (caseExecutioner == null) {
-			return CASE_NOT_FOUND;
+			return caseNotFoundResponse(cmId, caseId);
 		}
 
+		TerminationCondition terminationCondition = caseExecutioner.getCaseModel().getTerminationCondition();
 		DataManager dataManager = caseExecutioner.getDataManager();
-		JSONObject result = new JSONObject();
+		boolean canTerminate = terminationCondition.isFulfilled(dataManager.getDataStateConditions());
 
-		result.put("canTerminate", dataManager.canTerminate());
+		JSONObject result = new JSONObject();
+		result.put("canTerminate", canTerminate);
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 

@@ -3,17 +3,36 @@ package de.hpi.bpt.chimera.jcore.rest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.hpi.bpt.chimera.execution.ExecutionService;
+import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
+
 /**
  *
  */
 public class AbstractRestService {
-	protected final Response CASEMODEL_NOT_FOUND = Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("Casemodel id is not assigned").build();
+	protected final Response casemodelNotFoundResponse(String cmId) {
+		String responseText = String.format("Casemodel id: %s is not assigned", cmId);
+		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();
+	}
 
-	protected final Response CASE_NOT_FOUND = Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_PLAIN).entity("Casemodel id or Case id is not assigned.").build();
+	protected final Response caseNotFoundResponse(String cmId, String caseId) {
+		if (!CaseModelManager.isExistingCaseModel(cmId)) {
+			return casemodelNotFoundResponse(cmId);
+		}
 
-	protected final Response ACTIVITY_INSTANCE_NOT_FOUND = Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"Acitivity Instance id is not assigned.\"}").build();
+		String responseText = String.format("Case id: %s is not assigned", caseId);
+		return Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_PLAIN).entity(responseText).build();
+	}
 
-	protected final Response DATAOBJECT_NOT_FOUND = Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"Data Object id is not assigned.\"}").build();
+	protected final Response activityInstanceNotFoundResponse(String activityInstanceId) {
+		String responseText = String.format("{\"error\":\"Acitivity Instance id: %s is not assigned.\"}", activityInstanceId);
+		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();
+	}
+
+	protected final Response dataObjectNotFoundResponse(String dataObjectId) {
+		String responseText = String.format("{\"error\":\"Data Object id: %s is not assigned.\"}", dataObjectId);
+		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();
+	}
 
 	public Response stateNotFoundResponse(String state) {
 		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The state " + "is not allowed " + state + "\"}").build();
