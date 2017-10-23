@@ -189,13 +189,13 @@ public class ActivityRestService extends AbstractRestService {
 			return caseNotFoundResponse(cmId, caseId);
 		}
 
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
+		try {
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstanceWithExceptions(activityInstanceId);
+			ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
+			return Response.ok(activity, MediaType.APPLICATION_JSON).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
-
-		ActivityJaxBean activity = new ActivityJaxBean(activityInstance);
-		return Response.ok(activity, MediaType.APPLICATION_JSON).build();
 	}
 
 
@@ -303,8 +303,12 @@ public class ActivityRestService extends AbstractRestService {
 		// TODO: begin of activity could fail in which case another Response needs to be sent
 		// ExecutionService.beginActivityInstance(scenarioInstanceId,
 		// activityInstanceId, selectedDataObjectIds);
-		caseExecutioner.beginActivityInstance(activityInstanceId, selectedDataObjectInstanceIds);
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
+		try {
+			caseExecutioner.beginActivityInstance(activityInstanceId, selectedDataObjectInstanceIds);
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity("{\"message\":\"activity begun.\"}").build();
+		} catch (SecurityException e) {
+			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 	}
 
 	/**

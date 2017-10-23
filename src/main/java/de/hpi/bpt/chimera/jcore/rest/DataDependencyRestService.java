@@ -155,23 +155,26 @@ public class DataDependencyRestService extends AbstractRestService {
 		if (caseExecutioner == null) {
 			return caseNotFoundResponse(cmId, caseId);
 		}
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
 
-		DataManager dataManager = caseExecutioner.getDataManager();
-		MetaCondition activityPreCondition = activityInstance.getControlNode().getPreCondition();
-		List<ConditionSet> fulfilledConditionSets = activityPreCondition.getFulfilledConditions(dataManager.getDataStateConditions());
-		Set<DataObject> availableInput = dataManager.getAvailableDataObjects(fulfilledConditionSets);
+		try {
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstanceWithExceptions(activityInstanceId);
+
+			DataManager dataManager = caseExecutioner.getDataManager();
+			MetaCondition activityPreCondition = activityInstance.getControlNode().getPreCondition();
+			List<ConditionSet> fulfilledConditionSets = activityPreCondition.getFulfilledConditions(dataManager.getDataStateConditions());
+			Set<DataObject> availableInput = dataManager.getAvailableDataObjects(fulfilledConditionSets);
+
+			List<DataObjectJaxBean> resultBeans = new ArrayList<>();
+			for (DataObject dataObject : availableInput) {
+				resultBeans.add(new DataObjectJaxBean(dataObject));
+			}
+			JSONArray result = new JSONArray(resultBeans);
+
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
+		}
 		
-		List<DataObjectJaxBean> resultBeans = new ArrayList<>();
-		for (DataObject dataObject : availableInput) {
-			resultBeans.add(new DataObjectJaxBean(dataObject));
-		}
-		JSONArray result = new JSONArray(resultBeans);
-
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 	}
 
 	@GET
@@ -182,33 +185,37 @@ public class DataDependencyRestService extends AbstractRestService {
 		if (caseExecutioner == null) {
 			return caseNotFoundResponse(cmId, caseId);
 		}
-		AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstance(activityInstanceId);
-		if (activityInstance == null) {
-			return activityInstanceNotFoundResponse(activityInstanceId);
-		}
 
-		Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
+		try {
+			AbstractActivityInstance activityInstance = caseExecutioner.getActivityInstanceWithExceptions(activityInstanceId);
 
-		Set<DataStateCondition> availableConditions = new HashSet<>();
-		for (ConditionSet conditionSet : activityInstance.getControlNode().getPostCondition().getConditionSets()) {
-			for (DataStateCondition condition : conditionSet.getConditions()) {
-				availableConditions.add(condition);
+			Collection<DataObject> selectedInstances = activityInstance.getSelectedDataObjectInstances();
+
+			Set<DataStateCondition> availableConditions = new HashSet<>();
+			for (ConditionSet conditionSet : activityInstance.getControlNode().getPostCondition().getConditionSets()) {
+				for (DataStateCondition condition : conditionSet.getConditions()) {
+					availableConditions.add(condition);
+				}
 			}
-		}
-		JSONArray result = new JSONArray();
-		for (DataStateCondition condition : availableConditions) {
-			JSONObject resultCondition = new JSONObject(new DataNodeJaxBean(condition));
-			// JSONObject possibleInput = buildDataObjectsJson(dataNode,
-			// selectedInstances);
-			// resultCondition.put("possibleInput", possibleInput);
-			result.put(resultCondition);
+			JSONArray result = new JSONArray();
+			for (DataStateCondition condition : availableConditions) {
+				JSONObject resultCondition = new JSONObject(new DataNodeJaxBean(condition));
+				// JSONObject possibleInput = buildDataObjectsJson(dataNode,
+				// selectedInstances);
+				// resultCondition.put("possibleInput", possibleInput);
+				result.put(resultCondition);
+			}
+
+			// List<DataObjectJaxBean> outputBeans =
+			// possibleInputs.stream().map(x
+			// -> buildDataObjectJaxBean(x,
+			// executionService)).collect(Collectors.toList());
+			// JSONArray array = new JSONArray(outputBeans);
+			return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
+		} catch (IllegalArgumentException e) {
+			return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(buildException(e.getMessage())).build();
 		}
 		
-		// List<DataObjectJaxBean> outputBeans = possibleInputs.stream().map(x
-		// -> buildDataObjectJaxBean(x,
-		// executionService)).collect(Collectors.toList());
-		// JSONArray array = new JSONArray(outputBeans);
-		return Response.status(Response.Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(result.toString()).build();
 
 	}
 

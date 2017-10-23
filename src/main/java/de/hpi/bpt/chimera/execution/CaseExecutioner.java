@@ -17,7 +17,7 @@ import de.hpi.bpt.chimera.model.datamodel.ObjectLifecycleState;
 import de.hpi.bpt.chimera.model.fragment.bpmn.AbstractDataControlNode;
 
 public class CaseExecutioner {
-	// private static final Logger log = Logger.getLogger(CaseExecutioner.class);
+	private static final Logger log = Logger.getLogger(CaseExecutioner.class);
 
 	private Case caze;
 	private CaseModel caseModel;
@@ -66,25 +66,29 @@ public class CaseExecutioner {
 	}
 
 	/**
-	 * Begin an ActivityInstance. Therefore lock all DataObjectInstances that
-	 * are used by the ActivityInstance and set them in the ActivityInstance.
+	 * Begin an {@link AbstractActivityInstance}. Therefore lock all
+	 * {@link DataObject}s that are used by the AbstractActivityInstance and set
+	 * them in the AbstractActivityInstance. If {@code activityInstanceId} is
+	 * not assigned to an AbstractActivityInstance or if one of the selected
+	 * DataObjects is already locked the AbstractActivityInstance cannot be
+	 * begun.
 	 * 
 	 * @param activityInstanceId
-	 * @param selectedDataObjectInstanceIds
+	 *            - {@code id} of AbstractActivityInstance that shall be begun
+	 * @param selectedDataObjectIds
+	 *            - list of {@code ids } of DataObjects that are used by the
+	 *            AbstractActivityInstance
 	 */
-	public void beginActivityInstance(String activityInstanceId, List<String> selectedDataObjectInstanceIds) {
-		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
-		if (nodeInstance == null)
-			return;
-
-		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.READY) {
-			AbstractActivityInstance activtyInstance = (AbstractActivityInstance) nodeInstance;
-			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjectInstanceIds);
-			activtyInstance.setSelectedDataObjects(lockedDataObjects);
+	public void beginActivityInstance(String activityInstanceId, List<String> selectedDataObjectIds) {
+		try {
+			AbstractActivityInstance activityInstance = getActivityInstanceWithStateAndExceptions(activityInstanceId, State.READY);
+			List<DataObject> lockedDataObjects = dataManager.lockDataObjects(selectedDataObjectIds);
+			activityInstance.setSelectedDataObjects(lockedDataObjects);
 			// TODO: has this to be before lock?
-			activtyInstance.getFragmentInstance().skipAlternativeControlNodes(nodeInstance);
-			activtyInstance.begin();
-			return;
+			activityInstance.getFragmentInstance().skipAlternativeControlNodes(activityInstance);
+			activityInstance.begin();
+		} catch (IllegalArgumentException | SecurityException e) {
+			throw e;
 		}
 	}
 
@@ -94,24 +98,22 @@ public class CaseExecutioner {
 	 * @param dataObjectTransitions
 	 */
 	public void terminateActivityInstance(String activityInstanceId, DataManagerBean dataManagerBean) {
-		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
-		if (nodeInstance == null)
-			return;
-
-		// TODO: think about instance has to be running
-		if (nodeInstance instanceof AbstractActivityInstance && nodeInstance.getState() == State.RUNNING) {
-			AbstractActivityInstance activtyInstance = (AbstractActivityInstance) nodeInstance;
-			List<DataObject> toUnlockDataObjects = activtyInstance.getSelectedDataObjectInstances();
-			dataManager.unlockDataObjects(toUnlockDataObjects);
-			AbstractDataControlNode controlNode = (AbstractDataControlNode) nodeInstance.getControlNode();
+		try {
+			AbstractActivityInstance activityInstance = this.getActivityInstanceWithStateAndExceptions(activityInstanceId, State.RUNNING);
+			List<DataObject> dataObjectsToUnlock = activityInstance.getSelectedDataObjectInstances();
+			dataManager.unlockDataObjects(dataObjectsToUnlock);
 			// dataManager.transitionDataObject(controlNode.getOutgoingDataNodes(),
 			// dataManagerBean);
 			// dataManager.createDataObject(controlNode.getOutgoingDataNodes(),
 			// dataManagerBean);
-			activtyInstance.terminate();
+			activityInstance.terminate();
+		} catch (IllegalArgumentException e) {
+			throw e;
 		}
 	}
 
+	// TODO: think about whether this should be refactored to a method with
+	// exceptions
 	/**
 	 * Get a specific ActivityInstance by an id.
 	 * 
@@ -127,6 +129,52 @@ public class CaseExecutioner {
 		if (!(nodeInstance instanceof AbstractActivityInstance))
 			return null;
 		return (AbstractActivityInstance) nodeInstance;
+	}
+
+	/**
+	 * Get a specific ActivityInstance by an id.
+	 * 
+	 * @param activityInstanceId
+	 * @return the associated AbstractActivityInstance, or {@code null} if the
+	 *         id is not assigned, or {@code null} if the id is associated to a
+	 *         ControlNodeInstance which is not an ActivityInstance
+	 */
+	public AbstractActivityInstance getActivityInstanceWithExceptions(String activityInstanceId) {
+		ControlNodeInstance nodeInstance = getControlNodeInstance(activityInstanceId);
+		if (nodeInstance == null) {
+			String message = String.format("ActivityInstance-id: %s is not assigned", activityInstanceId);
+			log.error(message);
+			throw new IllegalArgumentException(message);
+		}
+		if (!(nodeInstance instanceof AbstractActivityInstance)) {
+			String message = String.format("ControlNode assigned by id: %s, is not of an ActivityInstance", activityInstanceId);
+			log.error(message);
+			throw new IllegalArgumentException(message);
+		}
+
+		return (AbstractActivityInstance) nodeInstance;
+	}
+
+	/**
+	 * Get a specific ActivityInstance by an id.
+	 * 
+	 * @param activityInstanceId
+	 * @return the associated AbstractActivityInstance, or {@code null} if the
+	 *         id is not assigned, or {@code null} if the id is associated to a
+	 *         ControlNodeInstance which is not an ActivityInstance
+	 */
+	public AbstractActivityInstance getActivityInstanceWithStateAndExceptions(String activityInstanceId, State state) {
+		try {
+			AbstractActivityInstance activitiyInstance = this.getActivityInstanceWithExceptions(activityInstanceId);
+			if (activitiyInstance.getState() != state) {
+				String message = String.format("ActivityInstance assigned by id: %s, is not in State: %s", activityInstanceId, state.toString());
+				log.error(message);
+				throw new IllegalArgumentException(message);
+			}
+			return activitiyInstance;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
 	}
 
 	// Do not implement this at the moment

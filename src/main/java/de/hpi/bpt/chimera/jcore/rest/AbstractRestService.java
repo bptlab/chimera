@@ -3,6 +3,9 @@ package de.hpi.bpt.chimera.jcore.rest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import de.hpi.bpt.chimera.execution.ExecutionService;
 import de.hpi.bpt.chimera.persistencemanager.CaseModelManager;
 
@@ -34,8 +37,18 @@ public class AbstractRestService {
 		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();
 	}
 
-	public Response stateNotFoundResponse(String state) {
-		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity("{\"error\":\"The state " + "is not allowed " + state + "\"}").build();
+	protected final Response stateNotFoundResponse(String state) {
+		String responseText = String.format("{\"error\":\"The state: %s is not a valid state\"}", state);
+		return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(responseText).build();
+	}
+
+	protected final String buildException(String text) {
+		JSONArray result = new JSONArray();
+		JSONObject content = new JSONObject();
+		content.put("text", text);
+		content.put("type", "danger");
+		result.put(content);
+		return result.toString();
 	}
 
 	public Response buildNotFoundResponse(String errorMsg) {

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.model.condition.ConditionSet;
 import de.hpi.bpt.chimera.model.condition.DataStateCondition;
 import de.hpi.bpt.chimera.model.datamodel.DataModel;
@@ -18,6 +20,7 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.DataNode;
  * I manage the data objects of a case.
  */
 public class DataManager {
+	private static final Logger log = Logger.getLogger(DataManager.class);
 
 	private CaseExecutioner caseExecutioner;
 	private DataModel dataModel;
@@ -89,7 +92,8 @@ public class DataManager {
 
 	/**
 	 * Lock those {@link DataObject}{@code s} that are referred by the
-	 * dataObjectIds and returns these Instances.
+	 * dataObjectIds and returns these DataObjects. If a DataObject shall be
+	 * locked that is already locked throw a SecurityException.
 	 * 
 	 * @param dataObjectIds
 	 *            - list of {@code ids} which referring DataObjects shall be
@@ -101,8 +105,19 @@ public class DataManager {
 		for (String id : dataObjectIds) {
 			if (dataObjectIdToDataObject.containsKey(id)) {
 				DataObject dataObject = dataObjectIdToDataObject.get(id);
+				if (dataObject.isLocked()) {
+					unlockDataObjects(lockedDataObjects);
+					String message = String.format("Try to lock the DataObject with id: %s, that is already locked.", id);
+					log.error(message);
+					throw new SecurityException(message);
+				}
 				dataObject.lock();
 				lockedDataObjects.add(dataObject);
+			} else {
+				unlockDataObjects(lockedDataObjects);
+				String message = String.format("Try to lock a DataObject with id: %s, which id is not assigned.", id);
+				log.error(message);
+				throw new IllegalArgumentException(message);
 			}
 		}
 		return lockedDataObjects;

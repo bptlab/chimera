@@ -24,21 +24,15 @@ public class FragmentInstance {
 	private Case caze;
 	// TODO: think about whether it is needed to store terminated events, etc.
 	// Activities should be recorded for the history.
-	/**
-	 * Map of Id of ControlNodeInstance to ControlNodeInstance.
-	 */
-	private Map<String, ControlNodeInstance> controlNodeInstances;
-	/**
-	 * Map of Id of ControlNode to the corresponding ControlNodeInstanc.
-	 */
-	private Map<String, ControlNodeInstance> controlNodes;
+	private Map<String, ControlNodeInstance> controlNodeInstanceIdToInstance;
+	private Map<String, ControlNodeInstance> controlNodeIdToInstance;
 
 	public FragmentInstance(Fragment fragment, Case caze) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
 		this.fragment = fragment;
 		this.caze = caze;
-		this.controlNodeInstances = new HashMap<>();
-		this.controlNodes = new HashMap<>();
+		this.controlNodeInstanceIdToInstance = new HashMap<>();
+		this.controlNodeIdToInstance = new HashMap<>();
 	}
 
 	/**
@@ -56,7 +50,7 @@ public class FragmentInstance {
 	 * Update DataFlow of all ActivityInstances.
 	 */
 	public void updateDataFlow() {
-		for (ControlNodeInstance nodeInstance : controlNodeInstances.values()) { 
+		for (ControlNodeInstance nodeInstance : controlNodeInstanceIdToInstance.values()) { 
 			if (nodeInstance instanceof AbstractActivityInstance) {
 				((AbstractActivityInstance) nodeInstance).checkDataFlow();
 			}
@@ -72,7 +66,7 @@ public class FragmentInstance {
 	public void createFollowing(AbstractControlNode controlNode) {
 		for (AbstractControlNode following : controlNode.getOutgoingControlNodes()) {
 			if (isInstantiated(following)) {
-				ControlNodeInstance nodeInstance = controlNodes.get(following.getId());
+				ControlNodeInstance nodeInstance = controlNodeIdToInstance.get(following.getId());
 				nodeInstance.enableControlFlow();
 			} else {
 				ControlNodeInstance nodeInstance = ControlNodeInstanceFactory.createControlNodeInstance(following, this);
@@ -82,23 +76,14 @@ public class FragmentInstance {
 		}
 	}
 
-	/**
-	 * 
-	 * @param controlNodes
-	 * @return
-	 */
-	public boolean checkExclusiveGatewayBehaviour(ControlNodeInstance instance, List<ControlNodeInstance> instancesToRemove) {
-		return false;
-	}
-
 	// HELPER METHODS
 	/**
 	 * 
 	 * @param nodeInstance
 	 */
 	private void addControlNodeInstance(ControlNodeInstance nodeInstance) {
-		controlNodeInstances.put(nodeInstance.getId(), nodeInstance);
-		controlNodes.put(nodeInstance.getControlNode().getId(), nodeInstance);
+		controlNodeInstanceIdToInstance.put(nodeInstance.getId(), nodeInstance);
+		controlNodeIdToInstance.put(nodeInstance.getControlNode().getId(), nodeInstance);
 	}
 
 	/**
@@ -107,7 +92,7 @@ public class FragmentInstance {
 	 * @return true if the ControlNode is instantiated.
 	 */
 	public boolean isInstantiated(AbstractControlNode node) {
-		return controlNodes.containsKey(node.getId());
+		return controlNodeIdToInstance.containsKey(node.getId());
 	}
 
 	/**
@@ -130,7 +115,7 @@ public class FragmentInstance {
 	 * @return true if the ControlNode is terminated.
 	 */
 	public boolean isTerminated(AbstractControlNode node) {
-		if (controlNodes.containsKey(node.getId()) && controlNodes.get(node.getId()).getState() == State.TERMINATED) {
+		if (controlNodeIdToInstance.containsKey(node.getId()) && controlNodeIdToInstance.get(node.getId()).getState() == State.TERMINATED) {
 			return true;
 		} else {
 			return false;
@@ -143,7 +128,7 @@ public class FragmentInstance {
 	 * @return a ArrayList of executing gateways.
 	 */
 	public Map<String, ExclusiveGatewayInstance> getExecutingExclusiveGateways() {
-		return this.controlNodeInstances.entrySet().stream().filter(x -> (x.getValue().getClass().equals(ExclusiveGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (ExclusiveGatewayInstance) p.getValue()));
+		return this.controlNodeInstanceIdToInstance.entrySet().stream().filter(x -> (x.getValue().getClass().equals(ExclusiveGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (ExclusiveGatewayInstance) p.getValue()));
 	}
 
 	/**
@@ -155,8 +140,8 @@ public class FragmentInstance {
 	public ControlNodeInstance getControlNodeInstance(String controlNodeId) {
 		// TODO is it possible that someone calls this method for a controllnode
 		// that isn't instantiated yet?
-		if (controlNodes.containsKey(controlNodeId)) {
-			return controlNodes.get(controlNodeId);
+		if (controlNodeIdToInstance.containsKey(controlNodeId)) {
+			return controlNodeIdToInstance.get(controlNodeId);
 		} else {
 			return null;
 		}
@@ -199,11 +184,11 @@ public class FragmentInstance {
 	}
 
 	public Map<String, ControlNodeInstance> getControlNodeInstances() {
-		return controlNodeInstances;
+		return controlNodeInstanceIdToInstance;
 	}
 
 	public void setControlNodeInstances(Map<String, ControlNodeInstance> controlNodeInstances) {
-		this.controlNodeInstances = controlNodeInstances;
+		this.controlNodeInstanceIdToInstance = controlNodeInstances;
 	}
 
 	public Case getCase() {

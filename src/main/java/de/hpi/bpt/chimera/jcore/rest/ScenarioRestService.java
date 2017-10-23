@@ -160,17 +160,6 @@ public class ScenarioRestService extends AbstractRestService {
 		return Response.ok(result.toString(), MediaType.APPLICATION_JSON).build();
 	}
 
-
-	private String buildException(String text) {
-		JSONArray result = new JSONArray();
-		JSONObject content = new JSONObject();
-		content.put("text", text);
-		content.put("type", "danger");
-		result.put(content);
-		return result.toString();
-	}
-
-
 	/**
 	 * Get the fragment bpmn-xml representations for all fragments of a scenario.
 	 *
