@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import de.hpi.bpt.chimera.execution.ControlNodeInstance;
@@ -25,6 +26,13 @@ import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ParallelGateway;
 import de.hpi.bpt.chimera.model.fragment.bpmn.SequenceFlowAssociation;
 import de.hpi.bpt.chimera.model.fragment.bpmn.gateway.ExclusiveGateway;
 
+/**
+ * This class represents an ExclusiveGateway. It provides methods and functions
+ * for the incoming and outgoing controlflow logic as well as functions for
+ * parsing and executing conditions given as attributes of outgoing controlflows
+ * which makes branching possible.
+ *
+ */
 public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	private static Logger log = Logger.getLogger(ExclusiveGatewayInstance.class);
 
@@ -47,7 +55,8 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	}
 
 	/**
-	 * Expands branch to cover all control nodes skipping intermediate gateways.
+	 * Expands branch to cover all following control nodes skipping intermediate
+	 * gateways.
 	 *
 	 * @param id
 	 *            The id of the control node getting added.
@@ -170,17 +179,19 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 	 * Evaluates Conditions for the control flow of an XOR gateway.
 	 */
 	public void evaluateConditions() {
-		Map<AbstractControlNode, String> conditions = this.getControlNode().getOutgoingSequenceFlows().stream().collect(Collectors.toMap(item -> item.getTargetRef(), item -> item.getCondition()));
+		// Map<AbstractControlNode, String> conditions =
+		// this.getControlNode().getOutgoingSequenceFlows().stream().collect(Collectors.toMap(item
+		// -> item.getTargetRef(), item -> item.getCondition()));
+		List<SequenceFlowAssociation> associations = this.getControlNode().getOutgoingSequenceFlows().stream().collect(Collectors.toList());
 		// Map<Integer, String> conditions =
 		// this.getDbControlFlow().getConditions(getControlNodeId());
 		AbstractControlNode controlNode;
 		AbstractControlNode defaultControlNode = null;
 		String condition;
 		Set<AbstractControlNode> toEnable = new HashSet<>();
-		Iterator<AbstractControlNode> nodes = conditions.keySet().iterator();
-		while (nodes.hasNext()) {
-			controlNode = nodes.next();
-			condition = conditions.get(controlNode);
+		for (SequenceFlowAssociation association : associations) {
+			controlNode = association.getTargetRef();
+			condition = association.getCondition();
 			if (condition.equals("DEFAULT")) {
 				defaultControlNode = controlNode;
 			} else if (evaluateCondition(condition)) { // condition true or

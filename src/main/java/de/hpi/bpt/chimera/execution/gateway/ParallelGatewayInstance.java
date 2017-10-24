@@ -1,6 +1,7 @@
 package de.hpi.bpt.chimera.execution.gateway;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -78,8 +79,9 @@ public class ParallelGatewayInstance extends AbstractGatewayInstance {
 			return true;
 		}
 		// looks that all predecessors are terminated or executing Gateways
+		Map<String, AbstractGatewayInstance> executingGateways = getFragmentInstance().getExecutingGateways();
 		for (AbstractControlNode node : predecessors) {
-			if (!getFragmentInstance().isTerminated(node) && !getFragmentInstance().getExecutingExclusiveGateways().containsKey(node)) {
+			if (!getFragmentInstance().isTerminated(node) && !executingGateways.containsKey(node.getId())) {
 				return false;
 			}
 		}

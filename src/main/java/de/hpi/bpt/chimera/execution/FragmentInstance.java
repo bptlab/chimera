@@ -148,12 +148,21 @@ public class FragmentInstance {
 	}
 
 	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
-	// Gateways ist better
+	// Gateways is better and faster
 	/**
 	 * @return a ArrayList of executing gateways.
 	 */
 	public Map<String, ExclusiveGatewayInstance> getExecutingExclusiveGateways() {
-		return this.controlNodeInstances.entrySet().stream().filter(x -> (x.getValue().getClass().equals(ExclusiveGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (ExclusiveGatewayInstance) p.getValue()));
+		return this.controlNodes.entrySet().stream().filter(x -> (x.getValue().getClass().equals(ExclusiveGatewayInstance.class) && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (ExclusiveGatewayInstance) p.getValue()));
+	}
+
+	// TODO maybe not needed >>> maybe a separate map for executing (Xor-)
+	// Gateways is better and faster
+	/**
+	 * @return a ArrayList of executing gateways.
+	 */
+	public Map<String, AbstractGatewayInstance> getExecutingGateways() {
+		return this.controlNodes.entrySet().stream().filter(x -> (x.getValue() instanceof AbstractGatewayInstance && x.getValue().getState() == State.EXECUTING)).collect(Collectors.toMap(p -> p.getKey(), p -> (AbstractGatewayInstance) p.getValue()));
 	}
 
 	/**
