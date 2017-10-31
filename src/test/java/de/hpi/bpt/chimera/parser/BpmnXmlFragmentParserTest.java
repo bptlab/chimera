@@ -24,7 +24,7 @@ public class BpmnXmlFragmentParserTest {
 			jsonString = IOUtils.toString(inputStream);
 			inputStream.close();
 		} catch (Exception e) {
-			assertEquals("Error", 1, e);
+			assertEquals("Error", "wasn't able to find the file", e);
 		}
 	}
 

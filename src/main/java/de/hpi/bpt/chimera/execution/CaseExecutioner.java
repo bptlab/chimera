@@ -313,4 +313,20 @@ public class CaseExecutioner {
 	public List<DataAttributeLog> getDataAttributeLogs() {
 		return dataAttributeLogs;
 	}
+
+	/**
+	 * 
+	 * @return all AbstractActivityInstances in all FragmentInstances.
+	 */
+	public Collection<AbstractActivityInstance> getActivityInstances() {
+		Collection<AbstractActivityInstance> activityInstances = new ArrayList<>();
+		for (FragmentInstance fragmentInstance : caze.getFragmentInstances().values()) {
+			for (ControlNodeInstance nodeInstance : fragmentInstance.getControlNodeInstances().values()) {
+				if (nodeInstance instanceof AbstractActivityInstance) {
+					activityInstances.add((AbstractActivityInstance) nodeInstance);
+				}
+			}
+		}
+		return activityInstances;
+	}
 }

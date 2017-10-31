@@ -28,6 +28,7 @@ public class DataObject implements ConditionStatable {
 	 */
 	public DataObject(DataStateCondition condition, DataManager dataManager) {
 		this.id = UUID.randomUUID().toString().replace("-", "");
+		// TODO: don't lock the DataObject
 		this.lock();
 		this.setDataManger(dataManager);
 		this.condition = new DataStateCondition(condition);
