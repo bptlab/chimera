@@ -141,7 +141,7 @@ public class ExclusiveGatewayInstance extends AbstractGatewayInstance {
 		// getFragmentInstance().createFollowing(getControlNode());
 		this.evaluateConditions();
 		// TODO is it right to start automatic Tasks here?
-		this.getFragmentInstance().getCase().getCaseExecutioner().startAutomaticTasks();
+		// this.getFragmentInstance().getCase().getCaseExecutioner().startAutomaticTasks();
 		// this.terminate();
 	}
 
