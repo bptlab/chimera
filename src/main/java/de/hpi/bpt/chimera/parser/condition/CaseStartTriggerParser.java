@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.hpi.bpt.chimera.model.CaseModel;
 import de.hpi.bpt.chimera.model.condition.CaseStartTrigger;
 import de.hpi.bpt.chimera.model.condition.CaseStartTriggerConsequence;
 import de.hpi.bpt.chimera.model.condition.DataAttributeJsonPath;
@@ -35,7 +36,7 @@ public class CaseStartTriggerParser {
 	 * @param parserHelper
 	 * @return CaseStartTrigger
 	 */
-	public static CaseStartTrigger parseCaseStarterTrigger(JSONObject caseStartTriggerJson, CaseModelParserHelper parserHelper) {
+	public static CaseStartTrigger parseCaseStarterTrigger(JSONObject caseStartTriggerJson, CaseModelParserHelper parserHelper, CaseModel parentCaseModel) {
 		CaseStartTrigger caseStartTrigger = new CaseStartTrigger();
 		try {
 			String queryExecutionPlan = caseStartTriggerJson.getString("query");
@@ -43,6 +44,8 @@ public class CaseStartTriggerParser {
 
 			List<CaseStartTriggerConsequence> triggerConsequences = parseTriggerConsequences(caseStartTriggerJson.getJSONArray("dataclasses"), parserHelper);
 			caseStartTrigger.setTriggerConsequence(triggerConsequences);
+
+			caseStartTrigger.setParentCaseModel(parentCaseModel);
 
 		} catch (JSONException | IllegalArgumentException e) {
 			log.error(e);

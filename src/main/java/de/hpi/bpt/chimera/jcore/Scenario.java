@@ -40,7 +40,7 @@ public class Scenario {
   public void delete() {
     new DbScenario().deleteScenario(scenarioId);
     deleteCases();
-    EventDispatcher.unregisterCaseStartEvent(scenarioId);
+		EventDispatcher.unregisterCaseStartEvent(scenarioId);
   }
 
   /**

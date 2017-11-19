@@ -1,9 +1,11 @@
 package de.hpi.bpt.chimera.model.condition;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import de.hpi.bpt.chimera.model.datamodel.DataAttribute;
 
@@ -13,6 +15,7 @@ public class DataAttributeJsonPath {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int dbId;
 
+	@OneToOne(cascade = CascadeType.ALL)
 	private DataAttribute dataAttribute;
 	private String jsonPath;
 

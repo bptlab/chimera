@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import org.apache.log4j.Logger;
+
 import de.hpi.bpt.chimera.model.CaseModel;
 
 public class DomainModelPersistenceManager {
@@ -13,6 +16,8 @@ public class DomainModelPersistenceManager {
 	// name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 	// to <property name="eclipselink.ddl-generation" value="create-tables" />
 	// Otherwise the dababase will be reset every time.
+	private static final Logger log = Logger.getLogger(DomainModelPersistenceManager.class);
+
 	private static final String PERSISTENCE_UNIT_NAME = "CaseModel";
 	private static EntityManagerFactory entityManagerFactory;
 	private static boolean isEntityManagerFactoryInitialized = false;
@@ -53,6 +58,7 @@ public class DomainModelPersistenceManager {
 		entityManager.getTransaction().commit();
 	}
 
+
 	/**
 	 * Loads a previously persisted CaseModel from the database.
 	 * 
@@ -88,4 +94,24 @@ public class DomainModelPersistenceManager {
 		em.getTransaction().commit();
 	}
 
+	public static EventMapper loadEventMapper() {
+		EntityManager em = getEntityManagerFactory().createEntityManager();
+		em.getTransaction().begin();
+		List<EventMapper> eventMapperList = em.createNamedQuery("EventMapper.get", EventMapper.class).getResultList();
+		em.getTransaction().commit();
+
+		if (eventMapperList.isEmpty()) {
+			return new EventMapper();
+		} else {
+			return eventMapperList.get(0);
+		}
+	}
+
+	public static void saveEventMapper(EventMapper eventMapper) {
+		EntityManager entityManager = getEntityManagerFactory().createEntityManager();
+
+		entityManager.getTransaction().begin();
+		entityManager.merge(eventMapper);
+		entityManager.getTransaction().commit();
+	}
 }
